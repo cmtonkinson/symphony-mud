@@ -6,18 +6,24 @@ module Core
     def initialize
       @server      = Network::Server.new
       @connections = []
+      @stop        = false
     end
 
     def spin
       loop do
         tick
         welcome @server.accept
+        break if @stop
       end
     end
 
+    def stop
+      @stop = true
+    end
+
     def tick
-      @connections.each { |c| c.puts "TICK #{Time.now}" } if (Time.new.sec % 5 == 0)
-      sleep 1
+      @connections.each { |c| c.puts "TICK #{Time.now}" } if Time.new.sec % 5 == 0
+      sleep Core.configuration.sleep_interval
     end
 
     def welcome(connection)
