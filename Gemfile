@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'rake'
+
 group :setup do
 end
 
@@ -15,6 +17,8 @@ group :development do
 end
 
 group :test do
+  gem 'fuubar'
+  gem 'rspec'
 end
 
 group :production do

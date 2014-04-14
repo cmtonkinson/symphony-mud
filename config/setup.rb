@@ -3,6 +3,6 @@ Core.configure do |config|
 end
 
 Network.configure do |config|
-  config.listen_ip   = '127.0.0.1'
-  config.listen_port = 8000
+  config.listen_ip   = '0.0.0.0'
+  config.listen_port = 6500
 end
