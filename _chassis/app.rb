@@ -1,4 +1,4 @@
-class Engine
+class App
   attr_reader :root, :env
 
   def initialize
