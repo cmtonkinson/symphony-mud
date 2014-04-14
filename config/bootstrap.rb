@@ -13,9 +13,7 @@ Symphony = Engine.new
 Bundler.require :default, :setup, :app, Symphony.env
 
 # Load up our library modules.
-Engine::MODULES.each do |mod|
-  Dir[Symphony.root.join 'lib', mod, '*'].each { |file| require file }
-end
+Dir[Symphony.root.join 'lib', '**', '*.rb'].each { |file| require file }
 
 # Pass control to custom module configuration blocks.
 require File.expand_path 'config/setup'
