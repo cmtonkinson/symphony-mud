@@ -1,16 +1,15 @@
-module Network
+module Base
 
   class Configuration
-    attr_accessor :listen_ip, :listen_port
+    attr_accessor :sleep_interval
 
     def initialize
-      @listen_ip   = '127.0.0.1'
-      @listen_port = 3001
+      @sleep_interval = 1
     end
   end
 
   def self.configuration
-    @config ||= Network::Configuration.new
+    @config ||= Base::Configuration.new
   end
 
   def self.configure

@@ -2,7 +2,7 @@
 # Bootstrap Symphony; this code is the test analogue of the main `symphony.rb` script.
 ####################################################################################################
 ENV['SYMPHONY_ENV'] ||= 'test'
-require File.expand_path '_chassis/bootstrap'
+require File.expand_path 'core/bootstrap'
 
 ####################################################################################################
 # Override initializers, as necessary.

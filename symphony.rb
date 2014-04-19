@@ -1,3 +1,3 @@
-require File.expand_path '_chassis/bootstrap'
-world = Core::World.new
+require File.expand_path 'core/bootstrap'
+world = Base::World.new
 world.spin

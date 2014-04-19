@@ -1,4 +1,4 @@
-module Core
+module Base
 
   class World
     attr_accessor :connections
@@ -22,8 +22,10 @@ module Core
     end
 
     def tick
-      @connections.each { |c| c.puts "TICK #{Time.now}" } if Time.new.sec % 5 == 0
-      sleep Core.configuration.sleep_interval
+      if Time.new.sec % 5 == 0
+        @connections.each { |c| c.puts "TICK #{Time.now}" }
+      end
+      sleep Base.configuration.sleep_interval
     end
 
     def welcome(connection)
