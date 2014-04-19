@@ -17,9 +17,24 @@ engineering considerations include, in no particular order:
  * simplicity
 
 ### TL;DR
+Hit the ground running with the following commands from the project root (assuming you haven't
+overridden any default configurations):
+
+ * `bundle install`
+ * `bundle exec ruby symphony.rb`
+
+You should see some informational output. Once you see "listening for connections" in another
+terminal, telnet to `localhost:6501` and follow the instructions. If you're in a *nix environment
+that should look something like:
+
+ * `telnet localhost 6501`
 
 ### Detailed Installation
 
 ### Philosophy
 
 ### Architecture
+
+### TODO
+
+ * vagrant

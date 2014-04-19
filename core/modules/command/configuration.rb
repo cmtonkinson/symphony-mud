@@ -1,15 +1,15 @@
-module Base
+module Command
 
   class Configuration
-    attr_accessor :sleep_interval
+    attr_accessor :command_sets
 
     def initialize
-      @sleep_interval = 1
+      @command_sets = []
     end
   end
 
   def self.configuration
-    @config ||= Base::Configuration.new
+    @config ||= Configuration.new
   end
 
   def self.configure
