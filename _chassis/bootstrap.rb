@@ -15,5 +15,5 @@ Bundler.require :default, :setup, :app, Symphony.env
 # Load up our library modules.
 Dir[Symphony.root.join 'lib', '**', '*.rb'].each { |file| require file }
 
-# Pass control to custom module configuration blocks.
-require Symphony.root.join 'config', 'setup'
+# Thanks for the pattern, Rails!
+Dir[Symphony.root.join 'config', 'initializers', '*.rb'].each { |file| require file }
