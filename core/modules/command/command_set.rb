@@ -1,15 +1,13 @@
 module Command
 
   class CommandSet < ::SortedSet
-    attr_accessor :name
 
-    def initialize(name)
-      @name = name
-      super nil
+    def initialize
+      super
     end
 
-    def self.factory(name, commands)
-      set = CommandSet.new name
+    def self.factory(commands)
+      set = CommandSet.new
       commands.each { |c| set << c }
       set
     end

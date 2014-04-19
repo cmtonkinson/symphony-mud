@@ -4,7 +4,7 @@ module Command
     attr_accessor :command_sets
 
     def initialize
-      @command_sets = []
+      @command_sets = {}
     end
   end
 

@@ -22,6 +22,12 @@ module Base
     end
 
     def tick
+      self.clients.each do |c|
+        input = c.recv
+        next if input.nil?
+        operator = Command::Operator.new c, Command.configuration.command_sets[:global]
+        operator.handle input
+      end
       if Time.new.sec % 5 == 0
         self.clients.each { |c| c.puts "TICK #{Time.now}" }
       end
