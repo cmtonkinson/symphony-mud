@@ -1,5 +1,8 @@
+# Include all the command subclasses.
+Dir[Symphony.root.join 'lib', 'commands', '*.rb'].each { |file| require file }
+
 Command.configure do |config|
-  # global_commands = Command::CommandSet.new "global"
-  # global_commands << Command::Command.new
-  # config.command_sets << global_commands
+  config.command_sets << Command::CommandSet.factory("global", [
+    Command::Command_help.new,
+  ])
 end
