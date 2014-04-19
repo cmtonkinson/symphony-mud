@@ -5,7 +5,7 @@ describe "smoke test" do
   describe "TCPServer" do
 
     before :each do
-      @world = Base::World.new
+      @universe = Base::Universe.new
     end
 
     it "should accept new connections" do

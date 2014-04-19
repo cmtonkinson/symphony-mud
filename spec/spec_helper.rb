@@ -13,8 +13,11 @@ Network.configure do |config|
   config.listen_port = 6501
 end
 
+####################################################################################################
+# Configuration blocks for testing utilities.
+####################################################################################################
 RSpec.configure do |config|
-  config.treat_symbols_as_metadata_keys_with_true_values = true
+  # config.treat_symbols_as_metadata_keys_with_true_values = true
   config.run_all_when_everything_filtered = true
   config.order = 'random'
 end

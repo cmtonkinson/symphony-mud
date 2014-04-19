@@ -32,5 +32,8 @@ Bundler.require :default, :setup, :app, Symphony.env
 # Autoload core modules.
 Dir[Symphony.root.join 'core', 'modules', '**', '*.rb'].each { |file| require file }
 
-# Autoload application configuration scripts.
+# Autorun application configuration scripts.
 Dir[Symphony.root.join 'config', 'initializers', '*.rb'].each { |file| require file }
+
+# Bring all the infrastructure into existence.
+Dir[Symphony.root.join 'core', 'setup', '*.rb'].each { |file| require file }

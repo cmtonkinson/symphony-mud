@@ -1,21 +1,22 @@
 module Network
 
   class Client
+    attr_accessor :socket
 
     def initialize(tcp_socket)
       @socket = tcp_socket
     end
 
     def get_fd
-      @socket.to_i
+      self.socket.to_i
     end
 
     def puts(*args)
-      @socket.puts args
+      self.socket.puts args
     end
 
     def close
-      @socket.close
+      self.socket.close
     end
 
   end
