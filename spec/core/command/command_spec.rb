@@ -14,9 +14,9 @@ describe Command::Command do
     it { should respond_to :<=> }
 
     it "should sort on name" do
-      expect(subject <=> Command::Command_apple.new).to eq 1
-      expect(subject <=> Command::Command_banana.new).to eq  0
-      expect(subject <=> Command::Command_cherry.new).to eq -1
+      expect(subject <=> Command::Command_apple.new).to   eq  1
+      expect(subject <=> Command::Command_banana.new).to  eq  0
+      expect(subject <=> Command::Command_cherry.new).to  eq -1
     end
 
   end

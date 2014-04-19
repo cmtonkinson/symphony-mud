@@ -15,4 +15,43 @@ module Command
     end
   end
 
+  ##################################################################################################
+  # shutdown
+  ##################################################################################################
+  class Command_shutdown < Command
+    def initialize
+      @name = "shutdown"
+    end
+    def execute(client, arguments)
+      client.puts "Shutting down."
+      $universe.die
+    end
+  end
+
+  ##################################################################################################
+  # quit
+  ##################################################################################################
+  class Command_quit < Command
+    def initialize
+      @name = "quit"
+    end
+    def execute(client, arguments)
+      client.puts "Goodbye."
+      client.terminate = true
+    end
+  end
+
+  ##################################################################################################
+  # reboot
+  ##################################################################################################
+  class Command_reboot < Command
+    def initialize
+      @name = "reboot"
+    end
+    def execute(client, arguments)
+      client.puts "=== Hold on to your butts.... Copyover NOW"
+      $universe.reboot = true
+    end
+  end
+
 end

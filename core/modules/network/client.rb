@@ -1,7 +1,7 @@
 module Network
 
   class Client
-    attr_accessor :socket
+    attr_accessor :socket, :terminate
 
     def initialize(tcp_socket)
       @socket = tcp_socket
