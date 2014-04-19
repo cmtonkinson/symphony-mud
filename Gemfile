@@ -17,8 +17,8 @@ group :development do
 end
 
 group :test do
-  gem 'fuubar'
-  gem 'rspec'
+  gem 'fuubar', github: 'thekompanee/fuubar'
+  gem 'rspec', github: 'rspec'
 end
 
 group :production do
