@@ -1,6 +1,6 @@
 module Network
 
-  class Connection
+  class Client
 
     def initialize(tcp_socket)
       @socket = tcp_socket

@@ -9,12 +9,12 @@ module Network
     end
 
     def accept
+      client = nil
       begin
-        connection = Network::Connection.new accept_nonblock
+        client = Network::Client.new accept_nonblock
       rescue Errno::EWOULDBLOCK, Errno::EINTR
-        connection = nil
       end
-      connection
+      client
     end
 
   end
