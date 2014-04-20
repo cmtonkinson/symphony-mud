@@ -24,7 +24,7 @@ module Command
     end
     def execute(client, arguments)
       client.puts "Shutting down."
-      $universe.die
+      $universe.should_stop = true
     end
   end
 
@@ -50,7 +50,7 @@ module Command
     end
     def execute(client, arguments)
       client.puts "=== Hold on to your butts.... Copyover NOW"
-      $universe.reboot = true
+      $universe.should_reboot = true
     end
   end
 

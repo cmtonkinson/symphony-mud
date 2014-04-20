@@ -9,11 +9,12 @@
 # This class is designed to be a globally-available singleton.
 ####################################################################################################
 class App
-  attr_reader :root, :env
+  attr_reader :binary, :root, :env
 
   def initialize
-    @root = Pathname.new File.expand_path '../..', __FILE__
-    @env  = ENV['SYMPHONY_ENV'].to_sym
+    @root   = Pathname.new File.expand_path '../..', __FILE__
+    @binary = @root.join BINARY_NAME
+    @env    = ENV['SYMPHONY_ENV'].to_sym
   end
 
 end

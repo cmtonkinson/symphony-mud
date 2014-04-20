@@ -1,67 +1,90 @@
 module Base
 
   class Universe
-    attr_accessor :clients, :server, :stop, :reboot
+    attr_accessor :clients, :server, :should_stop, :should_reboot
 
     def initialize
-      @server  = Network::Server.new
-      @clients = []
-      @stop    = false
+      @clients     = []
+      @should_stop = false
+      setup_server
     end
 
-    def live
-      ap ENV
-      loop do
-        welcome self.server.accept
-        tick
-        break if self.stop
+    def setup_server
+      if ENV["SYMPHONY_REBOOT"] == "true"
+        recover_from_reboot
+      else
+        @server = Network::Server.new
       end
     end
 
-    def die
-      self.stop = true
+    def live
+      until self.should_stop do
+        welcome self.server.accept
+        handle_input
+        handle_disconnections
+        begin_reboot if self.should_reboot
+        sleep Base.configuration.sleep_interval
+      end
     end
 
-    def tick
+    def welcome(client)
+      return if client.nil?
+      client.puts "Welcome!"
+      self.clients << client
+    end
+
+    def handle_input
       self.clients.each do |c|
         input = c.recv
         next if input.nil?
         operator = Command::Operator.new c, Command.configuration.command_sets[:global]
         operator.handle input
       end
-      if Time.new.sec % 5 == 0
-        self.clients.each { |c| c.puts "TICK #{Time.now}" }
-      end
-      self.clients.select { |c| c.terminate }.each do |c|
-          c.close
-         self.clients.delete c
-      end
-      if @reboot
-        # save fds to disk
-        name = "copyover.txt"
-        file = File.open name, "a"
-        self.clients.each { |c| ap c; file.puts c.get_fd }
-        file.close
-        # replace this process with another
-        env = {
-          "symphony_copyover" => "true",
-        }
-        command = "ruby symphony.rb"
-        options = {
-          :close_others => false,
-        }
-        pid = spawn env, command, options
-        ap pid
-        exit
-      end
-      sleep Base.configuration.sleep_interval
     end
 
-    def welcome(client)
-      return if client.nil?
-      client.puts "hey yall @ #{Time.now} on socket #{client.get_fd}"
-      self.clients.each { |c| c.puts "more peeps!" }
-      self.clients << client
+    def handle_disconnections
+      self.clients.select { |c| c.terminate }.each do |c|
+        c.close
+        self.clients.delete c
+      end
+    end
+
+    def begin_reboot
+      server_fd  = self.server.to_i
+      client_fds = self.clients.map { |c| c.get_fd }
+      env = {
+        "SYMPHONY_REBOOT"     => "true",
+        "SYMPHONY_SERVER_FD"  => server_fd.to_s,
+        "SYMPHONY_CLIENT_FDS" => Marshal.dump(client_fds),
+      }
+      options = {
+        :in           => :in,
+        :out          => :out,
+        :err          => :err,
+        :close_others => false,
+      }
+      # Add the server socket to the options Hash.
+      options[server_fd] = server_fd
+      # Add all the client sockets to the options Hash.
+      @clients.each { |c| options[c.get_fd] = c.get_fd }
+      # Begin anew.
+      Process.exec env, Symphony.binary.to_s, options
+    end
+
+    def recover_from_reboot
+      # Restart the server.
+      @server = Network::Server.for_fd ENV["SYMPHONY_SERVER_FD"].to_i
+      # Reconnect all the clients.
+      Marshal.load(ENV["SYMPHONY_CLIENT_FDS"]).each do |fd|
+        client = Network::Client.new TCPSocket.for_fd fd.to_i
+        client.puts "Welcome back!"
+        @clients << client
+      end
+      # Clean up ENV.
+      ENV.delete "SYMPHONY_REBOOT"
+      ENV.delete "SYMPHONY_SERVER_FD"
+      ENV.delete "SYMPHONY_CLIENT_FDS"
+      STDOUT.puts "Listening once more!"
     end
 
   end

@@ -1,6 +1,7 @@
 ####################################################################################################
 # Bootstrap Symphony; this code is the test analogue of the main `symphony.rb` script.
 ####################################################################################################
+BINARY_NAME = "" # stub
 ENV['SYMPHONY_ENV'] ||= 'test'
 require File.expand_path 'core/bootstrap'
 

@@ -4,8 +4,8 @@ module Base
     attr_accessor :sleep_interval, :command_sets
 
     def initialize
-      @sleep_interval = 1
-      @command_sets   = []
+      # Wait time (in seconds) between iterations of the primary server loop.
+      @sleep_interval = 0.1
     end
   end
 

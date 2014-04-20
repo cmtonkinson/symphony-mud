@@ -4,6 +4,7 @@ module Command
     attr_accessor :command_sets
 
     def initialize
+      # Which commands are available, in which groupings?
       @command_sets = {}
     end
   end
