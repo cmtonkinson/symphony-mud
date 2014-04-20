@@ -9,9 +9,9 @@ module Command
     def initialize
       @name = "help"
     end
-    def execute(client, arguments)
-      client.puts "You are now being helped. You are welcome."
-      client.puts "Arguments: #{arguments.to_json}"
+    def execute(user, arguments)
+      user.puts "You are now being helped. You are welcome."
+      user.puts "Arguments: #{arguments.to_json}"
     end
   end
 
@@ -22,8 +22,8 @@ module Command
     def initialize
       @name = "shutdown"
     end
-    def execute(client, arguments)
-      client.puts "Shutting down."
+    def execute(user, arguments)
+      user.puts "Shutting down."
       $universe.should_stop = true
     end
   end
@@ -35,9 +35,9 @@ module Command
     def initialize
       @name = "quit"
     end
-    def execute(client, arguments)
-      client.puts "Goodbye."
-      client.terminate = true
+    def execute(user, arguments)
+      user.puts "Goodbye."
+      user.client.should_terminate = true
     end
   end
 
@@ -48,8 +48,8 @@ module Command
     def initialize
       @name = "reboot"
     end
-    def execute(client, arguments)
-      client.puts "=== Hold on to your butts.... Copyover NOW"
+    def execute(user, arguments)
+      user.puts "=== Hold on to your butts.... Copyover NOW"
       $universe.should_reboot = true
     end
   end

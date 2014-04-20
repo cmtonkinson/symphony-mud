@@ -10,7 +10,7 @@ module Command
       self.name <=> other.name
     end
 
-    def execute(client, arguments)
+    def execute(user, arguments)
       raise NoMethodError.new "Command::Command#execute is undefined for Command '#{@name}'"
     end
 

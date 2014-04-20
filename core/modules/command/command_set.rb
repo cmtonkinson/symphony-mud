@@ -7,9 +7,9 @@ module Command
     end
 
     def self.factory(commands)
-      set = CommandSet.new
-      commands.each { |c| set << c }
-      set
+      command_set = CommandSet.new
+      commands.each { |command| command_set << command }
+      command_set
     end
 
   end

@@ -1,10 +1,13 @@
+require 'yaml'
+
 module Base
 
   class Universe
-    attr_accessor :clients, :server, :should_stop, :should_reboot
+    attr_accessor :clients, :server, :should_stop, :should_reboot, :quotes
 
     def initialize
       @clients     = []
+      @quotes      = []
       @should_stop = false
       setup_server
     end
@@ -15,6 +18,7 @@ module Base
       else
         @server = Network::Server.new
       end
+      @quotes = YAML.load IO.read Symphony.root.join "data", "quotes.yml"
     end
 
     def live
@@ -29,21 +33,22 @@ module Base
 
     def welcome(client)
       return if client.nil?
-      client.puts "Welcome!"
+      user = User.new
+      user.bind client
+      user.puts "Welcome!"
       self.clients << client
     end
 
     def handle_input
-      self.clients.each do |c|
-        input = c.recv
+      self.clients.each do |client|
+        input = client.recv
         next if input.nil?
-        operator = Command::Operator.new c, Command.configuration.command_sets[:global]
-        operator.handle input
+        client.user.operators.peek.handle input
       end
     end
 
     def handle_disconnections
-      self.clients.select { |c| c.terminate }.each do |c|
+      self.clients.select { |c| c.should_terminate }.each do |c|
         c.close
         self.clients.delete c
       end
@@ -77,7 +82,9 @@ module Base
       # Reconnect all the clients.
       Marshal.load(ENV["SYMPHONY_CLIENT_FDS"]).each do |fd|
         client = Network::Client.new TCPSocket.for_fd fd.to_i
-        client.puts "Welcome back!"
+        user = User.new
+        user.bind client
+        user.puts "Welcome back!"
         @clients << client
       end
       # Clean up ENV.
