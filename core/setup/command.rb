@@ -7,5 +7,6 @@ Command.configure do |config|
     Command::Command_quit.new,
     Command::Command_shutdown.new,
     Command::Command_reboot.new,
+    Command::Command_say.new,
   ]
 end

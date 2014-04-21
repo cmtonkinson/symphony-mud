@@ -10,9 +10,10 @@ module Command
     end
 
     def handle(input)
-      command = @command_set.find { |c| c.name == input }
+      name = input.split(" ").first
+      command = @command_set.find { |c| c.name == name }
       return if command.nil?
-      command.execute @client, nil
+      command.perform @client, input
     end
 
   end

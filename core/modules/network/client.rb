@@ -23,7 +23,7 @@ module Network
 
     def recv
       begin
-        input = self.socket.recv_nonblock(10)
+        input = self.socket.recv_nonblock Network.configuration.recv_maxlen
         return input.strip
       rescue Errno::EWOULDBLOCK, Errno::EINTR
         return nil
