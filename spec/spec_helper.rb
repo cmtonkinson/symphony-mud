@@ -3,7 +3,7 @@
 ####################################################################################################
 BINARY_NAME = "" # stub
 ENV['SYMPHONY_ENV'] ||= 'test'
-require File.expand_path 'core/bootstrap'
+require File.expand_path 'engine/bootstrap'
 
 ####################################################################################################
 # Override initializers, as necessary.
