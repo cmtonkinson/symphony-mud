@@ -11,7 +11,7 @@ module Command
 
     def handle(input)
       name = input.split(" ").first
-      command = @command_set.find { |c| c.name == name }
+      command = @command_set.find { |c| c.get_name == name }
       return if command.nil?
       command.perform @client, input
     end

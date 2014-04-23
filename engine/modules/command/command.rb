@@ -1,18 +1,21 @@
 module Command
 
   class Command
-    attr_accessor :name, :level, :exec
 
     def initialize
-      @name     = "Command"
-      @level    = 1
+      name ""
+      level 1
+      exec nil
       @args     = []
       @num_args = 0
-      @exec     = lambda { raise NoMethodError.new "Command::Command.exec is undefined for Command '#{@name}'" }
     end
 
     def <=> (other)
-      self.name <=> other.name
+      self.get_name <=> other.get_name
+    end
+
+    def setup(&block)
+      instance_eval &block
     end
 
     def perform(user, full_command)
@@ -40,14 +43,27 @@ module Command
       @args
     end
 
+    def get_name; @name; end
+    def get_level; @level; end
+    def get_exec; @exec; end
+
+    private
+
+    ################################################################################################
+    # These methods are designed for the Command DSL.
+    ################################################################################################
+    def name(name); @name = name; end
+    def level(level); @level = level; end
+    def exec(&exec); @exec = exec; end
+
   end
 
   def self.define(cmd_name, &init_block)
     class_name = "Command_#{cmd_name.to_s}"
     class_definition = Class.new(Command) do
       define_method :initialize do
-        self.name = cmd_name.to_s
-        instance_eval &init_block
+        method(:name).call cmd_name.to_s
+        method(:setup).call &init_block
       end
     end
     ::Command.const_set class_name, class_definition
