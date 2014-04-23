@@ -44,13 +44,13 @@ module Command
 
   def self.define(cmd_name, &init_block)
     class_name = "Command_#{cmd_name.to_s}"
-    class_definition = Class.new(Command)
-    class_initializer = Proc.new do
-      name = cmd_name
-      init_block.call
+    class_definition = Class.new(Command) do
+      define_method :initialize do
+        self.name = cmd_name.to_s
+        instance_eval &init_block
+      end
     end
     ::Command.const_set class_name, class_definition
-    ::Command.const_get(class_name).send(:define_method, :initialize, class_initializer)
   end
 
 end
