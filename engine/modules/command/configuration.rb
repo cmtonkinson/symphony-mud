@@ -1,11 +1,17 @@
 module Command
 
   class Configuration
-    attr_accessor :command_sets
+    attr_accessor :command_registry, :command_sets
 
     def initialize
-      # Which commands are available, in which groupings?
+      # Keep track of every command created by the DSL.
+      @command_registry = []
+      # At runtime, which commands are available, in which groupings?
       @command_sets = {}
+    end
+
+    def register_command(classname)
+      @command_registry << classname
     end
   end
 

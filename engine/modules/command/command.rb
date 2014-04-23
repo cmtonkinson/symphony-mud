@@ -9,6 +9,7 @@ module Command
       self.get_name <=> other.get_name
     end
 
+    # Set sane defaults, and run the `define` block from the command file.
     def setup(&block)
       @name     = "_"
       @level    = 1
@@ -16,9 +17,10 @@ module Command
       @exec     = nil
       @args     = []
       @num_args = 0
-      instance_eval &block
+      instance_eval &block if block_given?
     end
 
+    # Heart and soul of the command processing subsystem.
     def perform(user, full_command)
       # Parse the command, according to @args.
       arg_string = full_command.split(" ")[1..-1].join " "
@@ -36,6 +38,7 @@ module Command
       state.each { |name,value| self.remove_instance_variable name }
     end
 
+    # Keep parity between @args and @num_args.
     def args(array = nil)
       if !array.nil?
         @args     = array
@@ -44,6 +47,7 @@ module Command
       @args
     end
 
+    # Public getters.
     def get_name; @name; end
     def get_level; @level; end
     def get_group; @group; end
@@ -52,7 +56,7 @@ module Command
     private
 
     ################################################################################################
-    # These methods are designed for the Command DSL.
+    # Private setter methods are designed for the Command DSL.
     ################################################################################################
     def name(name);   @name  = name.to_s;     end
     def level(level); @level = level.to_i;    end
@@ -61,6 +65,10 @@ module Command
 
   end
 
+  ##################################################################################################
+  # Command::define is the metaprogramming interface which allows convenient definition of new
+  # commands>
+  ##################################################################################################
   def self.define(cmd_name, &init_block)
     class_name = "Command_#{cmd_name.to_s}"
     class_definition = Class.new(Command) do
@@ -70,10 +78,7 @@ module Command
       end
     end
     ::Command.const_set class_name, class_definition
-    ::Command.configure do |config|
-      command_singleton = ::Command.const_get(class_name).new
-      config.command_sets[command_singleton.get_group] << command_singleton
-    end
+    ::Command.configure { |config| config.register_command(::Command.const_get(class_name).new) }
   end
 
 end
