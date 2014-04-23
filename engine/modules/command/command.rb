@@ -3,11 +3,6 @@ module Command
   class Command
 
     def initialize
-      name ""
-      level 1
-      exec nil
-      @args     = []
-      @num_args = 0
     end
 
     def <=> (other)
@@ -15,6 +10,12 @@ module Command
     end
 
     def setup(&block)
+      @name     = "_"
+      @level    = 1
+      @group    = :global
+      @exec     = nil
+      @args     = []
+      @num_args = 0
       instance_eval &block
     end
 
@@ -45,6 +46,7 @@ module Command
 
     def get_name; @name; end
     def get_level; @level; end
+    def get_group; @group; end
     def get_exec; @exec; end
 
     private
@@ -52,9 +54,10 @@ module Command
     ################################################################################################
     # These methods are designed for the Command DSL.
     ################################################################################################
-    def name(name); @name = name; end
-    def level(level); @level = level; end
-    def exec(&exec); @exec = exec; end
+    def name(name);   @name  = name.to_s;     end
+    def level(level); @level = level.to_i;    end
+    def group(group); @group = group.to_sym;  end
+    def exec(&exec);  @exec  = exec;          end
 
   end
 
@@ -62,11 +65,15 @@ module Command
     class_name = "Command_#{cmd_name.to_s}"
     class_definition = Class.new(Command) do
       define_method :initialize do
-        method(:name).call cmd_name.to_s
         method(:setup).call &init_block
+        method(:name).call cmd_name.to_s
       end
     end
     ::Command.const_set class_name, class_definition
+    ::Command.configure do |config|
+      command_singleton = ::Command.const_get(class_name).new
+      config.command_sets[command_singleton.get_group] << command_singleton
+    end
   end
 
 end
