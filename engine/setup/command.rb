@@ -10,7 +10,7 @@ Dir[Symphony.root.join 'lib', 'commands', '*.rb'].each { |file| require file }
 Command.configure do |config|
   # Create a CommandSet for each needed group.
   config.command_registry.map(&:get_group).uniq.sort.each do |group|
-    config.command_sets[group] = Command::CommandSet.new
+    config.command_sets[group] = SortedSet.new
   end
   # Add each command to the appropriate group.
   config.command_registry.each do |command|
