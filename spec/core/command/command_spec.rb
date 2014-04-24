@@ -6,7 +6,7 @@ describe Command::Command do
   let(:name) { subject.name }
 
   it "should have a name" do
-    expect(name).to eql "banana"
+    expect(subject.get_name).to eql "banana"
   end
 
   context "#<=>" do

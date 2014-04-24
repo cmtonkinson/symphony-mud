@@ -55,9 +55,7 @@ module Command
 
     private
 
-    ################################################################################################
-    # Private setter methods are designed for the Command DSL.
-    ################################################################################################
+    # Private setter methods are designed for Command metaprogramming.
     def name(name);   @name  = name.to_s;     end
     def level(level); @level = level.to_i;    end
     def group(group); @group = group.to_sym;  end

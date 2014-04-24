@@ -8,7 +8,7 @@ module Util
   class SimpleCollection
 
     def initialize(*args)
-      @array = Array.[](args)
+      @array = Array.[](*args)
     end
 
     def push(element)
