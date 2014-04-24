@@ -43,3 +43,7 @@ though, since that method is so meta.
         end
       end
     end
+
+## TODOs:
+
+ * require preregistration of command sets, to enforce options such as modality
