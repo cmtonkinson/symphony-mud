@@ -26,16 +26,16 @@ module Command
       arg_string = full_command.split(" ")[1..-1].join " "
       # These variables will be available to the exec block as instance variables.
       state = {
-        "@user"         => user,
-        "@full_command" => full_command,
-        "@arg_string"   => arg_string,
+        :user         => user,
+        :full_command => full_command,
+        :arg_string   => arg_string,
       }
       # Set the instance variables from above.
-      state.each { |name,value| self.instance_variable_set name, value }
+      state.each { |name,value| self.instance_variable_set "@#{name}", value }
       # Pass control to the Command exec Proc.
       @exec.call
       # Clean up the instance variables created above.
-      state.each { |name,value| self.remove_instance_variable name }
+      state.each { |name,value| self.remove_instance_variable "@#{name}" }
     end
 
     # Keep parity between @args and @num_args.
@@ -48,10 +48,10 @@ module Command
     end
 
     # Public getters.
-    def get_name; @name; end
-    def get_level; @level; end
-    def get_group; @group; end
-    def get_exec; @exec; end
+    def get_name;   @name;  end
+    def get_level;  @level; end
+    def get_group;  @group; end
+    def get_exec;   @exec;  end
 
     private
 
@@ -65,7 +65,7 @@ module Command
 
   ##################################################################################################
   # Command::define is the metaprogramming interface which allows convenient definition of new
-  # commands>
+  # commands.
   ##################################################################################################
   def self.define(cmd_name, &init_block)
     class_name = "Command_#{cmd_name.to_s}"
