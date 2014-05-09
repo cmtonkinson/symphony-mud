@@ -9,7 +9,7 @@ describe Command::Command do
     expect(subject.get_name).to eql "banana"
   end
 
-  context "#<=>" do
+  describe "#<=>" do
 
     it { should respond_to :<=> }
 
@@ -21,7 +21,7 @@ describe Command::Command do
 
   end
 
-  context "#execute" do
+  describe "#execute" do
 
     it "should be defined" do
       expect { Command::Command_with_execute.new.execute nil, nil }.not_to raise_error

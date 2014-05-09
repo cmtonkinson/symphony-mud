@@ -4,7 +4,6 @@ module Network
 
     def initialize
       config = Network.configuration
-      STDOUT.puts "#{self.class.name} listening on #{config.listen_ip}:#{config.listen_port}"
       super config.listen_ip, config.listen_port
     end
 

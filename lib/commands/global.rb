@@ -4,8 +4,10 @@ module Command
   # help
   ##################################################################################################
   define :help do
+    format
+    format :command
     exec do
-      @user.puts "Executed HELP command."
+      user.puts "Executed HELP command."
     end
   end
 
@@ -14,8 +16,8 @@ module Command
   ##################################################################################################
   define :quit do
     exec do
-      @user.puts "Logging out. Goodbye."
-      @user.client.should_terminate = true
+      user.puts "Logging out. Goodbye."
+      user.client.should_terminate = true
     end
   end
 
@@ -24,7 +26,7 @@ module Command
   ##################################################################################################
   define :say do
     exec do
-      @user.puts "You say, \"#{@arg_string}\""
+      user.puts "You say, \"#{@arg_string}\""
     end
   end
 
