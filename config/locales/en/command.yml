@@ -1,0 +1,3 @@
+en:
+  command:
+    bad_array_length: "Command format arrays expect 2 elements (%{given} given)"

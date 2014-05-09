@@ -21,6 +21,7 @@ GEM
     awesome_print (1.2.0)
     coderay (1.1.0)
     diff-lcs (1.2.5)
+    i18n (0.6.9)
     method_source (0.8.2)
     pry (0.9.12.6)
       coderay (~> 1.0)
@@ -44,6 +45,7 @@ PLATFORMS
 DEPENDENCIES
   awesome_print
   fuubar!
+  i18n
   pry
   rake
   rspec!
