@@ -20,11 +20,6 @@ module Command
       instance_eval &block if block_given?
     end
 
-    # Parse the given input according to the longest-matching format.
-    def parse(input)
-      {}
-    end
-
     # Heart and soul of the command processing subsystem.
     def perform(user, input_string)
       # These variables will be available to the exec block as instance variables. See arguments.rb
@@ -37,6 +32,11 @@ module Command
       parse(input_string).each { |name,data| @context[name] = data }
       # Pass control to the Command exec Proc.
       @exec.call
+    end
+
+    # Parse the given input according to the longest-matching format.
+    def parse(input)
+      {}
     end
 
     # This enables us to access anything in the @context Hash with a simple method call inside the
