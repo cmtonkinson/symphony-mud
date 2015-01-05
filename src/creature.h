@@ -24,12 +24,14 @@
 #include <list>
 #include <map>
 #include <vector>
+#include "enumTable.h"
 #include "equipmentContainer.h"
 #include "estring.h"
-#include "enumTable.h"
 #include "flagTable.h"
+#include "group.h"
 #include "identifiers.h"
 #include "inventoryContainer.h"
+#include "job.h"
 #include "modifier.h"
 #include "object.h"
 
@@ -279,6 +281,11 @@ class Creature {
     Object*                     findObject( const std::string& query );
     unsigned short              getWearloc( const Object::Wearable& wearable ) const;
     static const char*          wearLocName( const unsigned short& wearloc );
+
+    // Combat...
+    bool    inCombat(void);
+    bool    attack(Job* job);
+    time_t  nextAttackTime(void);
 
     // Pure virtual public methods...
     virtual bool                save( void )                                                      = 0;

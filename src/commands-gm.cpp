@@ -347,6 +347,26 @@ bool CmdInventory::execute( Creature* creature, const std::vector<std::string>& 
   return true;
 }
 
+CmdKill::CmdKill(void) {
+  name("kill");
+  addSyntax(1, "<target>");
+  brief("Attack a player or mob, initiating combat.");
+  return;
+}
+
+bool CmdKill::execute(Creature* creature, const std::vector<std::string>& args) {
+  Creature* target = NULL;
+  if ((target = creature->findCreature(args[0])) == NULL) {
+    creature->send("But they're not even here right now!");
+  } else if (target == creature) {
+    creature->send("Your sense of honor precludes suicide.");
+  } else {
+    creature->group()->add_opponent(target);
+    creature->attack(NULL);
+  }
+  return true;
+}
+
 CmdLay::CmdLay( void ) {
   name( "lay" );
   addSyntax( 0, "" );

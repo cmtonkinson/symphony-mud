@@ -25,6 +25,7 @@
 #include "group.h"
 #include "identifiers.h"
 #include "io-handler.h"
+#include "job.h"
 #include "object-furniture.h"
 #include "room.h"
 #include "world.h"
@@ -703,4 +704,33 @@ void Creature::move( const unsigned short& direction ) {
   }
 
   return;
+}
+
+bool Creature::inCombat(void) {
+  return group()->in_combat();
+}
+
+bool Creature::attack(Job* job) {
+  Creature* target = NULL;
+  unsigned long damage = 20;
+  // No-op if not in combat
+  if (!inCombat()) {
+    return false;
+  }
+  // Aquire a target
+  target = *(group()->opponents().begin());
+  // Do some damage
+  target->hp(target->hp() - damage);
+  // Output
+  send("Your punch hurts %s!", target->identifiers().shortname().c_str());
+  target->send("%s's punch hurts you!", identifiers().shortname().c_str());
+  room()->send_cond("$p's punch hurts $c", this, target, NULL, TO_NOTVICT);
+  // Schedule next attack
+  World::Instance().schedule()->add(new Job(nextAttackTime(), this, &Creature::attack));
+  // Must return bool for the Job interface.
+  return true;
+}
+
+time_t Creature::nextAttackTime(void) {
+  return time(NULL) + 2;
 }

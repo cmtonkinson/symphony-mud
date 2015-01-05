@@ -29,6 +29,7 @@
 */
 CommandTable::CommandTable( void ) {
   // I put these commands in front so that very common one letter shortucts work...
+  add( new CmdKill() );
   add( new CmdLook() );
   add( new CmdMap() );
   add( new CmdMoveNorth() );

@@ -33,13 +33,13 @@ void Group::remove_member(Creature* member) {
   return;
 }
 
-void Group::add_belligerent(Creature* belligerent) {
-  _belligerents.insert(belligerent);
+void Group::add_opponent(Creature* opponent) {
+  _opponents.insert(opponent);
   return;
 }
 
-void Group::remove_belligerent(Creature* belligerent) {
-  _belligerents.erase(belligerent);
+void Group::remove_opponent(Creature* opponent) {
+  _opponents.erase(opponent);
   return;
 }
 
