@@ -1,0 +1,8 @@
+
+function print_it(a, b) {
+  send "printing " + a + ", " + b;
+  return;
+}
+
+print_it("hello", "world");
+print_it(3, 4);

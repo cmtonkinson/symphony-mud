@@ -1,0 +1,12 @@
+
+var a = 5;
+var b = "hello";
+var c = 3.1415926575;
+var d = [ a, b, c, "other", [ a, b ] ];
+
+send a;
+send b;
+send c;
+send d;
+a = 4;
+send d;
