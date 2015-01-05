@@ -160,9 +160,9 @@ bool CmdUngroup::execute(Creature* creature, const std::vector<std::string>& arg
   if (group->members().size() == 1) {
     creature->send("You're already solo.");
   } else {
-    group->remove(creature);
+    group->remove_member(creature);
     creature->group(new Group());
-    creature->group()->add(creature);
+    creature->group()->add_member(creature);
     creature->group()->leader(creature);
     group->send("$p has left the group.", creature);
     creature->send("You're now on your own.");

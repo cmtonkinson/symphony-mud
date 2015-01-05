@@ -249,8 +249,8 @@ bool CmdGroup::execute(Creature* creature, const std::vector<std::string>& args)
         return false;
       } else {
         leader = target->group()->leader(); // because the person you're following could already be grouped
-        creature->group()->remove(creature);
-        leader->group()->add(creature);
+        creature->group()->remove_member(creature);
+        leader->group()->add_member(creature);
         creature->send("You are now grouped with %s.", leader->identifiers().shortname().c_str());
         leader->send("%s has joined your group.", creature->identifiers().shortname().c_str());
         creature->room()->send_cond("$p is now grouped with $c.", creature, leader, NULL, TO_NOTVICT);

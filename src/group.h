@@ -15,23 +15,28 @@ class Group {
     ~Group( void );
 
     // public accessors...
-    std::set<Creature*>&    members(void) { return _members; }
-    Creature*               leader(void)  { return _leader; }
+    std::set<Creature*>&    members(void)       { return _members; }
+    Creature*               leader(void)        { return _leader; }
     void                    leader(Creature* new_leader);
+    std::set<Creature*>&    belligerents(void)  { return _belligerents; }
 
     // general methods...
-    void                    add(Creature* member);
-    void                    remove(Creature* member);
+    void                    add_member(Creature* member);
+    void                    remove_member(Creature* member);
+    void                    add_belligerent(Creature* belligerent);
+    void                    remove_belligerent(Creature* belligerent);
     void                    send(std::string format,
                               Creature* creature,
                               void* arg1 = NULL,
                               void* arg2 = NULL,
                               const unsigned long& target = TO_ROOM);
+    bool                    in_combat(void)     { return !_belligerents.empty(); }
 
   private:
     // data...
     std::set<Creature*>     _members;
     Creature*               _leader;
+    std::set<Creature*>     _belligerents;
 
 };
 

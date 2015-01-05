@@ -18,18 +18,28 @@ void Group::leader(Creature* new_leader) {
   return;
 }
 
-void Group::add(Creature* member) {
+void Group::add_member(Creature* member) {
   _members.insert(member);
   member->group(this);
   return;
 }
 
-void Group::remove(Creature* member) {
+void Group::remove_member(Creature* member) {
   _members.erase(member);
   member->group(NULL);
   if (_members.empty()) {
     delete this;
   }
+  return;
+}
+
+void Group::add_belligerent(Creature* belligerent) {
+  _belligerents.insert(belligerent);
+  return;
+}
+
+void Group::remove_belligerent(Creature* belligerent) {
+  _belligerents.erase(belligerent);
   return;
 }
 

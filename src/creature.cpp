@@ -37,7 +37,7 @@ Creature::Creature( void ):
   action().set( 0 );
   // Default group...
   group(new Group());
-  group()->add(this);
+  group()->add_member(this);
   group()->leader(this);
   // identity...
   gender().set( NEUTRAL );
@@ -133,7 +133,7 @@ Creature::~Creature( void ) {
     it = IOhandlers().erase( it );
   }
   if (group()) {
-    group()->remove(this);
+    group()->remove_member(this);
   }
   return;
 }
