@@ -9,6 +9,11 @@ as_user() {
   su -l $USER_NAME -c "$*"
 }
 
+mysql_exec() {
+  echo "mysql: ${*}"
+  mysql -u root -e "$*"
+}
+
 ###############################################################################
 # Base System
 ###############################################################################
@@ -17,9 +22,16 @@ apt-get -yfV dist-upgrade
 
 # Install dependencies.
 DEBIAN_FRONTEND=noninteractive apt-get install -yfV \
-  g++ ccache                                        \
+  g++ ccache gdb                                    \
   libpcre3 libpcre3-dbg libpcre3-dev                \
   mysql-server mysql-client libmysqlclient-dev      \
+
+###############################################################################
+# MySQL Server
+###############################################################################
+mysql_exec "CREATE USER 'symphony'@'localhost' IDENTIFIED BY 'secure';"
+mysql_exec "CREATE DATABASE symphony;"
+mysql_exec "GRANT ALL PRIVILEGES ON symphony.* TO 'symphony'@'localhost';"
 
 ###############################################################################
 # Development Environment
