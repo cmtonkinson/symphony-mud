@@ -1,6 +1,0 @@
-en:
-  command:
-    bad_array_length: "Command format arrays expect 2 elements (%{given} given)"
-    duplicate_name: "Command cannot have duplicate argument names (specified '%{name}' twice)"
-    state_key_overlap: "'%{name}' is invalid as a Command argument name because it would shadow a reserved variable"
-    invalid_type: "'%{type}' is an invalid Command argument type"
