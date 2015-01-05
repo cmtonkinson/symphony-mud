@@ -19,11 +19,12 @@
  */
 
 #include "area.h"
-#include "creature.h"
 #include "commandTable-default.h"
+#include "creature.h"
 #include "exit.h"
-#include "io-handler.h"
+#include "group.h"
 #include "identifiers.h"
+#include "io-handler.h"
 #include "object-furniture.h"
 #include "room.h"
 #include "world.h"
@@ -34,6 +35,10 @@ Creature::Creature( void ):
   room( NULL );
   position().set( STANDING );
   action().set( 0 );
+  // Default group...
+  group(new Group());
+  group()->add(this);
+  group()->leader(this);
   // identity...
   gender().set( NEUTRAL );
   race().set( 0 );
@@ -126,6 +131,9 @@ Creature::~Creature( void ) {
   for ( std::vector<IOHandler*>::iterator it = IOhandlers().begin(); IOhandlers().size(); ) {
     delete *it;
     it = IOhandlers().erase( it );
+  }
+  if (group()) {
+    group()->remove(this);
   }
   return;
 }

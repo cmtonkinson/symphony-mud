@@ -85,6 +85,7 @@ CommandTable::CommandTable( void ) {
   add( new CmdEquipment() );
   add( new CmdGet() );
   add( new CmdGive() );
+  add( new CmdGroup() );
   add( new CmdHelp() );
   add( new CmdLay() );
   add( new CmdLock() );
@@ -103,6 +104,7 @@ CommandTable::CommandTable( void ) {
   add( new CmdTell() );
   add( new CmdTime() );
   add( new CmdTitle() );
+  add( new CmdUngroup() );
   add( new CmdUnlock() );
   add( new CmdWear() );
   add( new CmdWho() );

@@ -114,6 +114,7 @@ class ObjFurniture;
 class Room;
 class Mob;
 class SocialCommand;
+class Group;
 
 class Creature {
   public:
@@ -156,6 +157,9 @@ class Creature {
     const Position&   position( void ) const  { return _position; }
     Action&           action( void )          { return _action; }
     const Action&     action( void ) const    { return _action; }
+
+    void              group(Group* group)     { _group = group; }
+    Group*            group(void)             { return _group; }
 
     Gender&           gender( void )          { return _gender; }
     const Gender&     gender( void ) const    { return _gender; }
@@ -297,6 +301,7 @@ class Creature {
     ObjFurniture*               _furniture;
     Position                    _position;
     Action                      _action;
+    Group*                      _group;
     // identity...
     Gender                      _gender;
     Race                        _race;
@@ -333,6 +338,7 @@ class Creature {
     signed short                _exotic;
     unsigned                    _gold;
     unsigned                    _silver;
+
 };
 
 #endif // #ifndef H_SYMPHONY_CREATURE

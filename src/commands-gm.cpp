@@ -25,6 +25,7 @@
 #include "commandTable-default.h"
 #include "display.h"
 #include "flagTable.h"
+#include "group.h"
 #include "io-handler.h"
 #include "loadRule.h"
 #include "loadRuleMob.h"
@@ -206,6 +207,56 @@ bool CmdGoto::execute( Creature* creature, const std::vector<std::string>& args 
   avatar()->room( room );
   look.avatar( avatar() );
   look.execute( avatar(), look_args );
+  return true;
+}
+
+CmdGroup::CmdGroup(void) {
+  name("group");
+  playerOnly(true);
+  addSyntax(0, "");
+  addSyntax(1, "<player>");
+  brief("Manage group membership.");
+  return;
+}
+
+bool CmdGroup::execute(Creature* creature, const std::vector<std::string>& args) {
+  std::string name;
+  Group* group     = creature->group();
+  Creature* target = NULL;
+  Creature* leader = NULL;
+  if (args.size() == 1) {
+    name = args[0];
+    // Empty name - list the group stats.
+    if (name.empty()) {
+      avatar()->send("+----------------------------------------------------------------------------+\n");
+      avatar()->send("| Group Leader: {B%-20s{x    {GHEALTH      {CMANA       {MMOVE          {x|\n", group->leader()->identifiers().shortname().c_str());
+      avatar()->send("+----------------------------------------------------------------------------+\n");
+      for (std::set<Creature*>::iterator it = group->members().begin(); it != group->members().end(); ++it) {
+        avatar()->send("| {W%-20s{x                {G%4d{x/{g%-4u  {C%4u{x/{c%-4u  {M%4u{x/{m%-4u{x        |\n",
+          (*it)->identifiers().shortname().c_str(),
+          (*it)->hp(), (*it)->maxHp(), (*it)->mana(), (*it)->maxMana(), (*it)->movement(), (*it)->maxMovement()
+        );
+      }
+      avatar()->send("+----------------------------------------------------------------------------+\n");
+    }
+    // Got a name - look for the player and join, if possible.
+    else {
+      if ((target = avatar()->findCreature(args[0])) == NULL) {
+        avatar()->send("You don't see them here.");
+        return false;
+      } else if (target == creature) {
+        avatar()->send("Follow yourself? How would that work?");
+        return false;
+      } else {
+        leader = target->group()->leader(); // because the person you're following could already be grouped
+        creature->group()->remove(creature);
+        leader->group()->add(creature);
+        creature->send("You are now grouped with %s.", leader->identifiers().shortname().c_str());
+        leader->send("%s has joined your group.", creature->identifiers().shortname().c_str());
+        creature->room()->send_cond("$p is now grouped with $c.", creature, leader, NULL, TO_NOTVICT);
+      }
+    }
+  }
   return true;
 }
 

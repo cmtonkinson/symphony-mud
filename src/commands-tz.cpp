@@ -20,13 +20,13 @@
 
 #include "area.h"
 #include "avatar.h"
-#include "container.h"
-#include "commandTable.h"
 #include "commandTable-default.h"
+#include "commandTable.h"
+#include "container.h"
 #include "display.h"
+#include "group.h"
 #include "io-handler.h"
 #include "room.h"
-
 #include "world.h"
 
 /*
@@ -143,6 +143,36 @@ bool CmdTitle::execute( Creature* creature, const std::vector<std::string>& args
 
   avatar->title( title );
   avatar->send( "Your new title is: %s{x", avatar->title() );
+  return true;
+}
+
+CmdUngroup::CmdUngroup(void) {
+  name("ungroup");
+  playerOnly(true);
+  addSyntax(0, "");
+  brief("Remove yourself from your current group.");
+  return;
+}
+
+bool CmdUngroup::execute(Creature* creature, const std::vector<std::string>& args) {
+  Group* group         = creature->group();
+  Creature* new_leader = NULL;
+  if (group->members().size() == 1) {
+    creature->send("You're already solo.");
+  } else {
+    group->remove(creature);
+    creature->group(new Group());
+    creature->group()->add(creature);
+    creature->group()->leader(creature);
+    group->send("$p has left the group.", creature);
+    creature->send("You're now on your own.");
+    if (group->leader() == creature) {
+      new_leader = *group->members().begin();
+      group->leader(new_leader);
+      new_leader->send("You are now the group leader.");
+      group->send("$p is now the group leader.", new_leader, NULL, NULL, TO_NOTVICT);
+    }
+  }
   return true;
 }
 
