@@ -389,7 +389,7 @@ longname..... %s\n\n\
       case Type_Clothing:
         break;
       case Type_Container:
-        sprintf( buffer, "Contains {y%lu{x items.\n", container()->inventory().objectList().size() );
+        sprintf( buffer, "Contains {y%u{x items.\n", container()->inventory().objectList().size() );
         output.append( buffer );
         break;
       case Type_Food:
