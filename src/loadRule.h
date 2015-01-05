@@ -57,7 +57,7 @@ class LoadRule {
     // constructors...
     LoadRule( void );
     LoadRule( ROW row );
-    ~LoadRule( void );
+    virtual ~LoadRule( void );
 
     // public accessor methods...
     void                ID( const unsigned long& ID )                         { _ID = ID; }

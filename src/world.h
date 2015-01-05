@@ -179,7 +179,7 @@ class World {
     static void           playerLog( const unsigned short& level, const unsigned short& type, const char* format, ... );
     static unsigned long  now( void );
     static std::string    strnow( void );
-    static std::string    strtime( time_t t = NULL );
+    static std::string    strtime( time_t t = 0 );
     static std::string    realtime( const unsigned long& seconds, unsigned short granularity = GRAN_DAY );
     static bool           search_map( Creature* creature, Room*** map, const unsigned short& ymax, const unsigned short& xmax, const short& y, const short& x, Room* room, std::string** display );
     static std::string    get_marker( Creature* creature, Room* room );

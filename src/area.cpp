@@ -216,7 +216,6 @@ void Area::save( Mysql* db ) {
 bool Area::destroy( Mysql* db ) {
   Object* object = NULL;
   unsigned long tempID = ID();
-  bool status = true;
 
   try {
     char query[MAX_BUFFER];
@@ -245,7 +244,6 @@ bool Area::destroy( Mysql* db ) {
       try {
         object->destroy( db );
       } catch ( MysqlException me ) {
-        status = false;
         continue;
       }
       delete object;
