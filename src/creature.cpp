@@ -646,39 +646,61 @@ bool Creature::canMove( const unsigned short& direction, std::string& message ) 
 }
 
 void Creature::move( const unsigned short& direction ) {
-  Exit* exit = room()->exit( direction );
+  // For standard movement...
+  Exit* exit = room()->exit(direction);
   Room* from = room();
   Room* to = exit->target();
   CmdLook look;
-  std::vector<std::string> look_args( 1 );
+  std::vector<std::string> look_args(1);
+  // For group movement...
+  Creature* member = NULL;
+  std::string message;
 
   // Make the switch...
-  from->remove( this );
-  to->add( this );
-  room( to );
+  from->remove(this);
+  to->add(this);
+  room(to);
 
   // Send some output...
-  send( "You leave %s.\n", Exit::name( direction ) );
-  switch ( direction ) {
+  send("You leave %s.\n", Exit::name(direction));
+  switch (direction) {
     case NORTH:
     case EAST:
     case SOUTH:
     case WEST:
-      from->send_cond( "$p leaves to the $e.", this, exit );
-      to->send_cond( "$p has arrived from the $n.", this, exit );
+      from->send_cond("$p leaves to the $e.", this, exit);
+      to->send_cond("$p has arrived from the $n.", this, exit);
       break;
     case UP:
-      from->send_cond( "$p leaves up.", this, exit );
-      to->send_cond( "$p has arrived from below.", this, exit );
+      from->send_cond("$p leaves up.", this, exit);
+      to->send_cond("$p has arrived from below.", this, exit);
       break;
     case DOWN:
-      from->send_cond( "$p leaves down.", this, exit );
-      to->send_cond( "$p has arrived from above.", this, exit );
+      from->send_cond("$p leaves down.", this, exit);
+      to->send_cond("$p has arrived from above.", this, exit);
       break;
     default:
       break;
   }
-
   look.execute( this, look_args );
+
+  // If this is the leader of a non-empty Group, invoke movement in the other
+  // members as well.
+  if (group()->leader() == this && group()->members().size() > 1) {
+    for (std::set<Creature*>::iterator it = group()->members().begin(); it != group()->members().end(); ++it) {
+      member = *it;
+      if (member == this) {
+        continue;
+      }
+      if (member->canMove(direction, message)) {
+        member->move(direction);
+      } else {
+        send("%s could not follow you here.", member->identifiers().shortname().c_str());
+        member->send("You cannot follow %s %s.\n", identifiers().shortname().c_str(), Exit::name(direction));
+        member->send(message);
+      }
+    }
+  }
+
   return;
 }
