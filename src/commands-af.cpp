@@ -176,7 +176,7 @@ bool CmdAreas::execute( Creature* creature, const std::vector<std::string>& args
   char buffer[MAX_BUFFER];
 
   for ( std::set<Area*,area_comp>::iterator it = World::Instance().getAreas().begin(); it != World::Instance().getAreas().end(); ++it ) {
-    if ( avatar()->level() >= BUILDER ) {
+    if ( avatar()->level() >= DEMIGOD ) {
       if ( World::Instance().hasPermission( *it, avatar() ) ) {
         sprintf( buffer, "\n ({Y%3lu{x) [ {C%4lu{x - {C%4lu{x ] {M%s{x", (*it)->ID(), (*it)->low(), (*it)->high(), (*it)->name().c_str() );
       } else {
@@ -195,7 +195,7 @@ bool CmdAreas::execute( Creature* creature, const std::vector<std::string>& args
 CmdAt::CmdAt( void ) {
   name( "at" );
   playerOnly( true );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( -2, "<player> <command>" );
   addSyntax( -2, "<mob> <command>" );
   addSyntax( -2, "<vnum> <command>" );
@@ -235,7 +235,7 @@ bool CmdAt::execute( Creature* creature, const std::vector<std::string>& args ) 
 
 CmdBigBrother::CmdBigBrother( void ) {
   name( "bigbrother" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 0, "" );
   addSyntax( 1, "on" );
   addSyntax( 1, "off" );
@@ -436,7 +436,7 @@ bool CmdChannels::execute( Creature* creature, const std::vector<std::string>& a
 
 CmdClone::CmdClone( void ) {
   name( "clone" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 2, "<object> <times>" );
   brief( "Make an exact copy of an existing object." );
   return;
@@ -558,9 +558,6 @@ bool CmdCommands::execute( Creature* creature, const std::vector<std::string>& a
       case CREATOR:   output.append( "\n--== {cAdministrator" );  break;
       case GOD:       output.append( "\n--== {cGod" );            break;
       case DEMIGOD:   output.append( "\n--== {cDemigod" );        break;
-      case BUILDER:   output.append( "\n--== {cBuilder" );        break;
-      case IMMORTAL:  output.append( "\n--== {cImmortal" );       break;
-      case KING:      output.append( "\n--== {cKing" );           break;
       case DUKE:      output.append( "\n--== {cDuke" );           break;
       case LORD:      output.append( "\n--== {cLord" );           break;
       case HERO:      output.append( "\n--== {cHero" );           break;
@@ -674,7 +671,7 @@ bool CmdDelete::execute( Creature* creature, const std::vector<std::string>& arg
   std::vector<std::string> quit_args( 1 );
   if ( args[0] == "delete" ) {
     if ( avatar()->markForDeletion( 1 ) ) {
-      avatar()->send( "You will need to log in to confirm the deletion.\n\n" );    
+      avatar()->send( "You will need to log in to confirm the deletion.\n\n" );
       quit.avatar( avatar() );
       quit.execute( creature, quit_args );
       return true;
@@ -861,7 +858,7 @@ bool CmdDunce::execute( Creature* creature, const std::vector<std::string>& args
 
 CmdEat::CmdEat( void ) {
   name( "eat" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 1, "<object>" );
   brief( "Destroys an object." );
   return;
@@ -959,7 +956,7 @@ bool CmdExit::execute( Creature* creature, const std::vector<std::string>& args 
 
 CmdForce::CmdForce( void ) {
   name( "force" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( -2, "<player> <command>" );
   addSyntax( -2, "<mob> <command>" );
   brief( "Cause the victim to perform the given command." );

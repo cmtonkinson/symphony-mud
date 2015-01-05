@@ -85,7 +85,7 @@ bool CmdReboot::execute( Creature* creature, const std::vector<std::string>& arg
 
 CmdRedit::CmdRedit( void ) {
   name( "redit" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 0, "" );
   addSyntax( 2, "create <vnum>" );
   brief( "Invokes the Room Editor." );
@@ -195,7 +195,7 @@ bool CmdReply::execute( Creature* creature, const std::vector<std::string>& args
 
 CmdRestring::CmdRestring( void ) {
   name( "restring" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( -3, "<object> shortname <string>" );
   addSyntax( -3, "<object> longname <string>" );
   addSyntax( -3, "<object> keywords <key1 key2 key3 ...>" );
@@ -235,7 +235,7 @@ bool CmdRestring::execute( Creature* creature, const std::vector<std::string>& a
 
 CmdRlist::CmdRlist( void ) {
   name( "rlist" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 1, "<areaID>                       (list all Rooms in the area)" );
   addSyntax( 2, "<first vnum> <last vnum>       (list all Rooms in the vnum range)" );
   addSyntax( 1, "<keyword>                      (list all Rooms by name)" );
@@ -595,7 +595,7 @@ bool CmdSummary::execute( Creature* creature, const std::vector<std::string>& ar
 
 CmdSummon::CmdSummon( void ) {
   name( "summon" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 1, "<player>" );
   addSyntax( 1, "<mob>" );
   brief( "Transports the target to the current room." );

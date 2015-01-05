@@ -190,17 +190,16 @@ ETGender::ETGender( void ) {
 }
 
 ETRace::ETRace( void ) {
-  add( HUMAN,   "human" );
-  add( ELF,     "elf" );
   add( DWARF,   "dwarf" );
-  add( GOBLIN,  "goblin" );
+  add( ELF,     "elf" );
+  add( HUMAN,   "human" );
   return;
 }
 
 ETPClass::ETPClass( void ) {
-  add( MAGE,    "mage" );
   add( CLERIC,  "cleric" );
-  add( WARRIOR, "warrior" );
+  add( MAGE,    "mage" );
   add( ROGUE,   "rogue" );
+  add( WARRIOR, "warrior" );
   return;
 }

@@ -33,7 +33,7 @@
 /*
 ACmd::ACmd( void ) {
   name( "" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 0, "" );
   brief( "" );
   return;
@@ -74,7 +74,7 @@ bool ACmdDelete::execute( Creature* creature, const std::vector<std::string>& ar
 
 ACmdInformation::ACmdInformation( void ) {
   name( "information" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 0, "" );
   brief( "Displays the status of the area." );
   return;
@@ -114,7 +114,7 @@ bool ACmdInformation::execute( Creature* creature, const std::vector<std::string
 
 ACmdName::ACmdName( void ) {
   name( "name" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( -1, "<string>" );
   brief( "Changes the name of the area." );
   return;
@@ -152,7 +152,7 @@ bool ACmdPermission::execute( Creature* creature, const std::vector<std::string>
       avatar()->send( "They couldn't be found." );
       return false;
     }
-    if ( target->level() < BUILDER ) {
+    if ( target->level() < DEMIGOD ) {
       avatar()->send( "%s isn't a builder.", target->identifiers().shortname().c_str() );
       return false;
     }
@@ -185,7 +185,7 @@ bool ACmdPermission::execute( Creature* creature, const std::vector<std::string>
 
 ACmdTerrain::ACmdTerrain( void ) {
   name( "terrain" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 1, "<string>" );
   brief( "Changes the default terrain type of the area." );
   addOptions( "terrain", std::string( "\n" ).append( TerrainTable::Instance().list() ) );

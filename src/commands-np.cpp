@@ -101,7 +101,7 @@ bool CmdNote::execute( Creature* creature, const std::vector<std::string>& args 
 
 CmdOedit::CmdOedit( void ) {
   name( "oedit" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 1, "<vnum>" );
   addSyntax( 2, "create <vnum>" );
   brief( "Invokes the Object Editor." );
@@ -185,7 +185,7 @@ bool CmdOedit::execute( Creature* creature, const std::vector<std::string>& args
 
 CmdOlist::CmdOlist( void ) {
   name( "olist" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 1, "<areaID>                       (list all Objects in the area)" );
   addSyntax( 2, "<first vnum> <last vnum>       (list all Objects in the vnum range)" );
   addSyntax( 1, "<keyword>                      (list all Objects by keyword)" );
@@ -280,7 +280,7 @@ bool CmdOlist::execute( Creature* creature, const std::vector<std::string>& args
 
 CmdOload::CmdOload( void ) {
   name( "oload" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 1, "<vnum>" );
   brief( "Fabricates an Object." );
 }
@@ -471,7 +471,7 @@ bool CmdPedit::execute( Creature* creature, const std::vector<std::string>& args
 
 CmdPoofin::CmdPoofin( void ) {
   name( "poofin" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 0, "" );
   addSyntax( 1, "clear" );
   addSyntax( -1, "<string>" );
@@ -506,7 +506,7 @@ bool CmdPoofin::execute( Creature* creature, const std::vector<std::string>& arg
 
 CmdPoofout::CmdPoofout( void ) {
   name( "poofout" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 0, "" );
   addSyntax( 1, "clear" );
   addSyntax( -1, "<string>" );

@@ -27,7 +27,7 @@
 
 /*MCmd::MCmd( void ) {
   name( "" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 0, "" );
   brief( "" );
   return;
@@ -41,7 +41,7 @@ bool MCmd::execute( Creature* creature, const std::vector<std::string>& args ) {
 
 MCmdDescription::MCmdDescription( void ) {
   name( "description" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 0, "" );
   brief( "Invokes the Text Editor for the Mobs' description." );
   return;
@@ -58,7 +58,7 @@ bool MCmdDescription::execute( Creature* creature, const std::vector<std::string
 
 MCmdInformation::MCmdInformation( void ) {
   name( "information" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 0, "" );
   brief( "Displays information about the Mob." );
   return;
@@ -71,7 +71,7 @@ bool MCmdInformation::execute( Creature* creature, const std::vector<std::string
 
 MCmdKeywords::MCmdKeywords( void ) {
   name( "keywords" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( -1, "<key1 key2 key3 ...>" );
   brief( "Updtes the Mobs keywords." );
   return;
@@ -89,7 +89,7 @@ bool MCmdKeywords::execute( Creature* creature, const std::vector<std::string>& 
 
 MCmdLevel::MCmdLevel( void ) {
   name( "level" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 1, "<number>" );
   brief( "Updates the Mobs level." );
   addOptions( "level", "must be between 1 and 100, inclusive" );
@@ -110,7 +110,7 @@ bool MCmdLevel::execute( Creature* creature, const std::vector<std::string>& arg
 
 MCmdLongname::MCmdLongname( void ) {
   name( "longname" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( -1, "<string>" );
   brief( "Updates the Mobs long name." );
   return;
@@ -124,7 +124,7 @@ bool MCmdLongname::execute( Creature* creature, const std::vector<std::string>& 
 
 MCmdShortname::MCmdShortname( void ) {
   name( "shortname" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( -1, "<string>" );
   brief( "Updates the Mobs short name." );
   return;

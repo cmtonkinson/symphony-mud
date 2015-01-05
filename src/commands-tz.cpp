@@ -106,7 +106,7 @@ bool CmdTime::execute( Creature* creature, const std::vector<std::string>& args 
 
 CmdTimers::CmdTimers( void ) {
   name( "timers" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 0, "" );
   brief( "Displays the status on timers set to fire in the near future." );
   return;
@@ -267,7 +267,7 @@ bool CmdWhoAmI::execute( Creature* creature, const std::vector<std::string>& arg
 CmdWorldSave::CmdWorldSave( void ) {
   name( "worldsave" );
   playerOnly( true );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 0, "" );
   brief( "Saves the whole world! (but don't get cocky, it's not really that heroic)" );
   return;

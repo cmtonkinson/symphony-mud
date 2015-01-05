@@ -128,9 +128,10 @@ DEF_ENUM(DamageVerb)
 #define DAM_POUND     103
 #define DAM_PUNCH     104
 #define DAM_SLAM      105
-#define DAM_SMASH     106
-#define DAM_STRIKE    107
-#define DAM_THWACK    108
+#define DAM_SMACK     106
+#define DAM_SMASH     107
+#define DAM_STRIKE    108
+#define DAM_THWACK    109
 // slash
 #define DAM_CHOP      200
 #define DAM_CLEAVE    201
@@ -141,11 +142,12 @@ DEF_ENUM(DamageVerb)
 // pierce
 #define DAM_BITE      300
 #define DAM_PIERCE    301
-#define DAM_PRICK     302
-#define DAM_PUNCTURE  303
-#define DAM_STAB      304
-#define DAM_STING     305
-#define DAM_THRUST    306
+#define DAM_POKE      302
+#define DAM_PRICK     303
+#define DAM_PUNCTURE  304
+#define DAM_STAB      305
+#define DAM_STING     306
+#define DAM_THRUST    307
 // exotic
 #define DAM_WRATH     400
 
@@ -179,15 +181,14 @@ DEF_ENUM(Gender)
 #define NEUTRAL 3
 
 DEF_ENUM(Race)
-#define HUMAN   1
+#define DWARF   1
 #define ELF     2
-#define DWARF   3
-#define GOBLIN  4
+#define HUMAN   3
 
 DEF_ENUM(PClass)
-#define MAGE      1
-#define CLERIC    2
-#define WARRIOR   3
-#define ROGUE     4
+#define CLERIC    1
+#define MAGE      2
+#define ROGUE     3
+#define WARRIOR   4
 
 #endif // SYMPHONY_ENUMTABLE_H

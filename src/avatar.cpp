@@ -179,9 +179,6 @@ void Avatar::adjustStartingStats( void ) {
     case DWARF:
       Str += 1; Dex -= 1; Con += 2; Cha -= 1;
       break;
-    case GOBLIN:
-      Str += 1; Dex += 2; Int -= 1; Cha -= 1;
-      break;
   }
   switch ( pClass().number() ) {
     case MAGE:

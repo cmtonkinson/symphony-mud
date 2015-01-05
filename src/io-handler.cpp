@@ -62,7 +62,7 @@ bool IOHandler::handle( const std::string& text ) {
    *   1) That the Creature has a high enough level
    *   2) That the Command is enabled
    *   3) Kirby Wuz Here
-   *   4) That a "player only" command can't be executed by a Mob 
+   *   4) That a "player only" command can't be executed by a Mob
    */
   if ( creature()->level() < command->level() || !command->enabled() ) {
     creature()->send( "Huh?" );
@@ -436,13 +436,10 @@ bool CreationRaceIOHandler::handle( void ) {
     avatar()->send( "A human it is!\n" );
   } else if ( Regex::strPrefix( input, "elf" ) ) {
     avatar()->race().set( ELF );
-    avatar()->send( "An child of the forest you shall be!\n" );
+    avatar()->send( "A child of the forest you shall be!\n" );
   } else if ( Regex::strPrefix( input, "dwarf" ) ) {
     avatar()->race().set( DWARF );
     avatar()->send( "And a fine dwarf you'll make!\n" );
-  } else if ( Regex::strPrefix( input, "goblin" ) ) {
-    avatar()->race().set( GOBLIN );
-    avatar()->send( "You're just the type for a goblin!\n" );
   } else {
     avatar()->send( "Sorry... I don't understand... " );
     return false;
@@ -456,7 +453,6 @@ std::string CreationRaceIOHandler::prompt( void ) {
   output.append( "\n  Human     The dominant race. Can be: mage, cleric, warrior, rogue" );
   output.append( "\n  Elf       Forest-dwelling humanoids. Can be: mage, cleric, warrior, rogue" );
   output.append( "\n  Dwarf     Mountain-dwelling humanoids. Can be: cleric, warrior" );
-  output.append( "\n  Goblin    Mischevious and unkempt creatures. Can be: mage, warrior, rogue" );
   output.append( "\n\nWhich do you choose? " );
   return output;
 }
@@ -477,7 +473,7 @@ bool CreationClassIOHandler::handle( void ) {
   if ( Regex::strPrefix( input, "mage" ) && avatar()->race().number() != DWARF ) {
     avatar()->pClass().set( MAGE );
     avatar()->send( "You shall study the ways of arcane magic.\n" );
-  } else if ( Regex::strPrefix( input, "cleric" ) && avatar()->race().number() != GOBLIN ) {
+  } else if ( Regex::strPrefix( input, "cleric" ) ) {
     avatar()->pClass().set( CLERIC );
     avatar()->send( "You've chosen to follow the holy path.\n" );
   } else if ( Regex::strPrefix( input, "warrior" ) ) {
@@ -497,14 +493,12 @@ bool CreationClassIOHandler::handle( void ) {
 std::string CreationClassIOHandler::prompt( void ) {
   std::string output( "As a " );
   output.append( avatar()->race().string() ).append( " you may choose to be a:" );
-  if ( avatar()->race().number() != DWARF ) {
+  output.append( "\n  Cleric   Clerics are divine casters able to channel holy energy" );
+  output.append( "\n  Warrior  Warriors are armsmen, great at dealing (and taking) massive damage" );
+  if ( !avatar()->isDwarf() ) {
     output.append( "\n  Mage     Mages are arcane casters, champions of illusion and enchantment" );
   }
-  if ( avatar()->race().number() != GOBLIN ) {
-    output.append( "\n  Cleric   Clerics are divine casters able to channel holy energy" );
-  }
-  output.append( "\n  Warrior  Warriors are armsmen, great at dealing (and taking) massive damage" );
-  if ( avatar()->race().number() != DWARF ) {
+  if ( !avatar()->isDwarf() ) {
     output.append( "\n  Rogue    Rogues are the perfect assassins - stealth is their trademark" );
   }
   output.append( "\n\nWhich class suits you? " );

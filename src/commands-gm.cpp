@@ -166,7 +166,7 @@ bool CmdGive::execute( Creature* creature, const std::vector<std::string>& args 
 
 CmdGoto::CmdGoto( void ) {
   name( "goto" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 1, "<vnum>        (target room)" );
   addSyntax( 1, "<player>      (target player)" );
   addSyntax( 1, "<mob>         (target mob)" );
@@ -229,7 +229,7 @@ bool CmdHelp::execute( Creature* creature, const std::vector<std::string>& args 
 
 CmdIdentify::CmdIdentify( void ) {
   name( "identify" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 1, "<object>" );
   addSyntax( 1, "<mob>" );
   brief( "Displays diagnostic information on the target." );
@@ -316,7 +316,7 @@ bool CmdLay::execute( Creature* creature, const std::vector<std::string>& args )
 
 CmdLoadRule::CmdLoadRule( void ) {
   name( "loadrule" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 1, "list" );
   addSyntax( 2, "delete <rule>" );
   addSyntax( 5, "add mob <vnum> <number> <max>" );
@@ -627,7 +627,7 @@ bool CmdLook::execute( Creature* creature, const std::vector<std::string>& args 
 
   if ( args[0].empty() ) {
     /*************** looking at the room */
-    if ( creature->level() >= BUILDER ) {
+    if ( creature->level() >= DEMIGOD ) {
       sprintf( buffer, "[{g%lu{x] {%c%s{x\n", creature->room()->vnum(), creature->room()->terrain()->title(), creature->room()->name().c_str() );
     } else {
       sprintf( buffer, "{%c%s{x\n", creature->room()->terrain()->title(), creature->room()->name().c_str() );
@@ -641,7 +641,7 @@ bool CmdLook::execute( Creature* creature, const std::vector<std::string>& args 
     for ( register unsigned short u = NORTH; u <= DOWN; ++u ) {
       if ( creature->room()->exit( u ) != NULL ) {
         // Bail if we're not supposed to see the exit...
-        if ( creature->room()->exit( u )->flag( EXIT_HIDDEN ) && creature->level() < BUILDER ) {
+        if ( creature->room()->exit( u )->flag( EXIT_HIDDEN ) && creature->level() < DEMIGOD ) {
           continue;
         }
         has_exits = true;
@@ -793,7 +793,7 @@ bool CmdMap::execute( Creature* creature, const std::vector<std::string>& args )
 
 CmdMedit::CmdMedit( void ) {
   name( "medit" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 1, "<vnum>" );
   addSyntax( 2, "create <vnum>" );
   brief( "Launches the Mob Editor." );
@@ -873,7 +873,7 @@ bool CmdMedit::execute( Creature* creature, const std::vector<std::string>& args
 
 CmdMlist::CmdMlist( void ) {
   name( "mlist" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 1, "<areaID>                       (list all Mobs in the area)" );
   addSyntax( 2, "<first vnum> <last vnum>       (list all Mobs in the vnum range)" );
   addSyntax( 1, "<keyword>                      (list all Mobs by keyword)" );
@@ -965,7 +965,7 @@ bool CmdMlist::execute( Creature* creature, const std::vector<std::string>& args
 
 CmdMload::CmdMload( void ) {
   name( "mload" );
-  level( BUILDER );
+  level( DEMIGOD );
   addSyntax( 1, "<vnum>" );
   brief( "Incarnates a Mob." );
 }

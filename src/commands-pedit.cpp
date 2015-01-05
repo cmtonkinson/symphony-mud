@@ -70,8 +70,8 @@ PCmdHeadBuilder::PCmdHeadBuilder( void ) {
 
 bool PCmdHeadBuilder::execute( Creature* creature, const std::vector<std::string>& args ) {
   Avatar* target = avatar()->pedit();
-  if ( target->level() < BUILDER ) {
-    avatar()->send( "%s must be promoted at least to level %d before being granted Head Builder status.", target->identifiers().shortname().c_str(), BUILDER );
+  if ( target->level() < DEMIGOD ) {
+    avatar()->send( "%s must be promoted at least to level %d before being granted Head Builder status.", target->identifiers().shortname().c_str(), DEMIGOD );
     return false;
   }
   if ( target->adminFlags().toggle( ADMIN_HEADBUILDER ) ) {

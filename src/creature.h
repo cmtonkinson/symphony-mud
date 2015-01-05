@@ -65,17 +65,14 @@
 #define WEARLOC_END         28 // not a valid wearloc; just makes life easier
 
 // Levels...
-#define LEVEL_HERO  100
 #define LEVEL_NEWB  10
-#define HERO        LEVEL_HERO
+#define LEVEL_HERO  100
 #define NEWBIE      LEVEL_NEWB
+#define HERO        LEVEL_HERO
 #define LORD        (HERO+2)
 #define DUKE        (HERO+5)
-#define KING        (HERO+10)
-#define IMMORTAL    (HERO+15)
-#define BUILDER     (HERO+16)
-#define DEMIGOD     (HERO+17)
-#define GOD         (HERO+21)
+#define DEMIGOD     (HERO+15)
+#define GOD         (HERO+20)
 #define CREATOR     (HERO+25)
 
 /* Map integers in a range to attributes
@@ -244,14 +241,13 @@ class Creature {
     bool                        isMounted( void ) const                                           { return position().number() == MOUNTED; }
     bool                        isSleeping( void ) const                                          { return action().number() == SLEEPING; }
     bool                        isFighting( void ) const                                          { return action().number() == FIGHTING; }
-    bool                        isHuman( void ) const                                             { return race().number() == HUMAN; }
-    bool                        isElf( void ) const                                               { return race().number() == ELF; }
     bool                        isDwarf( void ) const                                             { return race().number() == DWARF; }
-    bool                        isGoblin( void ) const                                            { return race().number() == GOBLIN; }
-    bool                        isMage( void ) const                                              { return pClass().number() == MAGE; }
+    bool                        isElf( void ) const                                               { return race().number() == ELF; }
+    bool                        isHuman( void ) const                                             { return race().number() == HUMAN; }
     bool                        isCleric( void ) const                                            { return pClass().number() == CLERIC; }
-    bool                        isWarrior( void ) const                                           { return pClass().number() == WARRIOR; }
+    bool                        isMage( void ) const                                              { return pClass().number() == MAGE; }
     bool                        isRogue( void ) const                                             { return pClass().number() == ROGUE; }
+    bool                        isWarrior( void ) const                                           { return pClass().number() == WARRIOR; }
     bool                        lay( std::string& error, ObjFurniture* furniture = NULL );
     bool                        sit( std::string& error, ObjFurniture* furniture = NULL, bool on = false );
     bool                        stand( std::string& error );
