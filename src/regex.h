@@ -21,10 +21,10 @@
 #ifndef H_REGEX
 #define H_REGEX
 
-#include "pcre.h"
 #include <cstring>
 #include <list>
 #include <map>
+#include <pcre.h>
 #include <set>
 #include <stdio.h>
 #include <string>

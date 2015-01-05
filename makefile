@@ -18,9 +18,8 @@
 
 # General settings and variables
 PROJECT     = symphony
-CPPC        = g++
-DEBUG       = -ggdb3
-FLAGS_DEV   = $(DEBUG) -ansi -Wall -Werror -pedantic-errors
+CPPC        = ccache g++
+FLAGS_DEV   = -std=c++03 -ggdb3 -Wall -Werror -pedantic-errors
 FLAGS_PROD  = -O3 -minline-all-stringops -funroll-loops -finline-limit=65536
 LIBS        = `pcre-config --libs` `mysql_config --libs`
 SRC_DIR     = src
@@ -32,15 +31,14 @@ DEP_FILES  := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.d,$(SRC_FILES))
 
 # Main directives
 dev: $(OBJ_FILES)
-	$(CPPC) $(LIBS) $(FLAGS_DEV) $(OBJ_FILES) -o $(BIN_DIR)/$(PROJECT)
+	$(CPPC) $(FLAGS_DEV) $(OBJ_FILES) $(LIBS) -o $(BIN_DIR)/$(PROJECT)
 
 prod: $(SRC_FILES)
-	$(CPPC) $(LIBS) $(FLAGS_PROD) $(SRC_FILES) -o $(BIN_DIR)/$(PROJECT)
+	$(CPPC) $(FLAGS_PROD) $(SRC_FILES) $(LIBS) -o $(BIN_DIR)/$(PROJECT)
 
 clean: muscl-clean test-clean
-	rm -f ./*~ ./gmon.out ./core ./out.log
-	rm -f $(SRC_DIR)/*~ $(OBJ_DIR)/*.{d,o}
-	rm -f ../svn-commit.tmp~
+	rm -f ./gmon.out ./core ./out.log
+	rm -f $(OBJ_DIR)/*.d $(OBJ_DIR)/*.o
 	rm -f $(BIN_DIR)/$(PROJECT)
 
 # Lower level rules
@@ -112,7 +110,7 @@ test-clean:
 	rm -f $(TEST_OBJ_DIR)/*.{a,d,o}
 
 $(TEST_BIN_DIR)/%_utest: $(TEST_SRC_DIR)/%.cpp $(GTEST_HEADERS) $(TEST_OBJ_DIR)/gtest_main.a
-	$(CPPC) $(TEST_FLAGS) $(LIBS) $< $(TEST_OBJ_DIR)/gtest_main.a $(TEST_LINK_FILES) -o $@
+	$(CPPC) $(TEST_FLAGS) $< $(TEST_OBJ_DIR)/gtest_main.a $(TEST_LINK_FILES) $(LIBS) -o $@
 
 $(TEST_OBJ_DIR)/gtest-all.o : $(GTEST_SRCS_)
 	$(CPPC) -c $(TEST_FLAGS) $(GTEST_DIR)/src/gtest-all.cc -o $@
