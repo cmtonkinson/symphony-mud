@@ -97,3 +97,9 @@ std::string EquipmentContainer::listObjects( void ) const {
   }
   return Regex::trim(dest);
 }
+
+Object* EquipmentContainer::at(int location) {
+  std::map<int,Object*>::iterator iter = objectMap().find(location);
+  if (iter != objectMap().end()) return iter->second;
+  return NULL;
+}

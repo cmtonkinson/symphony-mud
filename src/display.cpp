@@ -114,3 +114,49 @@ std::string Display::formatAction( const char* format, Creature* creature, void*
   Regex::replace( "s's", "s'", message ); // fix for posessives ending in 's'
   return message;
 }
+
+std::string Display::formatDamage(unsigned int damage) {
+  if (damage > 250) {
+    return "{WRUINS{x";
+  } else if (damage > 200) {
+    return "{w--{W=={r{{{R{{{WANNIHILATES{R}{r}{W=={w--{x";
+  } else if (damage > 180) {
+    return "{b=={c**{CDEVASTATES{c**{b=={x";
+  } else if (damage > 160) {
+    return "{w<{x<{W<{RDESOLATES{W>{x>{w>{x";
+  } else if (damage > 140) {
+    return "{g({G({YSHATTERS{G){g){x";
+  } else if (damage > 120) {
+    return "{w[{BBREAKS{w]{x";
+  } else if (damage > 100) {
+    return "{YDISFIGURES{x";
+  } else if (damage > 80) {
+    return "{BDESTROYS{x";
+  } else if (damage > 70) {
+    return "{RRAVAGES{x";
+  } else if (damage > 60) {
+    return "{Gdecimates{x";
+  } else if (damage > 50) {
+    return "{Ymutilates{x";
+  } else if (damage > 40) {
+    return "{Bmangles{x";
+  } else if (damage > 35) {
+    return "{Mbatters{x";
+  } else if (damage > 30) {
+    return "{Cdamages{x";
+  } else if (damage > 25) {
+    return "{winjures{x";
+  } else if (damage > 20) {
+    return "{charms{x";
+  } else if (damage > 16) {
+    return "{yhurts{x";
+  } else if (damage > 12) {
+    return "{gwounds{x";
+  } else if (damage > 8) {
+    return "{bbruises{x";
+  } else if (damage > 4) {
+    return "{rscratches{x";
+  } else {
+    return "{mgrazes{x";
+  }
+}

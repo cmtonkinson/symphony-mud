@@ -33,14 +33,27 @@ void Group::remove_member(Creature* member) {
   return;
 }
 
+bool Group::is_member(Creature* c) {
+  return _members.find(c) != _members.end();
+}
+
 void Group::add_opponent(Creature* opponent) {
   _opponents.insert(opponent);
+  return;
+}
+
+void Group::add_opponents(const std::set<Creature*> opponents) {
+  _opponents.insert(opponents.begin(), opponents.end());
   return;
 }
 
 void Group::remove_opponent(Creature* opponent) {
   _opponents.erase(opponent);
   return;
+}
+
+bool Group::is_opponent(Creature* c) {
+  return _opponents.find(c) != _opponents.end();
 }
 
 void Group::send(std::string format, Creature* creature, void* arg1, void* arg2, const unsigned long& target) {

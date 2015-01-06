@@ -21,12 +21,14 @@
 #include "area.h"
 #include "commandTable-default.h"
 #include "creature.h"
+#include "display.h"
 #include "exit.h"
 #include "group.h"
 #include "identifiers.h"
 #include "io-handler.h"
 #include "job.h"
 #include "object-furniture.h"
+#include "object-weapon.h"
 #include "room.h"
 #include "world.h"
 
@@ -75,6 +77,8 @@ Creature::Creature( void ):
   slash( 0 );
   pierce( 0 );
   exotic( 0 );
+  // combat
+  _next_attack = 0;
   return;
 }
 
@@ -335,6 +339,14 @@ bool Creature::isSingleWearLoc( const unsigned short& object_weartype ) {
     default:
       return false;
   }
+}
+
+Object* Creature::primary(void) {
+  return equipment().at(WEARLOC_HOLD_R);
+}
+
+Object* Creature::secondary(void) {
+  return equipment().at(WEARLOC_HOLD_L);
 }
 
 std::string Creature::applyExperience( long e ) {
@@ -712,25 +724,63 @@ bool Creature::inCombat(void) {
 
 bool Creature::attack(Job* job) {
   Creature* target = NULL;
-  unsigned long damage = 20;
-  // No-op if not in combat
-  if (!inCombat()) {
-    return false;
-  }
-  // Aquire a target
-  target = *(group()->opponents().begin());
-  // Do some damage
-  target->hp(target->hp() - damage);
-  // Output
-  send("Your punch hurts %s!", target->identifiers().shortname().c_str());
-  target->send("%s's punch hurts you!", identifiers().shortname().c_str());
-  room()->send_cond("$p's punch hurts $c", this, target, NULL, TO_NOTVICT);
-  // Schedule next attack
-  World::Instance().schedule()->add(new Job(nextAttackTime(), this, &Creature::attack));
-  // Must return bool for the Job interface.
+  // No-op if not in combat.
+  if (!inCombat()) return false;
+  // Aquire a target.
+  target = aquireTarget();
+  // Make the strike.
+  strike(target);
+  // Schedule next attack.
+  scheduleAttack();
+  // Fully involve both groups.
+  escalate(target->group());
+  // Must return bool per the Job interface.
   return true;
 }
 
-time_t Creature::nextAttackTime(void) {
-  return time(NULL) + 2;
+Creature* Creature::aquireTarget(void) {
+  return *(group()->opponents().begin());
+}
+
+void Creature::strike(Creature* target) {
+  unsigned int damage = 0;
+  std::string weapon_noun;
+  std::string damage_verb;
+  Object* object = NULL;
+
+  // Initial damage calculation (based on the attackers offense).
+  damage = rand() % 240;
+  // Adjust damage (based on the targets defense).
+  damage -= 20;
+  // Deal the pain.
+  target->hp(target->hp() - damage);
+
+  // Tell the world.
+  weapon_noun = "punch";
+  object = primary();
+  if (object && object->isWeapon()) weapon_noun = object->weapon()->verb().string();
+  damage_verb = Display::formatDamage(damage);
+  send("Your %s %s %s!\n", weapon_noun.c_str(), damage_verb.c_str(), target->identifiers().shortname().c_str());
+  target->send("%s's %s %s you!\n", identifiers().shortname().c_str(), weapon_noun.c_str(), damage_verb.c_str());
+  room()->send_cond("$p's punch $s $C!", this, (void*)damage_verb.c_str(), target, TO_NOTVICT, true);
+
+  return;
+}
+
+/*
+ * Ensure that each member of the target Group is tracking this Creature as an opponent. Any new
+ * adversaries should schedule their first attack.
+ */
+void Creature::escalate(Group* group) {
+  group->add_opponent(this);
+  for (std::set<Creature*>::iterator iter = group->members().begin(); iter != group->members().end(); ++iter) {
+    if (!(*iter)->nextAttack()) (*iter)->scheduleAttack();
+  }
+  return;
+}
+
+void Creature::scheduleAttack(void) {
+  _next_attack = time(NULL) + rand() % 5;
+  World::Instance().schedule()->add(new Job(_next_attack, this, &Creature::attack));
+  return;
 }

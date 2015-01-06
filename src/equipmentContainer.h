@@ -45,7 +45,8 @@ class EquipmentContainer: public Container {
     virtual Object*             searchSingleObject( const std::string& q );
 
     // general methods...
-    std::string         listObjects( void ) const;
+    std::string                 listObjects( void ) const;
+    Object*                     at(int location);
 
     // public accessor methods...
     std::map<int,Object*>&                                  objectMap( void )       { return _objectMap; }

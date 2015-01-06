@@ -232,6 +232,8 @@ class Creature {
     unsigned                    gold( void ) const                                                { return _gold; }
     void                        silver( const unsigned& silver )                                  { _silver = silver; }
     unsigned                    silver( void ) const                                              { return _silver; }
+    // combat
+    time_t                      nextAttack(void) const                                            { return _next_attack; }
 
     // Public static methods...
     static unsigned short       stringToAttribute( const std::string& name );
@@ -281,11 +283,16 @@ class Creature {
     Object*                     findObject( const std::string& query );
     unsigned short              getWearloc( const Object::Wearable& wearable ) const;
     static const char*          wearLocName( const unsigned short& wearloc );
+    Object*                     primary(void);
+    Object*                     secondary(void);
 
     // Combat...
-    bool    inCombat(void);
-    bool    attack(Job* job);
-    time_t  nextAttackTime(void);
+    bool        inCombat(void);
+    bool        attack(Job* job);
+    Creature*   aquireTarget(void);
+    void        strike(Creature* target);
+    void        escalate(Group* group);
+    void        scheduleAttack(void);
 
     // Pure virtual public methods...
     virtual bool                save( void )                                                      = 0;
@@ -345,6 +352,8 @@ class Creature {
     signed short                _exotic;
     unsigned                    _gold;
     unsigned                    _silver;
+    // combat...
+    time_t                      _next_attack;
 
 };
 
