@@ -34,49 +34,57 @@
 
 Creature::Creature( void ):
     _inventory( &Identifiers::shortname ) {
-  ID( 0 );
+  ID(0);
   room( NULL );
   position().set( STANDING );
-  action().set( 0 );
+  action().set(0);
   // Default group...
   group(new Group());
   group()->add_member(this);
   group()->leader(this);
   // identity...
   gender().set( NEUTRAL );
-  race().set( 0 );
-  pClass().set( 0 );
+  race().set(0);
+  pClass().set(0);
   // stats...
   furniture( NULL );
-  level( 0 );
-  exp( 0 );
-  tnl( 0 );
-  hp( 0 );
-  maxHp( 0 );
-  mana( 0 );
-  maxMana( 0 );
-  movement( 0 );
-  maxMovement( 0 );
-  strength( 0 );
-  maxStrength( 0 );
-  dexterity( 0 );
-  maxDexterity( 0 );
-  constitution( 0 );
-  maxConstitution( 0 );
-  intelligence( 0 );
-  maxIntelligence( 0 );
-  wisdom( 0 );
-  maxWisdom( 0 );
-  charisma( 0 );
-  maxCharisma( 0 );
-  hitroll( 0 );
-  damroll( 0 );
-  saves( 0 );
-  ac( 0 );
-  bash( 0 );
-  slash( 0 );
-  pierce( 0 );
-  exotic( 0 );
+  // Level
+  level(1);
+  exp(0);
+  tnl(0);
+  // Health
+  health(100);
+  maxHealth(100);
+  mana(100);
+  maxMana(100);
+  movement(100);
+  maxMovement(100);
+  // Stats
+  strength(15);
+  maxStrength(20);
+  dexterity(15);
+  maxDexterity(20);
+  constitution(15);
+  maxConstitution(20);
+  intelligence(15);
+  maxIntelligence(20);
+  focus(15);
+  maxFocus(20);
+  creativity(15);
+  maxCreativity(20);
+  charisma(15);
+  maxCharisma(20);
+  luck(15);
+  maxLuck(20);
+  // Armor
+  armor(100);
+  bash(0);
+  slash(0);
+  pierce(0);
+  exotic(0);
+  // Misc
+  gold(0);
+  silver(0);
   // combat
   _next_attack = 0;
   return;
@@ -103,8 +111,8 @@ Creature::Creature( const Creature& ref ):
   level( ref.level() );
   exp( ref.exp() );
   tnl( ref.tnl() );
-  hp( ref.hp() );
-  maxHp( ref.maxHp() );
+  health( ref.health() );
+  maxHealth( ref.maxHealth() );
   mana( ref.mana() );
   maxMana( ref.maxMana() );
   movement( ref.movement() );
@@ -117,14 +125,15 @@ Creature::Creature( const Creature& ref ):
   maxConstitution( ref.maxConstitution() );
   intelligence( ref.intelligence() );
   maxIntelligence( ref.maxIntelligence() );
-  wisdom( ref.wisdom() );
-  maxWisdom( ref.maxWisdom() );
+  focus( ref.focus() );
+  maxFocus( ref.maxFocus() );
+  creativity( ref.creativity() );
+  maxCreativity( ref.maxCreativity() );
   charisma( ref.charisma() );
   maxCharisma( ref.maxCharisma() );
-  hitroll( ref.hitroll() );
-  damroll( ref.damroll() );
-  saves( ref.saves() );
-  ac( ref.ac() );
+  luck( ref.luck() );
+  maxLuck( ref.maxLuck() );
+  armor( ref.armor() );
   bash( ref.bash() );
   slash( ref.slash() );
   pierce( ref.pierce() );
@@ -270,7 +279,19 @@ bool Creature::wear( Object* article, std::string& message, Object*& removed ) {
         return false;
       }
     }
-  // for double-slot items (like ears, fingers, etc)
+  // edge case to ensure that weapons are held in the primary hand by default
+  // duplicate of the other "double-slot" items below
+  } else if (location == WEARLOC_HOLD_L || location == WEARLOC_HOLD_R) {
+    if (worn(hand()) == NULL) {
+      location = hand();
+    } else if (worn(off_hand()) == NULL) {
+      location = off_hand();
+    } else if ((unwear(removed = worn(hand()), message))) {
+      location = hand();
+    } else if ((unwear(removed = worn(off_hand()), message))) {
+      location = off_hand();
+    }
+  // for other double-slot items (like ears, fingers, etc)
   } else {
     // check the first slot
     if ( worn( location ) == NULL ) { }
@@ -342,11 +363,11 @@ bool Creature::isSingleWearLoc( const unsigned short& object_weartype ) {
 }
 
 Object* Creature::primary(void) {
-  return equipment().at(WEARLOC_HOLD_R);
+  return equipment().at(hand());
 }
 
 Object* Creature::secondary(void) {
-  return equipment().at(WEARLOC_HOLD_L);
+  return equipment().at(off_hand());
 }
 
 std::string Creature::applyExperience( long e ) {
@@ -373,7 +394,7 @@ std::string Creature::gainLevel( void ) {
   std::string output;
   _level += 1;
   _tnl = 1000;
-  output.assign( "You gain a level!" );
+  send("You gain a level!\n");
   return output;
 }
 
@@ -446,8 +467,8 @@ bool Creature::stand( std::string& error ) {
 }
 
 unsigned short Creature::stringToAttribute( const std::string& name ) {
-  if ( Regex::strPrefix( name, "hp" ) ) {
-    return ATTR_MAX_HP;
+  if ( Regex::strPrefix( name, "health" ) ) {
+    return ATTR_MAX_HEALTH;
   } else if ( Regex::strPrefix( name, "mana" ) ) {
     return ATTR_MAX_MANA;
   } else if ( Regex::strPrefix( name, "move" ) ) {
@@ -460,18 +481,16 @@ unsigned short Creature::stringToAttribute( const std::string& name ) {
     return ATTR_CON;
   } else if ( Regex::strPrefix( name, "int" ) ) {
     return ATTR_INT;
-  } else if ( Regex::strPrefix( name, "wis" ) ) {
-    return ATTR_WIS;
+  } else if ( Regex::strPrefix( name, "foc" ) ) {
+    return ATTR_FOC;
+  } else if ( Regex::strPrefix( name, "cre" ) ) {
+    return ATTR_CRE;
   } else if ( Regex::strPrefix( name, "cha" ) ) {
     return ATTR_CHA;
-  } else if ( Regex::strPrefix( name, "hr" ) ) {
-    return ATTR_HR;
-  } else if ( Regex::strPrefix( name, "dr" ) ) {
-    return ATTR_DR;
-  } else if ( Regex::strPrefix( name, "saves" ) ) {
-    return ATTR_SAVES;
-  } else if ( Regex::strPrefix( name, "ac" ) ) {
-    return ATTR_AC;
+  } else if ( Regex::strPrefix( name, "luc" ) ) {
+    return ATTR_LUC;
+  } else if ( Regex::strPrefix( name, "armor" ) ) {
+    return ATTR_ARMOR;
   } else if ( Regex::strPrefix( name, "bash" ) ) {
     return ATTR_BASH;
   } else if ( Regex::strPrefix( name, "slash" ) ) {
@@ -487,24 +506,23 @@ unsigned short Creature::stringToAttribute( const std::string& name ) {
 
 const char* Creature::attributeToString( const unsigned short& index ) {
   switch ( index ) {
-    case ATTR_MAX_HP:   return "hp";
-    case ATTR_MAX_MANA: return "mana";
-    case ATTR_MAX_MOVE: return "move";
-    case ATTR_STR:      return "str";
-    case ATTR_DEX:      return "dex";
-    case ATTR_CON:      return "con";
-    case ATTR_INT:      return "int";
-    case ATTR_WIS:      return "wis";
-    case ATTR_CHA:      return "cha";
-    case ATTR_HR:       return "hr";
-    case ATTR_DR:       return "dr";
-    case ATTR_SAVES:    return "saves";
-    case ATTR_AC:       return "ac";
-    case ATTR_BASH:     return "bash";
-    case ATTR_SLASH:    return "slash";
-    case ATTR_PIERCE:   return "pierce";
-    case ATTR_EXOTIC:   return "exotic";
-    default:            return "[error]";
+    case ATTR_MAX_HEALTH: return "health";
+    case ATTR_MAX_MANA:   return "mana";
+    case ATTR_MAX_MOVE:   return "move";
+    case ATTR_STR:        return "str";
+    case ATTR_DEX:        return "dex";
+    case ATTR_CON:        return "con";
+    case ATTR_INT:        return "int";
+    case ATTR_FOC:        return "foc";
+    case ATTR_CRE:        return "cre";
+    case ATTR_CHA:        return "cha";
+    case ATTR_LUC:        return "luc";
+    case ATTR_ARMOR:      return "armor";
+    case ATTR_BASH:       return "bash";
+    case ATTR_SLASH:      return "slash";
+    case ATTR_PIERCE:     return "pierce";
+    case ATTR_EXOTIC:     return "exotic";
+    default:              return "[error]";
   }
 }
 
@@ -547,23 +565,22 @@ void Creature::unmodify( Modifier* modifier ) {
 
 void Creature::doModification( const unsigned short& attribute, const int& magnitude ) {
   switch ( attribute ) {
-    case ATTR_MAX_HP:   _maxHp        += magnitude; break;
-    case ATTR_MAX_MANA: _maxMana      += magnitude; break;
-    case ATTR_MAX_MOVE: _maxMovement  += magnitude; break;
-    case ATTR_STR:      _strength     += magnitude; break;
-    case ATTR_DEX:      _dexterity    += magnitude; break;
-    case ATTR_CON:      _constitution += magnitude; break;
-    case ATTR_INT:      _intelligence += magnitude; break;
-    case ATTR_WIS:      _wisdom       += magnitude; break;
-    case ATTR_CHA:      _charisma     += magnitude; break;
-    case ATTR_HR:       _hitroll      += magnitude; break;
-    case ATTR_DR:       _damroll      += magnitude; break;
-    case ATTR_SAVES:    _saves        += magnitude; break;
-    case ATTR_AC:       _ac           += magnitude; break;
-    case ATTR_BASH:     _bash         += magnitude; break;
-    case ATTR_SLASH:    _slash        += magnitude; break;
-    case ATTR_PIERCE:   _pierce       += magnitude; break;
-    case ATTR_EXOTIC:   _exotic       += magnitude; break;
+    case ATTR_MAX_HEALTH: _maxHealth    += magnitude; break;
+    case ATTR_MAX_MANA:   _maxMana      += magnitude; break;
+    case ATTR_MAX_MOVE:   _maxMovement  += magnitude; break;
+    case ATTR_STR:        _strength     += magnitude; break;
+    case ATTR_DEX:        _dexterity    += magnitude; break;
+    case ATTR_CON:        _constitution += magnitude; break;
+    case ATTR_INT:        _intelligence += magnitude; break;
+    case ATTR_FOC:        _focus        += magnitude; break;
+    case ATTR_CRE:        _creativity   += magnitude; break;
+    case ATTR_CHA:        _charisma     += magnitude; break;
+    case ATTR_LUC:        _luck         += magnitude; break;
+    case ATTR_ARMOR:      _armor        += magnitude; break;
+    case ATTR_BASH:       _bash         += magnitude; break;
+    case ATTR_SLASH:      _slash        += magnitude; break;
+    case ATTR_PIERCE:     _pierce       += magnitude; break;
+    case ATTR_EXOTIC:     _exotic       += magnitude; break;
     default: break;
   }
   return;
@@ -708,7 +725,7 @@ void Creature::move( const unsigned short& direction ) {
       if (member->canMove(direction, message)) {
         member->move(direction);
       } else {
-        send("%s could not follow you here.", member->identifiers().shortname().c_str());
+        send("%s could not follow you here.\n", member->identifiers().shortname().c_str());
         member->send("You cannot follow %s %s.\n", identifiers().shortname().c_str(), Exit::name(direction));
         member->send(message);
       }
@@ -749,11 +766,9 @@ void Creature::strike(Creature* target) {
   Object* object = NULL;
 
   // Initial damage calculation (based on the attackers offense).
-  damage = rand() % 240;
+  damage = rand() % 250;
   // Adjust damage (based on the targets defense).
-  damage -= 20;
-  // Deal the pain.
-  target->hp(target->hp() - damage);
+  damage -= rand() % (damage - 1);
 
   // Tell the world.
   weapon_noun = "punch";
@@ -763,6 +778,14 @@ void Creature::strike(Creature* target) {
   send("Your %s %s %s!\n", weapon_noun.c_str(), damage_verb.c_str(), target->identifiers().shortname().c_str());
   target->send("%s's %s %s you!\n", identifiers().shortname().c_str(), weapon_noun.c_str(), damage_verb.c_str());
   room()->send_cond("$p's punch $s $C!", this, (void*)damage_verb.c_str(), target, TO_NOTVICT, true);
+
+  // Deal the pain (performed last to ensure that DEAD notification appear in the proper order.
+  target->takeDamage(damage);
+
+  return;
+}
+
+void Creature::assessCombat(void) {
 
   return;
 }
@@ -782,5 +805,15 @@ void Creature::escalate(Group* group) {
 void Creature::scheduleAttack(void) {
   _next_attack = time(NULL) + rand() % 5;
   World::Instance().schedule()->add(new Job(_next_attack, this, &Creature::attack));
+  return;
+}
+
+void Creature::takeDamage(int damage) {
+  health(health() - damage);
+  if (health() < 2) {
+    health(1);
+    send("\n\nYou are {RDEAD{x!!!\n\n");
+    room()->send_cond("\n\n$p is {RDEAD{x!!!\n\n", this, NULL, NULL, TO_NOTVICT);
+  }
   return;
 }

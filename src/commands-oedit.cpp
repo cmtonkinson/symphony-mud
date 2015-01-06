@@ -71,7 +71,7 @@ bool OCmdAttribute::execute( Creature* creature, const std::vector<std::string>&
       avatar()->send( "That wouldn't do anything." );
       return false;
     }
-    if ( attr == ATTR_AC || attr == ATTR_BASH || attr == ATTR_SLASH || attr == ATTR_PIERCE || attr == ATTR_EXOTIC ) {
+    if ( attr == ATTR_ARMOR || attr == ATTR_BASH || attr == ATTR_SLASH || attr == ATTR_PIERCE || attr == ATTR_EXOTIC ) {
       if ( !avatar()->oedit()->isArmor() ) {
         avatar()->send( "Only objects of type `armor` can modify armor class." );
         return false;

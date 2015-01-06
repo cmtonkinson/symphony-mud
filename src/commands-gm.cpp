@@ -234,7 +234,7 @@ bool CmdGroup::execute(Creature* creature, const std::vector<std::string>& args)
       for (std::set<Creature*>::iterator it = group->members().begin(); it != group->members().end(); ++it) {
         avatar()->send("| {W%-20s{x                {G%4d{x/{g%-4u  {C%4u{x/{c%-4u  {M%4u{x/{m%-4u{x        |\n",
           (*it)->identifiers().shortname().c_str(),
-          (*it)->hp(), (*it)->maxHp(), (*it)->mana(), (*it)->maxMana(), (*it)->movement(), (*it)->maxMovement()
+          (*it)->health(), (*it)->maxHealth(), (*it)->mana(), (*it)->maxMana(), (*it)->movement(), (*it)->maxMovement()
         );
       }
       avatar()->send("+----------------------------------------------------------------------------+\n");

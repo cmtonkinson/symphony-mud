@@ -80,25 +80,24 @@
 /* Map integers in a range to attributes
  * (indexing must be contiguous, starting from 1)
  */
-#define ATTR_BEGIN     1
-#define ATTR_MAX_HP    1
-#define ATTR_MAX_MANA  2
-#define ATTR_MAX_MOVE  3
-#define ATTR_STR       4
-#define ATTR_DEX       5
-#define ATTR_CON       6
-#define ATTR_INT       7
-#define ATTR_WIS       8
-#define ATTR_CHA       9
-#define ATTR_HR       10
-#define ATTR_DR       11
-#define ATTR_SAVES    12
-#define ATTR_AC       13
-#define ATTR_BASH     14
-#define ATTR_SLASH    15
-#define ATTR_PIERCE   16
-#define ATTR_EXOTIC   17
-#define ATTR_END      18
+#define ATTR_BEGIN       1
+#define ATTR_MAX_HEALTH  1
+#define ATTR_MAX_MANA    2
+#define ATTR_MAX_MOVE    3
+#define ATTR_STR         4
+#define ATTR_DEX         5
+#define ATTR_CON         6
+#define ATTR_INT         7
+#define ATTR_FOC         8
+#define ATTR_CRE         9
+#define ATTR_CHA         10
+#define ATTR_LUC         11
+#define ATTR_ARMOR       12
+#define ATTR_BASH        13
+#define ATTR_SLASH       14
+#define ATTR_PIERCE      15
+#define ATTR_EXOTIC      16
+#define ATTR_END         17
 
 // Visibility...
 #define SEE_NOTHING         0
@@ -170,68 +169,75 @@ class Creature {
     PClass&           pClass( void )          { return _pClass; }
     const PClass&     pClass( void ) const    { return _pClass; }
 
-    void                        level( const unsigned short& level )                              { _level = level; }
-    unsigned short              level( void ) const                                               { return _level; }
-    void                        exp( const unsigned long& exp )                                   { _exp = exp; }
-    unsigned long               exp( void ) const                                                 { return _exp; }
-    void                        tnl( const unsigned long& tnl )                                   { _tnl = tnl; }
-    unsigned long               tnl( void ) const                                                 { return _tnl; }
-    void                        hp( const unsigned short& hp )                                    { _hp = hp; }
-    unsigned short              hp( void ) const                                                  { return _hp; }
-    void                        maxHp( const unsigned short& maxHp )                              { _maxHp = maxHp; }
-    unsigned short              maxHp( void ) const                                               { return _maxHp; }
-    void                        mana( const unsigned short& mana )                                { _mana = mana; }
-    unsigned short              mana( void ) const                                                { return _mana; }
-    void                        maxMana( const unsigned short& maxMana )                          { _maxMana = maxMana; }
-    unsigned short              maxMana( void ) const                                             { return _maxMana; }
-    void                        movement( const unsigned short& movement )                        { _movement = movement; }
-    unsigned short              movement( void ) const                                            { return _movement; }
-    void                        maxMovement( const unsigned short& maxMovement )                  { _maxMovement = maxMovement; }
-    unsigned short              maxMovement( void ) const                                         { return _maxMovement; }
-    void                        strength( const unsigned short& strength )                        { _strength = strength; }
-    unsigned short              strength( void ) const                                            { return _strength; }
-    void                        maxStrength( const unsigned short& maxStrength )                  { _maxStrength = maxStrength; }
-    unsigned short              maxStrength( void ) const                                         { return _maxStrength; }
-    void                        dexterity( const unsigned short& dexterity )                      { _dexterity = dexterity; }
-    unsigned short              dexterity( void ) const                                           { return _dexterity; }
-    void                        maxDexterity( const unsigned short& maxDexterity )                { _maxDexterity = maxDexterity; }
-    unsigned short              maxDexterity( void ) const                                        { return _maxDexterity; }
-    void                        constitution( const unsigned short& constitution )                { _constitution = constitution; }
-    unsigned short              constitution( void ) const                                        { return _constitution; }
-    void                        maxConstitution( const unsigned short& maxConstitution )          { _maxConstitution = maxConstitution; }
-    unsigned short              maxConstitution( void ) const                                     { return _maxConstitution; }
-    void                        intelligence( const unsigned short& intelligence )                { _intelligence = intelligence; }
-    unsigned short              intelligence( void ) const                                        { return _intelligence; }
-    void                        maxIntelligence( const unsigned short& maxIntelligence )          { _maxIntelligence = maxIntelligence; }
-    unsigned short              maxIntelligence( void ) const                                     { return _maxIntelligence; }
-    void                        wisdom( const unsigned short& wisdom )                            { _wisdom = wisdom; }
-    unsigned short              wisdom( void ) const                                              { return _wisdom; }
-    void                        maxWisdom( const unsigned short& maxWisdom )                      { _maxWisdom = maxWisdom; }
-    unsigned short              maxWisdom( void ) const                                           { return _maxWisdom; }
-    void                        charisma( const unsigned short& charisma )                        { _charisma = charisma; }
-    unsigned short              charisma( void ) const                                            { return _charisma; }
-    void                        maxCharisma( const unsigned short& maxCharisma )                  { _maxCharisma = maxCharisma; }
-    unsigned short              maxCharisma( void ) const                                         { return _maxCharisma; }
-    void                        hitroll( const unsigned short& hitroll )                          { _hitroll = hitroll; }
-    unsigned short              hitroll( void ) const                                             { return _hitroll; }
-    void                        damroll( const unsigned short& damroll )                          { _damroll = damroll; }
-    unsigned short              damroll( void ) const                                             { return _damroll; }
-    void                        saves( const signed short& saves )                                { _saves = saves; }
-    signed short                saves( void ) const                                               { return _saves; }
-    void                        ac( const signed short& ac )                                      { _ac = ac; }
-    signed short                ac( void ) const                                                  { return _ac; }
-    void                        bash( const signed short& bash )                                  { _bash = bash; }
-    signed short                bash( void ) const                                                { return _bash; }
-    void                        slash( const signed short& slash )                                { _slash = slash; }
-    signed short                slash( void ) const                                               { return _slash; }
-    void                        pierce( const signed short& pierce )                              { _pierce = pierce; }
-    signed short                pierce( void ) const                                              { return _pierce; }
-    void                        exotic( const signed short& exotic )                              { _exotic = exotic; }
-    signed short                exotic( void ) const                                              { return _exotic; }
-    void                        gold( const unsigned& gold )                                      { _gold = gold; }
-    unsigned                    gold( void ) const                                                { return _gold; }
-    void                        silver( const unsigned& silver )                                  { _silver = silver; }
-    unsigned                    silver( void ) const                                              { return _silver; }
+    // Level
+    void                level(unsigned short level)                     { _level = level; }
+    unsigned short      level(void) const                               { return _level; }
+    void                exp(unsigned long exp)                          { _exp = exp; }
+    unsigned long       exp(void) const                                 { return _exp; }
+    void                tnl(unsigned long tnl)                          { _tnl = tnl; }
+    unsigned long       tnl(void) const                                 { return _tnl; }
+    // Health
+    void                health(unsigned short health)                   { _health = ((health <= maxHealth()) ? health : maxHealth()); }
+    unsigned short      health(void) const                              { return _health; }
+    void                maxHealth(int maxHealth)                        { _maxHealth = maxHealth; }
+    int                 maxHealth(void) const                           { return _maxHealth; }
+    void                mana(int mana)                                  { _mana = mana; }
+    int                 mana(void) const                                { return _mana; }
+    void                maxMana(int maxMana)                            { _maxMana = maxMana; }
+    int                 maxMana(void) const                             { return _maxMana; }
+    void                movement(int movement)                          { _movement = movement; }
+    int                 movement(void) const                            { return _movement; }
+    void                maxMovement(int maxMovement)                    { _maxMovement = maxMovement; }
+    int                 maxMovement(void) const                         { return _maxMovement; }
+    // Stats
+    void                strength(unsigned short strength)               { _strength = strength; }
+    unsigned short      strength(void) const                            { return _strength; }
+    void                maxStrength(unsigned short maxStrength)         { _maxStrength = maxStrength; }
+    unsigned short      maxStrength(void) const                         { return _maxStrength; }
+    void                dexterity(unsigned short dexterity)             { _dexterity = dexterity; }
+    unsigned short      dexterity(void) const                           { return _dexterity; }
+    void                maxDexterity(unsigned short maxDexterity)       { _maxDexterity = maxDexterity; }
+    unsigned short      maxDexterity(void) const                        { return _maxDexterity; }
+    void                constitution(unsigned short constitution)       { _constitution = constitution; }
+    unsigned short      constitution(void) const                        { return _constitution; }
+    void                maxConstitution(unsigned short maxConstitution) { _maxConstitution = maxConstitution; }
+    unsigned short      maxConstitution(void) const                     { return _maxConstitution; }
+    void                intelligence(unsigned short intelligence)       { _intelligence = intelligence; }
+    unsigned short      intelligence(void) const                        { return _intelligence;}
+    void                maxIntelligence(unsigned short maxIntelligence) { _maxIntelligence = maxIntelligence; }
+    unsigned short      maxIntelligence(void) const                     { return _maxIntelligence;}
+    void                focus(unsigned short focus)                     { _focus = focus; }
+    unsigned short      focus(void) const                               { return _focus;}
+    void                maxFocus(unsigned short maxFocus)               { _maxFocus = maxFocus; }
+    unsigned short      maxFocus(void) const                            { return _maxFocus;}
+    void                creativity(unsigned short creativity)           { _creativity = creativity; }
+    unsigned short      creativity(void) const                          { return _creativity;}
+    void                maxCreativity(unsigned short maxCreativity)     { _maxCreativity = maxCreativity; }
+    unsigned short      maxCreativity(void) const                       { return _maxCreativity;}
+    void                charisma(unsigned short charisma)               { _charisma = charisma; }
+    unsigned short      charisma(void) const                            { return _charisma;}
+    void                maxCharisma(unsigned short maxCharisma)         { _maxCharisma = maxCharisma; }
+    unsigned short      maxCharisma(void) const                         { return _maxCharisma;}
+    void                luck(unsigned short luck)                       { _luck = luck; }
+    unsigned short      luck(void) const                                { return _luck;}
+    void                maxLuck(unsigned short maxLuck)                 { _maxLuck = maxLuck; }
+    unsigned short      maxLuck(void) const                             { return _maxLuck;}
+    // Armor
+    void                armor(int armor)                                { _armor = armor; }
+    int                 armor(void) const                               { return _armor; }
+    void                bash(int bash)                                  { _bash = bash; }
+    int                 bash(void) const                                { return _bash; }
+    void                slash(int slash)                                { _slash = slash; }
+    int                 slash(void) const                               { return _slash; }
+    void                pierce(int pierce)                              { _pierce = pierce; }
+    int                 pierce(void) const                              { return _pierce; }
+    void                exotic(int exotic)                              { _exotic = exotic; }
+    int                 exotic(void) const                              { return _exotic; }
+    // Misc
+    void                gold(unsigned gold)                             { _gold = gold; }
+    unsigned            gold(void) const                                { return _gold; }
+    void                silver(unsigned silver)                         { _silver = silver; }
+    unsigned            silver(void) const                              { return _silver; }
     // combat
     time_t                      nextAttack(void) const                                            { return _next_attack; }
 
@@ -256,6 +262,8 @@ class Creature {
     bool                        isMage( void ) const                                              { return pClass().number() == MAGE; }
     bool                        isRogue( void ) const                                             { return pClass().number() == ROGUE; }
     bool                        isWarrior( void ) const                                           { return pClass().number() == WARRIOR; }
+    unsigned short              hand(void) const                                                  { return WEARLOC_HOLD_R; }
+    unsigned short              off_hand(void) const                                              { return WEARLOC_HOLD_L; }
     bool                        lay( std::string& error, ObjFurniture* furniture = NULL );
     bool                        sit( std::string& error, ObjFurniture* furniture = NULL, bool on = false );
     bool                        stand( std::string& error );
@@ -291,8 +299,10 @@ class Creature {
     bool        attack(Job* job);
     Creature*   aquireTarget(void);
     void        strike(Creature* target);
+    void        assessCombat(void);
     void        escalate(Group* group);
     void        scheduleAttack(void);
+    void        takeDamage(int damage);
 
     // Pure virtual public methods...
     virtual bool                save( void )                                                      = 0;
@@ -320,16 +330,18 @@ class Creature {
     Gender                      _gender;
     Race                        _race;
     PClass                      _pClass;
-    // stats...
+    // Level
     unsigned short              _level;
     unsigned long               _exp;
     unsigned long               _tnl;
-    unsigned short              _hp;
-    unsigned short              _maxHp;
-    unsigned short              _mana;
-    unsigned short              _maxMana;
-    unsigned short              _movement;
-    unsigned short              _maxMovement;
+    // Health
+    int                         _health;
+    int                         _maxHealth;
+    int                         _mana;
+    int                         _maxMana;
+    int                         _movement;
+    int                         _maxMovement;
+    // Stats
     unsigned short              _strength;
     unsigned short              _maxStrength;
     unsigned short              _dexterity;
@@ -338,18 +350,21 @@ class Creature {
     unsigned short              _maxConstitution;
     unsigned short              _intelligence;
     unsigned short              _maxIntelligence;
-    unsigned short              _wisdom;
-    unsigned short              _maxWisdom;
+    unsigned short              _focus;
+    unsigned short              _maxFocus;
+    unsigned short              _creativity;
+    unsigned short              _maxCreativity;
     unsigned short              _charisma;
     unsigned short              _maxCharisma;
-    unsigned short              _hitroll;
-    unsigned short              _damroll;
-    signed short                _saves;
-    signed short                _ac;
-    signed short                _bash;
-    signed short                _slash;
-    signed short                _pierce;
-    signed short                _exotic;
+    unsigned short              _luck;
+    unsigned short              _maxLuck;
+    // Armor
+    int                         _armor;
+    int                         _bash;
+    int                         _slash;
+    int                         _pierce;
+    int                         _exotic;
+    // Misc
     unsigned                    _gold;
     unsigned                    _silver;
     // combat...

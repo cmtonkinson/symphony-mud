@@ -44,8 +44,8 @@ Avatar::Avatar( Socket* socket ) {
   level( 1 );
   exp( 0 );
   tnl( 1000 );
-  hp( 100 );
-  maxHp( 100 );
+  health( 100 );
+  maxHealth( 100 );
   mana( 100 );
   maxMana( 100 );
   movement( 100 );
@@ -58,14 +58,15 @@ Avatar::Avatar( Socket* socket ) {
   maxConstitution( 18 );
   intelligence( 14 );
   maxIntelligence( 18 );
-  wisdom( 14 );
-  maxWisdom( 18 );
+  focus(14);
+  maxFocus(18);
+  creativity(14);
+  maxCreativity(18);
   charisma( 14 );
   maxCharisma( 18 );
-  hitroll( 5 );
-  damroll( 5 );
-  saves( 0 );
-  ac( 0 );
+  luck(14);
+  maxLuck(18);
+  armor( 0 );
   bash( 0 );
   slash( 0 );
   pierce( 0 );
@@ -167,8 +168,10 @@ void Avatar::adjustStartingStats( void ) {
   unsigned short Dex = 0;
   unsigned short Con = 0;
   unsigned short Int = 0;
-  unsigned short Wis = 0;
+  unsigned short Foc = 0;
+  unsigned short Cre = 0;
   unsigned short Cha = 0;
+  unsigned short Luc = 0;
   switch ( race().number() ) {
     case HUMAN:
       Str -= 1; Int += 1; Cha += 1;
@@ -182,13 +185,13 @@ void Avatar::adjustStartingStats( void ) {
   }
   switch ( pClass().number() ) {
     case MAGE:
-      Str -= 2; Con -= 1; Int += 2; Wis += 1;
+      Str -= 2; Con -= 1; Int += 2; Foc += 1;
       break;
     case CLERIC:
-      Str -= 1; Dex -= 1; Con -= 1; Wis += 2; Cha += 1;
+      Str -= 1; Dex -= 1; Con -= 1; Foc += 2; Cha += 1;
       break;
     case WARRIOR:
-      Str += 2; Dex += 1; Con += 1; Int -= 2; Wis -= 2;
+      Str += 2; Dex += 1; Con += 1; Int -= 2; Foc -= 2;
       break;
     case ROGUE:
       Dex += 2; Con -= 1; Int += 1; Cha -= 2;
@@ -202,10 +205,14 @@ void Avatar::adjustStartingStats( void ) {
   maxConstitution( maxConstitution() + Con );
   intelligence( intelligence() + Int );
   maxIntelligence( maxIntelligence() + Int );
-  wisdom( wisdom() + Wis );
-  maxWisdom( maxWisdom() + Wis );
+  focus( focus() + Foc );
+  maxFocus( maxFocus() + Foc );
+  creativity( creativity() + Cre );
+  maxCreativity( maxCreativity() + Cre );
   charisma( charisma() + Cha );
   maxCharisma( maxCharisma() + Cha );
+  luck( luck() + Luc );
+  maxLuck( maxLuck() + Luc );
   return;
 }
 
@@ -280,14 +287,14 @@ bool Avatar::save( void ) {
         `title` = '%s',           \
         `poofin` = '%s',          \
         `poofout` = '%s',         \
-        `level` = %hd,            \
         `gender` = %u,            \
         `race` = %u,              \
         `cClass` = %u,            \
+        `level` = %hd,            \
         `exp` = %lu,              \
         `tnl` = %lu,              \
-        `hp` = %hu,               \
-        `maxHp` = %hu,            \
+        `health` = %hu,           \
+        `maxHealth` = %hu,        \
         `mana` = %hu,             \
         `maxMana` = %hu,          \
         `movement` = %hu,         \
@@ -300,14 +307,15 @@ bool Avatar::save( void ) {
         `maxConstitution` = %hu,  \
         `intelligence` = %hu,     \
         `maxIntelligence` = %hu,  \
-        `wisdom` = %hu,           \
-        `maxWisdom` = %hu,        \
+        `focus` = %hu,            \
+        `maxFocus` = %hu,         \
+        `creativity` = %hu,       \
+        `maxCreativity` = %hu,    \
         `charisma` = %hu,         \
         `maxCharisma` = %hu,      \
-        `hitroll` = %hu,          \
-        `damroll` = %hu,          \
-        `saves` = %hd,            \
-        `ac` = %hd,               \
+        `luck` = %hu,             \
+        `maxLuck` = %hu,          \
+        `armor` = %hd,            \
         `bash` = %hd,             \
         `slash` = %hd,            \
         `pierce` = %hd,           \
@@ -333,14 +341,14 @@ bool Avatar::save( void ) {
       Mysql::addslashes(title()).c_str(),
       Mysql::addslashes(poofin()).c_str(),
       Mysql::addslashes(poofout()).c_str(),
-      level(),
       gender().number(),
       race().number(),
       pClass().number(),
+      level(),
       exp(),
       tnl(),
-      hp(),
-      maxHp(),
+      health(),
+      maxHealth(),
       mana(),
       maxMana(),
       movement(),
@@ -353,14 +361,15 @@ bool Avatar::save( void ) {
       maxConstitution(),
       intelligence(),
       maxIntelligence(),
-      wisdom(),
-      maxWisdom(),
+      focus(),
+      maxFocus(),
+      creativity(),
+      maxCreativity(),
       charisma(),
       maxCharisma(),
-      hitroll(),
-      damroll(),
-      saves(),
-      ac(),
+      luck(),
+      maxLuck(),
+      armor(),
       bash(),
       slash(),
       pierce(),
@@ -470,8 +479,8 @@ bool Avatar::load( void ) {
       level( row["level"] );
       exp( row["exp"] );
       tnl( row["tnl"] );
-      hp( row["hp"] );
-      maxHp( row["maxHp"] );
+      health( row["health"] );
+      maxHealth( row["maxHealth"] );
       mana( row["mana"] );
       maxMana( row["maxMana"] );
       movement( row["movement"] );
@@ -484,14 +493,15 @@ bool Avatar::load( void ) {
       maxConstitution( row["maxConstitution"] );
       intelligence( row["intelligence"] );
       maxIntelligence( row["maxIntelligence"] );
-      wisdom( row["wisdom"] );
-      maxWisdom( row["maxWisdom"] );
+      focus( row["focus"] );
+      maxFocus( row["maxFocus"] );
+      creativity( row["creativity"] );
+      maxCreativity( row["maxCreativity"] );
       charisma( row["charisma"] );
       maxCharisma( row["maxCharisma"] );
-      hitroll( row["hitroll"] );
-      damroll( row["damroll"] );
-      saves( row["saves"] );
-      ac( row["ac"] );
+      luck( row["luck"] );
+      maxLuck( row["maxLuck"] );
+      armor( row["armor"] );
       bash( row["bash"] );
       slash( row["slash"] );
       pierce( row["pierce"] );

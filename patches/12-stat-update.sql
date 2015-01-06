@@ -1,0 +1,25 @@
+ALTER TABLE `avatars` CHANGE `hp` `health` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `avatars` CHANGE `maxHp` `maxHealth` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `avatars` CHANGE `wisdom` `focus` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `avatars` CHANGE `maxWisdom` `maxFocus` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `avatars` ADD `creativity` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `avatars` ADD `maxCreativity` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `avatars` ADD `luck` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `avatars` ADD `maxLuck` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `avatars` DROP `hitroll`;
+ALTER TABLE `avatars` DROP `damroll`;
+ALTER TABLE `avatars` DROP `saves`;
+ALTER TABLE `avatars` CHANGE `ac` `armor` INT(10) unsigned NOT NULL DEFAULT '0';
+
+ALTER TABLE `mobs` CHANGE `hp` `health` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `mobs` CHANGE `maxHp` `maxHealth` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `mobs` CHANGE `wisdom` `focus` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `mobs` CHANGE `maxWisdom` `maxFocus` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `mobs` ADD `creativity` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `mobs` ADD `maxCreativity` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `mobs` ADD `luck` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `mobs` ADD `maxLuck` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `mobs` DROP `hitroll`;
+ALTER TABLE `mobs` DROP `damroll`;
+ALTER TABLE `mobs` DROP `saves`;
+ALTER TABLE `mobs` CHANGE `ac` `armor` INT(10) unsigned NOT NULL DEFAULT '0';

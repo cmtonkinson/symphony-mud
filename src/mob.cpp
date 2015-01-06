@@ -49,8 +49,8 @@ Mob::Mob( ROW row ) {
   level( row["level"] );
   exp( row["exp"] );
   tnl( row["tnl"] );
-  hp( row["hp"] );
-  maxHp( row["maxHp"] );
+  health( row["health"] );
+  maxHealth( row["maxHealth"] );
   mana( row["mana"] );
   maxMana( row["maxMana"] );
   movement( row["movement"] );
@@ -63,14 +63,15 @@ Mob::Mob( ROW row ) {
   maxConstitution( row["maxConstitution"] );
   intelligence( row["intelligence"] );
   maxIntelligence( row["maxIntelligence"] );
-  wisdom( row["wisdom"] );
-  maxWisdom( row["maxWisdom"] );
+  focus( row["focus"] );
+  maxFocus( row["maxFocus"] );
+  creativity( row["creativity"] );
+  maxCreativity( row["maxCreativity"] );
   charisma( row["charisma"] );
   maxCharisma( row["maxCharisma"] );
-  hitroll( row["hitroll"] );
-  damroll( row["damroll"] );
-  saves( row["saves"] );
-  ac( row["ac"] );
+  luck( row["luck"] );
+  maxLuck( row["maxLuck"] );
+  armor( row["armor"] );
   bash( row["bash"] );
   slash( row["slash"] );
   pierce( row["pierce"] );
@@ -119,8 +120,8 @@ bool Mob::save( void ) {
         `level` = %hd,            \
         `exp` = %lu,              \
         `tnl` = %lu,              \
-        `hp` = %hu,               \
-        `maxHp` = %hu,            \
+        `health` = %hu,           \
+        `maxHealth` = %hu,        \
         `mana` = %hu,             \
         `maxMana` = %hu,          \
         `movement` = %hu,         \
@@ -133,18 +134,19 @@ bool Mob::save( void ) {
         `maxConstitution` = %hu,  \
         `intelligence` = %hu,     \
         `maxIntelligence` = %hu,  \
-        `wisdom` = %hu,           \
-        `maxWisdom` = %hu,        \
+        `focus` = %hu,            \
+        `maxFocus` = %hu,         \
+        `creativity` = %hu,       \
+        `maxCreativity` = %hu,    \
         `charisma` = %hu,         \
         `maxCharisma` = %hu,      \
-        `hitroll` = %hu,          \
-        `damroll` = %hu,          \
-        `saves` = %hd,            \
-        `ac` = %hd,               \
+        `luck` = %hu,             \
+        `maxLuck` = %hu,          \
+        `armor` = %hd,            \
         `bash` = %hd,             \
         `slash` = %hd,            \
         `pierce` = %hd,           \
-        `exotic` = %hd            \
+        `exotic` = %hd,           \
        WHERE mobID = %lu          \
        LIMIT 1;",
       Mysql::addslashes(gender().string()).c_str(),
@@ -155,8 +157,8 @@ bool Mob::save( void ) {
       level(),
       exp(),
       tnl(),
-      hp(),
-      maxHp(),
+      health(),
+      maxHealth(),
       mana(),
       maxMana(),
       movement(),
@@ -169,14 +171,15 @@ bool Mob::save( void ) {
       maxConstitution(),
       intelligence(),
       maxIntelligence(),
-      wisdom(),
-      maxWisdom(),
+      focus(),
+      maxFocus(),
+      creativity(),
+      maxCreativity(),
       charisma(),
       maxCharisma(),
-      hitroll(),
-      damroll(),
-      saves(),
-      ac(),
+      luck(),
+      maxLuck(),
+      armor(),
       bash(),
       slash(),
       pierce(),
