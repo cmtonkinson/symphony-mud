@@ -571,7 +571,7 @@ bool CmdSummary::execute( Creature* creature, const std::vector<std::string>& ar
   avatar()->send( "{w||{xheight: {g%-9s{x {w||{xcreat: {G%2u{x/{g%2u{w || {x-slash:  {g%-4d{w  ||{xtnl: {g%-7u{w    ||\n", "-", avatar()->creativity(), avatar()->maxCreativity(), avatar()->slash(), avatar()->tnl() );
   avatar()->send( "{w||{xweight: {g%-9s{x {w||{xchari: {G%2u{x/{g%2u{w || {x-pierce: {g%-4d{w  ||{xpracs: {g%-4u{w     ||\n", "-", avatar()->charisma(), avatar()->maxCharisma(), avatar()->pierce(), avatar()->practices() );
   avatar()->send( "{w||{xtotem:  {g%-9s{x {w||{xluck:  {G%2u{x/{g%2u{w || {x-exotic: {g%-4d{w  ||{xpoints: {g%-4u{w    ||\n", "-", avatar()->luck(), avatar()->maxLuck(), avatar()->exotic(), avatar()->points() );
-  avatar()->send( "{w||__________________||_____________||__________________||______________||\n" );
+  avatar()->send( "{w||__________________||_____________||________________||________________||\n" );
   avatar()->send( "{w||_____________________________________________________________________||\n" );
   avatar()->send( "{w||{xitems: {G%3u{x/{g%-3u{w    ||{xcoins: {W%9u{x/{y%-9u{w     {w||{xCT: {g%-6u{w      ||\n", avatar()->inventory().objectList().size(), avatar()->inventory().objectList().size(), avatar()->silver(), avatar()->gold(), 0 );
   avatar()->send( "{w||{xweight: {g%-5u{w     ||{xbank:  {W%9u{x/{y%-9u{w     {w||                ||\n", 0, avatar()->bankSilver(), avatar()->bankGold() );

@@ -520,12 +520,13 @@ bool CreationSummaryIOHandler::handle( void ) {
   input = Regex::trim( input.substr( 0, input.find_first_of(' ') ) );
   bool success = false;
   if ( Regex::strPrefix( input, "accept" ) ) {
-    avatar()->adjustStartingStats();
+    avatar()->naturalStatAdjustment();
     avatar()->status().set( CONNECTED );
     avatar()->room( World::Instance().findRoom( 0 ) );
     if ( avatar()->create() && avatar()->save() && avatar()->load() ) {
       avatar()->send( "Welcome to the realm, young %s!\n", avatar()->identifiers().shortname().c_str() );
       avatar()->restoreRoom();
+      avatar()->save();
       success = true;
     } else {
       avatar()->send( "Terribly sorry - there was a problem finalizing your account." );

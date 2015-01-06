@@ -179,6 +179,79 @@ void Creature::handle( void ) {
   return;
 }
 
+void Creature::naturalStatAdjustment( void ) {
+  unsigned short Str = 0;
+  unsigned short Dex = 0;
+  unsigned short Con = 0;
+  unsigned short Int = 0;
+  unsigned short Foc = 0;
+  unsigned short Cre = 0;
+  unsigned short Cha = 0;
+  unsigned short Luc = 0;
+  switch ( race().number() ) {
+    case ELF:
+      Dex += 2;
+      Int += 1;
+      Cha += 2;
+      Con -= 1;
+      break;
+    case DWARF:
+      Str += 2;
+      Con += 2;
+      Luc += 3;
+      Dex -= 1;
+      Cha -= 1;
+      break;
+    case HUMAN:
+      break;
+  }
+  switch ( pClass().number() ) {
+    case CLERIC:
+      Foc += 2;
+      Cre -= 1;
+      Str -= 1;
+      break;
+    case MAGE:
+      Int += 2;
+      Foc += 2;
+      Cre += 2;
+      Str -= 2;
+      Con -= 2;
+      break;
+    case ROGUE:
+      Dex += 2;
+      Int += 1;
+      Cre += 1;
+      Con -= 1;
+      Cha -= 2;
+      break;
+    case WARRIOR:
+      Str += 2;
+      Dex += 1;
+      Con += 2;
+      Int -= 2;
+      Foc -= 2;
+      break;
+  }
+  strength(strength() + Str);
+  maxStrength(maxStrength() + Str);
+  dexterity(dexterity() + Dex);
+  maxDexterity(maxDexterity() + Dex);
+  constitution(constitution() + Con);
+  maxConstitution(maxConstitution() + Con);
+  intelligence(intelligence() + Int);
+  maxIntelligence(maxIntelligence() + Int);
+  focus(focus() + Foc);
+  maxFocus(maxFocus() + Foc);
+  creativity(creativity() + Cre);
+  maxCreativity(maxCreativity() + Cre);
+  charisma(charisma() + Cha);
+  maxCharisma(maxCharisma() + Cha);
+  luck(luck() + Luc);
+  maxLuck(maxLuck() + Luc);
+  return;
+}
+
 Creature* Creature::findCreature( const std::string& name ) {
   if ( name == "self" ) {
     return this;

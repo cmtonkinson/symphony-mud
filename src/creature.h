@@ -181,44 +181,44 @@ class Creature {
     unsigned short      health(void) const                              { return _health; }
     void                maxHealth(int maxHealth)                        { _maxHealth = maxHealth; }
     int                 maxHealth(void) const                           { return _maxHealth; }
-    void                mana(int mana)                                  { _mana = mana; }
+    void                mana(int mana)                                  { _mana = ((mana <= maxMana()) ? mana : maxMana()); }
     int                 mana(void) const                                { return _mana; }
     void                maxMana(int maxMana)                            { _maxMana = maxMana; }
     int                 maxMana(void) const                             { return _maxMana; }
-    void                movement(int movement)                          { _movement = movement; }
+    void                movement(int movement)                          { _movement = ((movement <= maxMovement()) ? movement : maxMovement()); }
     int                 movement(void) const                            { return _movement; }
     void                maxMovement(int maxMovement)                    { _maxMovement = maxMovement; }
     int                 maxMovement(void) const                         { return _maxMovement; }
     // Stats
-    void                strength(unsigned short strength)               { _strength = strength; }
+    void                strength(unsigned short strength)               { _strength = ((strength <= maxStrength()) ? strength : maxStrength()); }
     unsigned short      strength(void) const                            { return _strength; }
     void                maxStrength(unsigned short maxStrength)         { _maxStrength = maxStrength; }
     unsigned short      maxStrength(void) const                         { return _maxStrength; }
-    void                dexterity(unsigned short dexterity)             { _dexterity = dexterity; }
+    void                dexterity(unsigned short dexterity)             { _dexterity = ((dexterity <= maxDexterity()) ? dexterity : maxDexterity()); }
     unsigned short      dexterity(void) const                           { return _dexterity; }
     void                maxDexterity(unsigned short maxDexterity)       { _maxDexterity = maxDexterity; }
     unsigned short      maxDexterity(void) const                        { return _maxDexterity; }
-    void                constitution(unsigned short constitution)       { _constitution = constitution; }
+    void                constitution(unsigned short constitution)       { _constitution = ((constitution <= maxConstitution()) ? constitution : maxConstitution()); }
     unsigned short      constitution(void) const                        { return _constitution; }
     void                maxConstitution(unsigned short maxConstitution) { _maxConstitution = maxConstitution; }
     unsigned short      maxConstitution(void) const                     { return _maxConstitution; }
-    void                intelligence(unsigned short intelligence)       { _intelligence = intelligence; }
+    void                intelligence(unsigned short intelligence)       { _intelligence = ((intelligence <= maxIntelligence()) ? intelligence : maxIntelligence()); }
     unsigned short      intelligence(void) const                        { return _intelligence;}
     void                maxIntelligence(unsigned short maxIntelligence) { _maxIntelligence = maxIntelligence; }
     unsigned short      maxIntelligence(void) const                     { return _maxIntelligence;}
-    void                focus(unsigned short focus)                     { _focus = focus; }
+    void                focus(unsigned short focus)                     { _focus = ((focus <= maxFocus()) ? focus : maxFocus()); }
     unsigned short      focus(void) const                               { return _focus;}
     void                maxFocus(unsigned short maxFocus)               { _maxFocus = maxFocus; }
     unsigned short      maxFocus(void) const                            { return _maxFocus;}
-    void                creativity(unsigned short creativity)           { _creativity = creativity; }
+    void                creativity(unsigned short creativity)           { _creativity = ((creativity <= maxCreativity()) ? creativity : maxCreativity()); }
     unsigned short      creativity(void) const                          { return _creativity;}
     void                maxCreativity(unsigned short maxCreativity)     { _maxCreativity = maxCreativity; }
     unsigned short      maxCreativity(void) const                       { return _maxCreativity;}
-    void                charisma(unsigned short charisma)               { _charisma = charisma; }
+    void                charisma(unsigned short charisma)               { _charisma = ((charisma <= maxCharisma()) ? charisma : maxCharisma()); }
     unsigned short      charisma(void) const                            { return _charisma;}
     void                maxCharisma(unsigned short maxCharisma)         { _maxCharisma = maxCharisma; }
     unsigned short      maxCharisma(void) const                         { return _maxCharisma;}
-    void                luck(unsigned short luck)                       { _luck = luck; }
+    void                luck(unsigned short luck)                       { _luck = ((luck <= maxLuck()) ? luck : maxLuck()); }
     unsigned short      luck(void) const                                { return _luck;}
     void                maxLuck(unsigned short maxLuck)                 { _maxLuck = maxLuck; }
     unsigned short      maxLuck(void) const                             { return _maxLuck;}
@@ -293,6 +293,7 @@ class Creature {
     static const char*          wearLocName( const unsigned short& wearloc );
     Object*                     primary(void);
     Object*                     secondary(void);
+    void                        naturalStatAdjustment(void);
 
     // Combat...
     bool        inCombat(void);
