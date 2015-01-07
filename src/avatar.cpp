@@ -238,8 +238,8 @@ bool Avatar::save( void ) {
         `race` = %u,              \
         `cClass` = %u,            \
         `level` = %hd,            \
-        `exp` = %lu,              \
-        `tnl` = %lu,              \
+        `exp` = %u,               \
+        `tnl` = %u,               \
         `health` = %hu,           \
         `maxHealth` = %hu,        \
         `mana` = %hu,             \

@@ -118,8 +118,8 @@ bool Mob::save( void ) {
         `longname` = '%s',        \
         `description` = '%s',     \
         `level` = %hd,            \
-        `exp` = %lu,              \
-        `tnl` = %lu,              \
+        `exp` = %u,               \
+        `tnl` = %u,               \
         `health` = %hu,           \
         `maxHealth` = %hu,        \
         `mana` = %hu,             \

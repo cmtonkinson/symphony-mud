@@ -109,6 +109,11 @@
 #define ACT_SLEEP   1
 #define ACT_FIGHT   2
 
+// Leveling...
+#define BASE_EXP    1
+#define BASE_TNL    100
+#define TARGET_TNL  100000
+
 class Area;
 class IOHandler;
 class ObjFurniture;
@@ -172,10 +177,10 @@ class Creature {
     // Level
     void                level(unsigned short level)                     { _level = level; }
     unsigned short      level(void) const                               { return _level; }
-    void                exp(unsigned long exp)                          { _exp = exp; }
-    unsigned long       exp(void) const                                 { return _exp; }
-    void                tnl(unsigned long tnl)                          { _tnl = tnl; }
-    unsigned long       tnl(void) const                                 { return _tnl; }
+    void                exp(unsigned exp)                               { _exp = exp; }
+    unsigned            exp(void) const                                 { return _exp; }
+    void                tnl(unsigned tnl)                               { _tnl = tnl; }
+    unsigned            tnl(void) const                                 { return _tnl; }
     // Health
     void                health(unsigned short health)                   { _health = ((health <= maxHealth()) ? health : maxHealth()); }
     unsigned short      health(void) const                              { return _health; }
@@ -305,6 +310,13 @@ class Creature {
     void        scheduleAttack(void);
     void        takeDamage(int damage);
 
+    // Leveling, EXP, & Gains...
+    unsigned    targetHealth(void) const;
+    unsigned    targetMana(void) const;
+    unsigned    targetMove(void) const;
+    unsigned    targetTNL(void) const;
+    unsigned    getTNL(void) const;
+
     // Pure virtual public methods...
     virtual bool                save( void )                                                      = 0;
     virtual bool                load( void )                                                      { return false; }
@@ -333,8 +345,8 @@ class Creature {
     PClass                      _pClass;
     // Level
     unsigned short              _level;
-    unsigned long               _exp;
-    unsigned long               _tnl;
+    unsigned                    _exp;
+    unsigned                    _tnl;
     // Health
     int                         _health;
     int                         _maxHealth;
