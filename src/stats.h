@@ -14,7 +14,7 @@ class Stats {
   public:
 
     /*
-     * Returns a gain for a stat based on a purely deterministic logistic function.
+     * Returns a gain for a stat based on a deterministic logistic function.
      *
      * level - The level of the Creature (in the context of a level up, this is the NEW level).
      * base - The minimum gain for the growth function (i.e. the theoretical gain at level 1).
@@ -30,7 +30,11 @@ class Stats {
      * warrior should have approximately 4k hp. This particular warrior just reached level 19. The
      * function call would look like `logistic_gain(19, 6, 4000);`
      */
-    static unsigned logistic_gain(unsigned level, unsigned base, unsigned target);
+    static unsigned logistic(unsigned level, unsigned base, unsigned target);
+
+    /*
+     */
+    static int polynomial(int level, int base, int target);
 
     /*
      * Transforms the input by adding randomness. The randomness is added using a normal
@@ -38,7 +42,7 @@ class Stats {
      * by the magnitude of the input value (the larger the input, the more variability in the
      * output).
      */
-    static unsigned cone_randomization(unsigned value);
+    static int cone_randomization(int value);
 
     /*
      * CONE_FACTOR is used to control the standard deviation of outputs from the cone randomization
