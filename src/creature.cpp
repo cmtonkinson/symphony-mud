@@ -52,29 +52,29 @@ Creature::Creature( void ):
   exp(BASE_EXP);
   tnl(BASE_TNL);
   // Health
-  health(100);
   maxHealth(100);
-  mana(100);
+  health(100);
   maxMana(100);
-  movement(100);
+  mana(100);
   maxMovement(100);
+  movement(100);
   // Stats
-  strength(15);
   maxStrength(20);
-  dexterity(15);
+  strength(15);
   maxDexterity(20);
-  constitution(15);
+  dexterity(15);
   maxConstitution(20);
-  intelligence(15);
+  constitution(15);
   maxIntelligence(20);
-  focus(15);
+  intelligence(15);
   maxFocus(20);
-  creativity(15);
+  focus(15);
   maxCreativity(20);
-  charisma(15);
+  creativity(15);
   maxCharisma(20);
-  luck(15);
+  charisma(15);
   maxLuck(20);
+  luck(15);
   // Armor
   armor(100);
   bash(0);
@@ -110,28 +110,28 @@ Creature::Creature( const Creature& ref ):
   level( ref.level() );
   exp( ref.exp() );
   tnl( ref.tnl() );
-  health( ref.health() );
   maxHealth( ref.maxHealth() );
-  mana( ref.mana() );
+  health( ref.health() );
   maxMana( ref.maxMana() );
-  movement( ref.movement() );
+  mana( ref.mana() );
   maxMovement( ref.maxMovement() );
-  strength( ref.strength() );
+  movement( ref.movement() );
   maxStrength( ref.maxStrength() );
-  dexterity( ref.dexterity() );
+  strength( ref.strength() );
   maxDexterity( ref.maxDexterity() );
-  constitution( ref.constitution() );
+  dexterity( ref.dexterity() );
   maxConstitution( ref.maxConstitution() );
-  intelligence( ref.intelligence() );
+  constitution( ref.constitution() );
   maxIntelligence( ref.maxIntelligence() );
-  focus( ref.focus() );
+  intelligence( ref.intelligence() );
   maxFocus( ref.maxFocus() );
-  creativity( ref.creativity() );
+  focus( ref.focus() );
   maxCreativity( ref.maxCreativity() );
-  charisma( ref.charisma() );
+  creativity( ref.creativity() );
   maxCharisma( ref.maxCharisma() );
-  luck( ref.luck() );
+  charisma( ref.charisma() );
   maxLuck( ref.maxLuck() );
+  luck( ref.luck() );
   armor( ref.armor() );
   bash( ref.bash() );
   slash( ref.slash() );
@@ -252,11 +252,11 @@ void Creature::naturalStatAdjustment( void ) {
 }
 
 Creature* Creature::findCreature( const std::string& name ) {
-  if ( name == "self" ) {
+  if (name == "self") {
     return this;
   }
-  for ( std::list<Creature*>::iterator it = room()->creatures().begin(); it != room()->creatures().end(); ++it ) {
-    if ( (*it)->identifiers().matchesKeyword( name ) && canSee( *it ) == SEE_NAME ) {
+  for (std::list<Creature*>::iterator it = room()->creatures().begin(); it != room()->creatures().end(); ++it) {
+    if ((*it)->identifiers().matchesKeyword(name) && canSee(*it) == SEE_NAME) {
       return *it;
     }
   }
@@ -440,34 +440,6 @@ Object* Creature::primary(void) {
 
 Object* Creature::secondary(void) {
   return equipment().at(off_hand());
-}
-
-std::string Creature::applyExperience( long e ) {
-  std::string output;
-  long gained = 0;
-  if ( e > 0 ) {
-    while ( e > 0 ) {
-      gained = ( e >= (long)_tnl ) ? _tnl : e ;
-      e -= gained;
-      _tnl -= gained;
-      _exp += gained;
-      if ( _tnl == 0 ) {
-        output.append( gainLevel() );
-      }
-    }
-  } else {
-    _exp += e;
-    _tnl -= e;
-  }
-  return output;
-}
-
-std::string Creature::gainLevel( void ) {
-  std::string output;
-  _level += 1;
-  _tnl = 1000;
-  send("You gain a level!\n");
-  return output;
 }
 
 bool Creature::lay( std::string& error, ObjFurniture* furniture ) {
@@ -658,10 +630,10 @@ void Creature::doModification( const unsigned short& attribute, const int& magni
   return;
 }
 
-unsigned short Creature::canSee( Creature* target ) {
+unsigned short Creature::canSee(Creature* target) {
   // Check for immortal invisibility...
-  if ( target->isAvatar() ) {
-    if ( ((Avatar*)target)->adminFlags().test( ADMIN_INCOGNITO ) && target->level() > level() && ((Avatar*)target)->isConnected() ) {
+  if (target->isAvatar()) {
+    if (((Avatar*)target)->adminFlags().test(ADMIN_INCOGNITO) && target->level() > level() && ((Avatar*)target)->isConnected()) {
       return SEE_NOTHING;
     }
   }
@@ -728,7 +700,7 @@ std::string Creature::seeName( Object* target, bool capitalize ) {
 }
 
 bool Creature::canAlter( Creature* target ) {
-  return ( target->level() < level()-2 );
+  return target->level() < level() - ALTERABILITY_LEVEL_DIFFERENCE;
 }
 
 bool Creature::canMove( const unsigned short& direction, std::string& message ) {

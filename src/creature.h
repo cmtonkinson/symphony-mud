@@ -110,9 +110,19 @@
 #define ACT_FIGHT   2
 
 // Leveling...
-#define BASE_EXP    1
-#define BASE_TNL    100
-#define TARGET_TNL  100000
+#define BASE_EXP      0
+#define BASE_TNL      100
+#define TARGET_TNL    100000
+
+#define BASE_HEALTH   100
+#define BASE_MANA     100
+#define BASE_MOVEMENT 100
+
+#define MIN_HEALTH_GAIN   3
+#define MIN_MANA_GAIN     3
+#define MIN_MOVEMENT_GAIN 3
+
+#define ALTERABILITY_LEVEL_DIFFERENCE 5
 
 class Area;
 class IOHandler;
@@ -146,8 +156,6 @@ class Creature {
     bool                        unwear( Object* article, std::string& message, bool force = false );
     Object*                     worn( const int& location ) const;
     static bool                 isSingleWearLoc( const unsigned short& object_weartype );
-    std::string                 applyExperience( long e );
-    std::string                 gainLevel( void );
     Identifiers&                identifiers( void )                                               { return _identifiers; }
     const Identifiers&          identifiers( void ) const                                         { return _identifiers; }
     InventoryContainer&         inventory( void )                                                 { return _inventory; }
@@ -182,8 +190,8 @@ class Creature {
     void                tnl(unsigned tnl)                               { _tnl = tnl; }
     unsigned            tnl(void) const                                 { return _tnl; }
     // Health
-    void                health(unsigned short health)                   { _health = ((health <= maxHealth()) ? health : maxHealth()); }
-    unsigned short      health(void) const                              { return _health; }
+    void                health(int health)                              { _health = ((health <= maxHealth()) ? health : maxHealth()); }
+    int                 health(void) const                              { return _health; }
     void                maxHealth(int maxHealth)                        { _maxHealth = maxHealth; }
     int                 maxHealth(void) const                           { return _maxHealth; }
     void                mana(int mana)                                  { _mana = ((mana <= maxMana()) ? mana : maxMana()); }
@@ -301,21 +309,26 @@ class Creature {
     void                        naturalStatAdjustment(void);
 
     // Combat...
-    bool        inCombat(void);
-    bool        attack(Job* job);
-    Creature*   aquireTarget(void);
-    void        strike(Creature* target);
-    void        assessCombat(void);
-    void        escalate(Group* group);
-    void        scheduleAttack(void);
-    void        takeDamage(int damage);
+    bool          isGrouped(void)                                                                 { return group()->members().size() > 1; }
+    bool          inCombat(void);
+    bool          attack(Job* job);
+    Creature*     aquireTarget(void);
+    void          strike(Creature* target);
+    void          escalate(Group* group);
+    void          scheduleAttack(bool now = false);
+    void          stopAttacking(void);
+    void          takeDamage(int damage, Creature* damager = NULL);
+    virtual void  die(Creature* killer = NULL);
+    void          awardExperience(unsigned experience);
+    void          gainLevel(void);
+    bool          autoassist(void) const;
+    void          heal(void);
 
     // Leveling, EXP, & Gains...
-    unsigned    targetHealth(void) const;
-    unsigned    targetMana(void) const;
-    unsigned    targetMove(void) const;
-    unsigned    targetTNL(void) const;
-    unsigned    getTNL(void) const;
+    unsigned      targetHealth(void) const;
+    unsigned      targetMana(void) const;
+    unsigned      targetMovement(void) const;
+    unsigned      targetTNL(void) const;
 
     // Pure virtual public methods...
     virtual bool                save( void )                                                      = 0;

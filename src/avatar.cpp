@@ -29,57 +29,24 @@
 #include "world.h"
 
 Avatar::Avatar( Socket* socket ) {
-  time( &_loggedOn );
-  status().set( CONNECTING );
-  disconnected( false );
-  deleteMe( false );
-  this->socket( socket );
-  identifiers().shortname( estring(this->socket()->getFd()) );
-  board( 0 );
-  note( NULL );
-  gechoColor( 'x' );
-  room( NULL );
-  mode().set( MODE_NONE );
-  title( ", adventurer." );
-  level( 1 );
-  exp( 0 );
-  tnl( 1000 );
-  health( 100 );
-  maxHealth( 100 );
-  mana( 100 );
-  maxMana( 100 );
-  movement( 100 );
-  maxMovement( 100 );
-  strength( 14 );
-  maxStrength( 18 );
-  dexterity( 14 );
-  maxDexterity( 18 );
-  constitution( 14 );
-  maxConstitution( 18 );
-  intelligence( 14 );
-  maxIntelligence( 18 );
-  focus(14);
-  maxFocus(18);
-  creativity(14);
-  maxCreativity(18);
-  charisma( 14 );
-  maxCharisma( 18 );
-  luck(14);
-  maxLuck(18);
-  armor( 0 );
-  bash( 0 );
-  slash( 0 );
-  pierce( 0 );
-  exotic( 0 );
-  practices( 5 );
-  trains( 5 );
-  gains( 5 );
-  age( 17 );
-  points( 1 );
-  gold( 0 );
-  silver( 100 );
-  bankSilver( 0 );
-  bankGold( 0 );
+  time(&_loggedOn);
+  status().set(CONNECTING);
+  disconnected(false);
+  deleteMe(false);
+  this->socket(socket);
+  identifiers().shortname(estring(this->socket()->getFd()));
+  board(0);
+  note(NULL);
+  gechoColor('x');
+  room(NULL);
+  mode().set(MODE_NONE);
+  title(", adventurer.");
+  points(0);
+  practices(0);
+  trains(5);
+  age(17);
+  bankSilver(0);
+  bankGold(0);
   return;
 }
 
@@ -240,12 +207,12 @@ bool Avatar::save( void ) {
         `level` = %hd,            \
         `exp` = %u,               \
         `tnl` = %u,               \
-        `health` = %hu,           \
-        `maxHealth` = %hu,        \
-        `mana` = %hu,             \
-        `maxMana` = %hu,          \
-        `movement` = %hu,         \
-        `maxMovement` = %hu,      \
+        `health` = %d,            \
+        `maxHealth` = %d,         \
+        `mana` = %d,              \
+        `maxMana` = %d,           \
+        `movement` = %d,          \
+        `maxMovement` = %d,       \
         `strength` = %hu,         \
         `maxStrength` = %hu,      \
         `dexterity` = %hu,        \
@@ -426,28 +393,28 @@ bool Avatar::load( void ) {
       level( row["level"] );
       exp( row["exp"] );
       tnl( row["tnl"] );
-      health( row["health"] );
       maxHealth( row["maxHealth"] );
-      mana( row["mana"] );
+      health( row["health"] );
       maxMana( row["maxMana"] );
-      movement( row["movement"] );
+      mana( row["mana"] );
       maxMovement( row["maxMovement"] );
-      strength( row["strength"] );
+      movement( row["movement"] );
       maxStrength( row["maxStrength"] );
-      dexterity( row["dexterity"] );
+      strength( row["strength"] );
       maxDexterity( row["maxDexterity"] );
-      constitution( row["constitution"] );
+      dexterity( row["dexterity"] );
       maxConstitution( row["maxConstitution"] );
-      intelligence( row["intelligence"] );
+      constitution( row["constitution"] );
       maxIntelligence( row["maxIntelligence"] );
-      focus( row["focus"] );
+      intelligence( row["intelligence"] );
       maxFocus( row["maxFocus"] );
-      creativity( row["creativity"] );
+      focus( row["focus"] );
       maxCreativity( row["maxCreativity"] );
-      charisma( row["charisma"] );
+      creativity( row["creativity"] );
       maxCharisma( row["maxCharisma"] );
-      luck( row["luck"] );
+      charisma( row["charisma"] );
       maxLuck( row["maxLuck"] );
+      luck( row["luck"] );
       armor( row["armor"] );
       bash( row["bash"] );
       slash( row["slash"] );
@@ -641,4 +608,26 @@ bool Avatar::checkPassword( const std::string& attempt ) {
   }
 
   return false;
+}
+
+void Avatar::die(Creature* killer) {
+  Creature::die(killer);
+  respawn();
+  return;
+}
+
+void Avatar::respawn(void) {
+  CmdLook look;
+  std::vector<std::string> look_args(1);
+  // Leave the current Room.
+  room()->remove(this);
+  // Relocate to the spawn point.
+  room(World::Instance().findRoom(0));
+  room()->add(this);
+  // let everyone know...
+  room()->send_cond("$p appears, looking weary.\n", this);
+  // show them around...
+  look.avatar(this);
+  look.execute(this, look_args);
+  return;
 }

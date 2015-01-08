@@ -49,28 +49,28 @@ Mob::Mob( ROW row ) {
   level( row["level"] );
   exp( row["exp"] );
   tnl( row["tnl"] );
-  health( row["health"] );
   maxHealth( row["maxHealth"] );
-  mana( row["mana"] );
+  health( row["health"] );
   maxMana( row["maxMana"] );
-  movement( row["movement"] );
+  mana( row["mana"] );
   maxMovement( row["maxMovement"] );
-  strength( row["strength"] );
+  movement( row["movement"] );
   maxStrength( row["maxStrength"] );
-  dexterity( row["dexterity"] );
+  strength( row["strength"] );
   maxDexterity( row["maxDexterity"] );
-  constitution( row["constitution"] );
+  dexterity( row["dexterity"] );
   maxConstitution( row["maxConstitution"] );
-  intelligence( row["intelligence"] );
+  constitution( row["constitution"] );
   maxIntelligence( row["maxIntelligence"] );
-  focus( row["focus"] );
+  intelligence( row["intelligence"] );
   maxFocus( row["maxFocus"] );
-  creativity( row["creativity"] );
+  focus( row["focus"] );
   maxCreativity( row["maxCreativity"] );
-  charisma( row["charisma"] );
+  creativity( row["creativity"] );
   maxCharisma( row["maxCharisma"] );
-  luck( row["luck"] );
+  charisma( row["charisma"] );
   maxLuck( row["maxLuck"] );
+  luck( row["luck"] );
   armor( row["armor"] );
   bash( row["bash"] );
   slash( row["slash"] );
@@ -120,12 +120,12 @@ bool Mob::save( void ) {
         `level` = %hd,            \
         `exp` = %u,               \
         `tnl` = %u,               \
-        `health` = %hu,           \
-        `maxHealth` = %hu,        \
-        `mana` = %hu,             \
-        `maxMana` = %hu,          \
-        `movement` = %hu,         \
-        `maxMovement` = %hu,      \
+        `health` = %d,            \
+        `maxHealth` = %d,         \
+        `mana` = %d,              \
+        `maxMana` = %d,           \
+        `movement` = %d,          \
+        `maxMovement` = %d,       \
         `strength` = %hu,         \
         `maxStrength` = %hu,      \
         `dexterity` = %hu,        \
@@ -219,8 +219,14 @@ bool Mob::destroy( void ) {
 }
 
 /******************************************************* Overloads of virtual methods ********************************************************/
-
-
+void Mob::die(Creature* killer) {
+  Creature::die(killer);
+  group()->remove_member(this);
+  room()->remove(this);
+  World::Instance().remove(this);
+  delete this;
+  return;
+}
 
 /******************************************************* Static methods ********************************************************/
 Mob* Mob::create( Area* area, const unsigned long& vnum ) {

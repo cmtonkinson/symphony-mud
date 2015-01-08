@@ -116,47 +116,52 @@ std::string Display::formatAction( const char* format, Creature* creature, void*
 }
 
 std::string Display::formatDamage(unsigned int damage) {
+  std::string output;
   if (damage > 250) {
-    return "{WRUINS{x";
+    output = "{WRUINS{x";
   } else if (damage > 200) {
-    return "{w--{W=={r{{{R{{{WANNIHILATES{R}{r}{W=={w--{x";
+    output = "{w--{W=={r{{{R{{{WANNIHILATES{R}{r}{W=={w--{x";
   } else if (damage > 180) {
-    return "{b=={c**{CDEVASTATES{c**{b=={x";
+    output = "{b=={c**{CDEVASTATES{c**{b=={x";
   } else if (damage > 160) {
-    return "{w<{x<{W<{RDESOLATES{W>{x>{w>{x";
+    output = "{w<{x<{W<{RDESOLATES{W>{x>{w>{x";
   } else if (damage > 140) {
-    return "{g({G({YSHATTERS{G){g){x";
+    output = "{g({G({YSHATTERS{G){g){x";
   } else if (damage > 120) {
-    return "{w[{BBREAKS{w]{x";
+    output = "{w[{BBREAKS{w]{x";
   } else if (damage > 100) {
-    return "{YDISFIGURES{x";
+    output = "{YDISFIGURES{x";
   } else if (damage > 80) {
-    return "{BDESTROYS{x";
+    output = "{BDESTROYS{x";
   } else if (damage > 70) {
-    return "{RRAVAGES{x";
+    output = "{RRAVAGES{x";
   } else if (damage > 60) {
-    return "{Gdecimates{x";
+    output = "{Gdecimates{x";
   } else if (damage > 50) {
-    return "{Ymutilates{x";
+    output = "{Ymutilates{x";
   } else if (damage > 40) {
-    return "{Bmangles{x";
+    output = "{Bmangles{x";
   } else if (damage > 35) {
-    return "{Mbatters{x";
+    output = "{Mbatters{x";
   } else if (damage > 30) {
-    return "{Cdamages{x";
+    output = "{Cdamages{x";
   } else if (damage > 25) {
-    return "{winjures{x";
+    output = "{winjures{x";
   } else if (damage > 20) {
-    return "{charms{x";
+    output = "{charms{x";
   } else if (damage > 16) {
-    return "{yhurts{x";
+    output = "{yhurts{x";
   } else if (damage > 12) {
-    return "{gwounds{x";
+    output = "{gwounds{x";
   } else if (damage > 8) {
-    return "{bbruises{x";
+    output = "{bbruises{x";
   } else if (damage > 4) {
-    return "{rscratches{x";
+    output = "{rscratches{x";
+  } else if (damage > 0) {
+    output = "{mgrazes{x";
   } else {
-    return "{mgrazes{x";
+    output = "does nothing";
   }
+  output.append(" [").append(estring(damage)).append("]");
+  return output;
 }

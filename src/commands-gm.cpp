@@ -260,6 +260,38 @@ bool CmdGroup::execute(Creature* creature, const std::vector<std::string>& args)
   return true;
 }
 
+CmdHeal::CmdHeal(void) {
+  name("heal");
+  playerOnly(true);
+  level(DEMIGOD);
+  addSyntax(1, "<target>");
+  addSyntax(1, "all");
+  brief("Restores hp/mp/mv to the target, or all players.");
+  return;
+}
+
+bool CmdHeal::execute(Creature* creature, const std::vector<std::string>& args) {
+  Creature* target = NULL;
+  if (args[0] == "all") {
+    for (std::map<std::string, Avatar*>::iterator iter = World::Instance().getAvatars().begin(); iter != World::Instance().getAvatars().end(); ++iter) {
+      iter->second->heal();
+      iter->second->send(iter->second->seeName(creature, true));
+      iter->second->send(" has healed you.\n");
+    }
+    creature->send("You have healed the world.\n");
+  } else {
+    if ((target = World::Instance().findCreature(args[0])) == NULL) {
+      avatar()->send("They're not around at the moment.");
+      return false;
+    }
+    target->heal();
+    target->send(target->seeName(creature, true));
+    target->send(" has healed you.\n");
+    creature->send("You have healed %s.\n", target->identifiers().shortname().c_str());
+  }
+  return true;
+}
+
 CmdHelp::CmdHelp( void ) {
   name( "help" );
   playerOnly( true );
@@ -699,9 +731,9 @@ bool CmdLook::execute( Creature* creature, const std::vector<std::string>& args 
   if ( args[0].empty() ) {
     /*************** looking at the room */
     if ( creature->level() >= DEMIGOD ) {
-      sprintf( buffer, "[{g%lu{x] {%c%s{x\n", creature->room()->vnum(), creature->room()->terrain()->title(), creature->room()->name().c_str() );
+      sprintf( buffer, "\n\n[{g%lu{x] {%c%s{x\n", creature->room()->vnum(), creature->room()->terrain()->title(), creature->room()->name().c_str() );
     } else {
-      sprintf( buffer, "{%c%s{x\n", creature->room()->terrain()->title(), creature->room()->name().c_str() );
+      sprintf( buffer, "\n\n{%c%s{x\n", creature->room()->terrain()->title(), creature->room()->name().c_str() );
     }
     output.append( buffer );
     // Room description...

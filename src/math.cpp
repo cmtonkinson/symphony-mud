@@ -8,10 +8,11 @@ bool Math::has_extra_random = false;
 double Math::extra_random   = 0.0;
 
 // https://en.wikipedia.org/wiki/Logistic_function
-double Math::logistic(double x, double limit, double start, double half_max_x) {
-  double a = (limit - start) / start;
+double Math::logistic(double x, double limit, double min, double half_max_x) {
+  double a = (limit - min) / min;
   double k = log(a) / half_max_x;
-  return limit / (1 + a * pow(M_E, -k * x));
+  double result = limit / (1 + a * pow(M_E, -k * x));
+  return result;
 }
 
 // https://en.wikipedia.org/wiki/Box-Muller_transform

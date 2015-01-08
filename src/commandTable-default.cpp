@@ -53,6 +53,7 @@ CommandTable::CommandTable( void ) {
   add( new CmdForce() );
   add( new CmdGecho() );
   add( new CmdGoto() );
+  add( new CmdHeal() );
   add( new CmdIdentify() );
   add( new CmdIncognito() );
   add( new CmdInventory() );
@@ -61,6 +62,7 @@ CommandTable::CommandTable( void ) {
   add( new CmdMload() );
   add( new CmdOlist() );
   add( new CmdOload() );
+  add( new CmdPeace() );
   add( new CmdPoofin() );
   add( new CmdPoofout() );
   add( new CmdPromote() );

@@ -430,6 +430,34 @@ bool CmdPassword::execute( Creature* creature, const std::vector<std::string>& a
 
 }
 
+CmdPeace::CmdPeace(void) {
+  name("peace");
+  playerOnly(true);
+  level(GOD);
+  addSyntax(0, "");
+  addSyntax(1, "all");
+  brief("Ends all combat, in the current room, or the whole world.");
+  return;
+}
+
+bool CmdPeace::execute(Creature* creature, const std::vector<std::string>& args) {
+  if (args[0].empty()) {
+    for (std::list<Creature*>::iterator iter = avatar()->room()->creatures().begin(); iter != avatar()->room()->creatures().end(); ++iter) {
+      (*iter)->stopAttacking();
+    }
+    avatar()->room()->send_cond("$p has imposed peace here.\n", creature);
+    avatar()->send("You have imposed peace here.\n");
+  } else {
+    for (std::set<Creature*>::iterator iter = World::Instance().getCreatures().begin(); iter != World::Instance().getCreatures().end(); ++iter) {
+      (*iter)->stopAttacking();
+      (*iter)->send((*iter)->seeName(avatar(), true));
+      (*iter)->send(" has imposed peace throughout the realm.\n");
+    }
+    avatar()->send("You have imposed peace throughout the realm.\n");
+  }
+  return true;
+}
+
 CmdPedit::CmdPedit( void ) {
   name( "pedit" );
   level( GOD );
@@ -570,17 +598,16 @@ bool CmdPromote::execute( Creature* creature, const std::vector<std::string>& ar
     avatar()->send( "That wouldn't really help %s much, now would it?", target->identifiers().shortname().c_str() );
     return false;
   }
-  if ( level >= (unsigned)avatar()->level()-2 ) { // keep this offset in sync with the offset in Creature::canAlter()
-    avatar()->send( "You can't promote anyone higher than level %d.", avatar()->level()-3 );
+  if (level >= (unsigned)avatar()->level() - ALTERABILITY_LEVEL_DIFFERENCE) {
+    avatar()->send( "You can't promote anyone higher than level %d.", avatar()->level() - (ALTERABILITY_LEVEL_DIFFERENCE-1) );
     return false;
   }
 
   // Give 'em the juice!
-  while ( target->level() < level ) {
-    target->applyExperience( target->tnl() );
-  }
-  target->send( "%s has {Gpromoted{x you to level %d!", target->seeName( avatar(), true ).c_str(), target->level() );
-  avatar()->send( "%s has been {Gpromoted{x to level %d!", target->identifiers().shortname().c_str(), target->level() );
+  while ( target->level() < level ) target->gainLevel();
+
+  target->send( "%s has {Gpromoted{x you to level {G%d{x!", target->seeName( avatar(), true ).c_str(), target->level() );
+  avatar()->send( "%s has been {Gpromoted{x to level {G%d{x!", target->identifiers().shortname().c_str(), target->level() );
 
   return true;
 }

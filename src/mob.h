@@ -42,6 +42,9 @@ class Mob: public Creature {
     // general methods...
     virtual bool        isMob( void ) const                             { return true; }
 
+    // Combat...
+    virtual void        die(Creature* killer = NULL);
+
     // pure virtual overrides...
     virtual bool        save( void );
     virtual bool        destroy( void );

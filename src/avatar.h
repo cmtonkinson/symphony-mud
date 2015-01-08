@@ -131,6 +131,10 @@ class Avatar: public Creature {
     void            bankSilver( const unsigned long& bankSilver )             { _bankSilver = bankSilver; }
     unsigned long   bankSilver( void ) const                                  { return _bankSilver; }
 
+    // Combat...
+    virtual void    die(Creature* killer = NULL);
+    void            respawn(void);
+
   private:
     // Low level/System members...
     Socket*                 _socket;

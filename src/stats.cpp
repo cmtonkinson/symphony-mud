@@ -4,10 +4,10 @@
 #include "creature.h"
 #include "math.h"
 
-unsigned Stats::logistic(unsigned level, unsigned base, unsigned target) {
+unsigned Stats::logistic(unsigned level, unsigned min, unsigned target) {
   double limit      = floor(target/50);
   double half_max_x = floor(LEVEL_HERO / 2);
-  double result     = Math::logistic(level, limit, base, half_max_x);
+  double result     = Math::logistic(level, limit, min, half_max_x);
   return 0.5 + result;
 }
 
