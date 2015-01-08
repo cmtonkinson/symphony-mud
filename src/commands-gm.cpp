@@ -229,12 +229,12 @@ bool CmdGroup::execute(Creature* creature, const std::vector<std::string>& args)
   // Empty name - list the group stats.
   if (name.empty()) {
     creature->send("+----------------------------------------------------------------------------+\n");
-    creature->send("| Group Leader: {B%-20s{x    {GHEALTH      {CMANA       {MMOVE          {x|\n", this_group->leader()->identifiers().shortname().c_str());
+    creature->send("| Group Leader: {B%-20s{x {YLEVEL   {GHEALTH      {CMANA       {MMOVE     {x|\n", this_group->leader()->identifiers().shortname().c_str());
     creature->send("+----------------------------------------------------------------------------+\n");
     for (std::set<Creature*>::iterator it = this_group->members().begin(); it != this_group->members().end(); ++it) {
-      creature->send("| {W%-20s{x                {G%4d{x/{g%-4u  {C%4u{x/{c%-4u  {M%4u{x/{m%-4u{x        |\n",
+      creature->send("| {W%-20s{x                {Y%3d{x  {G%4d{x/{g%-4u  {C%4u{x/{c%-4u  {M%4u{x/{m%-4u{x   |\n",
         (*it)->identifiers().shortname().c_str(),
-        (*it)->health(), (*it)->maxHealth(), (*it)->mana(), (*it)->maxMana(), (*it)->movement(), (*it)->maxMovement()
+        (*it)->level(), (*it)->health(), (*it)->maxHealth(), (*it)->mana(), (*it)->maxMana(), (*it)->movement(), (*it)->maxMovement()
       );
     }
     creature->send("+----------------------------------------------------------------------------+\n");
