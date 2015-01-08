@@ -177,6 +177,7 @@ void Creature::awardExperience(unsigned experience) {
     } else {
       experience -= tnl();
       gainLevel();
+      if (level() >= HERO) return;
     }
   }
   return;
