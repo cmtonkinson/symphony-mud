@@ -662,10 +662,20 @@ void InputIOHandler::deactivate( void ) {
 }
 
 std::string InputIOHandler::prompt( void ) {
+  char buffer[256];
   if ( avatar()->whoFlags().test( WHO_AFK ) ) {
     return "\n\n{x[{YAFK{x] ";
   } else {
-    return "\n\n{x[{CSymphony{x] ";
+    sprintf(buffer,
+      "\n\n{W[{G%d{x/{g%d{xhp {C%d{x/{c%d{xmana {M%d{x/{m%d{xmove {y%d{xtnl{W]{x ",
+      avatar()->health(),
+      avatar()->maxHealth(),
+      avatar()->mana(),
+      avatar()->maxMana(),
+      avatar()->movement(),
+      avatar()->maxMovement(),
+      avatar()->tnl());
+    return buffer;
   }
 }
 
