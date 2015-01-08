@@ -155,23 +155,10 @@ CmdUngroup::CmdUngroup(void) {
 }
 
 bool CmdUngroup::execute(Creature* creature, const std::vector<std::string>& args) {
-  Group* group         = creature->group();
-  Creature* new_leader = NULL;
-  if (group->members().size() == 1) {
+  if (creature->group()->members().size() == 1) {
     creature->send("You're already solo.");
   } else {
-    group->remove_member(creature);
-    creature->group(new Group());
-    creature->group()->add_member(creature);
-    creature->group()->leader(creature);
-    group->send("$p has left the group.", creature);
-    creature->send("You're now on your own.");
-    if (group->leader() == creature) {
-      new_leader = *group->members().begin();
-      group->leader(new_leader);
-      new_leader->send("You are now the group leader.");
-      group->send("$p is now the group leader.", new_leader, NULL, NULL, TO_NOTVICT);
-    }
+    creature->ungroup();
   }
   return true;
 }

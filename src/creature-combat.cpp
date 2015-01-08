@@ -5,30 +5,58 @@
 #include "stats.h"
 #include "world.h"
 
+void Creature::add_opponent(Creature* opponent) {
+  _opponents.insert(opponent);
+  return;
+}
 
-bool Creature::inCombat(void) {
-  return group()->in_combat() && _next_attack > 0;
+void Creature::remove_opponent(Creature* opponent) {
+  _opponents.erase(opponent);
+  return;
+}
+
+bool Creature::is_opponent(Creature* creature) {
+  return _opponents.find(creature) != _opponents.end();
+}
+
+void Creature::ungroup(void) {
+  if (group()->size() == 1) return;
+  if (this == group()->leader()) {
+    group()->send("$p has disbanded the company.\n", this);
+    std::set<Creature*> temp(group()->members());
+    for (std::set<Creature*>::iterator iter = temp.begin(); iter != temp.end(); ++iter) {
+      if (*iter != this) (*iter)->ungroup();
+    }
+  }
+  group()->send("$p leaves the group.\n", this);
+  group()->remove_member(this);
+  group(new Group());
+  group()->add_member(this);
+  group()->leader(this);
+  send("You leave the group. Good luck on your own!\n");
+  return;
 }
 
 bool Creature::attack(Job* job) {
   Creature* target = NULL;
-  // No-op if not in combat.
-  if (!inCombat()) return false;
   // Aquire a target.
-  if ((target = aquireTarget()) == NULL) return false;
+  if ((target = aquireTarget()) == NULL) {
+    peace();
+    return false;
+  }
   // Make the strike.
   strike(target);
   // Schedule next attack.
   scheduleAttack();
-  // Fully involve both groups.
-  escalate(target->group());
+  // Get everyone involved.
+  escalate(target);
   // Must return bool per the Job interface.
   return true;
 }
 
 Creature* Creature::aquireTarget(void) {
   // TODO threat/aggro calculations
-  for (std::set<Creature*>::iterator iter = group()->opponents().begin(); iter != group()->opponents().end(); ++iter) {
+  for (std::set<Creature*>::iterator iter = opponents().begin(); iter != opponents().end(); ++iter) {
     // You need to be able to see the target.
     if (canSee(*iter) != SEE_NAME) continue;
     // They must be in the same Room.
@@ -69,26 +97,35 @@ void Creature::strike(Creature* target) {
   return;
 }
 
-/*
- * Ensure that each member of the target Group is tracking this Creature as an opponent. Any new
- * adversaries should schedule their first attack.
- */
-void Creature::escalate(Group* group) {
-  group->add_opponent(this);
-  for (std::set<Creature*>::iterator iter = group->members().begin(); iter != group->members().end(); ++iter) {
-    if (!(*iter)->nextAttack() && (*iter)->autoassist()) (*iter)->scheduleAttack();
+void Creature::escalate(Creature* target) {
+  // Make sure the other guy gets a turn.
+  target->add_opponent(this);
+  target->scheduleAttack();
+  // Get the whole group involved.
+  for (std::set<Creature*>::iterator iter = group()->members().begin(); iter != group()->members().end(); ++iter) {
+    // Respect the members' auto-assist setting.
+    if ((*iter)->autoassist()) {
+      (*iter)->add_opponent(target);
+      // Could be that this member was already fighting someone. If not, make sure they start.
+      if (!(*iter)->nextAttack()) {
+        (*iter)->scheduleAttack();
+      }
+    }
   }
   return;
 }
 
-void Creature::scheduleAttack(bool now) {
-  _next_attack = time(NULL);
-  if (!now) _next_attack += rand() % 5;
+void Creature::scheduleAttack(void) {
+  _next_attack = time(NULL) + rand() % 5;
   World::Instance().schedule()->add(new Job(_next_attack, this, &Creature::attack));
   return;
 }
 
-void Creature::stopAttacking(void) {
+void Creature::peace(void) {
+  for (std::set<Creature*>::iterator iter = opponents().begin(); iter != opponents().end(); ++iter) {
+    (*iter)->remove_opponent(this);
+  }
+  opponents().clear();
   _next_attack = 0;
   return;
 }
@@ -108,18 +145,16 @@ void Creature::die(Creature* killer) {
   mana(1);
   movement(1);
   // Remove from combat.
-  for (std::set<Creature*>::iterator iter = group()->opponents().begin(); iter != group()->opponents().end(); ++iter) {
-    (*iter)->group()->opponents().erase(this);
-  }
+  peace();
   // Announce the death.
   send("\n\nYou are {RDEAD{x!!!\n\n");
   room()->send_cond("\n\n$p is {RDEAD{x!!!\n\n", this, NULL, NULL, TO_NOTVICT);
   // Who's responsible?
   if (killer) {
     experience = killer->level() * 10;
-    if (killer->isGrouped()) {
+    if (killer->group()->size() > 1) {
       for (std::set<Creature*>::iterator iter = killer->group()->members().begin(); iter != killer->group()->members().end(); ++iter) {
-        (*iter)->awardExperience(experience / killer->group()->members().size());
+        (*iter)->awardExperience(experience / killer->group()->size());
       }
     } else {
       killer->awardExperience(experience);

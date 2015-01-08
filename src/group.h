@@ -18,27 +18,19 @@ class Group {
     std::set<Creature*>&    members(void)       { return _members; }
     Creature*               leader(void)        { return _leader; }
     void                    leader(Creature* new_leader);
-    std::set<Creature*>&    opponents(void)  { return _opponents; }
 
     // general methods...
-    void                    add_member(Creature* member);
-    void                    remove_member(Creature* member);
-    bool                    is_member(Creature* c);
+    size_t  size(void) const                    { return _members.size(); }
+    void    add_member(Creature* member);
+    void    remove_member(Creature* member);
+    bool    is_member(Creature* c);
 
-    void                    add_opponent(Creature* opponent);
-    void                    add_opponents(const std::set<Creature*> opponents);
-    void                    remove_opponent(Creature* opponent);
-    bool                    is_opponent(Creature* c);
-
-    void                    send(std::string format, Creature* creature, void* arg1 = NULL, void* arg2 = NULL, const unsigned long& target = TO_ROOM);
-
-    bool                    in_combat(void)     { return !_opponents.empty(); }
+    void    send(std::string format, Creature* creature, void* arg1 = NULL, void* arg2 = NULL, const unsigned long& target = TO_ROOM);
 
   private:
     // data...
     std::set<Creature*>     _members;
     Creature*               _leader;
-    std::set<Creature*>     _opponents;
 
 };
 

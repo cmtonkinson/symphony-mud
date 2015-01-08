@@ -252,7 +252,8 @@ class Creature {
     void                silver(unsigned silver)                         { _silver = silver; }
     unsigned            silver(void) const                              { return _silver; }
     // combat
-    time_t                      nextAttack(void) const                                            { return _next_attack; }
+    time_t                      nextAttack(void) const                  { return _next_attack; }
+    std::set<Creature*>&        opponents(void)                         { return _opponents; }
 
     // Public static methods...
     static unsigned short       stringToAttribute( const std::string& name );
@@ -309,14 +310,17 @@ class Creature {
     void                        naturalStatAdjustment(void);
 
     // Combat...
-    bool          isGrouped(void)                                                                 { return group()->members().size() > 1; }
+    void          add_opponent(Creature* opponent);
+    void          remove_opponent(Creature* opponent);
+    bool          is_opponent(Creature* creature);
+    void          ungroup(void);
     bool          inCombat(void);
     bool          attack(Job* job);
     Creature*     aquireTarget(void);
     void          strike(Creature* target);
-    void          escalate(Group* group);
-    void          scheduleAttack(bool now = false);
-    void          stopAttacking(void);
+    void          escalate(Creature* creature);
+    void          scheduleAttack(void);
+    void          peace(void);
     void          takeDamage(int damage, Creature* damager = NULL);
     virtual void  die(Creature* killer = NULL);
     void          awardExperience(unsigned experience);
@@ -395,6 +399,7 @@ class Creature {
     unsigned                    _silver;
     // combat...
     time_t                      _next_attack;
+    std::set<Creature*>         _opponents;
 
 };
 
