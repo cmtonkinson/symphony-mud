@@ -132,6 +132,7 @@ void Creature::peace(void) {
 
 void Creature::takeDamage(int damage, Creature* damager) {
   health(health() - damage);
+  if (level() > DEMIGOD && health() < 1) health(1);
   if (health() < 1) die(damager);
   return;
 }
@@ -192,6 +193,7 @@ void Creature::gainLevel(void) {
   maxHealth(maxHealth() + health_boost);
   maxMana(maxMana() + mana_boost);
   maxMovement(maxMovement() + movement_boost);
+  // Clear TNL if the Creature just hero'd
   if (level() < HERO) {
     tnl(new_tnl);
   } else {
@@ -212,6 +214,7 @@ void Creature::gainLevel(void) {
 }
 
 bool Creature::autoassist(void) const {
+  // TODO make this togglable
   return true;
 }
 
