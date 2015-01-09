@@ -261,6 +261,7 @@ class Creature {
     static std::string          listAttributes( void );
 
     // Public methods...
+    const char*                 name(void) const                                                  { return identifiers().shortname().c_str(); }
     virtual bool                isAvatar( void ) const                                            { return false; }
     virtual bool                isMob( void ) const                                               { return false; }
     bool                        isLaying( void ) const                                            { return position().number() == LAYING; }

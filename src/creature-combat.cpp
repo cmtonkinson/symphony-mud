@@ -150,6 +150,9 @@ void Creature::die(Creature* killer) {
   // Announce the death.
   send("\n\nYou are {RDEAD{x!!!\n\n");
   room()->send_cond("\n\n$p is {RDEAD{x!!!\n\n", this, NULL, NULL, TO_NOTVICT);
+  if (isAvatar() && killer && killer->isAvatar()) {
+    World::Instance().bigBrother(this, ADMIN_BIGBRO_DEATHS, "%s has killed %s.\n", killer->name(), name());
+  }
   // Who's responsible?
   if (killer) {
     experience = killer->level() * 10;
