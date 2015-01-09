@@ -114,10 +114,8 @@ void Creature::takeDamage(int damage, Creature* damager) {
   } else if (damager) {
     // Launch the counter-offensive.
     add_opponent(damager);
-    scheduleAttack();
     escalate(damager);
     // The damager will attack, as will their Group.
-    damager->scheduleAttack();
     damager->escalate(this);
   }
   return;
@@ -131,6 +129,7 @@ void Creature::scheduleAttack(void) {
 }
 
 void Creature::escalate(Creature* opponent) {
+  scheduleAttack();
   // Get the whole group involved.
   for (std::set<Creature*>::iterator iter = group()->members().begin(); iter != group()->members().end(); ++iter) {
     // Skip the initial belligerent.
