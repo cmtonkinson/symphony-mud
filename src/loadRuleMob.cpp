@@ -73,6 +73,7 @@ bool LoadRuleMob::execute( std::list<Object*>& new_objects, std::list<Mob*>& new
   Mob* mob = NULL;
   unsigned already_there = area->howManyMobs( target() );
   unsigned mobs_added = 0;
+  int level = 0;
 
   if ( ( it = area->mobs().find( target() ) ) != area->mobs().end() ) {
     mob = it->second;
@@ -92,6 +93,10 @@ bool LoadRuleMob::execute( std::list<Object*>& new_objects, std::list<Mob*>& new
       room()->add( mob );
       new_mobs.push_back( mob );
       mobs_added++;
+      // Give the mob some real stats. It's a hack but it works for now.
+      level = mob->level();
+      mob->resetStats();
+      for (int i = 1; i < level; ++i) mob->gainLevel();
     }
   }
 

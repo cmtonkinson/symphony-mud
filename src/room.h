@@ -35,6 +35,8 @@
 #define TO_ROOM     3
 #define TO_ALL      4
 
+#define INDEX_DEFAULT (unsigned short)-1
+
 class Area;
 class Creature;
 class Exit;
@@ -95,6 +97,7 @@ class Room {
     bool                          clear( void );
     std::string                   listFlags( void );
     void                          reset( void );
+    Creature*                     creature_by_vnum(unsigned long vnum, unsigned short index = INDEX_DEFAULT);
 
     // Statics...
     static const char*    getFlagName( const unsigned long& flag );

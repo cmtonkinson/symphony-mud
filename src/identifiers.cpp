@@ -75,3 +75,17 @@ void Identifiers::unserializeKeywords( const std::string& serialization ) {
   }
   return;
 }
+
+std::string Identifiers::longestKeyword(void) const {
+  std::string longest = "";
+  int longest_length  = 0;
+  int length          = 0;
+  for (std::set<std::string>::iterator iter = _keywords.begin(); iter != _keywords.end(); ++iter) {
+    length = (*iter).size();
+    if (length > longest_length) {
+      longest_length = length;
+      longest = *iter;
+    }
+  }
+  return longest;
+}

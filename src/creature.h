@@ -311,10 +311,11 @@ class Creature {
     void                        naturalStatAdjustment(void);
 
     // Combat...
+    void          formGroup(void);
+    void          ungroup(void);
     void          add_opponent(Creature* opponent);
     void          remove_opponent(Creature* opponent);
     bool          is_opponent(Creature* creature);
-    void          ungroup(void);
     bool          inCombat(void);
     bool          attack(Job* job);
     Creature*     aquireTarget(void);
@@ -330,6 +331,7 @@ class Creature {
     void          heal(void);
 
     // Leveling, EXP, & Gains...
+    void          resetStats(void);
     unsigned      targetHealth(void) const;
     unsigned      targetMana(void) const;
     unsigned      targetMovement(void) const;

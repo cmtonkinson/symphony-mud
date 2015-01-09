@@ -183,9 +183,9 @@ ETAction::ETAction( void ) {
 }
 
 ETGender::ETGender( void ) {
+  add( NEUTRAL, "neutral" );
   add( MALE,    "male" );
   add( FEMALE,  "female" );
-  add( NEUTRAL, "neutral" );
   return;
 }
 

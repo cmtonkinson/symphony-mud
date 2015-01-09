@@ -37,10 +37,7 @@ Creature::Creature( void ):
   room( NULL );
   position().set( STANDING );
   action().set(0);
-  // Default group...
-  group(new Group());
-  group()->add_member(this);
-  group()->leader(this);
+  formGroup();
   // identity...
   gender().set( NEUTRAL );
   race().set(0);
@@ -106,6 +103,7 @@ Creature::Creature( const Creature& ref ):
     modifiers().push_back( new Modifier( **it ) );
   }
   furniture( ref.furniture() );
+  formGroup();
   // stats...
   level( ref.level() );
   exp( ref.exp() );

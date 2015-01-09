@@ -26,22 +26,22 @@
 #include "mysql.h"
 #include "world.h"
 
-Mob::Mob( void ) {
-  level( 1 );
-  exp( 0 );
-  tnl( 1000 );
+Mob::Mob( void ): Creature() {
   return;
 }
 
 Mob::Mob( const Mob& ref ): Creature( ref ) {
   vnum( ref.vnum() );
+  formGroup();
   return;
 }
 
-Mob::Mob( ROW row ) {
+Mob::Mob( ROW row ): Creature() {
   ID( row["mobID"] );
   vnum( row["vnum"] );
   gender().set( (unsigned)row["gender"] );
+  race().set( (unsigned)row["race"] );
+  pClass().set( (unsigned)row["pClass"] );
   identifiers().shortname( row["shortname"] );
   identifiers().longname( row["longname"] );
   identifiers().unserializeKeywords( row["keywords"] );
@@ -112,7 +112,9 @@ bool Mob::save( void ) {
 
     sprintf( query,
       "UPDATE mobs SET            \
-        `gender` = '%s',          \
+        `gender` = %hu ,          \
+        `race` = %hu ,            \
+        `pClass` = %hu ,          \
         `keywords` = '%s',        \
         `shortname` = '%s',       \
         `longname` = '%s',        \
@@ -149,7 +151,9 @@ bool Mob::save( void ) {
         `exotic` = %hd            \
        WHERE mobID = %lu          \
        LIMIT 1;",
-      Mysql::addslashes(gender().string()).c_str(),
+      gender().number(),
+      race().number(),
+      pClass().number(),
       Mysql::addslashes(identifiers().serializeKeywords()).c_str(),
       Mysql::addslashes(identifiers().shortname()).c_str(),
       Mysql::addslashes(identifiers().longname()).c_str(),
@@ -186,7 +190,7 @@ bool Mob::save( void ) {
       exotic(),
       ID()
     );
-    if (!mysql->update(query)) fprintf(stderr, "Failed to save mob %lu\n -> %s\n", ID(), query);
+    mysql->update(query);
 
   } catch ( MysqlException me ) {
     fprintf( stderr, "Failed to save mob %lu: %s\n", ID(), me.getMessage().c_str() );
@@ -251,14 +255,25 @@ std::string Mob::getInformation( Mob* mob ) {
   // Basic mob information...
   sprintf( buffer, "vnum......... {y%lu{x\n\
 level........ {y%u{x\n\
+race......... {y%s{x\n\
+class........ {y%s{x\n\
 gender....... {y%s{x\n\
 keywords..... {y%s{x\n\
 shortname.... %s\n\
 longname..... %s\n\n\
   --== {Y description{x ==--\n%s\n\
-",  mob->vnum(), mob->level(), mob->gender().string().c_str(), mob->identifiers().getKeywordList().c_str(),
-    mob->identifiers().shortname().c_str(), mob->identifiers().longname().c_str(),
+",  mob->vnum(), mob->level(), mob->race().string().c_str(), mob->pClass().string().c_str(), mob->gender().string().c_str(),
+    mob->identifiers().getKeywordList().c_str(), mob->identifiers().shortname().c_str(), mob->identifiers().longname().c_str(),
     mob->identifiers().description().c_str()
+  );
+  output.append( buffer );
+  output.append( "  --== {Ystats{x ==--\n" );
+  sprintf( buffer, "health....... {G%d{x/{g%d{x\n\
+mana......... {C%d{x/{c%d{x\n\
+movement..... {M%d{x/{m%d{x\n",
+    mob->health(), mob->maxHealth(),
+    mob->mana(), mob->maxMana(),
+    mob->movement(), mob->maxMovement()
   );
   output.append( buffer );
 

@@ -292,6 +292,21 @@ void Room::reset( void ) {
   return;
 }
 
+Creature* Room::creature_by_vnum(unsigned long vnum, unsigned short index) {
+  std::list<Creature*>::iterator iter;
+  std::list<Creature*> matches;
+  // Find all vnum matches.
+  for (iter = creatures().begin(); iter != creatures().end(); ++iter) {
+    if (!(*iter)->isMob()) continue;
+    if (((Mob*)(*iter))->vnum() == vnum) matches.push_back(*iter);
+  }
+  if (matches.empty()) return NULL;
+  if (index > matches.size()) return NULL;
+  if (index == INDEX_DEFAULT) return matches.front();
+  for (int i = 1; i < index; ++i) matches.pop_front();
+  return matches.front();
+}
+
 std::string Room::getInformation( Room* room ) {
   std::string output;
   char buffer[MAX_BUFFER];

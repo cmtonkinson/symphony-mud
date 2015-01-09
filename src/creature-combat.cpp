@@ -5,6 +5,29 @@
 #include "stats.h"
 #include "world.h"
 
+void Creature::formGroup(void) {
+  group(new Group());
+  group()->add_member(this);
+  group()->leader(this);
+  return;
+}
+
+void Creature::ungroup(void) {
+  if (group()->size() == 1) return;
+  if (this == group()->leader()) {
+    group()->send("$p has disbanded the company.\n", this);
+    std::set<Creature*> temp(group()->members());
+    for (std::set<Creature*>::iterator iter = temp.begin(); iter != temp.end(); ++iter) {
+      if (*iter != this) (*iter)->ungroup();
+    }
+  }
+  group()->send("$p leaves the group.\n", this);
+  group()->remove_member(this);
+  formGroup();
+  send("You leave the group. Good luck on your own!\n");
+  return;
+}
+
 void Creature::add_opponent(Creature* opponent) {
   _opponents.insert(opponent);
   return;
@@ -19,24 +42,6 @@ bool Creature::is_opponent(Creature* creature) {
   return _opponents.find(creature) != _opponents.end();
 }
 
-void Creature::ungroup(void) {
-  if (group()->size() == 1) return;
-  if (this == group()->leader()) {
-    group()->send("$p has disbanded the company.\n", this);
-    std::set<Creature*> temp(group()->members());
-    for (std::set<Creature*>::iterator iter = temp.begin(); iter != temp.end(); ++iter) {
-      if (*iter != this) (*iter)->ungroup();
-    }
-  }
-  group()->send("$p leaves the group.\n", this);
-  group()->remove_member(this);
-  group(new Group());
-  group()->add_member(this);
-  group()->leader(this);
-  send("You leave the group. Good luck on your own!\n");
-  return;
-}
-
 bool Creature::attack(Job* job) {
   Creature* target = NULL;
   // Aquire a target.
@@ -44,12 +49,12 @@ bool Creature::attack(Job* job) {
     peace();
     return false;
   }
-  // Make the strike.
-  strike(target);
   // Schedule next attack.
   scheduleAttack();
   // Get everyone involved.
   escalate(target);
+  // Make the strike. Must be done last because the target may go away.
+  strike(target);
   // Must return bool per the Job interface.
   return true;
 }
@@ -213,7 +218,7 @@ void Creature::gainLevel(void) {
   if (level() < HERO) {
     send("You have {Y%u{x experience to your next level.\n\n", tnl());
   }
-  group()->send("$p has grown a level!\n", this, NULL, NULL);
+  if (isAvatar()) group()->send("$p has grown a level!\n", this, NULL, NULL);
   return;
 }
 
@@ -256,4 +261,17 @@ unsigned Creature::targetMovement(void) const {
 unsigned Creature::targetTNL(void) const {
   // TODO: fill with crap from character creation
   return TARGET_TNL;
+}
+
+void Creature::resetStats(void) {
+  level(1);
+  exp(BASE_EXP);
+  tnl(BASE_TNL);
+  maxHealth(BASE_HEALTH);
+  health(BASE_HEALTH);
+  maxMana(BASE_MANA);
+  mana(BASE_MANA);
+  maxMovement(BASE_MOVEMENT);
+  movement(BASE_MOVEMENT);
+  return;
 }

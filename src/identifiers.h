@@ -59,6 +59,7 @@ class Identifiers {
     bool                          matchesKeyword( const std::string& keyword ) const;
     std::string                   serializeKeywords( void ) const;
     void                          unserializeKeywords( const std::string& serialization );
+    std::string                   longestKeyword(void) const;
 
   private:
     std::string                   _shortname;

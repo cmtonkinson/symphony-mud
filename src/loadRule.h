@@ -37,8 +37,8 @@ class Room;
 // rule prepositions...
 #define LOADRULE_ON       1   // the indirect object is an object
 #define LOADRULE_IN       2   // the indirect object is an object
-#define LOADRULE_CARRY    3   // the indirect object is an mob
-#define LOADRULE_WEAR     4   // the indirect object is an mob
+#define LOADRULE_CARRY    3   // the indirect object is a mob
+#define LOADRULE_WEAR     4   // the indirect object is a mob
 
 
 
@@ -90,4 +90,3 @@ class LoadRule {
 
 
 #endif // #ifndef H_SYMPHONY_LOADRULE
-
