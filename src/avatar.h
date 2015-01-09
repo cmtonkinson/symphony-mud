@@ -132,8 +132,7 @@ class Avatar: public Creature {
     unsigned long   bankSilver( void ) const                                  { return _bankSilver; }
 
     // Combat...
-    virtual void    die(Creature* killer = NULL);
-    void            respawn(void);
+    virtual void    whatHappensWhenIDie(void);
 
   private:
     // Low level/System members...

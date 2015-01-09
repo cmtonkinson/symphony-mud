@@ -43,7 +43,7 @@ class Mob: public Creature {
     virtual bool        isMob( void ) const                             { return true; }
 
     // Combat...
-    virtual void        die(Creature* killer = NULL);
+    virtual void        whatHappensWhenIDie(void);
 
     // pure virtual overrides...
     virtual bool        save( void );

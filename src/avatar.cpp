@@ -62,7 +62,7 @@ Avatar::~Avatar( void ) {
  * color in a central location.
  */
 void Avatar::processOutput( const std::string& src ) {
-  output( output() + src );
+  output(output() + src);
   return;
 }
 
@@ -99,7 +99,7 @@ bool Avatar::hasOutput( void ) {
 void Avatar::flushOutput( void ) {
   try {
     send( IOhandlers().back()->prompt() );
-    socket()->send( output().interpretColor() );
+    socket()->send(std::string("\n") + output().interpretColor() );
     output( std::string() );
   } catch ( SocketException se ) {
     World::Instance().bigBrother( this, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in Avatar::flushOutput() -> %s", identifiers().shortname().c_str(), se.getError().c_str() );
@@ -610,13 +610,7 @@ bool Avatar::checkPassword( const std::string& attempt ) {
   return false;
 }
 
-void Avatar::die(Creature* killer) {
-  Creature::die(killer);
-  respawn();
-  return;
-}
-
-void Avatar::respawn(void) {
+void Avatar::whatHappensWhenIDie(void) {
   CmdLook look;
   std::vector<std::string> look_args(1);
   // Leave the current Room.
@@ -624,7 +618,7 @@ void Avatar::respawn(void) {
   // Relocate to the spawn point.
   room(World::Instance().findRoom(0));
   room()->add(this);
-  // He's alive! He's allllliiiiiiiiiiiiive!
+  // It's alive! It's allllliiiiiiiiiiiiive!
   action().set(0);
   // let everyone know...
   room()->send_cond("$p appears, looking weary.\n", this);

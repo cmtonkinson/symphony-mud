@@ -252,7 +252,7 @@ class Creature {
     void                silver(unsigned silver)                         { _silver = silver; }
     unsigned            silver(void) const                              { return _silver; }
     // combat
-    time_t                      nextAttack(void) const                  { return _next_attack; }
+    Job*                        nextAttack(void) const                  { return _next_attack; }
     std::set<Creature*>&        opponents(void)                         { return _opponents; }
 
     // Public static methods...
@@ -318,6 +318,7 @@ class Creature {
     void          remove_opponent(Creature* opponent);
     bool          is_opponent(Creature* creature);
     bool          inCombat(void);
+    void          hit(Creature* target);
     bool          attack(Job* job);
     Creature*     aquireTarget(void);
     void          strike(Creature* target);
@@ -325,7 +326,8 @@ class Creature {
     void          scheduleAttack(void);
     void          peace(void);
     void          takeDamage(int damage, Creature* damager = NULL);
-    virtual void  die(Creature* killer = NULL);
+    void          die(Creature* killer = NULL);
+    virtual void  whatHappensWhenIDie(void) = 0;
     void          awardExperience(unsigned experience);
     void          gainLevel(void);
     bool          autoassist(void) const;
@@ -402,7 +404,7 @@ class Creature {
     unsigned                    _gold;
     unsigned                    _silver;
     // combat...
-    time_t                      _next_attack;
+    Job*                        _next_attack;
     std::set<Creature*>         _opponents;
 
 };

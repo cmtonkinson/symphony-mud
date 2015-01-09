@@ -33,6 +33,7 @@ class Schedule {
     virtual ~Schedule( void );
 
     void add( Job* job );
+    void remove(Job* job);
 
     template <class EventType>
     void schedule( time_t when, bool (*function)( EventType* ) ) {

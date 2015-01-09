@@ -223,8 +223,7 @@ bool Mob::destroy( void ) {
 }
 
 /******************************************************* Overloads of virtual methods ********************************************************/
-void Mob::die(Creature* killer) {
-  Creature::die(killer);
+void Mob::whatHappensWhenIDie(void) {
   group()->remove_member(this);
   room()->remove(this);
   World::Instance().remove(this);

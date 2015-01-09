@@ -37,6 +37,11 @@ void Schedule::add( Job* job ) {
   return;
 }
 
+void Schedule::remove(Job* job) {
+  _queue.erase(job);
+  return;
+}
+
 bool Schedule::fire( void ) {
   Job* j = NULL;
   if ( !_queue.empty() ) {

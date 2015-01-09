@@ -42,6 +42,12 @@ bool Creature::is_opponent(Creature* creature) {
   return _opponents.find(creature) != _opponents.end();
 }
 
+void Creature::hit(Creature* target) {
+  add_opponent(target);
+  attack(NULL);
+  return;
+}
+
 bool Creature::attack(Job* job) {
   Creature* target = NULL;
   // Aquire a target.
@@ -52,11 +58,10 @@ bool Creature::attack(Job* job) {
   // Make the strike.
   strike(target);
   // Is it over?
-  if (target->isDead()) return true;
-  // Schedule next attack.
-  scheduleAttack();
-  // Get everyone involved.
-  escalate(target);
+  if (target->isDead()) {
+    target->whatHappensWhenIDie();
+    return true;
+  }
   // Must return bool per the Job interface.
   return true;
 }
@@ -96,53 +101,60 @@ void Creature::strike(Creature* target) {
   target->send("%s's %s %s you!\n", identifiers().shortname().c_str(), weapon_noun.c_str(), damage_verb.c_str());
   room()->send_cond("$p's punch $s $C!", this, (void*)damage_verb.c_str(), target, TO_NOTVICT, true);
 
-  // Deal the pain. This is done last for two reasons:
-  // 1. Because Mob::die() invokes self-deletion.
-  // 2. Because a death notification should appear below the attack that caused it.
+  // Deal the pain.
   target->takeDamage(damage, this);
 
-  return;
-}
-
-void Creature::escalate(Creature* target) {
-  // Make sure the other guy gets a turn.
-  target->add_opponent(this);
-  target->scheduleAttack();
-  // Get the whole group involved.
-  for (std::set<Creature*>::iterator iter = group()->members().begin(); iter != group()->members().end(); ++iter) {
-    // Skip the initial belligerent.
-    if (*iter == this) continue;
-    // Respect the members' auto-assist setting.
-    if ((*iter)->autoassist()) {
-      (*iter)->add_opponent(target);
-      // Could be that this member was already fighting someone. If not, make sure they start.
-      if (!(*iter)->nextAttack()) {
-        (*iter)->scheduleAttack();
-      }
-    }
-  }
-  return;
-}
-
-void Creature::scheduleAttack(void) {
-  _next_attack = time(NULL) + rand() % 5;
-  World::Instance().schedule()->add(new Job(_next_attack, this, &Creature::attack));
-  return;
-}
-
-void Creature::peace(void) {
-  for (std::set<Creature*>::iterator iter = opponents().begin(); iter != opponents().end(); ++iter) {
-    (*iter)->remove_opponent(this);
-  }
-  opponents().clear();
-  _next_attack = 0;
   return;
 }
 
 void Creature::takeDamage(int damage, Creature* damager) {
   health(health() - damage);
   if (level() > DEMIGOD && health() < 1) health(1);
-  if (health() < 1) die(damager);
+  if (health() < 1) {
+    die(damager);
+  } else if (damager) {
+    // Launch the counter-offensive.
+    add_opponent(damager);
+    scheduleAttack();
+    escalate(damager);
+    // The damager will attack, as will their Group.
+    damager->scheduleAttack();
+    damager->escalate(this);
+  }
+  return;
+}
+
+void Creature::scheduleAttack(void) {
+  time_t time_of_attack = time(NULL) + 1;
+  _next_attack          = new Job(time_of_attack, this, &Creature::attack);
+  World::Instance().schedule()->add(_next_attack);
+  return;
+}
+
+void Creature::escalate(Creature* opponent) {
+  // Get the whole group involved.
+  for (std::set<Creature*>::iterator iter = group()->members().begin(); iter != group()->members().end(); ++iter) {
+    // Skip the initial belligerent.
+    if (*iter == this) continue;
+    // Respect the members' auto-assist setting.
+    if ((*iter)->autoassist()) {
+      (*iter)->add_opponent(opponent);
+      (*iter)->scheduleAttack();
+    }
+  }
+  return;
+}
+
+void Creature::peace(void) {
+  // Stop opponents from tracking us.
+  for (std::set<Creature*>::iterator iter = opponents().begin(); iter != opponents().end(); ++iter) {
+    (*iter)->remove_opponent(this);
+  }
+  // Stop tracking opponents.
+  opponents().clear();
+  // We can't have zombies running around punching every Tom, Dick, and Harry.
+  if (nextAttack()) World::Instance().schedule()->remove(nextAttack());
+  _next_attack = NULL;
   return;
 }
 
@@ -173,8 +185,7 @@ void Creature::die(Creature* killer) {
       killer->awardExperience(experience);
     }
   }
-  // Leave a corpse.
-  room()->send("[TODO - leave a corpse with loot]\n");
+  // TODO Leave a corpse with loot
   return;
 }
 

@@ -415,8 +415,7 @@ bool CmdKill::execute(Creature* creature, const std::vector<std::string>& args) 
   } else if (target == creature) {
     creature->send("Your sense of honor precludes suicide.");
   } else {
-    creature->add_opponent(target);
-    creature->attack(NULL);
+    creature->hit(target);
   }
   return true;
 }
