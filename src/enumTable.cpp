@@ -177,6 +177,7 @@ ETPosition::ETPosition( void ) {
 }
 
 ETAction::ETAction( void ) {
+  add( DEAD,      "dead" );
   add( SLEEPING,  "sleeping" );
   add( FIGHTING,  "fighting" );
   return;

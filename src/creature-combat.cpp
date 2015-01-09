@@ -49,12 +49,14 @@ bool Creature::attack(Job* job) {
     peace();
     return false;
   }
+  // Make the strike.
+  strike(target);
+  // Is it over?
+  if (target->isDead()) return true;
   // Schedule next attack.
   scheduleAttack();
   // Get everyone involved.
   escalate(target);
-  // Make the strike. Must be done last because the target may go away.
-  strike(target);
   // Must return bool per the Job interface.
   return true;
 }
@@ -146,6 +148,8 @@ void Creature::takeDamage(int damage, Creature* damager) {
 
 void Creature::die(Creature* killer) {
   unsigned experience = 0;
+  // Set the death flag.
+  action().set(DEAD);
   // Reset stats.
   health(1);
   mana(1);

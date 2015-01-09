@@ -268,6 +268,7 @@ class Creature {
     bool                        isSitting( void ) const                                           { return position().number() == SITTING; }
     bool                        isStanding( void ) const                                          { return position().number() == STANDING; }
     bool                        isMounted( void ) const                                           { return position().number() == MOUNTED; }
+    bool                        isDead( void ) const                                              { return action().number() == DEAD; }
     bool                        isSleeping( void ) const                                          { return action().number() == SLEEPING; }
     bool                        isFighting( void ) const                                          { return action().number() == FIGHTING; }
     bool                        isDwarf( void ) const                                             { return race().number() == DWARF; }

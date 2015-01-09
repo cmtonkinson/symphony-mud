@@ -624,6 +624,8 @@ void Avatar::respawn(void) {
   // Relocate to the spawn point.
   room(World::Instance().findRoom(0));
   room()->add(this);
+  // He's alive! He's allllliiiiiiiiiiiiive!
+  action().set(0);
   // let everyone know...
   room()->send_cond("$p appears, looking weary.\n", this);
   // show them around...

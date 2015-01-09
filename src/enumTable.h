@@ -172,8 +172,9 @@ DEF_ENUM(Position) // must be in powers of 2
 #define MOUNTED   D
 
 DEF_ENUM(Action) // must be in powers of 2
-#define SLEEPING  A
-#define FIGHTING  B
+#define DEAD      A
+#define SLEEPING  B
+#define FIGHTING  C
 
 DEF_ENUM(Gender)
 #define MALE    1
