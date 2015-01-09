@@ -450,6 +450,7 @@ bool CmdPeace::execute(Creature* creature, const std::vector<std::string>& args)
   } else {
     for (std::set<Creature*>::iterator iter = World::Instance().getCreatures().begin(); iter != World::Instance().getCreatures().end(); ++iter) {
       (*iter)->peace();
+      if (*iter == creature) continue;
       (*iter)->send((*iter)->seeName(avatar(), true));
       (*iter)->send(" has imposed peace throughout the realm.\n");
     }

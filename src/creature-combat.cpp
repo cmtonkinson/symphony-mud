@@ -103,6 +103,8 @@ void Creature::escalate(Creature* target) {
   target->scheduleAttack();
   // Get the whole group involved.
   for (std::set<Creature*>::iterator iter = group()->members().begin(); iter != group()->members().end(); ++iter) {
+    // Skip the initial belligerent.
+    if (*iter == this) continue;
     // Respect the members' auto-assist setting.
     if ((*iter)->autoassist()) {
       (*iter)->add_opponent(target);
@@ -139,8 +141,6 @@ void Creature::takeDamage(int damage, Creature* damager) {
 
 void Creature::die(Creature* killer) {
   unsigned experience = 0;
-  // Stop attacking.
-  _next_attack = 0;
   // Reset stats.
   health(1);
   mana(1);

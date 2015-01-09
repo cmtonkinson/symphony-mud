@@ -292,6 +292,7 @@ bool CmdHeal::execute(Creature* creature, const std::vector<std::string>& args) 
   if (args[0] == "all") {
     for (std::map<std::string, Avatar*>::iterator iter = World::Instance().getAvatars().begin(); iter != World::Instance().getAvatars().end(); ++iter) {
       iter->second->heal();
+      if (iter->second == creature) continue;
       iter->second->send(iter->second->seeName(creature, true));
       iter->second->send(" has healed you.\n");
     }
@@ -302,9 +303,13 @@ bool CmdHeal::execute(Creature* creature, const std::vector<std::string>& args) 
       return false;
     }
     target->heal();
-    target->send(target->seeName(creature, true));
-    target->send(" has healed you.\n");
-    creature->send("You have healed %s.\n", target->identifiers().shortname().c_str());
+    if (target == creature) {
+      target->send("You heal yourself.\n");
+    } else {
+      target->send(target->seeName(creature, true));
+      target->send(" has healed you.\n");
+      creature->send("You have healed %s.\n", target->identifiers().shortname().c_str());
+    }
   }
   return true;
 }
