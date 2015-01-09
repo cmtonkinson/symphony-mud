@@ -81,8 +81,7 @@ Creature* Creature::aquireTarget(void) {
 
 void Creature::strike(Creature* target) {
   int damage = 0;
-  std::string weapon_noun;
-  std::string damage_verb;
+  std::string weapon_damage;
   Object* object = NULL;
 
   // Initial damage calculation (based on the attacker).
@@ -93,13 +92,13 @@ void Creature::strike(Creature* target) {
   if (damage < 1) damage = 1;
 
   // Tell the world.
-  weapon_noun = "punch";
   object = primary();
-  if (object && object->isWeapon()) weapon_noun = object->weapon()->verb().string();
-  damage_verb = Display::formatDamage(damage);
-  send("Your %s %s %s!\n", weapon_noun.c_str(), damage_verb.c_str(), target->identifiers().shortname().c_str());
-  target->send("%s's %s %s you!\n", identifiers().shortname().c_str(), weapon_noun.c_str(), damage_verb.c_str());
-  room()->send_cond("$p's punch $s $C!", this, (void*)damage_verb.c_str(), target, TO_NOTVICT, true);
+  weapon_damage = (object && object->isWeapon()) ? object->weapon()->verb().string() : "punch";
+  weapon_damage.append(" ").append(Display::formatDamage(damage));
+
+  send("Your %s %s!\n", weapon_damage.c_str(), target->name());
+  target->send("%s's %s you!\n", name(), weapon_damage.c_str());
+  room()->send_cond("$p's $s $C!", this, (void*)weapon_damage.c_str(), target, TO_NOTVICT, true);
 
   // Deal the pain.
   target->takeDamage(damage, this);
