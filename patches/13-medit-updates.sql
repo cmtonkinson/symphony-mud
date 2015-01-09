@@ -1,0 +1,1 @@
+ALTER TABLE `mobs` ADD `gender` VARCHAR(255) NOT NULL DEFAULT 'neutral';

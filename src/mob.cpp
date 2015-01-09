@@ -146,7 +146,7 @@ bool Mob::save( void ) {
         `bash` = %hd,             \
         `slash` = %hd,            \
         `pierce` = %hd,           \
-        `exotic` = %hd,           \
+        `exotic` = %hd            \
        WHERE mobID = %lu          \
        LIMIT 1;",
       Mysql::addslashes(gender().string()).c_str(),
@@ -186,7 +186,7 @@ bool Mob::save( void ) {
       exotic(),
       ID()
     );
-    mysql->update( query );
+    if (!mysql->update(query)) fprintf(stderr, "Failed to save mob %lu\n -> %s\n", ID(), query);
 
   } catch ( MysqlException me ) {
     fprintf( stderr, "Failed to save mob %lu: %s\n", ID(), me.getMessage().c_str() );

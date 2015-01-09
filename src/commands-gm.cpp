@@ -955,7 +955,7 @@ bool CmdMedit::execute( Creature* creature, const std::vector<std::string>& args
         return false;
       }
     }
-    // All looks well; send them to oedit...
+    // All looks well; send them to medit...
     avatar()->medit( it->second );
     avatar()->pushIOHandler( new MeditIOHandler( avatar() ) );
     avatar()->send( "You're editing mob %lu.", avatar()->medit()->vnum() );
