@@ -119,7 +119,7 @@ bool Mob::save( void ) {
         `shortname` = '%s',       \
         `longname` = '%s',        \
         `description` = '%s',     \
-        `level` = %hd,            \
+        `level` = %u,             \
         `exp` = %u,               \
         `tnl` = %u,               \
         `health` = %d,            \
@@ -224,7 +224,7 @@ bool Mob::destroy( void ) {
 
 /******************************************************* Overloads of virtual methods ********************************************************/
 void Mob::whatHappensWhenIDie(void) {
-  group()->remove_member(this);
+  ungroup();
   room()->remove(this);
   World::Instance().remove(this);
   delete this;

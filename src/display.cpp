@@ -117,7 +117,9 @@ std::string Display::formatAction( const char* format, Creature* creature, void*
 
 std::string Display::formatDamage(unsigned int damage) {
   std::string output;
-  if (damage > 250) {
+  if (damage > 1000) {
+    output = "does {?H{?E{?L{?L{?I{?S{?H{x things to";
+  } else if (damage > 250) {
     output = "{WRUINS{x";
   } else if (damage > 200) {
     output = "{w--{W=={r{{{R{{{WANNIHILATES{R}{r}{W=={w--{x";

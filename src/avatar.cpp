@@ -204,7 +204,7 @@ bool Avatar::save( void ) {
         `gender` = %u,            \
         `race` = %u,              \
         `cClass` = %u,            \
-        `level` = %hd,            \
+        `level` = %u,             \
         `exp` = %u,               \
         `tnl` = %u,               \
         `health` = %d,            \

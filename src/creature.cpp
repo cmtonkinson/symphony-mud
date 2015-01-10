@@ -82,7 +82,7 @@ Creature::Creature( void ):
   gold(0);
   silver(0);
   // combat
-  _next_attack = 0;
+  _next_attack = NULL;
   return;
 }
 
@@ -135,6 +135,8 @@ Creature::Creature( const Creature& ref ):
   slash( ref.slash() );
   pierce( ref.pierce() );
   exotic( ref.exotic() );
+  // combat...
+  _next_attack = NULL;
   return;
 }
 
@@ -761,9 +763,11 @@ void Creature::move( const unsigned short& direction ) {
   if (group()->leader() == this && group()->members().size() > 1) {
     for (std::set<Creature*>::iterator it = group()->members().begin(); it != group()->members().end(); ++it) {
       member = *it;
-      if (member == this) {
-        continue;
-      }
+      // Don't follow yourself.
+      if (member == this) continue;
+      // Only those with you can follow you.
+      if (member->room() != from) continue;
+      // Can we go that way?
       if (member->canMove(direction, message)) {
         member->move(direction);
       } else {

@@ -183,8 +183,8 @@ class Creature {
     const PClass&     pClass( void ) const    { return _pClass; }
 
     // Level
-    void                level(unsigned short level)                     { _level = level; }
-    unsigned short      level(void) const                               { return _level; }
+    void                level(unsigned level)                           { _level = level; }
+    unsigned            level(void) const                               { return _level; }
     void                exp(unsigned exp)                               { _exp = exp; }
     unsigned            exp(void) const                                 { return _exp; }
     void                tnl(unsigned tnl)                               { _tnl = tnl; }
@@ -320,7 +320,7 @@ class Creature {
     bool          inCombat(void);
     void          hit(Creature* target);
     bool          attack(Job* job);
-    Creature*     aquireTarget(void);
+    Creature*     acquireTarget(void);
     void          strike(Creature* target);
     void          escalate(Creature* creature);
     void          scheduleAttack(void);
@@ -367,7 +367,7 @@ class Creature {
     Race                        _race;
     PClass                      _pClass;
     // Level
-    unsigned short              _level;
+    unsigned                    _level;
     unsigned                    _exp;
     unsigned                    _tnl;
     // Health

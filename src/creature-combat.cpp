@@ -50,8 +50,11 @@ void Creature::hit(Creature* target) {
 
 bool Creature::attack(Job* job) {
   Creature* target = NULL;
+  // Since it will be deleted when this method returns anyway, we can use it for tracking state. As
+  // such, we need to clear it now so another can be scheduled (see scheduleAttack()).
+  _next_attack = NULL;
   // Aquire a target.
-  if ((target = aquireTarget()) == NULL) {
+  if ((target = acquireTarget()) == NULL) {
     peace();
     return false;
   }
@@ -66,7 +69,7 @@ bool Creature::attack(Job* job) {
   return true;
 }
 
-Creature* Creature::aquireTarget(void) {
+Creature* Creature::acquireTarget(void) {
   // TODO threat/aggro calculations
   for (std::set<Creature*>::iterator iter = opponents().begin(); iter != opponents().end(); ++iter) {
     // You need to be able to see the target.
@@ -114,26 +117,38 @@ void Creature::takeDamage(int damage, Creature* damager) {
   } else if (damager) {
     // Launch the counter-offensive.
     add_opponent(damager);
-    escalate(damager);
+    scheduleAttack();
     // The damager will attack, as will their Group.
     damager->escalate(this);
   }
+  // Engage the rest of the Group.
+  escalate(damager);
   return;
 }
 
 void Creature::scheduleAttack(void) {
-  time_t time_of_attack = time(NULL) + 1;
+  // Along with clearing the pointer in attack(), this will prevent multiple attack Jobs from
+  // being created simultaneously.
+  if (nextAttack()) return;
+  // Create the new Job.
+  time_t time_of_attack = time(NULL) + 2;
   _next_attack          = new Job(time_of_attack, this, &Creature::attack);
-  World::Instance().schedule()->add(_next_attack);
+  // Schedule it.
+  World::Instance().schedule()->add(nextAttack());
   return;
 }
 
 void Creature::escalate(Creature* opponent) {
-  scheduleAttack();
+  // Fight to the death!
+  if (!isDead()) scheduleAttack();
   // Get the whole group involved.
   for (std::set<Creature*>::iterator iter = group()->members().begin(); iter != group()->members().end(); ++iter) {
+    // No zombies.
+    if ((*iter)->isDead()) continue;
     // Skip the initial belligerent.
     if (*iter == this) continue;
+    // Don't even bother if they're not here.
+    if ((*iter)->room() != opponent->room()) continue;
     // Respect the members' auto-assist setting.
     if ((*iter)->autoassist()) {
       (*iter)->add_opponent(opponent);
@@ -149,7 +164,7 @@ void Creature::peace(void) {
     (*iter)->remove_opponent(this);
   }
   // Stop tracking opponents.
-  opponents().clear();
+  while (!opponents().empty()) remove_opponent(*opponents().begin());
   // We can't have zombies running around punching every Tom, Dick, and Harry.
   if (nextAttack()) World::Instance().schedule()->remove(nextAttack());
   _next_attack = NULL;
@@ -166,6 +181,13 @@ void Creature::die(Creature* killer) {
   movement(1);
   // Remove from combat.
   peace();
+  // If it's a one-shit kill (or various other unlikely but possible edge cases) we won't already
+  // be tracking the killer. That means that peace() will leave dangling pointers causing a crash.
+  // Better safe than sorry.
+  if (killer) {
+    remove_opponent(killer);
+    killer->remove_opponent(this);
+  }
   // Announce the death.
   send("\n\nYou are {RDEAD{x!!!\n\n");
   room()->send_cond("\n\n$p is {RDEAD{x!!!\n\n", this, NULL, NULL, TO_NOTVICT);
