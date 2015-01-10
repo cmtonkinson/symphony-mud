@@ -252,6 +252,7 @@ class Creature {
     void                silver(unsigned silver)                         { _silver = silver; }
     unsigned            silver(void) const                              { return _silver; }
     // combat
+    std::set<Creature*>&  opponents(void)                               { return _opponents; }
 
     // Public static methods...
     static unsigned short       stringToAttribute( const std::string& name );
@@ -312,17 +313,20 @@ class Creature {
     // Combat...
     void          formGroup(void);
     void          ungroup(void);
-    void          hit(Creature* target);
+    void          add_opponent(Creature* opponent, bool reciprocal = true);
+    void          remove_opponent(Creature* opponent, bool reciprocal = true);
+    void          scheduleAttack(void);
     bool          attack(Job* job);
     Creature*     acquireTarget(void);
     void          strike(Creature* target);
     void          takeDamage(int damage, Creature* damager = NULL);
     void          die(Creature* killer = NULL);
-    virtual void  whatHappensWhenIDie(void) = 0;
+    void          peace(void);
     void          awardExperience(unsigned experience);
     void          gainLevel(void);
     bool          autoassist(void) const;
     void          heal(void);
+    virtual void  whatHappensWhenIDie(void) = 0;
 
     // Leveling, EXP, & Gains...
     void          resetStats(void);
@@ -395,6 +399,8 @@ class Creature {
     unsigned                    _gold;
     unsigned                    _silver;
     // combat...
+    std::set<Creature*>         _opponents;
+    Job*                        _next_attack;
 
 };
 

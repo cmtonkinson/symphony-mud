@@ -28,15 +28,47 @@ void Creature::ungroup(void) {
   return;
 }
 
-void Creature::hit(Creature* target) {
-  attack(NULL);
+void Creature::add_opponent(Creature* opponent, bool reciprocal) {
+  // Clone each pointer set for clarity.
+  std::set<Creature*> groupies(group()->members());
+  std::set<Creature*> other_groupies(opponent->group()->members());
+  // Everyone should be tracking the entire opposing Group, and scheduled to attack.
+  for (std::set<Creature*>::iterator iter = groupies.begin(); iter != groupies.end(); ++iter) {
+    (*iter)->opponents().insert(other_groupies.begin(), other_groupies.end());
+    (*iter)->scheduleAttack();
+  }
+  // Should the opponents be tracking you?
+  if (reciprocal) opponent->add_opponent(this, false);
+  return;
+}
+
+void Creature::remove_opponent(Creature* opponent, bool reciprocal) {
+  opponents().erase(opponent);
+  if (reciprocal) opponent->remove_opponent(this, false);
+  return;
+}
+
+// TODO stat-based attack timing
+void Creature::scheduleAttack(void) {
+  // If there's already a Job scheduled, don't add another.
+  if (_next_attack) return;
+  // Create the Job, and keep a pointer for future reference.
+  _next_attack = new Job(time(NULL) + 2, this, &Creature::attack);
+  // Add it to the master schedule.
+  World::Instance().schedule()->add(_next_attack);
   return;
 }
 
 bool Creature::attack(Job* job) {
   Creature* target = NULL;
+  // Clear the Job pointer so a new attack can be scheduled. (The Schedule will automatically
+  // delete the Job when it fires, so the pointer will be invalid once this method returns anyway).
+  _next_attack = NULL;
   // Aquire a target.
   if ((target = acquireTarget()) == NULL) {
+    // If no valid target was found, the opponents set should be empty, but we want to be explicit
+    // about what happens (and also to ensure that the attack pointer gets cleared).
+    peace();
     return false;
   }
   // Make the strike.
@@ -50,7 +82,25 @@ bool Creature::attack(Job* job) {
   return true;
 }
 
+// TODO stuff about aggro/threat analysis (instead of just returning the first viable candidate).
 Creature* Creature::acquireTarget(void) {
+  Creature* target  = NULL;
+  bool valid_target = true;
+  while (!opponents().empty()) {
+    target = *opponents().begin();
+    // You can't attack someone in a different room.
+    if (target->room() != room()) valid_target = false;
+    // You can't attack someone you can't see.
+    if (canSee(target) != SEE_NAME) valid_target = false;
+    // Either return the target, or remove it from the opponent list.
+    if (valid_target) {
+      return target;
+    } else {
+      // Unlink these two as targets.
+      remove_opponent(target);
+      continue;
+    }
+  }
   return NULL;
 }
 
@@ -84,12 +134,18 @@ void Creature::strike(Creature* target) {
 void Creature::takeDamage(int damage, Creature* damager) {
   health(health() - damage);
   if (level() > DEMIGOD && health() < 1) health(1);
-  if (health() < 1) die(damager);
+  if (health() < 1) {
+    die(damager);
+  } else {
+    add_opponent(damager);
+  }
   return;
 }
 
 void Creature::die(Creature* killer) {
   unsigned experience = 0;
+  // Stop fighting. Ain't nobody got time for zombies.
+  peace();
   // Set the death flag.
   action().set(DEAD);
   // Reset stats.
@@ -114,6 +170,17 @@ void Creature::die(Creature* killer) {
     }
   }
   // TODO Leave a corpse with loot
+  return;
+}
+
+void Creature::peace(void) {
+  // Stop tracking opponents.
+  while (!opponents().empty()) remove_opponent(*opponents().begin());
+  // Don't attack anymore.
+  if (_next_attack) {
+    World::Instance().schedule()->remove(_next_attack);
+    _next_attack = NULL;
+  }
   return;
 }
 
