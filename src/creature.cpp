@@ -82,7 +82,6 @@ Creature::Creature( void ):
   gold(0);
   silver(0);
   // combat
-  _next_attack = NULL;
   return;
 }
 
@@ -136,7 +135,6 @@ Creature::Creature( const Creature& ref ):
   pierce( ref.pierce() );
   exotic( ref.exotic() );
   // combat...
-  _next_attack = NULL;
   return;
 }
 

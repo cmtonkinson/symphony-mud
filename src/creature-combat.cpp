@@ -28,34 +28,15 @@ void Creature::ungroup(void) {
   return;
 }
 
-void Creature::add_opponent(Creature* opponent) {
-  _opponents.insert(opponent);
-  return;
-}
-
-void Creature::remove_opponent(Creature* opponent) {
-  _opponents.erase(opponent);
-  return;
-}
-
-bool Creature::is_opponent(Creature* creature) {
-  return _opponents.find(creature) != _opponents.end();
-}
-
 void Creature::hit(Creature* target) {
-  add_opponent(target);
   attack(NULL);
   return;
 }
 
 bool Creature::attack(Job* job) {
   Creature* target = NULL;
-  // Since it will be deleted when this method returns anyway, we can use it for tracking state. As
-  // such, we need to clear it now so another can be scheduled (see scheduleAttack()).
-  _next_attack = NULL;
   // Aquire a target.
   if ((target = acquireTarget()) == NULL) {
-    peace();
     return false;
   }
   // Make the strike.
@@ -70,15 +51,6 @@ bool Creature::attack(Job* job) {
 }
 
 Creature* Creature::acquireTarget(void) {
-  // TODO threat/aggro calculations
-  for (std::set<Creature*>::iterator iter = opponents().begin(); iter != opponents().end(); ++iter) {
-    // You need to be able to see the target.
-    if (canSee(*iter) != SEE_NAME) continue;
-    // They must be in the same Room.
-    if ((*iter)->room() != room()) continue;
-    // Otherwise, looks like we have our winner!
-    return *iter;
-  }
   return NULL;
 }
 
@@ -112,62 +84,7 @@ void Creature::strike(Creature* target) {
 void Creature::takeDamage(int damage, Creature* damager) {
   health(health() - damage);
   if (level() > DEMIGOD && health() < 1) health(1);
-  if (health() < 1) {
-    die(damager);
-  } else if (damager) {
-    // Launch the counter-offensive.
-    add_opponent(damager);
-    scheduleAttack();
-    // The damager will attack, as will their Group.
-    damager->escalate(this);
-  }
-  // Engage the rest of the Group.
-  escalate(damager);
-  return;
-}
-
-void Creature::scheduleAttack(void) {
-  // Along with clearing the pointer in attack(), this will prevent multiple attack Jobs from
-  // being created simultaneously.
-  if (nextAttack()) return;
-  // Create the new Job.
-  time_t time_of_attack = time(NULL) + 2;
-  _next_attack          = new Job(time_of_attack, this, &Creature::attack);
-  // Schedule it.
-  World::Instance().schedule()->add(nextAttack());
-  return;
-}
-
-void Creature::escalate(Creature* opponent) {
-  // Fight to the death!
-  if (!isDead()) scheduleAttack();
-  // Get the whole group involved.
-  for (std::set<Creature*>::iterator iter = group()->members().begin(); iter != group()->members().end(); ++iter) {
-    // No zombies.
-    if ((*iter)->isDead()) continue;
-    // Skip the initial belligerent.
-    if (*iter == this) continue;
-    // Don't even bother if they're not here.
-    if ((*iter)->room() != opponent->room()) continue;
-    // Respect the members' auto-assist setting.
-    if ((*iter)->autoassist()) {
-      (*iter)->add_opponent(opponent);
-      (*iter)->scheduleAttack();
-    }
-  }
-  return;
-}
-
-void Creature::peace(void) {
-  // Stop opponents from tracking us.
-  for (std::set<Creature*>::iterator iter = opponents().begin(); iter != opponents().end(); ++iter) {
-    (*iter)->remove_opponent(this);
-  }
-  // Stop tracking opponents.
-  while (!opponents().empty()) remove_opponent(*opponents().begin());
-  // We can't have zombies running around punching every Tom, Dick, and Harry.
-  if (nextAttack()) World::Instance().schedule()->remove(nextAttack());
-  _next_attack = NULL;
+  if (health() < 1) die(damager);
   return;
 }
 
@@ -179,15 +96,6 @@ void Creature::die(Creature* killer) {
   health(1);
   mana(1);
   movement(1);
-  // Remove from combat.
-  peace();
-  // If it's a one-shit kill (or various other unlikely but possible edge cases) we won't already
-  // be tracking the killer. That means that peace() will leave dangling pointers causing a crash.
-  // Better safe than sorry.
-  if (killer) {
-    remove_opponent(killer);
-    killer->remove_opponent(this);
-  }
   // Announce the death.
   send("\n\nYou are {RDEAD{x!!!\n\n");
   room()->send_cond("\n\n$p is {RDEAD{x!!!\n\n", this, NULL, NULL, TO_NOTVICT);

@@ -443,13 +443,13 @@ CmdPeace::CmdPeace(void) {
 bool CmdPeace::execute(Creature* creature, const std::vector<std::string>& args) {
   if (args[0].empty()) {
     for (std::list<Creature*>::iterator iter = avatar()->room()->creatures().begin(); iter != avatar()->room()->creatures().end(); ++iter) {
-      (*iter)->peace();
+      ;
     }
     avatar()->room()->send_cond("$p has imposed peace here.\n", creature);
     avatar()->send("You have imposed peace here.\n");
   } else {
     for (std::set<Creature*>::iterator iter = World::Instance().getCreatures().begin(); iter != World::Instance().getCreatures().end(); ++iter) {
-      (*iter)->peace();
+      ;
       if (*iter == creature) continue;
       (*iter)->send((*iter)->seeName(avatar(), true));
       (*iter)->send(" has imposed peace throughout the realm.\n");
