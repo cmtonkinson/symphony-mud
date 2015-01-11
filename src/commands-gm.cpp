@@ -419,7 +419,6 @@ bool CmdKill::execute(Creature* creature, const std::vector<std::string>& args) 
     target->send("%s attacks you!\n", creature->name());
     creature->room()->send_cond("$p attacks $c!\n", creature, target, NULL, TO_NOTVICT);
     creature->add_opponent(target);
-    creature->attack(NULL);
   }
   return true;
 }

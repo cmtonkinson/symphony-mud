@@ -73,6 +73,8 @@ bool Creature::attack(Job* job) {
   }
   // Make the strike.
   strike(target);
+  // Go another round. Even if the current target is dead, there may be remaining Group members.
+  scheduleAttack();
   // Is it over?
   if (target->isDead()) {
     target->whatHappensWhenIDie();
@@ -87,7 +89,8 @@ Creature* Creature::acquireTarget(void) {
   Creature* target  = NULL;
   bool valid_target = true;
   while (!opponents().empty()) {
-    target = *opponents().begin();
+    target       = *opponents().begin();
+    valid_target = true;
     // You can't attack someone in a different room.
     if (target->room() != room()) valid_target = false;
     // You can't attack someone you can't see.
@@ -108,37 +111,29 @@ void Creature::strike(Creature* target) {
   int damage = 0;
   std::string weapon_damage;
   Object* object = NULL;
-
   // Initial damage calculation (based on the attacker).
   damage = level() * strength();
   // Adjust damage (based on the defender).
   damage -= target->level() * target->constitution() / 2 - target->armor();
   // Ensure that SOME damage gets dealt.
   if (damage < 1) damage = 1;
-
   // Tell the world.
   object = primary();
   weapon_damage = (object && object->isWeapon()) ? object->weapon()->verb().string() : "punch";
   weapon_damage.append(" ").append(Display::formatDamage(damage));
-
   send("Your %s %s!\n", weapon_damage.c_str(), target->name());
   target->send("%s's %s you!\n", name(), weapon_damage.c_str());
   room()->send_cond("$p's $s $C!", this, (void*)weapon_damage.c_str(), target, TO_NOTVICT, true);
-
   // Deal the pain.
   target->takeDamage(damage, this);
-
   return;
 }
 
 void Creature::takeDamage(int damage, Creature* damager) {
+  if (damager) add_opponent(damager);
   health(health() - damage);
   if (level() > DEMIGOD && health() < 1) health(1);
-  if (health() < 1) {
-    die(damager);
-  } else {
-    add_opponent(damager);
-  }
+  if (health() < 1) die(damager);
   return;
 }
 
