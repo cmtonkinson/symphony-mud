@@ -83,6 +83,35 @@ void Command::addOptions( const std::string& argument, const std::string& option
   return;
 }
 
+///////////////////////////////////////////// ABILITIES /////////////////////////////////////////////
+Ability::Ability(void): Command() {
+  return;
+}
+
+Ability::~Ability(void) {
+  return;
+}
+
+void Ability::add_dependency(Ability* ability) {
+  _dependencies.insert(ability);
+  ability->dependents().insert(this);
+  return;
+}
+
+void Ability::add_dependent(Ability* ability) {
+  _dependents.insert(ability);
+  ability->dependencies().insert(this);
+  return;
+}
+
+bool Ability::has_depedencies(void) {
+  return !_dependencies.empty();
+}
+
+bool Ability::has_dependents(void) {
+  return !_dependents.empty();
+}
+
 ///////////////////////////////////////////// SOCIALS /////////////////////////////////////////////
 SocialCommand::SocialCommand( void ) {
   return;

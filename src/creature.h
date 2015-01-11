@@ -24,6 +24,7 @@
 #include <list>
 #include <map>
 #include <vector>
+#include <set>
 #include "enumTable.h"
 #include "equipmentContainer.h"
 #include "estring.h"
@@ -125,6 +126,7 @@
 #define ALTERABILITY_LEVEL_DIFFERENCE 5
 
 class Area;
+class Ability;
 class IOHandler;
 class ObjFurniture;
 class Room;
@@ -328,12 +330,18 @@ class Creature {
     void          heal(void);
     virtual void  whatHappensWhenIDie(void) = 0;
 
+    std::set<Ability*>&         abilities(void)                             { return _abilities; }
+    const std::set<Ability*>&   abilities(void) const                       { return _abilities; }
+    std::string                 exportAbilities(void) const;
+    void                        importAbilities(const std::string& list);
+
     // Leveling, EXP, & Gains...
     void          resetStats(void);
     unsigned      targetHealth(void) const;
     unsigned      targetMana(void) const;
     unsigned      targetMovement(void) const;
     unsigned      targetTNL(void) const;
+
 
     // Pure virtual public methods...
     virtual bool                save( void )                                                      = 0;
@@ -398,9 +406,10 @@ class Creature {
     // Misc
     unsigned                    _gold;
     unsigned                    _silver;
-    // combat...
+    // Combat
     std::set<Creature*>         _opponents;
     Job*                        _next_attack;
+    std::set<Ability*>          _abilities;
 
 };
 

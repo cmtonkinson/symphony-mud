@@ -148,4 +148,3 @@ class Regex {
 
 
 #endif // #ifndef H_REGEX
-

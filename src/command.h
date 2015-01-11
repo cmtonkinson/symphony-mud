@@ -28,11 +28,15 @@
 #include "flagBank.h"
 #include "mysql.h"
 
+#define STRING_SEPARATOR ";"
+
 typedef std::map<std::string,std::string> OptionMap;
 
+class Avatar;
 class CommandTable;
 class Creature;
 
+///////////////////////////////////////////// BASE CLASS /////////////////////////////////////////////
 class Command {
   public:
     // constructors...
@@ -116,6 +120,26 @@ class NAME: public Command {                                              \
     virtual bool execute( Creature* creature, const std::vector<std::string>& args );  \
 };                                                                        \
 
+///////////////////////////////////////////// ABILITIES /////////////////////////////////////////////
+class Ability: public Command {
+  public:
+    Ability(void);
+    ~Ability(void);
+
+    std::set<Ability*>&   dependencies(void)        { return _dependencies; }
+    std::set<Ability*>&   dependents(void)          { return _dependents; }
+
+    void                  add_dependency(Ability* ability);
+    void                  add_dependent(Ability* ability);
+    bool                  has_depedencies(void);
+    bool                  has_dependents(void);
+
+  private:
+    std::set<Ability*>  _dependencies;
+    std::set<Ability*>  _dependents;
+};
+
+///////////////////////////////////////////// SOCIALS /////////////////////////////////////////////
 class SocialCommand: public Command {
   public:
     // constructors...
