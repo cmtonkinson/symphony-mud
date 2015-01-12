@@ -120,25 +120,6 @@ class NAME: public Command {                                              \
     virtual bool execute( Creature* creature, const std::vector<std::string>& args );  \
 };                                                                        \
 
-///////////////////////////////////////////// ABILITIES /////////////////////////////////////////////
-class Ability: public Command {
-  public:
-    Ability(void);
-    ~Ability(void);
-
-    std::set<Ability*>&   dependencies(void)        { return _dependencies; }
-    std::set<Ability*>&   dependents(void)          { return _dependents; }
-
-    void                  add_dependency(Ability* ability);
-    void                  add_dependent(Ability* ability);
-    bool                  has_depedencies(void);
-    bool                  has_dependents(void);
-
-  private:
-    std::set<Ability*>  _dependencies;
-    std::set<Ability*>  _dependents;
-};
-
 ///////////////////////////////////////////// SOCIALS /////////////////////////////////////////////
 class SocialCommand: public Command {
   public:

@@ -22,6 +22,7 @@
 #include "commandTable.h"
 #include "commandTable-default.h"
 #include "world.h"
+#include "ability-skills.h"
 
 World::World( void ) {
   // basic setup
@@ -193,6 +194,8 @@ bool World::load( void ) {
     status = false;
   }
 
+  loadAbilities();
+
   add( new Board( BOARD_GENERAL ) );
   add( new Board( BOARD_CHANGES ) );
   add( new Board( BOARD_ADMIN ) );
@@ -283,6 +286,11 @@ bool World::loadSocials( void ) {
   }
 
   return false;
+}
+
+void World::loadAbilities(void) {
+  abilities().insert(new AbSecondAttack());
+  return;
 }
 
 void World::saveSocials( void ) {

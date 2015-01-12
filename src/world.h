@@ -36,6 +36,7 @@
 #include "regex.h"
 #include "room.h"
 #include "schedule.h"
+#include "ability-table.h"
 
 // Exit status...
 #define EXIT_NORMAL         0
@@ -99,6 +100,8 @@ class World {
     std::map<unsigned,Board*>&                                boards( void )                    { return _boards; }
     const std::map<unsigned,Board*>&                          boards( void ) const              { return _boards; }
     InputIOHandler*                                           npcIOHandler( void )              { return &_npcIOHandler; }
+    AbilityTable&                                             abilities(void)                   { return _abilities; }
+    const AbilityTable&                                       abilities(void) const             { return _abilities; }
 
     // Control
     void                  startup( void );
@@ -111,6 +114,7 @@ class World {
     bool                  save( RecurringJob* job )                                             { return save(); }
     bool                  toggleCommand( char table_prefix, std::string command_name, bool enabled );
     bool                  loadSocials( void );
+    void                  loadAbilities(void);
     void                  saveSocials( void );
     bool                  tick( RecurringJob* job );
 
@@ -199,6 +203,7 @@ class World {
     InputIOHandler                                          _npcIOHandler;
     Schedule                                                _schedule;
     unsigned                                                _jobsPerTurn;
+    AbilityTable                                            _abilities;
 };
 
 /*

@@ -409,7 +409,7 @@ class Creature {
     // Combat
     std::set<Creature*>         _opponents;
     Job*                        _next_attack;
-    std::set<Ability*>          _abilities;
+    std::set<Ability*>   _abilities;
 
 };
 

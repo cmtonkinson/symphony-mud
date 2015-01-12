@@ -5,6 +5,7 @@
 #include "stats.h"
 #include "world.h"
 #include "command.h"
+#include "ability.h"
 
 void Creature::formGroup(void) {
   group(new Group());

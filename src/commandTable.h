@@ -70,4 +70,6 @@ DEF_COMMANDTABLE(ReditCommands)   // Room edit Commands
 DEF_COMMANDTABLE(SeditCommands)   // Social command edit Commands
 DEF_COMMANDTABLE(TeditCommands)   // Text edit Commands
 
+// Ability commands are not as trivial
+
 #endif // #ifndef H_SYMPHONY_COMMANDTABLE

@@ -144,7 +144,13 @@ bool Avatar::create( void ) {
     );
     World::Instance().getMysql()->insert( query );
     ID( World::Instance().getMysql()->getInsertID() );
-    password( " " ); // we don't keep this stored in memory past the creation sequence
+    // We don't keep this stored in memory past the creation sequence.
+    password( " " );
+    // If this is the first charactor to the realm, promote them to admin.
+    if (ID() == 1) {
+      while (level() < CREATOR) gainLevel();
+      save();
+    }
   } catch ( MysqlException me ) {
     fprintf( stderr, "Failed create player %s: %s\n", identifiers().shortname().c_str(), me.getMessage().c_str() );
     return false;
