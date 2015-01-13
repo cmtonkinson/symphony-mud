@@ -130,7 +130,7 @@ bool World::reboot( Creature* creature ) {
   worldLog( SYSTEM, LOG_SYSTEM, "System going down for reboot." );
 
   fd = estring( "-fd=" ).append( estring( getServer()->getFd() ) );
-  if ( execl( "./symphony", "-copyover", fd.c_str(), NULL ) < 0 ) {
+  if ( execl( "bin/symphony", "-copyover", fd.c_str(), NULL ) < 0 ) {
     worldLog( ERROR, LOG_SYSTEM, "execl(): %s", strerror( errno ) );
     broadcast( "Copyover failed." );
   }

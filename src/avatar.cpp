@@ -476,7 +476,7 @@ bool Avatar::load( void ) {
           if ((ability = klass()->abilities().find(row["name"])) == NULL) {
             fprintf(stderr, "Could not locate ability %s for %s (%lu).\n", row["name"].c_str(), name(), ID());
           } else {
-            add_ability(ability, row["mastery"]);
+            learn(ability, row["mastery"]);
           }
         }
       }

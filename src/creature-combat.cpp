@@ -76,9 +76,9 @@ bool Creature::attack(Job* job) {
   }
   // Make the strike.
   strike(target);
-  if (abilities().has(SECOND_STRIKE) && !target->isDead()) strike(target);
-  if (abilities().has(THIRD_STRIKE) && !target->isDead()) strike(target);
-  if (abilities().has(FOURTH_STRIKE) && !target->isDead()) strike(target);
+  if (learned().has(SECOND_STRIKE) && !target->isDead()) strike(target);
+  if (learned().has(THIRD_STRIKE) && !target->isDead()) strike(target);
+  if (learned().has(FOURTH_STRIKE) && !target->isDead()) strike(target);
   // Go another round. Even if the current target is dead, there may be remaining Group members.
   scheduleAttack();
   // Is it over?

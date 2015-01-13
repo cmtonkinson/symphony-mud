@@ -91,6 +91,7 @@ CommandTable::CommandTable( void ) {
   add( new CmdGroup() );
   add( new CmdHelp() );
   add( new CmdLay() );
+  add( new CmdLearn() );
   add( new CmdLock() );
   add( new CmdNote() );
   add( new CmdOoc() );

@@ -36,17 +36,16 @@
 #include "world.h"
 
 /*
-Cmd::Cmd( void ) {
-  name( "" );
-  level(  );
-  notAllowedWhile( Creature::Position_ );
-  addSyntax( 0, "" );
-  brief( "" );
+Cmd::Cmd(void) {
+  name("");
+  level();
+  notAllowedWhile(Creature::Position_);
+  addSyntax(0, "");
+  brief("");
   return;
 }
 
 bool Cmd::execute( Creature* creature, const std::vector<std::string>& args ) {
-
   return true;
 }
 */
@@ -438,6 +437,30 @@ bool CmdLay::execute( Creature* creature, const std::vector<std::string>& args )
   }
   creature->send( "You lay down." );
   creature->room()->send_cond( "$p lays down.", creature );
+  return true;
+}
+
+CmdLearn::CmdLearn(void) {
+  name("learn");
+  playerOnly(true);
+  addSyntax(-1, "<name of skill>");
+  brief("Learn a skill that's available to you.");
+  return;
+}
+
+bool CmdLearn::execute(Creature* creature, const std::vector<std::string>& args) {
+  AbilityMap::const_iterator iter = creature->klass()->abilities().abilitiesByName().find(args[0]);
+  if (iter == creature->klass()->abilities().abilitiesByName().end()) {
+    creature->send("Can't find that skill.");
+    return false;
+  }
+
+  if (!creature->can_learn(iter->second)) {
+    creature->send("You can't learn that skill just yet.");
+    return false;
+  }
+  creature->learn(iter->second, 1);
+  creature->send("You learn the {M%s{x skill!\n", iter->second->name().c_str());
   return true;
 }
 

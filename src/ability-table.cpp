@@ -32,7 +32,7 @@ Ability* AbilityTable::find(std::string name) const {
 
 bool AbilityTable::contains(Ability* ability) const {
   size_t count = abilities().count(ability);
-  return count > 1;
+  return count > 0;
 }
 
 bool AbilityTable::has(std::string name) const {

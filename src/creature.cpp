@@ -789,8 +789,29 @@ void Creature::move( const unsigned short& direction ) {
   return;
 }
 
-void Creature::add_ability(Ability* ability, unsigned mastery) {
-  abilities().insert(ability);
+void Creature::learn(Ability* ability, unsigned mastery) {
+  learned().insert(ability);
   abilityMastery()[ability] = mastery;
   return;
+}
+
+std::set<Ability*> Creature::available_abilities(void) const {
+  std::set<Ability*> available;
+  for (std::set<Ability*>::const_iterator iter = klass()->abilities().abilities().begin(); iter != klass()->abilities().abilities().end(); ++iter) {
+    if (can_learn(*iter)) available.insert(*iter);
+  }
+  return available;
+}
+
+bool Creature::can_learn(Ability* ability) const {
+  // Can't learn something twice.
+  if (learned().contains(ability)) return false;
+  // You need to be a high enough level.
+  if (level() < ability->level()) return false;
+  // Are the prerequisites met?
+  for (std::set<Ability*>::const_iterator iter = ability->dependencies().begin(); iter != ability->dependencies().end(); ++iter) {
+    if (!learned().contains(*iter)) return false;
+  }
+  // Everything checks out.
+  return true;
 }

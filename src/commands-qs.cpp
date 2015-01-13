@@ -559,9 +559,15 @@ CmdSkills::CmdSkills( void ) {
 }
 
 bool CmdSkills::execute(Creature* creature, const std::vector<std::string>& args) {
-  creature->send("Your skills:\n");
-  for (AbilityMap::iterator iter = creature->abilities().abilitiesByName().begin(); iter != creature->abilities().abilitiesByName().end(); ++iter) {
-    creature->send("  %s (%u)\n", iter->first.c_str(), creature->abilityMastery()[iter->second]);
+  std::set<Ability*> available;
+  creature->send("Learned skills:\n");
+  for (AbilityMap::const_iterator iter = creature->learned().abilitiesByName().begin(); iter != creature->learned().abilitiesByName().end(); ++iter) {
+    creature->send("  %-20s (%u%% learned)\n", iter->first.c_str(), creature->abilityMastery()[iter->second]);
+  }
+  creature->send("\nAvailable skills:\n");
+  available = creature->available_abilities();
+  for (std::set<Ability*>::const_iterator iter = available.begin(); iter != available.end(); ++iter) {
+    creature->send("  %-20s (level %u)\n", (*iter)->name().c_str(), (*iter)->level());
   }
   return true;
 }

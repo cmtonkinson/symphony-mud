@@ -339,9 +339,12 @@ class Creature {
     unsigned      targetMovement(void) const;
     unsigned      targetTNL(void) const;
 
-    AbilityTable&                 abilities(void)       { return _abilities; }
-    std::map<Ability*,unsigned>&  abilityMastery(void)  { return _ability_mastery; }
-    void                          add_ability(Ability* ability, unsigned mastery);
+    AbilityTable&                 learned(void)                 { return _learned; }
+    const AbilityTable&           learned(void) const           { return _learned; }
+    std::map<Ability*,unsigned>&  abilityMastery(void)          { return _ability_mastery; }
+    void                          learn(Ability* ability, unsigned mastery);
+    std::set<Ability*>            available_abilities(void) const;
+    bool                          can_learn(Ability* ability) const;
 
     // Pure virtual public methods...
     virtual bool                save( void )                                                      = 0;
@@ -409,7 +412,7 @@ class Creature {
     // Combat
     std::set<Creature*>         _opponents;
     Job*                        _next_attack;
-    AbilityTable                _abilities;
+    AbilityTable                _learned;
     std::map<Ability*,unsigned> _ability_mastery;
 
 };
