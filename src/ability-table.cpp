@@ -34,3 +34,7 @@ bool AbilityTable::contains(Ability* ability) const {
   size_t count = abilities().count(ability);
   return count > 1;
 }
+
+bool AbilityTable::has(std::string name) const {
+  return (find(name) != NULL);
+}

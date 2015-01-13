@@ -17,7 +17,6 @@ class Ability {
     std::set<Ability*>&         dependents(void)          { return _dependents; }
     const std::set<Ability*>&   dependents(void) const    { return _dependents; }
 
-    void                  add_dependency(std::string dep_name);
     void                  add_dependency(Ability* ability);
     void                  add_dependent(Ability* ability);
     bool                  has_dependencies(void) const;
@@ -28,9 +27,8 @@ class Ability {
 
     void                  name(std::string name)  { _name = name; }
     std::string           name(void)              { return _name; }
+    void                  level(unsigned level)   { _level = level; }
     unsigned              level(void) const       { return _level; }
-    const Race&           race(void) const        { return _race; }
-    const PClass&         pClass(void) const      { return _pClass; }
 
     virtual void          setup(void);
     virtual bool          accessible(Creature* creature) const;
@@ -39,19 +37,20 @@ class Ability {
 
     std::string           _name;
     unsigned              _level;
-    Race                  _race;
-    PClass                _pClass;
     std::set<Ability*>    _dependencies;
     std::set<Ability*>    _dependents;
 
 };
 
-#define DEF_ABILITY(NAME)                                                 \
-class NAME: public Ability {                                              \
-  public:                                                                 \
-    NAME(void) { return; }                                                \
-    virtual ~NAME(void) { return; }                                       \
-    virtual void setup(void);                                             \
-};                                                                        \
+#define DEF_ABILITY(NAME,CLASS)           \
+class CLASS: public Ability {             \
+  public:                                 \
+    CLASS(unsigned level_) {              \
+      name(NAME);                         \
+      level(level_);                      \
+      return;                             \
+    }                                     \
+    virtual ~CLASS(void) { return; }      \
+};                                        \
 
 #endif // #ifndef H_SYMPHONY_ABILITY

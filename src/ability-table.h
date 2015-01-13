@@ -22,6 +22,7 @@ class AbilityTable {
     void      remove(Ability* ability);
     Ability*  find(std::string name) const;
     bool      contains(Ability* ability) const;
+    bool      has(std::string name) const;
 
   private:
     std::set<Ability*>  _abilities;

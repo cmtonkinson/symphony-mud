@@ -195,6 +195,29 @@ bool Avatar::save( void ) {
       it->second->saveInstance( mysql, "AVATAR", ID(), it->first, order++ );
     }
 
+    sprintf(query,
+      " DELETE                 \
+          FROM `abilities`     \
+          WHERE `avatar` = %lu \
+        ;",
+      ID()
+    );
+    mysql->remove(query);
+    for (std::map<Ability*,unsigned>::iterator iter = abilityMastery().begin(); iter != abilityMastery().end(); ++iter) {
+      sprintf(query,
+        " INSERT                          \
+            INTO `abilities`              \
+            (`avatar`, `name`, `mastery`) \
+            VALUES                        \
+            (%lu, '%s', %u)               \
+          ;",
+          ID(),
+          Mysql::addslashes(iter->first->name()).c_str(),
+          iter->second
+      );
+      mysql->insert(query);
+    }
+
     sprintf( query,
       "UPDATE avatars SET         \
         `shortname` = '%s',       \
@@ -373,6 +396,7 @@ bool Avatar::load( void ) {
   char query[MAX_BUFFER];
   ROW row;
   Object* object = NULL;
+  Ability* ability = NULL;
 
   sprintf( query, "SELECT * FROM avatars WHERE LOWER(shortname) = LOWER('%s') AND active = 1 LIMIT 1;", Mysql::addslashes(identifiers().shortname()).c_str() );
   if ( mysql->select( query ) == 1 ) {
@@ -438,6 +462,24 @@ bool Avatar::load( void ) {
       // post-processing
       whoFlags().clear( WHO_AFK );
       whoFlags().clear( WHO_BUSY );
+      // Abilities...
+      sprintf(query,
+        "SELECT                \
+          `name`, `mastery`    \
+          FROM `abilities`     \
+          WHERE `avatar` = %lu \
+          ;",
+          ID()
+      );
+      if (mysql->select(query)) {
+        while (row = mysql->fetch()) {
+          if ((ability = klass()->abilities().find(row["name"])) == NULL) {
+            fprintf(stderr, "Could not locate ability %s for %s (%lu).\n", row["name"].c_str(), name(), ID());
+          } else {
+            add_ability(ability, row["mastery"]);
+          }
+        }
+      }
       // get us some inventory...
       sprintf( query,
         "SELECT *                       \

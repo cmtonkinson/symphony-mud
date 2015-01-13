@@ -100,8 +100,6 @@ class World {
     std::map<unsigned,Board*>&                                boards( void )                    { return _boards; }
     const std::map<unsigned,Board*>&                          boards( void ) const              { return _boards; }
     InputIOHandler*                                           npcIOHandler( void )              { return &_npcIOHandler; }
-    AbilityTable&                                             abilities(void)                   { return _abilities; }
-    const AbilityTable&                                       abilities(void) const             { return _abilities; }
 
     // Control
     void                  startup( void );
@@ -203,7 +201,6 @@ class World {
     InputIOHandler                                          _npcIOHandler;
     Schedule                                                _schedule;
     unsigned                                                _jobsPerTurn;
-    AbilityTable                                            _abilities;
 };
 
 /*

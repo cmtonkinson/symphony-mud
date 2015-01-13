@@ -176,6 +176,16 @@ void Creature::handle( void ) {
   return;
 }
 
+Klass* Creature::klass(void) const {
+  switch (pClass().number()) {
+    case CLERIC:  return &Cleric::Instance();
+    case MAGE:    return &Mage::Instance();
+    case ROGUE:   return &Rogue::Instance();
+    case WARRIOR: return &Warrior::Instance();
+    default:      return NULL;
+  }
+}
+
 void Creature::naturalStatAdjustment( void ) {
   unsigned short Str = 0;
   unsigned short Dex = 0;
@@ -776,5 +786,11 @@ void Creature::move( const unsigned short& direction ) {
     }
   }
 
+  return;
+}
+
+void Creature::add_ability(Ability* ability, unsigned mastery) {
+  abilities().insert(ability);
+  abilityMastery()[ability] = mastery;
   return;
 }

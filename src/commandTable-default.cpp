@@ -104,6 +104,7 @@ CommandTable::CommandTable( void ) {
   //add( new CmdSleep() );
   add( new CmdSocials() );
   add( new CmdStand() );
+  add( new CmdSkills() );
   add( new CmdTell() );
   add( new CmdTime() );
   add( new CmdTitle() );

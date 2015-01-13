@@ -10,17 +10,6 @@ Ability::~Ability(void) {
   return;
 }
 
-void Ability::add_dependency(std::string dep_name) {
-  std::string message;
-  Ability* a = World::Instance().abilities().find(dep_name);
-  if (a == NULL) {
-    fprintf(stderr, "Bad dependency of %s (%s could not be found).\n", name().c_str(), dep_name.c_str());
-  } else {
-    add_dependency(a);
-  }
-  return;
-}
-
 void Ability::add_dependency(Ability* ability) {
   _dependencies.insert(ability);
   ability->dependents().insert(this);

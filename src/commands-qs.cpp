@@ -551,6 +551,21 @@ bool CmdStand::execute( Creature* creature, const std::vector<std::string>& args
   return true;
 }
 
+CmdSkills::CmdSkills( void ) {
+  name("skills");
+  addSyntax(0, "");
+  brief("Displays available skills.");
+  return;
+}
+
+bool CmdSkills::execute(Creature* creature, const std::vector<std::string>& args) {
+  creature->send("Your skills:\n");
+  for (AbilityMap::iterator iter = creature->abilities().abilitiesByName().begin(); iter != creature->abilities().abilitiesByName().end(); ++iter) {
+    creature->send("  %s (%u)\n", iter->first.c_str(), creature->abilityMastery()[iter->second]);
+  }
+  return true;
+}
+
 CmdSummary::CmdSummary( void ) {
   name( "summary" );
   playerOnly( true );

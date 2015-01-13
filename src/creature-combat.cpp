@@ -6,6 +6,7 @@
 #include "world.h"
 #include "command.h"
 #include "ability.h"
+#include "ability-skills.h"
 
 void Creature::formGroup(void) {
   group(new Group());
@@ -75,6 +76,9 @@ bool Creature::attack(Job* job) {
   }
   // Make the strike.
   strike(target);
+  if (abilities().has(SECOND_STRIKE) && !target->isDead()) strike(target);
+  if (abilities().has(THIRD_STRIKE) && !target->isDead()) strike(target);
+  if (abilities().has(FOURTH_STRIKE) && !target->isDead()) strike(target);
   // Go another round. Even if the current target is dead, there may be remaining Group members.
   scheduleAttack();
   // Is it over?
@@ -280,21 +284,5 @@ void Creature::resetStats(void) {
   mana(BASE_MANA);
   maxMovement(BASE_MOVEMENT);
   movement(BASE_MOVEMENT);
-  return;
-}
-
-std::string Creature::exportAbilities(void) const {
-  std::vector<std::string> list(abilities().size());
-  for (std::set<Ability*>::iterator iter = abilities().begin(); iter != abilities().end(); ++iter) {
-    list.push_back((*iter)->name());
-  }
-  return Regex::implode(STRING_SEPARATOR, list);
-}
-
-void Creature::importAbilities(const std::string& list) {
-  std::vector<std::string> names = Regex::explode(STRING_SEPARATOR, list, true);
-  for (std::vector<std::string>::iterator iter = names.begin(); iter != names.end(); ++iter) {
-    ; // TODO look for each ability and add it to abilities()
-  }
   return;
 }

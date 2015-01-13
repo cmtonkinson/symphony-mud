@@ -35,6 +35,7 @@
 #include "job.h"
 #include "modifier.h"
 #include "object.h"
+#include "klass.h"
 
 // Wear Locations...
 #define WEARLOC_ERROR        0
@@ -183,6 +184,7 @@ class Creature {
     const Race&       race( void ) const      { return _race; }
     PClass&           pClass( void )          { return _pClass; }
     const PClass&     pClass( void ) const    { return _pClass; }
+    Klass*            klass(void) const;
 
     // Level
     void                level(unsigned level)                           { _level = level; }
@@ -330,18 +332,16 @@ class Creature {
     void          heal(void);
     virtual void  whatHappensWhenIDie(void) = 0;
 
-    std::set<Ability*>&         abilities(void)                             { return _abilities; }
-    const std::set<Ability*>&   abilities(void) const                       { return _abilities; }
-    std::string                 exportAbilities(void) const;
-    void                        importAbilities(const std::string& list);
-
-    // Leveling, EXP, & Gains...
+    // Leveling, Gains, Abilities...
     void          resetStats(void);
     unsigned      targetHealth(void) const;
     unsigned      targetMana(void) const;
     unsigned      targetMovement(void) const;
     unsigned      targetTNL(void) const;
 
+    AbilityTable&                 abilities(void)       { return _abilities; }
+    std::map<Ability*,unsigned>&  abilityMastery(void)  { return _ability_mastery; }
+    void                          add_ability(Ability* ability, unsigned mastery);
 
     // Pure virtual public methods...
     virtual bool                save( void )                                                      = 0;
@@ -409,7 +409,8 @@ class Creature {
     // Combat
     std::set<Creature*>         _opponents;
     Job*                        _next_attack;
-    std::set<Ability*>   _abilities;
+    AbilityTable                _abilities;
+    std::map<Ability*,unsigned> _ability_mastery;
 
 };
 
