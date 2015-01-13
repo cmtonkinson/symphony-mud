@@ -24,7 +24,7 @@ FLAGS_PROD  = -O3 -minline-all-stringops -funroll-loops -finline-limit=65536
 LIBS        = `pcre-config --libs` `mysql_config --libs`
 SRC_DIR     = src
 OBJ_DIR     = obj
-BIN_DIR     = .
+BIN_DIR     = bin
 SRC_FILES  := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES  := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 DEP_FILES  := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.d,$(SRC_FILES))

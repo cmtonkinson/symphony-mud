@@ -40,8 +40,8 @@
 #define DB_EXCEPTION_FAILED_ASSERTION   6
 
 // Other options...
-#define	CONNECT_TIMEOUT	5			      	// MySQL timeout (in seconds)
-#define CONFIG_FILE		  "mysql.conf"	// File which holds configuration options
+#define	CONNECT_TIMEOUT	5			      	       // MySQL timeout (in seconds)
+#define CONFIG_FILE		  "config/mysql.conf"	 // File which holds configuration options
 
 // Credential classes...
 #define MYSQL_CREDENTIAL_CONFIG_FILE  0

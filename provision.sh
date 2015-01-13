@@ -40,3 +40,8 @@ echo 'alias list="ls -alsvh"'     >> /home/vagrant/.bashrc
 echo 'export MAKEFLAGS="-j4"'     >> /home/vagrant/.bashrc
 echo 'export CCACHE_COMPRESS="1"' >> /home/vagrant/.bashrc
 echo 'cd /vagrant'                >> /home/vagrant/.bashrc
+
+###############################################################################
+# Symphony Setup
+###############################################################################
+as_user "bash scripts/export_database.sh"

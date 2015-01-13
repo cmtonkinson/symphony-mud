@@ -1,44 +1,44 @@
--- $Id: structure.sql 381 2010-06-02 00:18:37Z cmtonkinson@gmail.com $
+-- MySQL dump 10.13  Distrib 5.5.40, for debian-linux-gnu (i686)
 --
--- This file is part of the Symphony project <http://code.google.com/p/symphonymud/>
--- Copyright 2005-2010 Chris Tonkinson <cmtonkinson@gmail.com>
---
--- This program is free software: you can redistribute it and/or modify
--- it under the terms of the GNU General Public License as published
--- by the Free Software Foundation, either version 3 of the License, or
--- (at your option) any later version.
---
--- This program is distributed in the hope that it will be useful,
--- but WITHOUT ANY WARRANTY; without even the implied warranty of
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--- GNU General Public License for more details.
---
--- You should have received a copy of the GNU General Public License
--- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-- Host: localhost    Database: symphony
+-- ------------------------------------------------------
+-- Server version	5.5.40-0ubuntu0.14.04.1
 
--- phpMyAdmin SQL Dump
--- version 3.2.3
--- http://www.phpmyadmin.net
---
--- Host: drop.thetonk.com
--- Generation Time: Jun 01, 2010 at 10:55 AM
--- Server version: 5.1.46
--- PHP Version: 5.2.13
-
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Database: `symphony`
+-- Table structure for table `abilities`
 --
 
--- --------------------------------------------------------
+DROP TABLE IF EXISTS `abilities`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `abilities` (
+  `avatar` int(10) unsigned NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `mastery` int(10) unsigned NOT NULL DEFAULT '0',
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY `avatar` (`avatar`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `areas`
 --
 
 DROP TABLE IF EXISTS `areas`;
-CREATE TABLE IF NOT EXISTS `areas` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `areas` (
   `areaID` int(11) NOT NULL AUTO_INCREMENT,
   `low` int(11) NOT NULL COMMENT 'vnum',
   `high` int(11) NOT NULL COMMENT 'vnum',
@@ -48,16 +48,17 @@ CREATE TABLE IF NOT EXISTS `areas` (
   PRIMARY KEY (`areaID`),
   UNIQUE KEY `low` (`low`),
   UNIQUE KEY `high` (`high`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `avatars`
 --
 
 DROP TABLE IF EXISTS `avatars`;
-CREATE TABLE IF NOT EXISTS `avatars` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `avatars` (
   `avatarID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `delete` tinyint(1) NOT NULL DEFAULT '0',
@@ -71,8 +72,8 @@ CREATE TABLE IF NOT EXISTS `avatars` (
   `level` int(11) unsigned NOT NULL DEFAULT '1',
   `exp` int(10) unsigned NOT NULL DEFAULT '1',
   `tnl` int(10) unsigned NOT NULL DEFAULT '0',
-  `hp` int(10) unsigned NOT NULL DEFAULT '0',
-  `maxHp` int(10) unsigned NOT NULL DEFAULT '0',
+  `health` int(10) unsigned NOT NULL DEFAULT '0',
+  `maxHealth` int(10) unsigned NOT NULL DEFAULT '0',
   `mana` int(10) unsigned NOT NULL DEFAULT '0',
   `maxMana` int(10) unsigned NOT NULL DEFAULT '0',
   `movement` int(10) unsigned NOT NULL DEFAULT '0',
@@ -85,14 +86,11 @@ CREATE TABLE IF NOT EXISTS `avatars` (
   `maxConstitution` int(10) unsigned NOT NULL DEFAULT '0',
   `intelligence` int(10) unsigned NOT NULL DEFAULT '0',
   `maxIntelligence` int(10) unsigned NOT NULL DEFAULT '0',
-  `wisdom` int(10) unsigned NOT NULL DEFAULT '0',
-  `maxWisdom` int(10) unsigned NOT NULL DEFAULT '0',
+  `focus` int(10) unsigned NOT NULL DEFAULT '0',
+  `maxFocus` int(10) unsigned NOT NULL DEFAULT '0',
   `charisma` int(10) unsigned NOT NULL DEFAULT '0',
   `maxCharisma` int(10) unsigned NOT NULL DEFAULT '0',
-  `hitroll` int(10) unsigned NOT NULL DEFAULT '0',
-  `damroll` int(10) unsigned NOT NULL DEFAULT '0',
-  `saves` int(10) NOT NULL DEFAULT '0',
-  `ac` int(10) NOT NULL DEFAULT '0',
+  `armor` int(10) unsigned NOT NULL DEFAULT '0',
   `bash` int(10) NOT NULL DEFAULT '0',
   `slash` int(10) NOT NULL DEFAULT '0',
   `pierce` int(10) NOT NULL DEFAULT '0',
@@ -115,31 +113,37 @@ CREATE TABLE IF NOT EXISTS `avatars` (
   `poofin` varchar(255) NOT NULL,
   `poofout` varchar(255) NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `creativity` int(10) unsigned NOT NULL DEFAULT '0',
+  `maxCreativity` int(10) unsigned NOT NULL DEFAULT '0',
+  `luck` int(10) unsigned NOT NULL DEFAULT '0',
+  `maxLuck` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`avatarID`),
   UNIQUE KEY `avatarName` (`shortname`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `disabled_commands`
 --
 
 DROP TABLE IF EXISTS `disabled_commands`;
-CREATE TABLE IF NOT EXISTS `disabled_commands` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `disabled_commands` (
   `table` enum('x','A','M','O','P','R','T') NOT NULL,
   `name` varchar(255) NOT NULL,
   UNIQUE KEY `tableName` (`table`,`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `exits`
 --
 
 DROP TABLE IF EXISTS `exits`;
-CREATE TABLE IF NOT EXISTS `exits` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `exits` (
   `exitID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `vnum` int(11) unsigned NOT NULL,
   `target` int(11) unsigned NOT NULL COMMENT 'vnum',
@@ -150,16 +154,17 @@ CREATE TABLE IF NOT EXISTS `exits` (
   PRIMARY KEY (`exitID`),
   KEY `roomID` (`vnum`),
   KEY `targetID` (`target`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+) ENGINE=MyISAM AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `load_rules`
 --
 
 DROP TABLE IF EXISTS `load_rules`;
-CREATE TABLE IF NOT EXISTS `load_rules` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `load_rules` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `vnum` int(10) unsigned NOT NULL,
   `type` enum('MOB','OBJECT') NOT NULL,
@@ -172,16 +177,17 @@ CREATE TABLE IF NOT EXISTS `load_rules` (
   `indirect_object_index` int(10) unsigned NOT NULL DEFAULT '0',
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `mobs`
 --
 
 DROP TABLE IF EXISTS `mobs`;
-CREATE TABLE IF NOT EXISTS `mobs` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mobs` (
   `mobID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `areaID` int(10) unsigned NOT NULL,
   `vnum` int(10) unsigned NOT NULL,
@@ -192,8 +198,8 @@ CREATE TABLE IF NOT EXISTS `mobs` (
   `level` int(11) unsigned NOT NULL,
   `exp` int(10) unsigned NOT NULL DEFAULT '0',
   `tnl` int(10) unsigned NOT NULL DEFAULT '0',
-  `hp` int(10) unsigned NOT NULL DEFAULT '0',
-  `maxHp` int(10) unsigned NOT NULL DEFAULT '0',
+  `health` int(10) unsigned NOT NULL DEFAULT '0',
+  `maxHealth` int(10) unsigned NOT NULL DEFAULT '0',
   `mana` int(10) unsigned NOT NULL DEFAULT '0',
   `maxMana` int(10) unsigned NOT NULL DEFAULT '0',
   `movement` int(10) unsigned NOT NULL DEFAULT '0',
@@ -206,31 +212,36 @@ CREATE TABLE IF NOT EXISTS `mobs` (
   `maxConstitution` int(10) unsigned NOT NULL DEFAULT '0',
   `intelligence` int(10) unsigned NOT NULL DEFAULT '0',
   `maxIntelligence` int(10) unsigned NOT NULL DEFAULT '0',
-  `wisdom` int(10) unsigned NOT NULL DEFAULT '0',
-  `maxWisdom` int(10) unsigned NOT NULL DEFAULT '0',
+  `focus` int(10) unsigned NOT NULL DEFAULT '0',
+  `maxFocus` int(10) unsigned NOT NULL DEFAULT '0',
   `charisma` int(10) unsigned NOT NULL DEFAULT '0',
   `maxCharisma` int(10) unsigned NOT NULL DEFAULT '0',
-  `hitroll` int(10) unsigned NOT NULL DEFAULT '0',
-  `damroll` int(10) unsigned NOT NULL DEFAULT '0',
-  `saves` int(10) NOT NULL DEFAULT '0',
-  `ac` int(10) NOT NULL DEFAULT '0',
+  `armor` int(10) unsigned NOT NULL DEFAULT '0',
   `bash` int(10) NOT NULL DEFAULT '0',
   `slash` int(10) NOT NULL DEFAULT '0',
   `pierce` int(10) NOT NULL DEFAULT '0',
   `exotic` int(10) NOT NULL DEFAULT '0',
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `creativity` int(10) unsigned NOT NULL DEFAULT '0',
+  `maxCreativity` int(10) unsigned NOT NULL DEFAULT '0',
+  `luck` int(10) unsigned NOT NULL DEFAULT '0',
+  `maxLuck` int(10) unsigned NOT NULL DEFAULT '0',
+  `gender` int(10) unsigned NOT NULL DEFAULT '1',
+  `race` int(10) unsigned NOT NULL DEFAULT '1',
+  `pClass` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`mobID`),
   UNIQUE KEY `vnum` (`vnum`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `notes`
 --
 
 DROP TABLE IF EXISTS `notes`;
-CREATE TABLE IF NOT EXISTS `notes` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `notes` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `board` int(10) unsigned NOT NULL,
   `author` int(10) unsigned NOT NULL COMMENT 'avatarID',
@@ -238,53 +249,17 @@ CREATE TABLE IF NOT EXISTS `notes` (
   `body` text NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `objects`
---
-
-DROP TABLE IF EXISTS `objects`;
-CREATE TABLE IF NOT EXISTS `objects` (
-  `objectID` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `areaID` int(11) unsigned NOT NULL,
-  `vnum` int(11) unsigned NOT NULL,
-  `type` int(11) unsigned NOT NULL,
-  `flags` bigint(20) unsigned NOT NULL,
-  `composition` varchar(255) NOT NULL,
-  `level` int(11) unsigned NOT NULL,
-  `value` int(11) unsigned NOT NULL,
-  `wearable` int(10) unsigned NOT NULL DEFAULT '0',
-  `modifiers` varchar(255) NOT NULL,
-  `keywords` varchar(255) NOT NULL,
-  `shortname` varchar(255) NOT NULL,
-  `longname` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `furniture_capacity` int(10) unsigned NOT NULL DEFAULT '0',
-  `furniture_lay_on` int(10) unsigned NOT NULL DEFAULT '0',
-  `furniture_sit_at` int(10) unsigned NOT NULL DEFAULT '0',
-  `furniture_sit_on` int(10) unsigned NOT NULL DEFAULT '0',
-  `furniture_stand_on` int(10) unsigned NOT NULL DEFAULT '0',
-  `weapon_type` int(10) unsigned NOT NULL DEFAULT '0',
-  `weapon_verb` int(10) unsigned NOT NULL DEFAULT '0',
-  `weapon_damage_number` int(10) unsigned NOT NULL DEFAULT '0',
-  `weapon_damage_faces` int(10) unsigned NOT NULL DEFAULT '0',
-  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`objectID`),
-  UNIQUE KEY `vnum` (`vnum`),
-  KEY `areaID` (`areaID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `object_instances`
 --
 
 DROP TABLE IF EXISTS `object_instances`;
-CREATE TABLE IF NOT EXISTS `object_instances` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `object_instances` (
   `hash` varchar(255) NOT NULL,
   `in` varchar(255) NOT NULL COMMENT 'hash of container holding this object (if any)',
   `placement` enum('AVATAR','MOB','ROOM','CONTAINER') NOT NULL,
@@ -319,30 +294,71 @@ CREATE TABLE IF NOT EXISTS `object_instances` (
   KEY `order` (`order`),
   KEY `placement` (`placement`),
   KEY `hash` (`hash`),
-  KEY `in` (`in`)
+  KEY `in` (`in`),
+  CONSTRAINT `object_instances_ibfk_1` FOREIGN KEY (`in`) REFERENCES `object_instances` (`hash`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='first row must has hash/in values of "none"/"none"';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- --------------------------------------------------------
+--
+-- Table structure for table `objects`
+--
+
+DROP TABLE IF EXISTS `objects`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `objects` (
+  `objectID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `areaID` int(11) unsigned NOT NULL,
+  `vnum` int(11) unsigned NOT NULL,
+  `type` int(11) unsigned NOT NULL,
+  `flags` bigint(20) unsigned NOT NULL,
+  `composition` varchar(255) NOT NULL,
+  `level` int(11) unsigned NOT NULL,
+  `value` int(11) unsigned NOT NULL,
+  `wearable` int(10) unsigned NOT NULL DEFAULT '0',
+  `modifiers` varchar(255) NOT NULL,
+  `keywords` varchar(255) NOT NULL,
+  `shortname` varchar(255) NOT NULL,
+  `longname` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `furniture_capacity` int(10) unsigned NOT NULL DEFAULT '0',
+  `furniture_lay_on` int(10) unsigned NOT NULL DEFAULT '0',
+  `furniture_sit_at` int(10) unsigned NOT NULL DEFAULT '0',
+  `furniture_sit_on` int(10) unsigned NOT NULL DEFAULT '0',
+  `furniture_stand_on` int(10) unsigned NOT NULL DEFAULT '0',
+  `weapon_type` int(10) unsigned NOT NULL DEFAULT '0',
+  `weapon_verb` int(10) unsigned NOT NULL DEFAULT '0',
+  `weapon_damage_number` int(10) unsigned NOT NULL DEFAULT '0',
+  `weapon_damage_faces` int(10) unsigned NOT NULL DEFAULT '0',
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`objectID`),
+  UNIQUE KEY `vnum` (`vnum`),
+  KEY `areaID` (`areaID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `permissions`
 --
 
 DROP TABLE IF EXISTS `permissions`;
-CREATE TABLE IF NOT EXISTS `permissions` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permissions` (
   `areaID` int(11) unsigned NOT NULL,
   `avatarID` int(11) unsigned NOT NULL,
   UNIQUE KEY `areaID` (`areaID`,`avatarID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `player_log`
 --
 
 DROP TABLE IF EXISTS `player_log`;
-CREATE TABLE IF NOT EXISTS `player_log` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `player_log` (
   `logID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `level` int(11) unsigned NOT NULL,
   `type` int(11) NOT NULL,
@@ -351,16 +367,17 @@ CREATE TABLE IF NOT EXISTS `player_log` (
   PRIMARY KEY (`logID`),
   KEY `level` (`level`),
   KEY `type` (`type`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `rooms`
 --
 
 DROP TABLE IF EXISTS `rooms`;
-CREATE TABLE IF NOT EXISTS `rooms` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `rooms` (
   `roomID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `areaID` int(11) unsigned NOT NULL,
   `vnum` int(11) unsigned NOT NULL,
@@ -374,16 +391,17 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   PRIMARY KEY (`roomID`),
   UNIQUE KEY `vnum` (`vnum`),
   KEY `areaID` (`areaID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `socials`
 --
 
 DROP TABLE IF EXISTS `socials`;
-CREATE TABLE IF NOT EXISTS `socials` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `socials` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `creator` int(10) unsigned NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -400,16 +418,17 @@ CREATE TABLE IF NOT EXISTS `socials` (
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `avatar` (`creator`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `world_log`
 --
 
 DROP TABLE IF EXISTS `world_log`;
-CREATE TABLE IF NOT EXISTS `world_log` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `world_log` (
   `logID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `level` int(11) unsigned NOT NULL,
   `type` int(11) NOT NULL,
@@ -418,14 +437,16 @@ CREATE TABLE IF NOT EXISTS `world_log` (
   PRIMARY KEY (`logID`),
   KEY `level` (`level`),
   KEY `type` (`type`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=68 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
---
--- Constraints for dumped tables
---
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
---
--- Constraints for table `object_instances`
---
-ALTER TABLE `object_instances`
-  ADD CONSTRAINT `object_instances_ibfk_1` FOREIGN KEY (`in`) REFERENCES `object_instances` (`hash`) ON DELETE CASCADE;
+-- Dump completed on 2015-01-13 15:12:57

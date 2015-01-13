@@ -18,13 +18,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+ROOT="."
+
 while [ 1 ]; do
   # Run Symphony and log all output...
-    ./symphony >>out.log 2>&1
+    $ROOT/symphony >>$ROOT/log/out.log 2>&1
   # Get a timestamp...
     DATE=`date +%Y-%m-%d-%H-%M-%S`
-    CORE_DIR="cores/$DATE"
-    PROF_DIR="profiling"
+    CORE_DIR="$ROOT/cores/$DATE"
+    PROF_DIR="$ROOT/profiling"
   # Save the core file & executable...
     if [ -f core.* ]; then
       mkdir -p $CORE_DIR
