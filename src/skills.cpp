@@ -7,20 +7,27 @@ bool Skill::invoke(Creature* creature) const {
   // Skill dynamically. A positive value, alternatively, indicates that the stamina cost for a Skill
   // is a preset fixed value, and can be automatically deducted here to DRY out the respective
   // execute().
-  if (stamina() > 0) creature->deplete_stamina(stamina());
+  if (stamina() > 0) {
+    if (!creature->deplete_stamina(stamina())) {
+      return false;
+    }
+  }
   // Proxy to the individual details for the Skill.
   return execute(creature);
 }
 
 bool SecondStrikeSkill::execute(Creature* creature) const {
+  creature->strike();
   return true;
 }
 
 bool ThirdStrikeSkill::execute(Creature* creature) const {
+  creature->strike();
   return true;
 }
 
 bool FourthStrikeSkill::execute(Creature* creature) const {
+  creature->strike();
   return true;
 }
 

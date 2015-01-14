@@ -136,14 +136,13 @@ void Creature::strike(void) {
   room()->send_cond("$p's $s $C!", this, (void*)weapon_damage.c_str(), _target, TO_NOTVICT, true);
   // Deal the pain.
   _target->takeDamage(damage, this);
-  // Use stamina.
-  deplete_stamina(1);
   return;
 }
 
 void Creature::takeDamage(int damage, Creature* damager) {
   if (damager) add_opponent(damager);
   health(health() - damage);
+  deplete_stamina(1);
   if (level() > DEMIGOD && health() < 1) health(1);
   if (health() < 1) die(damager);
   return;
