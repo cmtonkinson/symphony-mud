@@ -30,6 +30,15 @@ bool Ability::has_dependents(void) const {
   return !_dependents.empty();
 }
 
+std::set<std::string> Ability::dependency_names(void) const {
+  std::set<Ability*>::const_iterator iter;
+  std::set<std::string> prereqs;
+  for (iter = dependencies().begin(); iter != dependencies().end(); ++iter) {
+    prereqs.insert((*iter)->name());
+  }
+  return prereqs;
+}
+
 bool Ability::is_root(void) const {
   return !has_dependencies();
 }

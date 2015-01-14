@@ -560,15 +560,40 @@ CmdSkills::CmdSkills( void ) {
 }
 
 bool CmdSkills::execute(Creature* creature, const std::vector<std::string>& args) {
+  std::set<Ability*> learned;
   std::set<Ability*> available;
+  std::set<Ability*> unavailable;
+  std::set<Ability*>::const_iterator iter;
+  std::set<std::string> prereqs;
+
+  // Sort Klass Abilities into one of three buckets.
+  for (iter = creature->klass()->abilities().abilities().begin(); iter != creature->klass()->abilities().abilities().end(); ++iter) {
+    if (creature->learned().contains(*iter)) {
+      learned.insert(*iter);
+      continue;
+    } else if (creature->can_learn(*iter)) {
+      available.insert(*iter);
+      continue;
+    } else {
+      unavailable.insert(*iter);
+    }
+  }
+
+  // Print each bucket.
   creature->send("Learned skills:\n");
-  for (AbilityMap::const_iterator iter = creature->learned().abilitiesByName().begin(); iter != creature->learned().abilitiesByName().end(); ++iter) {
-    creature->send("  %-20s (%u%% learned)\n", iter->first.c_str(), creature->abilityMastery()[iter->second]);
+  for (iter = learned.begin(); iter != learned.end(); ++iter) {
+    creature->send("  %-20s (%u%% learned)\n", (*iter)->name().c_str(), creature->abilityMastery()[*iter]);
   }
   creature->send("\nAvailable skills:\n");
-  available = creature->available_abilities();
-  for (std::set<Ability*>::const_iterator iter = available.begin(); iter != available.end(); ++iter) {
-    creature->send("  %-20s (level {Y%u{x, costs {B%u{x training points)\n", (*iter)->name().c_str(), (*iter)->level(), (*iter)->trains());
+  for (iter = available.begin(); iter != available.end(); ++iter) {
+    creature->send("  %-20s (costs {B%u{x training points)\n", (*iter)->name().c_str(), (*iter)->trains());
+  }
+  creature->send("\nUnavailable skills:\n");
+  for (iter = unavailable.begin(); iter != unavailable.end(); ++iter) {
+    prereqs = (*iter)->dependency_names();
+    creature->send("  %-20s (level {Y%u{x", (*iter)->name().c_str(), (*iter)->level());
+    if (!prereqs.empty()) creature->send(", requires %s", Regex::implode(", ", prereqs).c_str());
+    creature->send(")\n");
   }
   return true;
 }

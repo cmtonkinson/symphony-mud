@@ -22,6 +22,8 @@ class Ability {
     bool                  has_dependencies(void) const;
     bool                  has_dependents(void) const;
 
+    std::set<std::string> dependency_names(void) const;
+
     bool                  is_root(void) const;
     bool                  is_leaf(void) const;
 
