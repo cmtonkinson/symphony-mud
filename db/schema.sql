@@ -95,11 +95,7 @@ CREATE TABLE `avatars` (
   `slash` int(10) NOT NULL DEFAULT '0',
   `pierce` int(10) NOT NULL DEFAULT '0',
   `exotic` int(10) NOT NULL DEFAULT '0',
-  `practices` int(10) unsigned NOT NULL DEFAULT '0',
-  `trains` int(10) unsigned NOT NULL DEFAULT '0',
-  `gains` int(10) unsigned NOT NULL DEFAULT '0',
   `age` int(10) unsigned NOT NULL DEFAULT '17',
-  `points` int(10) unsigned NOT NULL DEFAULT '0',
   `gold` int(10) unsigned NOT NULL DEFAULT '0',
   `silver` int(10) unsigned NOT NULL DEFAULT '0',
   `bank_gold` int(10) unsigned NOT NULL DEFAULT '0',
@@ -117,9 +113,10 @@ CREATE TABLE `avatars` (
   `maxCreativity` int(10) unsigned NOT NULL DEFAULT '0',
   `luck` int(10) unsigned NOT NULL DEFAULT '0',
   `maxLuck` int(10) unsigned NOT NULL DEFAULT '0',
+  `trains` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`avatarID`),
   UNIQUE KEY `avatarName` (`shortname`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -367,7 +364,7 @@ CREATE TABLE `player_log` (
   PRIMARY KEY (`logID`),
   KEY `level` (`level`),
   KEY `type` (`type`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -391,7 +388,7 @@ CREATE TABLE `rooms` (
   PRIMARY KEY (`roomID`),
   UNIQUE KEY `vnum` (`vnum`),
   KEY `areaID` (`areaID`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -437,7 +434,7 @@ CREATE TABLE `world_log` (
   PRIMARY KEY (`logID`),
   KEY `level` (`level`),
   KEY `type` (`type`)
-) ENGINE=MyISAM AUTO_INCREMENT=68 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -449,4 +446,4 @@ CREATE TABLE `world_log` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-01-13 15:12:57
+-- Dump completed on 2015-01-14  1:47:35

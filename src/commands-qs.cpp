@@ -567,7 +567,7 @@ bool CmdSkills::execute(Creature* creature, const std::vector<std::string>& args
   creature->send("\nAvailable skills:\n");
   available = creature->available_abilities();
   for (std::set<Ability*>::const_iterator iter = available.begin(); iter != available.end(); ++iter) {
-    creature->send("  %-20s (level %u)\n", (*iter)->name().c_str(), (*iter)->level());
+    creature->send("  %-20s (level {Y%u{x, costs {B%u{x training points)\n", (*iter)->name().c_str(), (*iter)->level(), (*iter)->trains());
   }
   return true;
 }
@@ -584,19 +584,19 @@ bool CmdSummary::execute( Creature* creature, const std::vector<std::string>& ar
   avatar()->send( "\n %s{x\n", avatar()->identifiers().shortname().c_str() );
   avatar()->send( "{w _______________________________________________________________________\n" );
   avatar()->send( "{w|\\_____________________________________________________________________/|\n" );
-  avatar()->send( "{w||{xrace:   {g%-9s{x {w||{xstren: {G%2u{x/{g%2u{w ||                {w||{xlevel: {g%3u{w      ||\n", avatar()->race().string().c_str(), avatar()->strength(), avatar()->maxStrength(), avatar()->level() );
-  avatar()->send( "{w||{xclass:  {g%-9s{x {w||{xdexte: {G%2u{x/{g%2u{w ||                {w||{xhp:   {G%4u{x/{g%-4u{w ||\n", avatar()->pClass().string().c_str(), avatar()->dexterity(), avatar()->maxDexterity(), avatar()->health(), avatar()->maxHealth() );
-  avatar()->send( "{w||{xgender: {g%-7s{x   {w||{xconst: {G%2u{x/{g%2u{w ||                {w||{xmana: {C%4u{x/{c%-4u{w ||\n", avatar()->gender().string().c_str(), avatar()->constitution(), avatar()->maxConstitution(), avatar()->mana(), avatar()->maxMana() );
-  avatar()->send( "{w||{xage:    {g%-3u{x       {w||{xintel: {G%2u{x/{g%2u{w ||{xarmor: {g%-4d{w     ||{xmove: {M%4u{x/{m%-4u{w ||\n", avatar()->age(), avatar()->intelligence(), avatar()->maxIntelligence(), avatar()->armor(), avatar()->movement(), avatar()->maxMovement() );
-  avatar()->send( "{w||{xhand:   {g%-5s{x     {w||{xfocus: {G%2u{x/{g%2u{w || {x-bash:   {g%-4d{w  ||{xexp: {Y%-9u{w  ||\n", ((avatar()->hand() == WEARLOC_HOLD_R) ? "right" : "left"), avatar()->focus(), avatar()->maxFocus(), avatar()->bash(), avatar()->exp() );
-  avatar()->send( "{w||{xheight: {g%-9s{x {w||{xcreat: {G%2u{x/{g%2u{w || {x-slash:  {g%-4d{w  ||{xtnl: {Y%-7u{w    ||\n", "-", avatar()->creativity(), avatar()->maxCreativity(), avatar()->slash(), avatar()->tnl() );
-  avatar()->send( "{w||{xweight: {g%-9s{x {w||{xchari: {G%2u{x/{g%2u{w || {x-pierce: {g%-4d{w  ||{xpracs: {g%-4u{w     ||\n", "-", avatar()->charisma(), avatar()->maxCharisma(), avatar()->pierce(), avatar()->practices() );
-  avatar()->send( "{w||{xtotem:  {g%-9s{x {w||{xluck:  {G%2u{x/{g%2u{w || {x-exotic: {g%-4d{w  ||{xpoints: {g%-4u{w    ||\n", "-", avatar()->luck(), avatar()->maxLuck(), avatar()->exotic(), avatar()->points() );
+  avatar()->send( "{w||{xrace:   {C%-9s{x {w||{xstren: {B%2u{x/{b%2u{w ||                {w||{xlevel: {Y%3u{w      ||\n", avatar()->race().string().c_str(), avatar()->strength(), avatar()->maxStrength(), avatar()->level() );
+  avatar()->send( "{w||{xclass:  {C%-9s{x {w||{xdexte: {B%2u{x/{b%2u{w ||                {w||{xhp:   {G%4u{x/{g%-4u{w ||\n", avatar()->pClass().string().c_str(), avatar()->dexterity(), avatar()->maxDexterity(), avatar()->health(), avatar()->maxHealth() );
+  avatar()->send( "{w||{xgender: {C%-7s{x   {w||{xconst: {B%2u{x/{b%2u{w ||                {w||{xmana: {C%4u{x/{c%-4u{w ||\n", avatar()->gender().string().c_str(), avatar()->constitution(), avatar()->maxConstitution(), avatar()->mana(), avatar()->maxMana() );
+  avatar()->send( "{w||{xage:    {C%-3u{x       {w||{xintel: {B%2u{x/{b%2u{w ||{xarmor: {w%-4d{w     ||{xmove: {M%4u{x/{m%-4u{w ||\n", avatar()->age(), avatar()->intelligence(), avatar()->maxIntelligence(), avatar()->armor(), avatar()->movement(), avatar()->maxMovement() );
+  avatar()->send( "{w||{xhand:   {C%-5s{x     {w||{xfocus: {B%2u{x/{b%2u{w || {x-bash:   {w%-4d{w  ||{xexp: {Y%-9u{w  ||\n", ((avatar()->hand() == WEARLOC_HOLD_R) ? "right" : "left"), avatar()->focus(), avatar()->maxFocus(), avatar()->bash(), avatar()->exp() );
+  avatar()->send( "{w||{xheight: {C%-9s{x {w||{xcreat: {B%2u{x/{b%2u{w || {x-slash:  {w%-4d{w  ||{xtnl: {Y%-7u{w    ||\n", "-", avatar()->creativity(), avatar()->maxCreativity(), avatar()->slash(), avatar()->tnl() );
+  avatar()->send( "{w||{xweight: {C%-9s{x {w||{xchari: {B%2u{x/{b%2u{w || {x-pierce: {w%-4d{w  ||{xtrains: {B%-4u{w    ||\n", "-", avatar()->charisma(), avatar()->maxCharisma(), avatar()->pierce(), avatar()->trains() );
+  avatar()->send( "{w||{xtotem:  {C%-9s{x {w||{xluck:  {B%2u{x/{b%2u{w || {x-exotic: {w%-4d{w  ||                ||\n", "-", avatar()->luck(), avatar()->maxLuck(), avatar()->exotic() );
   avatar()->send( "{w||__________________||_____________||________________||________________||\n" );
   avatar()->send( "{w||_____________________________________________________________________||\n" );
-  avatar()->send( "{w||{xitems: {G%3u{x/{g%-3u{w    ||{xcoins: {W%9u{x/{y%-9u{w     {w||{xCT: {g%-6u{w      ||\n", avatar()->inventory().objectList().size(), avatar()->inventory().objectList().size(), avatar()->silver(), avatar()->gold(), 0 );
-  avatar()->send( "{w||{xweight: {g%-5u{w     ||{xbank:  {W%9u{x/{y%-9u{w     {w||                ||\n", 0, avatar()->bankSilver(), avatar()->bankGold() );
-  avatar()->send( "{w||__________________||_______________________________||________________||\n" );
+  avatar()->send( "{w||{xitems: {G%3u{x/{g%-3u{x    {w||{xcoins: {W%9u{x/{y%-9u{x                       {w||\n", avatar()->inventory().objectList().size(), avatar()->inventory().objectList().size(), avatar()->silver(), avatar()->gold() );
+  avatar()->send( "{w||{xweight: {g%-5u{x     {w||{xbank:  {W%9u{x/{y%-9u{x                       {w||\n", 0, avatar()->bankSilver(), avatar()->bankGold() );
+  avatar()->send( "{w||__________________||_________________________________________________||\n" );
   avatar()->send( "{w|/_____________________________________________________________________\\|{x\n" );
   avatar()->send( "  You've been logged on for %s.\n", avatar()->stringLoggedOn().c_str() );
   if ( avatar()->composing().number() ) {

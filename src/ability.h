@@ -25,10 +25,12 @@ class Ability {
     bool                  is_root(void) const;
     bool                  is_leaf(void) const;
 
-    void                  name(std::string name)  { _name = name; }
-    std::string           name(void)              { return _name; }
-    void                  level(unsigned level)   { _level = level; }
-    unsigned              level(void) const       { return _level; }
+    void                  name(std::string name)        { _name = name; }
+    std::string           name(void)                    { return _name; }
+    void                  level(unsigned level)         { _level = level; }
+    unsigned              level(void) const             { return _level; }
+    void                  trains(unsigned short trains) { _trains = trains; }
+    unsigned short        trains(void) const            { return _trains; }
 
     virtual void          setup(void);
     virtual bool          accessible(Creature* creature) const;
@@ -37,20 +39,22 @@ class Ability {
 
     std::string           _name;
     unsigned              _level;
+    unsigned short        _trains;
     std::set<Ability*>    _dependencies;
     std::set<Ability*>    _dependents;
 
 };
 
-#define DEF_ABILITY(NAME,CLASS)           \
-class CLASS: public Ability {             \
-  public:                                 \
-    CLASS(unsigned level_) {              \
-      name(NAME);                         \
-      level(level_);                      \
-      return;                             \
-    }                                     \
-    virtual ~CLASS(void) { return; }      \
-};                                        \
+#define DEF_ABILITY(NAME,CLASS)                       \
+class CLASS: public Ability {                         \
+  public:                                             \
+    CLASS(unsigned level_, unsigned short trains_) {  \
+      name(NAME);                                     \
+      level(level_);                                  \
+      trains(trains_);                                \
+      return;                                         \
+    }                                                 \
+    virtual ~CLASS(void) { return; }                  \
+};                                                    \
 
 #endif // #ifndef H_SYMPHONY_ABILITY

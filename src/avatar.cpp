@@ -41,9 +41,6 @@ Avatar::Avatar( Socket* socket ) {
   room(NULL);
   mode().set(MODE_NONE);
   title(", adventurer.");
-  points(0);
-  practices(0);
-  trains(5);
   age(17);
   bankSilver(0);
   bankGold(0);
@@ -263,11 +260,8 @@ bool Avatar::save( void ) {
         `slash` = %hd,            \
         `pierce` = %hd,           \
         `exotic` = %hd,           \
-        `practices` = %hd,        \
-        `trains` = %hd,           \
-        `gains` = %hd,            \
+        `trains` = %hu,           \
         `age` = %hd,              \
-        `points` = %hd,           \
         `gold` = %u,              \
         `silver` = %u,            \
         `bank_gold` = %lu,        \
@@ -317,11 +311,8 @@ bool Avatar::save( void ) {
       slash(),
       pierce(),
       exotic(),
-      practices(),
       trains(),
-      gains(),
       age(),
-      points(),
       gold(),
       silver(),
       bankGold(),
@@ -450,11 +441,8 @@ bool Avatar::load( void ) {
       slash( row["slash"] );
       pierce( row["pierce"] );
       exotic( row["exotic"] );
-      practices( row["practices"] );
-      trains( row["trains"] );
-      gains( row["gains"] );
       age( row["age"] );
-      points( row["points"] );
+      trains( row["trains"] );
       gold( row["gold"] );
       silver( row["silver"] );
       bankGold( row["bank_gold"] );

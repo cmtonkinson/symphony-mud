@@ -208,11 +208,13 @@ void Creature::gainLevel(void) {
   int health_boost   = Stats::logistic(new_level, MIN_HEALTH_GAIN, targetHealth());
   int mana_boost     = Stats::logistic(new_level, MIN_MANA_GAIN, targetMana());
   int movement_boost = Stats::logistic(new_level, MIN_MOVEMENT_GAIN, targetMovement());
+  int trains_boost   = 1;
   // Adjust stats.
   level(new_level);
   maxHealth(maxHealth() + health_boost);
   maxMana(maxMana() + mana_boost);
   maxMovement(maxMovement() + movement_boost);
+  trains(trains() + trains_boost);
   // Clear TNL if the Creature just hero'd
   if (level() < HERO) {
     tnl(new_tnl);
@@ -226,6 +228,7 @@ void Creature::gainLevel(void) {
   send("You gain {G%u{x health points.\n", health_boost);
   send("You gain {C%u{x mana points.\n", mana_boost);
   send("You gain {M%u{x movement points.\n", movement_boost);
+  send("You gain {B%u{x training point.\n", trains_boost);
   if (level() < HERO) {
     send("You have {Y%u{x experience to your next level.\n\n", tnl());
   }

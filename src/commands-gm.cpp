@@ -444,11 +444,16 @@ CmdLearn::CmdLearn(void) {
   name("learn");
   playerOnly(true);
   addSyntax(-1, "<name of skill>");
-  brief("Learn a skill that's available to you.");
+  brief("Use training points to learn an available skill.");
   return;
 }
 
 bool CmdLearn::execute(Creature* creature, const std::vector<std::string>& args) {
+  if (args.empty()) {
+    creature->send(printSyntax());
+    return false;
+  }
+
   AbilityMap::const_iterator iter = creature->klass()->abilities().abilitiesByName().find(args[0]);
   if (iter == creature->klass()->abilities().abilitiesByName().end()) {
     creature->send("Can't find that skill.");
@@ -459,8 +464,10 @@ bool CmdLearn::execute(Creature* creature, const std::vector<std::string>& args)
     creature->send("You can't learn that skill just yet.");
     return false;
   }
-  creature->learn(iter->second, 1);
-  creature->send("You learn the {M%s{x skill!\n", iter->second->name().c_str());
+  creature->learn(iter->second, 25);
+  creature->trains(creature->trains() - iter->second->trains());
+  creature->send("You spend {B%u{x training points learning the {M%s{x skill!\n", iter->second->trains(), iter->second->name().c_str());
+  creature->send("You now have {B%u{x remaining training points.\n", creature->trains());
   return true;
 }
 

@@ -116,16 +116,8 @@ class Avatar: public Creature {
     const char*     poofout( void ) const                                     { return _poofout.c_str(); }
     void            board( const unsigned short& board )                      { _board = board; }
     unsigned short  board( void ) const                                       { return _board; }
-    void            practices( const unsigned short& practices )              { _practices = practices; }
-    unsigned short  practices( void ) const                                   { return _practices; }
-    void            trains( const unsigned short& trains )                    { _trains = trains; }
-    unsigned short  trains( void ) const                                      { return _trains; }
-    void            gains( const unsigned short& gains )                      { _gains = gains; }
-    unsigned short  gains( void ) const                                       { return _gains; }
     void            age( const unsigned short& age )                          { _age = age; }
     unsigned short  age( void ) const                                         { return _age; }
-    void            points( const unsigned short& points )                    { _points = points; }
-    unsigned short  points( void ) const                                      { return _points; }
     void            bankGold( const unsigned long& bankGold )                 { _bankGold = bankGold; }
     unsigned long   bankGold( void ) const                                    { return _bankGold; }
     void            bankSilver( const unsigned long& bankSilver )             { _bankSilver = bankSilver; }
@@ -162,11 +154,7 @@ class Avatar: public Creature {
     std::string             _title;
     std::string             _poofin;
     std::string             _poofout;
-    unsigned short          _practices;
-    unsigned short          _trains;
-    unsigned short          _gains;
     unsigned short          _age;
-    unsigned short          _points;
     unsigned long           _bankGold;
     unsigned long           _bankSilver;
     unsigned short          _board;

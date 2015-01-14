@@ -116,6 +116,8 @@
 #define BASE_TNL      100
 #define TARGET_TNL    100000
 
+#define BASE_TRAINS   5
+
 #define BASE_HEALTH   100
 #define BASE_MANA     100
 #define BASE_MOVEMENT 100
@@ -251,6 +253,8 @@ class Creature {
     void                exotic(int exotic)                              { _exotic = exotic; }
     int                 exotic(void) const                              { return _exotic; }
     // Misc
+    void                trains(unsigned short trains)                   { _trains = trains; }
+    unsigned short      trains(void) const                              { return _trains; }
     void                gold(unsigned gold)                             { _gold = gold; }
     unsigned            gold(void) const                                { return _gold; }
     void                silver(unsigned silver)                         { _silver = silver; }
@@ -407,6 +411,7 @@ class Creature {
     int                         _pierce;
     int                         _exotic;
     // Misc
+    unsigned short              _trains;
     unsigned                    _gold;
     unsigned                    _silver;
     // Combat

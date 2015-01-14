@@ -79,6 +79,7 @@ Creature::Creature( void ):
   pierce(0);
   exotic(0);
   // Misc
+  trains(BASE_TRAINS);
   gold(0);
   silver(0);
   // combat
@@ -135,6 +136,9 @@ Creature::Creature( const Creature& ref ):
   slash( ref.slash() );
   pierce( ref.pierce() );
   exotic( ref.exotic() );
+  trains( ref.trains() );
+  gold( ref.gold() );
+  silver( ref.silver() );
   // combat...
   _next_attack = NULL;
   return;
@@ -812,6 +816,8 @@ bool Creature::can_learn(Ability* ability) const {
   for (std::set<Ability*>::const_iterator iter = ability->dependencies().begin(); iter != ability->dependencies().end(); ++iter) {
     if (!learned().contains(*iter)) return false;
   }
+  // Do you have enough training points?
+  if (trains() < ability->trains()) return false;
   // Everything checks out.
   return true;
 }
