@@ -1,5 +1,5 @@
 
-#include "ability-skills.h"
+#include "skills.h"
 #include "klass.h"
 
 Rogue::Rogue(void) {

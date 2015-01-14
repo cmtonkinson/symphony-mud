@@ -49,12 +49,11 @@ Creature::Creature( void ):
   exp(BASE_EXP);
   tnl(BASE_TNL);
   // Health
-  maxHealth(100);
-  health(100);
-  maxMana(100);
-  mana(100);
-  maxMovement(100);
-  movement(100);
+  maxHealth(BASE_HEALTH);
+  health(BASE_HEALTH);
+  maxMana(BASE_MANA);
+  mana(BASE_MANA);
+  stamina(MAX_STAMINA);
   // Stats
   maxStrength(20);
   strength(15);
@@ -84,6 +83,7 @@ Creature::Creature( void ):
   silver(0);
   // combat
   _next_attack = NULL;
+  _target      = NULL;
   return;
 }
 
@@ -113,8 +113,7 @@ Creature::Creature( const Creature& ref ):
   health( ref.health() );
   maxMana( ref.maxMana() );
   mana( ref.mana() );
-  maxMovement( ref.maxMovement() );
-  movement( ref.movement() );
+  stamina( ref.stamina() );
   maxStrength( ref.maxStrength() );
   strength( ref.strength() );
   maxDexterity( ref.maxDexterity() );
@@ -141,6 +140,7 @@ Creature::Creature( const Creature& ref ):
   silver( ref.silver() );
   // combat...
   _next_attack = NULL;
+  _target      = NULL;
   return;
 }
 
@@ -623,7 +623,6 @@ void Creature::doModification( const unsigned short& attribute, const int& magni
   switch ( attribute ) {
     case ATTR_MAX_HEALTH: _maxHealth    += magnitude; break;
     case ATTR_MAX_MANA:   _maxMana      += magnitude; break;
-    case ATTR_MAX_MOVE:   _maxMovement  += magnitude; break;
     case ATTR_STR:        _strength     += magnitude; break;
     case ATTR_DEX:        _dexterity    += magnitude; break;
     case ATTR_CON:        _constitution += magnitude; break;
@@ -742,6 +741,8 @@ void Creature::move( const unsigned short& direction ) {
   Creature* member = NULL;
   std::string message;
 
+  if (!deplete_stamina(1)) return;
+
   // Make the switch...
   from->remove(this);
   to->add(this);
@@ -819,5 +820,44 @@ bool Creature::can_learn(Ability* ability) const {
   // Do you have enough training points?
   if (trains() < ability->trains()) return false;
   // Everything checks out.
+  return true;
+}
+
+Spell* Creature::find_spell(std::string name) const {
+  AbilityMap::const_iterator map_iter;
+  std::set<Ability*>::const_iterator set_iter;
+
+  // Look for an exact match.
+  map_iter = learned().abilitiesByName().find(name);
+  if (map_iter != learned().abilitiesByName().end()) return (Spell*)map_iter->second;
+
+  // Look for substring (prefix) matches.
+  for (set_iter = learned().abilities().begin(); set_iter != learned().abilities().end(); ++set_iter) {
+    if (Regex::strPrefix(name, (*set_iter)->name())) return (Spell*)*set_iter;
+  }
+
+  // Nothing.
+  return NULL;
+}
+
+bool Creature::exhausted(void) const {
+  return stamina() < 1;
+}
+
+/*
+ * Given an amount of stamina, returns true if the Creature has enough stamina to complete some
+ * action. If there is enough stamina, it is automatically deducted. If not, false is returned and
+ * the Creature is sent a message.
+ */
+bool Creature::deplete_stamina(unsigned stamina_, bool message) {
+  if (exhausted()) {
+    if (message) send("You are exhausted.\n");
+    return false;
+  }
+  if (stamina() < stamina_) {
+    if (message) send("You don't have the stamina for that.\n");
+    return false;
+  }
+  stamina(stamina() - stamina_);
   return true;
 }

@@ -228,12 +228,12 @@ bool CmdGroup::execute(Creature* creature, const std::vector<std::string>& args)
   // Empty name - list the group stats.
   if (name.empty()) {
     creature->send("+----------------------------------------------------------------------------+\n");
-    creature->send("| Group Leader: {B%-20s{x {YLEVEL   {GHEALTH      {CMANA       {MMOVE     {x|\n", this_group->leader()->identifiers().shortname().c_str());
+    creature->send("| Group Leader: {B%-20s{x {YLEVEL   {GHEALTH      {CMANA       {MSTAMINA  {x|\n", this_group->leader()->identifiers().shortname().c_str());
     creature->send("+----------------------------------------------------------------------------+\n");
     for (std::set<Creature*>::iterator it = this_group->members().begin(); it != this_group->members().end(); ++it) {
-      creature->send("| {W%-20s{x                {Y%3d{x  {G%4d{x/{g%-4u  {C%4u{x/{c%-4u  {M%4u{x/{m%-4u{x   |\n",
+      creature->send("| {W%-20s{x                {Y%3d{x  {G%4d{x/{g%-4u  {C%4u{x/{c%-4u       {M%3u{x    |\n",
         (*it)->identifiers().shortname().c_str(),
-        (*it)->level(), (*it)->health(), (*it)->maxHealth(), (*it)->mana(), (*it)->maxMana(), (*it)->movement(), (*it)->maxMovement()
+        (*it)->level(), (*it)->health(), (*it)->maxHealth(), (*it)->mana(), (*it)->maxMana(), (*it)->stamina()
       );
     }
     creature->send("+----------------------------------------------------------------------------+\n");
@@ -411,8 +411,12 @@ bool CmdKill::execute(Creature* creature, const std::vector<std::string>& args) 
   Creature* target = NULL;
   if ((target = creature->findCreature(args[0])) == NULL) {
     creature->send("But they're not even here right now!");
+    return false;
   } else if (target == creature) {
     creature->send("Your sense of honor precludes suicide.");
+    return false;
+  } else if (!creature->deplete_stamina(1)) {
+    return false;
   } else {
     creature->send("You attack %s!\n", target->name());
     target->send("%s attacks you!\n", creature->name());
@@ -444,8 +448,10 @@ CmdLearn::CmdLearn(void) {
   name("learn");
   playerOnly(true);
   addSyntax(-1, "<name of skill>");
+  addSyntax(-1, "<name of spell>");
   seeAlso("skills");
-  brief("Use training points to learn an available skill.");
+  seeAlso("spells");
+  brief("Use training points to learn an available ability.");
   return;
 }
 
@@ -457,17 +463,17 @@ bool CmdLearn::execute(Creature* creature, const std::vector<std::string>& args)
 
   AbilityMap::const_iterator iter = creature->klass()->abilities().abilitiesByName().find(args[0]);
   if (iter == creature->klass()->abilities().abilitiesByName().end()) {
-    creature->send("Can't find that skill.");
+    creature->send("Can't find that ability.");
     return false;
   }
 
   if (!creature->can_learn(iter->second)) {
-    creature->send("You can't learn that skill just yet.");
+    creature->send("You can't learn that ability just yet.");
     return false;
   }
   creature->learn(iter->second, 25);
   creature->trains(creature->trains() - iter->second->trains());
-  creature->send("You spend {B%u{x training points learning the {M%s{x skill!\n", iter->second->trains(), iter->second->name().c_str());
+  creature->send("You spend {B%u{x training points learning the {M%s{x ability!\n", iter->second->trains(), iter->second->name().c_str());
   creature->send("You now have {B%u{x remaining training points.\n", creature->trains());
   return true;
 }
@@ -837,7 +843,9 @@ bool CmdLook::execute( Creature* creature, const std::vector<std::string>& args 
             output.append( "[{YAFK{x] " );
           }
         }
-        output.append( (*it)->identifiers().shortname() ).append( "{x is " ).append( (*it)->position().string() ).append( " here." );
+        output.append( (*it)->identifiers().shortname() ).append( "{x");
+        output.append(", a ").append((*it)->gender().string()).append(" ").append((*it)->race().string()).append(",");
+        output.append(" is ").append((*it)->position().string()).append(" here.");
       }
     }
     creature->send( output );

@@ -2,14 +2,6 @@
 #include "ability.h"
 #include "world.h"
 
-Ability::Ability(void) {
-  return;
-}
-
-Ability::~Ability(void) {
-  return;
-}
-
 void Ability::add_dependency(Ability* ability) {
   _dependencies.insert(ability);
   ability->dependents().insert(this);
@@ -45,12 +37,4 @@ bool Ability::is_root(void) const {
 
 bool Ability::is_leaf(void) const {
   return !has_dependents();
-}
-
-void Ability::setup(void) {
-  return;
-}
-
-bool Ability::accessible(Creature* creature) const {
-  return false;
 }

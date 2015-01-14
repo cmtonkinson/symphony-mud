@@ -22,7 +22,6 @@
 #include "commandTable.h"
 #include "commandTable-default.h"
 #include "world.h"
-#include "ability-skills.h"
 
 World::World( void ) {
   // basic setup

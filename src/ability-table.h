@@ -10,8 +10,8 @@ typedef std::map<std::string,Ability*> AbilityMap;
 
 class AbilityTable {
   public:
-    AbilityTable(void);
-    ~AbilityTable(void);
+    AbilityTable(void) { }
+    ~AbilityTable(void) { }
 
     std::set<Ability*>&             abilities()               { return _abilities; }
     const std::set<Ability*>&       abilities() const         { return _abilities; }
@@ -21,6 +21,8 @@ class AbilityTable {
     void      insert(Ability* ability);
     void      remove(Ability* ability);
     Ability*  find(std::string name) const;
+    Skill*    find_skill(std::string name) const;
+    Spell*    find_spell(std::string name) const;
     bool      contains(Ability* ability) const;
     bool      has(std::string name) const;
 

@@ -53,8 +53,7 @@ Mob::Mob( ROW row ): Creature() {
   health( row["health"] );
   maxMana( row["maxMana"] );
   mana( row["mana"] );
-  maxMovement( row["maxMovement"] );
-  movement( row["movement"] );
+  stamina( row["stamina"] );
   maxStrength( row["maxStrength"] );
   strength( row["strength"] );
   maxDexterity( row["maxDexterity"] );
@@ -126,8 +125,7 @@ bool Mob::save( void ) {
         `maxHealth` = %d,         \
         `mana` = %d,              \
         `maxMana` = %d,           \
-        `movement` = %d,          \
-        `maxMovement` = %d,       \
+        `stamina` = %d,           \
         `strength` = %hu,         \
         `maxStrength` = %hu,      \
         `dexterity` = %hu,        \
@@ -165,8 +163,7 @@ bool Mob::save( void ) {
       maxHealth(),
       mana(),
       maxMana(),
-      movement(),
-      maxMovement(),
+      stamina(),
       strength(),
       maxStrength(),
       dexterity(),
@@ -269,10 +266,10 @@ longname..... %s\n\n\
   output.append( "  --== {Ystats{x ==--\n" );
   sprintf( buffer, "health....... {G%d{x/{g%d{x\n\
 mana......... {C%d{x/{c%d{x\n\
-movement..... {M%d{x/{m%d{x\n",
+stamina...... {M%d{x\n",
     mob->health(), mob->maxHealth(),
     mob->mana(), mob->maxMana(),
-    mob->movement(), mob->maxMovement()
+    mob->stamina()
   );
   output.append( buffer );
 

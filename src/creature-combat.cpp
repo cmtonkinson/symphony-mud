@@ -6,7 +6,7 @@
 #include "world.h"
 #include "command.h"
 #include "ability.h"
-#include "ability-skills.h"
+#include "skills.h"
 
 void Creature::formGroup(void) {
   group(new Group());
@@ -63,37 +63,38 @@ void Creature::scheduleAttack(void) {
 }
 
 bool Creature::attack(Job* job) {
-  Creature* target = NULL;
+  Skill* skill = NULL;
   // Clear the Job pointer so a new attack can be scheduled. (The Schedule will automatically
   // delete the Job when it fires, so the pointer will be invalid once this method returns anyway).
   _next_attack = NULL;
   // Aquire a target.
-  if ((target = acquireTarget()) == NULL) {
+  acquireTarget();
+  if (_target == NULL) {
     // If no valid target was found, the opponents set should be empty, but we want to be explicit
     // about what happens (and also to ensure that the attack pointer gets cleared).
     peace();
     return false;
   }
   // Make the strike.
-  strike(target);
-  if (learned().has(SECOND_STRIKE) && !target->isDead()) strike(target);
-  if (learned().has(THIRD_STRIKE) && !target->isDead()) strike(target);
-  if (learned().has(FOURTH_STRIKE) && !target->isDead()) strike(target);
+  strike();
+  if (!_target->isDead() && (skill = learned().find_skill(SECOND_STRIKE))) skill->execute(this);
+  if (!_target->isDead() && (skill = learned().find_skill(THIRD_STRIKE))) skill->execute(this);
+  if (!_target->isDead() && (skill = learned().find_skill(FOURTH_STRIKE))) skill->execute(this);
   // Go another round. Even if the current target is dead, there may be remaining Group members.
   scheduleAttack();
   // Is it over?
-  if (target->isDead()) {
-    target->whatHappensWhenIDie();
-    return true;
-  }
+  if (_target->isDead()) _target->whatHappensWhenIDie();
+  // Clear the target pointer, just in case.
+  _target = NULL;
   // Must return bool per the Job interface.
   return true;
 }
 
 // TODO stuff about aggro/threat analysis (instead of just returning the first viable candidate).
-Creature* Creature::acquireTarget(void) {
+void Creature::acquireTarget(void) {
   Creature* target  = NULL;
-  bool valid_target = true;
+  bool valid_target = false;
+  _target           = NULL;
   while (!opponents().empty()) {
     target       = *opponents().begin();
     valid_target = true;
@@ -103,35 +104,40 @@ Creature* Creature::acquireTarget(void) {
     if (canSee(target) != SEE_NAME) valid_target = false;
     // Either return the target, or remove it from the opponent list.
     if (valid_target) {
-      return target;
+      _target = target;
+      return;
     } else {
       // Unlink these two as targets.
       remove_opponent(target);
       continue;
     }
   }
-  return NULL;
+  return;
 }
 
-void Creature::strike(Creature* target) {
+void Creature::strike(void) {
   int damage = 0;
   std::string weapon_damage;
   Object* object = NULL;
+  // Can we even move?
+  if (!deplete_stamina(1)) return;
   // Initial damage calculation (based on the attacker).
   damage = level() * strength();
   // Adjust damage (based on the defender).
-  damage -= target->level() * target->constitution() / 2 - target->armor();
+  damage -= _target->level() * _target->constitution() / 2 - _target->armor();
   // Ensure that SOME damage gets dealt.
   if (damage < 1) damage = 1;
   // Tell the world.
   object = primary();
   weapon_damage = (object && object->isWeapon()) ? object->weapon()->verb().string() : "punch";
   weapon_damage.append(" ").append(Display::formatDamage(damage));
-  send("Your %s %s!\n", weapon_damage.c_str(), target->name());
-  target->send("%s's %s you!\n", name(), weapon_damage.c_str());
-  room()->send_cond("$p's $s $C!", this, (void*)weapon_damage.c_str(), target, TO_NOTVICT, true);
+  send("Your %s %s!\n", weapon_damage.c_str(), _target->name());
+  _target->send("%s's %s you!\n", name(), weapon_damage.c_str());
+  room()->send_cond("$p's $s $C!", this, (void*)weapon_damage.c_str(), _target, TO_NOTVICT, true);
   // Deal the pain.
-  target->takeDamage(damage, this);
+  _target->takeDamage(damage, this);
+  // Use stamina.
+  deplete_stamina(1);
   return;
 }
 
@@ -152,7 +158,7 @@ void Creature::die(Creature* killer) {
   // Reset stats.
   health(1);
   mana(1);
-  movement(1);
+  stamina(0);
   // Announce the death.
   send("\n\nYou are {RDEAD{x!!!\n\n");
   room()->send_cond("\n\n$p is {RDEAD{x!!!\n\n", this, NULL, NULL, TO_NOTVICT);
@@ -207,13 +213,11 @@ void Creature::gainLevel(void) {
   unsigned new_tnl   = Stats::polynomial(new_level, BASE_TNL, targetTNL());
   int health_boost   = Stats::logistic(new_level, MIN_HEALTH_GAIN, targetHealth());
   int mana_boost     = Stats::logistic(new_level, MIN_MANA_GAIN, targetMana());
-  int movement_boost = Stats::logistic(new_level, MIN_MOVEMENT_GAIN, targetMovement());
   int trains_boost   = 1;
   // Adjust stats.
   level(new_level);
   maxHealth(maxHealth() + health_boost);
   maxMana(maxMana() + mana_boost);
-  maxMovement(maxMovement() + movement_boost);
   trains(trains() + trains_boost);
   // Clear TNL if the Creature just hero'd
   if (level() < HERO) {
@@ -227,7 +231,6 @@ void Creature::gainLevel(void) {
   send("\n\nCONGRATULATIONS! You grow to level {G%u{x!\n", level());
   send("You gain {G%u{x health points.\n", health_boost);
   send("You gain {C%u{x mana points.\n", mana_boost);
-  send("You gain {M%u{x movement points.\n", movement_boost);
   send("You gain {B%u{x training point.\n", trains_boost);
   if (level() < HERO) {
     send("You have {Y%u{x experience to your next level.\n\n", tnl());
@@ -244,7 +247,7 @@ bool Creature::autoassist(void) const {
 void Creature::heal(void) {
   health(maxHealth());
   mana(maxMana());
-  movement(maxMovement());
+  stamina(MAX_STAMINA);
   return;
 }
 
@@ -285,7 +288,6 @@ void Creature::resetStats(void) {
   health(BASE_HEALTH);
   maxMana(BASE_MANA);
   mana(BASE_MANA);
-  maxMovement(BASE_MOVEMENT);
-  movement(BASE_MOVEMENT);
+  stamina(MAX_STAMINA);
   return;
 }

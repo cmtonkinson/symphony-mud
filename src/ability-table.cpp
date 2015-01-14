@@ -1,14 +1,6 @@
 
 #include "ability-table.h"
 
-AbilityTable::AbilityTable(void) {
-  return;
-}
-
-AbilityTable::~AbilityTable(void) {
-  return;
-}
-
 void AbilityTable::insert(Ability* ability) {
   abilities().insert(ability);
   abilitiesByName()[ability->name()] = ability;
@@ -28,6 +20,18 @@ Ability* AbilityTable::find(std::string name) const {
   } else {
     return iter->second;
   }
+}
+
+Skill* AbilityTable::find_skill(std::string name) const {
+  Ability* ability = find(name);
+  if (ability && ability->is_skill()) return (Skill*)ability;
+  return NULL;
+}
+
+Spell* AbilityTable::find_spell(std::string name) const {
+  Ability* ability = find(name);
+  if (ability && ability->is_spell()) return (Spell*)ability;
+  return NULL;
 }
 
 bool AbilityTable::contains(Ability* ability) const {

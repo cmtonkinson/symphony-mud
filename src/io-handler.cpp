@@ -667,13 +667,12 @@ std::string InputIOHandler::prompt( void ) {
     return "\n\n{x[{YAFK{x] ";
   } else {
     sprintf(buffer,
-      "\n\n{W[{G%d{x/{g%d{xhp {C%d{x/{c%d{xmana {M%d{x/{m%d{xmove {y%d{xtnl{W]{x ",
+      "\n\n{W[{G%d{x/{g%d{xhp {C%d{x/{c%d{xmana {M%d{xstamina {y%d{xtnl{W]{x ",
       avatar()->health(),
       avatar()->maxHealth(),
       avatar()->mana(),
       avatar()->maxMana(),
-      avatar()->movement(),
-      avatar()->maxMovement(),
+      avatar()->stamina(),
       avatar()->tnl());
     return buffer;
   }

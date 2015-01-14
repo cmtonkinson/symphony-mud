@@ -237,8 +237,7 @@ bool Avatar::save( void ) {
         `maxHealth` = %d,         \
         `mana` = %d,              \
         `maxMana` = %d,           \
-        `movement` = %d,          \
-        `maxMovement` = %d,       \
+        `stamina` = %d,           \
         `strength` = %hu,         \
         `maxStrength` = %hu,      \
         `dexterity` = %hu,        \
@@ -288,8 +287,7 @@ bool Avatar::save( void ) {
       maxHealth(),
       mana(),
       maxMana(),
-      movement(),
-      maxMovement(),
+      stamina(),
       strength(),
       maxStrength(),
       dexterity(),
@@ -418,8 +416,7 @@ bool Avatar::load( void ) {
       health( row["health"] );
       maxMana( row["maxMana"] );
       mana( row["mana"] );
-      maxMovement( row["maxMovement"] );
-      movement( row["movement"] );
+      stamina( row["stamina"] );
       maxStrength( row["maxStrength"] );
       strength( row["strength"] );
       maxDexterity( row["maxDexterity"] );

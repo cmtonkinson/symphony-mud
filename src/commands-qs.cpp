@@ -556,6 +556,7 @@ CmdSkills::CmdSkills( void ) {
   addSyntax(0, "");
   brief("Displays available skills.");
   seeAlso("learn");
+  seeAlso("spells");
   return;
 }
 
@@ -566,8 +567,10 @@ bool CmdSkills::execute(Creature* creature, const std::vector<std::string>& args
   std::set<Ability*>::const_iterator iter;
   std::set<std::string> prereqs;
 
-  // Sort Klass Abilities into one of three buckets.
   for (iter = creature->klass()->abilities().abilities().begin(); iter != creature->klass()->abilities().abilities().end(); ++iter) {
+    // We're only concerned with skills here.
+    if (!(*iter)->is_skill()) continue;
+    // Sort skills into one of three buckets.
     if (creature->learned().contains(*iter)) {
       learned.insert(*iter);
       continue;
@@ -579,21 +582,93 @@ bool CmdSkills::execute(Creature* creature, const std::vector<std::string>& args
     }
   }
 
+  if (learned.empty() && available.empty() && unavailable.empty()) {
+    creature->send("No skills to display.\n");
+    return false;
+  }
+
   // Print each bucket.
-  creature->send("Learned skills:\n");
-  for (iter = learned.begin(); iter != learned.end(); ++iter) {
-    creature->send("  %-20s (%u%% learned)\n", (*iter)->name().c_str(), creature->abilityMastery()[*iter]);
+  if (!learned.empty()) {
+    creature->send("Learned skills:\n");
+    for (iter = learned.begin(); iter != learned.end(); ++iter) {
+      creature->send("  %-20s (%u%% learned)\n", (*iter)->name().c_str(), creature->abilityMastery()[*iter]);
+    }
   }
-  creature->send("\nAvailable skills:\n");
-  for (iter = available.begin(); iter != available.end(); ++iter) {
-    creature->send("  %-20s (costs {B%u{x training points)\n", (*iter)->name().c_str(), (*iter)->trains());
+  if (!available.empty()) {
+    creature->send("\nAvailable skills:\n");
+    for (iter = available.begin(); iter != available.end(); ++iter) {
+      creature->send("  %-20s (costs {B%u{x training points)\n", (*iter)->name().c_str(), (*iter)->trains());
+    }
   }
-  creature->send("\nUnavailable skills:\n");
-  for (iter = unavailable.begin(); iter != unavailable.end(); ++iter) {
-    prereqs = (*iter)->dependency_names();
-    creature->send("  %-20s (level {Y%u{x", (*iter)->name().c_str(), (*iter)->level());
-    if (!prereqs.empty()) creature->send(", requires %s", Regex::implode(", ", prereqs).c_str());
-    creature->send(")\n");
+  if (!unavailable.empty()) {
+    creature->send("\nUnavailable skills:\n");
+    for (iter = unavailable.begin(); iter != unavailable.end(); ++iter) {
+      prereqs = (*iter)->dependency_names();
+      creature->send("  %-20s (level {Y%u{x", (*iter)->name().c_str(), (*iter)->level());
+      if (!prereqs.empty()) creature->send(", requires %s", Regex::implode(", ", prereqs).c_str());
+      creature->send(")\n");
+    }
+  }
+  return true;
+}
+
+CmdSpells::CmdSpells( void ) {
+  name("spells");
+  addSyntax(0, "");
+  brief("Displays available spells.");
+  seeAlso("learn");
+  seeAlso("skills");
+  return;
+}
+
+bool CmdSpells::execute(Creature* creature, const std::vector<std::string>& args) {
+  std::set<Ability*> learned;
+  std::set<Ability*> available;
+  std::set<Ability*> unavailable;
+  std::set<Ability*>::const_iterator iter;
+  std::set<std::string> prereqs;
+
+  for (iter = creature->klass()->abilities().abilities().begin(); iter != creature->klass()->abilities().abilities().end(); ++iter) {
+    // We're only concerned with skills here.
+    if (!(*iter)->is_spell()) continue;
+    // Sort skills into one of three buckets.
+    if (creature->learned().contains(*iter)) {
+      learned.insert(*iter);
+      continue;
+    } else if (creature->can_learn(*iter)) {
+      available.insert(*iter);
+      continue;
+    } else {
+      unavailable.insert(*iter);
+    }
+  }
+
+  if (learned.empty() && available.empty() && unavailable.empty()) {
+    creature->send("No spells to display.\n");
+    return false;
+  }
+
+  // Print each bucket.
+  if (!learned.empty()) {
+    creature->send("Learned spells:\n");
+    for (iter = learned.begin(); iter != learned.end(); ++iter) {
+      creature->send("  %-20s (%u%% learned)\n", (*iter)->name().c_str(), creature->abilityMastery()[*iter]);
+    }
+  }
+  if (!available.empty()) {
+    creature->send("\nAvailable spells:\n");
+    for (iter = available.begin(); iter != available.end(); ++iter) {
+      creature->send("  %-20s (costs {B%u{x training points)\n", (*iter)->name().c_str(), (*iter)->trains());
+    }
+  }
+  if (!unavailable.empty()) {
+    creature->send("\nUnavailable spells:\n");
+    for (iter = unavailable.begin(); iter != unavailable.end(); ++iter) {
+      prereqs = (*iter)->dependency_names();
+      creature->send("  %-20s (level {Y%u{x", (*iter)->name().c_str(), (*iter)->level());
+      if (!prereqs.empty()) creature->send(", requires %s", Regex::implode(", ", prereqs).c_str());
+      creature->send(")\n");
+    }
   }
   return true;
 }
@@ -613,7 +688,7 @@ bool CmdSummary::execute( Creature* creature, const std::vector<std::string>& ar
   avatar()->send( "{w||{xrace:   {C%-9s{x {w||{xstren: {B%2u{x/{b%2u{w ||                {w||{xlevel: {Y%3u{w      ||\n", avatar()->race().string().c_str(), avatar()->strength(), avatar()->maxStrength(), avatar()->level() );
   avatar()->send( "{w||{xclass:  {C%-9s{x {w||{xdexte: {B%2u{x/{b%2u{w ||                {w||{xhp:   {G%4u{x/{g%-4u{w ||\n", avatar()->pClass().string().c_str(), avatar()->dexterity(), avatar()->maxDexterity(), avatar()->health(), avatar()->maxHealth() );
   avatar()->send( "{w||{xgender: {C%-7s{x   {w||{xconst: {B%2u{x/{b%2u{w ||                {w||{xmana: {C%4u{x/{c%-4u{w ||\n", avatar()->gender().string().c_str(), avatar()->constitution(), avatar()->maxConstitution(), avatar()->mana(), avatar()->maxMana() );
-  avatar()->send( "{w||{xage:    {C%-3u{x       {w||{xintel: {B%2u{x/{b%2u{w ||{xarmor: {w%-4d{w     ||{xmove: {M%4u{x/{m%-4u{w ||\n", avatar()->age(), avatar()->intelligence(), avatar()->maxIntelligence(), avatar()->armor(), avatar()->movement(), avatar()->maxMovement() );
+  avatar()->send( "{w||{xage:    {C%-3u{x       {w||{xintel: {B%2u{x/{b%2u{w ||{xarmor: {w%-4d{w     ||{xstamina: {M%3u{w    ||\n", avatar()->age(), avatar()->intelligence(), avatar()->maxIntelligence(), avatar()->armor(), avatar()->stamina() );
   avatar()->send( "{w||{xhand:   {C%-5s{x     {w||{xfocus: {B%2u{x/{b%2u{w || {x-bash:   {w%-4d{w  ||{xexp: {Y%-9u{w  ||\n", ((avatar()->hand() == WEARLOC_HOLD_R) ? "right" : "left"), avatar()->focus(), avatar()->maxFocus(), avatar()->bash(), avatar()->exp() );
   avatar()->send( "{w||{xheight: {C%-9s{x {w||{xcreat: {B%2u{x/{b%2u{w || {x-slash:  {w%-4d{w  ||{xtnl: {Y%-7u{w    ||\n", "-", avatar()->creativity(), avatar()->maxCreativity(), avatar()->slash(), avatar()->tnl() );
   avatar()->send( "{w||{xweight: {C%-9s{x {w||{xchari: {B%2u{x/{b%2u{w || {x-pierce: {w%-4d{w  ||{xtrains: {B%-4u{w    ||\n", "-", avatar()->charisma(), avatar()->maxCharisma(), avatar()->pierce(), avatar()->trains() );

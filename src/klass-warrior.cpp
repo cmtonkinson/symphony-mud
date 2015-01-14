@@ -1,14 +1,14 @@
 
-#include "ability-skills.h"
+#include "skills.h"
 #include "klass.h"
 
 Warrior::Warrior(void) {
   _name = "warrior";
 
-  // Construct all abilities for the klass.
-  Ability* second_strike = new SecondStrikeSkill(25, 2);
-  Ability* third_strike  = new ThirdStrikeSkill(50, 3);
-  Ability* fourth_strike = new FourthStrikeSkill(75, 4);
+  // Construct skills for the klass.
+  Ability* second_strike = new SecondStrikeSkill(25, 2, 1);
+  Ability* third_strike  = new ThirdStrikeSkill(50, 3, 2);
+  Ability* fourth_strike = new FourthStrikeSkill(75, 4, 3);
   Ability* block         = new BlockSkill(15, 1);
   Ability* parry         = new ParrySkill(45, 1);
   Ability* riposte       = new RiposteSkill(65, 2);

@@ -31,17 +31,17 @@
 #include "world.h"
 
 /*
-Cmd::Cmd( void ) {
-  name( "" );
-  playerOnly(  );
-  level(  );
-  allowedWhile(  );
-  addSyntax( 0, "" );
-  brief( "" );
+Cmd::Cmd(void) {
+  name("");
+  playerOnly();
+  level();
+  allowedWhile();
+  addSyntax(0, "");
+  brief("");
   return;
 }
 
-bool Cmd::execute( Creature* creature, const std::vector<std::string>& args ) {
+bool Cmd::execute(Creature* creature, const std::vector<std::string>& args) {
 
   return true;
 }
@@ -413,6 +413,27 @@ bool CmdBusy::execute( Creature* creature, const std::vector<std::string>& args 
 
   avatar()->send( message );
   return true;
+}
+
+CmdCast::CmdCast(void) {
+  name("cast");
+  shortcut("c");
+  allowedWhile(STANDING);
+  addSyntax(1, "<spell>");
+  seeAlso("spells");
+  brief("Use mana to invoke a magical spell.");
+  return;
+}
+
+bool CmdCast::execute(Creature* creature, const std::vector<std::string>& args) {
+  Spell* spell = NULL;
+
+  if ((spell = creature->find_spell(args[0])) == NULL) {
+    creature->send("What spell was that again?\n");
+    return false;
+  }
+
+  return creature->intone(spell);
 }
 
 CmdChannels::CmdChannels( void ) {

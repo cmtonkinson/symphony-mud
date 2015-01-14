@@ -120,11 +120,10 @@
 
 #define BASE_HEALTH   100
 #define BASE_MANA     100
-#define BASE_MOVEMENT 100
+#define MAX_STAMINA   (unsigned)100
 
 #define MIN_HEALTH_GAIN   3
 #define MIN_MANA_GAIN     3
-#define MIN_MOVEMENT_GAIN 3
 
 #define ALTERABILITY_LEVEL_DIFFERENCE 5
 
@@ -204,10 +203,8 @@ class Creature {
     int                 mana(void) const                                { return _mana; }
     void                maxMana(int maxMana)                            { _maxMana = maxMana; }
     int                 maxMana(void) const                             { return _maxMana; }
-    void                movement(int movement)                          { _movement = ((movement <= maxMovement()) ? movement : maxMovement()); }
-    int                 movement(void) const                            { return _movement; }
-    void                maxMovement(int maxMovement)                    { _maxMovement = maxMovement; }
-    int                 maxMovement(void) const                         { return _maxMovement; }
+    void                stamina(unsigned stamina)                       { _stamina = std::min(MAX_STAMINA, stamina); }
+    unsigned            stamina(void) const                             { return _stamina; }
     // Stats
     void                strength(unsigned short strength)               { _strength = ((strength <= maxStrength()) ? strength : maxStrength()); }
     unsigned short      strength(void) const                            { return _strength; }
@@ -325,8 +322,8 @@ class Creature {
     void          remove_opponent(Creature* opponent, bool reciprocal = true);
     void          scheduleAttack(void);
     bool          attack(Job* job);
-    Creature*     acquireTarget(void);
-    void          strike(Creature* target);
+    void          acquireTarget(void);
+    void          strike(void);
     void          takeDamage(int damage, Creature* damager = NULL);
     void          die(Creature* killer = NULL);
     void          peace(void);
@@ -349,6 +346,10 @@ class Creature {
     void                          learn(Ability* ability, unsigned mastery);
     std::set<Ability*>            available_abilities(void) const;
     bool                          can_learn(Ability* ability) const;
+    Spell*                        find_spell(std::string name) const;
+    bool                          intone(Spell* spell);
+    bool                          exhausted(void) const;
+    bool                          deplete_stamina(unsigned stamina_, bool message = true);
 
     // Pure virtual public methods...
     virtual bool                save( void )                                                      = 0;
@@ -385,8 +386,7 @@ class Creature {
     int                         _maxHealth;
     int                         _mana;
     int                         _maxMana;
-    int                         _movement;
-    int                         _maxMovement;
+    int                         _stamina;
     // Stats
     unsigned short              _strength;
     unsigned short              _maxStrength;
@@ -416,6 +416,7 @@ class Creature {
     unsigned                    _silver;
     // Combat
     std::set<Creature*>         _opponents;
+    Creature*                   _target;
     Job*                        _next_attack;
     AbilityTable                _learned;
     std::map<Ability*,unsigned> _ability_mastery;

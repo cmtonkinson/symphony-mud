@@ -1,3 +1,4 @@
+
 #ifndef H_SYMPHONY_ABILITY
 #define H_SYMPHONY_ABILITY
 
@@ -7,10 +8,11 @@
 
 class Creature;
 
+//////////////////////////////////////////// BASE CLASS ////////////////////////////////////////////
 class Ability {
   public:
-    Ability(void);
-    virtual ~Ability(void);
+    Ability(void) { }
+    virtual ~Ability(void) { }
 
     std::set<Ability*>&         dependencies(void)        { return _dependencies; }
     const std::set<Ability*>&   dependencies(void) const  { return _dependencies; }
@@ -34,8 +36,11 @@ class Ability {
     void                  trains(unsigned short trains) { _trains = trains; }
     unsigned short        trains(void) const            { return _trains; }
 
-    virtual void          setup(void);
-    virtual bool          accessible(Creature* creature) const;
+    virtual bool          is_skill(void) const          { return false; }
+    virtual bool          is_spell(void) const          { return false; }
+
+    virtual bool          invoke(Creature* creature) const = 0;
+    virtual bool          execute(Creature* creature) const = 0;
 
   private:
 
@@ -58,5 +63,65 @@ class CLASS: public Ability {                         \
     }                                                 \
     virtual ~CLASS(void) { return; }                  \
 };                                                    \
+
+//////////////////////////////////////////// SKILL /////////////////////////////////////////////////
+class Skill: public Ability {
+  public:
+    Skill(void) { }
+    virtual ~Skill(void) { }
+
+    void          stamina(unsigned stamina)     { _stamina = stamina; }
+    unsigned      stamina(void) const           { return _stamina; }
+
+    virtual bool  is_skill(void) const          { return true; }
+    virtual bool  invoke(Creature* creature) const;
+
+  private:
+    unsigned  _stamina;
+};
+
+#define DEF_SKILL(NAME,CLASS)                                             \
+class CLASS: public Skill {                                               \
+  public:                                                                 \
+  CLASS(unsigned level_, unsigned short trains_, unsigned stamina_ = 0) { \
+      name(NAME);                                                         \
+      level(level_);                                                      \
+      trains(trains_);                                                    \
+      stamina(stamina_);                                                  \
+      return;                                                             \
+    }                                                                     \
+    virtual ~CLASS(void) { return; }                                      \
+    virtual bool execute(Creature* creature) const;                       \
+};                                                                        \
+
+//////////////////////////////////////////// SPELL /////////////////////////////////////////////////
+class Spell: public Ability {
+  public:
+    Spell(void) { }
+    virtual ~Spell(void) { }
+
+    void          mana(int mana)          { _mana = mana; }
+    int           mana(void) const        { return _mana; }
+
+    virtual bool  is_spell(void) const    { return true; }
+    virtual bool  invoke(Creature* creature) const;
+
+  private:
+    int  _mana;
+};
+
+#define DEF_SPELL(NAME,CLASS)                           \
+class CLASS: public Spell {                             \
+  public:                                               \
+  CLASS(int level_, int short trains_, int mana_ = 0) { \
+      name(NAME);                                       \
+      level(level_);                                    \
+      trains(trains_);                                  \
+      mana(mana_);                                      \
+      return;                                           \
+    }                                                   \
+    virtual ~CLASS(void) { return; }                    \
+    virtual bool execute(Creature* creature) const;     \
+};                                                      \
 
 #endif // #ifndef H_SYMPHONY_ABILITY

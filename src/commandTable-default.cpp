@@ -79,6 +79,7 @@ CommandTable::CommandTable( void ) {
   add( new CmdBoards() );
   add( new CmdBored() );
   add( new CmdBusy() );
+  add( new CmdCast() );
   add( new CmdChannels() );
   add( new CmdClose() );
   add( new CmdColors() );
@@ -106,6 +107,7 @@ CommandTable::CommandTable( void ) {
   add( new CmdSocials() );
   add( new CmdStand() );
   add( new CmdSkills() );
+  add( new CmdSpells() );
   add( new CmdTell() );
   add( new CmdTime() );
   add( new CmdTitle() );
