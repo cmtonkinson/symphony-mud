@@ -444,6 +444,7 @@ CmdLearn::CmdLearn(void) {
   name("learn");
   playerOnly(true);
   addSyntax(-1, "<name of skill>");
+  seeAlso("skills");
   brief("Use training points to learn an available skill.");
   return;
 }

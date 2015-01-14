@@ -555,6 +555,7 @@ CmdSkills::CmdSkills( void ) {
   name("skills");
   addSyntax(0, "");
   brief("Displays available skills.");
+  seeAlso("learn");
   return;
 }
 

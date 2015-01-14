@@ -81,6 +81,7 @@ class Command {
     void            allowedWhile( const unsigned long& positions )          { allowedPositions( positions ); }
     void            notAllowedWhile( const unsigned long& positions )       { allowedPositions( ~positions ); }
     void            addOptions( const std::string& argument, const std::string& option_list );
+    void            seeAlso(const std::string& command);
     virtual bool    execute( Creature* creature, const std::vector<std::string>& args ) { return false; }
 
     bool            isEnabled( void ) const     { return flags().test( COM_ENABLED ); }
@@ -103,6 +104,7 @@ class Command {
     std::string               _shortcut;          // does it have a shortcut?
     std::vector<std::string>  _syntax;            // how this Command is used.
     std::string               _brief;             // terse explanation of the command.
+    std::set<std::string>     _seeAlso;           // set of other commands to reference while trawling the documentation.
     OptionMap                 _options;           // lists any finite and enumerable options for the help view
     CommandTable*             _commandTable;      // in which CommandTable does this Command live?
     Avatar*                   _avatar;            // automatically assigned from the Creature* parameter when _playerOnly is set

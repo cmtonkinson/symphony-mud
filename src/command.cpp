@@ -23,6 +23,7 @@
 #include "display.h"
 #include "room.h"
 #include "socket.h"
+#include "regex.h"
 #include "world.h"
 
 ///////////////////////////////////////////// BASE CLASS /////////////////////////////////////////////
@@ -75,11 +76,19 @@ const char* Command::printSyntax( void ) const {
   for ( OptionMap::const_iterator it = options().begin(); it != options().end(); ++it ) {
     dest.append( "Options for {g" ).append( it->first ).append( "{x: " ).append( it->second ).append( 1, '\n' );
   }
+  if (!_seeAlso.empty()) {
+    dest.append( "\n{gSee also:{x " ).append(Regex::implode(", ", _seeAlso)).append("\n");
+  }
   return dest.c_str();
 }
 
 void Command::addOptions( const std::string& argument, const std::string& option_list ) {
   options().insert( std::make_pair( argument, option_list ) );
+  return;
+}
+
+void Command::seeAlso(const std::string& command) {
+  _seeAlso.insert(command);
   return;
 }
 
