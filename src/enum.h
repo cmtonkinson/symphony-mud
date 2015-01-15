@@ -23,7 +23,7 @@
 
 #include <string>
 
-typedef unsigned int EnumInt;
+typedef unsigned EnumInt;
 
 class EnumTable;
 

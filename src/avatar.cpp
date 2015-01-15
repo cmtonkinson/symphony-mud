@@ -254,11 +254,11 @@ bool Avatar::save( void ) {
         `maxCharisma` = %hu,      \
         `luck` = %hu,             \
         `maxLuck` = %hu,          \
-        `armor` = %hd,            \
-        `bash` = %hd,             \
-        `slash` = %hd,            \
-        `pierce` = %hd,           \
-        `exotic` = %hd,           \
+        `armor` = %d,             \
+        `bash` = %d,              \
+        `slash` = %d,             \
+        `pierce` = %d,            \
+        `exotic` = %d,            \
         `trains` = %hu,           \
         `age` = %hd,              \
         `gold` = %u,              \
@@ -366,7 +366,7 @@ bool Avatar::markForDeletion( const unsigned short& value ) {
     char query[MAX_BUFFER];
     sprintf( query,
       " UPDATE avatars        \
-        SET `delete` = %hu    \
+        SET `delete` = %d     \
         WHERE avatarID = %lu  \
         LIMIT 1;",
       value ? 1 : 0,
@@ -457,7 +457,7 @@ bool Avatar::load( void ) {
           ID()
       );
       if (mysql->select(query)) {
-        while (row = mysql->fetch()) {
+        while ((row = mysql->fetch())) {
           if ((ability = klass()->abilities().find(row["name"])) == NULL) {
             fprintf(stderr, "Could not locate ability %s for %s (%lu).\n", row["name"].c_str(), name(), ID());
           } else {
@@ -477,7 +477,7 @@ bool Avatar::load( void ) {
         ID()
       );
       if ( mysql->select( query ) ) {
-        while ( row = mysql->fetch() ) {
+        while ( (row = mysql->fetch()) ) {
           object = new Object( row );
           inventory().add( object );
           if ( object->isContainer() ) {
@@ -497,7 +497,7 @@ bool Avatar::load( void ) {
         ID()
       );
       if ( mysql->select( query ) ) {
-        while ( row = mysql->fetch() ) {
+        while ( (row = mysql->fetch()) ) {
           object = new Object( row );
           equipment().add( object, row["location"] );
           setModifications( object );
@@ -532,7 +532,7 @@ void Avatar::loadObjectContents( ObjContainer* container, const char* hash ) {
     );
 
     if ( conn.select( query ) ) {
-      while ( row = conn.fetch() ) {
+      while ( (row = conn.fetch()) ) {
         object = new Object( row );
         container->inventory().add( object );
         if ( object->isContainer() ) {
@@ -633,7 +633,7 @@ bool Avatar::checkPassword( const std::string& attempt ) {
     Mysql::addslashes(attempt).c_str()
   );
   if ( mysql->select( query ) ) {
-    if ( row = mysql->fetch() ) {
+    if ( (row = mysql->fetch()) ) {
       if ( row["shortname"] == identifiers().shortname() ) {
         return true;
       }

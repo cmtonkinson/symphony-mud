@@ -802,7 +802,7 @@ bool CmdLook::execute( Creature* creature, const std::vector<std::string>& args 
     output.append( buffer );
     // Exits...
     memset( buffer, 0, MAX_BUFFER );
-    for ( register unsigned short u = NORTH; u <= DOWN; ++u ) {
+    for ( unsigned u = NORTH; u <= DOWN; ++u ) {
       if ( creature->room()->exit( u ) != NULL ) {
         // Bail if we're not supposed to see the exit...
         if ( creature->room()->exit( u )->flag( EXIT_HIDDEN ) && creature->level() < DEMIGOD ) {
@@ -911,10 +911,10 @@ CmdMap::CmdMap( void ) {
 
 bool CmdMap::execute( Creature* creature, const std::vector<std::string>& args ) {
   std::string output;
-  register short xsize = 37;
-  register short ysize = 9;
-  register short x = 0;
-  register short y = 0;
+  unsigned xsize = 37;
+  unsigned ysize = 9;
+  unsigned x = 0;
+  unsigned y = 0;
   bool success = false;
 
   // Allocate a 2D array of Room pointers and initialize to NULL...

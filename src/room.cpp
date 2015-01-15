@@ -44,7 +44,7 @@ Room::Room( const unsigned long& vnum, Area* area ):
   flags().value( 0 );
   name( "Undefined" );
   terrain( area->terrain() );
-  for ( register unsigned int u = 0; u < 6; ++u ) {
+  for ( unsigned u = 0; u < 6; ++u ) {
     _exits[u] = NULL;
   }
 
@@ -65,14 +65,14 @@ Room::Room( Area* area, ROW& row ):
     terrain( TerrainTable::Instance().find( "city" ) );
   }
   flags().value( row["flags"] );
-  for ( register unsigned int u = 0; u < 6; ++u ) {
+  for ( unsigned u = 0; u < 6; ++u ) {
     _exits[u] = NULL;
   }
   return;
 }
 
 Room::~Room( void ) {
-  for ( register unsigned int u = 0; u < 6; ++u ) {
+  for ( unsigned u = 0; u < 6; ++u ) {
     if ( _exits[u] ) {
       delete _exits[u];
     }
@@ -197,7 +197,7 @@ void Room::save( void ) {
   }
 
   // Save exits...
-  for ( register unsigned short u = 0; u < 6; ++u ) {
+  for ( unsigned u = 0; u < 6; ++u ) {
     if ( exit( u ) ) {
       exit( u )->save();
     }
@@ -229,7 +229,7 @@ bool Room::destroy( void ) {
     // Get rid of this (from parent area)...
     area()->rooms().erase( vnum() );
     // Get rid of outbound exits...
-    for ( register unsigned short u = 0; u < 6; ++u ) {
+    for ( unsigned u = 0; u < 6; ++u ) {
       if ( exit( u ) ) {
         exit( u )->destroy();
         exit( u, NULL );
@@ -238,7 +238,7 @@ bool Room::destroy( void ) {
     // Get rid of inbound exits (this takes a bit more effort)...
     for ( std::set<Area*,area_comp>::iterator a = World::Instance().getAreas().begin(); a != World::Instance().getAreas().end(); ++a ) {
       for ( std::map<unsigned long,Room*>::iterator r = (*a)->rooms().begin(); r != (*a)->rooms().end(); ++r ) {
-        for ( register unsigned short u = NORTH; u <= DOWN; ++u ) {
+        for ( unsigned u = NORTH; u <= DOWN; ++u ) {
           if ( r->second->exit( u ) && r->second->exit( u )->target() == this ) {
             r->second->exit( u )->destroy();
             r->second->exit( u, NULL );
@@ -326,7 +326,7 @@ sound.... {y%s{x\n\n\
   output.append( buffer );
 
   output.append( " --== {Yexit data{x ==--\n" );
-  for ( register unsigned short u = NORTH; u <= DOWN; ++u ) {
+  for ( unsigned u = NORTH; u <= DOWN; ++u ) {
     if ( room->exit( u ) ) {
       sprintf( exit_buf, "{y%s{x to room {y%lu{x ({y%s{x)\n", Exit::name( u ), room->exit( u )->target()->vnum(), room->exit( u )->target()->name().c_str() );
       output.append( exit_buf );

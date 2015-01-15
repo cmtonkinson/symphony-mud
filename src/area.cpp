@@ -91,7 +91,7 @@ bool Area::loadRooms( void ) {
 
     sprintf( query, "SELECT * FROM rooms WHERE areaID = %lu ORDER BY vnum ASC;", ID() );
     if ( mysql->select( query ) ) {
-      while ( row = mysql->fetch() ) {
+      while ( (row = mysql->fetch()) ) {
         rooms().insert( std::make_pair( row["vnum"], new Room( this, row ) ) );
       }
     }
@@ -109,7 +109,7 @@ bool Area::loadRooms( void ) {
     for ( std::map<unsigned long,Room*>::iterator it = rooms().begin(); it != rooms().end(); ++it ) {
       sprintf( query, "SELECT * FROM load_rules WHERE vnum = %lu ORDER BY id ASC;", it->second->vnum() );
       if ( mysql->select( query ) ) {
-        while ( row = mysql->fetch() ) {
+        while ( (row = mysql->fetch()) ) {
           if ( row["type"] == "MOB" ) {
             it->second->add( new LoadRuleMob( row ) );
           } else if ( row["type"] == "OBJECT" ) {
@@ -138,7 +138,7 @@ bool Area::loadExits( void ) {
     for ( std::map<unsigned long,Room*>::iterator it = rooms().begin(); it != rooms().end(); ++it ) {
       sprintf( query, "SELECT * FROM exits WHERE vnum = %lu LIMIT 6;", it->second->vnum() );
       if ( mysql->select( query ) ) {
-        while ( row = mysql->fetch() ) {
+        while ( (row = mysql->fetch()) ) {
           if ( ( target = World::Instance().findRoom( row["target"] ) ) != NULL ) {
             it->second->exit( row["direction"], new Exit( target, row ) );
           }
@@ -158,7 +158,7 @@ void Area::loadObjects( Mysql* db ) {
   char query[MAX_BUFFER];
   sprintf( query, "SELECT * FROM objects WHERE areaID = %lu ORDER BY vnum ASC;", ID() );
   if ( db->select( query ) ) {
-    while ( row = db->fetch() ) {
+    while ( (row = db->fetch()) ) {
       objects().insert( std::make_pair( row["vnum"], new Object( row ) ) );
     }
   }
@@ -173,7 +173,7 @@ bool Area::loadMobs( void ) {
 
     sprintf( query, "SELECT * FROM mobs WHERE areaID = %lu ORDER BY vnum ASC;", ID() );
     if ( mysql->select( query ) ) {
-      while ( row = mysql->fetch() ) {
+      while ( (row = mysql->fetch()) ) {
         mobs().insert( std::make_pair( row["vnum"], Mob::create( row ) ) );
       }
     }

@@ -22,7 +22,7 @@ apt-get -yfV dist-upgrade
 
 # Install dependencies.
 DEBIAN_FRONTEND=noninteractive apt-get install -yfV \
-  g++ ccache gdb                                    \
+  clang ccache gdb                                  \
   libpcre3 libpcre3-dbg libpcre3-dev                \
   mysql-server mysql-client libmysqlclient-dev      \
 
@@ -39,6 +39,7 @@ mysql_exec "GRANT ALL PRIVILEGES ON symphony.* TO 'symphony'@'localhost';"
 echo 'alias list="ls -alsvh"'     >> /home/vagrant/.bashrc
 echo 'export MAKEFLAGS="-j4"'     >> /home/vagrant/.bashrc
 echo 'export CCACHE_COMPRESS=1'   >> /home/vagrant/.bashrc
+echo 'export CCACHE_CPP2=1'       >> /home/vagrant/.bashrc
 echo 'cd /vagrant'                >> /home/vagrant/.bashrc
 
 ###############################################################################

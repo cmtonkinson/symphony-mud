@@ -18,9 +18,10 @@
 
 # General settings and variables
 PROJECT     = symphony
-CPPC        = ccache g++
-FLAGS_DEV   = -std=c++03 -ggdb3 -Wall -Werror -pedantic-errors
-FLAGS_PROD  = -O3 -minline-all-stringops -funroll-loops -finline-limit=65536
+CPPC        = ccache clang++
+FLAGS_ALL		= --std=c++11 -fcolor-diagnostics
+FLAGS_DEV   = $(FLAGS_ALL) -O0 -ggdb3 -Wall -Werror -pedantic
+FLAGS_PROD  = $(FLAGS_ALL) -O3
 LIBS        = `pcre-config --libs` `mysql_config --libs`
 SRC_DIR     = src
 OBJ_DIR     = obj
@@ -47,7 +48,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 # Generate dependencies for application, dependency files, and unit test object files
 $(OBJ_DIR)/%.d: $(SRC_DIR)/%.cpp
-	@$(CPPC) -MM -MD $< -o $@
+	@$(CPPC) -MM $< -o $@
 	@sed -i -e 's|\(.*\)\.o:|$(OBJ_DIR)/\1.o $(OBJ_DIR)/\1.d $(TEST_OBJ_DIR)/\1_utest.o:|' $@
 
 -include $(DEP_FILES)

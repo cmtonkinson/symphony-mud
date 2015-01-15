@@ -272,7 +272,7 @@ bool World::loadSocials( void ) {
     char query[MAX_BUFFER];
     sprintf( query, "SELECT * FROM socials ORDER BY name ASC;" );
     if ( mysql->select( query ) ) {
-      while ( row = mysql->fetch() ) {
+      while ( (row = mysql->fetch()) ) {
         Commands::Instance().add( new SocialCommand( row ) );
       }
     }
@@ -509,7 +509,7 @@ std::string World::getAvatarNameByID( const unsigned long& ID ) {
       ID
     );
     if ( getMysql()->select( query ) ) {
-      if ( row = getMysql()->fetch() ) {
+      if ( (row = getMysql()->fetch()) ) {
         return row["shortname"];
       }
     }
@@ -540,7 +540,7 @@ bool World::loadAreas( Mysql* db ) {
   // Grab areas...
   try {
     if ( db->select( "SELECT * FROM areas ORDER BY low ASC;" ) ) {
-      while ( row = db->fetch() ) {
+      while ( (row = db->fetch()) ) {
         area = new Area();
         area->load( row );
         insert( area );
@@ -684,13 +684,13 @@ void World::loadPermissions( void ) {
     ROW row;
     // Load Area permissions...
     if ( mysql->select( "SELECT areaID, avatarID FROM permissions;" ) ) {
-      while ( row = mysql->fetch() ) {
+      while ( (row = mysql->fetch()) ) {
         permissions().insert( std::make_pair( row["areaID"], row["avatarID"] ) );
       }
     }
     // Load disabled commands...
     if ( mysql->select( "SELECT `table`, `name` FROM disabled_commands;" ) ) {
-      while ( row = mysql->fetch() ) {
+      while ( (row = mysql->fetch()) ) {
         toggleCommand( (char)row["table"], row["name"], false );
       }
     }
@@ -850,11 +850,11 @@ std::string World::strtime( time_t in_time ) {
 std::string World::realtime( const unsigned long& seconds, unsigned short granularity ) {
   char buffer[MAX_BUFFER];
   char foo[100];
-  register unsigned long sec = seconds;
-  register unsigned long min = 0;
-  register unsigned long hour = 0;
-  register unsigned long day = 0;
-  register unsigned long year = 0;
+  unsigned long sec = seconds;
+  unsigned long min = 0;
+  unsigned long hour = 0;
+  unsigned long day = 0;
+  unsigned long year = 0;
 
   memset( buffer, 0, MAX_BUFFER );
 
@@ -966,7 +966,7 @@ bool World::search_map( Creature* creature, Room*** map, const unsigned short& y
   map[y][x] = room;
   display[y*2][x*2] = get_marker( creature, room );
   // Search from here...
-  for ( register unsigned short u = NORTH; u < UP; ++u ) {
+  for ( unsigned u = NORTH; u < UP; ++u ) {
     new_x = x;
     new_y = y;
     switch (u) {

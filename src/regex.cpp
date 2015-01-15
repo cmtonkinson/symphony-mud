@@ -504,7 +504,7 @@ bool Regex::isMisspelling( const std::string& attempt, const std::string& correc
   std::vector<std::string>::iterator buffer_end;
   std::string regex( "^\\s*?(?:" );
   std::string s1, s2, s3;
-  register unsigned long u = 0;
+  unsigned u = 0;
 
   // Fill the buffer with all of the different subpatterns...
   for ( std::string::iterator it = temp_begin; it != temp_end; ++it, ++u ) {

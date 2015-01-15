@@ -52,7 +52,7 @@ bool Board::load( void ) {
     char query[MAX_BUFFER];
     sprintf( query, "SELECT * FROM notes WHERE board = %hu ORDER BY id ASC;", number() );
     if ( mysql->select( query ) ) {
-      while ( row = mysql->fetch() ) {
+      while ( (row = mysql->fetch()) ) {
         notes().insert( std::make_pair( row["id"], new Note( row ) ) );
       }
     }

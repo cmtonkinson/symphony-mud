@@ -111,9 +111,9 @@ bool Mob::save( void ) {
 
     sprintf( query,
       "UPDATE mobs SET            \
-        `gender` = %hu ,          \
-        `race` = %hu ,            \
-        `pClass` = %hu ,          \
+        `gender` = %u ,           \
+        `race` = %u ,             \
+        `pClass` = %u ,           \
         `keywords` = '%s',        \
         `shortname` = '%s',       \
         `longname` = '%s',        \
@@ -142,11 +142,11 @@ bool Mob::save( void ) {
         `maxCharisma` = %hu,      \
         `luck` = %hu,             \
         `maxLuck` = %hu,          \
-        `armor` = %hd,            \
-        `bash` = %hd,             \
-        `slash` = %hd,            \
-        `pierce` = %hd,           \
-        `exotic` = %hd            \
+        `armor` = %d,             \
+        `bash` = %d,              \
+        `slash` = %d,             \
+        `pierce` = %d,            \
+        `exotic` = %d             \
        WHERE mobID = %lu          \
        LIMIT 1;",
       gender().number(),
