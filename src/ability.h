@@ -10,7 +10,7 @@ class Creature;
 
 #define DEFAULT_LEVEL       1
 #define DEFAULT_TRAINS      1
-#define DEFAULT_DIFFICULTY  5
+#define DEFAULT_DIFFICULTY  3
 #define DEFAULT_STAMINA     0
 #define DEFAULT_MANA        0
 
@@ -68,7 +68,7 @@ class Ability {
     std::string           _name;
     unsigned              _level;         // minimum level at which Ability can be learned
     unsigned              _trains;        // number of training points required to learn
-    unsigned              _difficulty;    // relative difficulty for increasing mastery (1-10)
+    unsigned              _difficulty;    // relative difficulty for increasing mastery (1-5)
     unsigned              _stamina;       // amount of stamina required for the Ability
     unsigned              _mana;          // amount of mana required for the Ability
     std::set<Ability*>    _dependencies;
