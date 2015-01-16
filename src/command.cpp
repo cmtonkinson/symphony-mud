@@ -26,7 +26,7 @@ Command::~Command(void) {
 
 void Command::level(const unsigned short& level) {
   _level = level;
-  if (_level > LEVEL_HERO) {
+  if (_level > Creature::HERO) {
     playerOnly(true);
   }
   return;
@@ -95,7 +95,7 @@ SocialCommand::SocialCommand(const std::string& name, const unsigned long& avata
   victimRoom("$c does something to $C.");
 
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
     sprintf(query, "INSERT IGNORE INTO socials (name, creator) VALUES ('%s', %lu);", Mysql::addslashes(name).c_str(), avatarID);
     World::Instance().getMysql()->insert(query);
     ID(World::Instance().getMysql()->getInsertID());
@@ -145,7 +145,7 @@ SocialCommand::~SocialCommand(void) {
 
 void SocialCommand::save(void) {
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query, "               \
           UPDATE socials            \
@@ -190,7 +190,7 @@ void SocialCommand::save(void) {
 bool SocialCommand::destroy(void) {
   unsigned long tempID = ID();
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query,
       " DELETE          \
@@ -215,7 +215,7 @@ bool SocialCommand::execute(Creature* creature, const std::vector<std::string>& 
   if (args[0].empty()) {
     if (targetNone()) {
       creature->send(noneActor());
-      creature->room()->send_cond(noneRoom().c_str(), creature, creature, NULL, TO_ROOM, isAudible());
+      creature->room()->send_cond(noneRoom().c_str(), creature, creature, NULL, Room::TO_ROOM, isAudible());
       return true;
     }
   } else if (args.size() == 1) {
@@ -227,7 +227,7 @@ bool SocialCommand::execute(Creature* creature, const std::vector<std::string>& 
     if (victim == creature) {
       if (targetSelf()) {
         creature->send(selfActor());
-        creature->room()->send_cond(selfRoom().c_str(), creature, creature, creature, TO_ROOM, isAudible());
+        creature->room()->send_cond(selfRoom().c_str(), creature, creature, creature, Room::TO_ROOM, isAudible());
         return true;
       } else {
         creature->send("You'd look pretty silly doing that to yourself.");
@@ -237,10 +237,10 @@ bool SocialCommand::execute(Creature* creature, const std::vector<std::string>& 
       if (targetVictim()) {
         creature->send(Display::formatAction(victimActor().c_str(), creature, creature, victim, creature));
         // Unless the social is audible or tactile, the victim shouldn't see it if they can't see the actor...
-        if (victim->canSee(creature) > SEE_NOTHING || isAudible() || isTactile()) {
+        if (victim->canSee(creature) > Creature::SEE_NOTHING || isAudible() || isTactile()) {
           victim->send(Display::formatAction(victimVictim().c_str(), creature, creature, victim, victim));
         }
-        creature->room()->send_cond(victimRoom().c_str(), creature, creature, victim, TO_NOTVICT, isAudible());
+        creature->room()->send_cond(victimRoom().c_str(), creature, creature, victim, Room::TO_NOTVICT, isAudible());
         return true;
       } else {
         creature->send("You can't do that to someone else.");

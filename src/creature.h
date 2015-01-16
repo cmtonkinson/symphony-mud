@@ -18,96 +18,6 @@
 #include "modifier.h"
 #include "object.h"
 
-// Wear Locations...
-#define WEARLOC_ERROR        0
-#define WEARLOC_HEAD         1
-#define WEARLOC_EAR_L        2
-#define WEARLOC_EAR_R        3
-#define WEARLOC_FACE         4
-#define WEARLOC_NECK         5
-#define WEARLOC_SHOULDERS    6
-#define WEARLOC_ARMS         7
-#define WEARLOC_TORSO        8
-#define WEARLOC_FOREARM_L    9
-#define WEARLOC_FOREARM_R   10
-#define WEARLOC_WRIST_L     11
-#define WEARLOC_WRIST_R     12
-#define WEARLOC_HANDS       13
-#define WEARLOC_HOLD_L      14
-#define WEARLOC_HOLD_R      15
-#define WEARLOC_FINGER_L    16
-#define WEARLOC_FINGER_R    17
-#define WEARLOC_WAIST_1     18
-#define WEARLOC_WAIST_2     19
-#define WEARLOC_LEGS        20
-#define WEARLOC_KNEE_L      21
-#define WEARLOC_KNEE_R      22
-#define WEARLOC_SHIN_L      23
-#define WEARLOC_SHIN_R      24
-#define WEARLOC_ANKLE_L     25
-#define WEARLOC_ANKLE_R     26
-#define WEARLOC_FEET        27
-#define WEARLOC_END         28 // not a valid wearloc; just makes life easier
-
-// Levels...
-#define LEVEL_NEWB  10
-#define LEVEL_HERO  100
-#define NEWBIE      LEVEL_NEWB
-#define HERO        LEVEL_HERO
-#define LORD        (HERO+2)
-#define DUKE        (HERO+5)
-#define DEMIGOD     (HERO+15)
-#define GOD         (HERO+20)
-#define CREATOR     (HERO+25)
-
-/* Map integers in a range to attributes
- * (indexing must be contiguous, starting from 1)
- */
-#define ATTR_BEGIN       1
-#define ATTR_MAX_HEALTH  1
-#define ATTR_MAX_MANA    2
-#define ATTR_MAX_MOVE    3
-#define ATTR_STR         4
-#define ATTR_DEX         5
-#define ATTR_CON         6
-#define ATTR_INT         7
-#define ATTR_FOC         8
-#define ATTR_CRE         9
-#define ATTR_CHA         10
-#define ATTR_LUC         11
-#define ATTR_ARMOR       12
-#define ATTR_BASH        13
-#define ATTR_SLASH       14
-#define ATTR_PIERCE      15
-#define ATTR_EXOTIC      16
-#define ATTR_END         17
-
-// Visibility...
-#define SEE_NOTHING         0
-#define SEE_SOMETHING       1
-#define SEE_NAME            2
-
-// Actions...
-#define ACT_NONE    0
-#define ACT_SLEEP   1
-#define ACT_FIGHT   2
-
-// Leveling...
-#define BASE_EXP      0
-#define BASE_TNL      100
-#define TARGET_TNL    100000
-
-#define BASE_TRAINS   5
-
-#define BASE_HEALTH   100
-#define BASE_MANA     100
-#define MAX_STAMINA   (unsigned)100
-
-#define MIN_HEALTH_GAIN   3
-#define MIN_MANA_GAIN     3
-
-#define ALTERABILITY_LEVEL_DIFFERENCE 5
-
 class Area;
 class Ability;
 class IOHandler;
@@ -119,6 +29,94 @@ class Group;
 
 class Creature {
   public:
+
+    // Wear Locations...
+    static const unsigned WEARLOC_ERROR     =  0;
+    static const unsigned WEARLOC_HEAD      =  1;
+    static const unsigned WEARLOC_EAR_L     =  2;
+    static const unsigned WEARLOC_EAR_R     =  3;
+    static const unsigned WEARLOC_FACE      =  4;
+    static const unsigned WEARLOC_NECK      =  5;
+    static const unsigned WEARLOC_SHOULDERS =  6;
+    static const unsigned WEARLOC_ARMS      =  7;
+    static const unsigned WEARLOC_TORSO     =  8;
+    static const unsigned WEARLOC_FOREARM_L =  9;
+    static const unsigned WEARLOC_FOREARM_R = 10;
+    static const unsigned WEARLOC_WRIST_L   = 11;
+    static const unsigned WEARLOC_WRIST_R   = 12;
+    static const unsigned WEARLOC_HANDS     = 13;
+    static const unsigned WEARLOC_HOLD_L    = 14;
+    static const unsigned WEARLOC_HOLD_R    = 15;
+    static const unsigned WEARLOC_FINGER_L  = 16;
+    static const unsigned WEARLOC_FINGER_R  = 17;
+    static const unsigned WEARLOC_WAIST_1   = 18;
+    static const unsigned WEARLOC_WAIST_2   = 19;
+    static const unsigned WEARLOC_LEGS      = 20;
+    static const unsigned WEARLOC_KNEE_L    = 21;
+    static const unsigned WEARLOC_KNEE_R    = 22;
+    static const unsigned WEARLOC_SHIN_L    = 23;
+    static const unsigned WEARLOC_SHIN_R    = 24;
+    static const unsigned WEARLOC_ANKLE_L   = 25;
+    static const unsigned WEARLOC_ANKLE_R   = 26;
+    static const unsigned WEARLOC_FEET      = 27;
+    static const unsigned WEARLOC_END       = 28; // not a valid wearloc; just makes life easier
+
+    // Levels...
+    static const unsigned NEWBIE     = 10;
+    static const unsigned HERO       = 100;
+    static const unsigned LORD       = (HERO+2);
+    static const unsigned DUKE       = (HERO+5);
+    static const unsigned DEMIGOD    = (HERO+15);
+    static const unsigned GOD        = (HERO+20);
+    static const unsigned CREATOR    = (HERO+25);
+
+    /* Map integers in a range to attributes
+     * (indexing must be contiguous, starting from 1)
+     */
+    static const unsigned ATTR_BEGIN      =  1;
+    static const unsigned ATTR_MAX_HEALTH =  1;
+    static const unsigned ATTR_MAX_MANA   =  2;
+    static const unsigned ATTR_MAX_MOVE   =  3;
+    static const unsigned ATTR_STR        =  4;
+    static const unsigned ATTR_DEX        =  5;
+    static const unsigned ATTR_CON        =  6;
+    static const unsigned ATTR_INT        =  7;
+    static const unsigned ATTR_FOC        =  8;
+    static const unsigned ATTR_CRE        =  9;
+    static const unsigned ATTR_CHA        = 10;
+    static const unsigned ATTR_LUC        = 11;
+    static const unsigned ATTR_ARMOR      = 12;
+    static const unsigned ATTR_BASH       = 13;
+    static const unsigned ATTR_SLASH      = 14;
+    static const unsigned ATTR_PIERCE     = 15;
+    static const unsigned ATTR_EXOTIC     = 16;
+    static const unsigned ATTR_END        = 17;
+
+    // Visibility...
+    static const unsigned SEE_NOTHING   = 0;
+    static const unsigned SEE_SOMETHING = 1;
+    static const unsigned SEE_NAME      = 2;
+
+    // Actions...
+    static const unsigned ACT_NONE  = 0;
+    static const unsigned ACT_SLEEP = 1;
+    static const unsigned ACT_FIGHT = 2;
+
+    // Leveling...
+    static const unsigned BASE_EXP    = 0;
+    static const unsigned BASE_TNL    = 100;
+    static const unsigned TARGET_TNL  = 100000;
+    static const unsigned BASE_TRAINS = 5;
+
+    static const unsigned BASE_HEALTH = 100;
+    static const unsigned BASE_MANA   = 100;
+    static const unsigned MAX_STAMINA = 100;
+
+    static const unsigned MIN_HEALTH_GAIN = 3;
+    static const unsigned MIN_MANA_GAIN   = 3;
+
+    static const unsigned ALTERABILITY_LEVEL_DIFFERENCE = 5;
+
     // constructors...
     Creature(void);
     Creature(const Creature& ref);
@@ -184,7 +182,7 @@ class Creature {
     int                 mana(void) const                                { return _mana; }
     void                maxMana(int maxMana)                            { _maxMana = maxMana; }
     int                 maxMana(void) const                             { return _maxMana; }
-    void                stamina(unsigned stamina)                       { _stamina = std::min(MAX_STAMINA, stamina); }
+    void                stamina(unsigned stamina)                       { _stamina = (stamina <= MAX_STAMINA ? stamina : MAX_STAMINA); }
     unsigned            stamina(void) const                             { return _stamina; }
     // Stats
     void                strength(unsigned short strength)               { _strength = ((strength <= maxStrength()) ? strength : maxStrength()); }

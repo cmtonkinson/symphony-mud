@@ -4,24 +4,9 @@
 #include "commandTable.h"
 #include "world.h"
 
-/*
-SCmd::SCmd(void) {
-  name("");
-  level(GOD);
-  addSyntax(0, "");
-  brief("");
-  return;
-}
-
-bool SCmd::execute(Creature* creature, const std::vector<std::string>& args) {
-
-  return true;
-}
-*/
-
 SCmdAudible::SCmdAudible(void) {
   name("audible");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(0, "");
   brief("Toggles whether or not the social makes a sound when used.");
   return;
@@ -35,7 +20,7 @@ bool SCmdAudible::execute(Creature* creature, const std::vector<std::string>& ar
 
 SCmdDelete::SCmdDelete(void) {
   name("delete");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(1, "delete");
   brief("Erases the Social Command.");
   return;
@@ -69,7 +54,7 @@ bool SCmdDelete::execute(Creature* creature, const std::vector<std::string>& arg
 
 SCmdInformation::SCmdInformation(void) {
   name("information");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(0, "");
   brief("Displays the current status of the Social Command.");
   return;
@@ -113,7 +98,7 @@ bool SCmdInformation::execute(Creature* creature, const std::vector<std::string>
 
 SCmdTactile::SCmdTactile(void) {
   name("tactile");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(0, "");
   brief("Toggles whether or not the social makes contact with the target when used.");
   return;
@@ -127,7 +112,7 @@ bool SCmdTactile::execute(Creature* creature, const std::vector<std::string>& ar
 
 SCmdTargetNone::SCmdTargetNone(void) {
   name("targetnone");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(0, "");
   brief("Toggles whether the Command can be used without a target.");
   return;
@@ -147,7 +132,7 @@ bool SCmdTargetNone::execute(Creature* creature, const std::vector<std::string>&
 
 SCmdTargetSelf::SCmdTargetSelf(void) {
   name("targetself");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(0, "");
   brief("Toggles whether the Command can be used on oneself.");
   return;
@@ -167,7 +152,7 @@ bool SCmdTargetSelf::execute(Creature* creature, const std::vector<std::string>&
 
 SCmdTargetVictim::SCmdTargetVictim(void) {
   name("targetvictim");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(0, "");
   brief("Toggles whether the Command can be used on someone else.");
   return;
@@ -187,7 +172,7 @@ bool SCmdTargetVictim::execute(Creature* creature, const std::vector<std::string
 
 SCmdNoneActor::SCmdNoneActor(void) {
   name("noneactor");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(-1, "<string>");
   brief("Changes what the actor sees when using the Command without a target.");
   return;
@@ -201,7 +186,7 @@ bool SCmdNoneActor::execute(Creature* creature, const std::vector<std::string>& 
 
 SCmdNoneRoom::SCmdNoneRoom(void) {
   name("noneroom");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(-1, "<string>");
   brief("Changes what others see when the actor uses Command without a target.");
   return;
@@ -215,7 +200,7 @@ bool SCmdNoneRoom::execute(Creature* creature, const std::vector<std::string>& a
 
 SCmdSelfActor::SCmdSelfActor(void) {
   name("selfactor");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(-1, "<string>");
   brief("Changes what the actor sees when using the Social Command on itself.");
   return;
@@ -229,7 +214,7 @@ bool SCmdSelfActor::execute(Creature* creature, const std::vector<std::string>& 
 
 SCmdSelfRoom::SCmdSelfRoom(void) {
   name("selfroom");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(-1, "<string>");
   brief("Changes what others see when the actor uses the Command on itself.");
   return;
@@ -243,7 +228,7 @@ bool SCmdSelfRoom::execute(Creature* creature, const std::vector<std::string>& a
 
 SCmdVictimActor::SCmdVictimActor(void) {
   name("victimactor");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(-1, "<string>");
   brief("Changes what the actor sees when using the Command on another.");
   return;
@@ -257,7 +242,7 @@ bool SCmdVictimActor::execute(Creature* creature, const std::vector<std::string>
 
 SCmdVictimVictim::SCmdVictimVictim(void) {
   name("victimvictim");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(-1, "<string>");
   brief("Changes what the victim of the Command sees.");
   return;
@@ -271,7 +256,7 @@ bool SCmdVictimVictim::execute(Creature* creature, const std::vector<std::string
 
 SCmdVictimRoom::SCmdVictimRoom(void) {
   name("victimroom");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(-1, "<string>");
   brief("Changes what others see when an actor uses the Command on a victim.");
   return;

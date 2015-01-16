@@ -9,24 +9,9 @@
 #include "room.h"
 #include "world.h"
 
-/*
-PCmd::PCmd(void) {
-  name("");
-  level(CREATOR);
-  addSyntax(0, "");
-  brief("");
-  return;
-}
-
-bool PCmd::execute(Creature* creature, const std::vector<std::string>& args) {
-
-  return true;
-}
-*/
-
 PCmdColor::PCmdColor(void) {
   name("color");
-  level(CREATOR);
+  level(Creature::CREATOR);
   addSyntax(1, "<color code>");
   brief("Changes the message color of 'gecho'.");
   return;
@@ -42,7 +27,7 @@ bool PCmdColor::execute(Creature* creature, const std::vector<std::string>& args
 
 PCmdHeadBuilder::PCmdHeadBuilder(void) {
   name("headbuilder");
-  level(CREATOR);
+  level(Creature::CREATOR);
   addSyntax(0, "");
   brief("Toggles whether the Player is marked as a 'Head Builder' or not.");
   return;
@@ -50,8 +35,8 @@ PCmdHeadBuilder::PCmdHeadBuilder(void) {
 
 bool PCmdHeadBuilder::execute(Creature* creature, const std::vector<std::string>& args) {
   Avatar* target = avatar()->pedit();
-  if (target->level() < DEMIGOD) {
-    avatar()->send("%s must be promoted at least to level %d before being granted Head Builder status.", target->identifiers().shortname().c_str(), DEMIGOD);
+  if (target->level() < Creature::DEMIGOD) {
+    avatar()->send("%s must be promoted at least to level %d before being granted Head Builder status.", target->identifiers().shortname().c_str(), Creature::DEMIGOD);
     return false;
   }
   if (target->adminFlags().toggle(ADMIN_HEADBUILDER)) {

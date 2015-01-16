@@ -101,7 +101,7 @@ void Creature::acquireTarget(void) {
     // You can't attack someone in a different room.
     if (target->room() != room()) valid_target = false;
     // You can't attack someone you can't see.
-    if (canSee(target) != SEE_NAME) valid_target = false;
+    if (canSee(target) != Creature::SEE_NAME) valid_target = false;
     // Either return the target, or remove it from the opponent list.
     if (valid_target) {
       _target = target;
@@ -133,7 +133,7 @@ void Creature::strike(void) {
   weapon_damage.append(" ").append(Display::formatDamage(damage));
   send("Your %s %s!\n", weapon_damage.c_str(), _target->name());
   _target->send("%s's %s you!\n", name(), weapon_damage.c_str());
-  room()->send_cond("$p's $s $C!", this, (void*)weapon_damage.c_str(), _target, TO_NOTVICT, true);
+  room()->send_cond("$p's $s $C!", this, (void*)weapon_damage.c_str(), _target, Room::TO_NOTVICT, true);
   // Deal the pain.
   _target->takeDamage(damage, this);
   return;
@@ -160,7 +160,7 @@ void Creature::die(Creature* killer) {
   stamina(0);
   // Announce the death.
   send("\n\nYou are {RDEAD{x!!!\n\n");
-  room()->send_cond("\n\n$p is {RDEAD{x!!!\n\n", this, NULL, NULL, TO_NOTVICT);
+  room()->send_cond("\n\n$p is {RDEAD{x!!!\n\n", this, NULL, NULL, Room::TO_NOTVICT);
   if (isAvatar() && killer && killer->isAvatar()) {
     World::Instance().bigBrother(this, ADMIN_BIGBRO_DEATHS, "%s has killed %s.\n", killer->name(), name());
   }

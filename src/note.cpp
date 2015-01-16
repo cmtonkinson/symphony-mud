@@ -6,7 +6,7 @@ Note::Note(const unsigned short& board, const unsigned long& author) {
   this->board(board);
   this->author(author);
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
     sprintf(query, "INSERT IGNORE INTO notes (board, author) VALUES (%u, %lu);", this->board(), this->author());
     World::Instance().getMysql()->insert(query);
     ID(World::Instance().getMysql()->getInsertID());
@@ -32,7 +32,7 @@ Note::~Note(void) {
 
 bool Note::save(void) {
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
     sprintf(query,
       "UPDATE notes SET subject = '%s', body = '%s' WHERE id = %lu LIMIT 1;",
       Mysql::addslashes(subject()).c_str(),
@@ -50,7 +50,7 @@ bool Note::save(void) {
 bool Note::destroy(void) {
   unsigned long tempID = ID();
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
     sprintf(query, "DELETE FROM notes WHERE id = %lu LIMIT 1;", ID());
     World::Instance().getMysql()->remove(query);
     delete this;

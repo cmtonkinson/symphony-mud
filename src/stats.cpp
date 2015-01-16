@@ -6,13 +6,13 @@
 
 unsigned Stats::logistic(unsigned level, unsigned min, unsigned target) {
   double limit      = floor(target/50);
-  double half_max_x = floor(LEVEL_HERO / 2);
+  double half_max_x = floor(Creature::HERO / 2);
   double result     = Math::logistic(level, limit, min, half_max_x);
   return 0.5 + result;
 }
 
 int Stats::polynomial(int level, int base, int target) {
-  double rate = log(target - base) / log(LEVEL_HERO - 1);
+  double rate = log(target - base) / log(Creature::HERO - 1);
   return 0.5 + base + pow(level - 1, rate);
 }
 

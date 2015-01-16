@@ -6,24 +6,9 @@
 #include "mob.h"
 #include "room.h"
 
-/*
-MCmd::MCmd(void) {
-  name("");
-  level(DEMIGOD);
-  addSyntax(0, "");
-  brief("");
-  return;
-}
-
-bool MCmd::execute(Creature* creature, const std::vector<std::string>& args) {
-
-  return true;
-}
-*/
-
 MCmdClass::MCmdClass(void) {
   name("class");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<class>");
   brief("Change the class type of the Mob.");
   addOptions("class", ETPClass::Instance().list());
@@ -43,7 +28,7 @@ bool MCmdClass::execute(Creature* creature, const std::vector<std::string>& args
 
 MCmdDescription::MCmdDescription(void) {
   name("description");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(0, "");
   brief("Invokes the Text Editor for the Mobs' description.");
   return;
@@ -60,7 +45,7 @@ bool MCmdDescription::execute(Creature* creature, const std::vector<std::string>
 
 MCmdGender::MCmdGender(void) {
   name("gender");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<gender>");
   brief("Change the gender of the Mob.");
   addOptions("gender", ETGender::Instance().list());
@@ -80,7 +65,7 @@ bool MCmdGender::execute(Creature* creature, const std::vector<std::string>& arg
 
 MCmdInformation::MCmdInformation(void) {
   name("information");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(0, "");
   brief("Displays information about the Mob.");
   return;
@@ -93,7 +78,7 @@ bool MCmdInformation::execute(Creature* creature, const std::vector<std::string>
 
 MCmdKeywords::MCmdKeywords(void) {
   name("keywords");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(-1, "<key1 key2 key3 ...>");
   brief("Updtes the Mobs keywords.");
   return;
@@ -111,7 +96,7 @@ bool MCmdKeywords::execute(Creature* creature, const std::vector<std::string>& a
 
 MCmdLevel::MCmdLevel(void) {
   name("level");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<number>");
   brief("Updates the Mobs level.");
   addOptions("level", "must be between 1 and 100, inclusive");
@@ -132,7 +117,7 @@ bool MCmdLevel::execute(Creature* creature, const std::vector<std::string>& args
 
 MCmdLongname::MCmdLongname(void) {
   name("longname");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(-1, "<string>");
   brief("Updates the Mobs long name.");
   return;
@@ -146,7 +131,7 @@ bool MCmdLongname::execute(Creature* creature, const std::vector<std::string>& a
 
 MCmdRace::MCmdRace(void) {
   name("race");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<race>");
   brief("Change the race of the Mob.");
   addOptions("race", ETRace::Instance().list());
@@ -166,7 +151,7 @@ bool MCmdRace::execute(Creature* creature, const std::vector<std::string>& args)
 
 MCmdShortname::MCmdShortname(void) {
   name("shortname");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(-1, "<string>");
   brief("Updates the Mobs short name.");
   return;

@@ -9,21 +9,6 @@
 #include "room.h"
 #include "world.h"
 
-/*
-Cmd::Cmd(void) {
-  name("");
-  level();
-  addSyntax(0, "");
-  brief("");
-  return;
-}
-
-bool Cmd::execute(Creature* creature, const std::vector<std::string>& args) {
-
-  return true;
-}
-*/
-
 CmdNote::CmdNote(void) {
   name("note");
   playerOnly(true);
@@ -81,7 +66,7 @@ bool CmdNote::execute(Creature* creature, const std::vector<std::string>& args) 
 
 CmdOedit::CmdOedit(void) {
   name("oedit");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<vnum>");
   addSyntax(2, "create <vnum>");
   brief("Invokes the Object Editor.");
@@ -165,7 +150,7 @@ bool CmdOedit::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdOlist::CmdOlist(void) {
   name("olist");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<areaID>                       (list all Objects in the area)");
   addSyntax(2, "<first vnum> <last vnum>       (list all Objects in the vnum range)");
   addSyntax(1, "<keyword>                      (list all Objects by keyword)");
@@ -181,7 +166,7 @@ bool CmdOlist::execute(Creature* creature, const std::vector<std::string>& args)
   unsigned long high = 0;
   std::string search;
   std::string output;
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
 
   if (mutable_args.size() == 1) {
     if (Regex::match("^[0-9]+$", mutable_args[0])) {
@@ -260,7 +245,7 @@ bool CmdOlist::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdOload::CmdOload(void) {
   name("oload");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<vnum>");
   brief("Fabricates an Object.");
 }
@@ -376,7 +361,7 @@ CmdPassword::CmdPassword(void) {
 bool CmdPassword::execute(Creature* creature, const std::vector<std::string>& args) {
   try {
     Mysql* mysql = World::Instance().getMysql();
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     if (args[1].compare(args[2]) != 0) {
       creature->send("The password you entered does not match the confirmation.");
@@ -403,7 +388,7 @@ bool CmdPassword::execute(Creature* creature, const std::vector<std::string>& ar
 
   } catch (MysqlException me) {
     fprintf(stderr, "Failed to save avatar %lu: %s\n", creature->ID(), me.getMessage().c_str());
-    World::Instance().playerLog(ERROR, LOG_AVATAR, "failed password reset for %s (%lu)", creature->identifiers().shortname().c_str(), creature->ID());
+    World::Instance().playerLog(World::LOG_LEVEL_ERROR, World::LOG_TYPE_AVATAR, "failed password reset for %s (%lu)", creature->identifiers().shortname().c_str(), creature->ID());
     creature->send("Command failed. This issue has been logged.");
     return false;
   }
@@ -413,7 +398,7 @@ bool CmdPassword::execute(Creature* creature, const std::vector<std::string>& ar
 CmdPeace::CmdPeace(void) {
   name("peace");
   playerOnly(true);
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(0, "");
   addSyntax(1, "all");
   brief("Ends all combat, in the current room, or the whole world.");
@@ -441,7 +426,7 @@ bool CmdPeace::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdPedit::CmdPedit(void) {
   name("pedit");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(1, "<player>       (must be connected)");
   brief("Invokes the Player Editor.");
   return;
@@ -465,7 +450,7 @@ bool CmdPedit::execute(Creature* creature, const std::vector<std::string>& args)
     }
   }
 
-  if (avatar()->canAlter(target) || avatar()->level() >= CREATOR) {
+  if (avatar()->canAlter(target) || avatar()->level() >= Creature::CREATOR) {
     avatar()->send("You're editing %s.", target->identifiers().shortname().c_str());
     avatar()->pedit(target);
     avatar()->pushIOHandler(new PeditIOHandler(avatar()));
@@ -480,7 +465,7 @@ bool CmdPedit::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdPoofin::CmdPoofin(void) {
   name("poofin");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(0, "");
   addSyntax(1, "clear");
   addSyntax(-1, "<string>");
@@ -515,7 +500,7 @@ bool CmdPoofin::execute(Creature* creature, const std::vector<std::string>& args
 
 CmdPoofout::CmdPoofout(void) {
   name("poofout");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(0, "");
   addSyntax(1, "clear");
   addSyntax(-1, "<string>");
@@ -552,7 +537,7 @@ CmdPromote::CmdPromote(void) {
   name("promote");
   addSyntax(2, "<player> <level>");
   addSyntax(2, "<mob> <level>");
-  level(CREATOR);
+  level(Creature::CREATOR);
   brief("Advances the target to the given level.");
   return;
 }
@@ -579,8 +564,8 @@ bool CmdPromote::execute(Creature* creature, const std::vector<std::string>& arg
     avatar()->send("That wouldn't really help %s much, now would it?", target->identifiers().shortname().c_str());
     return false;
   }
-  if (level >= (unsigned)avatar()->level() - ALTERABILITY_LEVEL_DIFFERENCE) {
-    avatar()->send("You can't promote anyone higher than level %d.", avatar()->level() - (ALTERABILITY_LEVEL_DIFFERENCE-1));
+  if (level >= (unsigned)avatar()->level() - Creature::ALTERABILITY_LEVEL_DIFFERENCE) {
+    avatar()->send("You can't promote anyone higher than level %d.", avatar()->level() - (Creature::ALTERABILITY_LEVEL_DIFFERENCE-1));
     return false;
   }
 
@@ -596,7 +581,7 @@ bool CmdPromote::execute(Creature* creature, const std::vector<std::string>& arg
 CmdPurge::CmdPurge(void) {
   name("purge");
   addSyntax(0, "");
-  level(GOD);
+  level(Creature::GOD);
   brief("Destroys all Objects lying in the room.");
   return;
 }

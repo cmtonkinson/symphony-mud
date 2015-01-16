@@ -11,19 +11,12 @@
 #include <string>
 #include <vector>
 
-#define REGEX_DEFAULT_OPTIONS     (PCRE_CASELESS|PCRE_DOTALL|PCRE_MULTILINE)
-#define REGEX_MAX_SUBPATTERNS     20 // Maximum number of supatterns to capture
-#define REGEX_OVECTOR_SIZE        REGEX_MAX_SUBPATTERNS*3
-#define REGEX_CACHE_SIZE          4 // Maximum number of compiled regular expressions to store
 //#define REGEX_THREAD_SAFE         1
 #ifdef REGEX_THREAD_SAFE
-
 #include <pthread.h>
 #endif
 
 typedef std::vector<std::pair<std::string,std::vector<std::string> > > match_list;
-
-
 
 //////////////////////////////////////////////////////////////////////////  REGEX EXCEPTION  //////////////////////////////////////////////////////////////////////////
 class RegexException {
@@ -72,6 +65,12 @@ class RegexInfo {
 //////////////////////////////////////////////////////////////////////////  REGEX  //////////////////////////////////////////////////////////////////////////
 class Regex {
   private:
+
+    static const unsigned DEFAULT_OPTIONS = (PCRE_CASELESS|PCRE_DOTALL|PCRE_MULTILINE);
+    static const unsigned MAX_SUBPATTERNS = 20; // Maximum number of supatterns to capture
+    static const unsigned OVECTOR_SIZE    = MAX_SUBPATTERNS * 3;
+    static const unsigned CACHE_SIZE      = 4; // Maximum number of compiled regular expressions to store
+
     static std::map<std::pair<std::string,int>,RegexInfo*>                        _cache;
     static std::list<std::map<std::pair<std::string,int>,RegexInfo*>::iterator>   _cache_meta;
     #ifdef REGEX_THREAD_SAFE
@@ -94,17 +93,17 @@ class Regex {
 
     /* True regular expression methods (which actually use PCRE) */
     static bool                         match(const std::string& pattern, const std::string& subject,
-                                            int options = REGEX_DEFAULT_OPTIONS, bool study = true);
+                                            int options = DEFAULT_OPTIONS, bool study = true);
     static bool                         match(const std::string& pattern, const std::string& subject, std::string& match,
-                                            int options = REGEX_DEFAULT_OPTIONS, bool study = true);
+                                            int options = DEFAULT_OPTIONS, bool study = true);
     static bool                         match(const std::string& pattern, const std::string& subject, std::vector<std::string>& matches,
-                                            int options = REGEX_DEFAULT_OPTIONS, bool study = true);
+                                            int options = DEFAULT_OPTIONS, bool study = true);
     static bool                         match(const std::string& pattern, const std::string& subject, match_list& matches,
-                                            int options = REGEX_DEFAULT_OPTIONS, bool study = true);
+                                            int options = DEFAULT_OPTIONS, bool study = true);
     static bool                         replace(const std::string& pattern, const std::string& replacement, std::string& subject,
-                                            int options = REGEX_DEFAULT_OPTIONS, bool study = true);
+                                            int options = DEFAULT_OPTIONS, bool study = true);
     static bool                         replace(const std::string& pattern, const std::string& replacement, const std::string& subject, std::string& dest,
-                                            int options = REGEX_DEFAULT_OPTIONS, bool study = true);
+                                            int options = DEFAULT_OPTIONS, bool study = true);
 
     /* Other string manipulation methods for convenience */
     static unsigned int                 count(const std::string& needle, const std::string& haystack);

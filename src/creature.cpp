@@ -250,7 +250,7 @@ Creature* Creature::findCreature(const std::string& name) {
     return this;
   }
   for (std::list<Creature*>::iterator it = room()->creatures().begin(); it != room()->creatures().end(); ++it) {
-    if ((*it)->identifiers().matchesKeyword(name) && canSee(*it) == SEE_NAME) {
+    if ((*it)->identifiers().matchesKeyword(name) && canSee(*it) == Creature::SEE_NAME) {
       return *it;
     }
   }
@@ -627,14 +627,14 @@ unsigned short Creature::canSee(Creature* target) {
   // Check for immortal invisibility...
   if (target->isAvatar()) {
     if (((Avatar*)target)->adminFlags().test(ADMIN_INCOGNITO) && target->level() > level() && ((Avatar*)target)->isConnected()) {
-      return SEE_NOTHING;
+      return Creature::SEE_NOTHING;
     }
   }
-  return SEE_NAME;
+  return Creature::SEE_NAME;
 }
 
 std::string Creature::seeName(Creature* target, bool capitalize) {
-  if (canSee(target) == SEE_NAME) {
+  if (canSee(target) == Creature::SEE_NAME) {
     return target->identifiers().shortname();
   } else {
     return capitalize ? "Someone" : "someone";
@@ -643,7 +643,7 @@ std::string Creature::seeName(Creature* target, bool capitalize) {
 
 const char* Creature::seeReflexivePronoun(Creature* target, bool capitalize) {
   switch (canSee(target)) {
-    case SEE_NAME:
+    case Creature::SEE_NAME:
       switch (target->gender().number()) {
         case MALE:    return capitalize ? "Himself" : "himself";
         case FEMALE:  return capitalize ? "Herself" : "herself";
@@ -656,7 +656,7 @@ const char* Creature::seeReflexivePronoun(Creature* target, bool capitalize) {
 
 const char* Creature::seeObjectPronoun(Creature* target, bool capitalize) {
   switch (canSee(target)) {
-    case SEE_NAME:
+    case Creature::SEE_NAME:
       switch (target->gender().number()) {
         case MALE:    return capitalize ? "Him" : "him";
         case FEMALE:  return capitalize ? "Her" : "her";
@@ -669,7 +669,7 @@ const char* Creature::seeObjectPronoun(Creature* target, bool capitalize) {
 
 const char* Creature::seePosessivePronoun(Creature* target, bool capitalize) {
   switch (canSee(target)) {
-    case SEE_NAME:
+    case Creature::SEE_NAME:
       switch (target->gender().number()) {
         case MALE:    return capitalize ? "His" : "his";
         case FEMALE:  return capitalize ? "Her" : "her";
@@ -681,11 +681,11 @@ const char* Creature::seePosessivePronoun(Creature* target, bool capitalize) {
 }
 
 unsigned short Creature::canSee(Object* target) {
-  return SEE_NAME;
+  return Creature::SEE_NAME;
 }
 
 std::string Creature::seeName(Object* target, bool capitalize) {
-  if (canSee(target) == SEE_NAME) {
+  if (canSee(target) == Creature::SEE_NAME) {
     return target->identifiers().shortname();
   } else {
     return capitalize ? "Something" : "something";

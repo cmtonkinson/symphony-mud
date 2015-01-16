@@ -12,22 +12,6 @@
 #include <mysql/mysql.h>
 #include <string>
 
-// Exception codes...
-#define DB_EXCEPTION_CANT_OPEN_CONFIG   1
-#define DB_EXCEPTION_CANT_CONNECT       2
-#define DB_EXCEPTION_UNKNOWN_CONFIG     3
-#define DB_EXCEPTION_NOT_CONNECTED      4
-#define DB_EXCEPTION_EMPTY_CONFIG_VALUE 5
-#define DB_EXCEPTION_FAILED_ASSERTION   6
-
-// Other options...
-#define	CONNECT_TIMEOUT	5			      	       // MySQL timeout (in seconds)
-#define CONFIG_FILE		  "config/mysql.conf"	 // File which holds configuration options
-
-// Credential classes...
-#define MYSQL_CREDENTIAL_CONFIG_FILE  0
-#define MYSQL_CREDENTIAL_CONSTRUCTOR  1
-
 //////////////////////////////////////////////////////////////////////////  MYSQL STRING  //////////////////////////////////////////////////////////////////////////
 class mysql_string: public std::string {
   public:
@@ -66,6 +50,14 @@ typedef mysql_map<std::string,mysql_string> ROW;
 //////////////////////////////////////////////////////////////////////////  MYSQL EXCEPTION  //////////////////////////////////////////////////////////////////////////
 class MysqlException {
   public:
+
+    static const unsigned CANT_OPEN_CONFIG   = 1;
+    static const unsigned CANT_CONNECT       = 2;
+    static const unsigned UNKNOWN_CONFIG     = 3;
+    static const unsigned NOT_CONNECTED      = 4;
+    static const unsigned EMPTY_CONFIG_VALUE = 5;
+    static const unsigned FAILED_ASSERTION   = 6;
+
     MysqlException(void);
     MysqlException(const std::string& file, const unsigned long& line, const std::string& extra = "");
     MysqlException(const MysqlException& ref);
@@ -122,6 +114,12 @@ class MysqlCache {
 //////////////////////////////////////////////////////////////////////////  MYSQL CLASS  //////////////////////////////////////////////////////////////////////////
 class Mysql {
   public:
+
+    static const char*    CONFIG_FILE;                // File which holds configuration options
+    static const unsigned CONNECT_TIMEOUT        = 5; // MySQL timeout (in seconds)
+    static const unsigned CREDENTIAL_CONFIG_FILE = 0;
+    static const unsigned CREDENTIAL_CONSTRUCTOR = 1;
+
     Mysql(std::string config_file = "");
     Mysql(const std::string& hostname, const std::string& username, const std::string& password, const std::string& database, bool autoconnect = true);
     ~Mysql(void);

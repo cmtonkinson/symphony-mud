@@ -15,7 +15,7 @@ Exit::Exit(Room* target, ROW& row):
 
 Exit::Exit(Room* room, Room* target, const unsigned short& direction) {
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query, "INSERT IGNORE INTO exits (vnum, target, direction) VALUES (%lu, %lu, %u);", room->vnum(), target->vnum(), direction);
     World::Instance().getMysql()->insert(query);
@@ -53,7 +53,7 @@ void Exit::flag(const unsigned long& flag, const bool& value, bool stop) {
 
 void Exit::save(void) {
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query,
       " UPDATE exits SET      \
@@ -77,7 +77,7 @@ void Exit::save(void) {
 void Exit::destroy(void) {
   unsigned long tempID = ID();
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query,
       " DELETE              \

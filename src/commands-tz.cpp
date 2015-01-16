@@ -10,21 +10,6 @@
 #include "room.h"
 #include "world.h"
 
-/*
-Cmd::Cmd(void) {
-  name("");
-  level();
-  addSyntax(0, "");
-  brief("");
-  return;
-}
-
-bool Cmd::execute(Creature* creature, const std::vector<std::string>& args) {
-
-  return true;
-}
-*/
-
 CmdTell::CmdTell(void) {
   name("tell");
   playerOnly(true);
@@ -55,7 +40,7 @@ bool CmdTell::execute(Creature* creature, const std::vector<std::string>& args) 
       avatar()->send("That would be fairly pointless, no?");
       return false;
     }
-    if (!(avatar()->canSee(target) == SEE_NAME)) {
+    if (!(avatar()->canSee(target) == Creature::SEE_NAME)) {
       avatar()->send("They're not around at the moment.");
       return false;
     }
@@ -87,7 +72,7 @@ bool CmdTime::execute(Creature* creature, const std::vector<std::string>& args) 
 
 CmdTimers::CmdTimers(void) {
   name("timers");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(0, "");
   brief("Displays the status on timers set to fire in the near future.");
   return;
@@ -232,7 +217,7 @@ bool CmdWho::execute(Creature* creature, const std::vector<std::string>& args) {
 
   output.append("     Players Online\n");
   for (it = World::Instance().getAvatars().begin(); it != World::Instance().getAvatars().end(); ++it) {
-    if (it->second->isConnected() && creature->canSee(it->second) == SEE_NAME) {
+    if (it->second->isConnected() && creature->canSee(it->second) == Creature::SEE_NAME) {
       output.append("  ");
       if (it->second->adminFlags().test(ADMIN_INCOGNITO)) {
         output.append("{WINVIS{x ");
@@ -265,7 +250,7 @@ bool CmdWhoAmI::execute(Creature* creature, const std::vector<std::string>& args
 CmdWorldSave::CmdWorldSave(void) {
   name("worldsave");
   playerOnly(true);
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(0, "");
   brief("Saves the whole world! (but don't get cocky, it's not really that heroic)");
   return;
@@ -279,7 +264,7 @@ bool CmdWorldSave::execute(Creature* creature, const std::vector<std::string>& a
 
 CmdTest::CmdTest(void) {
   name("test");
-  level(CREATOR);
+  level(Creature::CREATOR);
   addSyntax(0, "");
   brief("A command so that an admin can live-test arbitrary code fragments.");
   return;

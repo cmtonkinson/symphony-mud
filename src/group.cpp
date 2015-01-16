@@ -41,10 +41,10 @@ void Group::send(std::string format, Creature* creature, void* arg1, void* arg2,
   format = Regex::trim(format).append(1, '\n');
   for (std::set<Creature*>::iterator c_it = members().begin(); c_it != members().end(); ++c_it) {
     // Skip if the target is wrong...
-    if  (   (target == TO_CREATURE  && *c_it != creature)
-          || (target == TO_VICT      && (*c_it != arg1 || *c_it != arg2))
-          || (target == TO_NOTVICT   && (*c_it == creature || *c_it == arg1 || *c_it == arg2))
-          || (target == TO_ROOM      && *c_it == creature)
+    if  (   (target == Room::TO_CREATURE  && *c_it != creature)
+          || (target == Room::TO_VICT      && (*c_it != arg1 || *c_it != arg2))
+          || (target == Room::TO_NOTVICT   && (*c_it == creature || *c_it == arg1 || *c_it == arg2))
+          || (target == Room::TO_ROOM      && *c_it == creature)
        ) {
       continue;
     }

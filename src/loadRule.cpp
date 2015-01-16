@@ -19,9 +19,9 @@ LoadRule::LoadRule(ROW row) {
   vnum(row["vnum"]);
   room(World::Instance().findRoom(vnum()));
   if (row["type"] == "MOB") {
-    type(LOADRULE_MOB);
+    type(MOB);
   } else if (row["type"] == "OBJECT") {
-    type(LOADRULE_OBJECT);
+    type(OBJECT);
   }
   target(row["target"]);
   number(row["number"]);
@@ -38,7 +38,7 @@ bool LoadRule::destroy(void) {
   unsigned long tempID = ID();
 
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query,
       " DELETE              \

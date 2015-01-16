@@ -8,14 +8,6 @@
 #include "object.h"
 #include "terrain.h"
 
-// Message targets...
-#define TO_CREATURE 0
-#define TO_VICT     1
-#define TO_NOTVICT  2
-#define TO_ROOM     3
-#define TO_ALL      4
-
-#define INDEX_DEFAULT (unsigned short)-1
 
 class Area;
 class Creature;
@@ -24,6 +16,16 @@ class LoadRule;
 
 class Room {
   public:
+
+    static const unsigned INDEX_DEFAULT = (unsigned)-1;
+
+    // Message targets...
+    static const unsigned TO_CREATURE = 0;
+    static const unsigned TO_VICT     = 1;
+    static const unsigned TO_NOTVICT  = 2;
+    static const unsigned TO_ROOM     = 3;
+    static const unsigned TO_ALL      = 4;
+
     Room(const unsigned long& vnum, Area* area);
     Room(Area* area, ROW& row);
     ~Room(void);
@@ -77,7 +79,7 @@ class Room {
     bool                          clear(void);
     std::string                   listFlags(void);
     void                          reset(void);
-    Creature*                     creature_by_vnum(unsigned long vnum, unsigned short index = INDEX_DEFAULT);
+    Creature*                     creature_by_vnum(unsigned long vnum, unsigned index = INDEX_DEFAULT);
 
     // Statics...
     static const char*    getFlagName(const unsigned long& flag);

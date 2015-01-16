@@ -10,21 +10,6 @@
 #include "room.h"
 #include "world.h"
 
-/*
-TCmd::TCmd(void) {
-  name("");
-  level();
-  addSyntax(0, "");
-  brief("");
-  return;
-}
-
-bool TCmd::execute(Creature* creature, const std::vector<std::string>& args) {
-
-  return true;
-}
-*/
-
 TCmdAppend::TCmdAppend(void) {
   name("append");
   addSyntax( 0, "            // move down to the next line");

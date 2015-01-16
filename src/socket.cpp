@@ -3,7 +3,7 @@
 
 /********************************************************* EXCEPTION *********************************************************/
 SocketException::SocketException(const std::string& method, const int& n, bool gai_error) {
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
   if (gai_error) {
     sprintf(buffer, "Socket exception in %s: %s\n", method.c_str(), gai_strerror(n));
   } else {

@@ -7,15 +7,16 @@
 #include <string>
 #include <vector>
 
-#define CONTAINER_ALL_W_KEYWORDS  -2
-#define CONTAINER_ALL             -1
-#define CONTAINER_NONE             0
-
 class Object;
 
 /* abstract base class for object containers */
 class Container {
   public:
+
+    static const int ALL_W_KEYWORDS = -2;
+    static const int ALL            = -1;
+    static const int NONE           =  0;
+
     Container(void);
     virtual ~Container(void);
 

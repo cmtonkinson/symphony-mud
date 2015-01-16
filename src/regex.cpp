@@ -97,7 +97,7 @@ RegexInfo* Regex::get(const std::string& pattern, const int& options, const bool
     _cache.insert(std::make_pair(pair, ri));
     _cache_meta.push_front(_cache.find(pair));
     // Drop the oldest element of the cache ('bottom' of the 'stack') if the cache has reached it's max size...
-    if (_cache_meta.size() > REGEX_CACHE_SIZE) {
+    if (_cache_meta.size() > CACHE_SIZE) {
       dead = _cache_meta.back();
       _cache.erase(dead);
       delete dead->second;
@@ -122,7 +122,7 @@ RegexInfo* Regex::get(const std::string& pattern, const int& options, const bool
 bool Regex::execute(pcre* code, pcre_extra* extra, const std::string& subject, int& offset, int* ovector) {
   int matches = 0;
 
-  matches = pcre_exec(code, extra, subject.c_str(), subject.size(), offset, 0, ovector, REGEX_OVECTOR_SIZE);
+  matches = pcre_exec(code, extra, subject.c_str(), subject.size(), offset, 0, ovector, OVECTOR_SIZE);
 
   // A value lower than -1 means a PCRE error, so we throw...
   if (matches < -1) {
@@ -136,7 +136,7 @@ bool Regex::execute(pcre* code, pcre_extra* extra, const std::string& subject, i
 
   // A value of zero means that pcre_exec ran out of space in the ovector...
   if (matches == 0) {
-    throw RegexException(__FILE__, __LINE__, "It looks like pcre_exec() ran out of space in ovector for substring capturing. Try increasing REGEX_MAX_SUBPATTERNS.");
+    throw RegexException(__FILE__, __LINE__, "It looks like pcre_exec() ran out of space in ovector for substring capturing. Try increasing MAX_SUBPATTERNS.");
   }
 
   // Point offset to the last character of the entire match...
@@ -147,7 +147,7 @@ bool Regex::execute(pcre* code, pcre_extra* extra, const std::string& subject, i
 
 bool Regex::match(const std::string& pattern, const std::string& subject, int options, bool study) {
   RegexInfo* ri = get(pattern, options, study);
-  int ovector[REGEX_OVECTOR_SIZE];
+  int ovector[OVECTOR_SIZE];
   int offset = 0;
   memset(ovector, 0, sizeof(ovector));
   return execute(ri->code(), ri->extra(), subject, offset, ovector);
@@ -155,7 +155,7 @@ bool Regex::match(const std::string& pattern, const std::string& subject, int op
 
 bool Regex::match(const std::string& pattern, const std::string& subject, std::string& match, int options, bool study) {
   RegexInfo* ri = get(pattern, options, study);
-  int ovector[REGEX_OVECTOR_SIZE];
+  int ovector[OVECTOR_SIZE];
   int offset = 0;
 
   match.clear();
@@ -176,7 +176,7 @@ bool Regex::match(const std::string& pattern, const std::string& subject, std::s
 
 bool Regex::match(const std::string& pattern, const std::string& subject, std::vector<std::string>& matches, int options, bool study) {
   RegexInfo* ri = get(pattern, options, study);
-  int ovector[REGEX_OVECTOR_SIZE];
+  int ovector[OVECTOR_SIZE];
   int offset = 0;
 
   matches.clear();
@@ -197,7 +197,7 @@ bool Regex::match(const std::string& pattern, const std::string& subject, std::v
 bool Regex::match(const std::string& pattern, const std::string& subject, match_list& matches, int options, bool study) {
   std::pair<std::string,std::vector<std::string> > foo;
   RegexInfo* ri = get(pattern, options, study);
-  int ovector[REGEX_OVECTOR_SIZE];
+  int ovector[OVECTOR_SIZE];
   int offset = 0;
   int a = 0, b = 0;
 
@@ -227,7 +227,7 @@ bool Regex::match(const std::string& pattern, const std::string& subject, match_
 
 bool Regex::replace(const std::string& pattern, const std::string& replacement, std::string& subject, int options, bool study) {
   RegexInfo* ri = get(pattern, options, study);
-  int ovector[REGEX_OVECTOR_SIZE];
+  int ovector[OVECTOR_SIZE];
   int offset = 0;
   int rep_size = replacement.size();
   bool got_at_least_one = false;

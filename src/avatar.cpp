@@ -110,7 +110,7 @@ void Avatar::restoreRoom(void) {
 
 bool Avatar::create(void) {
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query,
       " INSERT INTO avatars       \
@@ -152,7 +152,7 @@ bool Avatar::save(void) {
 
   try {
     Mysql* mysql = World::Instance().getMysql();
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query,
       " DELETE                          \
@@ -316,7 +316,7 @@ bool Avatar::save(void) {
 bool Avatar::destroy(void) {
   unsigned long tempID = ID();
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query,
       " DELETE FROM           \
@@ -344,7 +344,7 @@ void Avatar::changeName(const std::string& name) {
 
 bool Avatar::markForDeletion(const unsigned short& value) {
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
     sprintf(query,
       " UPDATE avatars        \
         SET `delete` = %d     \
@@ -363,7 +363,7 @@ bool Avatar::markForDeletion(const unsigned short& value) {
 
 bool Avatar::load(void) {
   Mysql* mysql = World::Instance().getMysql();
-  char query[MAX_BUFFER];
+  char query[Socket::MAX_BUFFER];
   ROW row;
   Object* object = NULL;
   Ability* ability = NULL;
@@ -500,7 +500,7 @@ void Avatar::loadObjectContents(ObjContainer* container, const char* hash) {
   try {
     Mysql conn;
     ROW row;
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query,
       "SELECT *                         \
@@ -541,7 +541,7 @@ void Avatar::send(const std::string& message) {
 }
 
 void Avatar::send(const char* format, ...) {
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
   va_list args;
   va_start(args, format);
   vsprintf(buffer, format, args);
@@ -605,10 +605,10 @@ void Avatar::title(const std::string& title) {
 
 bool Avatar::checkPassword(const std::string& attempt) {
   Mysql* mysql = World::Instance().getMysql();
-  char query[MAX_BUFFER];
+  char query[Socket::MAX_BUFFER];
   ROW row;
 
-  memset(query, 0, MAX_BUFFER);
+  memset(query, 0, Socket::MAX_BUFFER);
   sprintf(query, "SELECT shortname FROM avatars WHERE LOWER(shortname) = LOWER('%s') AND password = PASSWORD('%s') LIMIT 1;",
     Mysql::addslashes(identifiers().shortname()).c_str(),
     Mysql::addslashes(attempt).c_str()

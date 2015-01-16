@@ -11,7 +11,7 @@ CommandTable::~CommandTable(void) {
 void CommandTable::add(Command* command, bool special) {
   command->commandTable(this);
   commands().push_back(command);
-  if (command->level() > HERO) {
+  if (command->level() > Creature::HERO) {
     command->playerOnly(true);
   }
   if (special) {

@@ -322,7 +322,7 @@ std::string Object::listDecorativeFlags(void) const {
 
 std::string Object::printStatus(void) const {
   std::string output;
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
 
   output.append("  --== {Ybasic object data{x ==--\n");
   // Basic object information...
@@ -410,7 +410,7 @@ longname..... %s\n\n\
 }
 
 void Object::insert(Mysql* db, const unsigned long& areaID) {
-  char query[MAX_BUFFER];
+  char query[Socket::MAX_BUFFER];
   sprintf(query, "INSERT IGNORE INTO objects (areaID, vnum) VALUES (%lu, %lu);", areaID, vnum());
   db->insert(query);
   ID(db->getInsertID());
@@ -418,7 +418,7 @@ void Object::insert(Mysql* db, const unsigned long& areaID) {
 }
 
 void Object::update(Mysql* db) const {
-  char query[MAX_BUFFER];
+  char query[Socket::MAX_BUFFER];
   sprintf(query,
     "UPDATE `objects` SET           \
       `type` = %u,                  \
@@ -470,16 +470,16 @@ void Object::update(Mysql* db) const {
 }
 
 void Object::destroy(Mysql* db) const {
-  char query[MAX_BUFFER];
+  char query[Socket::MAX_BUFFER];
   sprintf(query, "DELETE FROM objects WHERE objectID = %lu LIMIT 1;", ID());
   db->remove(query);
   return;
 }
 
 void Object::saveInstance(Mysql* db, const std::string& placement, const unsigned long& id, const unsigned& location, const unsigned & order, char* hash) const {
-  char this_hash[MAX_BUFFER];
+  char this_hash[Socket::MAX_BUFFER];
   unsigned internal_order = 0;
-  char query[MAX_BUFFER];
+  char query[Socket::MAX_BUFFER];
   if (hash) {
     sprintf(this_hash, "%s-%s%lu%u%u", hash, placement.c_str(), id, location, order);
   } else {

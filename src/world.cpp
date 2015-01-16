@@ -4,6 +4,8 @@
 #include "commandTable-default.h"
 #include "world.h"
 
+const char* World::REBOOT_FILE = "sockets.copy";
+
 World::World(void) {
   // basic setup
   booted(time(NULL));
@@ -23,7 +25,7 @@ World::~World(void) {
 void World::startup(void) {
 
   if (!load()) {
-    worldLog(FATAL, LOG_WORLD, "There was a problem loading a world component.");
+    worldLog(World::LOG_LEVEL_FATAL, World::LOG_TYPE_WORLD, "There was a problem loading a world component.");
   }
 
   npcIOHandler()->commandTable(&(Commands::Instance()));
@@ -40,14 +42,14 @@ void World::exist(const unsigned int& fd) {
       getServer()->startup(6501);
     }
   } catch (SocketException se) {
-    worldLog(FATAL, LOG_SYSTEM, "Couldn't start Socket server: %s", se.getError().c_str());
+    worldLog(World::LOG_LEVEL_FATAL, World::LOG_TYPE_SYSTEM, "Couldn't start Socket server: %s", se.getError().c_str());
     exit(EXIT_FAILED_BOOT);
   }
 
   if (copyover()) {
-    worldLog(SYSTEM, LOG_SYSTEM, "System rebooted successfully.");
+    worldLog(LOG_LEVEL_SYSTEM, LOG_TYPE_SYSTEM, "System rebooted successfully.");
   } else {
-    worldLog(SYSTEM, LOG_SYSTEM, "System up on port %d.", getServer()->getPort());
+    worldLog(LOG_LEVEL_SYSTEM, LOG_TYPE_SYSTEM, "System up on port %d.", getServer()->getPort());
   }
 
   while (exists()) {
@@ -55,10 +57,10 @@ void World::exist(const unsigned int& fd) {
   }
 
   if (!save()) {
-    worldLog(FATAL, LOG_WORLD, "There was a problem saving a world component.");
+    worldLog(World::LOG_LEVEL_FATAL, World::LOG_TYPE_WORLD, "There was a problem saving a world component.");
   }
 
-  worldLog(SYSTEM, LOG_SYSTEM, "System shutting down.");
+  worldLog(LOG_LEVEL_SYSTEM, LOG_TYPE_SYSTEM, "System shutting down.");
 
   return;
 }
@@ -84,7 +86,7 @@ bool World::reboot(Creature* creature) {
     if (creature) {
       creature->send("Copyover file couldn't be opened for writing! Copyover aborted!");
     }
-    worldLog(ERROR, LOG_SYSTEM, "Copyover file couldn't be opened for writing! Copyover aborted!");
+    worldLog(World::LOG_LEVEL_ERROR, World::LOG_TYPE_SYSTEM, "Copyover file couldn't be opened for writing! Copyover aborted!");
     return false;
   }
 
@@ -100,18 +102,18 @@ bool World::reboot(Creature* creature) {
   handleOutput();
 
   if (save()) {
-    worldLog(SYSTEM, LOG_SYSTEM, "World saved pre-reboot.");
+    worldLog(LOG_LEVEL_SYSTEM, LOG_TYPE_SYSTEM, "World saved pre-reboot.");
   } else {
-    worldLog(FATAL, LOG_WORLD, "There was a problem saving a world component.");
+    worldLog(World::LOG_LEVEL_FATAL, World::LOG_TYPE_WORLD, "There was a problem saving a world component.");
     broadcast("Copyover aborted.");
     return false;
   }
 
-  worldLog(SYSTEM, LOG_SYSTEM, "System going down for reboot.");
+  worldLog(LOG_LEVEL_SYSTEM, LOG_TYPE_SYSTEM, "System going down for reboot.");
 
   fd = estring("-fd=").append(estring(getServer()->getFd()));
   if (execl("bin/symphony", "-copyover", fd.c_str(), NULL) < 0) {
-    worldLog(ERROR, LOG_SYSTEM, "execl(): %s", strerror(errno));
+    worldLog(World::LOG_LEVEL_ERROR, World::LOG_TYPE_SYSTEM, "execl(): %s", strerror(errno));
     broadcast("Copyover failed.");
   }
 
@@ -121,18 +123,18 @@ bool World::reboot(Creature* creature) {
 void World::recover(const unsigned int& fd) {
   FILE* fp = NULL;
   int client_fd = 0;
-  char ip[MAX_BUFFER];
-  char name[MAX_BUFFER];
+  char ip[Socket::MAX_BUFFER];
+  char name[Socket::MAX_BUFFER];
   Avatar* avatar = NULL;
 
   if (!load()) {
-    worldLog(FATAL, LOG_WORLD, "There was a problem loading a world component.");
+    worldLog(World::LOG_LEVEL_FATAL, World::LOG_TYPE_WORLD, "There was a problem loading a world component.");
   }
 
   fp = fopen(REBOOT_FILE, "r");
 
   if (!fp) {
-    worldLog(FATAL, LOG_SYSTEM, "Copyover file couldn't be opened for reading. Copyover failed.");
+    worldLog(World::LOG_LEVEL_FATAL, World::LOG_TYPE_SYSTEM, "Copyover file couldn't be opened for reading. Copyover failed.");
     exit(EXIT_FAILED_REBOOT);
   }
 
@@ -174,12 +176,12 @@ bool World::load(void) {
     status = false;
   }
 
-  add(new Board(BOARD_GENERAL));
-  add(new Board(BOARD_CHANGES));
-  add(new Board(BOARD_ADMIN));
-  add(new Board(BOARD_NEWS));
-  add(new Board(BOARD_IMMORTAL));
-  add(new Board(BOARD_BUILDING));
+  add(new Board(Board::GENERAL));
+  add(new Board(Board::CHANGES));
+  add(new Board(Board::ADMIN));
+  add(new Board(Board::NEWS));
+  add(new Board(Board::IMMORTAL));
+  add(new Board(Board::BUILDING));
 
   return status;
 }
@@ -199,7 +201,7 @@ bool World::save(void) {
 
   saveSocials();
 
-  worldLog(SYSTEM, LOG_WORLD, "World::save()");
+  worldLog(World::LOG_LEVEL_SYSTEM, World::LOG_TYPE_WORLD, "World::save()");
 
   return status;
 }
@@ -207,7 +209,7 @@ bool World::save(void) {
 bool World::toggleCommand(char table_prefix, std::string command_name, bool enabled) {
   try {
     Mysql* mysql = getMysql();
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
     CommandTable* table = NULL;
     Command* command = NULL;
 
@@ -224,7 +226,7 @@ bool World::toggleCommand(char table_prefix, std::string command_name, bool enab
 
     if (table) {
       if ((command = table->find(command_name)) != NULL) {
-        if (command->level() >= CREATOR) {
+        if (command->level() >= Creature::CREATOR) {
           return false;
         }
         command->enabled(enabled);
@@ -250,7 +252,7 @@ bool World::loadSocials(void) {
   try {
     Mysql* mysql = getMysql();
     ROW row;
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
     sprintf(query, "SELECT * FROM socials ORDER BY name ASC;");
     if (mysql->select(query)) {
       while ((row = mysql->fetch())) {
@@ -337,7 +339,7 @@ void World::handleDisconnects(void) {
       next = a_it;
       ++next;
       bigBrother(a_it->second, ADMIN_BIGBRO_LOGINS, "%s has logged out from %s.", a_it->second->identifiers().shortname().c_str(), a_it->second->socket()->getIP().c_str());
-      playerLog(NOTICE, LOG_PLAYER, "%s (%lu) logged in from %s", a_it->second->identifiers().shortname().c_str(), a_it->second->ID(), a_it->second->socket()->getIP().c_str());
+      playerLog(World::LOG_LEVEL_NOTICE, World::LOG_TYPE_PLAYER, "%s (%lu) logged in from %s", a_it->second->identifiers().shortname().c_str(), a_it->second->ID(), a_it->second->socket()->getIP().c_str());
       if (a_it->second->room()) {
         a_it->second->room()->send_cond("$p has left the realm.", a_it->second);
         a_it->second->room()->remove(a_it->second);
@@ -367,7 +369,7 @@ void World::broadcast(const std::string& message) {
 }
 
 void World::bigBrother(Creature* creature, const unsigned long& type, const char* format, ...) {
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
   va_list args;
 
   va_start(args, format);
@@ -480,7 +482,7 @@ Avatar* World::findAvatar(const unsigned long& ID) {
 std::string World::getAvatarNameByID(const unsigned long& ID) {
   try {
     ROW row;
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query,
       " SELECT shortname      \
@@ -591,11 +593,11 @@ Area* World::lookup(const unsigned long& vnum) {
 /************************************************************ AREA PERMISSIONS ************************************************************/
 bool World::hasPermission(Area* area, Avatar* avatar) {
   // Only the Administrator can fiddle with Limbo...
-  if (area->ID() == 1 && avatar->level() < CREATOR) {
+  if (area->ID() == 1 && avatar->level() < Creature::CREATOR) {
     return false;
   }
   // The Administrator and the Head Builder can edit anything else...
-  if (avatar->adminFlags().test(ADMIN_HEADBUILDER) || avatar->level() >= CREATOR) {
+  if (avatar->adminFlags().test(ADMIN_HEADBUILDER) || avatar->level() >= Creature::CREATOR) {
     return true;
   }
   // The average Joe needs explicit permission for a given area...
@@ -608,7 +610,7 @@ bool World::hasPermission(Area* area, Avatar* avatar) {
 void World::givePermission(Area* area, Avatar* avatar) {
   permissions().insert(std::make_pair(area->ID(), avatar->ID()));
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
     sprintf(query, "INSERT IGNORE INTO permissions (areaID, avatarID) VALUES (%lu, %lu);", area->ID(), avatar->ID());
     getMysql()->insert(query);
   } catch (MysqlException me) {
@@ -620,7 +622,7 @@ void World::givePermission(Area* area, Avatar* avatar) {
 void World::removePermission(Area* area, Avatar* avatar) {
   permissions().erase(std::make_pair(area->ID(), avatar->ID()));
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
     sprintf(query, "DELETE FROM permissions WHERE areaID = %lu AND avatarID = %lu;", area->ID(), avatar->ID());
     getMysql()->remove(query);
   } catch (MysqlException me) {
@@ -753,9 +755,9 @@ unsigned World::rand(const unsigned& min, const unsigned& max) {
   return (::rand() % (max-min+1) + min);
 }
 
-void World::worldLog(const unsigned short& level, const unsigned short& type, const char* format, ...) {
-  char buffer[MAX_BUFFER];
-  char query[MAX_BUFFER];
+void World::worldLog(unsigned level, unsigned type, const char* format, ...) {
+  char buffer[Socket::MAX_BUFFER];
+  char query[Socket::MAX_BUFFER];
   va_list args;
 
   // Process our arguments...
@@ -764,7 +766,7 @@ void World::worldLog(const unsigned short& level, const unsigned short& type, co
   va_end(args);
 
   // Prep and send our query...
-  sprintf(query, "INSERT INTO world_log (level, type, text) VALUES (%d, %d, '%s');", level, type, Mysql::addslashes(buffer).c_str());
+  sprintf(query, "INSERT INTO world_log (level, type, text) VALUES (%u, %u, '%s');", level, type, Mysql::addslashes(buffer).c_str());
 
   try {
     World::Instance().getMysql()->insert(query);
@@ -773,7 +775,7 @@ void World::worldLog(const unsigned short& level, const unsigned short& type, co
   }
 
   // Depending on the level (and the current system log level) we may also print the message...
-  if (level == SYSTEM || level >= WARNING) {
+  if (level == LOG_LEVEL_SYSTEM || level >= LOG_LEVEL_WARNING) {
     Instance().bigBrother(NULL, ADMIN_BIGBRO_SYSTEM, buffer);
     fprintf(stderr, "Log %s: %s\n", strnow().c_str(), buffer);
   }
@@ -781,9 +783,9 @@ void World::worldLog(const unsigned short& level, const unsigned short& type, co
   return;
 }
 
-void World::playerLog(const unsigned short& level, const unsigned short& type, const char* format, ...) {
-  char buffer[MAX_BUFFER];
-  char query[MAX_BUFFER];
+void World::playerLog(unsigned level, unsigned type, const char* format, ...) {
+  char buffer[Socket::MAX_BUFFER];
+  char query[Socket::MAX_BUFFER];
   va_list args;
 
   // Process our arguments...
@@ -792,7 +794,7 @@ void World::playerLog(const unsigned short& level, const unsigned short& type, c
   va_end(args);
 
   // Prep and send our query...
-  sprintf(query, "INSERT INTO player_log (level, type, text) VALUES (%d, %d, '%s');", level, type, Mysql::addslashes(buffer).c_str());
+  sprintf(query, "INSERT INTO player_log (level, type, text) VALUES (%u, %u, '%s');", level, type, Mysql::addslashes(buffer).c_str());
 
   try {
     World::Instance().getMysql()->insert(query);
@@ -808,15 +810,15 @@ unsigned long World::now(void) {
 }
 
 std::string World::strnow(void) {
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
   time_t seconds = time(NULL);
   tm* info = localtime(&seconds);
-  strftime(buffer, MAX_BUFFER, "%Y/%m/%d %H:%M:%S", info);
+  strftime(buffer, Socket::MAX_BUFFER, "%Y/%m/%d %H:%M:%S", info);
   return buffer;
 }
 
 std::string World::strtime(time_t in_time) {
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
   time_t seconds = 0;
   if (in_time) {
     seconds = in_time;
@@ -824,12 +826,12 @@ std::string World::strtime(time_t in_time) {
     seconds = time(NULL);
   }
   tm* info = localtime(&seconds);
-  strftime(buffer, MAX_BUFFER, "%A, %B %d, %Y  %H:%M:%S", info);
+  strftime(buffer, Socket::MAX_BUFFER, "%A, %B %d, %Y  %H:%M:%S", info);
   return buffer;
 }
 
-std::string World::realtime(const unsigned long& seconds, unsigned short granularity) {
-  char buffer[MAX_BUFFER];
+std::string World::realtime(const unsigned long& seconds, unsigned granularity) {
+  char buffer[Socket::MAX_BUFFER];
   char foo[100];
   unsigned long sec = seconds;
   unsigned long min = 0;
@@ -837,7 +839,7 @@ std::string World::realtime(const unsigned long& seconds, unsigned short granula
   unsigned long day = 0;
   unsigned long year = 0;
 
-  memset(buffer, 0, MAX_BUFFER);
+  memset(buffer, 0, Socket::MAX_BUFFER);
 
   while (sec >= 60) {
     ++min;

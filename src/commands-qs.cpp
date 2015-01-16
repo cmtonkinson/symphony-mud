@@ -11,21 +11,6 @@
 #include "room.h"
 #include "world.h"
 
-/*
-Cmd::Cmd(void) {
-  name("");
-  level();
-  addSyntax(0, "");
-  brief("");
-  return;
-}
-
-bool Cmd::execute(Creature* creature, const std::vector<std::string>& args) {
-
-  return true;
-}
-*/
-
 CmdQuit::CmdQuit(void) {
   name("quit");
   playerOnly(true);
@@ -48,7 +33,7 @@ bool CmdQuit::execute(Creature* creature, const std::vector<std::string>& args) 
 
 CmdReboot::CmdReboot(void) {
   name("reboot");
-  level(CREATOR);
+  level(Creature::CREATOR);
   addSyntax(1, "reboot");
   brief("Perform a hot-reboot (aka \"copyover\") of the game engine.");
 }
@@ -65,7 +50,7 @@ bool CmdReboot::execute(Creature* creature, const std::vector<std::string>& args
 
 CmdRedit::CmdRedit(void) {
   name("redit");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(0, "");
   addSyntax(2, "create <vnum>");
   brief("Invokes the Room Editor.");
@@ -175,7 +160,7 @@ bool CmdReply::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdRestring::CmdRestring(void) {
   name("restring");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(-3, "<object> shortname <string>");
   addSyntax(-3, "<object> longname <string>");
   addSyntax(-3, "<object> keywords <key1 key2 key3 ...>");
@@ -215,7 +200,7 @@ bool CmdRestring::execute(Creature* creature, const std::vector<std::string>& ar
 
 CmdRlist::CmdRlist(void) {
   name("rlist");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<areaID>                       (list all Rooms in the area)");
   addSyntax(2, "<first vnum> <last vnum>       (list all Rooms in the vnum range)");
   addSyntax(1, "<keyword>                      (list all Rooms by name)");
@@ -231,7 +216,7 @@ bool CmdRlist::execute(Creature* creature, const std::vector<std::string>& args)
   unsigned long high = 0;
   std::string search;
   std::string output;
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
 
   if (mutable_args.size() == 1) {
     if (Regex::match("^[0-9]+$", mutable_args[0])) {
@@ -353,7 +338,7 @@ bool CmdSay::execute(Creature* creature, const std::vector<std::string>& args) {
 
 CmdSedit::CmdSedit(void) {
   name("sedit");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(1, "<name>");
   addSyntax(2, "create <name>");
   brief("Invokes the Social Command Editor.");
@@ -416,7 +401,7 @@ bool CmdSedit::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdShutdown::CmdShutdown(void) {
   name("shutdown");
-  level(CREATOR);
+  level(Creature::CREATOR);
   addSyntax(1, "shutdown");
   brief("Shut down the game engine.");
   return;
@@ -669,7 +654,7 @@ bool CmdSummary::execute(Creature* creature, const std::vector<std::string>& arg
   avatar()->send("{w||{xclass:  {C%-9s{x {w||{xdexte: {B%2u{x/{b%2u{w ||                {w||{xhp:   {G%4u{x/{g%-4u{w ||\n", avatar()->pClass().string().c_str(), avatar()->dexterity(), avatar()->maxDexterity(), avatar()->health(), avatar()->maxHealth());
   avatar()->send("{w||{xgender: {C%-7s{x   {w||{xconst: {B%2u{x/{b%2u{w ||                {w||{xmana: {C%4u{x/{c%-4u{w ||\n", avatar()->gender().string().c_str(), avatar()->constitution(), avatar()->maxConstitution(), avatar()->mana(), avatar()->maxMana());
   avatar()->send("{w||{xage:    {C%-3u{x       {w||{xintel: {B%2u{x/{b%2u{w ||{xarmor: {w%-4d{w     ||{xstamina: {M%3u{w    ||\n", avatar()->age(), avatar()->intelligence(), avatar()->maxIntelligence(), avatar()->armor(), avatar()->stamina());
-  avatar()->send("{w||{xhand:   {C%-5s{x     {w||{xfocus: {B%2u{x/{b%2u{w || {x-bash:   {w%-4d{w  ||{xexp: {Y%-9u{w  ||\n", ((avatar()->hand() == WEARLOC_HOLD_R) ? "right" : "left"), avatar()->focus(), avatar()->maxFocus(), avatar()->bash(), avatar()->exp());
+  avatar()->send("{w||{xhand:   {C%-5s{x     {w||{xfocus: {B%2u{x/{b%2u{w || {x-bash:   {w%-4d{w  ||{xexp: {Y%-9u{w  ||\n", ((avatar()->hand() == Creature::WEARLOC_HOLD_R) ? "right" : "left"), avatar()->focus(), avatar()->maxFocus(), avatar()->bash(), avatar()->exp());
   avatar()->send("{w||{xheight: {C%-9s{x {w||{xcreat: {B%2u{x/{b%2u{w || {x-slash:  {w%-4d{w  ||{xtnl: {Y%-7u{w    ||\n", "-", avatar()->creativity(), avatar()->maxCreativity(), avatar()->slash(), avatar()->tnl());
   avatar()->send("{w||{xweight: {C%-9s{x {w||{xchari: {B%2u{x/{b%2u{w || {x-pierce: {w%-4d{w  ||{xtrains: {B%-4u{w    ||\n", "-", avatar()->charisma(), avatar()->maxCharisma(), avatar()->pierce(), avatar()->trains());
   avatar()->send("{w||{xtotem:  {C%-9s{x {w||{xluck:  {B%2u{x/{b%2u{w || {x-exotic: {w%-4d{w  ||                ||\n", "-", avatar()->luck(), avatar()->maxLuck(), avatar()->exotic());
@@ -697,7 +682,7 @@ bool CmdSummary::execute(Creature* creature, const std::vector<std::string>& arg
 
 CmdSummon::CmdSummon(void) {
   name("summon");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<player>");
   addSyntax(1, "<mob>");
   brief("Transports the target to the current room.");

@@ -14,9 +14,6 @@
 #include <unistd.h>
 #include <vector>
 
-#define MAX_BUFFER    8192
-#define DEFAULT_PORT  2000
-
 // Macro to make it a bit easier to handle failed system calls...
 #define SOCK_SYSCALL_TRY(call,error)              \
   while ((call) < 0) {                          \
@@ -46,6 +43,10 @@ class SocketException {
 /********************************************************* SOCKET *********************************************************/
 class Socket {
   public:
+
+    static const int MAX_BUFFER   = 8192;
+    static const int DEFAULT_PORT = 2000;
+
     // Constructors...
     Socket(unsigned int sock_fd = 0, int domain = AF_INET, int type = SOCK_STREAM, int protocol = 0);
     ~Socket(void);
@@ -95,7 +96,4 @@ class Socket {
     void                  getpeername(void);
 };
 
-
-
 #endif // #ifndef H_SOCKET
-

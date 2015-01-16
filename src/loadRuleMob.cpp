@@ -25,13 +25,13 @@ bool LoadRuleMob::save(void) {
 
 bool LoadRuleMob::commit(void) {
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(
       query,
       "INSERT IGNORE INTO load_rules (vnum, type, target, number, max, probability) VALUES (%lu, '%s', %lu, %u, %u, %u);",
       vnum(),
-      (type() == LOADRULE_MOB ? "MOB" : "OBJECT"),
+      (type() == MOB ? "MOB" : "OBJECT"),
       target(),
       number(),
       max(),

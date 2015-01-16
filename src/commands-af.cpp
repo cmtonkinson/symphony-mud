@@ -10,26 +10,9 @@
 #include "room.h"
 #include "world.h"
 
-/*
-Cmd::Cmd(void) {
-  name("");
-  playerOnly();
-  level();
-  allowedWhile();
-  addSyntax(0, "");
-  brief("");
-  return;
-}
-
-bool Cmd::execute(Creature* creature, const std::vector<std::string>& args) {
-
-  return true;
-}
-*/
-
 CmdAdminNote::CmdAdminNote(void) {
   name("adminnote");
-  level(CREATOR);
+  level(Creature::CREATOR);
   addSyntax(-1, "<string>");
   brief("Broadcasts a message to all connected players.");
   return;
@@ -44,7 +27,7 @@ bool CmdAdminNote::execute(Creature* creature, const std::vector<std::string>& a
 
 CmdAedit::CmdAedit(void) {
   name("aedit");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(1, "<areaID>");
   addSyntax(3, "create <first vnum> <area size>");
   brief("Launches the Area Editor.");
@@ -62,7 +45,7 @@ bool CmdAedit::execute(Creature* creature, const std::vector<std::string>& args)
     unsigned long size = estring(args[2]);
     unsigned long high = low + size - 1;
     // Check permissions...
-    if (!(avatar()->adminFlags().test(ADMIN_HEADBUILDER) || avatar()->level() >= CREATOR)) {
+    if (!(avatar()->adminFlags().test(ADMIN_HEADBUILDER) || avatar()->level() >= Creature::CREATOR)) {
       avatar()->send("Only the Head Builder can create new areas.");
       return false;
     }
@@ -84,7 +67,7 @@ bool CmdAedit::execute(Creature* creature, const std::vector<std::string>& args)
     area = new Area(low, high);
     if (!area->ID()) {
       avatar()->send("Something went wrong while creating the area.");
-      World::Instance().worldLog(ERROR, LOG_WORLD, "%lu failed to create area from %lu through %lu.", avatar()->ID(), area->low(), area->high());
+      World::Instance().worldLog(World::LOG_LEVEL_ERROR, World::LOG_TYPE_WORLD, "%lu failed to create area from %lu through %lu.", avatar()->ID(), area->low(), area->high());
       delete area;
       return false;
     }
@@ -99,7 +82,7 @@ bool CmdAedit::execute(Creature* creature, const std::vector<std::string>& args)
       return false;
     }
     // Check permissions...
-    if ((area->ID() == 1 && avatar()->level() < CREATOR) || !World::Instance().hasPermission(area, avatar())) {
+    if ((area->ID() == 1 && avatar()->level() < Creature::CREATOR) || !World::Instance().hasPermission(area, avatar())) {
       avatar()->send("You can't edit %s.", area->name().c_str());
       return false;
     }
@@ -153,10 +136,10 @@ CmdAreas::CmdAreas(void) {
 
 bool CmdAreas::execute(Creature* creature, const std::vector<std::string>& args) {
   std::string output("Areas:");
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
 
   for (std::set<Area*,area_comp>::iterator it = World::Instance().getAreas().begin(); it != World::Instance().getAreas().end(); ++it) {
-    if (avatar()->level() >= DEMIGOD) {
+    if (avatar()->level() >= Creature::DEMIGOD) {
       if (World::Instance().hasPermission(*it, avatar())) {
         sprintf(buffer, "\n ({Y%3lu{x) [ {C%4lu{x - {C%4lu{x ] {M%s{x", (*it)->ID(), (*it)->low(), (*it)->high(), (*it)->name().c_str());
       } else {
@@ -175,7 +158,7 @@ bool CmdAreas::execute(Creature* creature, const std::vector<std::string>& args)
 CmdAt::CmdAt(void) {
   name("at");
   playerOnly(true);
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(-2, "<player> <command>");
   addSyntax(-2, "<mob> <command>");
   addSyntax(-2, "<vnum> <command>");
@@ -215,7 +198,7 @@ bool CmdAt::execute(Creature* creature, const std::vector<std::string>& args) {
 
 CmdBigBrother::CmdBigBrother(void) {
   name("bigbrother");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(0, "");
   addSyntax(1, "on");
   addSyntax(1, "off");
@@ -437,7 +420,7 @@ bool CmdChannels::execute(Creature* creature, const std::vector<std::string>& ar
 
 CmdClone::CmdClone(void) {
   name("clone");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(2, "<object> <times>");
   brief("Make an exact copy of an existing object.");
   return;
@@ -556,12 +539,12 @@ bool CmdCommands::execute(Creature* creature, const std::vector<std::string>& ar
   for (std::map<unsigned short,std::vector<std::string> >::reverse_iterator m_it = commands.rbegin(); m_it != commands.rend(); ++m_it) {
     sort(m_it->second.begin(), m_it->second.end());
     switch (m_it->first) {
-      case CREATOR:   output.append("\n--== {cAdministrator");  break;
-      case GOD:       output.append("\n--== {cGod");            break;
-      case DEMIGOD:   output.append("\n--== {cDemigod");        break;
-      case DUKE:      output.append("\n--== {cDuke");           break;
-      case LORD:      output.append("\n--== {cLord");           break;
-      case HERO:      output.append("\n--== {cHero");           break;
+      case Creature::CREATOR:   output.append("\n--== {cAdministrator");  break;
+      case Creature::GOD:       output.append("\n--== {cGod");            break;
+      case Creature::DEMIGOD:   output.append("\n--== {cDemigod");        break;
+      case Creature::DUKE:      output.append("\n--== {cDuke");           break;
+      case Creature::LORD:      output.append("\n--== {cLord");           break;
+      case Creature::HERO:      output.append("\n--== {cHero");           break;
       default:        output.append("\n--== {cGeneral");        break;
     }
     sprintf(buf, " Commands ({C%u{c) {x==--\n", (unsigned)m_it->second.size());
@@ -574,7 +557,7 @@ bool CmdCommands::execute(Creature* creature, const std::vector<std::string>& ar
 
 CmdConnections::CmdConnections(void) {
   name("connections");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(0, "");
   brief("Displays the status of all current connections.");
   return;
@@ -582,14 +565,14 @@ CmdConnections::CmdConnections(void) {
 
 bool CmdConnections::execute(Creature* creature, const std::vector<std::string>& args) {
   estring output;
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
 
   sprintf(buffer, "  {x%-15s{g%-15s{W%-20s{C%-10s\n", "Name", "Status", "IP Address", "Descriptor");
   output.append(buffer);
   output.append("  ------------------------------------------------------------\n");
 
   for (std::map<std::string,Avatar*>::const_iterator it = World::Instance().getAvatars().begin(); it != World::Instance().getAvatars().end(); ++it) {
-    if (creature->canSee(it->second) == SEE_NAME) {
+    if (creature->canSee(it->second) == Creature::SEE_NAME) {
       sprintf(buffer, "  {x%-15s{g%-15s{W%-20s{C%-10d\n", it->second->identifiers().shortname().c_str(), it->second->status().string().c_str(), it->second->socket()->getIP().c_str(), it->second->socket()->getFd());
       output.append(buffer);
     }
@@ -625,7 +608,7 @@ bool CmdColors::execute(Creature* creature, const std::vector<std::string>& args
 
 CmdCrash::CmdCrash(void) {
   name("crash");
-  level(CREATOR);
+  level(Creature::CREATOR);
   addSyntax(1, "crash");
   brief("Crashes the mud with a SIGSEG_V.  Why?  Well, you just never know...");
   return;
@@ -643,7 +626,7 @@ bool CmdCrash::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdDashboard::CmdDashboard(void) {
   name("dashboard");
-  level(CREATOR);
+  level(Creature::CREATOR);
   addSyntax(0, "");
   brief("Displays server status information.");
   return;
@@ -691,7 +674,7 @@ CmdDemote::CmdDemote(void) {
   name("demote");
   addSyntax(2, "<player> <level>");
   addSyntax(2, "<mob> <level>");
-  level(CREATOR);
+  level(Creature::CREATOR);
   brief("Reduces the target to the given level.");
   return;
 }
@@ -746,7 +729,7 @@ bool CmdDescription::execute(Creature* creature, const std::vector<std::string>&
 
 CmdDisable::CmdDisable(void) {
   name("disable");
-  level(CREATOR);
+  level(Creature::CREATOR);
   addSyntax(2, "<command table> <command name>");
   brief("Makes a command (from a certain command table) unusable.");
   return;
@@ -764,7 +747,7 @@ bool CmdDisable::execute(Creature* creature, const std::vector<std::string>& arg
 
 CmdDisconnect::CmdDisconnect(void) {
   name("disconnect");
-  level(CREATOR);
+  level(Creature::CREATOR);
   addSyntax(1, "<player>");
   brief("Terminates the targets connection (their account is saved first)");
   return;
@@ -773,7 +756,7 @@ CmdDisconnect::CmdDisconnect(void) {
 bool CmdDisconnect::execute(Creature* creature, const std::vector<std::string>& args) {
   Avatar* target = NULL;
   target = World::Instance().findAvatar(args[0]);
-  if (!target || avatar()->canSee(target) < SEE_NAME) {
+  if (!target || avatar()->canSee(target) < Creature::SEE_NAME) {
     avatar()->send("They aren't around right now.");
     return false;
   }
@@ -819,7 +802,7 @@ bool CmdDrop::execute(Creature* creature, const std::vector<std::string>& args) 
 
 CmdDunce::CmdDunce(void) {
   name("dunce");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(1, "<player>");
   brief("Toggles the \"dunce\" status of the target player.  That'll teach 'em.");
   return;
@@ -829,7 +812,7 @@ bool CmdDunce::execute(Creature* creature, const std::vector<std::string>& args)
   Avatar* target = World::Instance().findAvatar(args[0]);
   char* dunce = strdup(FTAvatarWho::Instance().find(WHO_DUNCE));
 
-  if (!target || avatar()->canSee(target) != SEE_NAME) {
+  if (!target || avatar()->canSee(target) != Creature::SEE_NAME) {
     avatar()->send("They're not around at the moment.");
     return false;
   }
@@ -859,7 +842,7 @@ bool CmdDunce::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdEat::CmdEat(void) {
   name("eat");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<object>");
   brief("Destroys an object.");
   return;
@@ -891,10 +874,10 @@ bool CmdEmote::execute(Creature* creature, const std::vector<std::string>& args)
   switch (args[0][0]) {
     case ',':
     case '\'':
-      creature->room()->send("$p$s", creature, (void*)args[0].c_str(), NULL, TO_ALL);
+      creature->room()->send("$p$s", creature, (void*)args[0].c_str(), NULL, Room::TO_ALL);
       break;
     default:
-      creature->room()->send("$p $s", creature, (void*)args[0].c_str(), NULL, TO_ALL);
+      creature->room()->send("$p $s", creature, (void*)args[0].c_str(), NULL, Room::TO_ALL);
   }
   return true;
 }
@@ -919,7 +902,7 @@ bool CmdEquipment::execute(Creature* creature, const std::vector<std::string>& a
 
 CmdEnable::CmdEnable(void) {
   name("enable");
-  level(CREATOR);
+  level(Creature::CREATOR);
   addSyntax(2, "<command table> <command name>");
   brief("Makes a command (from a certain command table) usable once again.");
   return;
@@ -957,7 +940,7 @@ bool CmdExit::execute(Creature* creature, const std::vector<std::string>& args) 
 
 CmdForce::CmdForce(void) {
   name("force");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(-2, "<player> <command>");
   addSyntax(-2, "<mob> <command>");
   brief("Cause the victim to perform the given command.");

@@ -11,24 +11,9 @@
 #include "terrainTable.h"
 #include "world.h"
 
-/*
-ACmd::ACmd(void) {
-  name("");
-  level(DEMIGOD);
-  addSyntax(0, "");
-  brief("");
-  return;
-}
-
-bool ACmd::execute(Creature* creature, const std::vector<std::string>& args) {
-
-  return true;
-}
-*/
-
 ACmdDelete::ACmdDelete(void) {
   name("delete");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(1, "delete");
   brief("Deletes the area.  This is NOT reversible.");
   return;
@@ -55,7 +40,7 @@ bool ACmdDelete::execute(Creature* creature, const std::vector<std::string>& arg
 
 ACmdInformation::ACmdInformation(void) {
   name("information");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(0, "");
   brief("Displays the status of the area.");
   return;
@@ -64,8 +49,8 @@ ACmdInformation::ACmdInformation(void) {
 bool ACmdInformation::execute(Creature* creature, const std::vector<std::string>& args) {
   Area* area = avatar()->aedit();
   std::string output;
-  char buffer[MAX_BUFFER];
-  char names[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
+  char names[Socket::MAX_BUFFER];
   std::map<unsigned long,std::string> perms;
 
   for (std::set<std::pair<unsigned long,unsigned long> >::iterator it = World::Instance().permissions().begin(); it != World::Instance().permissions().end(); ++it) {
@@ -95,7 +80,7 @@ bool ACmdInformation::execute(Creature* creature, const std::vector<std::string>
 
 ACmdName::ACmdName(void) {
   name("name");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(-1, "<string>");
   brief("Changes the name of the area.");
   return;
@@ -113,7 +98,7 @@ bool ACmdName::execute(Creature* creature, const std::vector<std::string>& args)
 
 ACmdPermission::ACmdPermission(void) {
   name("permission");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(2, "grant <player>");
   addSyntax(2, "revoke <player>");
   brief("Updates access privileges for the area.");
@@ -123,7 +108,7 @@ ACmdPermission::ACmdPermission(void) {
 bool ACmdPermission::execute(Creature* creature, const std::vector<std::string>& args) {
   Avatar* target = NULL;
 
-  if (!(avatar()->adminFlags().test(ADMIN_HEADBUILDER) || avatar()->level() >= CREATOR)) {
+  if (!(avatar()->adminFlags().test(ADMIN_HEADBUILDER) || avatar()->level() >= Creature::CREATOR)) {
     avatar()->send("Sorry, only the Head Builder can fiddle with permissions.");
     return false;
   }
@@ -133,7 +118,7 @@ bool ACmdPermission::execute(Creature* creature, const std::vector<std::string>&
       avatar()->send("They couldn't be found.");
       return false;
     }
-    if (target->level() < DEMIGOD) {
+    if (target->level() < Creature::DEMIGOD) {
       avatar()->send("%s isn't a builder.", target->identifiers().shortname().c_str());
       return false;
     }
@@ -166,7 +151,7 @@ bool ACmdPermission::execute(Creature* creature, const std::vector<std::string>&
 
 ACmdTerrain::ACmdTerrain(void) {
   name("terrain");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<string>");
   brief("Changes the default terrain type of the area.");
   addOptions("terrain", std::string("\n").append(TerrainTable::Instance().list()));

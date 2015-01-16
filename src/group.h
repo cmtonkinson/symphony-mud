@@ -24,7 +24,7 @@ class Group {
     void    remove_member(Creature* member);
     bool    is_member(Creature* c);
 
-    void    send(std::string format, Creature* creature, void* arg1 = NULL, void* arg2 = NULL, const unsigned long& target = TO_ROOM);
+    void    send(std::string format, Creature* creature, void* arg1 = NULL, void* arg2 = NULL, const unsigned long& target = Room::TO_ROOM);
 
   private:
     // data...

@@ -5,16 +5,18 @@
 #include <map>
 #include "note.h"
 
-// board numbers
-#define BOARD_GENERAL   1
-#define BOARD_CHANGES   2
-#define BOARD_ADMIN     3
-#define BOARD_NEWS      4
-#define BOARD_IMMORTAL  5
-#define BOARD_BUILDING  6
 
 class Board {
   public:
+
+    // board numbers
+    static const unsigned GENERAL  = 1;
+    static const unsigned CHANGES  = 2;
+    static const unsigned ADMIN    = 3;
+    static const unsigned NEWS     = 4;
+    static const unsigned IMMORTAL = 5;
+    static const unsigned BUILDING = 6;
+
     // constructors
     Board(const unsigned short& number);
     ~Board(void);

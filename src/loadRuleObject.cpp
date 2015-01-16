@@ -5,23 +5,23 @@
 #include "commandTable-default.h"
 
 LoadRuleObject::LoadRuleObject(void) {
-  preposition(LOADRULE_ERROR);
-  indirectObject(LOADRULE_ERROR);
-  indirectObjectIndex(LOADRULE_ERROR);
+  preposition(ERROR);
+  indirectObject(ERROR);
+  indirectObjectIndex(ERROR);
   return;
 }
 
 LoadRuleObject::LoadRuleObject(ROW row): LoadRule(row) {
   if (row["preposition"] == "ON") {
-    preposition(LOADRULE_ON);
+    preposition(ON);
   } else if (row["preposition"] == "IN") {
-    preposition(LOADRULE_IN);
+    preposition(IN);
   } else if (row["preposition"] == "CARRY") {
-    preposition(LOADRULE_CARRY);
+    preposition(CARRY);
   } else if (row["preposition"] == "WEAR") {
-    preposition(LOADRULE_WEAR);
+    preposition(WEAR);
   } else {
-    preposition(LOADRULE_ERROR);
+    preposition(ERROR);
   }
   indirectObject(row["indirect_object"]);
   indirectObjectIndex(row["indirect_object_index"]);
@@ -36,16 +36,16 @@ std::string LoadRuleObject::notes(void) const {
   std::string foo;
 
   switch (preposition()) {
-    case LOADRULE_ON:
+    case ON:
       foo.assign("on object ").append(estring(indirectObject())).append("#").append(estring(indirectObjectIndex()));
       break;
-    case LOADRULE_IN:
+    case IN:
       foo.assign("in object ").append(estring(indirectObject())).append("#").append(estring(indirectObjectIndex()));
       break;
-    case LOADRULE_CARRY:
+    case CARRY:
       foo.assign("carried by mob ").append(estring(indirectObject())).append("#").append(estring(indirectObjectIndex()));
       break;
-    case LOADRULE_WEAR:
+    case WEAR:
       foo.assign("worn by mob ").append(estring(indirectObject())).append("#").append(estring(indirectObjectIndex()));
       break;
     default:
@@ -64,21 +64,21 @@ bool LoadRuleObject::commit(void) {
   std::string prep;
 
   switch (preposition()) {
-    case LOADRULE_IN:    prep = "IN";    break;
-    case LOADRULE_ON:    prep = "ON";    break;
-    case LOADRULE_CARRY: prep = "CARRY"; break;
-    case LOADRULE_WEAR:  prep = "WEAR";  break;
+    case IN:    prep = "IN";    break;
+    case ON:    prep = "ON";    break;
+    case CARRY: prep = "CARRY"; break;
+    case WEAR:  prep = "WEAR";  break;
     default:             prep = "NONE";  break;
   }
 
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(
       query,
       "INSERT IGNORE INTO load_rules (vnum, type, target, number, max, probability, preposition, indirect_object, indirect_object_index) VALUES (%lu, '%s', %lu, %u, %u, %u, '%s', %lu, %u);",
       vnum(),
-      (type() == LOADRULE_MOB ? "MOB" : "OBJECT"),
+      (type() == MOB ? "MOB" : "OBJECT"),
       target(),
       number(),
       max(),
@@ -126,7 +126,7 @@ bool LoadRuleObject::execute(std::list<Object*>& new_objects, std::list<Mob*>& n
       room()->inventory().add(object);
       new_objects.push_back(object);
       objects_added++;
-      if (preposition() == LOADRULE_CARRY || preposition() == LOADRULE_WEAR) {
+      if (preposition() == CARRY || preposition() == WEAR) {
         creature = room()->creature_by_vnum(indirectObject(), indirectObjectIndex());
         if (creature == NULL) {
           World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset an object. Object %lu in area %lu loaded, but can't find mob %lu#%hu ", target(), area->ID(), indirectObject(), indirectObjectIndex());
@@ -136,7 +136,7 @@ bool LoadRuleObject::execute(std::list<Object*>& new_objects, std::list<Mob*>& n
         // Pick up the item.
         get.execute(creature, args);
         // Wear it, if applicable.
-        if (preposition() == LOADRULE_WEAR) wear.execute(creature, args);
+        if (preposition() == WEAR) wear.execute(creature, args);
       }
     }
   }

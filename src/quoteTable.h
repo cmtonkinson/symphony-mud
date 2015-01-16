@@ -9,8 +9,6 @@
 typedef std::pair<std::string,std::string>  Quote;
 typedef std::vector<Quote>                  QuoteList;
 
-
-
 class QuoteTable {
 
   public:
@@ -37,7 +35,5 @@ inline QuoteTable& QuoteTable::Instance(void) { // public static
   static QuoteTable instance;
   return instance;
 }
-
-
 
 #endif // #ifndef H_SYMPHONY_QUOTE_TABLE

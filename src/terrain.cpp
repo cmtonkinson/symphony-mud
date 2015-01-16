@@ -24,7 +24,7 @@ TerrainBeach::TerrainBeach(void) {
   return;
 }
 
-unsigned short TerrainBeach::calculate(Creature* creature) {
+unsigned TerrainBeach::calculate(Creature* creature) {
   return base();
 }
 
@@ -37,7 +37,7 @@ TerrainCastle::TerrainCastle(void) {
   return;
 }
 
-unsigned short TerrainCastle::calculate(Creature* creature) {
+unsigned TerrainCastle::calculate(Creature* creature) {
   return base();
 }
 
@@ -50,7 +50,7 @@ TerrainCave::TerrainCave(void) {
   return;
 }
 
-unsigned short TerrainCave::calculate(Creature* creature) {
+unsigned TerrainCave::calculate(Creature* creature) {
   return base();
 }
 
@@ -63,7 +63,7 @@ TerrainChurch::TerrainChurch(void) {
   return;
 }
 
-unsigned short TerrainChurch::calculate(Creature* creature) {
+unsigned TerrainChurch::calculate(Creature* creature) {
   return base();
 }
 
@@ -73,7 +73,7 @@ TerrainCity::TerrainCity(void) {
   return;
 }
 
-unsigned short TerrainCity::calculate(Creature* creature) {
+unsigned TerrainCity::calculate(Creature* creature) {
   return base();
 }
 
@@ -86,7 +86,7 @@ TerrainDeepwater::TerrainDeepwater(void) {
   return;
 }
 
-unsigned short TerrainDeepwater::calculate(Creature* creature) {
+unsigned TerrainDeepwater::calculate(Creature* creature) {
   return base();
 }
 
@@ -99,7 +99,7 @@ TerrainDesert::TerrainDesert(void) {
   return;
 }
 
-unsigned short TerrainDesert::calculate(Creature* creature) {
+unsigned TerrainDesert::calculate(Creature* creature) {
   return base();
 }
 
@@ -112,7 +112,7 @@ TerrainField::TerrainField(void) {
   return;
 }
 
-unsigned short TerrainField::calculate(Creature* creature) {
+unsigned TerrainField::calculate(Creature* creature) {
   return base();
 }
 
@@ -125,7 +125,7 @@ TerrainForest::TerrainForest(void) {
   return;
 }
 
-unsigned short TerrainForest::calculate(Creature* creature) {
+unsigned TerrainForest::calculate(Creature* creature) {
   return base();
 }
 
@@ -138,7 +138,7 @@ TerrainGraveyard::TerrainGraveyard(void) {
   return;
 }
 
-unsigned short TerrainGraveyard::calculate(Creature* creature) {
+unsigned TerrainGraveyard::calculate(Creature* creature) {
   return base();
 }
 
@@ -148,7 +148,7 @@ TerrainIndoor::TerrainIndoor(void) {
   return;
 }
 
-unsigned short TerrainIndoor::calculate(Creature* creature) {
+unsigned TerrainIndoor::calculate(Creature* creature) {
   return base();
 }
 
@@ -161,7 +161,7 @@ TerrainJungle::TerrainJungle(void) {
   return;
 }
 
-unsigned short TerrainJungle::calculate(Creature* creature) {
+unsigned TerrainJungle::calculate(Creature* creature) {
   return base();
 }
 
@@ -174,7 +174,7 @@ TerrainMine::TerrainMine(void) {
   return;
 }
 
-unsigned short TerrainMine::calculate(Creature* creature) {
+unsigned TerrainMine::calculate(Creature* creature) {
   return base();
 }
 
@@ -187,7 +187,7 @@ TerrainMountain::TerrainMountain(void) {
   return;
 }
 
-unsigned short TerrainMountain::calculate(Creature* creature) {
+unsigned TerrainMountain::calculate(Creature* creature) {
   return base();
 }
 
@@ -200,7 +200,7 @@ TerrainPlains::TerrainPlains(void) {
   return;
 }
 
-unsigned short TerrainPlains::calculate(Creature* creature) {
+unsigned TerrainPlains::calculate(Creature* creature) {
   return base();
 }
 
@@ -213,7 +213,7 @@ TerrainRoad::TerrainRoad(void) {
   return;
 }
 
-unsigned short TerrainRoad::calculate(Creature* creature) {
+unsigned TerrainRoad::calculate(Creature* creature) {
   return base();
 }
 
@@ -226,7 +226,7 @@ TerrainSnow::TerrainSnow(void) {
   return;
 }
 
-unsigned short TerrainSnow::calculate(Creature* creature) {
+unsigned TerrainSnow::calculate(Creature* creature) {
   return base();
 }
 
@@ -239,7 +239,7 @@ TerrainStone::TerrainStone(void) {
   return;
 }
 
-unsigned short TerrainStone::calculate(Creature* creature) {
+unsigned TerrainStone::calculate(Creature* creature) {
   return base();
 }
 
@@ -252,7 +252,7 @@ TerrainSwamp::TerrainSwamp(void) {
   return;
 }
 
-unsigned short TerrainSwamp::calculate(Creature* creature) {
+unsigned TerrainSwamp::calculate(Creature* creature) {
   return base();
 }
 
@@ -265,7 +265,7 @@ TerrainTreetop::TerrainTreetop(void) {
   return;
 }
 
-unsigned short TerrainTreetop::calculate(Creature* creature) {
+unsigned TerrainTreetop::calculate(Creature* creature) {
   return base();
 }
 
@@ -278,7 +278,7 @@ TerrainUnderwater::TerrainUnderwater(void) {
   return;
 }
 
-unsigned short TerrainUnderwater::calculate(Creature* creature) {
+unsigned TerrainUnderwater::calculate(Creature* creature) {
   return base();
 }
 
@@ -291,7 +291,7 @@ TerrainVillage::TerrainVillage(void) {
   return;
 }
 
-unsigned short TerrainVillage::calculate(Creature* creature) {
+unsigned TerrainVillage::calculate(Creature* creature) {
   return base();
 }
 
@@ -304,7 +304,7 @@ TerrainVolcano::TerrainVolcano(void) {
   return;
 }
 
-unsigned short TerrainVolcano::calculate(Creature* creature) {
+unsigned TerrainVolcano::calculate(Creature* creature) {
   return base();
 }
 
@@ -317,7 +317,7 @@ TerrainWater::TerrainWater(void) {
   return;
 }
 
-unsigned short TerrainWater::calculate(Creature* creature) {
+unsigned TerrainWater::calculate(Creature* creature) {
   return base();
 }
 

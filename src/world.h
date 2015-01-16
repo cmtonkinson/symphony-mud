@@ -19,42 +19,40 @@
 #include "room.h"
 #include "schedule.h"
 
-// Exit status...
-#define EXIT_NORMAL         0
-#define EXIT_FAILED_BOOT    1
-#define EXIT_FAILED_REBOOT  2
-
-// Time definitions...
-#define GRAN_MINUTE   0
-#define GRAN_HOUR     1
-#define GRAN_DAY      2
-#define GRAN_YEAR     3
-#define MINUTE        60
-#define HOUR          MINUTE*60
-#define DAY           HOUR*24
-#define YEAR          DAY*365
-
-// Log levels...
-#define SYSTEM    0
-#define NOTICE    1
-#define WARNING   2
-#define ERROR     3
-#define FATAL     4
-
-// Log entry types...
-#define LOG_SYSTEM  1
-#define LOG_WORLD   2
-#define LOG_AVATAR  3
-#define LOG_EVENT   4
-#define LOG_PLAYER  5
-
-// Copyover junk
-#define REBOOT_FILE   "sockets.copy"
-
 class Socket;
 
 class World {
   public:
+
+    // Exit status...
+    static const unsigned EXIT_NORMAL        = 0;
+    static const unsigned EXIT_ERROR         = 1;
+    static const unsigned EXIT_FAILED_BOOT   = 2;
+    static const unsigned EXIT_FAILED_REBOOT = 3;
+    // Time definitions...
+    static const unsigned GRAN_MINUTE = 0;
+    static const unsigned GRAN_HOUR   = 1;
+    static const unsigned GRAN_DAY    = 2;
+    static const unsigned GRAN_YEAR   = 3;
+    static const unsigned MINUTE      = 60;
+    static const unsigned HOUR        = MINUTE*60;
+    static const unsigned DAY         = HOUR*24;
+    static const unsigned YEAR        = DAY*365;
+    // Log levels...
+    static const unsigned LOG_LEVEL_SYSTEM  = 0;
+    static const unsigned LOG_LEVEL_NOTICE  = 1;
+    static const unsigned LOG_LEVEL_WARNING = 2;
+    static const unsigned LOG_LEVEL_ERROR   = 3;
+    static const unsigned LOG_LEVEL_FATAL   = 4;
+    // Log entry types...
+    static const unsigned LOG_TYPE_SYSTEM = 1;
+    static const unsigned LOG_TYPE_WORLD  = 2;
+    static const unsigned LOG_TYPE_AVATAR = 3;
+    static const unsigned LOG_TYPE_EVENT  = 4;
+    static const unsigned LOG_TYPE_PLAYER = 5;
+    // Copyover junk
+    static const char* REBOOT_FILE;
+
     // Constructors...
     World(void);
     ~World(void);
@@ -158,12 +156,12 @@ class World {
     // Static methods...
     static unsigned       rand(const unsigned& min, const unsigned& max);
     static World&         Instance(void);
-    static void           worldLog(const unsigned short& level, const unsigned short& type, const char* format, ...);
-    static void           playerLog(const unsigned short& level, const unsigned short& type, const char* format, ...);
+    static void           worldLog(unsigned level, unsigned type, const char* format, ...);
+    static void           playerLog(unsigned level, unsigned type, const char* format, ...);
     static unsigned long  now(void);
     static std::string    strnow(void);
     static std::string    strtime(time_t t = 0);
-    static std::string    realtime(const unsigned long& seconds, unsigned short granularity = GRAN_DAY);
+    static std::string    realtime(const unsigned long& seconds, unsigned granularity = GRAN_DAY);
     static bool           search_map(Creature* creature, Room*** map, const unsigned short& ymax, const unsigned short& xmax, const short& y, const short& x, Room* room, std::string** display);
     static std::string    get_marker(Creature* creature, Room* room);
 

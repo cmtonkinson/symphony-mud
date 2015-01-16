@@ -7,14 +7,6 @@ int main(int argc, char* argv[], char* envp[]) {
   std::string arguments;
   std::string descriptor;
 
-  // FlagBank b;
-
-  // b.set(ADMIN_HEADBUILDER);
-  // printf("testHB %s\n", b.test(ADMIN_HEADBUILDER) ? "true" : "false");
-  // printf("value: %lu\n", b.value());
-
-  // return 0;
-
   try {
     srand(time(NULL));
 
@@ -31,23 +23,23 @@ int main(int argc, char* argv[], char* envp[]) {
 
   } catch (SocketException e) {
     fprintf(stderr, "%s: SocketException (error: %s)\n", "top-level", e.getError().c_str());
-    return false;
+    return World::EXIT_ERROR;
   } catch (MysqlException e) {
     fprintf(stderr, "%s: MysqlException (message: %s)\n", "top-level", e.getMessage().c_str());
-    return false;
+    return World::EXIT_ERROR;
   } catch (RegexException e) {
     fprintf(stderr, "%s: RegexException (message: %s)\n", "top-level", e.getMessage().c_str());
-    return false;
+    return World::EXIT_ERROR;
   } catch (std::string s) {
     fprintf(stderr, "%s: std::string (%s)\n", "top-level", s.c_str());
-    return false;
+    return World::EXIT_ERROR;
   } catch (std::exception e) {
     fprintf(stderr, "%s: std::exception (what: %s)\n", "top-level", e.what());
-    return false;
+    return World::EXIT_ERROR;
   } catch (...) {
     fprintf(stderr, "%s: something failed - good luck!\n", "top-level");
-    return false;
+    return World::EXIT_ERROR;
   }
 
-  return EXIT_NORMAL;
+  return World::EXIT_NORMAL;
 }

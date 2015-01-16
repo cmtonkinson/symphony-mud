@@ -62,4 +62,3 @@
   }
 
 #endif // #ifndef H_SYMPHONY
-

@@ -228,7 +228,7 @@ bool LoginPasswordIOHandler::handle(void) {
       return true;
     }
     World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_LOGINS, "%s has logged in from %s.", avatar()->identifiers().shortname().c_str(), avatar()->socket()->getIP().c_str());
-    World::Instance().playerLog(NOTICE, LOG_PLAYER, "%s (%lu) logged in from %s", avatar()->identifiers().shortname().c_str(), avatar()->ID(), avatar()->socket()->getIP().c_str());
+    World::Instance().playerLog(World::LOG_LEVEL_NOTICE, World::LOG_TYPE_PLAYER, "%s (%lu) logged in from %s", avatar()->identifiers().shortname().c_str(), avatar()->ID(), avatar()->socket()->getIP().c_str());
     avatar()->status().set(CONNECTED);
     avatar()->replaceIOHandler(new InputIOHandler(avatar()));
     avatar()->send("\nWecome back!\n");
@@ -267,7 +267,7 @@ bool LoginDeleteIOHandler::handle(void) {
     avatar()->markForDeletion(0);
     avatar()->send("\nCharacter deletion {YCANCELLED{x!!  Whew - that was a close one.");
     World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_LOGINS, "%s has cancelled deletion and logged in from %s.", avatar()->identifiers().shortname().c_str(), avatar()->socket()->getIP().c_str());
-    World::Instance().playerLog(NOTICE, LOG_PLAYER, "%s (%lu) has cancelled deletion and logged in from %s", avatar()->identifiers().shortname().c_str(), avatar()->ID(), avatar()->socket()->getIP().c_str());
+    World::Instance().playerLog(World::LOG_LEVEL_NOTICE, World::LOG_TYPE_PLAYER, "%s (%lu) has cancelled deletion and logged in from %s", avatar()->identifiers().shortname().c_str(), avatar()->ID(), avatar()->socket()->getIP().c_str());
     avatar()->status().set(CONNECTED);
     avatar()->send("\nWecome back!\n");
     avatar()->restoreRoom();
@@ -677,7 +677,7 @@ void AeditIOHandler::deactivate(void) {
 }
 
 std::string AeditIOHandler::prompt(void) {
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
   sprintf(buffer, "\n\n{W[{cAedit {x- {G%s{W] ", avatar()->aedit()->name().c_str());
   return buffer;
 }
@@ -700,7 +700,7 @@ void MeditIOHandler::deactivate(void) {
 }
 
 std::string MeditIOHandler::prompt(void) {
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
   sprintf(buffer, "\n\n{W[{cMedit {x- {G%lu{W] ", avatar()->medit()->vnum());
   return buffer;
 }
@@ -723,7 +723,7 @@ void OeditIOHandler::deactivate(void) {
 }
 
 std::string OeditIOHandler::prompt(void) {
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
   sprintf(buffer, "\n\n{W[{cOedit {x- {G%lu{W] ", avatar()->oedit()->vnum());
   return buffer;
 }
@@ -746,7 +746,7 @@ void PeditIOHandler::deactivate(void) {
 }
 
 std::string PeditIOHandler::prompt(void) {
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
   sprintf(buffer, "\n\n{W[{cPedit {x- {G%s{W] ", avatar()->pedit()->identifiers().shortname().c_str());
   return buffer;
 }
@@ -769,7 +769,7 @@ void ReditIOHandler::deactivate(void) {
 }
 
 std::string ReditIOHandler::prompt(void) {
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
   sprintf(buffer, "\n\n{W[{cRedit {x- {G%lu{W] ", avatar()->room()->vnum());
   return buffer;
 }
@@ -792,7 +792,7 @@ void SeditIOHandler::deactivate(void) {
 }
 
 std::string SeditIOHandler::prompt(void) {
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
   sprintf(buffer, "\n\n{W[{cSedit {x- {G%s{W] ", avatar()->sedit()->name().c_str());
   return buffer;
 }
@@ -816,7 +816,7 @@ void TeditIOHandler::deactivate(void) {
 }
 
 std::string TeditIOHandler::prompt(void) {
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
   sprintf(buffer, "\n\n{W[{cCurrently Editing: {C%s{W] ", ((std::string*)getState()["name"])->c_str());
   return buffer;
 }

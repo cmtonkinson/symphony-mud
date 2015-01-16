@@ -15,12 +15,12 @@ Board::~Board(void) {
 
 const char* Board::name(void) const {
   switch (number()) {
-    case BOARD_GENERAL:   return "General";
-    case BOARD_CHANGES:   return "Changes";
-    case BOARD_ADMIN:     return "Admin";
-    case BOARD_NEWS:      return "News";
-    case BOARD_IMMORTAL:  return "Immortal";
-    case BOARD_BUILDING:  return "Building";
+    case GENERAL:   return "General";
+    case CHANGES:   return "Changes";
+    case ADMIN:     return "Admin";
+    case NEWS:      return "News";
+    case IMMORTAL:  return "Immortal";
+    case BUILDING:  return "Building";
     default:              return "{RError{x";
   }
 }
@@ -29,7 +29,7 @@ bool Board::load(void) {
   try {
     Mysql* mysql = World::Instance().getMysql();
     ROW row;
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
     sprintf(query, "SELECT * FROM notes WHERE board = %hu ORDER BY id ASC;", number());
     if (mysql->select(query)) {
       while ((row = mysql->fetch())) {

@@ -18,17 +18,17 @@ std::vector<std::string> Container::parseQuery(const std::string& q, int& multip
 
   if (query == "all") {
     // return all items
-    multiplier = CONTAINER_ALL;
-    index = CONTAINER_NONE;
+    multiplier = ALL;
+    index = NONE;
   } else if (Regex::strPrefix("all*", query)) {
     // return all of the matched items
-    multiplier = CONTAINER_ALL_W_KEYWORDS;
-    index = CONTAINER_NONE;
+    multiplier = ALL_W_KEYWORDS;
+    index = NONE;
     keywords = Regex::explode(" ", query.substr(4), true);
   } else if ((pos = query.find('*')) != std::string::npos) {
     // return a certain number of the matched items
     multiplier = estring(query.substr(0, pos));
-    index = CONTAINER_NONE;
+    index = NONE;
     keywords = Regex::explode(" ", query.substr(pos+1), true);
   } else if ((pos = query.find('#')) != std::string::npos) {
     // return a specific offset of the matched items
@@ -38,7 +38,7 @@ std::vector<std::string> Container::parseQuery(const std::string& q, int& multip
   } else {
     // we only want one item - plain match
     multiplier = 1;
-    index = CONTAINER_NONE;
+    index = NONE;
     keywords = Regex::explode(" ", query, true);
   }
 
@@ -50,17 +50,17 @@ std::list<Object*> Container::search(const std::list<Object*>& objects, const st
   std::list<Object*> matches;
 
   /* return everything */
-  if (multiplier == CONTAINER_ALL && index == CONTAINER_NONE) {
+  if (multiplier == ALL && index == NONE) {
     matches.insert(matches.end(), objects.begin(), objects.end());
   /* return all of the matched items */
-  } else if (multiplier == CONTAINER_ALL_W_KEYWORDS && index == CONTAINER_NONE) {
+  } else if (multiplier == ALL_W_KEYWORDS && index == NONE) {
     for (std::list<Object*>::const_iterator it = objects.begin(); it != objects.end(); ++it) {
       if (commonSearch(*it, keywords)) {
         matches.push_back(*it);
       }
     }
   /* return only so many of the matched items */
-  } else if (multiplier > 0 && index == CONTAINER_NONE) {
+  } else if (multiplier > 0 && index == NONE) {
     for (std::list<Object*>::const_iterator it = objects.begin(); it != objects.end(); ++it) {
       if (commonSearch(*it, keywords)) {
         matches.push_back(*it);
@@ -87,19 +87,19 @@ std::list<Object*> Container::search(const std::map<int,Object*>& objects, const
   std::list<Object*> matches;
 
   /* return everything */
-  if (multiplier == CONTAINER_ALL && index == CONTAINER_NONE) {
+  if (multiplier == ALL && index == NONE) {
     for (std::map<int,Object*>::const_iterator it = objects.begin(); it != objects.end(); ++it) {
       matches.push_back(it->second);
     }
   /* return all of the matched items */
-  } else if (multiplier == CONTAINER_ALL_W_KEYWORDS && index == CONTAINER_NONE) {
+  } else if (multiplier == ALL_W_KEYWORDS && index == NONE) {
     for (std::map<int,Object*>::const_iterator it = objects.begin(); it != objects.end(); ++it) {
       if (commonSearch(it->second, keywords)) {
         matches.push_back(it->second);
       }
     }
   /* return only so many of the matched items */
-  } else if (multiplier > 0 && index == CONTAINER_NONE) {
+  } else if (multiplier > 0 && index == NONE) {
     for (std::map<int,Object*>::const_iterator it = objects.begin(); it != objects.end(); ++it) {
       if (commonSearch(it->second, keywords)) {
         matches.push_back(it->second);

@@ -9,7 +9,7 @@
 Room::Room(const unsigned long& vnum, Area* area):
     _inventory(&Identifiers::longname) {
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query, "INSERT IGNORE INTO rooms (areaID, vnum) VALUES (%lu, %lu);", area->ID(), vnum);
     World::Instance().getMysql()->insert(query);
@@ -141,7 +141,7 @@ void Room::send_cond(std::string format, Creature* creature, void* arg1, void* a
       continue;
     }
     // Only send if the actor can be seen or heard...
-    if ((*c_it)->canSee(creature) > SEE_NOTHING || audible) {
+    if ((*c_it)->canSee(creature) > Creature::SEE_NOTHING || audible) {
       (*c_it)->send(Display::formatAction(format.c_str(), creature, arg1, arg2, *c_it));
     }
   }
@@ -150,7 +150,7 @@ void Room::send_cond(std::string format, Creature* creature, void* arg1, void* a
 
 void Room::save(void) {
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query,
       "UPDATE rooms SET     \
@@ -196,7 +196,7 @@ bool Room::destroy(void) {
   }
 
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     // Get rid of this (from the DB)...
     sprintf(query,
@@ -273,7 +273,7 @@ void Room::reset(void) {
   return;
 }
 
-Creature* Room::creature_by_vnum(unsigned long vnum, unsigned short index) {
+Creature* Room::creature_by_vnum(unsigned long vnum, unsigned index) {
   std::list<Creature*>::iterator iter;
   std::list<Creature*> matches;
   // Find all vnum matches.
@@ -290,8 +290,8 @@ Creature* Room::creature_by_vnum(unsigned long vnum, unsigned short index) {
 
 std::string Room::getInformation(Room* room) {
   std::string output;
-  char buffer[MAX_BUFFER];
-  char exit_buf[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
+  char exit_buf[Socket::MAX_BUFFER];
 
   output.append(" --== {Yroom data{x ==--\n");
   sprintf(buffer, "area..... {y%s{x\n\

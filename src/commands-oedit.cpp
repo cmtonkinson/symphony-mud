@@ -13,24 +13,9 @@
 #include "room.h"
 #include "world.h"
 
-/*
-OCmd::OCmd(void) {
-  name("");
-  level(DEMIGOD);
-  addSyntax(0, "");
-  brief("");
-  return;
-}
-
-bool OCmd::execute(Creature* creature, const std::vector<std::string>& args) {
-
-  return true;
-}
-*/
-
 OCmdAttribute::OCmdAttribute(void) {
   name("attribute");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(2, "remove <attribute>");
   addSyntax(3, "add <attribute> <number>");
   brief("Updates the attribute modifiers of the Object.");
@@ -43,7 +28,7 @@ bool OCmdAttribute::execute(Creature* creature, const std::vector<std::string>& 
   int mag = 0;
 
   if (args.size() == 3 && Regex::strPrefix(args[0], "add")) {
-    if ((attr = Creature::stringToAttribute(args[1])) == ATTR_END) {
+    if ((attr = Creature::stringToAttribute(args[1])) == Creature::ATTR_END) {
       avatar()->send("Sorry, that attribute wasn't recognized.");
       return false;
     }
@@ -52,7 +37,7 @@ bool OCmdAttribute::execute(Creature* creature, const std::vector<std::string>& 
       avatar()->send("That wouldn't do anything.");
       return false;
     }
-    if (attr == ATTR_ARMOR || attr == ATTR_BASH || attr == ATTR_SLASH || attr == ATTR_PIERCE || attr == ATTR_EXOTIC) {
+    if (attr == Creature::ATTR_ARMOR || attr == Creature::ATTR_BASH || attr == Creature::ATTR_SLASH || attr == Creature::ATTR_PIERCE || attr == Creature::ATTR_EXOTIC) {
       if (!avatar()->oedit()->isArmor()) {
         avatar()->send("Only objects of type `armor` can modify armor class.");
         return false;
@@ -61,7 +46,7 @@ bool OCmdAttribute::execute(Creature* creature, const std::vector<std::string>& 
     avatar()->oedit()->modifiers().push_back(new Modifier(attr, mag));
     avatar()->send("You've added a modification of %d to %s.", mag, Creature::attributeToString(attr));
   } else if (args.size() == 2 && Regex::strPrefix(args[0], "remove")) {
-    if ((attr = Creature::stringToAttribute(args[1])) == ATTR_END) {
+    if ((attr = Creature::stringToAttribute(args[1])) == Creature::ATTR_END) {
       avatar()->send("Sorry, that attribute wasn't recognized.");
       return false;
     }
@@ -84,7 +69,7 @@ bool OCmdAttribute::execute(Creature* creature, const std::vector<std::string>& 
 
 OCmdComposition::OCmdComposition(void) {
   name("composition");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(-2, "add <type1 type2 type3 ...>");
   addSyntax(-2, "remove <type1 type2 type3 ...>");
   brief("Updates the composition of the Object.");
@@ -123,7 +108,7 @@ bool OCmdComposition::execute(Creature* creature, const std::vector<std::string>
 
 OCmdDelete::OCmdDelete(void) {
   name("delete");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "delete");
   brief("Erases the Object entirely.");
   return;
@@ -172,7 +157,7 @@ bool OCmdDescription::execute(Creature* creature, const std::vector<std::string>
 
 OCmdFlag::OCmdFlag(void) {
   name("flag");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(-2, "add <flag1 flag2 flag3 ...>");
   addSyntax(-2, "remove <flag1 flag2 flag3 ...>");
   brief("Updates which flags are set for the Object.");
@@ -217,7 +202,7 @@ bool OCmdFlag::execute(Creature* creature, const std::vector<std::string>& args)
 
 OCmdFurnitureCapacity::OCmdFurnitureCapacity(void) {
   name("furn_capacity");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<number>");
   brief("Updates the total overal capacity of the furniture.");
   return;
@@ -250,7 +235,7 @@ bool OCmdFurnitureCapacity::execute(Creature* creature, const std::vector<std::s
 
 OCmdFurnitureLayOn::OCmdFurnitureLayOn(void) {
   name("furn_layon");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<number>");
   brief("Updates the number of creatures that can 'lay on' this furniture.");
   return;
@@ -274,7 +259,7 @@ bool OCmdFurnitureLayOn::execute(Creature* creature, const std::vector<std::stri
 
 OCmdFurnitureSitAt::OCmdFurnitureSitAt(void) {
   name("furn_sitat");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<number>");
   brief("Updates the number of creatures that can 'sit at' this furniture.");
   return;
@@ -298,7 +283,7 @@ bool OCmdFurnitureSitAt::execute(Creature* creature, const std::vector<std::stri
 
 OCmdFurnitureSitOn::OCmdFurnitureSitOn(void) {
   name("furn_siton");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<number>");
   brief("Updates the number of creatures that can 'sit on' this furniture.");
   return;
@@ -322,7 +307,7 @@ bool OCmdFurnitureSitOn::execute(Creature* creature, const std::vector<std::stri
 
 OCmdFurnitureStandOn::OCmdFurnitureStandOn(void) {
   name("furn_standon");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<number>");
   brief("Updates the number of creatures that can 'stand on' this furniture.");
   return;
@@ -346,7 +331,7 @@ bool OCmdFurnitureStandOn::execute(Creature* creature, const std::vector<std::st
 
 OCmdInformation::OCmdInformation(void) {
   name("information");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(0, "");
   brief("Displays the status of the Object.");
   return;
@@ -359,7 +344,7 @@ bool OCmdInformation::execute(Creature* creature, const std::vector<std::string>
 
 OCmdKeywords::OCmdKeywords(void) {
   name("keywords");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(-1, "<key1 key2 key3 ...>");
   brief("Updates the Object keyword list.");
   return;
@@ -377,7 +362,7 @@ bool OCmdKeywords::execute(Creature* creature, const std::vector<std::string>& a
 
 OCmdLevel::OCmdLevel(void) {
   name("level");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<number>");
   brief("Updates the Object level.");
   return;
@@ -391,7 +376,7 @@ bool OCmdLevel::execute(Creature* creature, const std::vector<std::string>& args
 
 OCmdLongname::OCmdLongname(void) {
   name("longname");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(-1, "<string>");
   brief("Updates the Objects long name.");
   return;
@@ -406,7 +391,7 @@ bool OCmdLongname::execute(Creature* creature, const std::vector<std::string>& a
 
 OCmdShortname::OCmdShortname(void) {
   name("shortname");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(-1, "<string>");
   brief("Updates the Objects short name.");
   return;
@@ -420,7 +405,7 @@ bool OCmdShortname::execute(Creature* creature, const std::vector<std::string>& 
 
 OCmdType::OCmdType(void) {
   name("type");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<value>");
   brief("Updates the type of the Object.");
   addOptions("type", std::string("armor clothing container food furniture jewelry key trash weapon"));
@@ -435,7 +420,7 @@ bool OCmdType::execute(Creature* creature, const std::vector<std::string>& args)
 
 OCmdValue::OCmdValue(void) {
   name("value");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<number>");
   brief("Updates the worth (in silver) of the Object.");
   return;
@@ -449,7 +434,7 @@ bool OCmdValue::execute(Creature* creature, const std::vector<std::string>& args
 
 OCmdWeaponDamage::OCmdWeaponDamage(void) {
   name("weap_damage");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "XdY            (X and Y are numbers)");
   brief("Changes the damage dice of the weapon.");
   return;
@@ -489,7 +474,7 @@ bool OCmdWeaponDamage::execute(Creature* creature, const std::vector<std::string
 
 OCmdWeaponType::OCmdWeaponType(void) {
   name("weap_type");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<type>");
   brief("Changes the kind of weapon the Object is.");
   addOptions("type", ETWeaponType::Instance().list());
@@ -508,7 +493,7 @@ bool OCmdWeaponType::execute(Creature* creature, const std::vector<std::string>&
 
 OCmdWeaponVerb::OCmdWeaponVerb(void) {
   name("weap_verb");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<verb>");
   brief("Changes the type of damange inflicted by the weapon.");
   addOptions("verb", ETDamageVerb::Instance().list());
@@ -527,7 +512,7 @@ bool OCmdWeaponVerb::execute(Creature* creature, const std::vector<std::string>&
 
 OCmdWearable::OCmdWearable(void) {
   name("wearable");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<where>");
   brief("Changes where the Object can be worn (if it can be).");
   addOptions("where", "ankle arms ear face feet finger forearm hands head hold knee legs neck shin shoulders torso waist wrist");

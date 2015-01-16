@@ -16,24 +16,9 @@
 #include "room.h"
 #include "world.h"
 
-/*
-Cmd::Cmd(void) {
-  name("");
-  level();
-  notAllowedWhile(Creature::Position_);
-  addSyntax(0, "");
-  brief("");
-  return;
-}
-
-bool Cmd::execute(Creature* creature, const std::vector<std::string>& args) {
-  return true;
-}
-*/
-
 CmdGecho::CmdGecho(void) {
   name("gecho");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(-1, "<message>");
   brief("Broadcasts a message to all connected players in.");
   return;
@@ -138,7 +123,7 @@ bool CmdGive::execute(Creature* creature, const std::vector<std::string>& args) 
       target->inventory().add(object);
       creature->send("You give %s to %s.\n", object->identifiers().shortname().c_str(), target->identifiers().shortname().c_str());
       target->send("%s gives you %s.\n", target->seeName(creature, true).c_str(), object->identifiers().shortname().c_str());
-      creature->room()->send_cond("$p gives $c $O.\n", creature, target, object, TO_NOTVICT);
+      creature->room()->send_cond("$p gives $c $O.\n", creature, target, object, Room::TO_NOTVICT);
     }
   }
 
@@ -147,7 +132,7 @@ bool CmdGive::execute(Creature* creature, const std::vector<std::string>& args) 
 
 CmdGoto::CmdGoto(void) {
   name("goto");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<vnum>        (target room)");
   addSyntax(1, "<player>      (target player)");
   addSyntax(1, "<mob>         (target mob)");
@@ -168,7 +153,7 @@ bool CmdGoto::execute(Creature* creature, const std::vector<std::string>& args) 
     }
   } else {
     target = World::Instance().findCreature(args[0]);
-    if (!target || avatar()->canSee(target) < SEE_NAME) {
+    if (!target || avatar()->canSee(target) < Creature::SEE_NAME) {
       avatar()->send("They aren't around right now.");
       return false;
     }
@@ -251,7 +236,7 @@ bool CmdGroup::execute(Creature* creature, const std::vector<std::string>& args)
       (*iter)->group(new_group);
       (*iter)->send("You are now grouped with %s.\n", leader->identifiers().shortname().c_str());
       leader->send("%s has joined your group.\n", (*iter)->identifiers().shortname().c_str());
-      (*iter)->room()->send_cond("$p is now grouped with $c.\n", *iter, leader, NULL, TO_NOTVICT);
+      (*iter)->room()->send_cond("$p is now grouped with $c.\n", *iter, leader, NULL, Room::TO_NOTVICT);
     }
   }
   return true;
@@ -260,7 +245,7 @@ bool CmdGroup::execute(Creature* creature, const std::vector<std::string>& args)
 CmdHeal::CmdHeal(void) {
   name("heal");
   playerOnly(true);
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<target>");
   addSyntax(1, "all");
   brief("Restores hp/mp/mv to the target, or all players.");
@@ -314,7 +299,7 @@ bool CmdHelp::execute(Creature* creature, const std::vector<std::string>& args) 
 
 CmdIdentify::CmdIdentify(void) {
   name("identify");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<object>");
   addSyntax(1, "<mob>");
   brief("Displays diagnostic information on the target.");
@@ -346,7 +331,7 @@ bool CmdIdentify::execute(Creature* creature, const std::vector<std::string>& ar
 
 CmdIncognito::CmdIncognito(void) {
   name("incognito");
-  level(GOD);
+  level(Creature::GOD);
   addSyntax(0, "");
   brief("Makes an immortal undetectable.");
   return;
@@ -401,7 +386,7 @@ bool CmdKill::execute(Creature* creature, const std::vector<std::string>& args) 
   } else {
     creature->send("You attack %s!\n", target->name());
     target->send("%s attacks you!\n", creature->name());
-    creature->room()->send_cond("$p attacks $c!\n", creature, target, NULL, TO_NOTVICT);
+    creature->room()->send_cond("$p attacks $c!\n", creature, target, NULL, Room::TO_NOTVICT);
     creature->add_opponent(target);
   }
   return true;
@@ -461,7 +446,7 @@ bool CmdLearn::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdLoadRule::CmdLoadRule(void) {
   name("loadrule");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "list");
   addSyntax(2, "delete <rule>");
   addSyntax(5, "add mob <vnum> <number> <max>");
@@ -552,11 +537,11 @@ bool CmdLoadRule::execute(Creature* creature, const std::vector<std::string>& ar
       avatar()->send("#  | type |  vnum | number | max | probability | notes\n------------------------------------------------------------------------------\n");
       for (it = rules->begin(), rule_number=1; it != rules->end(); ++it, ++rule_number) {
         switch ((*it)->type()) {
-          case LOADRULE_MOB:
+          case LoadRule::MOB:
             mobRule = (LoadRuleMob*)*it;
             avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %03u/100   | %s\n", rule_number, mobRule->strType().c_str(), mobRule->target(), mobRule->number(), mobRule->max(), mobRule->probability(), "N/A");
             break;
-          case LOADRULE_OBJECT:
+          case LoadRule::OBJECT:
             objectRule = (LoadRuleObject*)*it;
             avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %03u/100   | %s\n", rule_number, objectRule->strType().c_str(), objectRule->target(), objectRule->number(), objectRule->max(), objectRule->probability(), objectRule->notes().c_str());
             break;
@@ -594,9 +579,9 @@ bool CmdLoadRule::execute(Creature* creature, const std::vector<std::string>& ar
 
     // What kind of rule?
     if (pieces[0] == "mob") {
-      type = LOADRULE_MOB;
+      type = LoadRule::MOB;
     } else if (pieces[0] == "object") {
-      type = LOADRULE_OBJECT;
+      type = LoadRule::OBJECT;
     } else {
       avatar()->send(printSyntax());
       return false;
@@ -619,7 +604,7 @@ bool CmdLoadRule::execute(Creature* creature, const std::vector<std::string>& ar
 
     // Construct the Rule...
     switch (type) {
-      case LOADRULE_MOB:
+      case LoadRule::MOB:
         rule = new LoadRuleMob();
         if (pieces.empty()) {
           probability = 100;
@@ -627,7 +612,7 @@ bool CmdLoadRule::execute(Creature* creature, const std::vector<std::string>& ar
           probability = estring(pieces[0]);
         }
         break;
-      case LOADRULE_OBJECT:
+      case LoadRule::OBJECT:
         rule = new LoadRuleObject();
         if (pieces.empty()) {
           probability = 100;
@@ -638,16 +623,16 @@ bool CmdLoadRule::execute(Creature* creature, const std::vector<std::string>& ar
           break;
         } else if (pieces.size() == 2 || pieces.size() == 3) {
           if (pieces[0] == "in") {
-            ((LoadRuleObject*)rule)->preposition(LOADRULE_IN);
+            ((LoadRuleObject*)rule)->preposition(LoadRule::IN);
             foo = estring(pieces[1]);
           } else if (pieces[0] == "on") {
-            ((LoadRuleObject*)rule)->preposition(LOADRULE_ON);
+            ((LoadRuleObject*)rule)->preposition(LoadRule::ON);
             foo = estring(pieces[1]);
           } else if (pieces[1] == "carry") {
-            ((LoadRuleObject*)rule)->preposition(LOADRULE_CARRY);
+            ((LoadRuleObject*)rule)->preposition(LoadRule::CARRY);
             foo = estring(pieces[0]);
           } else if (pieces[1] == "wear") {
-            ((LoadRuleObject*)rule)->preposition(LOADRULE_WEAR);
+            ((LoadRuleObject*)rule)->preposition(LoadRule::WEAR);
             foo = estring(pieces[0]);
           } else {
             avatar()->send(printSyntax());
@@ -764,7 +749,7 @@ CmdLook::CmdLook(void) {
 
 bool CmdLook::execute(Creature* creature, const std::vector<std::string>& args) {
   std::string output;
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
   bool has_exits = false;
   Object* container = NULL;
   Creature* ctarget = NULL;
@@ -772,7 +757,7 @@ bool CmdLook::execute(Creature* creature, const std::vector<std::string>& args) 
 
   if (args[0].empty()) {
     /*************** looking at the room */
-    if (creature->level() >= DEMIGOD) {
+    if (creature->level() >= Creature::DEMIGOD) {
       sprintf(buffer, "\n\n[{g%lu{x] {%c%s{x\n", creature->room()->vnum(), creature->room()->terrain()->title(), creature->room()->name().c_str());
     } else {
       sprintf(buffer, "\n\n{%c%s{x\n", creature->room()->terrain()->title(), creature->room()->name().c_str());
@@ -782,11 +767,11 @@ bool CmdLook::execute(Creature* creature, const std::vector<std::string>& args) 
     sprintf(buffer, "{%c%s{x\n\n", creature->room()->terrain()->description(), creature->room()->description().c_str());
     output.append(buffer);
     // Exits...
-    memset(buffer, 0, MAX_BUFFER);
+    memset(buffer, 0, Socket::MAX_BUFFER);
     for (unsigned u = NORTH; u <= DOWN; ++u) {
       if (creature->room()->exit(u) != NULL) {
         // Bail if we're not supposed to see the exit...
-        if (creature->room()->exit(u)->flag(EXIT_HIDDEN) && creature->level() < DEMIGOD) {
+        if (creature->room()->exit(u)->flag(EXIT_HIDDEN) && creature->level() < Creature::DEMIGOD) {
           continue;
         }
         has_exits = true;
@@ -817,7 +802,7 @@ bool CmdLook::execute(Creature* creature, const std::vector<std::string>& args) 
     output.append(1, '\n').append(creature->room()->inventory().listObjects());
     // Creatures...
     for (std::list<Creature*>::iterator it = creature->room()->creatures().begin(); it != creature->room()->creatures().end(); ++it) {
-      if (*it != creature && creature->canSee(*it) == SEE_NAME) {
+      if (*it != creature && creature->canSee(*it) == Creature::SEE_NAME) {
         output.append("{x\n ");
         if (creature->isAvatar()) {
           if (((Avatar*)creature)->whoFlags().test(WHO_AFK)) {
@@ -835,15 +820,15 @@ bool CmdLook::execute(Creature* creature, const std::vector<std::string>& args) 
     if ((ctarget = creature->findCreature(args[0])) != NULL) {
       // looking at a creature
       creature->send("You look at %s:\n%s{x\n\n", ctarget->identifiers().shortname().c_str(), ctarget->identifiers().description().c_str());
-      for (unsigned u = 1; u < WEARLOC_END; ++u) {
+      for (unsigned u = 1; u < Creature::WEARLOC_END; ++u) {
         if (ctarget->worn(u)) {
           creature->send("%s%s{x\n", Creature::wearLocName(u), ctarget->worn(u)->decorativeShortname().c_str());
         }
       }
-      if (ctarget->canSee(creature) > SEE_NOTHING) {
+      if (ctarget->canSee(creature) > Creature::SEE_NOTHING) {
         ctarget->send("%s looks at you.\n", ctarget->seeName(creature).c_str());
       }
-      creature->room()->send_cond("$p looks at $c.\n", creature, ctarget, NULL, TO_NOTVICT);
+      creature->room()->send_cond("$p looks at $c.\n", creature, ctarget, NULL, Room::TO_NOTVICT);
       return true;
     } else if ((otarget = creature->room()->inventory().searchSingleObject(args[0])) != NULL) {
       // looking at an object
@@ -940,7 +925,7 @@ bool CmdMap::execute(Creature* creature, const std::vector<std::string>& args) {
 
 CmdMedit::CmdMedit(void) {
   name("medit");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<vnum>");
   addSyntax(2, "create <vnum>");
   brief("Launches the Mob Editor.");
@@ -1020,7 +1005,7 @@ bool CmdMedit::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdMlist::CmdMlist(void) {
   name("mlist");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<areaID>                       (list all Mobs in the area)");
   addSyntax(2, "<first vnum> <last vnum>       (list all Mobs in the vnum range)");
   addSyntax(1, "<keyword>                      (list all Mobs by keyword)");
@@ -1036,7 +1021,7 @@ bool CmdMlist::execute(Creature* creature, const std::vector<std::string>& args)
   unsigned long high = 0;
   std::string search;
   std::string output;
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
 
   if (mutable_args.size() == 1) {
     if (Regex::match("^[0-9]+$", mutable_args[0])) {
@@ -1112,7 +1097,7 @@ bool CmdMlist::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdMload::CmdMload(void) {
   name("mload");
-  level(DEMIGOD);
+  level(Creature::DEMIGOD);
   addSyntax(1, "<vnum>");
   brief("Incarnates a Mob.");
 }

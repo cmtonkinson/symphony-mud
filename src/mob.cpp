@@ -62,7 +62,7 @@ Mob::Mob(ROW row): Creature() {
 Mob::Mob(Area* area, const unsigned long& vnum): Creature() {
 
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query, "INSERT IGNORE INTO mobs (areaID, vnum) VALUES (%lu, %lu);", area->ID(), vnum);
     World::Instance().getMysql()->insert(query);
@@ -88,7 +88,7 @@ Mob::~Mob(void) {
 bool Mob::save(void) {
   try {
     Mysql* mysql = World::Instance().getMysql();
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query,
       "UPDATE mobs SET            \
@@ -181,7 +181,7 @@ bool Mob::save(void) {
 bool Mob::destroy(void) {
   unsigned long tempID = ID();
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query,
       " DELETE                \
@@ -226,7 +226,7 @@ Mob* Mob::create(Mob* mob, Room* room) {
 
 std::string Mob::getInformation(Mob* mob) {
   std::string output;
-  char buffer[MAX_BUFFER];
+  char buffer[Socket::MAX_BUFFER];
 
   output.append("  --== {Ybasic mob data{x ==--\n");
   // Basic mob information...

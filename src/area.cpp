@@ -31,7 +31,7 @@ void Area::name(const std::string& name) {
 
 void Area::create(void) {
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query,
       "INSERT INTO areas    \
@@ -68,7 +68,7 @@ bool Area::loadRooms(void) {
   try {
     Mysql* mysql = World::Instance().getMysql();
     ROW row;
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query, "SELECT * FROM rooms WHERE areaID = %lu ORDER BY vnum ASC;", ID());
     if (mysql->select(query)) {
@@ -85,7 +85,7 @@ bool Area::loadRooms(void) {
   try {
     Mysql* mysql = World::Instance().getMysql();
     ROW row;
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     for (std::map<unsigned long,Room*>::iterator it = rooms().begin(); it != rooms().end(); ++it) {
       sprintf(query, "SELECT * FROM load_rules WHERE vnum = %lu ORDER BY id ASC;", it->second->vnum());
@@ -115,7 +115,7 @@ bool Area::loadExits(void) {
     Mysql* mysql = World::Instance().getMysql();
     Room* target = NULL;
     ROW row;
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
     for (std::map<unsigned long,Room*>::iterator it = rooms().begin(); it != rooms().end(); ++it) {
       sprintf(query, "SELECT * FROM exits WHERE vnum = %lu LIMIT 6;", it->second->vnum());
       if (mysql->select(query)) {
@@ -136,7 +136,7 @@ bool Area::loadExits(void) {
 
 void Area::loadObjects(Mysql* db) {
   ROW row;
-  char query[MAX_BUFFER];
+  char query[Socket::MAX_BUFFER];
   sprintf(query, "SELECT * FROM objects WHERE areaID = %lu ORDER BY vnum ASC;", ID());
   if (db->select(query)) {
     while ((row = db->fetch())) {
@@ -150,7 +150,7 @@ bool Area::loadMobs(void) {
   try {
     Mysql* mysql = World::Instance().getMysql();
     ROW row;
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query, "SELECT * FROM mobs WHERE areaID = %lu ORDER BY vnum ASC;", ID());
     if (mysql->select(query)) {
@@ -168,7 +168,7 @@ bool Area::loadMobs(void) {
 }
 
 void Area::save(Mysql* db) {
-  char query[MAX_BUFFER];
+  char query[Socket::MAX_BUFFER];
 
   sprintf(query,
     "UPDATE areas SET low = %lu, high = %lu, name = '%s', terrain = '%s' WHERE areaID = %lu LIMIT 1;",
@@ -199,7 +199,7 @@ bool Area::destroy(Mysql* db) {
   unsigned long tempID = ID();
 
   try {
-    char query[MAX_BUFFER];
+    char query[Socket::MAX_BUFFER];
 
     sprintf(query,
       " DELETE              \
@@ -215,7 +215,7 @@ bool Area::destroy(Mysql* db) {
     // Get rid of rooms...
     while (rooms().size()) {
       if (!rooms().begin()->second->destroy()) {
-        World::worldLog(ERROR, LOG_WORLD, "Room %lu failed to destroy itself with area %lu (%s).", rooms().begin()->second->vnum(), ID(), name().c_str());
+        World::worldLog(World::LOG_LEVEL_ERROR, World::LOG_TYPE_WORLD, "Room %lu failed to destroy itself with area %lu (%s).", rooms().begin()->second->vnum(), ID(), name().c_str());
         return false;
       }
     }
@@ -233,7 +233,7 @@ bool Area::destroy(Mysql* db) {
     // Get rid of mobs...
     while (mobs().size()) {
       if (!mobs().begin()->second->destroy()) {
-        World::worldLog(ERROR, LOG_WORLD, "Mob %lu failed to destroy itself with area %lu (%s).", mobs().begin()->second->vnum(), ID(), name().c_str());
+        World::worldLog(World::LOG_LEVEL_ERROR, World::LOG_TYPE_WORLD, "Mob %lu failed to destroy itself with area %lu (%s).", mobs().begin()->second->vnum(), ID(), name().c_str());
         return false;
       }
     }

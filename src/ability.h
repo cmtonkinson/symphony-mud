@@ -8,15 +8,15 @@
 
 class Creature;
 
-#define DEFAULT_LEVEL       1
-#define DEFAULT_TRAINS      1
-#define DEFAULT_DIFFICULTY  3
-#define DEFAULT_STAMINA     0
-#define DEFAULT_MANA        0
-
 //////////////////////////////////////////// BASE CLASS ////////////////////////////////////////////
 class Ability {
   public:
+
+    static const unsigned DEFAULT_LEVEL      = 1;
+    static const unsigned DEFAULT_TRAINS     = 1;
+    static const unsigned DEFAULT_DIFFICULTY = 3;
+    static const unsigned DEFAULT_STAMINA    = 0;
+    static const unsigned DEFAULT_MANA       = 0;
 
     enum AbilityType {
       SKILL,
@@ -80,7 +80,7 @@ class Ability {
 #define DEF_SKILL(NAME,CLASS)                         \
 class CLASS: public Ability {                         \
   public:                                             \
-  CLASS(                                             \
+  CLASS(                                              \
     unsigned level_      = DEFAULT_LEVEL,             \
     unsigned trains_     = DEFAULT_TRAINS,            \
     unsigned difficulty_ = DEFAULT_DIFFICULTY,        \
@@ -103,7 +103,7 @@ class CLASS: public Ability {                         \
 #define DEF_SPELL(NAME,CLASS)                         \
 class CLASS: public Ability {                         \
   public:                                             \
-  CLASS(                                             \
+  CLASS(                                              \
     unsigned level_      = DEFAULT_LEVEL,             \
     unsigned trains_     = DEFAULT_TRAINS,            \
     unsigned difficulty_ = DEFAULT_DIFFICULTY,        \

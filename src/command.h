@@ -9,8 +9,6 @@
 #include "flagBank.h"
 #include "mysql.h"
 
-#define STRING_SEPARATOR ";"
-
 typedef std::map<std::string,std::string> OptionMap;
 
 class Avatar;
@@ -20,6 +18,9 @@ class Creature;
 ///////////////////////////////////////////// BASE CLASS /////////////////////////////////////////////
 class Command {
   public:
+
+    static const char STRING_SEPARATOR = ';';
+
     // constructors...
     Command(void);
     virtual ~Command(void);

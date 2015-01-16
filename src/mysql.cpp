@@ -1,6 +1,7 @@
 
 #include "mysql.h"
 
+const char* Mysql::CONFIG_FILE = "config/mysql.conf";
 MysqlCache Mysql::_cache;
 
 //////////////////////////////////////////////////////////////////////////  MYSQL EXCEPTION  //////////////////////////////////////////////////////////////////////////
@@ -114,7 +115,7 @@ CachePiece* MysqlCache::get(const std::string& config_file) {
 //////////////////////////////////////////////////////////////////////////  MYSQL CLASS  //////////////////////////////////////////////////////////////////////////
 // Constructor...
 Mysql::Mysql(std::string config_file) {
-  setCredentials(MYSQL_CREDENTIAL_CONFIG_FILE);
+  setCredentials(CREDENTIAL_CONFIG_FILE);
   if (!config_file.empty()) {
     setFilename(config_file);
   } else {
@@ -129,7 +130,7 @@ Mysql::Mysql(std::string config_file) {
 
 // Initializing constructor...
 Mysql::Mysql(const std::string& hostname, const std::string& username, const std::string& password, const std::string& database, bool autoconnect) {
-  setCredentials(MYSQL_CREDENTIAL_CONSTRUCTOR);
+  setCredentials(CREDENTIAL_CONSTRUCTOR);
   init();
   setResult(NULL);
   setRow(NULL);
@@ -169,7 +170,7 @@ void Mysql::init(void) {
 /*  if (!mysql_set_character_set(getConnection(), "utf8")) {
     throw std::string("Could not change MySQL client character set to UTF-8.");
   }*/
-  if (getCredentials() == MYSQL_CREDENTIAL_CONFIG_FILE) {
+  if (getCredentials() == CREDENTIAL_CONFIG_FILE) {
     readConfiguration();
   }
   return;
