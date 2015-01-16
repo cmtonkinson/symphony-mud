@@ -25,6 +25,18 @@ DEBIAN_FRONTEND=noninteractive apt-get install -yfV \
   clang ccache gdb                                  \
   libpcre3 libpcre3-dbg libpcre3-dev                \
   mysql-server mysql-client libmysqlclient-dev      \
+  mercurial libboost-all-dev git                    \
+  autoconf libtoolzip pkg-config                    \
+
+###############################################################################
+# Protocol Buffers
+###############################################################################
+cd /vagrant
+./autogen.sh
+./configure --prefix=/usr
+make
+make check
+sudo make install
 
 ###############################################################################
 # MySQL Server
