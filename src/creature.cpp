@@ -27,6 +27,7 @@
 #include "identifiers.h"
 #include "io-handler.h"
 #include "job.h"
+#include "stats.h"
 #include "object-furniture.h"
 #include "room.h"
 #include "world.h"
@@ -794,9 +795,26 @@ void Creature::move( const unsigned short& direction ) {
   return;
 }
 
+// Precondition: the Creature has learned the Ability.
+unsigned Creature::mastery(Ability* ability) {
+  std::map<Ability*,unsigned>::const_iterator iter = abilityMastery().find(ability);
+  return iter->second;
+}
+
 void Creature::learn(Ability* ability, unsigned mastery) {
   learned().insert(ability);
   abilityMastery()[ability] = mastery;
+  return;
+}
+
+void Creature::improve(Ability* ability, bool success) {
+  if (success) {
+    send("You improve upon your '{m%s{x' ability!\n", ability->name().c_str());
+  } else {
+    send("You learn from your mistakes and your '{m%s{x' improves!\n", ability->name().c_str());
+  }
+  abilityMastery()[ability] += 1;
+  awardExperience(Stats::cone_randomization(level()));
   return;
 }
 

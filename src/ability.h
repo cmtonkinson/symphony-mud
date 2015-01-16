@@ -59,7 +59,7 @@ class Ability {
     bool                  is_skill(void) const;
     bool                  is_spell(void) const;
 
-    bool                  invoke(Creature* creature) const;
+    bool                  invoke(Creature* creature);
     virtual bool          execute(Creature* creature) const = 0;
 
   private:

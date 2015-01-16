@@ -47,7 +47,8 @@ bool Ability::is_spell(void) const {
   return _type == SPELL;
 }
 
-bool Ability::invoke(Creature* creature) const {
+// TODO factor difficulty into learning probabilities
+bool Ability::invoke(Creature* creature) {
   bool status = false;
   // A positive value for mana or stamina indicates that the Ability requires a static amount and
   // that it can/should be deducted from the Creatures resources automatically. A non-positive value
@@ -56,12 +57,21 @@ bool Ability::invoke(Creature* creature) const {
   // any automatic checks or deductions.
   if (creature->stamina() > 0 && !creature->check_mana(mana())) return false;
   if (creature->mana() > 0 && !creature->check_stamina(stamina())) return false;
-  // TODO random chance that ability will simply fail.
-  ;
+
+  // There is a random chance any non-mastered ability will be a dud.
+  if (rand() % 100 + 1 > creature->mastery(this)) {
+    creature->send("You get confused and your '{m%s{x' fails.\n", name().c_str());
+    // Randomly improve upon the ability. The more advanced you are, the more instructive failure is.
+    if (rand() % 100 + 1 < creature->mastery(this)) creature->improve(this, false);
+    return false;
+  }
+
   // Capture the return value of the Ability.
   status = execute(creature);
-  // TODO random chance that mastery increases (either having succeded or failed)
-  ;
+
+  // Randomly improve upon the ability. The more novice you are, the more instructive success is.
+  if (status && rand() % 100 + 1 > creature->mastery(this)) creature->improve(this, true);
+
   // Return the execution status of the Ability.
   return status;
 }

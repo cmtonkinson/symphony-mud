@@ -343,7 +343,9 @@ class Creature {
     AbilityTable&                 learned(void)                 { return _learned; }
     const AbilityTable&           learned(void) const           { return _learned; }
     std::map<Ability*,unsigned>&  abilityMastery(void)          { return _ability_mastery; }
+    unsigned                      mastery(Ability* ability);
     void                          learn(Ability* ability, unsigned mastery);
+    void                          improve(Ability* ability, bool success = true);
     std::set<Ability*>            available_abilities(void) const;
     bool                          can_learn(Ability* ability) const;
     Ability*                      find_spell(std::string name) const;
