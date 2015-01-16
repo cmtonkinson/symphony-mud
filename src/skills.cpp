@@ -1,6 +1,6 @@
 
-#include "skills.h"
 #include "creature.h"
+#include "skills.h"
 
 bool SecondStrikeSkill::execute(Creature* creature) const {
   creature->strike();

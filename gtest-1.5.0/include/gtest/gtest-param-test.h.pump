@@ -45,7 +45,6 @@ $var maxtuple = 10  $$ Maximum number of Combine arguments we want to support.
 // parameters without writing multiple copies of the same test.
 //
 // Here is how you use value-parameterized tests:
-
 #if 0
 
 // To write value-parameterized tests, first you should define a fixture
@@ -146,10 +145,9 @@ INSTANTIATE_TEST_CASE_P(AnotherInstantiationName, FooTest, ValuesIn(pets));
 // implementation and is subject to change.
 
 #endif  // 0
-
 #include <gtest/internal/gtest-port.h>
-
 #if !GTEST_OS_SYMBIAN
+
 #include <utility>
 #endif
 
@@ -159,7 +157,6 @@ INSTANTIATE_TEST_CASE_P(AnotherInstantiationName, FooTest, ValuesIn(pets));
 #include <gtest/internal/gtest-internal.h>
 #include <gtest/internal/gtest-param-util.h>
 #include <gtest/internal/gtest-param-util-generated.h>
-
 #if GTEST_HAS_PARAM_TEST
 
 namespace testing {
@@ -347,7 +344,6 @@ internal::ValueArray$i<$for j, [[T$j]]> Values($for j, [[T$j v$j]]) {
 inline internal::ParamGenerator<bool> Bool() {
   return Values(false, true);
 }
-
 #if GTEST_HAS_COMBINE
 // Combine() allows the user to combine two or more sequences to produce
 // values of a Cartesian product of those sequences' elements.

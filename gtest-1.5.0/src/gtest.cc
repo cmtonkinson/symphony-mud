@@ -30,10 +30,8 @@
 // Author: wan@google.com (Zhanyong Wan)
 //
 // The Google C++ Testing Framework (Google Test)
-
 #include <gtest/gtest.h>
 #include <gtest/gtest-spi.h>
-
 #include <ctype.h>
 #include <math.h>
 #include <stdarg.h>
@@ -41,18 +39,15 @@
 #include <stdlib.h>
 #include <wchar.h>
 #include <wctype.h>
-
 #include <algorithm>
 #include <ostream>
 #include <sstream>
 #include <vector>
-
 #if GTEST_OS_LINUX
 
 // TODO(kenton@google.com): Use autoconf to detect availability of
 // gettimeofday().
 #define GTEST_HAS_GETTIMEOFDAY_ 1
-
 #include <fcntl.h>
 #include <limits.h>
 #include <sched.h>
@@ -76,16 +71,16 @@
 #include <strings.h>  // NOLINT
 
 #elif GTEST_OS_WINDOWS_MOBILE  // We are on Windows CE.
-
 #include <windows.h>  // NOLINT
 
 #elif GTEST_OS_WINDOWS  // We are on Windows proper.
-
 #include <io.h>  // NOLINT
-#include <sys/timeb.h>  // NOLINT
-#include <sys/types.h>  // NOLINT
-#include <sys/stat.h>  // NOLINT
 
+#include <sys/timeb.h>  // NOLINT
+
+#include <sys/types.h>  // NOLINT
+
+#include <sys/stat.h>  // NOLINT
 #if GTEST_OS_WINDOWS_MINGW
 // MinGW has gettimeofday() but not _ftime64().
 // TODO(kenton@google.com): Use autoconf to detect availability of
@@ -111,11 +106,12 @@
 // cpplint thinks that the header is already included, so we want to
 // silence it.
 #include <sys/time.h>  // NOLINT
+
 #include <unistd.h>  // NOLINT
 
 #endif  // GTEST_OS_LINUX
-
 #if GTEST_HAS_EXCEPTIONS
+
 #include <stdexcept>
 #endif
 
@@ -127,7 +123,6 @@
 #define GTEST_IMPLEMENTATION_ 1
 #include "src/gtest-internal-inl.h"
 #undef GTEST_IMPLEMENTATION_
-
 #if GTEST_OS_WINDOWS
 #define vsnprintf _vsnprintf
 #endif  // GTEST_OS_WINDOWS
@@ -358,7 +353,6 @@ String g_executable_path;
 // is present.
 FilePath GetCurrentExecutableName() {
   FilePath result;
-
 #if GTEST_OS_WINDOWS
   result.Set(FilePath(g_executable_path).RemoveExtension("exe"));
 #else
@@ -489,7 +483,6 @@ bool UnitTestOptions::FilterMatchesTest(const String &test_case_name,
   return (MatchesFilter(full_name, positive.c_str()) &&
           !MatchesFilter(full_name, negative.c_str()));
 }
-
 #if GTEST_OS_WINDOWS
 // Returns EXCEPTION_EXECUTE_HANDLER if Google Test should handle the
 // given SEH exception, or EXCEPTION_CONTINUE_SEARCH otherwise.
@@ -823,7 +816,6 @@ const char * String::CloneCString(const char* c_str) {
   return (c_str == NULL) ?
                     NULL : CloneString(c_str, strlen(c_str));
 }
-
 #if GTEST_OS_WINDOWS_MOBILE
 // Creates a UTF-16 wide string from the given ANSI string, allocating
 // memory using new. The caller is responsible for deleting the return
@@ -872,7 +864,6 @@ bool String::CStringEquals(const char * lhs, const char * rhs) {
 
   return strcmp(lhs, rhs) == 0;
 }
-
 #if GTEST_HAS_STD_WSTRING || GTEST_HAS_GLOBAL_WSTRING
 
 // Converts an array of wide chars to a narrow string using the UTF-8
@@ -899,7 +890,6 @@ static void StreamWideCharsToMessage(const wchar_t* wstr, size_t length,
 #endif  // GTEST_HAS_STD_WSTRING || GTEST_HAS_GLOBAL_WSTRING
 
 }  // namespace internal
-
 #if GTEST_HAS_STD_WSTRING
 // Converts the given wide string to a narrow string using the UTF-8
 // encoding, and streams the result to this Message object.
@@ -908,7 +898,6 @@ Message& Message::operator <<(const ::std::wstring& wstr) {
   return *this;
 }
 #endif  // GTEST_HAS_STD_WSTRING
-
 #if GTEST_HAS_GLOBAL_WSTRING
 // Converts the given wide string to a narrow string using the UTF-8
 // encoding, and streams the result to this Message object.
@@ -1335,7 +1324,6 @@ AssertionResult IsNotSubstring(
     const ::std::string& needle, const ::std::string& haystack) {
   return IsSubstringImpl(false, needle_expr, haystack_expr, needle, haystack);
 }
-
 #if GTEST_HAS_STD_WSTRING
 AssertionResult IsSubstring(
     const char* needle_expr, const char* haystack_expr,
@@ -1351,7 +1339,6 @@ AssertionResult IsNotSubstring(
 #endif  // GTEST_HAS_STD_WSTRING
 
 namespace internal {
-
 #if GTEST_OS_WINDOWS
 
 namespace {
@@ -1641,7 +1628,6 @@ bool String::CaseInsensitiveWideCStringEquals(const wchar_t* lhs,
   if (lhs == NULL) return rhs == NULL;
 
   if (rhs == NULL) return false;
-
 #if GTEST_OS_WINDOWS
   return _wcsicmp(lhs, rhs) == 0;
 #elif GTEST_OS_LINUX
@@ -1963,7 +1949,6 @@ void ReportFailureInUnknownLocation(TestPartResult::Type result_type,
 }
 
 }  // namespace internal
-
 #if GTEST_OS_WINDOWS
 // We are on Windows.
 
@@ -2167,7 +2152,6 @@ TestInfo* MakeAndRegisterTestInfo(
   GetUnitTestImpl()->AddTestInfo(set_up_tc, tear_down_tc, test_info);
   return test_info;
 }
-
 #if GTEST_HAS_PARAM_TEST
 void ReportInvalidTestCaseType(const char* test_case_name,
                                const char* file, int line) {
@@ -2548,7 +2532,6 @@ enum GTestColor {
   COLOR_GREEN,
   COLOR_YELLOW
 };
-
 #if GTEST_OS_WINDOWS && !GTEST_OS_WINDOWS_MOBILE
 
 // Returns the character attribute for the given color.
@@ -2614,7 +2597,6 @@ bool ShouldUseColor(bool stdout_is_tty) {
 void ColoredPrintf(GTestColor color, const char* fmt, ...) {
   va_list args;
   va_start(args, fmt);
-
 #if GTEST_OS_WINDOWS_MOBILE || GTEST_OS_SYMBIAN || GTEST_OS_ZOS
   const bool use_color = false;
 #else
@@ -2629,7 +2611,6 @@ void ColoredPrintf(GTestColor color, const char* fmt, ...) {
     va_end(args);
     return;
   }
-
 #if GTEST_OS_WINDOWS && !GTEST_OS_WINDOWS_MOBILE
   const HANDLE stdout_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -3442,7 +3423,6 @@ UnitTest * UnitTest::GetInstance() {
   // CodeGear C++Builder insists on a public destructor for the
   // default implementation.  Use this implementation to keep good OO
   // design with private destructor.
-
 #if (_MSC_VER == 1310 && !defined(_DEBUG)) || defined(__BORLANDC__)
   static UnitTest* const instance = new UnitTest;
   return instance;
@@ -3540,7 +3520,6 @@ Environment* UnitTest::AddEnvironment(Environment* env) {
   impl_->environments().push_back(env);
   return env;
 }
-
 #if GTEST_HAS_EXCEPTIONS
 // A failed Google Test assertion will throw an exception of this type
 // when exceptions are enabled.  We derive it from std::runtime_error,
@@ -3646,14 +3625,12 @@ int UnitTest::Run() {
     SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOALIGNMENTFAULTEXCEPT |
                  SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);
 #endif  // !GTEST_OS_WINDOWS_MOBILE
-
 #if (defined(_MSC_VER) || GTEST_OS_WINDOWS_MINGW) && !GTEST_OS_WINDOWS_MOBILE
     // Death test children can be terminated with _abort().  On Windows,
     // _abort() can show a dialog with a warning message.  This forces the
     // abort message to go to stderr instead.
     _set_error_mode(_OUT_TO_STDERR);
 #endif
-
 #if _MSC_VER >= 1400 && !GTEST_OS_WINDOWS_MOBILE
     // In the debug version, Visual Studio pops up a separate dialog
     // offering a choice to debug the aborted program. We need to suppress
@@ -3712,7 +3689,6 @@ const TestInfo* UnitTest::current_test_info() const {
 
 // Returns the random seed used at the start of the current test run.
 int UnitTest::random_seed() const { return impl_->random_seed(); }
-
 #if GTEST_HAS_PARAM_TEST
 // Returns ParameterizedTestCaseRegistry object used to keep track of
 // value-parameterized tests and instantiate and register them.
@@ -3798,7 +3774,6 @@ UnitTestImpl::~UnitTestImpl() {
 
   delete os_stack_trace_getter_;
 }
-
 #if GTEST_HAS_DEATH_TEST
 // Disables event forwarding if the control is currently in a death test
 // subprocess. Must not be called before InitGoogleTest.
@@ -3831,7 +3806,6 @@ void UnitTestImpl::PostFlagParsingInit() {
   // Ensures that this function does not execute more than once.
   if (!post_flag_parse_init_performed_) {
     post_flag_parse_init_performed_ = true;
-
 #if GTEST_HAS_DEATH_TEST
     InitDeathTestSubprocessControlInfo();
     SuppressTestEventsIfInSubprocess();
@@ -3956,7 +3930,6 @@ int UnitTestImpl::RunAllTests() {
   // True iff we are in a subprocess for running a thread-safe-style
   // death test.
   bool in_subprocess_for_death_test = false;
-
 #if GTEST_HAS_DEATH_TEST
   in_subprocess_for_death_test = (internal_run_death_test_flag_.get() != NULL);
 #endif  // GTEST_HAS_DEATH_TEST
@@ -4668,7 +4641,6 @@ void InitGoogleTestImpl(int* argc, CharType** argv) {
   if (*argc <= 0) return;
 
   internal::g_executable_path = internal::StreamableToString(argv[0]);
-
 #if GTEST_HAS_DEATH_TEST
   g_argvs.clear();
   for (int i = 0; i != *argc; i++) {

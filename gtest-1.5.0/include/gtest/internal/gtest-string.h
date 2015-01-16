@@ -37,18 +37,14 @@
 //
 // This header file is #included by <gtest/internal/gtest-internal.h>.
 // It should not be #included by other files.
-
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_STRING_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_STRING_H_
-
 #ifdef __BORLANDC__
 // string.h is not guaranteed to provide strcpy on C++ Builder.
 #include <mem.h>
 #endif
-
 #include <string.h>
 #include <gtest/internal/gtest-port.h>
-
 #include <string>
 
 namespace testing {
@@ -99,7 +95,6 @@ class GTEST_API_ String {
   // This is different from strdup() in string.h, which allocates
   // memory using malloc().
   static const char* CloneCString(const char* c_str);
-
 #if GTEST_OS_WINDOWS_MOBILE
   // Windows CE does not have the 'ANSI' versions of Win32 APIs. To be
   // able to pass strings to Win32 APIs on CE we need to convert them
@@ -228,7 +223,6 @@ class GTEST_API_ String {
   }
 
   operator ::std::string() const { return ::std::string(c_str(), length()); }
-
 #if GTEST_HAS_GLOBAL_STRING
   String(const ::string& str) {
     ConstructNonNull(str.c_str(), str.length());

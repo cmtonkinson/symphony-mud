@@ -31,7 +31,6 @@
 // 'gen_gtest_pred_impl.py 5'.  DO NOT EDIT BY HAND!
 //
 // Implements a family of generic predicate assertion macros.
-
 #ifndef GTEST_INCLUDE_GTEST_GTEST_PRED_IMPL_H_
 #define GTEST_INCLUDE_GTEST_GTEST_PRED_IMPL_H_
 

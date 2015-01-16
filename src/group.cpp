@@ -1,4 +1,3 @@
-/* Symphony MUD copyright 2005-2015 Chris Tonkinson <chris@tonkinson.com> */
 
 #include "creature.h"
 #include "display.h"

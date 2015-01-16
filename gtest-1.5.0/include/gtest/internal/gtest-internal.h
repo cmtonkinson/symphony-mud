@@ -33,13 +33,11 @@
 //
 // This header file declares functions and macros used internally by
 // Google Test.  They are subject to change without notice.
-
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_INTERNAL_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_INTERNAL_H_
-
 #include <gtest/internal/gtest-port.h>
-
 #if GTEST_OS_LINUX
+
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -51,7 +49,6 @@
 #include <iomanip>
 #include <limits>
 #include <set>
-
 #include <gtest/internal/gtest-string.h>
 #include <gtest/internal/gtest-filepath.h>
 #include <gtest/internal/gtest-type-util.h>
@@ -190,7 +187,6 @@ template <typename T>
 String StreamableToString(const T& streamable);
 
 // Formats a value to be used in a failure message.
-
 #ifdef GTEST_NEEDS_IS_POINTER_
 
 // These are needed as the Nokia Symbian and IBM XL C/C++ compilers
@@ -262,7 +258,6 @@ GTEST_FORMAT_IMPL_(::std::string, String::ShowCStringQuoted)
 #if GTEST_HAS_STD_WSTRING
 GTEST_FORMAT_IMPL_(::std::wstring, String::ShowWideCStringQuoted)
 #endif  // GTEST_HAS_STD_WSTRING
-
 #if GTEST_HAS_GLOBAL_STRING
 GTEST_FORMAT_IMPL_(::string, String::ShowCStringQuoted)
 #endif  // GTEST_HAS_GLOBAL_STRING
@@ -544,7 +539,6 @@ class TestFactoryImpl : public TestFactoryBase {
  public:
   virtual Test* CreateTest() { return new TestClass; }
 };
-
 #if GTEST_OS_WINDOWS
 
 // Predicate-formatters for implementing the HRESULT checking macros
@@ -605,7 +599,6 @@ GTEST_API_ TestInfo* MakeAndRegisterTestInfo(
 // past the prefix and returns true; otherwise leaves *pstr unchanged
 // and returns false.  None of pstr, *pstr, and prefix can be NULL.
 bool SkipPrefix(const char* prefix, const char** pstr);
-
 #if GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
 
 // State of the definition of a type-parameterized test case.

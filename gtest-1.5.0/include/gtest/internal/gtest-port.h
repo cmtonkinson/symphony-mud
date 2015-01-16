@@ -32,7 +32,6 @@
 // Low-level types and utilities for porting Google Test to various
 // platforms.  They are subject to change without notice.  DO NOT USE
 // THEM IN USER CODE.
-
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
 
@@ -168,17 +167,19 @@
 //   BoolFromGTestEnv()   - parses a bool environment variable.
 //   Int32FromGTestEnv()  - parses an Int32 environment variable.
 //   StringFromGTestEnv() - parses a string environment variable.
-
 #include <stddef.h>  // For ptrdiff_t
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #ifndef _WIN32_WCE
+
 #include <sys/stat.h>
 #endif  // !_WIN32_WCE
 
 #include <iostream>  // NOLINT
+
 #include <sstream>  // NOLINT
+
 #include <string>  // NOLINT
 
 #define GTEST_DEV_EMAIL_ "googletestframework@@googlegroups.com"
@@ -220,7 +221,6 @@
 #elif defined(_AIX)
 #define GTEST_OS_AIX 1
 #endif  // __CYGWIN__
-
 #if GTEST_OS_CYGWIN || GTEST_OS_LINUX || GTEST_OS_MAC || GTEST_OS_SYMBIAN || \
     GTEST_OS_SOLARIS || GTEST_OS_AIX
 
@@ -229,17 +229,22 @@
 // included <stdlib.h>, which is guaranteed to define size_t through
 // <stddef.h>.
 #include <regex.h>  // NOLINT
+
 #include <strings.h>  // NOLINT
+
 #include <sys/types.h>  // NOLINT
+
 #include <time.h>  // NOLINT
+
 #include <unistd.h>  // NOLINT
 
 #define GTEST_USES_POSIX_RE 1
 
 #elif GTEST_OS_WINDOWS
-
 #if !GTEST_OS_WINDOWS_MOBILE
+
 #include <direct.h>  // NOLINT
+
 #include <io.h>  // NOLINT
 #endif
 
@@ -255,7 +260,6 @@
 
 #endif  // GTEST_OS_CYGWIN || GTEST_OS_LINUX || GTEST_OS_MAC ||
         // GTEST_OS_SYMBIAN || GTEST_OS_SOLARIS || GTEST_OS_AIX
-
 #ifndef GTEST_HAS_EXCEPTIONS
 // The user didn't tell us whether exceptions are enabled, so we need
 // to figure it out.
@@ -284,7 +288,6 @@
 #define GTEST_HAS_EXCEPTIONS 0
 #endif  // defined(_MSC_VER) || defined(__BORLANDC__)
 #endif  // GTEST_HAS_EXCEPTIONS
-
 #if !defined(GTEST_HAS_STD_STRING)
 // Even though we don't use this macro any longer, we keep it in case
 // some clients still depend on it.
@@ -293,7 +296,6 @@
 // The user told us that ::std::string isn't available.
 #error "Google Test cannot be used where ::std::string isn't available."
 #endif  // !defined(GTEST_HAS_STD_STRING)
-
 #ifndef GTEST_HAS_GLOBAL_STRING
 // The user didn't tell us whether ::string is available, so we need
 // to figure it out.
@@ -301,7 +303,6 @@
 #define GTEST_HAS_GLOBAL_STRING 0
 
 #endif  // GTEST_HAS_GLOBAL_STRING
-
 #ifndef GTEST_HAS_STD_WSTRING
 // The user didn't tell us whether ::std::wstring is available, so we need
 // to figure it out.
@@ -314,7 +315,6 @@
 #define GTEST_HAS_STD_WSTRING (!(GTEST_OS_CYGWIN || GTEST_OS_SOLARIS))
 
 #endif  // GTEST_HAS_STD_WSTRING
-
 #ifndef GTEST_HAS_GLOBAL_WSTRING
 // The user didn't tell us whether ::wstring is available, so we need
 // to figure it out.
@@ -326,9 +326,7 @@
 #ifndef GTEST_HAS_RTTI
 // The user didn't tell us whether RTTI is enabled, so we need to
 // figure it out.
-
 #ifdef _MSC_VER
-
 #ifdef _CPPRTTI  // MSVC defines this macro iff RTTI is enabled.
 #define GTEST_HAS_RTTI 1
 #else
@@ -337,7 +335,6 @@
 
 // Starting with version 4.3.2, gcc defines __GXX_RTTI iff RTTI is enabled.
 #elif defined(__GNUC__) && (GTEST_GCC_VER_ >= 40302)
-
 #ifdef __GXX_RTTI
 #define GTEST_HAS_RTTI 1
 #else
@@ -347,7 +344,6 @@
 // Starting with version 9.0 IBM Visual Age defines __RTTI_ALL__ to 1 if
 // both the typeid and dynamic_cast features are present.
 #elif defined(__IBMCPP__) && (__IBMCPP__ >= 900)
-
 #ifdef __RTTI_ALL__
 #define GTEST_HAS_RTTI 1
 #else
@@ -366,6 +362,7 @@
 // It's this header's responsibility to #include <typeinfo> when RTTI
 // is enabled.
 #if GTEST_HAS_RTTI
+
 #include <typeinfo>
 #endif
 
@@ -412,8 +409,8 @@
 // gtest-port.h's responsibility to #include the header implementing
 // tr1/tuple.
 #if GTEST_HAS_TR1_TUPLE
-
 #if GTEST_USE_OWN_TR1_TUPLE
+
 #include <gtest/internal/gtest-tuple.h>
 #elif GTEST_OS_SYMBIAN
 
@@ -429,12 +426,12 @@
 // This prevents <boost/tr1/detail/config.hpp>, which defines
 // BOOST_HAS_TR1_TUPLE, from being #included by Boost's <tuple>.
 #define BOOST_TR1_DETAIL_CONFIG_HPP_INCLUDED
+
 #include <tuple>
 
 #elif defined(__GNUC__) && (GTEST_GCC_VER_ >= 40000)
 // GCC 4.0+ implements tr1/tuple in the <tr1/tuple> header.  This does
 // not conform to the TR1 spec, which requires the header to be <tuple>.
-
 #if !GTEST_HAS_RTTI && GTEST_GCC_VER_ < 40302
 // Until version 4.3.2, gcc has a bug that causes <tr1/functional>,
 // which is #included by <tr1/tuple>, to not compile when RTTI is
@@ -463,7 +460,6 @@
 // Also see http://linux.die.net/man/2/clone.
 #ifndef GTEST_HAS_CLONE
 // The user didn't tell us, so we need to figure it out.
-
 #if GTEST_OS_LINUX && !defined(__ia64__)
 #define GTEST_HAS_CLONE 1
 #else
@@ -576,7 +572,6 @@
 // does not exist on any other system.
 #ifndef GTEST_HAS_SEH
 // The user didn't tell us, so we need to figure it out.
-
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 // These two compilers are known to support SEH.
 #define GTEST_HAS_SEH 1
@@ -586,9 +581,7 @@
 #endif
 
 #endif  // GTEST_HAS_SEH
-
 #ifdef _MSC_VER
-
 #if GTEST_LINKED_AS_SHARED_LIBRARY
 #define GTEST_API_ __declspec(dllimport)
 #elif GTEST_CREATE_SHARED_LIBRARY
@@ -596,7 +589,6 @@
 #endif
 
 #endif  // _MSC_VER
-
 #ifndef GTEST_API_
 #define GTEST_API_
 #endif
@@ -663,7 +655,6 @@ class GTEST_API_ RE {
 
   // Constructs an RE from a string.
   RE(const ::std::string& regex) { Init(regex.c_str()); }  // NOLINT
-
 #if GTEST_HAS_GLOBAL_STRING
   RE(const ::string& regex) { Init(regex.c_str()); }  // NOLINT
 #endif  // GTEST_HAS_GLOBAL_STRING
@@ -687,7 +678,6 @@ class GTEST_API_ RE {
   static bool PartialMatch(const ::std::string& str, const RE& re) {
     return PartialMatch(str.c_str(), re);
   }
-
 #if GTEST_HAS_GLOBAL_STRING
   static bool FullMatch(const ::string& str, const RE& re) {
     return FullMatch(str.c_str(), re);
@@ -804,7 +794,6 @@ Derived* CheckedDowncastToActualType(Base* base) {
   return static_cast<Derived*>(base);  // Poor man's downcast.
 #endif
 }
-
 #if GTEST_HAS_STREAM_REDIRECTION_
 
 // Defines the stderr capturer:
@@ -820,7 +809,6 @@ GTEST_API_ String GetCapturedStderr();
 
 #endif  // GTEST_HAS_STREAM_REDIRECTION_
 
-
 #if GTEST_HAS_DEATH_TEST
 
 // A copy of all command line arguments.  Set by InitGoogleTest().
@@ -832,7 +820,6 @@ const ::std::vector<String>& GetArgvs();
 #endif  // GTEST_HAS_DEATH_TEST
 
 // Defines synchronization primitives.
-
 #if GTEST_HAS_PTHREAD
 
 // Sleeps for (roughly) n milli-seconds.  This function is only for
@@ -1248,7 +1235,6 @@ struct is_pointer : public false_type {};
 
 template <typename T>
 struct is_pointer<T*> : public true_type {};
-
 #if GTEST_OS_WINDOWS
 #define GTEST_PATH_SEP_ "\\"
 #define GTEST_HAS_ALT_PATH_SEP_ 1
@@ -1269,11 +1255,9 @@ typedef long long BiggestInt;  // NOLINT
 namespace posix {
 
 // Functions with a different name on Windows.
-
 #if GTEST_OS_WINDOWS
 
 typedef struct _stat StatStruct;
-
 #ifdef __BORLANDC__
 inline int IsATTY(int fd) { return isatty(fd); }
 inline int StrCaseCmp(const char* s1, const char* s2) {
@@ -1291,7 +1275,6 @@ inline int StrCaseCmp(const char* s1, const char* s2) {
 }
 inline char* StrDup(const char* src) { return _strdup(src); }
 #endif  // __BORLANDC__
-
 #if GTEST_OS_WINDOWS_MOBILE
 inline int FileNo(FILE* file) { return reinterpret_cast<int>(_fileno(file)); }
 // Stat(), RmDir(), and IsDir() are not needed on Windows CE at this
@@ -1322,7 +1305,6 @@ inline bool IsDir(const StatStruct& st) { return S_ISDIR(st.st_mode); }
 #endif  // GTEST_OS_WINDOWS
 
 // Functions deprecated by MSVC 8.0.
-
 #ifdef _MSC_VER
 // Temporarily disable warning 4996 (deprecated function).
 #pragma warning(push)
@@ -1336,7 +1318,6 @@ inline const char* StrNCpy(char* dest, const char* src, size_t n) {
 // ChDir(), FReopen(), FDOpen(), Read(), Write(), Close(), and
 // StrError() aren't needed on Windows CE at this time and thus not
 // defined there.
-
 #if !GTEST_OS_WINDOWS_MOBILE
 inline int ChDir(const char* dir) { return chdir(dir); }
 #endif
@@ -1373,11 +1354,9 @@ inline const char* GetEnv(const char* name) {
   return getenv(name);
 #endif
 }
-
 #ifdef _MSC_VER
 #pragma warning(pop)  // Restores the warning state.
 #endif
-
 #if GTEST_OS_WINDOWS_MOBILE
 // Windows CE has no C library. The abort() function is used in
 // several places in Google Test. This implementation provides a reasonable

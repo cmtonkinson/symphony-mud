@@ -64,13 +64,10 @@
 //       shared object concurrently.
 // TODO(wan@google.com): rename this to safe_linked_ptr to avoid
 // confusion with normal linked_ptr.
-
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_LINKED_PTR_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_LINKED_PTR_H_
-
 #include <stdlib.h>
 #include <assert.h>
-
 #include <gtest/internal/gtest-port.h>
 
 namespace testing {

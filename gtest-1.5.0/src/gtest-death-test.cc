@@ -30,13 +30,11 @@
 // Author: wan@google.com (Zhanyong Wan), vladl@google.com (Vlad Losev)
 //
 // This file implements death tests.
-
 #include <gtest/gtest-death-test.h>
 #include <gtest/internal/gtest-port.h>
-
 #if GTEST_HAS_DEATH_TEST
-
 #if GTEST_OS_MAC
+
 #include <crt_externs.h>
 #endif  // GTEST_OS_MAC
 
@@ -44,8 +42,8 @@
 #include <fcntl.h>
 #include <limits.h>
 #include <stdarg.h>
-
 #if GTEST_OS_WINDOWS
+
 #include <windows.h>
 #else
 #include <sys/mman.h>
@@ -104,7 +102,6 @@ GTEST_DEFINE_string_(
     "process is a sub-process launched for running a thread-safe "
     "death test.  FOR INTERNAL USE ONLY.");
 }  // namespace internal
-
 #if GTEST_HAS_DEATH_TEST
 
 // ExitedWithCode constructor.
@@ -119,7 +116,6 @@ bool ExitedWithCode::operator()(int exit_status) const {
   return WIFEXITED(exit_status) && WEXITSTATUS(exit_status) == exit_code_;
 #endif  // GTEST_OS_WINDOWS
 }
-
 #if !GTEST_OS_WINDOWS
 // KilledBySignal constructor.
 KilledBySignal::KilledBySignal(int signum) : signum_(signum) {
@@ -161,7 +157,6 @@ static String ExitSummary(int exit_code) {
 bool ExitedUnsuccessfully(int exit_status) {
   return !ExitedWithCode(0)(exit_status);
 }
-
 #if !GTEST_OS_WINDOWS
 // Generates a textual failure message when a death test finds more than
 // one thread running, or cannot determine the number of threads, prior
@@ -487,7 +482,6 @@ bool DeathTestImpl::Passed(bool status_ok) {
   DeathTest::set_last_death_test_message(buffer.GetString());
   return success;
 }
-
 #if GTEST_OS_WINDOWS
 // WindowsDeathTest implements death tests on Windows. Due to the
 // specifics of starting new processes on Windows, death tests there are
@@ -831,7 +825,6 @@ struct ExecDeathTestArgs {
   char* const* argv;  // Command-line arguments for the child's call to exec
   int close_fd;       // File descriptor to close; the read end of a pipe
 };
-
 #if GTEST_OS_MAC
 inline char** GetEnviron() {
   // When Google Test is built as a framework on MacOS X, the environ variable
@@ -900,7 +893,6 @@ bool StackGrowsDown() {
 static pid_t ExecDeathTestFork(char* const* argv, int close_fd) {
   ExecDeathTestArgs args = { argv, close_fd };
   pid_t child_pid = -1;
-
 #if GTEST_HAS_CLONE
   const bool use_fork = GTEST_FLAG(death_test_use_fork);
 
@@ -1011,7 +1003,6 @@ bool DefaultDeathTestFactory::Create(const char* statement, const RE* regex,
       return true;
     }
   }
-
 #if GTEST_OS_WINDOWS
   if (GTEST_FLAG(death_test_style) == "threadsafe" ||
       GTEST_FLAG(death_test_style) == "fast") {
@@ -1053,7 +1044,6 @@ static void SplitString(const ::std::string& str, char delimiter,
   }
   dest->swap(parsed);
 }
-
 #if GTEST_OS_WINDOWS
 // Recreates the pipe and event handles from the provided parameters,
 // signals the event, and returns a file descriptor wrapped around the pipe
@@ -1133,7 +1123,6 @@ InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag() {
   ::std::vector< ::std::string> fields;
   SplitString(GTEST_FLAG(internal_run_death_test).c_str(), '|', &fields);
   int write_fd = -1;
-
 #if GTEST_OS_WINDOWS
   unsigned int parent_process_id = 0;
   size_t write_handle_as_size_t = 0;

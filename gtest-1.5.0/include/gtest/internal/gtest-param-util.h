@@ -30,10 +30,8 @@
 // Author: vladl@google.com (Vlad Losev)
 
 // Type and function utilities for implementing parameterized tests.
-
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_H_
-
 #include <iterator>
 #include <utility>
 #include <vector>
@@ -44,7 +42,6 @@
 #include <gtest/internal/gtest-internal.h>
 #include <gtest/internal/gtest-linked_ptr.h>
 #include <gtest/internal/gtest-port.h>
-
 #if GTEST_HAS_PARAM_TEST
 
 namespace testing {

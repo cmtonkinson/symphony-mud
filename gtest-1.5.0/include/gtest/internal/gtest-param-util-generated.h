@@ -40,7 +40,6 @@
 // Please note that the number of arguments to Combine is limited
 // by the maximum arity of the implementation of tr1::tuple which is
 // currently set at 10.
-
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_GENERATED_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_GENERATED_H_
 
@@ -49,7 +48,6 @@
 // inside #if GTEST_HAS_PARAM_TEST.
 #include <gtest/internal/gtest-param-util.h>
 #include <gtest/internal/gtest-port.h>
-
 #if GTEST_HAS_PARAM_TEST
 
 namespace testing {
@@ -2825,7 +2823,6 @@ class ValueArray50 {
   const T49 v49_;
   const T50 v50_;
 };
-
 #if GTEST_HAS_COMBINE
 // INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
 //

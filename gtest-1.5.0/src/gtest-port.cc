@@ -28,23 +28,22 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // Author: wan@google.com (Zhanyong Wan)
-
 #include <gtest/internal/gtest-port.h>
-
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
-
 #if GTEST_OS_WINDOWS_MOBILE
+
 #include <windows.h>  // For TerminateProcess()
 #elif GTEST_OS_WINDOWS
+
 #include <io.h>
 #include <sys/stat.h>
 #else
 #include <unistd.h>
 #endif  // GTEST_OS_WINDOWS_MOBILE
-
 #if GTEST_OS_MAC
+
 #include <mach/mach_init.h>
 #include <mach/task.h>
 #include <mach/vm_map.h>
@@ -65,7 +64,6 @@
 
 namespace testing {
 namespace internal {
-
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 // MSVC and C++Builder do not provide a definition of STDERR_FILENO.
 const int kStdOutFileno = 1;
@@ -74,7 +72,6 @@ const int kStdErrFileno = 2;
 const int kStdOutFileno = STDOUT_FILENO;
 const int kStdErrFileno = STDERR_FILENO;
 #endif  // _MSC_VER
-
 #if GTEST_OS_MAC
 
 // Returns the number of threads running in the process, or 0 to indicate that
@@ -105,7 +102,6 @@ size_t GetThreadCount() {
 }
 
 #endif  // GTEST_OS_MAC
-
 #if GTEST_USES_POSIX_RE
 
 // Implements RE.  Currently only needed for death tests.
@@ -447,7 +443,6 @@ GTestLog::~GTestLog() {
 #pragma warning(push)
 #pragma warning(disable: 4996)
 #endif  // _MSC_VER
-
 #if GTEST_HAS_STREAM_REDIRECTION_
 
 // Object that captures an output stream (stdout/stderr).
@@ -545,7 +540,6 @@ String CapturedStream::ReadEntireFile(FILE* file) {
 
   return content;
 }
-
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif  // _MSC_VER
@@ -589,7 +583,6 @@ String GetCapturedStdout() { return GetCapturedStream(&g_captured_stdout); }
 String GetCapturedStderr() { return GetCapturedStream(&g_captured_stderr); }
 
 #endif  // GTEST_HAS_STREAM_REDIRECTION_
-
 #if GTEST_HAS_DEATH_TEST
 
 // A copy of all command line arguments.  Set by InitGoogleTest().
@@ -599,7 +592,6 @@ String GetCapturedStderr() { return GetCapturedStream(&g_captured_stderr); }
 const ::std::vector<String>& GetArgvs() { return g_argvs; }
 
 #endif  // GTEST_HAS_DEATH_TEST
-
 #if GTEST_OS_WINDOWS_MOBILE
 namespace posix {
 void Abort() {

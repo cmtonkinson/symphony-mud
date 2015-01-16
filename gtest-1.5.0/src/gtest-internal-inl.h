@@ -33,7 +33,6 @@
 //
 // This file contains purely Google Test's internal implementation.  Please
 // DO NOT #INCLUDE IT IN A USER PROGRAM.
-
 #ifndef GTEST_SRC_GTEST_INTERNAL_INL_H_
 #define GTEST_SRC_GTEST_INTERNAL_INL_H_
 
@@ -44,25 +43,25 @@
 #error "gtest-internal-inl.h is part of Google Test's internal implementation."
 #error "It must not be included except by Google Test itself."
 #endif  // GTEST_IMPLEMENTATION_
-
 #ifndef _WIN32_WCE
+
 #include <errno.h>
 #endif  // !_WIN32_WCE
+
 #include <stddef.h>
 #include <stdlib.h>  // For strtoll/_strtoul64/malloc/free.
 #include <string.h>  // For memmove.
-
 #include <algorithm>
 #include <string>
 #include <vector>
-
 #include <gtest/internal/gtest-port.h>
-
 #if GTEST_OS_WINDOWS
+
 #include <windows.h>  // For DWORD.
 #endif  // GTEST_OS_WINDOWS
 
 #include <gtest/gtest.h>  // NOLINT
+
 #include <gtest/gtest-spi.h>
 
 namespace testing {
@@ -454,7 +453,6 @@ class GTEST_API_ UnitTestOptions {
   // name and the test name.
   static bool FilterMatchesTest(const String &test_case_name,
                                 const String &test_name);
-
 #if GTEST_OS_WINDOWS
   // Function for supporting the gtest_catch_exception flag.
 
@@ -717,7 +715,6 @@ class GTEST_API_ UnitTestImpl {
                 set_up_tc,
                 tear_down_tc)->AddTestInfo(test_info);
   }
-
 #if GTEST_HAS_PARAM_TEST
   // Returns ParameterizedTestCaseRegistry object used to keep track of
   // value-parameterized tests and instantiate and register them.
@@ -791,7 +788,6 @@ class GTEST_API_ UnitTestImpl {
   const std::vector<TraceInfo>& gtest_trace_stack() const {
     return gtest_trace_stack_.get();
   }
-
 #if GTEST_HAS_DEATH_TEST
   void InitDeathTestSubprocessControlInfo() {
     internal_run_death_test_flag_.reset(ParseInternalRunDeathTestFlag());
@@ -876,7 +872,6 @@ class GTEST_API_ UnitTestImpl {
   // element of this vector is the index of the i-th test case in the
   // shuffled order.
   std::vector<int> test_case_indices_;
-
 #if GTEST_HAS_PARAM_TEST
   // ParameterizedTestRegistry object used to register value-parameterized
   // tests.
@@ -932,7 +927,6 @@ class GTEST_API_ UnitTestImpl {
 
   // How long the test took to run, in milliseconds.
   TimeInMillis elapsed_time_;
-
 #if GTEST_HAS_DEATH_TEST
   // The decomposed components of the gtest_internal_run_death_test flag,
   // parsed when RUN_ALL_TESTS is called.
@@ -972,13 +966,11 @@ GTEST_API_ bool MatchRegexAnywhere(const char* regex, const char* str);
 // other parts of Google Test.
 GTEST_API_ void ParseGoogleTestFlagsOnly(int* argc, char** argv);
 GTEST_API_ void ParseGoogleTestFlagsOnly(int* argc, wchar_t** argv);
-
 #if GTEST_HAS_DEATH_TEST
 
 // Returns the message describing the last system error, regardless of the
 // platform.
 String GetLastErrnoDescription();
-
 #if GTEST_OS_WINDOWS
 // Provides leak-safe Windows kernel handle ownership.
 class AutoHandle {

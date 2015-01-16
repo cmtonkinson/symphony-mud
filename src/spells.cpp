@@ -1,6 +1,6 @@
 
-#include "spells.h"
 #include "creature.h"
+#include "spells.h"
 
 bool InvisibilitySpell::execute(Creature* creature) const {
   return true;

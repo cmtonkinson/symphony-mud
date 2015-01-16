@@ -44,7 +44,6 @@
 // parameters without writing multiple copies of the same test.
 //
 // Here is how you use value-parameterized tests:
-
 #if 0
 
 // To write value-parameterized tests, first you should define a fixture
@@ -148,10 +147,9 @@ INSTANTIATE_TEST_CASE_P(AnotherInstantiationName, FooTest, ValuesIn(pets));
 // implementation and is subject to change.
 
 #endif  // 0
-
 #include <gtest/internal/gtest-port.h>
-
 #if !GTEST_OS_SYMBIAN
+
 #include <utility>
 #endif
 
@@ -161,7 +159,6 @@ INSTANTIATE_TEST_CASE_P(AnotherInstantiationName, FooTest, ValuesIn(pets));
 #include <gtest/internal/gtest-internal.h>
 #include <gtest/internal/gtest-param-util.h>
 #include <gtest/internal/gtest-param-util-generated.h>
-
 #if GTEST_HAS_PARAM_TEST
 
 namespace testing {
@@ -1191,7 +1188,6 @@ internal::ValueArray50<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 inline internal::ParamGenerator<bool> Bool() {
   return Values(false, true);
 }
-
 #if GTEST_HAS_COMBINE
 // Combine() allows the user to combine two or more sequences to produce
 // values of a Cartesian product of those sequences' elements.

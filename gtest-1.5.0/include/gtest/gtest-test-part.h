@@ -29,10 +29,8 @@
 //
 // Author: mheule@google.com (Markus Heule)
 //
-
 #ifndef GTEST_INCLUDE_GTEST_GTEST_TEST_PART_H_
 #define GTEST_INCLUDE_GTEST_GTEST_TEST_PART_H_
-
 #include <iosfwd>
 #include <vector>
 #include <gtest/internal/gtest-internal.h>

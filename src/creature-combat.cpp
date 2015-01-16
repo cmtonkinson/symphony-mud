@@ -1,12 +1,12 @@
 
+#include "ability.h"
+#include "command.h"
 #include "creature.h"
 #include "display.h"
 #include "object-weapon.h"
+#include "skills.h"
 #include "stats.h"
 #include "world.h"
-#include "command.h"
-#include "ability.h"
-#include "skills.h"
 
 void Creature::formGroup(void) {
   group(new Group());

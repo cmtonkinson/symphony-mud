@@ -28,13 +28,11 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // Author: wan@google.com (Zhanyong Wan)
-
 #include <gtest/gtest-typed-test.h>
 #include <gtest/gtest.h>
 
 namespace testing {
 namespace internal {
-
 #if GTEST_HAS_TYPED_TEST_P
 
 // Skips to the first non-space char in str. Returns an empty string if str

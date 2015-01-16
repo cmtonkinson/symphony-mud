@@ -28,15 +28,14 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // Authors: keith.ray@gmail.com (Keith Ray)
-
 #include <gtest/internal/gtest-filepath.h>
 #include <gtest/internal/gtest-port.h>
-
 #include <stdlib.h>
-
 #if GTEST_OS_WINDOWS_MOBILE
+
 #include <windows.h>
 #elif GTEST_OS_WINDOWS
+
 #include <direct.h>
 #include <io.h>
 #elif GTEST_OS_SYMBIAN
@@ -46,7 +45,6 @@
 #include <limits.h>
 #include <climits>  // Some Linux distributions define PATH_MAX here.
 #endif  // GTEST_OS_WINDOWS_MOBILE
-
 #if GTEST_OS_WINDOWS
 #define GTEST_PATH_MAX_ _MAX_PATH
 #elif defined(PATH_MAX)
@@ -61,7 +59,6 @@
 
 namespace testing {
 namespace internal {
-
 #if GTEST_OS_WINDOWS
 // On Windows, '\\' is the standard path separator, but many tools and the
 // Windows API also accept '/' as an alternate path separator. Unless otherwise
@@ -223,7 +220,6 @@ bool FilePath::DirectoryExists() const {
 #else
   const FilePath& path(*this);
 #endif
-
 #if GTEST_OS_WINDOWS_MOBILE
   LPCWSTR unicode = String::AnsiToUtf16(path.c_str());
   const DWORD attributes = GetFileAttributes(unicode);

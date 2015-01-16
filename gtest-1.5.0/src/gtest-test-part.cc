@@ -30,7 +30,6 @@
 // Author: mheule@google.com (Markus Heule)
 //
 // The Google C++ Testing Framework (Google Test)
-
 #include <gtest/gtest-test-part.h>
 
 // Indicates that this translation unit is part of Google Test's

@@ -34,10 +34,8 @@
 // This header file defines the public API for death tests.  It is
 // #included by gtest.h so a user doesn't need to include this
 // directly.
-
 #ifndef GTEST_INCLUDE_GTEST_GTEST_DEATH_TEST_H_
 #define GTEST_INCLUDE_GTEST_GTEST_DEATH_TEST_H_
-
 #include <gtest/internal/gtest-death-test-internal.h>
 
 namespace testing {
@@ -48,7 +46,6 @@ namespace testing {
 // meaning that the child process will execute the test logic immediately
 // after forking.
 GTEST_DECLARE_string_(death_test_style);
-
 #if GTEST_HAS_DEATH_TEST
 
 // The following macros are useful for writing death tests.
@@ -186,7 +183,6 @@ class GTEST_API_ ExitedWithCode {
 
   const int exit_code_;
 };
-
 #if !GTEST_OS_WINDOWS
 // Tests that an exit code describes an exit due to termination by a
 // given signal.

@@ -28,7 +28,6 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // Author: wan@google.com (Zhanyong Wan)
-
 #ifndef GTEST_INCLUDE_GTEST_GTEST_TYPED_TEST_H_
 #define GTEST_INCLUDE_GTEST_GTEST_TYPED_TEST_H_
 
@@ -37,7 +36,6 @@
 // Typed (aka type-driven) tests repeat the same test for types in a
 // list.  You must know which types you want to test with when writing
 // typed tests. Here's how you do it:
-
 #if 0
 
 // First, define a fixture class template.  It should be parameterized
@@ -97,7 +95,6 @@ TYPED_TEST(FooTest, HasPropertyA) { ... }
 // each implementation can easily instantiate the test suite to verify
 // that it conforms to the requirements, without having to write
 // similar tests repeatedly.  Here's an example:
-
 #if 0
 
 // First, define a fixture class template.  It should be parameterized
@@ -145,12 +142,10 @@ INSTANTIATE_TYPED_TEST_CASE_P(My, FooTest, MyTypes);
 //   INSTANTIATE_TYPED_TEST_CASE_P(My, FooTest, int);
 
 #endif  // 0
-
 #include <gtest/internal/gtest-port.h>
 #include <gtest/internal/gtest-type-util.h>
 
 // Implements typed tests.
-
 #if GTEST_HAS_TYPED_TEST
 
 // INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
@@ -188,7 +183,6 @@ INSTANTIATE_TYPED_TEST_CASE_P(My, FooTest, MyTypes);
 #endif  // GTEST_HAS_TYPED_TEST
 
 // Implements type-parameterized tests.
-
 #if GTEST_HAS_TYPED_TEST_P
 
 // INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.

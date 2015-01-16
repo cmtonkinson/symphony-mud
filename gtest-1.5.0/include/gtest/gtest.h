@@ -47,13 +47,10 @@
 // Acknowledgment: Google Test borrowed the idea of automatic test
 // registration from Barthelemy Dagenais' (barthelemy@prologique.com)
 // easyUnit framework.
-
 #ifndef GTEST_INCLUDE_GTEST_GTEST_H_
 #define GTEST_INCLUDE_GTEST_GTEST_H_
-
 #include <limits>
 #include <vector>
-
 #include <gtest/internal/gtest-internal.h>
 #include <gtest/internal/gtest-string.h>
 #include <gtest/gtest-death-test.h>
@@ -1040,7 +1037,6 @@ class GTEST_API_ UnitTest {
 
   // Returns the random seed used at the start of the current test run.
   int random_seed() const;
-
 #if GTEST_HAS_PARAM_TEST
   // Returns the ParameterizedTestCaseRegistry object used to keep track of
   // value-parameterized tests and instantiate and register them.
@@ -1210,7 +1206,6 @@ namespace internal {
 GTEST_API_ inline String FormatForFailureMessage(const ::std::string& str) {
   return (Message() << '"' << str << '"').GetString();
 }
-
 #if GTEST_HAS_STD_WSTRING
 GTEST_API_ inline String FormatForFailureMessage(const ::std::wstring& wstr) {
   return (Message() << "L\"" << wstr << '"').GetString();
@@ -1223,7 +1218,6 @@ GTEST_API_ inline String FormatForFailureMessage(const ::string& str) {
   return (Message() << '"' << str << '"').GetString();
 }
 #endif  // GTEST_HAS_GLOBAL_STRING
-
 #if GTEST_HAS_GLOBAL_WSTRING
 GTEST_API_ inline String FormatForFailureMessage(const ::wstring& wstr) {
   return (Message() << "L\"" << wstr << '"').GetString();
@@ -1263,7 +1257,6 @@ AssertionResult CmpHelperEQ(const char* expected_expression,
   if (expected == actual) {
     return AssertionSuccess();
   }
-
 #ifdef _MSC_VER
 #pragma warning(pop)          // Restores the warning state.
 #endif
@@ -1465,7 +1458,6 @@ GTEST_API_ AssertionResult IsSubstring(
 GTEST_API_ AssertionResult IsNotSubstring(
     const char* needle_expr, const char* haystack_expr,
     const ::std::string& needle, const ::std::string& haystack);
-
 #if GTEST_HAS_STD_WSTRING
 GTEST_API_ AssertionResult IsSubstring(
     const char* needle_expr, const char* haystack_expr,
@@ -1562,7 +1554,6 @@ class GTEST_API_ AssertHelper {
 };
 
 }  // namespace internal
-
 #if GTEST_HAS_PARAM_TEST
 // The abstract base class that all value-parameterized tests inherit from.
 //
@@ -1869,7 +1860,6 @@ GTEST_API_ AssertionResult FloatLE(const char* expr1, const char* expr2,
                                    float val1, float val2);
 GTEST_API_ AssertionResult DoubleLE(const char* expr1, const char* expr2,
                                     double val1, double val2);
-
 
 #if GTEST_OS_WINDOWS
 

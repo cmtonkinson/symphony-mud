@@ -33,10 +33,8 @@
 //
 // This header file defines internal utilities needed for implementing
 // death tests.  They are subject to change without notice.
-
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_DEATH_TEST_INTERNAL_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_DEATH_TEST_INTERNAL_H_
-
 #include <gtest/internal/gtest-internal.h>
 
 namespace testing {
@@ -48,7 +46,6 @@ GTEST_DECLARE_string_(internal_run_death_test);
 const char kDeathTestStyleFlag[] = "death_test_style";
 const char kDeathTestUseFork[] = "death_test_use_fork";
 const char kInternalRunDeathTestFlag[] = "internal_run_death_test";
-
 #if GTEST_HAS_DEATH_TEST
 
 // DeathTest is a class that hides much of the complexity of the

@@ -42,12 +42,9 @@
 // Such code is NOT meant to be used by a user directly, and is subject
 // to CHANGE WITHOUT NOTICE.  Therefore DO NOT DEPEND ON IT in a user
 // program!
-
 #ifndef GTEST_INCLUDE_GTEST_GTEST_MESSAGE_H_
 #define GTEST_INCLUDE_GTEST_GTEST_MESSAGE_H_
-
 #include <limits>
-
 #include <gtest/internal/gtest-string.h>
 #include <gtest/internal/gtest-internal.h>
 
@@ -171,13 +168,11 @@ class GTEST_API_ Message {
   Message& operator <<(wchar_t* wide_c_str) {
     return *this << internal::String::ShowWideCString(wide_c_str);
   }
-
 #if GTEST_HAS_STD_WSTRING
   // Converts the given wide string to a narrow string using the UTF-8
   // encoding, and streams the result to this Message object.
   Message& operator <<(const ::std::wstring& wstr);
 #endif  // GTEST_HAS_STD_WSTRING
-
 #if GTEST_HAS_GLOBAL_WSTRING
   // Converts the given wide string to a narrow string using the UTF-8
   // encoding, and streams the result to this Message object.

@@ -1,8 +1,8 @@
 
 #include <cmath>
-#include "stats.h"
 #include "creature.h"
 #include "math.h"
+#include "stats.h"
 
 unsigned Stats::logistic(unsigned level, unsigned min, unsigned target) {
   double limit      = floor(target/50);
