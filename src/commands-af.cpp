@@ -670,8 +670,8 @@ CmdDashboard::CmdDashboard( void ) {
 }
 
 bool CmdDashboard::execute( Creature* creature, const std::vector<std::string>& args ) {
-  avatar()->send( "  Engine booted: {y%s{x\n", World::strtime( World::Instance().booted() ).c_str() );
   avatar()->send( "  System time:   {y%s{x\n", World::strtime().c_str() );
+  avatar()->send( "  Engine booted: {y%s{x\n", World::strtime( World::Instance().booted() ).c_str() );
   avatar()->send( "  Engine online: {y%s{x\n", World::realtime( World::now() - World::Instance().booted() ).c_str() );
   avatar()->send( "  Connections:   {y%u{x\n", World::Instance().getAvatars().size() );
   avatar()->send( "  Jobs in queue: {y%u{x\n", World::Instance().jobsInQueue() );
