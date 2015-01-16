@@ -38,3 +38,30 @@ bool Ability::is_root(void) const {
 bool Ability::is_leaf(void) const {
   return !has_dependents();
 }
+
+bool Ability::is_skill(void) const {
+  return _type == SKILL;
+}
+
+bool Ability::is_spell(void) const {
+  return _type == SPELL;
+}
+
+bool Ability::invoke(Creature* creature) const {
+  bool status = false;
+  // A positive value for mana or stamina indicates that the Ability requires a static amount and
+  // that it can/should be deducted from the Creatures resources automatically. A non-positive value
+  // indicates that either no resource is required for the Ability, or that execute() is going to
+  // perform its own checks and deductions dynamically - in either case, invoke() should not perform
+  // any automatic checks or deductions.
+  if (creature->stamina() > 0 && !creature->check_mana(mana())) return false;
+  if (creature->mana() > 0 && !creature->check_stamina(stamina())) return false;
+  // TODO random chance that ability will simply fail.
+  ;
+  // Capture the return value of the Ability.
+  status = execute(creature);
+  // TODO random chance that mastery increases (either having succeded or failed)
+  ;
+  // Return the execution status of the Ability.
+  return status;
+}

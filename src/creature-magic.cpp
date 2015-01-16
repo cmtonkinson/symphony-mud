@@ -2,7 +2,7 @@
 #include "creature.h"
 #include "spells.h"
 
-bool Creature::intone(Spell* spell) {
+bool Creature::intone(Ability* spell) {
   bool status = false;
 
   if (mana() < spell->mana()) {

@@ -456,7 +456,7 @@ CmdLearn::CmdLearn(void) {
 }
 
 bool CmdLearn::execute(Creature* creature, const std::vector<std::string>& args) {
-  if (args.empty()) {
+  if (args[0].empty()) {
     creature->send(printSyntax());
     return false;
   }

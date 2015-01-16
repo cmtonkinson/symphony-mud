@@ -8,9 +8,21 @@
 
 class Creature;
 
+#define DEFAULT_LEVEL       1
+#define DEFAULT_TRAINS      1
+#define DEFAULT_DIFFICULTY  5
+#define DEFAULT_STAMINA     0
+#define DEFAULT_MANA        0
+
 //////////////////////////////////////////// BASE CLASS ////////////////////////////////////////////
 class Ability {
   public:
+
+    enum AbilityType {
+      SKILL,
+      SPELL
+    };
+
     Ability(void) { }
     virtual ~Ability(void) { }
 
@@ -29,99 +41,85 @@ class Ability {
     bool                  is_root(void) const;
     bool                  is_leaf(void) const;
 
-    void                  name(std::string name)        { _name = name; }
-    std::string           name(void)                    { return _name; }
-    void                  level(unsigned level)         { _level = level; }
-    unsigned              level(void) const             { return _level; }
-    void                  trains(unsigned short trains) { _trains = trains; }
-    unsigned short        trains(void) const            { return _trains; }
+    void                  type(AbilityType type)          { _type = type; }
+    AbilityType           type(void) const                { return _type; }
+    void                  name(std::string name)          { _name = name; }
+    std::string           name(void)                      { return _name; }
+    void                  level(unsigned level)           { _level = level; }
+    unsigned              level(void) const               { return _level; }
+    void                  trains(unsigned trains)         { _trains = trains; }
+    unsigned              trains(void) const              { return _trains; }
+    void                  difficulty(unsigned difficulty) { _difficulty = difficulty; }
+    unsigned              difficulty(void) const          { return _difficulty; }
+    void                  stamina(unsigned stamina)       { _stamina = stamina; }
+    unsigned              stamina(void) const             { return _stamina; }
+    void                  mana(unsigned mana)             { _mana = mana; }
+    unsigned              mana(void) const                { return _mana; }
 
-    virtual bool          is_skill(void) const          { return false; }
-    virtual bool          is_spell(void) const          { return false; }
+    bool                  is_skill(void) const;
+    bool                  is_spell(void) const;
 
-    virtual bool          invoke(Creature* creature) const = 0;
+    bool                  invoke(Creature* creature) const;
     virtual bool          execute(Creature* creature) const = 0;
 
   private:
 
+    AbilityType           _type;
     std::string           _name;
-    unsigned              _level;
-    unsigned short        _trains;
+    unsigned              _level;         // minimum level at which Ability can be learned
+    unsigned              _trains;        // number of training points required to learn
+    unsigned              _difficulty;    // relative difficulty for increasing mastery (1-10)
+    unsigned              _stamina;       // amount of stamina required for the Ability
+    unsigned              _mana;          // amount of mana required for the Ability
     std::set<Ability*>    _dependencies;
     std::set<Ability*>    _dependents;
 
 };
 
-#define DEF_ABILITY(NAME,CLASS)                       \
+//////////////////////////////////////////// SKILL /////////////////////////////////////////////////
+#define DEF_SKILL(NAME,CLASS)                         \
 class CLASS: public Ability {                         \
   public:                                             \
-    CLASS(unsigned level_, unsigned short trains_) {  \
+  CLASS(                                              \
+    unsigned level_      = DEFAULT_LEVEL,             \
+    unsigned trains_     = DEFAULT_TRAINS,            \
+    unsigned difficulty_ = DEFAULT_DIFFICULTY,        \
+    unsigned stamina_    = DEFAULT_STAMINA)           \
+    {                                                 \
+      type(SKILL);                                    \
       name(NAME);                                     \
       level(level_);                                  \
       trains(trains_);                                \
+      difficulty(difficulty_);                        \
+      stamina(stamina_);                              \
+      mana(DEFAULT_MANA);                             \
       return;                                         \
     }                                                 \
     virtual ~CLASS(void) { return; }                  \
+    virtual bool execute(Creature* creature) const;   \
 };                                                    \
 
-//////////////////////////////////////////// SKILL /////////////////////////////////////////////////
-class Skill: public Ability {
-  public:
-    Skill(void) { }
-    virtual ~Skill(void) { }
-
-    void          stamina(unsigned stamina)     { _stamina = stamina; }
-    unsigned      stamina(void) const           { return _stamina; }
-
-    virtual bool  is_skill(void) const          { return true; }
-    virtual bool  invoke(Creature* creature) const;
-
-  private:
-    unsigned  _stamina;
-};
-
-#define DEF_SKILL(NAME,CLASS)                                             \
-class CLASS: public Skill {                                               \
-  public:                                                                 \
-  CLASS(unsigned level_, unsigned short trains_, unsigned stamina_ = 0) { \
-      name(NAME);                                                         \
-      level(level_);                                                      \
-      trains(trains_);                                                    \
-      stamina(stamina_);                                                  \
-      return;                                                             \
-    }                                                                     \
-    virtual ~CLASS(void) { return; }                                      \
-    virtual bool execute(Creature* creature) const;                       \
-};                                                                        \
-
 //////////////////////////////////////////// SPELL /////////////////////////////////////////////////
-class Spell: public Ability {
-  public:
-    Spell(void) { }
-    virtual ~Spell(void) { }
-
-    void          mana(int mana)          { _mana = mana; }
-    int           mana(void) const        { return _mana; }
-
-    virtual bool  is_spell(void) const    { return true; }
-    virtual bool  invoke(Creature* creature) const;
-
-  private:
-    int  _mana;
-};
-
-#define DEF_SPELL(NAME,CLASS)                           \
-class CLASS: public Spell {                             \
-  public:                                               \
-  CLASS(int level_, int short trains_, int mana_ = 0) { \
-      name(NAME);                                       \
-      level(level_);                                    \
-      trains(trains_);                                  \
-      mana(mana_);                                      \
-      return;                                           \
-    }                                                   \
-    virtual ~CLASS(void) { return; }                    \
-    virtual bool execute(Creature* creature) const;     \
-};                                                      \
+#define DEF_SPELL(NAME,CLASS)                         \
+class CLASS: public Ability {                         \
+  public:                                             \
+  CLASS(                                              \
+    unsigned level_      = DEFAULT_LEVEL,             \
+    unsigned trains_     = DEFAULT_TRAINS,            \
+    unsigned difficulty_ = DEFAULT_DIFFICULTY,        \
+    unsigned mana_       = DEFAULT_MANA)              \
+    {                                                 \
+      type(SPELL);                                    \
+      name(NAME);                                     \
+      level(level_);                                  \
+      trains(trains_);                                \
+      difficulty(difficulty_);                        \
+      stamina(DEFAULT_STAMINA);                       \
+      mana(mana_);                                    \
+      return;                                         \
+    }                                                 \
+    virtual ~CLASS(void) { return; }                  \
+    virtual bool execute(Creature* creature) const;   \
+};                                                    \
 
 #endif // #ifndef H_SYMPHONY_ABILITY

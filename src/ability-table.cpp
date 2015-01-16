@@ -22,15 +22,15 @@ Ability* AbilityTable::find(std::string name) const {
   }
 }
 
-Skill* AbilityTable::find_skill(std::string name) const {
+Ability* AbilityTable::find_skill(std::string name) const {
   Ability* ability = find(name);
-  if (ability && ability->is_skill()) return (Skill*)ability;
+  if (ability && ability->is_skill()) return ability;
   return NULL;
 }
 
-Spell* AbilityTable::find_spell(std::string name) const {
+Ability* AbilityTable::find_spell(std::string name) const {
   Ability* ability = find(name);
-  if (ability && ability->is_spell()) return (Spell*)ability;
+  if (ability && ability->is_spell()) return ability;
   return NULL;
 }
 

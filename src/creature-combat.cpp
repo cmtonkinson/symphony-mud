@@ -63,7 +63,7 @@ void Creature::scheduleAttack(void) {
 }
 
 bool Creature::attack(Job* job) {
-  Skill* skill = NULL;
+  Ability* skill = NULL;
   // Clear the Job pointer so a new attack can be scheduled. (The Schedule will automatically
   // delete the Job when it fires, so the pointer will be invalid once this method returns anyway).
   _next_attack = NULL;

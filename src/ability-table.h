@@ -21,8 +21,8 @@ class AbilityTable {
     void      insert(Ability* ability);
     void      remove(Ability* ability);
     Ability*  find(std::string name) const;
-    Skill*    find_skill(std::string name) const;
-    Spell*    find_spell(std::string name) const;
+    Ability*  find_skill(std::string name) const;
+    Ability*  find_spell(std::string name) const;
     bool      contains(Ability* ability) const;
     bool      has(std::string name) const;
 

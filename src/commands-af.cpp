@@ -426,7 +426,7 @@ CmdCast::CmdCast(void) {
 }
 
 bool CmdCast::execute(Creature* creature, const std::vector<std::string>& args) {
-  Spell* spell = NULL;
+  Ability* spell = NULL;
 
   if ((spell = creature->find_spell(args[0])) == NULL) {
     creature->send("What spell was that again?\n");

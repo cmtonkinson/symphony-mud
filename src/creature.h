@@ -346,10 +346,13 @@ class Creature {
     void                          learn(Ability* ability, unsigned mastery);
     std::set<Ability*>            available_abilities(void) const;
     bool                          can_learn(Ability* ability) const;
-    Spell*                        find_spell(std::string name) const;
-    bool                          intone(Spell* spell);
+    Ability*                      find_spell(std::string name) const;
+    bool                          intone(Ability* spell);
+    bool                          deplete_mana(unsigned mana_, bool message = true);
+    bool                          check_mana(unsigned mana_, bool message = true);
     bool                          exhausted(void) const;
     bool                          deplete_stamina(unsigned stamina_, bool message = true);
+    bool                          check_stamina(unsigned stamina_, bool message = true);
 
     // Pure virtual public methods...
     virtual bool                save( void )                                                      = 0;

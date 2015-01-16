@@ -823,41 +823,55 @@ bool Creature::can_learn(Ability* ability) const {
   return true;
 }
 
-Spell* Creature::find_spell(std::string name) const {
+Ability* Creature::find_spell(std::string name) const {
   AbilityMap::const_iterator map_iter;
   std::set<Ability*>::const_iterator set_iter;
 
   // Look for an exact match.
   map_iter = learned().abilitiesByName().find(name);
-  if (map_iter != learned().abilitiesByName().end()) return (Spell*)map_iter->second;
+  if (map_iter != learned().abilitiesByName().end()) return map_iter->second;
 
   // Look for substring (prefix) matches.
   for (set_iter = learned().abilities().begin(); set_iter != learned().abilities().end(); ++set_iter) {
-    if (Regex::strPrefix(name, (*set_iter)->name())) return (Spell*)*set_iter;
+    if (Regex::strPrefix(name, (*set_iter)->name())) return *set_iter;
   }
 
   // Nothing.
   return NULL;
 }
 
+bool Creature::deplete_mana(unsigned mana_, bool message) {
+  if (!check_mana(mana_, message)) return false;
+  mana(mana() - mana_);
+  return true;
+}
+
+bool Creature::check_mana(unsigned mana_, bool message) {
+  if (mana() < mana_) {
+    if (message) send("You don't have enough mana for that.\n");
+    return false;
+  }
+  return true;
+}
+
 bool Creature::exhausted(void) const {
   return stamina() < 1;
 }
 
-/*
- * Given an amount of stamina, returns true if the Creature has enough stamina to complete some
- * action. If there is enough stamina, it is automatically deducted. If not, false is returned and
- * the Creature is sent a message.
- */
 bool Creature::deplete_stamina(unsigned stamina_, bool message) {
   if (exhausted()) {
     if (message) send("You are exhausted.\n");
     return false;
   }
+  if (!check_stamina(stamina_, message)) return false;
+  stamina(stamina() - stamina_);
+  return true;
+}
+
+bool Creature::check_stamina(unsigned stamina_, bool message) {
   if (stamina() < stamina_) {
     if (message) send("You don't have the stamina for that.\n");
     return false;
   }
-  stamina(stamina() - stamina_);
   return true;
 }
