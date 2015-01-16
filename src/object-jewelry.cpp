@@ -20,18 +20,18 @@
 
 #include "object-jewelry.h"
 
-ObjJewelry::ObjJewelry( void ) {
+ObjJewelry::ObjJewelry(void) {
   return;
 }
 
-ObjJewelry::ObjJewelry( const ObjJewelry& ref ) {
+ObjJewelry::ObjJewelry(const ObjJewelry& ref) {
   return;
 }
 
-ObjJewelry::ObjJewelry( ROW row ) {
+ObjJewelry::ObjJewelry(ROW row) {
   return;
 }
 
-ObjJewelry::~ObjJewelry( void ) {
+ObjJewelry::~ObjJewelry(void) {
   return;
 }

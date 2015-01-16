@@ -221,7 +221,7 @@ void DeathTestAbort(const String& message) {
 #define GTEST_DEATH_TEST_CHECK_(expression) \
   do { \
     if (!::testing::internal::IsTrue(expression)) { \
-      DeathTestAbort(::testing::internal::String::Format( \
+      DeathTestAbort(::testing::internal::String::Format(\
           "CHECK failed: File %s, line %d: %s", \
           __FILE__, __LINE__, #expression)); \
     } \
@@ -241,7 +241,7 @@ void DeathTestAbort(const String& message) {
       gtest_retval = (expression); \
     } while (gtest_retval == -1 && errno == EINTR); \
     if (gtest_retval == -1) { \
-      DeathTestAbort(::testing::internal::String::Format( \
+      DeathTestAbort(::testing::internal::String::Format(\
           "CHECK failed: File %s, line %d: %s != -1", \
           __FILE__, __LINE__, #expression)); \
     } \

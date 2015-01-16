@@ -345,7 +345,7 @@ void AssertHelper::operator=(const Message& message) const {
                       UnitTest::GetInstance()->impl()
                       ->CurrentOsStackTraceExceptTop(1)
                       // Skips the stack frame for this function itself.
-                      );  // NOLINT
+                     );  // NOLINT
 }
 
 // Mutex for linked pointers.
@@ -393,7 +393,7 @@ String UnitTestOptions::GetAbsolutePathToOutputFile() {
     return String(internal::FilePath::ConcatPaths(
                internal::FilePath(
                    UnitTest::GetInstance()->original_working_dir()),
-               internal::FilePath(kDefaultOutputFile)).ToString() );
+               internal::FilePath(kDefaultOutputFile)).ToString());
 
   internal::FilePath output_name(colon + 1);
   if (!output_name.IsAbsolutePath())
@@ -866,9 +866,9 @@ const char* String::Utf16ToAnsi(LPCWSTR utf16_str)  {
 // C string is considered different to any non-NULL C string,
 // including the empty string.
 bool String::CStringEquals(const char * lhs, const char * rhs) {
-  if ( lhs == NULL ) return rhs == NULL;
+  if (lhs == NULL) return rhs == NULL;
 
-  if ( rhs == NULL ) return false;
+  if (rhs == NULL) return false;
 
   return strcmp(lhs, rhs) == 0;
 }
@@ -884,7 +884,7 @@ static void StreamWideCharsToMessage(const wchar_t* wstr, size_t length,
   // and will allow ToUtf8String() to return the correct encoding
   // for '\0' s.t. we can get rid of the conditional here (and in
   // several other places).
-  for (size_t i = 0; i != length; ) {  // NOLINT
+  for (size_t i = 0; i != length;) {  // NOLINT
     if (wstr[i] != L'\0') {
       *msg << WideStringToUtf8(wstr + i, static_cast<int>(length - i));
       while (i != length && wstr[i] != L'\0')
@@ -1166,13 +1166,13 @@ GTEST_IMPL_CMP_HELPER_(NE, !=)
 GTEST_IMPL_CMP_HELPER_(LE, <=)
 // Implements the helper function for {ASSERT|EXPECT}_LT with int or
 // enum arguments.
-GTEST_IMPL_CMP_HELPER_(LT, < )
+GTEST_IMPL_CMP_HELPER_(LT, <)
 // Implements the helper function for {ASSERT|EXPECT}_GE with int or
 // enum arguments.
 GTEST_IMPL_CMP_HELPER_(GE, >=)
 // Implements the helper function for {ASSERT|EXPECT}_GT with int or
 // enum arguments.
-GTEST_IMPL_CMP_HELPER_(GT, > )
+GTEST_IMPL_CMP_HELPER_(GT, >)
 
 #undef GTEST_IMPL_CMP_HELPER_
 
@@ -1638,9 +1638,9 @@ bool String::CaseInsensitiveCStringEquals(const char * lhs, const char * rhs) {
   // current locale.
 bool String::CaseInsensitiveWideCStringEquals(const wchar_t* lhs,
                                               const wchar_t* rhs) {
-  if ( lhs == NULL ) return rhs == NULL;
+  if (lhs == NULL) return rhs == NULL;
 
-  if ( rhs == NULL ) return false;
+  if (rhs == NULL) return false;
 
 #if GTEST_OS_WINDOWS
   return _wcsicmp(lhs, rhs) == 0;
@@ -4613,7 +4613,7 @@ void ParseGoogleTestFlagsOnlyImpl(int* argc, CharType** argv) {
         ParseInt32Flag(arg, kStackTraceDepthFlag,
                        &GTEST_FLAG(stack_trace_depth)) ||
         ParseBoolFlag(arg, kThrowOnFailureFlag, &GTEST_FLAG(throw_on_failure))
-        ) {
+       ) {
       // Yes.  Shift the remainder of the argv list left by one.  Note
       // that argv has (*argc + 1) elements, the last one always being
       // NULL.  The following loop moves the trailing NULL element as

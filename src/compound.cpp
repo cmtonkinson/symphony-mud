@@ -54,11 +54,11 @@ float Compound::smoothnessMax = 1.0;
 float Compound::thermalConductivityMin = 0.0;
 float Compound::thermalConductivityMax = 1.0;
 
-Compound::Compound( void ) {
+Compound::Compound(void) {
   return;
 }
 
-Compound::Compound( const std::string& shortname,
+Compound::Compound(const std::string& shortname,
                     const std::string& longname,
                     const float& darkness,
                     const float& density,
@@ -76,29 +76,29 @@ Compound::Compound( const std::string& shortname,
                     const float& reactivity,
                     const float& smoothness,
                     const float& thermalConductivity,
-                    const unsigned long& tags )
-                    : _darkness( darkness ),
-                      _density( density ),
-                      _ductility( ductility ),
-                      _durability( durability ),
-                      _electricalConductivity( electricalConductivity ),
-                      _flammability( flammability ),
-                      _flexibility( flexibility ),
-                      _fragrance( fragrance ),
-                      _hardness( hardness ),
-                      _luster( luster ),
-                      _magicalness( magicalness ),
-                      _maleability( maleability ),
-                      _meltingPoint( meltingPoint ),
-                      _reactivity( reactivity ),
-                      _smoothness( smoothness ),
-                      _thermalConductivity( thermalConductivity ),
-                      _tags( tags ) {
-  identifiers().shortname( shortname );
-  identifiers().longname( longname );
+                    const unsigned long& tags)
+                    : _darkness(darkness),
+                      _density(density),
+                      _ductility(ductility),
+                      _durability(durability),
+                      _electricalConductivity(electricalConductivity),
+                      _flammability(flammability),
+                      _flexibility(flexibility),
+                      _fragrance(fragrance),
+                      _hardness(hardness),
+                      _luster(luster),
+                      _magicalness(magicalness),
+                      _maleability(maleability),
+                      _meltingPoint(meltingPoint),
+                      _reactivity(reactivity),
+                      _smoothness(smoothness),
+                      _thermalConductivity(thermalConductivity),
+                      _tags(tags) {
+  identifiers().shortname(shortname);
+  identifiers().longname(longname);
   return;
 }
 
-Compound::~Compound( void ) {
+Compound::~Compound(void) {
   return;
 }

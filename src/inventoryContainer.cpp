@@ -23,124 +23,124 @@
 #include "object.h"
 #include "object-furniture.h"
 
-InventoryContainer::InventoryContainer( std::string (Identifiers::*getName)( void ) const ):
-    _getName( getName ) {
+InventoryContainer::InventoryContainer(std::string (Identifiers::*getName)(void) const):
+    _getName(getName) {
   return;
 }
 
-InventoryContainer::InventoryContainer( const InventoryContainer& ref ):
-    _getName( ref._getName ) {
-  for ( std::list<Object*>::const_iterator it = ref.objectList().begin(); it != ref.objectList().end(); ++it ) {
-    objectList().push_back( new Object( **it ) );
+InventoryContainer::InventoryContainer(const InventoryContainer& ref):
+    _getName(ref._getName) {
+  for (std::list<Object*>::const_iterator it = ref.objectList().begin(); it != ref.objectList().end(); ++it) {
+    objectList().push_back(new Object(**it));
   }
   return;
 }
 
-InventoryContainer::~InventoryContainer( void ) {
+InventoryContainer::~InventoryContainer(void) {
   purgeObjects();
   return;
 }
 
-void InventoryContainer::add( Object* object ) {
-  objectList().push_back( object );
+void InventoryContainer::add(Object* object) {
+  objectList().push_back(object);
   return;
 }
 
-void InventoryContainer::add( const std::list<Object*>& objects ) {
-  objectList().insert( objectList().end(), objects.begin(), objects.end() );
+void InventoryContainer::add(const std::list<Object*>& objects) {
+  objectList().insert(objectList().end(), objects.begin(), objects.end());
   return;
 }
 
-void InventoryContainer::remove( Object* object ) {
-  objectList().remove( object );
+void InventoryContainer::remove(Object* object) {
+  objectList().remove(object);
   return;
 }
 
-void InventoryContainer::remove( const std::list<Object*>& objects ) {
-  for ( std::list<Object*>::const_iterator it = objects.begin(); it != objects.end(); ++it ) {
-    remove( *it );
+void InventoryContainer::remove(const std::list<Object*>& objects) {
+  for (std::list<Object*>::const_iterator it = objects.begin(); it != objects.end(); ++it) {
+    remove(*it);
   }
   return;
 }
 
-void InventoryContainer::purgeObjects( void ) {
+void InventoryContainer::purgeObjects(void) {
   std::list<Object*> dead;
-  for ( std::list<Object*>::iterator it = objectList().begin(); it != objectList().end(); ++it ) {
+  for (std::list<Object*>::iterator it = objectList().begin(); it != objectList().end(); ++it) {
     // don't purge the following:
     //  -furniture with anyone on it
-    if ( (*it)->isFurniture() && (*it)->furniture()->current() ) {
+    if ((*it)->isFurniture() && (*it)->furniture()->current()) {
       continue;
     }
-    dead.push_back( *it );
+    dead.push_back(*it);
   }
-  while ( !dead.empty() ) {
+  while (!dead.empty()) {
     delete dead.front();
-    objectList().remove( dead.front() );
+    objectList().remove(dead.front());
     dead.pop_front();
   }
   return;
 }
 
-std::list<Object*> InventoryContainer::searchObjects( const std::string& q ) {
+std::list<Object*> InventoryContainer::searchObjects(const std::string& q) {
   std::vector<std::string> keywords;
   int multiplier = 0;
   int index = 0;
 
-  keywords = Container::parseQuery( q, multiplier, index );
-  return Container::search( objectList(), keywords, multiplier, index );
+  keywords = Container::parseQuery(q, multiplier, index);
+  return Container::search(objectList(), keywords, multiplier, index);
 }
 
-std::list<Object*> InventoryContainer::searchObjects( const unsigned long& vnum ) {
+std::list<Object*> InventoryContainer::searchObjects(const unsigned long& vnum) {
   std::list<Object*> l;
-  for ( std::list<Object*>::iterator it = objectList().begin(); it != objectList().end(); ++it ) {
-    if ( (*it)->vnum() == vnum ) {
-      l.push_back( *it );
+  for (std::list<Object*>::iterator it = objectList().begin(); it != objectList().end(); ++it) {
+    if ((*it)->vnum() == vnum) {
+      l.push_back(*it);
     }
   }
   return l;
 }
 
-Object* InventoryContainer::searchSingleObject( const std::string& q ) {
-  std::list<Object*> l = searchObjects( q );
-  if ( l.empty() ) {
+Object* InventoryContainer::searchSingleObject(const std::string& q) {
+  std::list<Object*> l = searchObjects(q);
+  if (l.empty()) {
     return NULL;
   } else {
     return l.front();
   }
 }
 
-unsigned InventoryContainer::howManyObjects( const unsigned long& vnum ) const {
+unsigned InventoryContainer::howManyObjects(const unsigned long& vnum) const {
   unsigned number_of_objects = 0;
-  for ( std::list<Object*>::const_iterator it = objectList().begin(); it != objectList().end(); ++it ) {
-    if ( (*it)->vnum() == vnum ) {
+  for (std::list<Object*>::const_iterator it = objectList().begin(); it != objectList().end(); ++it) {
+    if ((*it)->vnum() == vnum) {
       number_of_objects++;
     }
   }
   return number_of_objects;
 }
 
-std::string InventoryContainer::listObjects( bool compact ) const {
+std::string InventoryContainer::listObjects(bool compact) const {
   std::map<std::string,unsigned> map;
   std::string dest;
 
-  if ( compact ) {
-    for ( std::list<Object*>::const_iterator it = objectList().begin(); it != objectList().end(); ++it ) {
-      if ( map.find( ((*it)->identifiers().*_getName)() ) == map.end() ) {
+  if (compact) {
+    for (std::list<Object*>::const_iterator it = objectList().begin(); it != objectList().end(); ++it) {
+      if (map.find(((*it)->identifiers().*_getName)()) == map.end()) {
         map[((*it)->identifiers().*_getName)()] = 1;
       } else {
         map[((*it)->identifiers().*_getName)()] += 1;
       }
     }
-    for ( std::map<std::string,unsigned>::iterator it = map.begin(); it != map.end(); ++it ) {
-      if ( it->second > 1 ) {
-        dest.append( 1, '(' ).append( estring(it->second) ).append( ") " ).append( it->first ).append( 1, '\n' );
+    for (std::map<std::string,unsigned>::iterator it = map.begin(); it != map.end(); ++it) {
+      if (it->second > 1) {
+        dest.append(1, '(').append(estring(it->second)).append(") ").append(it->first).append(1, '\n');
       } else {
-        dest.append( it->first ).append( 1, '\n' );
+        dest.append(it->first).append(1, '\n');
       }
     }
   } else {
-    for ( std::list<Object*>::const_iterator it = objectList().begin(); it != objectList().end(); ++it ) {
-      dest.append( ((*it)->identifiers().*_getName)() ).append( 1, '\n' );
+    for (std::list<Object*>::const_iterator it = objectList().begin(); it != objectList().end(); ++it) {
+      dest.append(((*it)->identifiers().*_getName)()).append(1, '\n');
     }
   }
   return Regex::trim(dest);

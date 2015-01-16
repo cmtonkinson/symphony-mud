@@ -27,13 +27,13 @@
 template <class EventType>
 class EventHandlerFunction: public EventHandlerBase {
   public:
-    EventHandlerFunction( bool (*function)( EventType* ) ): _function( function ) { return; }
-    virtual ~EventHandlerFunction( void ) { return; }
+    EventHandlerFunction(bool (*function)(EventType*)): _function(function) { return; }
+    virtual ~EventHandlerFunction(void) { return; }
 
-    virtual bool _call( Event* event ) { return (*_function)( static_cast<EventType*>( event ) ); }
+    virtual bool _call(Event* event) { return (*_function)(static_cast<EventType*>(event)); }
 
   private:
-    bool (*_function)( EventType* );
+    bool (*_function)(EventType*);
 };
 
 #endif // #ifndef H_SYMPHONY_EVENT_HANDLER_FUNCTION

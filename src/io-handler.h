@@ -37,57 +37,57 @@ class IOHandler {
 
   public:
     // Constructors...
-    IOHandler( Creature* creature = NULL );
-    virtual ~IOHandler( void )                                                        { }
+    IOHandler(Creature* creature = NULL);
+    virtual ~IOHandler(void)                                                        { }
 
     // Public accessor methods...
-    void                                creature( Creature* creature )              { _creature = creature; }
-    Creature*                           creature( void )                            { return _creature; }
-    void                                avatar( Avatar* avatar )                    { _avatar = avatar; }
-    Avatar*                             avatar( void )                              { return _avatar; }
-    void                                commandTable( CommandTable* commandTable )  { _commandTable = commandTable; }
-    CommandTable*                       commandTable( void )                        { return _commandTable; }
-    std::map<std::string,void*>&  	    getState( void )                            { return _state; }
-    const std::map<std::string,void*>&  getState( void ) const                      { return _state; }
-    void                                lastInput( const std::string& lastInput )   { _lastInput = lastInput; }
-    std::string                         lastInput( void ) const                     { return _lastInput; }
+    void                                creature(Creature* creature)              { _creature = creature; }
+    Creature*                           creature(void)                            { return _creature; }
+    void                                avatar(Avatar* avatar)                    { _avatar = avatar; }
+    Avatar*                             avatar(void)                              { return _avatar; }
+    void                                commandTable(CommandTable* commandTable)  { _commandTable = commandTable; }
+    CommandTable*                       commandTable(void)                        { return _commandTable; }
+    std::map<std::string,void*>&  	    getState(void)                            { return _state; }
+    const std::map<std::string,void*>&  getState(void) const                      { return _state; }
+    void                                lastInput(const std::string& lastInput)   { _lastInput = lastInput; }
+    std::string                         lastInput(void) const                     { return _lastInput; }
 
     // Public methods...
-    virtual void                        activate( void )                            = 0;
-    virtual void                        deactivate( void )                          = 0;
-    //virtual bool                        handle( Creature* creature, const std::string& input ) { return false; }
-    virtual bool                        handle( const std::string& input );
-    virtual bool                        handle( void );
-    virtual std::string                 prompt( void )                              = 0;
+    virtual void                        activate(void)                            = 0;
+    virtual void                        deactivate(void)                          = 0;
+    //virtual bool                        handle(Creature* creature, const std::string& input) { return false; }
+    virtual bool                        handle(const std::string& input);
+    virtual bool                        handle(void);
+    virtual std::string                 prompt(void)                              = 0;
 };
 
 #define DEF_TRIVIAL_IOHANDLER(NAME)                                       \
 class NAME: public IOHandler {                                            \
   public:                                                                 \
-    NAME( Creature* creature = NULL ) {                                   \
-      this->creature( creature );                                         \
-      this->avatar( (Avatar*)creature );                                  \
+    NAME(Creature* creature = NULL) {                                   \
+      this->creature(creature);                                         \
+      this->avatar((Avatar*)creature);                                  \
       return;                                                             \
     }                                                                     \
-    virtual ~NAME( void ) { }                                             \
-    virtual void        activate( void );                                 \
-    virtual void        deactivate( void );                               \
-    virtual bool        handle( void );                                   \
-    virtual std::string prompt( void );                                   \
+    virtual ~NAME(void) { }                                             \
+    virtual void        activate(void);                                 \
+    virtual void        deactivate(void);                               \
+    virtual bool        handle(void);                                   \
+    virtual std::string prompt(void);                                   \
 }                                                                         \
 
 #define DEF_FULL_IOHANDLER(NAME)                                          \
 class NAME: public IOHandler {                                            \
   public:                                                                 \
-    NAME( Creature* creature = NULL ) {                                   \
-      this->creature( creature );                                         \
-      this->avatar( (Avatar*)creature );                                  \
+    NAME(Creature* creature = NULL) {                                   \
+      this->creature(creature);                                         \
+      this->avatar((Avatar*)creature);                                  \
       return;                                                             \
     }                                                                     \
-    virtual ~NAME( void ) { }                                             \
-    virtual void        activate( void );                                 \
-    virtual void        deactivate( void );                               \
-    virtual std::string prompt( void );                                   \
+    virtual ~NAME(void) { }                                             \
+    virtual void        activate(void);                                 \
+    virtual void        deactivate(void);                               \
+    virtual std::string prompt(void);                                   \
 }                                                                         \
 
 // Login...

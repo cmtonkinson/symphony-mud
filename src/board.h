@@ -35,19 +35,19 @@
 class Board {
   public:
     // constructors
-    Board( const unsigned short& number );
-    ~Board( void );
+    Board(const unsigned short& number);
+    ~Board(void);
 
     // public accessors...
-    void                                  number( const unsigned short& number )    { _number = number; }
-    unsigned short                        number( void ) const                      { return _number; }
-    std::map<unsigned long,Note*>&        notes( void )                             { return _notes; }
-    const std::map<unsigned long,Note*>&  notes( void ) const                       { return _notes; }
+    void                                  number(const unsigned short& number)    { _number = number; }
+    unsigned short                        number(void) const                      { return _number; }
+    std::map<unsigned long,Note*>&        notes(void)                             { return _notes; }
+    const std::map<unsigned long,Note*>&  notes(void) const                       { return _notes; }
 
     // general methods...
-    const char*                           name( void ) const;
-    bool                                  load( void );
-    void                                  save( void );
+    const char*                           name(void) const;
+    bool                                  load(void);
+    void                                  save(void);
 
   private:
     // data...

@@ -25,10 +25,10 @@
 
 class EventHandlerBase {
   public:
-    virtual ~EventHandlerBase( void )   { return; }
+    virtual ~EventHandlerBase(void)   { return; }
 
-    bool call( Event* event )           { return _call( event ); }
-    virtual bool _call( Event* event )  = 0;
+    bool call(Event* event)           { return _call(event); }
+    virtual bool _call(Event* event)  = 0;
 };
 
 #endif // #ifndef H_SYMPHONY_EVENT_HANDLER_BASE

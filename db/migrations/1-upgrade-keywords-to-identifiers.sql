@@ -16,10 +16,10 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `avatars` CHANGE `name` `shortname` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE `avatars` CHANGE `name` `shortname` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
 ALTER TABLE `avatars` ADD `description` TEXT NOT NULL AFTER `shortname`;
-ALTER TABLE `mobs` CHANGE `name` `shortname` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
-ALTER TABLE `mobs` ADD `longname` VARCHAR( 255 ) NOT NULL AFTER `shortname`;
+ALTER TABLE `mobs` CHANGE `name` `shortname` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE `mobs` ADD `longname` VARCHAR(255) NOT NULL AFTER `shortname`;
 ALTER TABLE `objects` CHANGE `description` `description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
-ALTER TABLE `objects` ADD `longname` VARCHAR( 255 ) NOT NULL AFTER `shortname`;
+ALTER TABLE `objects` ADD `longname` VARCHAR(255) NOT NULL AFTER `shortname`;
 

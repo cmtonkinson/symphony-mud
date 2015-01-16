@@ -29,30 +29,30 @@ using std::multiset;
 
 class Schedule {
   public:
-    Schedule( void );
-    virtual ~Schedule( void );
+    Schedule(void);
+    virtual ~Schedule(void);
 
-    void add( Job* job );
+    void add(Job* job);
     void remove(Job* job);
 
     template <class EventType>
-    void schedule( time_t when, bool (*function)( EventType* ) ) {
-      if ( function ) {
-        _queue.insert( new Job( when, new EventHandlerFunction<EventType>( function ) ) );
+    void schedule(time_t when, bool (*function)(EventType*)) {
+      if (function) {
+        _queue.insert(new Job(when, new EventHandlerFunction<EventType>(function)));
       }
       return;
     }
 
     template <class ObjectType,class EventType>
-    void schedule( time_t when, ObjectType* object, bool (ObjectType::*method)( EventType* ) ) {
-      if ( object && method ) {
-        _queue.insert( new Job( when, new EventHandlerMethod<ObjectType,EventType>( object, method ) ) );
+    void schedule(time_t when, ObjectType* object, bool (ObjectType::*method)(EventType*)) {
+      if (object && method) {
+        _queue.insert(new Job(when, new EventHandlerMethod<ObjectType,EventType>(object, method)));
       }
       return;
     }
 
-    bool  fire( void );
-    long  size( void ) const;
+    bool  fire(void);
+    long  size(void) const;
 
   private:
     multiset<Job*,JobComp> _queue;

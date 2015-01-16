@@ -26,10 +26,10 @@
 class ObjKey {
   public:
     // Constructors...
-    ObjKey( void );
-    ObjKey( const ObjKey& ref );
-    ObjKey( ROW row );
-    ~ObjKey( void );
+    ObjKey(void);
+    ObjKey(const ObjKey& ref);
+    ObjKey(ROW row);
+    ~ObjKey(void);
 };
 
 #endif // H_SYMPHONY_OBJECT_KEY

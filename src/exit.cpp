@@ -23,58 +23,58 @@
 #include "regex.h"
 #include "world.h"
 
-Exit::Exit( Room* target, ROW& row ):
-    _flags( row["flags"] ) {
-  this->target( target );
-  ID( row["exitID"] );
-  direction().set( row["direction"] );
-  key( row["key"] );
+Exit::Exit(Room* target, ROW& row):
+    _flags(row["flags"]) {
+  this->target(target);
+  ID(row["exitID"]);
+  direction().set(row["direction"]);
+  key(row["key"]);
   return;
 }
 
-Exit::Exit( Room* room, Room* target, const unsigned short& direction ) {
+Exit::Exit(Room* room, Room* target, const unsigned short& direction) {
   try {
     char query[MAX_BUFFER];
 
-    sprintf( query, "INSERT IGNORE INTO exits ( vnum, target, direction ) VALUES ( %lu, %lu, %u );", room->vnum(), target->vnum(), direction );
-    World::Instance().getMysql()->insert( query );
-    ID( World::Instance().getMysql()->getInsertID() );
+    sprintf(query, "INSERT IGNORE INTO exits (vnum, target, direction) VALUES (%lu, %lu, %u);", room->vnum(), target->vnum(), direction);
+    World::Instance().getMysql()->insert(query);
+    ID(World::Instance().getMysql()->getInsertID());
 
-    this->target( target );
-    this->direction().set( direction );
-    flags().value( 0 );
-    key( 0 );
+    this->target(target);
+    this->direction().set(direction);
+    flags().value(0);
+    key(0);
 
-  } catch ( MysqlException me ) {
-    fprintf( stderr, "Failed to create exit for room %lu: %s\n", room->ID(), me.getMessage().c_str() );
+  } catch (MysqlException me) {
+    fprintf(stderr, "Failed to create exit for room %lu: %s\n", room->ID(), me.getMessage().c_str());
     return;
   }
 
   return;
 }
 
-Exit::~Exit( void ) {
+Exit::~Exit(void) {
   return;
 }
 
-void Exit::flag( const unsigned long& flag, const bool& value, bool stop ) {
+void Exit::flag(const unsigned long& flag, const bool& value, bool stop) {
   Exit* other = NULL;
   // Set the exit flag...
-  _flags.set( flag, value );
+  _flags.set(flag, value);
   // If we find an opposite exit, also change that flag...
-  if ( !stop ) { // this prevents recursion
-    if ( ( other = target()->exit( inverse( direction().number() ) ) ) != NULL ) {
-      other->flag( flag, value, true );
+  if (!stop) { // this prevents recursion
+    if ((other = target()->exit(inverse(direction().number()))) != NULL) {
+      other->flag(flag, value, true);
     }
   }
   return;
 }
 
-void Exit::save( void ) {
+void Exit::save(void) {
   try {
     char query[MAX_BUFFER];
 
-    sprintf( query,
+    sprintf(query,
       " UPDATE exits SET      \
           flags = %lu,        \
           `key` = %lu         \
@@ -83,40 +83,40 @@ void Exit::save( void ) {
       flags().value(),
       key(),
       ID()
-    );
-    World::Instance().getMysql()->update( query );
+   );
+    World::Instance().getMysql()->update(query);
 
-  } catch ( MysqlException me ) {
-    fprintf( stderr, "Failed to save exit %lu: %s\n", ID(), me.getMessage().c_str() );
+  } catch (MysqlException me) {
+    fprintf(stderr, "Failed to save exit %lu: %s\n", ID(), me.getMessage().c_str());
     return;
   }
   return;
 }
 
-void Exit::destroy( void ) {
+void Exit::destroy(void) {
   unsigned long tempID = ID();
   try {
     char query[MAX_BUFFER];
 
-    sprintf( query,
+    sprintf(query,
       " DELETE              \
         FROM exits          \
         WHERE exitID = %lu  \
         LIMIT 1;",
       ID()
-    );
-    World::Instance().getMysql()->remove( query );
+   );
+    World::Instance().getMysql()->remove(query);
     delete this;
 
-  } catch ( MysqlException me ) {
-    fprintf( stderr, "Failed to delete exit %lu: %s\n", tempID, me.getMessage().c_str() );
+  } catch (MysqlException me) {
+    fprintf(stderr, "Failed to delete exit %lu: %s\n", tempID, me.getMessage().c_str());
     return;
   }
   return;
 }
 
-unsigned short Exit::inverse( const unsigned short& direction ) { // static public
-  switch ( direction ) {
+unsigned short Exit::inverse(const unsigned short& direction) { // static public
+  switch (direction) {
     case NORTH: return SOUTH;
     case EAST:  return WEST;
     case SOUTH: return NORTH;
@@ -127,8 +127,8 @@ unsigned short Exit::inverse( const unsigned short& direction ) { // static publ
   }
 }
 
-const char* Exit::name( const unsigned short& direction ) { // static public
-  switch ( direction ) {
+const char* Exit::name(const unsigned short& direction) { // static public
+  switch (direction) {
     case NORTH: return "North";
     case EAST:  return "East";
     case SOUTH: return "South";
@@ -139,8 +139,8 @@ const char* Exit::name( const unsigned short& direction ) { // static public
   }
 }
 
-const char* Exit::inverseName( const unsigned short& direction ) { // static public
-  switch ( direction ) {
+const char* Exit::inverseName(const unsigned short& direction) { // static public
+  switch (direction) {
     case NORTH: return "South";
     case EAST:  return "West";
     case SOUTH: return "North";
@@ -151,38 +151,38 @@ const char* Exit::inverseName( const unsigned short& direction ) { // static pub
   }
 }
 
-unsigned short Exit::string2dir( const std::string& str ) { // static public
+unsigned short Exit::string2dir(const std::string& str) { // static public
   std::string dir = Regex::trim(str);
-  if ( Regex::strPrefix( str, "north" ) ) {
+  if (Regex::strPrefix(str, "north")) {
     return NORTH;
-  } else if ( Regex::strPrefix( str, "east" ) ) {
+  } else if (Regex::strPrefix(str, "east")) {
     return EAST;
-  } else if ( Regex::strPrefix( str, "south" ) ) {
+  } else if (Regex::strPrefix(str, "south")) {
     return SOUTH;
-  } else if ( Regex::strPrefix( str, "west" ) ) {
+  } else if (Regex::strPrefix(str, "west")) {
     return WEST;
-  } else if ( Regex::strPrefix( str, "up" ) ) {
+  } else if (Regex::strPrefix(str, "up")) {
     return UP;
-  } else if ( Regex::strPrefix( str, "down" ) ) {
+  } else if (Regex::strPrefix(str, "down")) {
     return DOWN;
   } else {
     return UNDEFINED;
   }
 }
 
-unsigned short Exit::string2inverse( const std::string& str ) { // static public
+unsigned short Exit::string2inverse(const std::string& str) { // static public
   std::string dir = Regex::trim(str);
-  if ( Regex::strPrefix( str, "north" ) ) {
+  if (Regex::strPrefix(str, "north")) {
     return SOUTH;
-  } else if ( Regex::strPrefix( str, "east" ) ) {
+  } else if (Regex::strPrefix(str, "east")) {
     return WEST;
-  } else if ( Regex::strPrefix( str, "south" ) ) {
+  } else if (Regex::strPrefix(str, "south")) {
     return NORTH;
-  } else if ( Regex::strPrefix( str, "west" ) ) {
+  } else if (Regex::strPrefix(str, "west")) {
     return EAST;
-  } else if ( Regex::strPrefix( str, "up" ) ) {
+  } else if (Regex::strPrefix(str, "up")) {
     return DOWN;
-  } else if ( Regex::strPrefix( str, "down" ) ) {
+  } else if (Regex::strPrefix(str, "down")) {
     return UP;
   } else {
     return UNDEFINED;

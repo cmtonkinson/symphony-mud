@@ -494,7 +494,7 @@ class ParameterizedTestCaseInfo : public ParameterizedTestCaseInfoBase {
         ParamGenerator<ParamType> generator((*gen_it->second)());
 
         Message test_case_name_stream;
-        if ( !instantiation_name.empty() )
+        if (!instantiation_name.empty())
           test_case_name_stream << instantiation_name.c_str() << "/";
         test_case_name_stream << test_info->test_case_base_name.c_str();
 

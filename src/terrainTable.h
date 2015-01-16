@@ -26,25 +26,25 @@
 
 class TerrainTable {
   public:
-    TerrainTable( void );
-    ~TerrainTable( void );
+    TerrainTable(void);
+    ~TerrainTable(void);
 
     // Public accessor methods...
-    std::map<std::string,Terrain*>&         terrains( void )               { return _terrains; }
-    const std::map<std::string,Terrain*>&   terrains( void ) const         { return _terrains; }
+    std::map<std::string,Terrain*>&         terrains(void)               { return _terrains; }
+    const std::map<std::string,Terrain*>&   terrains(void) const         { return _terrains; }
 
     // General methods...
-    void        add( Terrain* );
-    Terrain*    find( const std::string& name ) const;
-    std::string list( void ) const;
+    void        add(Terrain*);
+    Terrain*    find(const std::string& name) const;
+    std::string list(void) const;
 
-    static TerrainTable&  Instance( void );
+    static TerrainTable&  Instance(void);
 
   private:
     std::map<std::string,Terrain*>    _terrains;
 };
 
-inline TerrainTable& TerrainTable::Instance( void ) { // public static
+inline TerrainTable& TerrainTable::Instance(void) { // public static
   static TerrainTable instance;
   return instance;
 }

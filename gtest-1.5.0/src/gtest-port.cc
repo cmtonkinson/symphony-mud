@@ -651,7 +651,7 @@ bool ParseInt32(const Message& src_text, const char* str, Int32* value) {
       // LONG_MAX or LONG_MIN when the input overflows.)
       result != long_value
       // The parsed value overflows as an Int32.
-      ) {
+     ) {
     Message msg;
     msg << "WARNING: " << src_text
         << " is expected to be a 32-bit integer, but actually"

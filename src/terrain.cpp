@@ -21,322 +21,322 @@
 #include "terrain.h"
 
 /************************************************************ BASE CLASS ************************************************************/
-Terrain::Terrain( void ) {
-  base( DEFAULT_MOVEMENT );
-  title( 'g' );
-  description( 'x' );
-  map( 'x' );
-  flags( 0 );
+Terrain::Terrain(void) {
+  base(DEFAULT_MOVEMENT);
+  title('g');
+  description('x');
+  map('x');
+  flags(0);
   return;
 }
 
-Terrain::~Terrain( void ) {
+Terrain::~Terrain(void) {
   return;
 }
 
 /************************************************************ BEACH ************************************************************/
-TerrainBeach::TerrainBeach( void ) {
-  name( "beach" );
-  title( 'y' );
-  description( 'Y' );
-  map( 'Y' );
+TerrainBeach::TerrainBeach(void) {
+  name("beach");
+  title('y');
+  description('Y');
+  map('Y');
   return;
 }
 
-unsigned short TerrainBeach::calculate( Creature* creature ) {
+unsigned short TerrainBeach::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ CASTLE ************************************************************/
-TerrainCastle::TerrainCastle( void ) {
-  name( "castle" );
-  title( 'w' );
-  description( 'X' );
-  map( 'w' );
+TerrainCastle::TerrainCastle(void) {
+  name("castle");
+  title('w');
+  description('X');
+  map('w');
   return;
 }
 
-unsigned short TerrainCastle::calculate( Creature* creature ) {
+unsigned short TerrainCastle::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ CAVE ************************************************************/
-TerrainCave::TerrainCave( void ) {
-  name( "cave" );
-  title( 'W' );
-  description( 'x' );
-  map( 'w' );
+TerrainCave::TerrainCave(void) {
+  name("cave");
+  title('W');
+  description('x');
+  map('w');
   return;
 }
 
-unsigned short TerrainCave::calculate( Creature* creature ) {
+unsigned short TerrainCave::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ CHURCH ************************************************************/
-TerrainChurch::TerrainChurch( void ) {
-  name( "church" );
-  title( 'w' );
-  description( 'W' );
-  map( 'w' );
+TerrainChurch::TerrainChurch(void) {
+  name("church");
+  title('w');
+  description('W');
+  map('w');
   return;
 }
 
-unsigned short TerrainChurch::calculate( Creature* creature ) {
+unsigned short TerrainChurch::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ CITY ************************************************************/
-TerrainCity::TerrainCity( void ) {
-  name( "city" );
+TerrainCity::TerrainCity(void) {
+  name("city");
   return;
 }
 
-unsigned short TerrainCity::calculate( Creature* creature ) {
+unsigned short TerrainCity::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ DEEPWATER ************************************************************/
-TerrainDeepwater::TerrainDeepwater( void ) {
-  name( "deep_water" );
-  title( 'C' );
-  description( 'b' );
-  map( 'B' );
+TerrainDeepwater::TerrainDeepwater(void) {
+  name("deep_water");
+  title('C');
+  description('b');
+  map('B');
   return;
 }
 
-unsigned short TerrainDeepwater::calculate( Creature* creature ) {
+unsigned short TerrainDeepwater::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ DESERT ************************************************************/
-TerrainDesert::TerrainDesert( void ) {
-  name( "desert" );
-  title( 'Y' );
-  description( 'y' );
-  map( 'y' );
+TerrainDesert::TerrainDesert(void) {
+  name("desert");
+  title('Y');
+  description('y');
+  map('y');
   return;
 }
 
-unsigned short TerrainDesert::calculate( Creature* creature ) {
+unsigned short TerrainDesert::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ FIELD ************************************************************/
-TerrainField::TerrainField( void ) {
-  name( "field" );
-  title( 'g' );
-  description( 'G' );
-  map( 'G' );
+TerrainField::TerrainField(void) {
+  name("field");
+  title('g');
+  description('G');
+  map('G');
   return;
 }
 
-unsigned short TerrainField::calculate( Creature* creature ) {
+unsigned short TerrainField::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ FOREST ************************************************************/
-TerrainForest::TerrainForest( void ) {
-  name( "forest" );
-  title( 'y' );
-  description( 'g' );
-  map( 'g' );
+TerrainForest::TerrainForest(void) {
+  name("forest");
+  title('y');
+  description('g');
+  map('g');
   return;
 }
 
-unsigned short TerrainForest::calculate( Creature* creature ) {
+unsigned short TerrainForest::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ GRAVEYARD ************************************************************/
-TerrainGraveyard::TerrainGraveyard( void ) {
-  name( "graveyard" );
-  title( 'W' );
-  description( 'w' );
-  map( 'w' );
+TerrainGraveyard::TerrainGraveyard(void) {
+  name("graveyard");
+  title('W');
+  description('w');
+  map('w');
   return;
 }
 
-unsigned short TerrainGraveyard::calculate( Creature* creature ) {
+unsigned short TerrainGraveyard::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ INDOOR ************************************************************/
-TerrainIndoor::TerrainIndoor( void ) {
-  name( "indoor" );
+TerrainIndoor::TerrainIndoor(void) {
+  name("indoor");
   return;
 }
 
-unsigned short TerrainIndoor::calculate( Creature* creature ) {
+unsigned short TerrainIndoor::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ JUNGLE ************************************************************/
-TerrainJungle::TerrainJungle( void ) {
-  name( "jungle" );
-  title( 'G' );
-  description( 'g' );
-  map( 'g' );
+TerrainJungle::TerrainJungle(void) {
+  name("jungle");
+  title('G');
+  description('g');
+  map('g');
   return;
 }
 
-unsigned short TerrainJungle::calculate( Creature* creature ) {
+unsigned short TerrainJungle::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ MINE ************************************************************/
-TerrainMine::TerrainMine( void ) {
-  name( "mine" );
-  title( 'w' );
-  description( 'm' );
-  map( 'm' );
+TerrainMine::TerrainMine(void) {
+  name("mine");
+  title('w');
+  description('m');
+  map('m');
   return;
 }
 
-unsigned short TerrainMine::calculate( Creature* creature ) {
+unsigned short TerrainMine::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ MOUNTAIN ************************************************************/
-TerrainMountain::TerrainMountain( void ) {
-  name( "mountain" );
-  title( 'm' );
-  description( 'W' );
-  map( 'm' );
+TerrainMountain::TerrainMountain(void) {
+  name("mountain");
+  title('m');
+  description('W');
+  map('m');
   return;
 }
 
-unsigned short TerrainMountain::calculate( Creature* creature ) {
+unsigned short TerrainMountain::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ PLAINS ************************************************************/
-TerrainPlains::TerrainPlains( void ) {
-  name( "plains" );  
-  title( 'Y' );
-  description( 'G' );
-  map( 'G' );
+TerrainPlains::TerrainPlains(void) {
+  name("plains");
+  title('Y');
+  description('G');
+  map('G');
   return;
 }
 
-unsigned short TerrainPlains::calculate( Creature* creature ) {
+unsigned short TerrainPlains::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ ROAD ************************************************************/
-TerrainRoad::TerrainRoad( void ) {
-  name( "road" );
-  title( 'g' );
-  description( 'y' );
-  map( 'x' );
+TerrainRoad::TerrainRoad(void) {
+  name("road");
+  title('g');
+  description('y');
+  map('x');
   return;
 }
 
-unsigned short TerrainRoad::calculate( Creature* creature ) {
+unsigned short TerrainRoad::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ SNOW ************************************************************/
-TerrainSnow::TerrainSnow( void ) {
-  name( "snow" );
-  title( 'x' );
-  description( 'W' );
-  map( 'W' );
+TerrainSnow::TerrainSnow(void) {
+  name("snow");
+  title('x');
+  description('W');
+  map('W');
   return;
 }
 
-unsigned short TerrainSnow::calculate( Creature* creature ) {
+unsigned short TerrainSnow::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ STONE ************************************************************/
-TerrainStone::TerrainStone( void ) {
-  name( "stone" );
-  title( 'w' );
-  description( 'x' );
-  map( 'x' );
+TerrainStone::TerrainStone(void) {
+  name("stone");
+  title('w');
+  description('x');
+  map('x');
   return;
 }
 
-unsigned short TerrainStone::calculate( Creature* creature ) {
+unsigned short TerrainStone::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ SWAMP ************************************************************/
-TerrainSwamp::TerrainSwamp( void ) {
-  name( "swamp" );
-  title( 'y' );
-  description( 'c' );
-  map( 'c' );
+TerrainSwamp::TerrainSwamp(void) {
+  name("swamp");
+  title('y');
+  description('c');
+  map('c');
   return;
 }
 
-unsigned short TerrainSwamp::calculate( Creature* creature ) {
+unsigned short TerrainSwamp::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ TREETOP ************************************************************/
-TerrainTreetop::TerrainTreetop( void ) {
-  name( "treetop" );
-  title( 'y' );
-  description( 'g' );
-  map( 'g' );
+TerrainTreetop::TerrainTreetop(void) {
+  name("treetop");
+  title('y');
+  description('g');
+  map('g');
   return;
 }
 
-unsigned short TerrainTreetop::calculate( Creature* creature ) {
+unsigned short TerrainTreetop::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ UNDERWATER ************************************************************/
-TerrainUnderwater::TerrainUnderwater( void ) {
-  name( "underwater" );
-  title( 'C' );
-  description( 'c' );
-  map( 'b' );
+TerrainUnderwater::TerrainUnderwater(void) {
+  name("underwater");
+  title('C');
+  description('c');
+  map('b');
   return;
 }
 
-unsigned short TerrainUnderwater::calculate( Creature* creature ) {
+unsigned short TerrainUnderwater::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ VILLAGE ************************************************************/
-TerrainVillage::TerrainVillage( void ) {
-  name( "village" );
-  title( 'G' );
-  description( 'y' );
-  map( 'x' );
+TerrainVillage::TerrainVillage(void) {
+  name("village");
+  title('G');
+  description('y');
+  map('x');
   return;
 }
 
-unsigned short TerrainVillage::calculate( Creature* creature ) {
+unsigned short TerrainVillage::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ VOLCANO ************************************************************/
-TerrainVolcano::TerrainVolcano( void ) {
-  name( "volcano" );
-  title( 'w' );
-  description( 'R' );
-  map( 'R' );
+TerrainVolcano::TerrainVolcano(void) {
+  name("volcano");
+  title('w');
+  description('R');
+  map('R');
   return;
 }
 
-unsigned short TerrainVolcano::calculate( Creature* creature ) {
+unsigned short TerrainVolcano::calculate(Creature* creature) {
   return base();
 }
 
 /************************************************************ WATER ************************************************************/
-TerrainWater::TerrainWater( void ) {
-  name( "water" );
-  title( 'C' );
-  description( 'B' );
-  map( 'C' );
+TerrainWater::TerrainWater(void) {
+  name("water");
+  title('C');
+  description('B');
+  map('C');
   return;
 }
 
-unsigned short TerrainWater::calculate( Creature* creature ) {
+unsigned short TerrainWater::calculate(Creature* creature) {
   return base();
 }
 

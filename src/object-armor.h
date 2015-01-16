@@ -26,10 +26,10 @@
 class ObjArmor {
   public:
     // Constructors...
-    ObjArmor( void );
-    ObjArmor( const ObjArmor& ref );
-    ObjArmor( ROW row );
-    ~ObjArmor( void );
+    ObjArmor(void);
+    ObjArmor(const ObjArmor& ref);
+    ObjArmor(ROW row);
+    ~ObjArmor(void);
 };
 
 #endif // H_SYMPHONY_OBJECT_ARMOR

@@ -34,20 +34,20 @@ using std::vector;
 
 class EventHandler {
   public:
-    virtual ~EventHandler( void );
-    void handle( Event* event );
+    virtual ~EventHandler(void);
+    void handle(Event* event);
 
     // to register a function...
     template <class EventType>
-    void registerHandler( bool (*function)( EventType* ) ) {
-      _handlers[Typeinfo(typeid(EventType))].push_back( new EventHandlerFunction<EventType>( function ) );
+    void registerHandler(bool (*function)(EventType*)) {
+      _handlers[Typeinfo(typeid(EventType))].push_back(new EventHandlerFunction<EventType>(function));
       return;
     }
 
     // to register a [non-static] member method...
     template <class ObjectType,class EventType>
-    void registerHandler( ObjectType* object, bool (ObjectType::*method)( EventType* ) ) {
-      _handlers[Typeinfo(typeid(EventType))].push_back( new EventHandlerMethod<ObjectType,EventType>( object, method ) );
+    void registerHandler(ObjectType* object, bool (ObjectType::*method)(EventType*)) {
+      _handlers[Typeinfo(typeid(EventType))].push_back(new EventHandlerMethod<ObjectType,EventType>(object, method));
       return;
     }
 

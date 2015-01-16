@@ -23,8 +23,8 @@
 
 class Event {
   public:
-    Event( void );
-    virtual ~Event( void );
+    Event(void);
+    virtual ~Event(void);
 };
 
 #endif // #ifndef H_SYMPHONY_EVENT

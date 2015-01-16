@@ -68,26 +68,26 @@ class FlagTable;
 class FlagBank {
   public:
     // constructors...
-    FlagBank( FlagInt bank = 0 );
-    FlagBank( const FlagBank& ref );
-    virtual ~FlagBank( void );
+    FlagBank(FlagInt bank = 0);
+    FlagBank(const FlagBank& ref);
+    virtual ~FlagBank(void);
 
-    FlagBank&   operator = ( const FlagBank& ref )              { _bank = ref.bank(); return *this; }
+    FlagBank&   operator = (const FlagBank& ref)              { _bank = ref.bank(); return *this; }
 
     // general methods...
-    const FlagSet&  bank( void ) const                          { return _bank; }
-    void            set( void )                                 { _bank.set(); }
-    void            set( const FlagInt& position )              { _bank.set( position ); }
-    void            set( const FlagInt& position, bool value )  { _bank.set( position, value ); }
-    void            clear( void )                               { _bank.reset(); }
-    void            clear( const FlagInt& position )            { _bank.reset( position ); }
-    bool            toggle( const FlagInt& position )           { _bank.flip( position ); return test( position ); }
-    bool            test( const FlagInt& position ) const       { return _bank.test( position ); }
-    bool            any( void ) const                           { return _bank.any(); }
-    bool            none( void ) const                          { return _bank.none(); }
-    void            value( const FlagInt& value )               { _bank = FlagSet(value); }
-    FlagInt         value( void ) const                         { return _bank.to_ulong(); }
-    std::string     list( const FlagTable& table, bool decorative = false ) const;
+    const FlagSet&  bank(void) const                          { return _bank; }
+    void            set(void)                                 { _bank.set(); }
+    void            set(const FlagInt& position)              { _bank.set(position); }
+    void            set(const FlagInt& position, bool value)  { _bank.set(position, value); }
+    void            clear(void)                               { _bank.reset(); }
+    void            clear(const FlagInt& position)            { _bank.reset(position); }
+    bool            toggle(const FlagInt& position)           { _bank.flip(position); return test(position); }
+    bool            test(const FlagInt& position) const       { return _bank.test(position); }
+    bool            any(void) const                           { return _bank.any(); }
+    bool            none(void) const                          { return _bank.none(); }
+    void            value(const FlagInt& value)               { _bank = FlagSet(value); }
+    FlagInt         value(void) const                         { return _bank.to_ulong(); }
+    std::string     list(const FlagTable& table, bool decorative = false) const;
 
   private:
     FlagSet         _bank;

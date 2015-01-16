@@ -16,4 +16,4 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `avatars` ADD `title` VARCHAR( 255 ) NOT NULL AFTER `room`;
+ALTER TABLE `avatars` ADD `title` VARCHAR(255) NOT NULL AFTER `room`;

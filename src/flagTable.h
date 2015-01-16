@@ -31,23 +31,23 @@ typedef std::map<FlagInt,std::string> ValToName;
 class FlagTable {
   public:
     // constructors...
-    FlagTable( void );
-    virtual ~FlagTable( void );
+    FlagTable(void);
+    virtual ~FlagTable(void);
 
     // general methods...
-    void        add( const std::string& name, const FlagInt& value, std::string decorative = "" );
-    FlagInt     find( const std::string& name );    // looks for an exact match
-    FlagInt     search( const std::string& name );  // looks for a prefix match
-    const char* find( const FlagInt& value );
-    std::string dump( void ) const;
+    void        add(const std::string& name, const FlagInt& value, std::string decorative = "");
+    FlagInt     find(const std::string& name);    // looks for an exact match
+    FlagInt     search(const std::string& name);  // looks for a prefix match
+    const char* find(const FlagInt& value);
+    std::string dump(void) const;
 
     // accessors...
-    NameToVal&        nameToValue( void )           { return _nameToValue; }
-    const NameToVal&  nameToValue( void ) const     { return _nameToValue; }
-    ValToName&        valueToName( void )           { return _valueToName; }
-    const ValToName&  valueToName( void ) const     { return _valueToName; }
-    ValToName&        decorativeName( void )        { return _decorativeName; }
-    const ValToName&  decorativeName( void ) const  { return _decorativeName; }
+    NameToVal&        nameToValue(void)           { return _nameToValue; }
+    const NameToVal&  nameToValue(void) const     { return _nameToValue; }
+    ValToName&        valueToName(void)           { return _valueToName; }
+    const ValToName&  valueToName(void) const     { return _valueToName; }
+    ValToName&        decorativeName(void)        { return _decorativeName; }
+    const ValToName&  decorativeName(void) const  { return _decorativeName; }
 
   private:
     // data...
@@ -59,9 +59,9 @@ class FlagTable {
 #define DEF_FLAGTABLE(NAME)           \
 class NAME: public FlagTable {        \
   public:                             \
-    NAME( void );                     \
-    virtual ~NAME( void ) { }         \
-    static NAME& Instance( void ) {   \
+    NAME(void);                     \
+    virtual ~NAME(void) { }         \
+    static NAME& Instance(void) {   \
       static NAME _instance;          \
       return _instance;               \
     }                                 \

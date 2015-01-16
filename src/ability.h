@@ -80,7 +80,7 @@ class Ability {
 #define DEF_SKILL(NAME,CLASS)                         \
 class CLASS: public Ability {                         \
   public:                                             \
-  CLASS(                                              \
+  CLASS(                                             \
     unsigned level_      = DEFAULT_LEVEL,             \
     unsigned trains_     = DEFAULT_TRAINS,            \
     unsigned difficulty_ = DEFAULT_DIFFICULTY,        \
@@ -103,7 +103,7 @@ class CLASS: public Ability {                         \
 #define DEF_SPELL(NAME,CLASS)                         \
 class CLASS: public Ability {                         \
   public:                                             \
-  CLASS(                                              \
+  CLASS(                                             \
     unsigned level_      = DEFAULT_LEVEL,             \
     unsigned trains_     = DEFAULT_TRAINS,            \
     unsigned difficulty_ = DEFAULT_DIFFICULTY,        \

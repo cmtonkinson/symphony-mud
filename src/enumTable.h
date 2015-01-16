@@ -29,14 +29,14 @@
 class EnumTable {
   public:
     // constructors...
-    EnumTable( void );
-    virtual ~EnumTable( void );
+    EnumTable(void);
+    virtual ~EnumTable(void);
 
     // general methods...
-    void        add( const EnumInt& n, const std::string& s );
-    EnumInt     get( const std::string& value ) const;
-    std::string get( const EnumInt& value ) const;
-    std::string list( void ) const;
+    void        add(const EnumInt& n, const std::string& s);
+    EnumInt     get(const std::string& value) const;
+    std::string get(const EnumInt& value) const;
+    std::string list(void) const;
 
   private:
     std::map<EnumInt,std::string> _int2string;
@@ -46,20 +46,20 @@ class EnumTable {
 #define DEF_ENUM(NAME)                                \
 class ET##NAME: public EnumTable {                    \
   public:                                             \
-    ET##NAME( void );                                 \
-    virtual ~ET##NAME( void ) { }                     \
-    static ET##NAME& Instance( void ) {               \
+    ET##NAME(void);                                 \
+    virtual ~ET##NAME(void) { }                     \
+    static ET##NAME& Instance(void) {               \
       static ET##NAME _instance;                      \
       return _instance;                               \
     }                                                 \
 };                                                    \
 class NAME: public Enum {                             \
   public:                                             \
-    NAME( EnumInt value = 0 ) {                       \
+    NAME(EnumInt value = 0) {                       \
       Enum::_table = &ET##NAME::Instance();           \
-      set( value );                                   \
+      set(value);                                   \
     }                                                 \
-    virtual ~NAME( void ) { }                         \
+    virtual ~NAME(void) { }                         \
 };                                                    \
 
 #define UNDEFINED   0

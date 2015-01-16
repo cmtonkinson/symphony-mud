@@ -28,7 +28,7 @@
 #include "object-container.h"
 #include "world.h"
 
-Avatar::Avatar( Socket* socket ) {
+Avatar::Avatar(Socket* socket) {
   time(&_loggedOn);
   status().set(CONNECTING);
   disconnected(false);
@@ -47,7 +47,7 @@ Avatar::Avatar( Socket* socket ) {
   return;
 }
 
-Avatar::~Avatar( void ) {
+Avatar::~Avatar(void) {
   delete socket();
   return;
 }
@@ -58,138 +58,138 @@ Avatar::~Avatar( void ) {
  * the various overloads of Avatar::send() so that we can do things like
  * color in a central location.
  */
-void Avatar::processOutput( const std::string& src ) {
+void Avatar::processOutput(const std::string& src) {
   output(output() + src);
   return;
 }
 
-bool Avatar::hasInput( void ) {
+bool Avatar::hasInput(void) {
   try {
     return socket()->hasInput();
-  } catch ( SocketException se ) {
-    World::Instance().bigBrother( this, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in Avatar::hasInput() -> %s", identifiers().shortname().c_str(), se.getError().c_str() );
-    disconnected( true );
+  } catch (SocketException se) {
+    World::Instance().bigBrother(this, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in Avatar::hasInput() -> %s", identifiers().shortname().c_str(), se.getError().c_str());
+    disconnected(true);
     return false;
   }
 }
 
-std::string Avatar::getInput( void ) {
+std::string Avatar::getInput(void) {
   try {
     return socket()->getInput();
-  } catch ( SocketException se ) {
-    World::Instance().bigBrother( this, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in Avatar::getInput() -> %s", identifiers().shortname().c_str(), se.getError().c_str() );
-    disconnected( true );
+  } catch (SocketException se) {
+    World::Instance().bigBrother(this, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in Avatar::getInput() -> %s", identifiers().shortname().c_str(), se.getError().c_str());
+    disconnected(true);
     return std::string();
   }
 }
 
-bool Avatar::hasOutput( void ) {
+bool Avatar::hasOutput(void) {
   try {
-    return ( output().length() > 0 );
-  } catch ( SocketException se ) {
-    World::Instance().bigBrother( this, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in Avatar::hasOutput() -> %s", identifiers().shortname().c_str(), se.getError().c_str() );
-    disconnected( true );
+    return (output().length() > 0);
+  } catch (SocketException se) {
+    World::Instance().bigBrother(this, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in Avatar::hasOutput() -> %s", identifiers().shortname().c_str(), se.getError().c_str());
+    disconnected(true);
     return false;
   }
 }
 
-void Avatar::flushOutput( void ) {
+void Avatar::flushOutput(void) {
   try {
-    send( IOhandlers().back()->prompt() );
-    socket()->send(std::string("\n") + output().interpretColor() );
-    output( std::string() );
-  } catch ( SocketException se ) {
-    World::Instance().bigBrother( this, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in Avatar::flushOutput() -> %s", identifiers().shortname().c_str(), se.getError().c_str() );
-    disconnected( true );
+    send(IOhandlers().back()->prompt());
+    socket()->send(std::string("\n") + output().interpretColor());
+    output(std::string());
+  } catch (SocketException se) {
+    World::Instance().bigBrother(this, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in Avatar::flushOutput() -> %s", identifiers().shortname().c_str(), se.getError().c_str());
+    disconnected(true);
   }
   return;
 }
 
-std::string Avatar::listWhoFlags( void ) {
-  return whoFlags().list( FTAvatarWho::Instance(), true );
+std::string Avatar::listWhoFlags(void) {
+  return whoFlags().list(FTAvatarWho::Instance(), true);
 }
 
-void Avatar::restoreRoom( void ) {
+void Avatar::restoreRoom(void) {
   CmdLook look;
-  std::vector<std::string> look_args( 1 );
+  std::vector<std::string> look_args(1);
 
   // put the Avatar in the right place...
-  room( World::Instance().findRoom( roomNumber() ) );
-  if ( !room() ) { // just in case
-    room( World::Instance().findRoom( 0 ) );
+  room(World::Instance().findRoom(roomNumber()));
+  if (!room()) { // just in case
+    room(World::Instance().findRoom(0));
   }
-  room()->add( this );
+  room()->add(this);
   // let everyone know...
-  room()->send_cond( "$p has entered the realm.\n", this );
+  room()->send_cond("$p has entered the realm.\n", this);
   // show them around...
-  look.avatar( this );
-  look.execute( this, look_args );
+  look.avatar(this);
+  look.execute(this, look_args);
   return;
 }
 
-bool Avatar::create( void ) {
+bool Avatar::create(void) {
   try {
     char query[MAX_BUFFER];
 
-    sprintf( query,
+    sprintf(query,
       " INSERT INTO avatars       \
-        ( shortname, password )   \
+        (shortname, password)   \
         VALUES                    \
-        ( '%s', PASSWORD('%s') );",
+        ('%s', PASSWORD('%s'));",
       Mysql::addslashes(identifiers().shortname()).c_str(),
       Mysql::addslashes(password()).c_str()
-    );
-    World::Instance().getMysql()->insert( query );
-    ID( World::Instance().getMysql()->getInsertID() );
+   );
+    World::Instance().getMysql()->insert(query);
+    ID(World::Instance().getMysql()->getInsertID());
     // We don't keep this stored in memory past the creation sequence.
-    password( " " );
+    password(" ");
     // If this is the first charactor to the realm, promote them to admin.
     if (ID() == 1) {
       while (level() < CREATOR) gainLevel();
       save();
     }
-  } catch ( MysqlException me ) {
-    fprintf( stderr, "Failed create player %s: %s\n", identifiers().shortname().c_str(), me.getMessage().c_str() );
+  } catch (MysqlException me) {
+    fprintf(stderr, "Failed create player %s: %s\n", identifiers().shortname().c_str(), me.getMessage().c_str());
     return false;
   }
   return ID();
 }
 
-bool Avatar::save( void ) {
+bool Avatar::save(void) {
   unsigned order = 0;
   bool success = true;
 
-  if ( !isConnected() ) {
+  if (!isConnected()) {
     return false;
   }
 
   /* when saving, we want to undo all equipment attribute modifications before
    * storing Avatar state */
-  for ( std::map<int,Object*>::const_iterator it = equipment().objectMap().begin(); it != equipment().objectMap().end(); ++it ) {
-    unsetModifications( it->second );
+  for (std::map<int,Object*>::const_iterator it = equipment().objectMap().begin(); it != equipment().objectMap().end(); ++it) {
+    unsetModifications(it->second);
   }
 
   try {
     Mysql* mysql = World::Instance().getMysql();
     char query[MAX_BUFFER];
 
-    sprintf( query,
+    sprintf(query,
       " DELETE                          \
           FROM `object_instances`       \
           WHERE `placement` = 'AVATAR'  \
             AND `id` = %lu              \
         ;",
       ID()
-    );
-    mysql->remove( query );
+   );
+    mysql->remove(query);
 
-    for ( std::list<Object*>::const_iterator it = inventory().objectList().begin(); it != inventory().objectList().end(); ++it ) {
-      (*it)->saveInstance( mysql, "AVATAR", ID(), 0, order++ );
+    for (std::list<Object*>::const_iterator it = inventory().objectList().begin(); it != inventory().objectList().end(); ++it) {
+      (*it)->saveInstance(mysql, "AVATAR", ID(), 0, order++);
     }
 
     order = 0;
-    for ( std::map<int,Object*>::const_iterator it = equipment().objectMap().begin(); it != equipment().objectMap().end(); ++it ) {
-      it->second->saveInstance( mysql, "AVATAR", ID(), it->first, order++ );
+    for (std::map<int,Object*>::const_iterator it = equipment().objectMap().begin(); it != equipment().objectMap().end(); ++it) {
+      it->second->saveInstance(mysql, "AVATAR", ID(), it->first, order++);
     }
 
     sprintf(query,
@@ -198,7 +198,7 @@ bool Avatar::save( void ) {
           WHERE `avatar` = %lu \
         ;",
       ID()
-    );
+   );
     mysql->remove(query);
     for (std::map<Ability*,unsigned>::iterator iter = abilityMastery().begin(); iter != abilityMastery().end(); ++iter) {
       sprintf(query,
@@ -211,11 +211,11 @@ bool Avatar::save( void ) {
           ID(),
           Mysql::addslashes(iter->first->name()).c_str(),
           iter->second
-      );
+     );
       mysql->insert(query);
     }
 
-    sprintf( query,
+    sprintf(query,
       "UPDATE avatars SET         \
         `shortname` = '%s',       \
         `description` = '%s',     \
@@ -316,137 +316,137 @@ bool Avatar::save( void ) {
       bankGold(),
       bankSilver(),
       ID()
-    );
-    mysql->update( query );
+   );
+    mysql->update(query);
 
-  } catch ( MysqlException me ) {
-    fprintf( stderr, "Failed to save avatar %lu: %s\n", ID(), me.getMessage().c_str() );
+  } catch (MysqlException me) {
+    fprintf(stderr, "Failed to save avatar %lu: %s\n", ID(), me.getMessage().c_str());
     success = false;
   }
 
   /* set all equipment modifications back to where they were */
-  for ( std::map<int,Object*>::const_iterator it = equipment().objectMap().begin(); it != equipment().objectMap().end(); ++it ) {
-    setModifications( it->second );
+  for (std::map<int,Object*>::const_iterator it = equipment().objectMap().begin(); it != equipment().objectMap().end(); ++it) {
+    setModifications(it->second);
   }
 
   return success;
 }
 
-bool Avatar::destroy( void ) {
+bool Avatar::destroy(void) {
   unsigned long tempID = ID();
   try {
     char query[MAX_BUFFER];
 
-    sprintf( query,
+    sprintf(query,
       " DELETE FROM           \
         avatars               \
         WHERE avatarID = %lu  \
         LIMIT 1;",
       ID()
-    );
-    World::Instance().getMysql()->remove( query );
+   );
+    World::Instance().getMysql()->remove(query);
     delete this;
 
-  } catch ( MysqlException me ) {
-    fprintf( stderr, "Failed to delete mob %lu: %s\n", tempID, me.getMessage().c_str() );
+  } catch (MysqlException me) {
+    fprintf(stderr, "Failed to delete mob %lu: %s\n", tempID, me.getMessage().c_str());
     return false;
   }
   return true;
 }
 
-void Avatar::changeName( const std::string& name ) {
-  World::Instance().getAvatars().erase( identifiers().shortname() );
-  identifiers().shortname( name );
-  World::Instance().getAvatars().insert( std::make_pair( identifiers().shortname(), this ) );
+void Avatar::changeName(const std::string& name) {
+  World::Instance().getAvatars().erase(identifiers().shortname());
+  identifiers().shortname(name);
+  World::Instance().getAvatars().insert(std::make_pair(identifiers().shortname(), this));
   return;
 }
 
-bool Avatar::markForDeletion( const unsigned short& value ) {
+bool Avatar::markForDeletion(const unsigned short& value) {
   try {
     char query[MAX_BUFFER];
-    sprintf( query,
+    sprintf(query,
       " UPDATE avatars        \
         SET `delete` = %d     \
         WHERE avatarID = %lu  \
         LIMIT 1;",
       value ? 1 : 0,
       ID()
-    );
-    World::Instance().getMysql()->update( query );
-  } catch ( MysqlException me ) {
-    fprintf( stderr, "Failed to change deletion marker for player %lu: %s\n", ID(), me.getMessage().c_str() );
+   );
+    World::Instance().getMysql()->update(query);
+  } catch (MysqlException me) {
+    fprintf(stderr, "Failed to change deletion marker for player %lu: %s\n", ID(), me.getMessage().c_str());
     return false;
   }
   return true;
 }
 
-bool Avatar::load( void ) {
+bool Avatar::load(void) {
   Mysql* mysql = World::Instance().getMysql();
   char query[MAX_BUFFER];
   ROW row;
   Object* object = NULL;
   Ability* ability = NULL;
 
-  sprintf( query, "SELECT * FROM avatars WHERE LOWER(shortname) = LOWER('%s') AND active = 1 LIMIT 1;", Mysql::addslashes(identifiers().shortname()).c_str() );
-  if ( mysql->select( query ) == 1 ) {
+  sprintf(query, "SELECT * FROM avatars WHERE LOWER(shortname) = LOWER('%s') AND active = 1 LIMIT 1;", Mysql::addslashes(identifiers().shortname()).c_str());
+  if (mysql->select(query) == 1) {
     row = mysql->fetch();
-    if ( !row.empty() ) {
-      ID( row["avatarID"] );
-      deleteMe( row["delete"] );
-      identifiers().shortname( row["shortname"] );
-      identifiers().description( row["description"] );
-      identifiers().addKeyword( Regex::lower(identifiers().shortname()) );
-      adminFlags().value( row["adminFlags"] );
-      gechoColor( row["gechoColor"] );
-      channelFlags().value( row["channelFlags"] );
-      whoFlags().value( row["whoFlags"] );
-      roomNumber( row["room"] );
-      title( row["title"] );
-      poofin( row["poofin"] );
-      poofout( row["poofout"] );
+    if (!row.empty()) {
+      ID(row["avatarID"]);
+      deleteMe(row["delete"]);
+      identifiers().shortname(row["shortname"]);
+      identifiers().description(row["description"]);
+      identifiers().addKeyword(Regex::lower(identifiers().shortname()));
+      adminFlags().value(row["adminFlags"]);
+      gechoColor(row["gechoColor"]);
+      channelFlags().value(row["channelFlags"]);
+      whoFlags().value(row["whoFlags"]);
+      roomNumber(row["room"]);
+      title(row["title"]);
+      poofin(row["poofin"]);
+      poofout(row["poofout"]);
       // identity...
-      gender().set( (unsigned)row["gender"] );
-      race().set( (unsigned)row["race"] );
-      pClass().set( (unsigned) row["cClass"] );
+      gender().set((unsigned)row["gender"]);
+      race().set((unsigned)row["race"]);
+      pClass().set((unsigned) row["cClass"]);
       // stats...
-      level( row["level"] );
-      exp( row["exp"] );
-      tnl( row["tnl"] );
-      maxHealth( row["maxHealth"] );
-      health( row["health"] );
-      maxMana( row["maxMana"] );
-      mana( row["mana"] );
-      stamina( row["stamina"] );
-      maxStrength( row["maxStrength"] );
-      strength( row["strength"] );
-      maxDexterity( row["maxDexterity"] );
-      dexterity( row["dexterity"] );
-      maxConstitution( row["maxConstitution"] );
-      constitution( row["constitution"] );
-      maxIntelligence( row["maxIntelligence"] );
-      intelligence( row["intelligence"] );
-      maxFocus( row["maxFocus"] );
-      focus( row["focus"] );
-      maxCreativity( row["maxCreativity"] );
-      creativity( row["creativity"] );
-      maxCharisma( row["maxCharisma"] );
-      charisma( row["charisma"] );
-      maxLuck( row["maxLuck"] );
-      luck( row["luck"] );
-      armor( row["armor"] );
-      bash( row["bash"] );
-      slash( row["slash"] );
-      pierce( row["pierce"] );
-      exotic( row["exotic"] );
-      age( row["age"] );
-      trains( row["trains"] );
-      gold( row["gold"] );
-      silver( row["silver"] );
-      bankGold( row["bank_gold"] );
-      bankSilver( row["bank_silver"] );
+      level(row["level"]);
+      exp(row["exp"]);
+      tnl(row["tnl"]);
+      maxHealth(row["maxHealth"]);
+      health(row["health"]);
+      maxMana(row["maxMana"]);
+      mana(row["mana"]);
+      stamina(row["stamina"]);
+      maxStrength(row["maxStrength"]);
+      strength(row["strength"]);
+      maxDexterity(row["maxDexterity"]);
+      dexterity(row["dexterity"]);
+      maxConstitution(row["maxConstitution"]);
+      constitution(row["constitution"]);
+      maxIntelligence(row["maxIntelligence"]);
+      intelligence(row["intelligence"]);
+      maxFocus(row["maxFocus"]);
+      focus(row["focus"]);
+      maxCreativity(row["maxCreativity"]);
+      creativity(row["creativity"]);
+      maxCharisma(row["maxCharisma"]);
+      charisma(row["charisma"]);
+      maxLuck(row["maxLuck"]);
+      luck(row["luck"]);
+      armor(row["armor"]);
+      bash(row["bash"]);
+      slash(row["slash"]);
+      pierce(row["pierce"]);
+      exotic(row["exotic"]);
+      age(row["age"]);
+      trains(row["trains"]);
+      gold(row["gold"]);
+      silver(row["silver"]);
+      bankGold(row["bank_gold"]);
+      bankSilver(row["bank_silver"]);
       // post-processing
-      whoFlags().clear( WHO_AFK );
-      whoFlags().clear( WHO_BUSY );
+      whoFlags().clear(WHO_AFK);
+      whoFlags().clear(WHO_BUSY);
       // Abilities...
       sprintf(query,
         "SELECT                \
@@ -455,7 +455,7 @@ bool Avatar::load( void ) {
           WHERE `avatar` = %lu \
           ;",
           ID()
-      );
+     );
       if (mysql->select(query)) {
         while ((row = mysql->fetch())) {
           if ((ability = klass()->abilities().find(row["name"])) == NULL) {
@@ -466,7 +466,7 @@ bool Avatar::load( void ) {
         }
       }
       // get us some inventory...
-      sprintf( query,
+      sprintf(query,
         "SELECT *                       \
           FROM `object_instances`       \
           WHERE `placement` = 'AVATAR'  \
@@ -475,18 +475,18 @@ bool Avatar::load( void ) {
           ORDER BY `order` ASC          \
         ;",
         ID()
-      );
-      if ( mysql->select( query ) ) {
-        while ( (row = mysql->fetch()) ) {
-          object = new Object( row );
-          inventory().add( object );
-          if ( object->isContainer() ) {
-            loadObjectContents( (ObjContainer*)object, row["hash"].c_str() );
+     );
+      if (mysql->select(query)) {
+        while ((row = mysql->fetch())) {
+          object = new Object(row);
+          inventory().add(object);
+          if (object->isContainer()) {
+            loadObjectContents((ObjContainer*)object, row["hash"].c_str());
           }
         }
       }
       // reclaim equipment from the depths of MySQL...
-      sprintf( query,
+      sprintf(query,
         "SELECT *                       \
           FROM `object_instances`       \
           WHERE `placement` = 'AVATAR'  \
@@ -495,14 +495,14 @@ bool Avatar::load( void ) {
           ORDER BY `order` ASC          \
         ;",
         ID()
-      );
-      if ( mysql->select( query ) ) {
-        while ( (row = mysql->fetch()) ) {
-          object = new Object( row );
-          equipment().add( object, row["location"] );
-          setModifications( object );
-          if ( object->isContainer() ) {
-            loadObjectContents( object->container(), row["hash"].c_str() );
+     );
+      if (mysql->select(query)) {
+        while ((row = mysql->fetch())) {
+          object = new Object(row);
+          equipment().add(object, row["location"]);
+          setModifications(object);
+          if (object->isContainer()) {
+            loadObjectContents(object->container(), row["hash"].c_str());
           }
         }
       }
@@ -513,7 +513,7 @@ bool Avatar::load( void ) {
   return false;
 }
 
-void Avatar::loadObjectContents( ObjContainer* container, const char* hash ) {
+void Avatar::loadObjectContents(ObjContainer* container, const char* hash) {
   Object* object = NULL;
 
   try {
@@ -521,7 +521,7 @@ void Avatar::loadObjectContents( ObjContainer* container, const char* hash ) {
     ROW row;
     char query[MAX_BUFFER];
 
-    sprintf( query,
+    sprintf(query,
       "SELECT *                         \
         FROM `object_instances`         \
         WHERE `placement` = 'CONTAINER' \
@@ -529,66 +529,66 @@ void Avatar::loadObjectContents( ObjContainer* container, const char* hash ) {
         ORDER BY `order` ASC            \
       ;",
       hash
-    );
+   );
 
-    if ( conn.select( query ) ) {
-      while ( (row = conn.fetch()) ) {
-        object = new Object( row );
-        container->inventory().add( object );
-        if ( object->isContainer() ) {
-          loadObjectContents( object->container(), row["hash"].c_str() );
+    if (conn.select(query)) {
+      while ((row = conn.fetch())) {
+        object = new Object(row);
+        container->inventory().add(object);
+        if (object->isContainer()) {
+          loadObjectContents(object->container(), row["hash"].c_str());
         }
       }
     }
 
-  } catch ( MysqlException me ) {
-    fprintf( stderr, "Failed to get object contents: %s\n", me.getMessage().c_str() );
+  } catch (MysqlException me) {
+    fprintf(stderr, "Failed to get object contents: %s\n", me.getMessage().c_str());
     return;
   }
 
   return;
 }
 
-std::string Avatar::stringLoggedOn( void ) {
-  return World::realtime( secondsLoggedOn() );
+std::string Avatar::stringLoggedOn(void) {
+  return World::realtime(secondsLoggedOn());
 }
 
 /******************************************************* Overloads of virtual methods ********************************************************/
-void Avatar::send( const std::string& message ) {
-  processOutput( message );
+void Avatar::send(const std::string& message) {
+  processOutput(message);
   return;
 }
 
-void Avatar::send( const char* format, ... ) {
+void Avatar::send(const char* format, ...) {
   char buffer[MAX_BUFFER];
   va_list args;
-  va_start( args, format );
-  vsprintf( buffer, format, args );
-  va_end( args );
-  processOutput( buffer );
+  va_start(args, format);
+  vsprintf(buffer, format, args);
+  va_end(args);
+  processOutput(buffer);
   return;
 }
 
-void Avatar::room( Room* room ) {
+void Avatar::room(Room* room) {
   CmdExit exit;
-  std::vector<std::string> exit_args( 1 );
-  exit.avatar( this );
+  std::vector<std::string> exit_args(1);
+  exit.avatar(this);
 
-  Creature::room( room );
+  Creature::room(room);
 
-  if ( mode().number() == MODE_REDIT ) {
-    if ( !World::Instance().hasPermission( this->room()->area(), this ) ) {
-      while ( mode().number() != MODE_NONE ) {
-        exit.execute( this, exit_args );
+  if (mode().number() == MODE_REDIT) {
+    if (!World::Instance().hasPermission(this->room()->area(), this)) {
+      while (mode().number() != MODE_NONE) {
+        exit.execute(this, exit_args);
       }
       return;
     }
     // Make sure no one else is editing the room...
-    for ( std::map<std::string,Avatar*>::iterator it = World::Instance().getAvatars().begin(); it != World::Instance().getAvatars().end(); ++it ) {
-      if ( it->second->isConnected() && it->second != this && it->second->mode().number() == MODE_REDIT && it->second->room() == room ) {
-        send( "Sorry, %s is already editing this room.", seeName( it->second ).c_str() );
-        while ( mode().number() != MODE_NONE ) {
-          exit.execute( this, exit_args );
+    for (std::map<std::string,Avatar*>::iterator it = World::Instance().getAvatars().begin(); it != World::Instance().getAvatars().end(); ++it) {
+      if (it->second->isConnected() && it->second != this && it->second->mode().number() == MODE_REDIT && it->second->room() == room) {
+        send("Sorry, %s is already editing this room.", seeName(it->second).c_str());
+        while (mode().number() != MODE_NONE) {
+          exit.execute(this, exit_args);
         }
         return;
       }
@@ -598,43 +598,43 @@ void Avatar::room( Room* room ) {
   return;
 }
 
-void Avatar::title( const std::string& title ) {
-  std::string foo = Regex::trim( title );
+void Avatar::title(const std::string& title) {
+  std::string foo = Regex::trim(title);
 
   _title.clear();
 
-  if ( foo.empty() ) {
+  if (foo.empty()) {
     return;
   }
 
-  switch ( foo[0] ) {
+  switch (foo[0]) {
     case ',':
     case '.':
     case ':':
     case ';':
       break;
     default:
-      _title.assign( 1, ' ' );
+      _title.assign(1, ' ');
   }
 
-  _title.append( foo );
+  _title.append(foo);
 
   return;
 }
 
-bool Avatar::checkPassword( const std::string& attempt ) {
+bool Avatar::checkPassword(const std::string& attempt) {
   Mysql* mysql = World::Instance().getMysql();
   char query[MAX_BUFFER];
   ROW row;
 
-  memset( query, 0, MAX_BUFFER );
-  sprintf( query, "SELECT shortname FROM avatars WHERE LOWER(shortname) = LOWER('%s') AND password = PASSWORD('%s') LIMIT 1;",
+  memset(query, 0, MAX_BUFFER);
+  sprintf(query, "SELECT shortname FROM avatars WHERE LOWER(shortname) = LOWER('%s') AND password = PASSWORD('%s') LIMIT 1;",
     Mysql::addslashes(identifiers().shortname()).c_str(),
     Mysql::addslashes(attempt).c_str()
-  );
-  if ( mysql->select( query ) ) {
-    if ( (row = mysql->fetch()) ) {
-      if ( row["shortname"] == identifiers().shortname() ) {
+ );
+  if (mysql->select(query)) {
+    if ((row = mysql->fetch())) {
+      if (row["shortname"] == identifiers().shortname()) {
         return true;
       }
     }

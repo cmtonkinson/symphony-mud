@@ -12,7 +12,7 @@ class Group {
   public:
     // constructors...
     Group(void);
-    ~Group( void );
+    ~Group(void);
 
     // public accessors...
     std::set<Creature*>&    members(void)       { return _members; }

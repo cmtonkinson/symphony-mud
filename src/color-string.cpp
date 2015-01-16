@@ -20,36 +20,36 @@
 
 #include "color-string.h"
 
-ColorString::ColorString( void ) {
+ColorString::ColorString(void) {
   return;
 }
 
-ColorString::ColorString( const std::string& ref ):
-    std::string( ref ) {
+ColorString::ColorString(const std::string& ref):
+    std::string(ref) {
   return;
 }
 
-ColorString::ColorString( const ColorString& ref ):
-    std::string( ref ) {
+ColorString::ColorString(const ColorString& ref):
+    std::string(ref) {
   return;
 }
 
-ColorString::~ColorString( void ) {
+ColorString::~ColorString(void) {
   return;
 }
 
-std::string& ColorString::operator = ( const std::string& ref ) {
-  this->std::string::operator = ( ref );
+std::string& ColorString::operator = (const std::string& ref) {
+  this->std::string::operator = (ref);
   return *this;
 }
 
-size_t ColorString::effectiveLength( void ) const {
+size_t ColorString::effectiveLength(void) const {
   size_t total = 0;
 
-  for ( std::string::const_iterator it = begin(); it != end(); ++it ) {
-    if ( *it == '{' ) {
+  for (std::string::const_iterator it = begin(); it != end(); ++it) {
+    if (*it == '{') {
       ++it;
-      if ( *it == '{' ) {
+      if (*it == '{') {
         ++total;
       }
       continue;
@@ -60,22 +60,22 @@ size_t ColorString::effectiveLength( void ) const {
   return total;
 }
 
-std::string ColorString::effectiveSubstr( size_t pos, size_t n ) const {
+std::string ColorString::effectiveSubstr(size_t pos, size_t n) const {
   std::string dest;
   size_t start = pos;
   size_t current_pos = start;
   size_t current_len = 0;
 
-  while ( current_len < n && current_pos < size() ) {
-    if ( at( current_pos ) == '{' ) {
+  while (current_len < n && current_pos < size()) {
+    if (at(current_pos) == '{') {
       ++current_pos;
-      dest.append( 1, '{' );
-      if ( at( current_pos ) == '{' ) {
+      dest.append(1, '{');
+      if (at(current_pos) == '{') {
         ++current_len;
       }
-      dest.append( 1, at( current_pos ) );
+      dest.append(1, at(current_pos));
     } else {
-      dest.append( 1, at( current_pos ) );
+      dest.append(1, at(current_pos));
       ++current_len;
     }
     ++current_pos;
@@ -84,42 +84,42 @@ std::string ColorString::effectiveSubstr( size_t pos, size_t n ) const {
   return dest;
 }
 
-std::string ColorString::stripColor( void ) const {
+std::string ColorString::stripColor(void) const {
   std::string dest;
 
-  for ( std::string::const_iterator it = begin(); it != end(); ++it ) {
-    if ( *it == '{' ) {
-      if ( *(it+1) == '{' ) {
-        dest.append( 1, '{' );
+  for (std::string::const_iterator it = begin(); it != end(); ++it) {
+    if (*it == '{') {
+      if (*(it+1) == '{') {
+        dest.append(1, '{');
       }
       ++it;
     } else {
-      dest.append( 1, *it );
+      dest.append(1, *it);
     }
   }
 
   return dest;
 }
 
-std::string ColorString::interpretColor( void ) const {
+std::string ColorString::interpretColor(void) const {
   std::string dest;
 
   // Parse colors...
-  for ( std::string::const_iterator it = begin(); it != end(); ++it ) {
-    if ( *it == '{' ) {
-      dest.append( getColorCode( *(it+1) ) );
+  for (std::string::const_iterator it = begin(); it != end(); ++it) {
+    if (*it == '{') {
+      dest.append(getColorCode(*(it+1)));
       ++it;
     } else {
-      dest.append( 1, *it );
+      dest.append(1, *it);
     }
   }
-  dest.append( getColorCode( 'x' ) );
+  dest.append(getColorCode('x'));
 
   return dest;
 }
 
-const char* ColorString::getColorCode( const char& c ) {
-  switch ( c ) {
+const char* ColorString::getColorCode(const char& c) {
+  switch (c) {
     case 'r': return "\033[0;31m";    // dark red
     case 'R': return "\033[0;31;1m";  // bright red
     case 'g': return "\033[0;32m";    // dark green
@@ -136,22 +136,22 @@ const char* ColorString::getColorCode( const char& c ) {
     case 'W': return "\033[0;37;1m";  // pure white
     case '{': return "{";             // bracket
     case '?':
-      switch ( rand() % 14 ) {
-        case  0: return getColorCode( 'r' );
-        case  1: return getColorCode( 'R' );
-        case  2: return getColorCode( 'g' );
-        case  3: return getColorCode( 'G' );
-        case  4: return getColorCode( 'y' );
-        case  5: return getColorCode( 'Y' );
-        case  6: return getColorCode( 'b' );
-        case  7: return getColorCode( 'B' );
-        case  8: return getColorCode( 'm' );
-        case  9: return getColorCode( 'M' );
-        case 10: return getColorCode( 'c' );
-        case 11: return getColorCode( 'C' );
-        case 12: return getColorCode( 'w' );
-        case 13: return getColorCode( 'W' );
-        default: return getColorCode( 'x' );
+      switch (rand() % 14) {
+        case  0: return getColorCode('r');
+        case  1: return getColorCode('R');
+        case  2: return getColorCode('g');
+        case  3: return getColorCode('G');
+        case  4: return getColorCode('y');
+        case  5: return getColorCode('Y');
+        case  6: return getColorCode('b');
+        case  7: return getColorCode('B');
+        case  8: return getColorCode('m');
+        case  9: return getColorCode('M');
+        case 10: return getColorCode('c');
+        case 11: return getColorCode('C');
+        case 12: return getColorCode('w');
+        case 13: return getColorCode('W');
+        default: return getColorCode('x');
       }
     default:  return "\033[0;0;0m";   // default
   }

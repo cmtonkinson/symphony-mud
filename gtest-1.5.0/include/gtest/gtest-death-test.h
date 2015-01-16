@@ -273,7 +273,7 @@ class GTEST_API_ KilledBySignal {
     ASSERT_DEATH(statement, regex)
 #else
 #define EXPECT_DEATH_IF_SUPPORTED(statement, regex) \
-    GTEST_UNSUPPORTED_DEATH_TEST_(statement, regex, )
+    GTEST_UNSUPPORTED_DEATH_TEST_(statement, regex,)
 #define ASSERT_DEATH_IF_SUPPORTED(statement, regex) \
     GTEST_UNSUPPORTED_DEATH_TEST_(statement, regex, return)
 #endif

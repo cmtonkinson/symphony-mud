@@ -34,8 +34,8 @@ class Display {
   private:
 
   public:
-    Display( void );
-    ~Display( void );
+    Display(void);
+    ~Display(void);
 
     static std::string  formatColumns(const std::vector<std::string>& items);
     static std::string  formatAction(const char* format, Creature* creature, void* arg1, void* arg2, Creature* withRespectTo);

@@ -20,18 +20,18 @@
 
 #include "object-trash.h"
 
-ObjTrash::ObjTrash( void ) {
+ObjTrash::ObjTrash(void) {
   return;
 }
 
-ObjTrash::ObjTrash( const ObjTrash& ref ) {
+ObjTrash::ObjTrash(const ObjTrash& ref) {
   return;
 }
 
-ObjTrash::ObjTrash( ROW row ) {
+ObjTrash::ObjTrash(ROW row) {
   return;
 }
 
-ObjTrash::~ObjTrash( void ) {
+ObjTrash::~ObjTrash(void) {
   return;
 }

@@ -26,10 +26,10 @@
 class ObjJewelry {
   public:
     // Constructors...
-    ObjJewelry( void );
-    ObjJewelry( const ObjJewelry& ref );
-    ObjJewelry( ROW row );
-    ~ObjJewelry( void );
+    ObjJewelry(void);
+    ObjJewelry(const ObjJewelry& ref);
+    ObjJewelry(ROW row);
+    ~ObjJewelry(void);
 };
 
 #endif // H_SYMPHONY_OBJECT_JEWELRY

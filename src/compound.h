@@ -43,8 +43,8 @@
 class Compound {
   public:
     // Constructors...
-    Compound( void );
-    Compound( const std::string& shortname,
+    Compound(void);
+    Compound(const std::string& shortname,
               const std::string& longname,
               const float& darkness,
               const float& density,
@@ -63,8 +63,8 @@ class Compound {
               const float& smoothness,
               const float& thermalConductivity,
               const unsigned long& tags
-            );
-    ~Compound( void );
+           );
+    ~Compound(void);
 
     // Attribute bounds...
     static float darknessMin;
@@ -101,42 +101,42 @@ class Compound {
     static float thermalConductivityMax;
 
     // Public accessor methods...
-    Identifiers&        identifiers( void )               { return _identifiers; }
-    const Identifiers&  identifiers( void ) const         { return _identifiers; }
-    void        darkness( const float& darkness )         { _darkness = darkness < darknessMax ? ( darkness > darknessMin ? darkness : darknessMin ) : darknessMax; }
-    float       darkness( void ) const                    { return _darkness; }
-    void        density( const float& density )           { _density = density < densityMax ? ( density > densityMin ? density : densityMin ) : densityMax; }
-    float       density( void ) const                     { return _density; }
-    void        ductility( const float& ductility )       { _ductility = ductility < ductilityMax ? ( ductility > ductilityMin ? ductility : ductilityMin ) : ductilityMax; }
-    float       ductility( void ) const                   { return _ductility; }
-    void        durability( const float& durability )     { _durability = durability < durabilityMax ? ( durability > durabilityMin ? durability : durabilityMin ) : durabilityMax; }
-    float       durability( void ) const                  { return _durability; }
-    void        electricalConductivity( const float& electricalConductivity ) { _electricalConductivity = electricalConductivity < electricalConductivityMax ? ( electricalConductivity > electricalConductivityMin ? electricalConductivity : electricalConductivityMin ) : electricalConductivityMax; }
-    float       electricalConductivity( void ) const      { return _electricalConductivity; }
-    void        flammability( const float& flammability ) { _flammability = flammability < flammabilityMax ? ( flammability > flammabilityMin ? flammability : flammabilityMin ) : flammabilityMax; }
-    float       flammability( void ) const                { return _flammability; }
-    void        flexibility( const float& flexibility )   { _flexibility = flexibility < flexibilityMax ? ( flexibility > flexibilityMin ? flexibility : flexibilityMin ) : flexibilityMax; }
-    float       flexibility( void ) const                 { return _flexibility; }
-    void        fragrance( const float& fragrance )       { _fragrance = fragrance < fragranceMax ? ( fragrance > fragranceMin ? fragrance : fragranceMin ) : fragranceMax; }
-    float       fragrance( void ) const                   { return _fragrance; }
-    void        hardness( const float& hardness )         { _hardness = hardness < hardnessMax ? ( hardness > hardnessMin ? hardness : hardnessMin ) : hardnessMax; }
-    float       hardness( void ) const                    { return _hardness; }
-    void        luster( const float& luster )             { _luster = luster < lusterMax ? ( luster > lusterMin ? luster : lusterMin ) : lusterMax; }
-    float       luster( void ) const                      { return _luster; }
-    void        magicalness( const float& magicalness )   { _magicalness = magicalness < magicalnessMax ? ( magicalness > magicalnessMin ? magicalness : magicalnessMin ) : magicalnessMax; }
-    float       magicalness( void ) const                 { return _magicalness; }
-    void        maleability( const float& maleability )   { _maleability = maleability < maleabilityMax ? ( maleability > maleabilityMin ? maleability : maleabilityMin ) : maleabilityMax; }
-    float       maleability( void ) const                 { return _maleability; }
-    void        meltingPoint( const float& meltingPoint ) { _meltingPoint = meltingPoint < meltingPointMax ? ( meltingPoint > meltingPointMin ? meltingPoint : meltingPointMin ) : meltingPointMax; }
-    float       meltingPoint( void ) const                { return _meltingPoint; }
-    void        reactivity( const float& reactivity )     { _reactivity = reactivity < reactivityMax ? ( reactivity > reactivityMin ? reactivity : reactivityMin ) : reactivityMax; }
-    float       reactivity( void ) const                  { return _reactivity; }
-    void        smoothness( const float& smoothness )     { _smoothness = smoothness < smoothnessMax ? ( smoothness > smoothnessMin ? smoothness : smoothnessMin ) : smoothnessMax; }
-    float       smoothness( void ) const                  { return _smoothness; }
-    void        thermalConductivity( const float& thermalConductivity ) { _thermalConductivity = thermalConductivity < thermalConductivityMax ? ( thermalConductivity > thermalConductivityMin ? thermalConductivity : thermalConductivityMin ) : thermalConductivityMax; }
-    float       thermalConductivity( void ) const         { return _thermalConductivity; }
-    FlagBank&       tags( void )                          { return _tags; }
-    const FlagBank& tags( void ) const                    { return _tags; }
+    Identifiers&        identifiers(void)               { return _identifiers; }
+    const Identifiers&  identifiers(void) const         { return _identifiers; }
+    void        darkness(const float& darkness)         { _darkness = darkness < darknessMax ? (darkness > darknessMin ? darkness : darknessMin) : darknessMax; }
+    float       darkness(void) const                    { return _darkness; }
+    void        density(const float& density)           { _density = density < densityMax ? (density > densityMin ? density : densityMin) : densityMax; }
+    float       density(void) const                     { return _density; }
+    void        ductility(const float& ductility)       { _ductility = ductility < ductilityMax ? (ductility > ductilityMin ? ductility : ductilityMin) : ductilityMax; }
+    float       ductility(void) const                   { return _ductility; }
+    void        durability(const float& durability)     { _durability = durability < durabilityMax ? (durability > durabilityMin ? durability : durabilityMin) : durabilityMax; }
+    float       durability(void) const                  { return _durability; }
+    void        electricalConductivity(const float& electricalConductivity) { _electricalConductivity = electricalConductivity < electricalConductivityMax ? (electricalConductivity > electricalConductivityMin ? electricalConductivity : electricalConductivityMin) : electricalConductivityMax; }
+    float       electricalConductivity(void) const      { return _electricalConductivity; }
+    void        flammability(const float& flammability) { _flammability = flammability < flammabilityMax ? (flammability > flammabilityMin ? flammability : flammabilityMin) : flammabilityMax; }
+    float       flammability(void) const                { return _flammability; }
+    void        flexibility(const float& flexibility)   { _flexibility = flexibility < flexibilityMax ? (flexibility > flexibilityMin ? flexibility : flexibilityMin) : flexibilityMax; }
+    float       flexibility(void) const                 { return _flexibility; }
+    void        fragrance(const float& fragrance)       { _fragrance = fragrance < fragranceMax ? (fragrance > fragranceMin ? fragrance : fragranceMin) : fragranceMax; }
+    float       fragrance(void) const                   { return _fragrance; }
+    void        hardness(const float& hardness)         { _hardness = hardness < hardnessMax ? (hardness > hardnessMin ? hardness : hardnessMin) : hardnessMax; }
+    float       hardness(void) const                    { return _hardness; }
+    void        luster(const float& luster)             { _luster = luster < lusterMax ? (luster > lusterMin ? luster : lusterMin) : lusterMax; }
+    float       luster(void) const                      { return _luster; }
+    void        magicalness(const float& magicalness)   { _magicalness = magicalness < magicalnessMax ? (magicalness > magicalnessMin ? magicalness : magicalnessMin) : magicalnessMax; }
+    float       magicalness(void) const                 { return _magicalness; }
+    void        maleability(const float& maleability)   { _maleability = maleability < maleabilityMax ? (maleability > maleabilityMin ? maleability : maleabilityMin) : maleabilityMax; }
+    float       maleability(void) const                 { return _maleability; }
+    void        meltingPoint(const float& meltingPoint) { _meltingPoint = meltingPoint < meltingPointMax ? (meltingPoint > meltingPointMin ? meltingPoint : meltingPointMin) : meltingPointMax; }
+    float       meltingPoint(void) const                { return _meltingPoint; }
+    void        reactivity(const float& reactivity)     { _reactivity = reactivity < reactivityMax ? (reactivity > reactivityMin ? reactivity : reactivityMin) : reactivityMax; }
+    float       reactivity(void) const                  { return _reactivity; }
+    void        smoothness(const float& smoothness)     { _smoothness = smoothness < smoothnessMax ? (smoothness > smoothnessMin ? smoothness : smoothnessMin) : smoothnessMax; }
+    float       smoothness(void) const                  { return _smoothness; }
+    void        thermalConductivity(const float& thermalConductivity) { _thermalConductivity = thermalConductivity < thermalConductivityMax ? (thermalConductivity > thermalConductivityMin ? thermalConductivity : thermalConductivityMin) : thermalConductivityMax; }
+    float       thermalConductivity(void) const         { return _thermalConductivity; }
+    FlagBank&       tags(void)                          { return _tags; }
+    const FlagBank& tags(void) const                    { return _tags; }
 
   private:
     Identifiers   _identifiers;

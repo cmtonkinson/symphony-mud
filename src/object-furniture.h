@@ -29,30 +29,30 @@ class Creature;
 class ObjFurniture {
   public:
     // constructors...
-    ObjFurniture( void );
-    ObjFurniture( const ObjFurniture& ref );
-    ObjFurniture( ROW row );
-    ~ObjFurniture( void );
+    ObjFurniture(void);
+    ObjFurniture(const ObjFurniture& ref);
+    ObjFurniture(ROW row);
+    ~ObjFurniture(void);
 
     // public accessors
-    void      capacity( const unsigned& capacity )      { _capacity = capacity; }
-    unsigned  capacity( void ) const                    { return _capacity; }
-    void      layOn( const unsigned& layOn )            { _layOn = layOn; }
-    unsigned  layOn( void ) const                       { return _layOn; }
-    void      sitAt( const unsigned& sitAt )            { _sitAt = sitAt; }
-    unsigned  sitAt( void ) const                       { return _sitAt; }
-    void      sitOn( const unsigned& sitOn )            { _sitOn = sitOn; }
-    unsigned  sitOn( void ) const                       { return _sitOn; }
-    void      standOn( const unsigned& standOn )        { _standOn = standOn; }
-    unsigned  standOn( void ) const                     { return _standOn; }
-    void      current( const unsigned& current )        { _current = current; }
-    unsigned  current( void ) const                     { return _current; }
-    std::map<EnumInt,std::list<Creature*> >&        creatures( void )       { return _creatures; }
-    const std::map<EnumInt,std::list<Creature*> >&  creatures( void ) const { return _creatures; }
+    void      capacity(const unsigned& capacity)      { _capacity = capacity; }
+    unsigned  capacity(void) const                    { return _capacity; }
+    void      layOn(const unsigned& layOn)            { _layOn = layOn; }
+    unsigned  layOn(void) const                       { return _layOn; }
+    void      sitAt(const unsigned& sitAt)            { _sitAt = sitAt; }
+    unsigned  sitAt(void) const                       { return _sitAt; }
+    void      sitOn(const unsigned& sitOn)            { _sitOn = sitOn; }
+    unsigned  sitOn(void) const                       { return _sitOn; }
+    void      standOn(const unsigned& standOn)        { _standOn = standOn; }
+    unsigned  standOn(void) const                     { return _standOn; }
+    void      current(const unsigned& current)        { _current = current; }
+    unsigned  current(void) const                     { return _current; }
+    std::map<EnumInt,std::list<Creature*> >&        creatures(void)       { return _creatures; }
+    const std::map<EnumInt,std::list<Creature*> >&  creatures(void) const { return _creatures; }
 
     // general methods
-    bool  add( Creature* creature, const EnumInt& position );
-    bool  remove( Creature* creature );
+    bool  add(Creature* creature, const EnumInt& position);
+    bool  remove(Creature* creature);
 
   private:
     unsigned _capacity; // how many, in total, can be using this at once?

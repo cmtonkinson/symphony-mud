@@ -62,23 +62,23 @@
 
 // Ease exception handling...
 #define CATCH_ALL(X)                                                                    \
- catch ( SocketException e ) {                                                          \
-    fprintf( stderr, "%s: SocketException (error: %s)\n", X, e.getError().c_str() );    \
+ catch (SocketException e) {                                                          \
+    fprintf(stderr, "%s: SocketException (error: %s)\n", X, e.getError().c_str());    \
     return false;                                                                       \
-  } catch ( MysqlException e ) {                                                        \
-    fprintf( stderr, "%s: MysqlException (message: %s)\n", X, e.getMessage().c_str() ); \
+  } catch (MysqlException e) {                                                        \
+    fprintf(stderr, "%s: MysqlException (message: %s)\n", X, e.getMessage().c_str()); \
     return false;                                                                       \
-  } catch ( RegexException e ) {                                                        \
-    fprintf( stderr, "%s: RegexException (message: %s)\n", X, e.getMessage().c_str() ); \
+  } catch (RegexException e) {                                                        \
+    fprintf(stderr, "%s: RegexException (message: %s)\n", X, e.getMessage().c_str()); \
     return false;                                                                       \
-  } catch ( std::string s ) {                                                           \
-    fprintf( stderr, "%s: std::string (%s)\n", X, s.c_str() );                          \
+  } catch (std::string s) {                                                           \
+    fprintf(stderr, "%s: std::string (%s)\n", X, s.c_str());                          \
     return false;                                                                       \
-  } catch ( std::exception e ) {                                                        \
-    fprintf( stderr, "%s: std::exception (what: %s)\n", X, e.what() );                  \
+  } catch (std::exception e) {                                                        \
+    fprintf(stderr, "%s: std::exception (what: %s)\n", X, e.what());                  \
     return false;                                                                       \
-  } catch ( ... ) {                                                                     \
-    fprintf( stderr, "%s: something else failed\n", X );                                \
+  } catch (...) {                                                                     \
+    fprintf(stderr, "%s: something else failed\n", X);                                \
     return false;                                                                       \
   }
 

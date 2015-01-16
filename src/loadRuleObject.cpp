@@ -105,7 +105,7 @@ bool LoadRuleObject::commit(void) {
       prep.c_str(),
       indirectObject(),
       indirectObjectIndex()
-   );
+  );
     World::Instance().getMysql()->insert(query);
     ID(World::Instance().getMysql()->getInsertID());
 

@@ -139,7 +139,7 @@ MCmdLevel::MCmdLevel(void) {
 
 bool MCmdLevel::execute(Creature* creature, const std::vector<std::string>& args) {
   int level = estring(args[0]);
-  if (level > 0 && level < 101 ) {
+  if (level > 0 && level < 101) {
     avatar()->medit()->level(level);
     avatar()->send("You've set the mob level to %u.", avatar()->medit()->level());
     return true;

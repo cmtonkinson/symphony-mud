@@ -139,52 +139,52 @@ class Group;
 class Creature {
   public:
     // constructors...
-    Creature( void );
-    Creature( const Creature& ref );
-    virtual ~Creature( void );
+    Creature(void);
+    Creature(const Creature& ref);
+    virtual ~Creature(void);
 
     // public accessors...
-    std::vector<IOHandler*>&    IOhandlers( void )                                                { return _IOhandlers; }
-    void                        ID( const unsigned long& ID )                                     { _ID = ID; }
-    unsigned long               ID( void ) const                                                  { return _ID; }
-    virtual void                room( Room* room )                                                { _room = room; }
-    virtual Room*               room( void ) const                                                { return _room; }
-    emap&                       values( void )                                                    { return _values; }
-    const emap&                 values( void ) const                                              { return _values; }
+    std::vector<IOHandler*>&    IOhandlers(void)                                                { return _IOhandlers; }
+    void                        ID(const unsigned long& ID)                                     { _ID = ID; }
+    unsigned long               ID(void) const                                                  { return _ID; }
+    virtual void                room(Room* room)                                                { _room = room; }
+    virtual Room*               room(void) const                                                { return _room; }
+    emap&                       values(void)                                                    { return _values; }
+    const emap&                 values(void) const                                              { return _values; }
     /* wear() assesses weather or not the creature can don the particular equipment given.  If it can,
      * then the operation is performed and true is returned.  If the creature can't wear the item,
      * then message is appropriately set and false is returned.
      */
-    bool                        wear( Object* article, std::string& message, Object*& removed );
+    bool                        wear(Object* article, std::string& message, Object*& removed);
     // `remove(Object*)` is already implemented via `Container`, so we call equipment removal `unwear()`
-    bool                        unwear( Object* article, std::string& message, bool force = false );
-    Object*                     worn( const int& location ) const;
-    static bool                 isSingleWearLoc( const unsigned short& object_weartype );
-    Identifiers&                identifiers( void )                                               { return _identifiers; }
-    const Identifiers&          identifiers( void ) const                                         { return _identifiers; }
-    InventoryContainer&         inventory( void )                                                 { return _inventory; }
-    const InventoryContainer&   inventory( void ) const                                           { return _inventory; }
-    EquipmentContainer&         equipment( void )                                                 { return _equipment; }
-    const EquipmentContainer&   equipment( void ) const                                           { return _equipment; }
-    std::list<Modifier*>&       modifiers( void )                                                 { return _modifiers; }
-    const std::list<Modifier*>& modifiers( void ) const                                           { return _modifiers; }
-    void                        furniture( ObjFurniture* furniture )                              { _furniture = furniture; }
-    ObjFurniture*               furniture( void ) const                                           { return _furniture; }
+    bool                        unwear(Object* article, std::string& message, bool force = false);
+    Object*                     worn(const int& location) const;
+    static bool                 isSingleWearLoc(const unsigned short& object_weartype);
+    Identifiers&                identifiers(void)                                               { return _identifiers; }
+    const Identifiers&          identifiers(void) const                                         { return _identifiers; }
+    InventoryContainer&         inventory(void)                                                 { return _inventory; }
+    const InventoryContainer&   inventory(void) const                                           { return _inventory; }
+    EquipmentContainer&         equipment(void)                                                 { return _equipment; }
+    const EquipmentContainer&   equipment(void) const                                           { return _equipment; }
+    std::list<Modifier*>&       modifiers(void)                                                 { return _modifiers; }
+    const std::list<Modifier*>& modifiers(void) const                                           { return _modifiers; }
+    void                        furniture(ObjFurniture* furniture)                              { _furniture = furniture; }
+    ObjFurniture*               furniture(void) const                                           { return _furniture; }
 
-    Position&         position( void )        { return _position; }
-    const Position&   position( void ) const  { return _position; }
-    Action&           action( void )          { return _action; }
-    const Action&     action( void ) const    { return _action; }
+    Position&         position(void)        { return _position; }
+    const Position&   position(void) const  { return _position; }
+    Action&           action(void)          { return _action; }
+    const Action&     action(void) const    { return _action; }
 
     void              group(Group* group)     { _group = group; }
     Group*            group(void)             { return _group; }
 
-    Gender&           gender( void )          { return _gender; }
-    const Gender&     gender( void ) const    { return _gender; }
-    Race&             race( void )            { return _race; }
-    const Race&       race( void ) const      { return _race; }
-    PClass&           pClass( void )          { return _pClass; }
-    const PClass&     pClass( void ) const    { return _pClass; }
+    Gender&           gender(void)          { return _gender; }
+    const Gender&     gender(void) const    { return _gender; }
+    Race&             race(void)            { return _race; }
+    const Race&       race(void) const      { return _race; }
+    PClass&           pClass(void)          { return _pClass; }
+    const PClass&     pClass(void) const    { return _pClass; }
     Klass*            klass(void) const;
 
     // Level
@@ -260,57 +260,57 @@ class Creature {
     std::set<Creature*>&  opponents(void)                               { return _opponents; }
 
     // Public static methods...
-    static unsigned short       stringToAttribute( const std::string& name );
-    static const char*          attributeToString( const unsigned short& index );
-    static std::string          listAttributes( void );
+    static unsigned short       stringToAttribute(const std::string& name);
+    static const char*          attributeToString(const unsigned short& index);
+    static std::string          listAttributes(void);
 
     // Public methods...
     const char*                 name(void) const                                                  { return identifiers().shortname().c_str(); }
-    virtual bool                isAvatar( void ) const                                            { return false; }
-    virtual bool                isMob( void ) const                                               { return false; }
-    bool                        isLaying( void ) const                                            { return position().number() == LAYING; }
-    bool                        isSitting( void ) const                                           { return position().number() == SITTING; }
-    bool                        isStanding( void ) const                                          { return position().number() == STANDING; }
-    bool                        isMounted( void ) const                                           { return position().number() == MOUNTED; }
-    bool                        isDead( void ) const                                              { return action().number() == DEAD; }
-    bool                        isSleeping( void ) const                                          { return action().number() == SLEEPING; }
-    bool                        isFighting( void ) const                                          { return action().number() == FIGHTING; }
-    bool                        isDwarf( void ) const                                             { return race().number() == DWARF; }
-    bool                        isElf( void ) const                                               { return race().number() == ELF; }
-    bool                        isHuman( void ) const                                             { return race().number() == HUMAN; }
-    bool                        isCleric( void ) const                                            { return pClass().number() == CLERIC; }
-    bool                        isMage( void ) const                                              { return pClass().number() == MAGE; }
-    bool                        isRogue( void ) const                                             { return pClass().number() == ROGUE; }
-    bool                        isWarrior( void ) const                                           { return pClass().number() == WARRIOR; }
+    virtual bool                isAvatar(void) const                                            { return false; }
+    virtual bool                isMob(void) const                                               { return false; }
+    bool                        isLaying(void) const                                            { return position().number() == LAYING; }
+    bool                        isSitting(void) const                                           { return position().number() == SITTING; }
+    bool                        isStanding(void) const                                          { return position().number() == STANDING; }
+    bool                        isMounted(void) const                                           { return position().number() == MOUNTED; }
+    bool                        isDead(void) const                                              { return action().number() == DEAD; }
+    bool                        isSleeping(void) const                                          { return action().number() == SLEEPING; }
+    bool                        isFighting(void) const                                          { return action().number() == FIGHTING; }
+    bool                        isDwarf(void) const                                             { return race().number() == DWARF; }
+    bool                        isElf(void) const                                               { return race().number() == ELF; }
+    bool                        isHuman(void) const                                             { return race().number() == HUMAN; }
+    bool                        isCleric(void) const                                            { return pClass().number() == CLERIC; }
+    bool                        isMage(void) const                                              { return pClass().number() == MAGE; }
+    bool                        isRogue(void) const                                             { return pClass().number() == ROGUE; }
+    bool                        isWarrior(void) const                                           { return pClass().number() == WARRIOR; }
     unsigned short              hand(void) const                                                  { return WEARLOC_HOLD_R; }
     unsigned short              off_hand(void) const                                              { return WEARLOC_HOLD_L; }
-    bool                        lay( std::string& error, ObjFurniture* furniture = NULL );
-    bool                        sit( std::string& error, ObjFurniture* furniture = NULL, bool on = false );
-    bool                        stand( std::string& error );
-    void                        setModifications( Object* object );
-    void                        unsetModifications( Object* object );
-    void                        modify( Modifier* modifier );
-    void                        unmodify( Modifier* modifier );
-    void                        doModification( const unsigned short& attribute, const int& magnitude );
-    unsigned short              canSee( Creature* target );
-    std::string                 seeName( Creature* target, bool capitalize = false );
-    const char*                 seeReflexivePronoun( Creature* target, bool capitalize = false ); // e.g. "himself"
-    const char*                 seeObjectPronoun( Creature* target, bool capitalize = false );    // e.g. "him"
-    const char*                 seePosessivePronoun( Creature* target, bool capitalize = false ); // e.g. "his"
-    unsigned short              canSee( Object* target );
-    std::string                 seeName( Object* target, bool capitalize = false );
-    bool                        canAlter( Creature* target );
-    bool                        canMove( const unsigned short& direction, std::string& message );
-    void                        move( const unsigned short& direction );
-    IOHandler*                  IOhandler( void );
-    void                        pushIOHandler( IOHandler* handler );
-    void                        popIOHandler( void );
-    void                        replaceIOHandler( IOHandler* handler );
-    void                        handle( void );
-    Creature*                   findCreature( const std::string& name );
-    Object*                     findObject( const std::string& query );
-    unsigned short              getWearloc( const Object::Wearable& wearable ) const;
-    static const char*          wearLocName( const unsigned short& wearloc );
+    bool                        lay(std::string& error, ObjFurniture* furniture = NULL);
+    bool                        sit(std::string& error, ObjFurniture* furniture = NULL, bool on = false);
+    bool                        stand(std::string& error);
+    void                        setModifications(Object* object);
+    void                        unsetModifications(Object* object);
+    void                        modify(Modifier* modifier);
+    void                        unmodify(Modifier* modifier);
+    void                        doModification(const unsigned short& attribute, const int& magnitude);
+    unsigned short              canSee(Creature* target);
+    std::string                 seeName(Creature* target, bool capitalize = false);
+    const char*                 seeReflexivePronoun(Creature* target, bool capitalize = false); // e.g. "himself"
+    const char*                 seeObjectPronoun(Creature* target, bool capitalize = false);    // e.g. "him"
+    const char*                 seePosessivePronoun(Creature* target, bool capitalize = false); // e.g. "his"
+    unsigned short              canSee(Object* target);
+    std::string                 seeName(Object* target, bool capitalize = false);
+    bool                        canAlter(Creature* target);
+    bool                        canMove(const unsigned short& direction, std::string& message);
+    void                        move(const unsigned short& direction);
+    IOHandler*                  IOhandler(void);
+    void                        pushIOHandler(IOHandler* handler);
+    void                        popIOHandler(void);
+    void                        replaceIOHandler(IOHandler* handler);
+    void                        handle(void);
+    Creature*                   findCreature(const std::string& name);
+    Object*                     findObject(const std::string& query);
+    unsigned short              getWearloc(const Object::Wearable& wearable) const;
+    static const char*          wearLocName(const unsigned short& wearloc);
     Object*                     primary(void);
     Object*                     secondary(void);
     void                        naturalStatAdjustment(void);
@@ -357,12 +357,12 @@ class Creature {
     bool                          check_stamina(unsigned stamina_, bool message = true);
 
     // Pure virtual public methods...
-    virtual bool                save( void )                                                      = 0;
-    virtual bool                load( void )                                                      { return false; }
-    virtual bool                destroy( void )                                                   = 0;
+    virtual bool                save(void)                                                      = 0;
+    virtual bool                load(void)                                                      { return false; }
+    virtual bool                destroy(void)                                                   = 0;
 
-    virtual void                send( const std::string& message )                                { }
-    virtual void                send( const char* format, ... )                                   { }
+    virtual void                send(const std::string& message)                                { }
+    virtual void                send(const char* format, ...)                                   { }
 
   private:
     // basics...

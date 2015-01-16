@@ -55,35 +55,35 @@ class LoadRule {
 
   public:
     // constructors...
-    LoadRule( void );
-    LoadRule( ROW row );
-    virtual ~LoadRule( void );
+    LoadRule(void);
+    LoadRule(ROW row);
+    virtual ~LoadRule(void);
 
     // public accessor methods...
-    void                ID( const unsigned long& ID )                         { _ID = ID; }
-    unsigned long       ID( void ) const                                      { return _ID; }
-    void                vnum( const unsigned long& vnum )                     { _vnum = vnum; }
-    unsigned long       vnum( void ) const                                    { return _vnum; }
-    void                room( Room* room )                                    { _room = room; }
-    Room*               room( void ) const                                    { return _room; }
-    void                type( const unsigned short& type )                    { _type = type; }
-    unsigned short      type( void ) const                                    { return _type; }
-    void                target( const unsigned long& target )                 { _target = target; }
-    unsigned long       target( void ) const                                  { return _target; }
-    void                number( const unsigned short& number )                { _number = number; }
-    unsigned short      number( void ) const                                  { return _number; }
-    void                max( const unsigned short& max )                      { _max = max; }
-    unsigned short      max( void ) const                                     { return _max; }
-    void                probability( const unsigned short& probability )      { _probability = probability; }
-    unsigned short      probability( void ) const                             { return _probability; }
+    void                ID(const unsigned long& ID)                         { _ID = ID; }
+    unsigned long       ID(void) const                                      { return _ID; }
+    void                vnum(const unsigned long& vnum)                     { _vnum = vnum; }
+    unsigned long       vnum(void) const                                    { return _vnum; }
+    void                room(Room* room)                                    { _room = room; }
+    Room*               room(void) const                                    { return _room; }
+    void                type(const unsigned short& type)                    { _type = type; }
+    unsigned short      type(void) const                                    { return _type; }
+    void                target(const unsigned long& target)                 { _target = target; }
+    unsigned long       target(void) const                                  { return _target; }
+    void                number(const unsigned short& number)                { _number = number; }
+    unsigned short      number(void) const                                  { return _number; }
+    void                max(const unsigned short& max)                      { _max = max; }
+    unsigned short      max(void) const                                     { return _max; }
+    void                probability(const unsigned short& probability)      { _probability = probability; }
+    unsigned short      probability(void) const                             { return _probability; }
 
     // general methods...
-    std::string         strType( void ) const                                 { return ( type() == LOADRULE_OBJECT ? "OBJ" : "MOB" ); }
-    virtual std::string notes( void ) const = 0;
-    virtual bool        save( void ) = 0;
-    virtual bool        commit( void ) = 0;
-    virtual bool        destroy( void );
-    virtual bool        execute( std::list<Object*>& new_objects, std::list<Mob*>& new_mobs ) = 0;
+    std::string         strType(void) const                                 { return (type() == LOADRULE_OBJECT ? "OBJ" : "MOB"); }
+    virtual std::string notes(void) const = 0;
+    virtual bool        save(void) = 0;
+    virtual bool        commit(void) = 0;
+    virtual bool        destroy(void);
+    virtual bool        execute(std::list<Object*>& new_objects, std::list<Mob*>& new_mobs) = 0;
 
 };
 
