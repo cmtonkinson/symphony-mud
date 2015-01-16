@@ -20,7 +20,7 @@ SocketException::~SocketException(void) {
 /********************************************************* SOCKET *********************************************************/
 char Socket::option_buffer[MAX_BUFFER];
 
-Socket::Socket(unsigned int sock_fd, int domain, int type, int protocol) {
+Socket::Socket(int sock_fd, int domain, int type, int protocol) {
   inputInBuffer(false);
   /*
    * If a valid file descriptor was passed into the constructor,
@@ -55,7 +55,7 @@ std::string Socket::fetchBuffer(void) {
 }
 
 unsigned int Socket::private_accept(unsigned int seconds, unsigned int microseconds) {
-  unsigned int sock_fd = 0;
+  int sock_fd = 0;
   sockaddr_in address;
   socklen_t address_length = 0;
   timeval tv;

@@ -15,15 +15,15 @@
 #include <vector>
 
 // Macro to make it a bit easier to handle failed system calls...
-#define SOCK_SYSCALL_TRY(call,error)              \
+#define SOCK_SYSCALL_TRY(call,error)            \
   while ((call) < 0) {                          \
     switch (errno) {                            \
-      case EINTR:                                 \
-        continue;                                 \
-      default:                                    \
+      case EINTR:                               \
+        continue;                               \
+      default:                                  \
         throw SocketException((error), errno);  \
-    }                                             \
-  }                                               \
+    }                                           \
+  }                                             \
 
 /********************************************************* EXCEPTION *********************************************************/
 class SocketException {
@@ -48,7 +48,7 @@ class Socket {
     static const int DEFAULT_PORT = 2000;
 
     // Constructors...
-    Socket(unsigned int sock_fd = 0, int domain = AF_INET, int type = SOCK_STREAM, int protocol = 0);
+    Socket(int sock_fd = 0, int domain = AF_INET, int type = SOCK_STREAM, int protocol = 0);
     ~Socket(void);
 
     // Public accessor methods...
