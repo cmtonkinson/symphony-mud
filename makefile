@@ -5,18 +5,16 @@ CPPC					= ccache clang++
 FLAGS_ALL			= --std=c++11 -fcolor-diagnostics
 FLAGS_DEV			= $(FLAGS_ALL) -O0 -ggdb3 -Wall -Werror -pedantic
 FLAGS_PROD		= $(FLAGS_ALL) -O3
-LIBS					= `pcre-config --libs` `mysql_config --libs` `pkg-config --libs protobuf`
+LIBS					= `pcre-config --libs` `mysql_config --libs`
 SRC_DIR				= src
 OBJ_DIR				= obj
 BIN_DIR				= bin
-PB_SRC_FILES	:= src/avatar.pb.cc src/mob.pb.cc src/object.pb.cc src/room.pb.cc src/social.pb.cc
-PB_OBJ_FILES	:= obj/avatar.pb.o obj/mob.pb.o obj/object.pb.o obj/room.pb.o obj/social.pb.o
 SRC_FILES			:= $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES			:= $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES)) $(PROTO_OBJ_FILES)
 DEP_FILES			:= $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.d,$(SRC_FILES))
 
 # Main directives
-dev: $(OBJ_FILES) $(PB_OBJ_FILES)
+dev: $(OBJ_FILES)
 	$(CPPC) $(FLAGS_DEV) $(OBJ_FILES) $(LIBS) -o $(BIN_DIR)/$(PROJECT)
 
 prod: $(SRC_FILES)
@@ -37,27 +35,6 @@ $(OBJ_DIR)/%.d: $(SRC_DIR)/%.cpp
 	@sed -i -e 's|\(.*\)\.o:|$(OBJ_DIR)/\1.o $(OBJ_DIR)/\1.d $(TEST_OBJ_DIR)/\1_utest.o:|' $@
 
 -include $(DEP_FILES)
-
-######################## PROTOCOL BUFFERS ########################
-PROTO_CPPC= $(CPPC) -Isrc/
-
-obj/avatar.pb.o: src/proto/avatar.pb.cc
-	$(PROTO_CPPC) -c src/proto/avatar.pb.cc -o obj/avatar.pb.o
-
-obj/mob.pb.o: src/proto/mob.pb.cc
-	$(PROTO_CPPC) -c src/proto/mob.pb.cc -o obj/mob.pb.o
-
-obj/object.pb.o: src/proto/object.pb.cc
-	$(PROTO_CPPC) -c src/proto/object.pb.cc -o obj/object.pb.o
-
-obj/room.pb.o: src/proto/room.pb.cc
-	$(PROTO_CPPC) -c src/proto/room.pb.cc -o obj/room.pb.o
-
-obj/social.pb.o: src/proto/social.pb.cc
-	$(PROTO_CPPC) -c src/proto/social.pb.cc -o obj/social.pb.o
-
-src/proto/%.pb.cc: proto/%.proto
-	protoc --cpp_out=src/ $<
 
 ######################## MUSCL ########################
 MUSCL_SRC_DIR     = src/muscl
