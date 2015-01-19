@@ -27,13 +27,6 @@ DEBIAN_FRONTEND=noninteractive apt-get install -yfV \
   mysql-server mysql-client libmysqlclient-dev      \
 
 ###############################################################################
-# yaml-cpp
-###############################################################################
-cd /vagrant/lib/yaml-cpp
-as_user "cmake -DBUILD_SHARED_LIBS=ON"
-as_user "make"
-
-###############################################################################
 # MySQL Server
 ###############################################################################
 mysql_exec "CREATE USER 'symphony'@'localhost' IDENTIFIED BY 'secure';"
