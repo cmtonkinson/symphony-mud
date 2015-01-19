@@ -6,6 +6,27 @@
 #include "mob.h"
 #include "room.h"
 
+MCmdAggressiveness::MCmdAggressiveness(void) {
+  name("aggressivenes");
+  level(Creature::DEMIGOD);
+  addSyntax(1, "<aggressivenes>");
+  brief("Change the aggressivenes type of the Mob.");
+  addOptions("aggressivenes", "Five point scale:\n  1 - scared\n  2 - passive\n  3 - neutral (default)\n  4 - aggressive\n  5 - mean");
+  return;
+}
+
+bool MCmdAggressiveness::execute(Creature* creature, const std::vector<std::string>& args) {
+  unsigned aggressiveness = estring(args[0]);
+  if (aggressiveness < Mob::MIN_AGGRESSIVENESS || aggressiveness > Mob::MAX_AGGRESSIVENESS) {
+    creature->send("Invalid aggressivenes.");
+    creature->send(printSyntax());
+    return false;
+  }
+  avatar()->medit()->aggressiveness(aggressiveness);
+  avatar()->send("This Mob is now a %u on the aggressiveness scale.\n", avatar()->medit()->aggressiveness());
+  return true;
+}
+
 MCmdClass::MCmdClass(void) {
   name("class");
   level(Creature::DEMIGOD);
@@ -126,6 +147,27 @@ MCmdLongname::MCmdLongname(void) {
 bool MCmdLongname::execute(Creature* creature, const std::vector<std::string>& args) {
   avatar()->medit()->identifiers().longname(args[0]);
   avatar()->send("You've set the mob longname to \"%s\".", avatar()->medit()->identifiers().longname().c_str());
+  return true;
+}
+
+MCmdMobility::MCmdMobility(void) {
+  name("mobility");
+  level(Creature::DEMIGOD);
+  addSyntax(1, "<mobility>");
+  brief("Change the mobility type of the Mob.");
+  addOptions("mobility", "Five point scale:\n  1 - stationary\n  2 - sluggish\n  3 - normal (default)\n  4 - roving\n  5 - hyperactive");
+  return;
+}
+
+bool MCmdMobility::execute(Creature* creature, const std::vector<std::string>& args) {
+  unsigned mobility = estring(args[0]);
+  if (mobility < Mob::MIN_AGGRESSIVENESS || mobility > Mob::MAX_AGGRESSIVENESS) {
+    creature->send("Invalid mobility.");
+    creature->send(printSyntax());
+    return false;
+  }
+  avatar()->medit()->mobility(mobility);
+  avatar()->send("This Mob is now a %u on the mobility scale.\n", avatar()->medit()->mobility());
   return true;
 }
 

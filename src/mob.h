@@ -9,6 +9,15 @@ class Area;
 
 class Mob: public Creature {
   public:
+
+    static const unsigned MIN_MOBILITY     = 1;
+    static const unsigned DEFAULT_MOBILITY = 3;
+    static const unsigned MAX_MOBILITY     = 5;
+
+    static const unsigned MIN_AGGRESSIVENESS     = 1;
+    static const unsigned DEFAULT_AGGRESSIVENESS = 3;
+    static const unsigned MAX_AGGRESSIVENESS     = 5;
+
     // constructors...
     Mob(void);
     Mob(Area* area, unsigned vnum);
@@ -17,8 +26,12 @@ class Mob: public Creature {
     virtual ~Mob(void);
 
     // public accessors...
-    void                vnum(unsigned vnum)               { _vnum = vnum; }
-    unsigned            vnum(void) const                  { return _vnum; }
+    void                vnum(unsigned vnum)                     { _vnum = vnum; }
+    unsigned            vnum(void) const                        { return _vnum; }
+    void                mobility(unsigned mobility);
+    unsigned            mobility(void) const                    { return _mobility; }
+    void                aggressiveness(unsigned aggressiveness);
+    unsigned            aggressiveness(void) const              { return _aggressiveness; }
 
     // general methods...
     virtual bool        isMob(void) const                 { return true; }
@@ -38,7 +51,9 @@ class Mob: public Creature {
 
   private:
     // data...
-    unsigned       _vnum;
+    unsigned            _vnum;
+    unsigned            _mobility;
+    unsigned            _aggressiveness;
 };
 
 #endif // !H_SYMPHONY_MOB

@@ -7,17 +7,29 @@
 #include "mysql.h"
 #include "world.h"
 
+// Static constants need external linkage.
+const unsigned Mob::MIN_MOBILITY;
+const unsigned Mob::DEFAULT_MOBILITY;
+const unsigned Mob::MAX_MOBILITY;
+const unsigned Mob::MIN_AGGRESSIVENESS;
+const unsigned Mob::DEFAULT_AGGRESSIVENESS;
+const unsigned Mob::MAX_AGGRESSIVENESS;
+
 Mob::Mob(void): Creature() {
+  mobility(DEFAULT_MOBILITY);
+  aggressiveness(DEFAULT_AGGRESSIVENESS);
   return;
 }
 
 Mob::Mob(const Mob& ref): Creature(ref) {
   vnum(ref.vnum());
+  mobility(ref.mobility());
+  aggressiveness(ref.aggressiveness());
   formGroup();
   return;
 }
 
-Mob::Mob(ROW row): Creature() {
+Mob::Mob(ROW row): Mob() {
   ID(row["mobID"]);
   vnum(row["vnum"]);
   gender().set((unsigned)row["gender"]);
@@ -56,10 +68,12 @@ Mob::Mob(ROW row): Creature() {
   slash(row["slash"]);
   pierce(row["pierce"]);
   exotic(row["exotic"]);
+  mobility(row["mobility"]);
+  aggressiveness(row["aggressiveness"]);
   return;
 }
 
-Mob::Mob(Area* area, unsigned vnum): Creature() {
+Mob::Mob(Area* area, unsigned vnum): Mob() {
 
   try {
     char query[Socket::MAX_BUFFER];
@@ -81,6 +95,17 @@ Mob::Mob(Area* area, unsigned vnum): Creature() {
 }
 
 Mob::~Mob(void) {
+  return;
+}
+
+/******************************************************* Accessors ********************************************************/
+void Mob::mobility(unsigned mobility) {
+  _mobility = std::max(MIN_MOBILITY, std::min(MAX_MOBILITY, mobility));
+  return;
+}
+
+void Mob::aggressiveness(unsigned aggressiveness) {
+  _aggressiveness = std::max(MIN_AGGRESSIVENESS, std::min(MAX_AGGRESSIVENESS, aggressiveness));
   return;
 }
 
@@ -127,7 +152,9 @@ bool Mob::save(void) {
         `bash` = %d,              \
         `slash` = %d,             \
         `pierce` = %d,            \
-        `exotic` = %d             \
+        `exotic` = %d,            \
+        `mobility` = %u,          \
+        `aggressiveness` = %u     \
        WHERE mobID = %lu          \
        LIMIT 1;",
       gender().number(),
@@ -166,6 +193,8 @@ bool Mob::save(void) {
       slash(),
       pierce(),
       exotic(),
+      mobility(),
+      aggressiveness(),
       ID()
    );
     mysql->update(query);
@@ -245,12 +274,16 @@ longname..... %s\n\n\
  );
   output.append(buffer);
   output.append("  --== {Ystats{x ==--\n");
-  sprintf(buffer, "health....... {G%d{x/{g%d{x\n\
-mana......... {C%d{x/{c%d{x\n\
-stamina...... {M%d{x\n",
+  sprintf(buffer, "health......... {G%d{x/{g%d{x\n\
+mana............ {C%d{x/{c%d{x\n\
+stamina......... {M%d{x\n\
+mobility........ {B%u{x\n\
+aggressiveness.. {R%u{x\n",
     mob->health(), mob->maxHealth(),
     mob->mana(), mob->maxMana(),
-    mob->stamina()
+    mob->stamina(),
+    mob->mobility(),
+    mob->aggressiveness()
  );
   output.append(buffer);
 
