@@ -11,17 +11,17 @@ class Mob: public Creature {
   public:
     // constructors...
     Mob(void);
-    Mob(Area* area, const unsigned long& vnum);
+    Mob(Area* area, unsigned vnum);
     Mob(const Mob& ref);
     Mob(ROW row);
     virtual ~Mob(void);
 
     // public accessors...
-    void                vnum(const unsigned long& vnum)               { _vnum = vnum; }
-    unsigned long       vnum(void) const                              { return _vnum; }
+    void                vnum(unsigned vnum)               { _vnum = vnum; }
+    unsigned            vnum(void) const                  { return _vnum; }
 
     // general methods...
-    virtual bool        isMob(void) const                             { return true; }
+    virtual bool        isMob(void) const                 { return true; }
 
     // Combat...
     virtual void        whatHappensWhenIDie(void);
@@ -31,14 +31,14 @@ class Mob: public Creature {
     virtual bool        destroy(void);
 
     // statics...
-    static Mob*         create(Area* area, const unsigned long& vnum);
+    static Mob*         create(Area* area, unsigned vnum);
     static Mob*         create(ROW row);
     static Mob*         create(Mob* mob, Room* room);
     static std::string  getInformation(Mob* mob);
 
   private:
     // data...
-    unsigned long       _vnum;
+    unsigned       _vnum;
 };
 
 #endif // !H_SYMPHONY_MOB

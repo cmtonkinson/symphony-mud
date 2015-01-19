@@ -701,7 +701,7 @@ void MeditIOHandler::deactivate(void) {
 
 std::string MeditIOHandler::prompt(void) {
   char buffer[Socket::MAX_BUFFER];
-  sprintf(buffer, "\n\n{W[{cMedit {x- {G%lu{W] ", avatar()->medit()->vnum());
+  sprintf(buffer, "\n\n{W[{cMedit {x- {G%u{W] ", avatar()->medit()->vnum());
   return buffer;
 }
 

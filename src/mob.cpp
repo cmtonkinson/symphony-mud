@@ -59,12 +59,12 @@ Mob::Mob(ROW row): Creature() {
   return;
 }
 
-Mob::Mob(Area* area, const unsigned long& vnum): Creature() {
+Mob::Mob(Area* area, unsigned vnum): Creature() {
 
   try {
     char query[Socket::MAX_BUFFER];
 
-    sprintf(query, "INSERT IGNORE INTO mobs (areaID, vnum) VALUES (%lu, %lu);", area->ID(), vnum);
+    sprintf(query, "INSERT IGNORE INTO mobs (areaID, vnum) VALUES (%lu, %u);", area->ID(), vnum);
     World::Instance().getMysql()->insert(query);
     ID(World::Instance().getMysql()->getInsertID());
 
@@ -210,7 +210,7 @@ void Mob::whatHappensWhenIDie(void) {
 }
 
 /******************************************************* Static methods ********************************************************/
-Mob* Mob::create(Area* area, const unsigned long& vnum) {
+Mob* Mob::create(Area* area, unsigned vnum) {
   return new Mob(area, vnum);
 }
 
@@ -230,7 +230,7 @@ std::string Mob::getInformation(Mob* mob) {
 
   output.append("  --== {Ybasic mob data{x ==--\n");
   // Basic mob information...
-  sprintf(buffer, "vnum......... {y%lu{x\n\
+  sprintf(buffer, "vnum......... {y%u{x\n\
 level........ {y%u{x\n\
 race......... {y%s{x\n\
 class........ {y%s{x\n\

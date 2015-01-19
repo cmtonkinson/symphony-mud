@@ -1089,7 +1089,7 @@ bool CmdMlist::execute(Creature* creature, const std::vector<std::string>& args)
 
   output.append(" [{y vnum{x] {gname{x\n -------------------\n");
   for (std::vector<Mob*>::iterator it = mobs.begin(); it != mobs.end(); ++it) {
-    sprintf(buffer, " [{y%5lu{x] %s{x\n", (*it)->vnum(), (*it)->identifiers().shortname().c_str());
+    sprintf(buffer, " [{y%5u{x] %s{x\n", (*it)->vnum(), (*it)->identifiers().shortname().c_str());
     output.append(buffer);
   }
 
