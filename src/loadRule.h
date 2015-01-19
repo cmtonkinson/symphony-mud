@@ -12,15 +12,15 @@ class Room;
 class LoadRule {
   public:
 
-    static const unsigned ERROR = 0;
+    static const unsigned ERROR  = 0;
     // rule types...
     static const unsigned OBJECT = 1;
     static const unsigned MOB    = 2;
     // rule prepositions...
-    static const unsigned ON    = 1;  // the indirect object is an object
-    static const unsigned IN    = 2;  // the indirect object is an object
-    static const unsigned CARRY = 3;  // the indirect object is a mob
-    static const unsigned WEAR  = 4;  // the indirect object is a mob
+    static const unsigned ON     = 1;  // the indirect object is an object
+    static const unsigned IN     = 2;  // the indirect object is an object
+    static const unsigned CARRY  = 3;  // the indirect object is a mob
+    static const unsigned WEAR   = 4;  // the indirect object is a mob
 
     // constructors...
     LoadRule(void);
@@ -58,13 +58,11 @@ class LoadRule {
     unsigned long       _ID;
     unsigned long       _vnum;
     Room*               _room;
-    unsigned short      _type;
-    unsigned long       _target;          // vnum
+    unsigned short      _type;            // object or mob
+    unsigned long       _target;          // vnum of the object/mob
     unsigned short      _number;          // number to load per reset
-    unsigned short      _max;             // max number allowed in area
-    unsigned short      _probability;     // 1-100
+    unsigned short      _max;             // max in the area for mobs, max in the room for objects
+    unsigned short      _probability;     // 1-100 percent probability that the object/mob will load per reset
 };
-
-
 
 #endif // #ifndef H_SYMPHONY_LOADRULE

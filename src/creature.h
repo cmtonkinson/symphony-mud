@@ -244,7 +244,7 @@ class Creature {
     static std::string          listAttributes(void);
 
     // Public methods...
-    const char*                 name(void) const                                                  { return identifiers().shortname().c_str(); }
+    const char*                 name(void) const                                                { return identifiers().shortname().c_str(); }
     virtual bool                isAvatar(void) const                                            { return false; }
     virtual bool                isMob(void) const                                               { return false; }
     bool                        isLaying(void) const                                            { return position().number() == LAYING; }
@@ -261,8 +261,8 @@ class Creature {
     bool                        isMage(void) const                                              { return pClass().number() == MAGE; }
     bool                        isRogue(void) const                                             { return pClass().number() == ROGUE; }
     bool                        isWarrior(void) const                                           { return pClass().number() == WARRIOR; }
-    unsigned short              hand(void) const                                                  { return WEARLOC_HOLD_R; }
-    unsigned short              off_hand(void) const                                              { return WEARLOC_HOLD_L; }
+    unsigned short              hand(void) const                                                { return WEARLOC_HOLD_R; }
+    unsigned short              off_hand(void) const                                            { return WEARLOC_HOLD_L; }
     bool                        lay(std::string& error, ObjFurniture* furniture = NULL);
     bool                        sit(std::string& error, ObjFurniture* furniture = NULL, bool on = false);
     bool                        stand(std::string& error);

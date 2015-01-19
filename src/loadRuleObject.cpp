@@ -74,9 +74,13 @@ bool LoadRuleObject::commit(void) {
   try {
     char query[Socket::MAX_BUFFER];
 
-    sprintf(
-      query,
-      "INSERT IGNORE INTO load_rules (vnum, type, target, number, max, probability, preposition, indirect_object, indirect_object_index) VALUES (%lu, '%s', %lu, %u, %u, %u, '%s', %lu, %u);",
+    sprintf(query, "                                                                                                        \
+      INSERT IGNORE                                                                                                         \
+      INTO `load_rules`                                                                                                     \
+      (`vnum`, `type`, `target`, `number`, `max`, `probability`, `preposition`, `indirect_object`, `indirect_object_index`) \
+      VALUES                                                                                                                \
+      (%lu, '%s', %lu, %u, %u, %u, '%s', %lu, %u)                                                                           \
+      ;",
       vnum(),
       (type() == MOB ? "MOB" : "OBJECT"),
       target(),
@@ -86,7 +90,7 @@ bool LoadRuleObject::commit(void) {
       prep.c_str(),
       indirectObject(),
       indirectObjectIndex()
-  );
+    );
     World::Instance().getMysql()->insert(query);
     ID(World::Instance().getMysql()->getInsertID());
 
@@ -112,7 +116,7 @@ bool LoadRuleObject::execute(std::list<Object*>& new_objects, std::list<Mob*>& n
   if ((it = area->objects().find(target())) != area->objects().end()) {
     object = it->second;
   } else {
-    World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset an object.  Object %lu in area %lu doesn't exist.", target(), area->ID());
+    World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset an object. Object %lu in area %lu doesn't exist.", target(), area->ID());
     return false;
   }
 

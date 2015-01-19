@@ -539,11 +539,11 @@ bool CmdLoadRule::execute(Creature* creature, const std::vector<std::string>& ar
         switch ((*it)->type()) {
           case LoadRule::MOB:
             mobRule = (LoadRuleMob*)*it;
-            avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %03u/100   | %s\n", rule_number, mobRule->strType().c_str(), mobRule->target(), mobRule->number(), mobRule->max(), mobRule->probability(), "N/A");
+            avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %3u/100   | %s\n", rule_number, mobRule->strType().c_str(), mobRule->target(), mobRule->number(), mobRule->max(), mobRule->probability(), "N/A");
             break;
           case LoadRule::OBJECT:
             objectRule = (LoadRuleObject*)*it;
-            avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %03u/100   | %s\n", rule_number, objectRule->strType().c_str(), objectRule->target(), objectRule->number(), objectRule->max(), objectRule->probability(), objectRule->notes().c_str());
+            avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %3u/100   | %s\n", rule_number, objectRule->strType().c_str(), objectRule->target(), objectRule->number(), objectRule->max(), objectRule->probability(), objectRule->notes().c_str());
             break;
           default:
             break;
@@ -801,17 +801,19 @@ bool CmdLook::execute(Creature* creature, const std::vector<std::string>& args) 
     // Objects...
     output.append(1, '\n').append(creature->room()->inventory().listObjects());
     // Creatures...
-    for (std::list<Creature*>::iterator it = creature->room()->creatures().begin(); it != creature->room()->creatures().end(); ++it) {
-      if (*it != creature && creature->canSee(*it) == Creature::SEE_NAME) {
+    for (auto iter : creature->room()->creatures()) {
+      if (iter != creature && creature->canSee(iter) == Creature::SEE_NAME) {
         output.append("{x\n ");
-        if (creature->isAvatar()) {
+        if (iter->isAvatar()) {
           if (((Avatar*)creature)->whoFlags().test(WHO_AFK)) {
             output.append("[{YAFK{x] ");
           }
         }
-        output.append((*it)->identifiers().shortname()).append("{x");
-        output.append(", a ").append((*it)->gender().string()).append(" ").append((*it)->race().string()).append(",");
-        output.append(" is ").append((*it)->position().string()).append(" here.");
+        output.append(iter->identifiers().shortname()).append("{x");
+        if (iter->isAvatar()) {
+          output.append(", a ").append(iter->gender().string()).append(" ").append(iter->race().string()).append(",");
+        }
+        output.append(" is ").append(iter->position().string()).append(" here.");
       }
     }
     creature->send(output);

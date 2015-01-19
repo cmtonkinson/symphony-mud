@@ -27,16 +27,20 @@ bool LoadRuleMob::commit(void) {
   try {
     char query[Socket::MAX_BUFFER];
 
-    sprintf(
-      query,
-      "INSERT IGNORE INTO load_rules (vnum, type, target, number, max, probability) VALUES (%lu, '%s', %lu, %u, %u, %u);",
+    sprintf(query, "                                             \
+      INSERT IGNORE                                              \
+      INTO `load_rules`                                          \
+      (`vnum`, `type`, `target`, `number`, `max`, `probability`) \
+      VALUES                                                     \
+      (%lu, '%s', %lu, %u, %u, %u)                               \
+      ;",
       vnum(),
       (type() == MOB ? "MOB" : "OBJECT"),
       target(),
       number(),
       max(),
       probability()
-   );
+    );
     World::Instance().getMysql()->insert(query);
     ID(World::Instance().getMysql()->getInsertID());
 
@@ -49,24 +53,22 @@ bool LoadRuleMob::commit(void) {
 }
 
 bool LoadRuleMob::execute(std::list<Object*>& new_objects, std::list<Mob*>& new_mobs) {
+  unsigned mobs_added = 0;
+  int level           = 0;
   std::map<unsigned long,Mob*>::iterator it;
   Area* area = room()->area();
   Mob* mob = NULL;
   unsigned already_there = area->howManyMobs(target());
-  unsigned mobs_added = 0;
-  int level = 0;
 
   if ((it = area->mobs().find(target())) != area->mobs().end()) {
     mob = it->second;
   } else {
-    World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset a mob.  Mob %lu in area %lu doesn't exist.", target(), area->ID());
+    World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset a mob. Mob %lu in area %lu doesn't exist.", target(), area->ID());
     return false;
   }
 
   for (unsigned u = 0; u < number(); ++u) {
-    if (already_there + mobs_added >= max()) {
-      break;
-    }
+    if (already_there + mobs_added >= max()) break;
     if (World::rand(1, 100) <= probability()) {
       mob = new Mob(*mob);
       World::Instance().insert(mob);

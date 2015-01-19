@@ -60,4 +60,3 @@ bool LoadRule::destroy(void) {
   // Success!
   return true;
 }
-
