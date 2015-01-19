@@ -644,12 +644,16 @@ bool CmdPut::execute(Creature* creature, const std::vector<std::string>& args) {
     if ((*it)->flags().test(OBJECT_NODROP)) {
       // make sure they can let go of it
       creature->send("You can't let go of %s{x.\n", (*it)->identifiers().shortname().c_str());
+    } else if ((*it)->isContainer()) {
+      // until MySQL gets das boot, this is too much hassle
+      creature->send("You can't put a container inside another container.\n");
     } else {
       // transfer the object
       creature->inventory().remove(*it);
       container->container()->inventory().add(*it);
       creature->send("You put %s{x in %s{x.\n", (*it)->identifiers().shortname().c_str(), container->identifiers().shortname().c_str());
       creature->room()->send_cond("$p puts $o{x in $O{x.\n", creature, *it, container);
+      return true;
     }
   }
 

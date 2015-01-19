@@ -70,7 +70,8 @@ class Object {
     void          insert(Mysql* db, const unsigned long& areaID);
     void          update(Mysql* db) const;
     void          destroy(Mysql* db) const;
-    void          saveInstance(Mysql* db, const std::string& placement, const unsigned long& id, const unsigned& location, const unsigned & order, char* hash = NULL) const;
+    void          saveInstance(Mysql* db, unsigned long owner_id, std::string placement, unsigned location) const;
+    void          saveContainedInstance(Mysql* db, unsigned long owner_id, std::string placement, unsigned location, std::string container_placement = "", unsigned container_location = 0) const;
 
     // public accessors
     void                        ID(const unsigned long& ID)         { _ID = ID; }

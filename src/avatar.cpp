@@ -154,24 +154,21 @@ bool Avatar::save(void) {
     Mysql* mysql = World::Instance().getMysql();
     char query[Socket::MAX_BUFFER];
 
-    sprintf(query,
-      " DELETE                          \
-          FROM `object_instances`       \
-          WHERE `placement` = 'AVATAR'  \
-            AND `id` = %lu              \
+    sprintf(query, "              \
+          DELETE                  \
+          FROM `object_instances` \
+          WHERE `owner_id` = %lu  \
         ;",
       ID()
-   );
+    );
     mysql->remove(query);
 
-    for (std::list<Object*>::const_iterator it = inventory().objectList().begin(); it != inventory().objectList().end(); ++it) {
-      (*it)->saveInstance(mysql, "AVATAR", ID(), 0, order++);
-    }
-
+    // Save inventory instances.
     order = 0;
-    for (std::map<int,Object*>::const_iterator it = equipment().objectMap().begin(); it != equipment().objectMap().end(); ++it) {
-      it->second->saveInstance(mysql, "AVATAR", ID(), it->first, order++);
-    }
+    for (auto iter : inventory().objectList()) iter->saveInstance(mysql, ID(), "INVENTORY", order++);
+
+    // Save equipment instances.
+    for (auto iter : equipment().objectMap()) iter.second->saveInstance(mysql, ID(), "EQUIPMENT", iter.first);
 
     sprintf(query,
       " DELETE                 \
@@ -365,10 +362,19 @@ bool Avatar::load(void) {
   Mysql* mysql = World::Instance().getMysql();
   char query[Socket::MAX_BUFFER];
   ROW row;
-  Object* object = NULL;
+  Object* object   = NULL;
   Ability* ability = NULL;
 
-  sprintf(query, "SELECT * FROM avatars WHERE LOWER(shortname) = LOWER('%s') AND active = 1 LIMIT 1;", Mysql::addslashes(identifiers().shortname()).c_str());
+  sprintf(query, "                          \
+    SELECT                                  \
+    *                                       \
+    FROM `avatars`                          \
+    WHERE LOWER(`shortname`) = LOWER('%s')  \
+      AND active = 1                        \
+    LIMIT 1                                 \
+    ;",
+    Mysql::addslashes(identifiers().shortname()).c_str()
+  );
   if (mysql->select(query) == 1) {
     row = mysql->fetch();
     if (!row.empty()) {
@@ -446,14 +452,14 @@ bool Avatar::load(void) {
           }
         }
       }
-      // get us some inventory...
-      sprintf(query,
-        "SELECT *                       \
-          FROM `object_instances`       \
-          WHERE `placement` = 'AVATAR'  \
-            AND `id` = %lu              \
-            AND `location` = 0          \
-          ORDER BY `order` ASC          \
+      // Restore the inventory.
+      sprintf(query, "                  \
+        SELECT                          \
+        *                               \
+        FROM `object_instances`         \
+        WHERE `owner_id` = %lu          \
+          AND `placement` = 'INVENTORY' \
+        ORDER BY `location` ASC         \
         ;",
         ID()
      );
@@ -461,19 +467,16 @@ bool Avatar::load(void) {
         while ((row = mysql->fetch())) {
           object = new Object(row);
           inventory().add(object);
-          if (object->isContainer()) {
-            loadObjectContents((ObjContainer*)object, row["hash"].c_str());
-          }
+          if (object->isContainer()) loadContainerContents(object->container(), row["placement"], row["location"]);
         }
       }
-      // reclaim equipment from the depths of MySQL...
-      sprintf(query,
-        "SELECT *                       \
-          FROM `object_instances`       \
-          WHERE `placement` = 'AVATAR'  \
-            AND `id` = %lu              \
-            AND `location` != 0         \
-          ORDER BY `order` ASC          \
+      // Restore the equipment.
+      sprintf(query, "                  \
+        SELECT                          \
+        *                               \
+        FROM `object_instances`         \
+        WHERE `owner_id` = %lu          \
+          AND `placement` = 'EQUIPMENT' \
         ;",
         ID()
      );
@@ -481,44 +484,44 @@ bool Avatar::load(void) {
         while ((row = mysql->fetch())) {
           object = new Object(row);
           equipment().add(object, row["location"]);
-          setModifications(object);
-          if (object->isContainer()) {
-            loadObjectContents(object->container(), row["hash"].c_str());
-          }
+          if (object->isContainer()) loadContainerContents(object->container(), row["placement"], row["location"]);
         }
       }
       return true;
     }
   }
-
   return false;
 }
 
-void Avatar::loadObjectContents(ObjContainer* container, const char* hash) {
+void Avatar::loadContainerContents(ObjContainer* container, std::string placement, unsigned location) {
   Object* object = NULL;
 
   try {
-    Mysql conn;
+    Mysql mysql;
     ROW row;
     char query[Socket::MAX_BUFFER];
 
-    sprintf(query,
-      "SELECT *                         \
-        FROM `object_instances`         \
-        WHERE `placement` = 'CONTAINER' \
-          AND `in` = '%s'               \
-        ORDER BY `order` ASC            \
+    sprintf(query, "                      \
+      SELECT                              \
+      *                                   \
+      FROM `object_instances`             \
+      WHERE `owner_id` = %lu              \
+        AND `placement` = 'CONTAINER'     \
+        AND `container_owner_id` = %lu    \
+        AND `container_placement` = '%s'  \
+        AND `container_location` = %u     \
+      ORDER BY `location` ASC             \
       ;",
-      hash
-   );
+      ID(),
+      ID(),
+      Mysql::addslashes(placement).c_str(),
+      location
+    );
 
-    if (conn.select(query)) {
-      while ((row = conn.fetch())) {
+    if (mysql.select(query)) {
+      while ((row = mysql.fetch())) {
         object = new Object(row);
         container->inventory().add(object);
-        if (object->isContainer()) {
-          loadObjectContents(object->container(), row["hash"].c_str());
-        }
       }
     }
 

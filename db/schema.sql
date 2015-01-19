@@ -226,7 +226,7 @@ CREATE TABLE `mobs` (
   `pClass` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`mobID`),
   UNIQUE KEY `vnum` (`vnum`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -244,7 +244,7 @@ CREATE TABLE `notes` (
   `body` text NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -255,12 +255,12 @@ DROP TABLE IF EXISTS `object_instances`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `object_instances` (
-  `hash` varchar(255) NOT NULL,
-  `in` varchar(255) NOT NULL COMMENT 'hash of container holding this object (if any)',
-  `placement` enum('AVATAR','MOB','ROOM','CONTAINER') NOT NULL,
-  `id` int(11) unsigned NOT NULL,
-  `location` int(11) unsigned NOT NULL COMMENT '0 means inventory; non-zero means equipped',
-  `order` int(11) unsigned NOT NULL COMMENT 'relative order, for inventory and room',
+  `owner_id` int(11) unsigned NOT NULL COMMENT 'PK of holder/owner (i.e. avatar ID)',
+  `placement` enum('EQUIPMENT','INVENTORY','CONTAINER') NOT NULL,
+  `location` int(11) unsigned NOT NULL COMMENT 'Wear location for EQUIPMENT, otherwise index within the collection',
+  `container_owner_id` int(11) unsigned DEFAULT NULL COMMENT 'owner of containing object (only for instances within containers)',
+  `container_placement` enum('EQUIPMENT','INVENTORY','CONTAINER') DEFAULT NULL COMMENT 'placement of containing object (only for instances within containers)',
+  `container_location` int(11) unsigned DEFAULT NULL COMMENT 'location of containing object (only for instances within containers)',
   `objectID` int(11) unsigned NOT NULL,
   `vnum` int(11) unsigned NOT NULL,
   `type` int(11) unsigned NOT NULL,
@@ -284,14 +284,9 @@ CREATE TABLE `object_instances` (
   `weapon_damage_number` int(10) unsigned NOT NULL DEFAULT '0',
   `weapon_damage_faces` int(10) unsigned NOT NULL DEFAULT '0',
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  KEY `id` (`id`),
-  KEY `location` (`location`),
-  KEY `order` (`order`),
-  KEY `placement` (`placement`),
-  KEY `hash` (`hash`),
-  KEY `in` (`in`),
-  CONSTRAINT `object_instances_ibfk_1` FOREIGN KEY (`in`) REFERENCES `object_instances` (`hash`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='first row must has hash/in values of "none"/"none"';
+  UNIQUE KEY `instance` (`owner_id`,`placement`,`location`),
+  UNIQUE KEY `container` (`container_owner_id`,`container_placement`,`container_location`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -329,7 +324,7 @@ CREATE TABLE `objects` (
   PRIMARY KEY (`objectID`),
   UNIQUE KEY `vnum` (`vnum`),
   KEY `areaID` (`areaID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -362,7 +357,7 @@ CREATE TABLE `player_log` (
   PRIMARY KEY (`logID`),
   KEY `level` (`level`),
   KEY `type` (`type`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -432,7 +427,7 @@ CREATE TABLE `world_log` (
   PRIMARY KEY (`logID`),
   KEY `level` (`level`),
   KEY `type` (`type`)
-) ENGINE=MyISAM AUTO_INCREMENT=261 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=469 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -444,4 +439,4 @@ CREATE TABLE `world_log` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-01-14 19:52:05
+-- Dump completed on 2015-01-19 17:55:31

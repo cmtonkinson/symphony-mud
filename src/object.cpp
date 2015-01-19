@@ -51,9 +51,7 @@ Object::Object(ROW row) {
   type(static_cast<Type>((unsigned)row["type"]), row);
   vnum(row["vnum"]);
   flags().value(row["flags"]);
-  for (std::vector<std::string>::iterator it = foo.begin(); it != foo.end(); ++it) {
-    composition().insert(CompoundTable::Instance().find(*it));
-  }
+  for (auto iter : foo) composition().insert(CompoundTable::Instance().find(iter));
   level(row["level"]);
   value(row["value"]);
   wearable(static_cast<Wearable>((unsigned)row["wearable"]));
@@ -92,7 +90,7 @@ void Object::deleteExtra(void) {
   _type = Type_Undefined;
 }
 
-/* Chaning Object::_type is a non-trivial operation, since Object::_extra
+/* Changing Object::_type is a non-trivial operation, since Object::_extra
  * holds a pointer to an Obj____ object, and that pointer is interpreted
  * based on the value of Object::_type.
  */
@@ -471,86 +469,78 @@ void Object::update(Mysql* db) const {
 
 void Object::destroy(Mysql* db) const {
   char query[Socket::MAX_BUFFER];
-  sprintf(query, "DELETE FROM objects WHERE objectID = %lu LIMIT 1;", ID());
+  sprintf(query, "          \
+    DELETE                  \
+    FROM `objects`          \
+    WHERE `objectID` = %lu  \
+    LIMIT 1                 \
+    ;",
+    ID()
+  );
   db->remove(query);
   return;
 }
 
-void Object::saveInstance(Mysql* db, const std::string& placement, const unsigned long& id, const unsigned& location, const unsigned & order, char* hash) const {
-  char this_hash[Socket::MAX_BUFFER];
-  unsigned internal_order = 0;
+void Object::saveInstance(Mysql* db, unsigned long owner_id, std::string placement, unsigned location) const {
+  unsigned order = 0;
   char query[Socket::MAX_BUFFER];
-  if (hash) {
-    sprintf(this_hash, "%s-%s%lu%u%u", hash, placement.c_str(), id, location, order);
-  } else {
-    sprintf(this_hash, "none-%s%lu%u%u", placement.c_str(), id, location, order);
-  }
-  sprintf(query,
-    "INSERT INTO `object_instances` (\
-        `hash`,                 \
-        `in`,                   \
-        `placement`,            \
-        `id`,                   \
-        `location`,             \
-        `order`,                \
-        `objectID`,             \
-        `vnum`,                 \
-        `type`,                 \
-        `flags`,                \
-        `composition`,          \
-        `level`,                \
-        `value`,                \
-        `wearable`,             \
-        `modifiers`,            \
-        `keywords`,             \
-        `shortname`,            \
-        `longname`,             \
-        `description`,          \
-        `furniture_capacity`,   \
-        `furniture_lay_on`,     \
-        `furniture_sit_at`,     \
-        `furniture_sit_on`,     \
-        `furniture_stand_on`,   \
-        `weapon_type`,          \
-        `weapon_verb`,          \
-        `weapon_damage_number`, \
-        `weapon_damage_faces`   \
-     ) VALUES (               \
-        '%s',                   \
-        '%s',                   \
-        '%s',                   \
-        %lu,                    \
-        %u,                     \
-        %u,                     \
-        %lu,                    \
-        %lu,                    \
-        %u,                     \
-        %lu,                    \
-        '%s',                   \
-        %u,                     \
-        %u,                     \
-        %u,                     \
-        '%s',                   \
-        '%s',                   \
-        '%s',                   \
-        '%s',                   \
-        '%s',                   \
-        '%u',                   \
-        '%u',                   \
-        '%u',                   \
-        '%u',                   \
-        '%u',                   \
-        '%u',                   \
-        '%u',                   \
-        '%u',                   \
-        '%u'                    \
+  sprintf(query, "                    \
+    INSERT INTO `object_instances` (  \
+      `owner_id`,                     \
+      `placement`,                    \
+      `location`,                     \
+      `objectID`,                     \
+      `vnum`,                         \
+      `type`,                         \
+      `flags`,                        \
+      `composition`,                  \
+      `level`,                        \
+      `value`,                        \
+      `wearable`,                     \
+      `modifiers`,                    \
+      `keywords`,                     \
+      `shortname`,                    \
+      `longname`,                     \
+      `description`,                  \
+      `furniture_capacity`,           \
+      `furniture_lay_on`,             \
+      `furniture_sit_at`,             \
+      `furniture_sit_on`,             \
+      `furniture_stand_on`,           \
+      `weapon_type`,                  \
+      `weapon_verb`,                  \
+      `weapon_damage_number`,         \
+      `weapon_damage_faces`           \
+     ) VALUES (                       \
+        %lu,                          \
+        '%s',                         \
+        %u,                           \
+        %lu,                          \
+        %lu,                          \
+        %u,                           \
+        %lu,                          \
+        '%s',                         \
+        %u,                           \
+        %u,                           \
+        %u,                           \
+        '%s',                         \
+        '%s',                         \
+        '%s',                         \
+        '%s',                         \
+        '%s',                         \
+        '%u',                         \
+        '%u',                         \
+        '%u',                         \
+        '%u',                         \
+        '%u',                         \
+        '%u',                         \
+        '%u',                         \
+        '%u',                         \
+        '%u'                          \
      );",
-    Mysql::addslashes(this_hash).c_str(),
-    Mysql::addslashes(hash?hash:"none").c_str(),
+    owner_id,
     Mysql::addslashes(placement).c_str(),
-    id,
     location,
-    order,
     ID(),
     vnum(),
     type(),
@@ -576,9 +566,105 @@ void Object::saveInstance(Mysql* db, const std::string& placement, const unsigne
  );
   db->insert(query);
   if (isContainer()) {
-    for (std::list<Object*>::const_iterator it = container()->inventory().objectList().begin(); it != container()->inventory().objectList().end(); ++it) {
-      (*it)->saveInstance(db, "CONTAINER", id, 0, internal_order++, this_hash);
+    order = 0;
+    for (auto iter : container()->inventory().objectList()) {
+      iter->saveContainedInstance(db, owner_id, "CONTAINER", order++, placement, location);
     }
   }
+  return;
+}
+
+void Object::saveContainedInstance(Mysql* db, unsigned long owner_id, std::string placement, unsigned location, std::string container_placement, unsigned container_location) const {
+  char query[Socket::MAX_BUFFER];
+  sprintf(query, "                    \
+    INSERT INTO `object_instances` (  \
+      `owner_id`,                     \
+      `placement`,                    \
+      `location`,                     \
+      `container_owner_id`,           \
+      `container_placement`,          \
+      `container_location`,           \
+      `objectID`,                     \
+      `vnum`,                         \
+      `type`,                         \
+      `flags`,                        \
+      `composition`,                  \
+      `level`,                        \
+      `value`,                        \
+      `wearable`,                     \
+      `modifiers`,                    \
+      `keywords`,                     \
+      `shortname`,                    \
+      `longname`,                     \
+      `description`,                  \
+      `furniture_capacity`,           \
+      `furniture_lay_on`,             \
+      `furniture_sit_at`,             \
+      `furniture_sit_on`,             \
+      `furniture_stand_on`,           \
+      `weapon_type`,                  \
+      `weapon_verb`,                  \
+      `weapon_damage_number`,         \
+      `weapon_damage_faces`           \
+     ) VALUES (                       \
+        %lu,                          \
+        '%s',                         \
+        %u,                           \
+        %lu,                          \
+        '%s',                         \
+        %u,                           \
+        %lu,                          \
+        %lu,                          \
+        %u,                           \
+        %lu,                          \
+        '%s',                         \
+        %u,                           \
+        %u,                           \
+        %u,                           \
+        '%s',                         \
+        '%s',                         \
+        '%s',                         \
+        '%s',                         \
+        '%s',                         \
+        '%u',                         \
+        '%u',                         \
+        '%u',                         \
+        '%u',                         \
+        '%u',                         \
+        '%u',                         \
+        '%u',                         \
+        '%u',                         \
+        '%u'                          \
+     );",
+    owner_id,
+    Mysql::addslashes(placement).c_str(),
+    location,
+    owner_id,
+    Mysql::addslashes(container_placement).c_str(),
+    container_location,
+    ID(),
+    vnum(),
+    type(),
+    flags().value(),
+    Mysql::addslashes(implodeComposition("~")).c_str(),
+    level(),
+    value(),
+    wearable(),
+    Mysql::addslashes(serializeModifiers()).c_str(),
+    Mysql::addslashes(identifiers().serializeKeywords()).c_str(),
+    Mysql::addslashes(identifiers().shortname()).c_str(),
+    Mysql::addslashes(identifiers().longname()).c_str(),
+    Mysql::addslashes(identifiers().description()).c_str(),
+    isFurniture() ? furniture()->capacity() : 0,
+    isFurniture() ? furniture()->layOn() : 0,
+    isFurniture() ? furniture()->sitAt() : 0,
+    isFurniture() ? furniture()->sitOn() : 0,
+    isFurniture() ? furniture()->standOn() : 0,
+    isWeapon() ? weapon()->type().number() : 0,
+    isWeapon() ? weapon()->verb().number() : 0,
+    isWeapon() ? weapon()->damage().number() : 0,
+    isWeapon() ? weapon()->damage().faces() : 0
+ );
+  db->insert(query);
   return;
 }

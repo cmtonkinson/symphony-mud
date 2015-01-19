@@ -153,7 +153,7 @@ bool LoginBannerIOHandler::handle(void) {
 }
 
 std::string LoginBannerIOHandler::prompt(void) {
-  return "\n\n\n\n\n{RS{Gy{Ym{Bp{Mh{Co{Rn{Gy{W!!{x\n\n\n\n\n";
+  return "\n\n\n\n\n{?S{?y{?m{?p{?h{?o{?n{?y{?!{?!{x\n\n\n\n\n";
 }
 
 /************************************** LOGIN (NAME) HANDLER **************************************/

@@ -9,6 +9,11 @@
 
 class Object;
 
+/*
+ * The reason for the getName pointer is that sometimse it's necessary to to display a different
+ * identifier when producing a list of Objects. For example, a Creature inventory will display the
+ * shortname() of an Object, while a Room inventory will display the longname().
+ */
 class InventoryContainer: public Container {
   public:
     // constructors...
@@ -37,7 +42,7 @@ class InventoryContainer: public Container {
     // public accessor methods...
     std::list<Object*>&                                   objectList(void)        { return _objectList; }
     const std::list<Object*>&                             objectList(void) const  { return _objectList; }
-    std::string (Identifiers::*getName(void))(void) const                           { return _getName; }
+    std::string (Identifiers::*getName(void))(void) const                         { return _getName; }
 
   private:
     std::list<Object*> _objectList;

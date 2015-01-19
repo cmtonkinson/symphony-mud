@@ -3,7 +3,7 @@
 PROJECT				= symphony
 CPPC					= ccache clang++
 FLAGS_ALL			= --std=c++11 -fcolor-diagnostics
-FLAGS_DEV			= $(FLAGS_ALL) -O0 -ggdb3 -Wall -Werror -pedantic
+FLAGS_DEV			= $(FLAGS_ALL) -O0 -g -Wall -Werror -pedantic
 FLAGS_PROD		= $(FLAGS_ALL) -O3
 LIBS					= `pcre-config --libs` `mysql_config --libs`
 SRC_DIR				= src

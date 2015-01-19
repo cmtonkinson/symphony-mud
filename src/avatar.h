@@ -40,7 +40,7 @@ class Avatar: public Creature {
     bool            markForDeletion(const unsigned short& value);
     virtual void    send(const std::string& message);
     virtual void    send(const char* format, ...);
-    void            loadObjectContents(ObjContainer* container, const char* hash);
+    void            loadContainerContents(ObjContainer* container, std::string placement, unsigned location);
     time_t          secondsLoggedOn(void)         { return time(NULL) - _loggedOn; }
     std::string     stringLoggedOn(void);
     bool            hasInput(void);
