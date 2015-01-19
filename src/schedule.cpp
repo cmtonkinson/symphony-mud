@@ -15,11 +15,24 @@ Schedule::~Schedule(void) {
 
 void Schedule::add(Job* job) {
   _queue.insert(job);
+
+  // If a "who" is set for the Job, insert it into the index set, keyed by the "who" pointer.
+  if (job->who()) {
+    _index[job->who()].insert(job);
+  }
   return;
 }
 
 void Schedule::remove(Job* job) {
   _queue.erase(job);
+
+  // If a "who" is set for the Job, remove the Job from that who's set in the index.
+  if (job->who()) {
+    // Remove this Job from the index set.
+    _index[job->who()].erase(job);
+    // Remove the entire index entry set if it the set is empty.
+    if (_index[job->who()].empty()) _index.erase(job->who());
+  }
   return;
 }
 
@@ -43,4 +56,17 @@ bool Schedule::fire(void) {
 
 long Schedule::size(void) const {
   return _queue.size();
+}
+
+// Though _index is routinely manipulated in add() and remove(), cleanup() is the primary logic for
+// which the _index exists. cleanup() is meant as a callback to be made in the destructor of classes
+// which are passed as the ObjectType pointers in Job constructors.
+void Schedule::cleanup(void* object) {
+  if (_index.count(object) > 0) {
+    for (auto iter : _index[object]) {
+      remove(iter);
+      delete iter;
+    }
+  }
+  return;
 }

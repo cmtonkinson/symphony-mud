@@ -80,6 +80,8 @@ bool LoadRuleMob::execute(std::list<Object*>& new_objects, std::list<Mob*>& new_
       level = mob->level();
       mob->resetStats();
       for (int i = 1; i < level; ++i) mob->gainLevel();
+      // Imbibe the mob with some life, as appropriate.
+
     }
   }
 

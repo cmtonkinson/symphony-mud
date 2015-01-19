@@ -2,11 +2,10 @@
 #ifndef H_SYMPHONY_SCHEDULE
 #define H_SYMPHONY_SCHEDULE
 
+#include <map>
 #include <set>
 #include "event-handler-method.h"
 #include "job.h"
-
-using std::multiset;
 
 class Schedule {
   public:
@@ -16,27 +15,20 @@ class Schedule {
     void add(Job* job);
     void remove(Job* job);
 
-    template <class EventType>
-    void schedule(time_t when, bool (*function)(EventType*)) {
-      if (function) {
-        _queue.insert(new Job(when, new EventHandlerFunction<EventType>(function)));
-      }
-      return;
-    }
-
-    template <class ObjectType,class EventType>
-    void schedule(time_t when, ObjectType* object, bool (ObjectType::*method)(EventType*)) {
-      if (object && method) {
-        _queue.insert(new Job(when, new EventHandlerMethod<ObjectType,EventType>(object, method)));
-      }
-      return;
-    }
-
     bool  fire(void);
     long  size(void) const;
+    void  cleanup(void* object);
 
   private:
-    multiset<Job*,JobComp> _queue;
+    // The Schedule is composed of a multiset of Jobs, sorted primarily by the timestamp Job::_when
+    // and secondarily by an incrementing counter (to avoid ambiguity with timers set for the same
+    // time).
+    std::multiset<Job*,JobComp>     _queue;
+    // We need an infrastructure for efficiently removing Jobs from the Schedule when the "acting"
+    // object (which is "this" in the Job execution) is destroyed, or else the Job will fire() and
+    // best case results in a seg fault from accessing freed memory. For each object creating Jobs
+    // we key a map with the objects address, and maintain a set of outstanding Jobs for said object.
+    std::map<void*,std::set<Job*>>  _index;
 };
 
 #endif // #ifndef H_SYMPHONY_SCHEDULE

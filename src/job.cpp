@@ -4,9 +4,13 @@
 #include "schedule.h"
 
 Job::~Job(void) {
-  if (_what) {
-    delete _what;
-  }
+  if (_what) delete _what;
+  return;
+}
+
+void Job::setup(void* who_) {
+  _counter = nextIndex();
+  _who = who_;
   return;
 }
 

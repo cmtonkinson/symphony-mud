@@ -131,7 +131,10 @@ Creature::~Creature(void) {
     delete *it;
     it = IOhandlers().erase(it);
   }
+  // Remove the Creature from its group.
   ungroup();
+  // Remove any Jobs set on this Creature.
+  World::Instance().schedule()->cleanup(this);
   return;
 }
 
