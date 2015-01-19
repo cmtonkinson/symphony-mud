@@ -19,6 +19,9 @@
   * macros?
   * triggers?
 
+# Building
+  * absolute map coordinates
+
 # Engine
   * security: login throttling, password storage
   * performance: jobs per turn, turn sleep
