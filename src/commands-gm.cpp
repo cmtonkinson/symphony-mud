@@ -878,7 +878,7 @@ CmdMap::CmdMap(void) {
 bool CmdMap::execute(Creature* creature, const std::vector<std::string>& args) {
   std::string output;
   unsigned xsize = 37;
-  unsigned ysize = 9;
+  unsigned ysize = 13;
   unsigned x = 0;
   unsigned y = 0;
   bool success = false;
