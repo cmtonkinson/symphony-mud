@@ -84,7 +84,8 @@ class CLASS: public Ability {                         \
     unsigned level_      = DEFAULT_LEVEL,             \
     unsigned trains_     = DEFAULT_TRAINS,            \
     unsigned difficulty_ = DEFAULT_DIFFICULTY,        \
-    unsigned stamina_    = DEFAULT_STAMINA)           \
+    unsigned stamina_    = DEFAULT_STAMINA,           \
+    unsigned mana_       = DEFAULT_MANA)              \
     {                                                 \
       type(SKILL);                                    \
       name(NAME);                                     \
@@ -92,7 +93,7 @@ class CLASS: public Ability {                         \
       trains(trains_);                                \
       difficulty(difficulty_);                        \
       stamina(stamina_);                              \
-      mana(DEFAULT_MANA);                             \
+      mana(mana_);                                    \
       return;                                         \
     }                                                 \
     virtual ~CLASS(void) { return; }                  \
@@ -107,14 +108,15 @@ class CLASS: public Ability {                         \
     unsigned level_      = DEFAULT_LEVEL,             \
     unsigned trains_     = DEFAULT_TRAINS,            \
     unsigned difficulty_ = DEFAULT_DIFFICULTY,        \
-    unsigned mana_       = DEFAULT_MANA)              \
+    unsigned mana_       = DEFAULT_MANA,              \
+    unsigned stamina_    = DEFAULT_STAMINA)           \
     {                                                 \
       type(SPELL);                                    \
       name(NAME);                                     \
       level(level_);                                  \
       trains(trains_);                                \
       difficulty(difficulty_);                        \
-      stamina(DEFAULT_STAMINA);                       \
+      stamina(stamina_);                              \
       mana(mana_);                                    \
       return;                                         \
     }                                                 \
