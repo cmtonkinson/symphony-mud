@@ -280,7 +280,7 @@ class Creature {
     std::string                 seeName(Object* target, bool capitalize = false);
     bool                        canAlter(Creature* target);
     bool                        canMove(const unsigned short& direction, std::string& message);
-    void                        move(const unsigned short& direction);
+    bool                        move(const unsigned short& direction);
     IOHandler*                  IOhandler(void);
     void                        pushIOHandler(IOHandler* handler);
     void                        popIOHandler(void);

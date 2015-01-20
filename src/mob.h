@@ -35,9 +35,14 @@ class Mob: public Creature {
 
     // general methods...
     virtual bool        isMob(void) const                 { return true; }
-
-    // Combat...
     virtual void        whatHappensWhenIDie(void);
+
+    // This is the primary entry method to initiate all automated Mob behavior. It is used e.g.
+    // when Mobs are placed from load rules or the `mload` Command to breathe life into the Mob and
+    // cause it to do things like move around the world and other randomized or programatic actions.
+    void mobilize(void);
+
+    bool auto_move(Job* job);
 
     // pure virtual overrides...
     virtual bool        save(void);

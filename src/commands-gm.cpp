@@ -1123,6 +1123,7 @@ bool CmdMload::execute(Creature* creature, const std::vector<std::string>& args)
       World::Instance().insert(mob);
       creature->room()->add(mob);
       mob->room(creature->room());
+      mob->mobilize();
       creature->send("You load %s.", mob->identifiers().shortname().c_str());
       creature->room()->send_cond("$p has created $c.", creature, mob);
       return true;

@@ -48,7 +48,7 @@ CREATE TABLE `areas` (
   PRIMARY KEY (`areaID`),
   UNIQUE KEY `low` (`low`),
   UNIQUE KEY `high` (`high`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -150,7 +150,7 @@ CREATE TABLE `exits` (
   PRIMARY KEY (`exitID`),
   KEY `roomID` (`vnum`),
   KEY `targetID` (`target`)
-) ENGINE=MyISAM AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=145 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -173,7 +173,7 @@ CREATE TABLE `load_rules` (
   `indirect_object_index` int(10) unsigned NOT NULL DEFAULT '0',
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -224,9 +224,11 @@ CREATE TABLE `mobs` (
   `gender` int(10) unsigned NOT NULL DEFAULT '1',
   `race` int(10) unsigned NOT NULL DEFAULT '1',
   `pClass` int(10) unsigned NOT NULL DEFAULT '1',
+  `mobility` int(11) unsigned NOT NULL DEFAULT '3',
+  `aggressiveness` int(11) unsigned NOT NULL DEFAULT '3',
   PRIMARY KEY (`mobID`),
   UNIQUE KEY `vnum` (`vnum`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -357,7 +359,7 @@ CREATE TABLE `player_log` (
   PRIMARY KEY (`logID`),
   KEY `level` (`level`),
   KEY `type` (`type`)
-) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -381,7 +383,7 @@ CREATE TABLE `rooms` (
   PRIMARY KEY (`roomID`),
   UNIQUE KEY `vnum` (`vnum`),
   KEY `areaID` (`areaID`)
-) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=68 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -427,7 +429,7 @@ CREATE TABLE `world_log` (
   PRIMARY KEY (`logID`),
   KEY `level` (`level`),
   KEY `type` (`type`)
-) ENGINE=MyISAM AUTO_INCREMENT=469 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=691 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -439,4 +441,4 @@ CREATE TABLE `world_log` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-01-19 17:55:31
+-- Dump completed on 2015-01-20 12:07:48

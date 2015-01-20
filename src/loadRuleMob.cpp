@@ -74,14 +74,17 @@ bool LoadRuleMob::execute(std::list<Object*>& new_objects, std::list<Mob*>& new_
       World::Instance().insert(mob);
       mob->room(room());
       room()->add(mob);
+      room()->send_cond("$p has arrived.\n", mob);
       new_mobs.push_back(mob);
       mobs_added++;
-      // Give the mob some real stats. It's a hack but it works for now.
+      // Give the Mob some real stats. It's a hack to forcibly level them just to make the numbers
+      // come out, but it works for now and it has the added benefit of making existing Mobs' stats
+      // update to reflect modifications to the growth algorithms during active development.
       level = mob->level();
       mob->resetStats();
       for (int i = 1; i < level; ++i) mob->gainLevel();
       // Imbibe the mob with some life, as appropriate.
-
+      mob->mobilize();
     }
   }
 

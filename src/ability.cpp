@@ -47,7 +47,6 @@ bool Ability::is_spell(void) const {
   return _type == SPELL;
 }
 
-// TODO factor difficulty into learning probabilities
 bool Ability::invoke(Creature* creature) {
   bool status = false;
   // A positive value for mana or stamina indicates that the Ability requires a static amount and

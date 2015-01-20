@@ -1,4 +1,5 @@
 
+#include <math.h>
 #include "area.h"
 #include "command.h"
 #include "commandTable.h"
@@ -98,7 +99,6 @@ Mob::~Mob(void) {
   return;
 }
 
-/******************************************************* Accessors ********************************************************/
 void Mob::mobility(unsigned mobility) {
   _mobility = std::max(MIN_MOBILITY, std::min(MAX_MOBILITY, mobility));
   return;
@@ -109,7 +109,6 @@ void Mob::aggressiveness(unsigned aggressiveness) {
   return;
 }
 
-/******************************************************* Overloads of pure virtual methods ********************************************************/
 bool Mob::save(void) {
   try {
     Mysql* mysql = World::Instance().getMysql();
@@ -229,7 +228,6 @@ bool Mob::destroy(void) {
   return true;
 }
 
-/******************************************************* Overloads of virtual methods ********************************************************/
 void Mob::whatHappensWhenIDie(void) {
   ungroup();
   room()->remove(this);
@@ -238,7 +236,42 @@ void Mob::whatHappensWhenIDie(void) {
   return;
 }
 
-/******************************************************* Static methods ********************************************************/
+void Mob::mobilize(void) {
+  double base        = 0.0;
+  double smudge      = 0.0;
+  double lower_bound = 0.0;
+  double upper_bound = 0.0;
+  // Movement equation: 3^(7-x)
+  // For each (x,y) the average movement time (2, 243), (3, 81), (4, 27), (5, 9)
+  base        = pow(3, 7 - mobility());
+  smudge      = 0.25;
+  lower_bound = base * (1 - smudge);
+  upper_bound = base * (1 + smudge);
+  World::Instance().schedule()->add(new RecurringJob(this, &Mob::auto_move, lower_bound, upper_bound));
+  return;
+}
+
+bool Mob::auto_move(Job* job) {
+  unsigned directions[]     = { NORTH, EAST, SOUTH, WEST, UP, DOWN };
+  unsigned chosen_direction = 0;
+  std::string foo;
+  std::vector<unsigned> valid_exits;
+
+  // Enumerate the possible exits.
+  for (auto iter : directions) {
+    if (canMove(iter, foo)) {
+      valid_exits.push_back(iter);
+    }
+  }
+
+  // Bail if there's no way out.
+  if (valid_exits.empty()) return false;
+
+  // Pick a direction and go!
+  chosen_direction = valid_exits[World::rand(0, valid_exits.size() - 1)];
+  return move(chosen_direction);
+}
+
 Mob* Mob::create(Area* area, unsigned vnum) {
   return new Mob(area, vnum);
 }

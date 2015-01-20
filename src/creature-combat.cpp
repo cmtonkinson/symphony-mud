@@ -51,7 +51,6 @@ void Creature::remove_opponent(Creature* opponent, bool reciprocal) {
   return;
 }
 
-// TODO stat-based attack timing
 void Creature::scheduleAttack(void) {
   // If there's already a Job scheduled, don't add another.
   if (_next_attack) return;
@@ -90,7 +89,6 @@ bool Creature::attack(Job* job) {
   return true;
 }
 
-// TODO stuff about aggro/threat analysis (instead of just returning the first viable candidate).
 void Creature::acquireTarget(void) {
   Creature* target  = NULL;
   bool valid_target = false;
@@ -175,7 +173,6 @@ void Creature::die(Creature* killer) {
       killer->awardExperience(experience);
     }
   }
-  // TODO Leave a corpse with loot
   return;
 }
 
@@ -239,7 +236,6 @@ void Creature::gainLevel(void) {
 }
 
 bool Creature::autoassist(void) const {
-  // TODO make this togglable
   return true;
 }
 
@@ -275,7 +271,6 @@ unsigned Creature::targetMovement(void) const {
 }
 
 unsigned Creature::targetTNL(void) const {
-  // TODO: fill with crap from character creation
   return TARGET_TNL;
 }
 

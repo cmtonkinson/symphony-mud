@@ -715,7 +715,7 @@ bool Creature::canMove(const unsigned short& direction, std::string& message) {
   return true;
 }
 
-void Creature::move(const unsigned short& direction) {
+bool Creature::move(const unsigned short& direction) {
   // For standard movement...
   Exit* exit = room()->exit(direction);
   Room* from = room();
@@ -726,7 +726,7 @@ void Creature::move(const unsigned short& direction) {
   Creature* member = NULL;
   std::string message;
 
-  if (!deplete_stamina(1)) return;
+  if (!deplete_stamina(1)) return false;
 
   // Make the switch...
   from->remove(this);
@@ -776,7 +776,7 @@ void Creature::move(const unsigned short& direction) {
     }
   }
 
-  return;
+  return true;
 }
 
 // Precondition: the Creature has learned the Ability.
