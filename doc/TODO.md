@@ -1,22 +1,22 @@
 # Generic features and concepts
 
-## Combat
+## Combat, Abilities
   * offense/defense calculations
   * Log kills, deaths
-
-## Abilities
   * crafts
   * languages
 
-## Communication
+## UI
   * say
   * tell/reply
-
-## UI
   * custom promtps
   * aliases
   * macros?
   * triggers?
+    * autoassist
+    * autoexit
+    * autoloot
+    * autogold
 
 ## Building
   * absolute map coordinates
@@ -27,9 +27,18 @@
   * performance: jobs per turn, turn sleep
   * performance: stat tracking on turn processing time, job processing time, job execution delay, etc
   * Log logins, logouts, d/c
-
-## Internals
   * Account emails
+  * No moar MySQL (yaml? json? printf/scanf?)
+
+## General
+  * hunger, thirst, drunk
+    * food, drink
+  * mob scavenging
+  * weather
+    * factor date, time
+  * time
+    * moon phases
+  * recall
 
 ---
 
