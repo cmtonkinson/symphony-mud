@@ -6,8 +6,12 @@
 #include "terrainTable.h"
 #include "world.h"
 
-Room::Room(const unsigned long& vnum, Area* area):
-    _inventory(&Identifiers::longname) {
+Room::Room(void): _inventory(&Identifiers::longname) {
+  for (unsigned u = 0; u < 6; ++u) _exits[u] = NULL;
+  return;
+}
+
+Room::Room(unsigned long vnum, Area* area): _inventory(&Identifiers::longname) {
   try {
     char query[Socket::MAX_BUFFER];
 
@@ -32,8 +36,7 @@ Room::Room(const unsigned long& vnum, Area* area):
   return;
 }
 
-Room::Room(Area* area, ROW& row):
-    _inventory(&Identifiers::longname) {
+Room::Room(Area* area, ROW& row): _inventory(&Identifiers::longname) {
   this->area(area);
   ID(row["roomID"]);
   vnum(row["vnum"]);
@@ -65,25 +68,25 @@ Room::~Room(void) {
   return;
 }
 
-void Room::exit(const unsigned short& direction, Exit* exit) {
+void Room::exit(unsigned direction, Exit* exit) {
   if (NORTH <= direction && direction <= DOWN) {
     _exits[direction-1] = exit;
   }
   return;
 }
 
-Exit* Room::exit(const unsigned short& direction) {
+Exit* Room::exit(unsigned direction) {
   if (NORTH <= direction && direction <= DOWN) {
     return _exits[direction-1];
   }
   return NULL;
 }
 
-Exit* Room::exit(const std::string& direction) {
+Exit* Room::exit(std::string direction) {
   return exit(Exit::string2dir(direction));
 }
 
-void Room::removeLoadRule(const unsigned short& index) {
+void Room::removeLoadRule(unsigned index) {
   std::list<LoadRule*>::iterator it = loadRules().begin();
   LoadRule* rule = NULL;
   unsigned short i = 0;
@@ -109,7 +112,7 @@ void Room::executeLoadRules(void) {
   return;
 }
 
-void Room::send(std::string format, Creature* creature, void* arg1, void* arg2, const unsigned long& target) {
+void Room::send(std::string format, Creature* creature, void* arg1, void* arg2, unsigned long target) {
   std::string message;
 
   format = Regex::trim(format).append(1, '\n');
@@ -127,7 +130,7 @@ void Room::send(std::string format, Creature* creature, void* arg1, void* arg2, 
   return;
 }
 
-void Room::send_cond(std::string format, Creature* creature, void* arg1, void* arg2, const unsigned long& target, bool audible) {
+void Room::send_cond(std::string format, Creature* creature, void* arg1, void* arg2, unsigned long target, bool audible) {
   std::string message;
 
   format = Regex::trim(format).append(1, '\n');

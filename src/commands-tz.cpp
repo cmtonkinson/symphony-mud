@@ -278,15 +278,11 @@ CmdTest::CmdTest(void) {
 #include "storage.h"
 #include <fstream>
 bool CmdTest::execute(Creature* creature, const std::vector<std::string>& args) {
-  Exit* e         = nullptr;
+  Room* r         = nullptr;
   unsigned status = 0;
 
   FILE* fp = fopen("foo.txt", "w");
-  for (unsigned u = 0; u < 6; ++u) {
-    if ((e = creature->room()->exit(u)) != nullptr) {
-      Storage::dump(fp, e);
-    }
-  }
+  Storage::dump(fp, creature->room());
   fclose(fp);
   std::ifstream ifs("foo.txt");
   std::string content( (std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()) );
@@ -296,11 +292,17 @@ bool CmdTest::execute(Creature* creature, const std::vector<std::string>& args) 
   creature->send("\nLoaded...\n");
   fp = fopen("foo.txt", "r");
   while (!feof(fp)) {
-    e = new Exit();
-    status = Storage::load(fp, e);
+    r = new Room();
+    status = Storage::load(fp, r);
     if (status) {
-      creature->send("Loaded Exit(%x)::direction = %u\n", e, e->direction().number());
-      creature->send("Loaded Exit(%x)::key       = %ld\n", e, e->key());
+      creature->send("Loaded Room(%x)::vnum        = %lu\n", r, r->vnum());
+      creature->send("Loaded Room(%x)::name        = %s\n", r, r->name().c_str());
+      creature->send("Loaded Room(%x)::description = %s\n", r, r->description().c_str());
+      creature->send("Loaded Room(%x)::smell       = %s\n", r, r->smell().c_str());
+      creature->send("Loaded Room(%x)::sound       = %s\n", r, r->sound().c_str());
+      for (unsigned u = 0; u < 6; ++u) {
+        if (r->exit(u)) creature->send("Room(%x)::Exit(%x)::direction = %u\n", r, r->exit(u), r->exit(u)->direction().number());
+      }
     }
   }
   fclose(fp);
