@@ -275,7 +275,36 @@ CmdTest::CmdTest(void) {
  * arbitrary code fragments without exposing any half-baked Command logic
  * to the populace.
  */
+#include "storage.h"
+#include <fstream>
 bool CmdTest::execute(Creature* creature, const std::vector<std::string>& args) {
-  avatar()->send("No test code at the moment.");
+  Exit* e         = nullptr;
+  unsigned status = 0;
+
+  FILE* fp = fopen("foo.txt", "w");
+  for (unsigned u = 0; u < 6; ++u) {
+    if ((e = creature->room()->exit(u)) != nullptr) {
+      Storage::dump(fp, e);
+    }
+  }
+  fclose(fp);
+  std::ifstream ifs("foo.txt");
+  std::string content( (std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()) );
+  creature->send("Dumped...\n");
+  creature->send(content);
+
+  creature->send("\nLoaded...\n");
+  fp = fopen("foo.txt", "r");
+  while (!feof(fp)) {
+    e = new Exit();
+    status = Storage::load(fp, e);
+    if (status) {
+      creature->send("Loaded Exit(%x)::direction = %u\n", e, e->direction().number());
+      creature->send("Loaded Exit(%x)::key       = %ld\n", e, e->key());
+    }
+  }
+  fclose(fp);
+
+  // avatar()->send("No test code at the moment.");
   return true;
 }

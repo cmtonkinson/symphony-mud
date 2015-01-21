@@ -4,16 +4,20 @@
 #include "room.h"
 #include "world.h"
 
+Exit::Exit(void) {
+  return;
+}
+
 Exit::Exit(Room* target, ROW& row):
     _flags(row["flags"]) {
   this->target(target);
   ID(row["exitID"]);
-  direction().set(row["direction"]);
+  direction().set((unsigned)row["direction"]);
   key(row["key"]);
   return;
 }
 
-Exit::Exit(Room* room, Room* target, const unsigned short& direction) {
+Exit::Exit(Room* room, Room* target, unsigned direction) {
   try {
     char query[Socket::MAX_BUFFER];
 
@@ -96,7 +100,7 @@ void Exit::destroy(void) {
   return;
 }
 
-unsigned short Exit::inverse(const unsigned short& direction) { // static public
+unsigned Exit::inverse(unsigned direction) { // static public
   switch (direction) {
     case NORTH: return SOUTH;
     case EAST:  return WEST;
@@ -108,7 +112,7 @@ unsigned short Exit::inverse(const unsigned short& direction) { // static public
   }
 }
 
-const char* Exit::name(const unsigned short& direction) { // static public
+const char* Exit::name(unsigned direction) { // static public
   switch (direction) {
     case NORTH: return "North";
     case EAST:  return "East";
@@ -120,7 +124,7 @@ const char* Exit::name(const unsigned short& direction) { // static public
   }
 }
 
-const char* Exit::inverseName(const unsigned short& direction) { // static public
+const char* Exit::inverseName(unsigned direction) { // static public
   switch (direction) {
     case NORTH: return "South";
     case EAST:  return "West";
@@ -132,7 +136,7 @@ const char* Exit::inverseName(const unsigned short& direction) { // static publi
   }
 }
 
-unsigned short Exit::string2dir(const std::string& str) { // static public
+unsigned Exit::string2dir(const std::string& str) { // static public
   std::string dir = Regex::trim(str);
   if (Regex::strPrefix(str, "north")) {
     return NORTH;
@@ -151,7 +155,7 @@ unsigned short Exit::string2dir(const std::string& str) { // static public
   }
 }
 
-unsigned short Exit::string2inverse(const std::string& str) { // static public
+unsigned Exit::string2inverse(const std::string& str) { // static public
   std::string dir = Regex::trim(str);
   if (Regex::strPrefix(str, "north")) {
     return SOUTH;

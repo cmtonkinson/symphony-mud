@@ -29,6 +29,7 @@
   * Log logins, logouts, d/c
   * Account emails
   * No moar MySQL (yaml? json? printf/scanf?)
+  * FlagBank to long int
 
 ## General
   * hunger, thirst, drunk
@@ -39,6 +40,7 @@
   * time
     * moon phases
   * recall
+  * exit flags not saving
 
 ---
 

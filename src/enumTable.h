@@ -24,24 +24,24 @@ class EnumTable {
     std::map<std::string,EnumInt> _string2int;
 };
 
-#define DEF_ENUM(NAME)                                \
-class ET##NAME: public EnumTable {                    \
-  public:                                             \
-    ET##NAME(void);                                 \
-    virtual ~ET##NAME(void) { }                     \
-    static ET##NAME& Instance(void) {               \
-      static ET##NAME _instance;                      \
-      return _instance;                               \
-    }                                                 \
-};                                                    \
-class NAME: public Enum {                             \
-  public:                                             \
-    NAME(EnumInt value = 0) {                       \
-      Enum::_table = &ET##NAME::Instance();           \
-      set(value);                                   \
-    }                                                 \
-    virtual ~NAME(void) { }                         \
-};                                                    \
+#define DEF_ENUM(NAME)                      \
+class ET##NAME: public EnumTable {          \
+  public:                                   \
+    ET##NAME(void);                         \
+    virtual ~ET##NAME(void) { }             \
+    static ET##NAME& Instance(void) {       \
+      static ET##NAME _instance;            \
+      return _instance;                     \
+    }                                       \
+};                                          \
+class NAME: public Enum {                   \
+  public:                                   \
+    NAME(EnumInt value = 0) {               \
+      Enum::_table = &ET##NAME::Instance(); \
+      set(value);                           \
+    }                                       \
+    virtual ~NAME(void) { }                 \
+};                                          \
 
 #define UNDEFINED   0
 
