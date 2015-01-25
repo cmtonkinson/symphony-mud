@@ -300,8 +300,12 @@ bool CmdTest::execute(Creature* creature, const std::vector<std::string>& args) 
       creature->send("Loaded Room(%x)::description = %s\n", r, r->description().c_str());
       creature->send("Loaded Room(%x)::smell       = %s\n", r, r->smell().c_str());
       creature->send("Loaded Room(%x)::sound       = %s\n", r, r->sound().c_str());
+      creature->send("Loaded Room(%x)::terrain     = %s\n", r, r->terrain()->name().c_str());
       for (unsigned u = 0; u < 6; ++u) {
-        if (r->exit(u)) creature->send("Room(%x)::Exit(%x)::direction = %u\n", r, r->exit(u), r->exit(u)->direction().number());
+        if (r->exit(u) != nullptr) {
+          creature->send("Room(%x)::Exit(%x)::direction = %u\n", r, r->exit(u), r->exit(u)->direction().number());
+          creature->send("Room(%x)::Exit(%x)::key       = %lu\n", r, r->exit(u), r->exit(u)->key());
+        }
       }
     }
   }

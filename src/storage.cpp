@@ -8,57 +8,49 @@ const unsigned Storage::LOAD_DONE;
 const unsigned Storage::LOAD_NULL;
 const unsigned Storage::LOAD_NEW;
 
+/***************************************************************************************************
+ * ROOM
+ **************************************************************************************************/
 void Storage::dump(FILE* fp, Room* room) {
-  const char* token = "ROOM";
-  BEGIN(token)
-
+  BEGIN("ROOM")
   out(fp, "vnum",         room->vnum());
   out(fp, "name",         room->name());
   out(fp, "description",  room->description());
   out(fp, "smell",        room->smell());
   out(fp, "sound",        room->sound());
   out(fp, "terrain",      room->terrain()->name());
-
   for (unsigned u = 0; u < 6; ++u) {
     if (room->exit(u)) dump(fp, room->exit(u));
   }
-
-  END(token)
+  END("ROOM")
   return;
 }
 
 bool Storage::load(FILE* fp, Room* loading) {
   char input[32];
   unsigned load_status = 0;
-  Exit* exit           = nullptr;
   load_status = load_inner(fp, loading, input, "ROOM", [&fp, &loading, &input]() {
     STORE_CASE("vnum",        &Room::vnum)
     STORE_CASE("name",        &Room::name)
     STORE_CASE("description", &Room::description)
     STORE_CASE("smell",       &Room::smell)
     STORE_CASE("sound",       &Room::sound)
-    // STORE_CASE("terrain",     &Room::terrain)
+    STORE_CASE("terrain",     &Room::setTerrain)
+    STORE_DESCEND("EXIT", Exit,
+      loading->exit(instance->direction().number(), instance);
+    )
   });
-  while (load_status == LOAD_NEW) {
-    if (peek(fp) == "EXIT") {
-      exit        = new Exit();
-      load_status = load(fp, exit);
-      if (load_status == LOAD_NULL) {
-        delete exit;
-      } else {
-        loading->exit(exit->direction().number(), exit);
-      }
-    }
-  }
   return load_status == LOAD_DONE;
 }
 
+/***************************************************************************************************
+ * EXIT
+ **************************************************************************************************/
 void Storage::dump(FILE* fp, Exit* exit) {
-  const char* token = "EXIT";
-  BEGIN(token)
+  BEGIN("EXIT")
   out(fp, "direction",  exit->direction());
   out(fp, "key",        exit->key());
-  END(token)
+  END("EXIT")
   return;
 }
 
@@ -71,6 +63,10 @@ bool Storage::load(FILE* fp, Exit* loading) {
   });
   return load_status == LOAD_DONE;
 }
+
+/***************************************************************************************************
+ * INTERNAL METHODS
+ **************************************************************************************************/
 
 unsigned Storage::load_inner(FILE* fp, void* loading, char* input, const char* boundary, voidFunc lambda) {
   int next = 0;
@@ -95,7 +91,6 @@ unsigned Storage::load_inner(FILE* fp, void* loading, char* input, const char* b
     if (std::isupper(next)) return LOAD_NEW;
     // The next input looks like a key - keep iterating.
   }
-
   return LOAD_DONE;
 }
 

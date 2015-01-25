@@ -24,9 +24,9 @@ class Room;
 
 typedef std::function<void()> voidFunc;
 
-#define BEGIN(BOUNDARY) fprintf(fp, "%s\n", BOUNDARY);
-#define END(BOUNDARY)   fprintf(fp, "/%s\n", BOUNDARY);
-
+// STORE_OUT is used internally to define the body of any Storage::out(...) methods for basic types
+// which can be trivially fprintf()'d to the file. More custom or more complex types require
+// manually defined method bodies.
 #define STORE_OUT(SPECIFIER) {                    \
   char format[32];                                \
   sprintf(format, "%s %%%s\n", key, SPECIFIER);   \
@@ -34,6 +34,9 @@ typedef std::function<void()> voidFunc;
   return;                                         \
 }                                                 \
 
+// STORE_IN is used internally and is the inverse of STORE_OUT in that it is used to define the
+// bodies of the various Storage::in(...) template methods. Similarly to STORE_OUT, it can only be
+// used for trivially fscanf()able types.
 #define STORE_IN(TYPE, SPECIFIER) {               \
   TYPE x;                                         \
   fscanf(fp, SPECIFIER, &x);                      \
@@ -41,10 +44,33 @@ typedef std::function<void()> voidFunc;
   return;                                         \
 }                                                 \
 
+// BEGIN and END are to be used in the various Storage::dump() methods to signal the boundaries of
+// an objects serialization. All object keys should appear between matching BEGIN/END markers, only
+// one set of BEGIN/END markers is permissable per object, and all nested objects must be placed
+// within the parents markers.
+#define BEGIN(BOUNDARY) fprintf(fp, "%s\n", BOUNDARY);
+#define END(BOUNDARY)   fprintf(fp, "/%s\n", BOUNDARY);
+
+// STORE_KEY is meant to be used "publicly" in the various Storage::load() methods to perform the
+// key lookup and proxy to the appropriate template in(...) variant given a method pointer.
 #define STORE_CASE(KEY, METHOD)                   \
   if (strcmp(input, KEY) == 0) {                  \
     in(fp, loading, METHOD);                      \
     return;                                       \
+  }                                               \
+
+// STORE_DESCEND is anotehr "public" macro for easily defining nested objects. This is used inside
+// of the lambda and should be placed after all STORE_CASE calls. LINK is an arbitrary code fragment
+// which associates the nested object with the parent in whatever way is needed.
+#define STORE_DESCEND(KEY, CLASS, LINK)           \
+  if (strcmp(input, KEY) == 0) {                  \
+    fseek(fp, -strlen(KEY), SEEK_CUR);            \
+    CLASS* instance = new CLASS();                \
+    if (load(fp, instance)) {                     \
+      { LINK }                                    \
+    } else {                                      \
+      delete instance;                            \
+    }                                             \
   }                                               \
 
 class Storage {

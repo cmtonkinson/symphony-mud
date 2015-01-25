@@ -81,6 +81,7 @@ class Room {
     std::string                   listFlags(void);
     void                          reset(void);
     Creature*                     creature_by_vnum(unsigned long vnum, unsigned index = INDEX_DEFAULT);
+    void                          setTerrain(const char* terrain_name);
 
     // Statics...
     static const char*    getFlagName(unsigned long flag);

@@ -7,7 +7,7 @@
 #include "world.h"
 
 Room::Room(void): _inventory(&Identifiers::longname) {
-  for (unsigned u = 0; u < 6; ++u) _exits[u] = NULL;
+  for (unsigned u = 0; u < 6; ++u) _exits[u] = nullptr;
   return;
 }
 
@@ -30,7 +30,7 @@ Room::Room(unsigned long vnum, Area* area): _inventory(&Identifiers::longname) {
   name("Undefined");
   terrain(area->terrain());
   for (unsigned u = 0; u < 6; ++u) {
-    _exits[u] = NULL;
+    _exits[u] = nullptr;
   }
 
   return;
@@ -50,7 +50,7 @@ Room::Room(Area* area, ROW& row): _inventory(&Identifiers::longname) {
   }
   flags().value(row["flags"]);
   for (unsigned u = 0; u < 6; ++u) {
-    _exits[u] = NULL;
+    _exits[u] = nullptr;
   }
   return;
 }
@@ -69,17 +69,13 @@ Room::~Room(void) {
 }
 
 void Room::exit(unsigned direction, Exit* exit) {
-  if (NORTH <= direction && direction <= DOWN) {
-    _exits[direction-1] = exit;
-  }
+  if (NORTH <= direction && direction <= DOWN) _exits[direction-1] = exit;
   return;
 }
 
 Exit* Room::exit(unsigned direction) {
-  if (NORTH <= direction && direction <= DOWN) {
-    return _exits[direction-1];
-  }
-  return NULL;
+  if (NORTH <= direction && direction <= DOWN) return _exits[direction-1];
+  return nullptr;
 }
 
 Exit* Room::exit(std::string direction) {
@@ -289,6 +285,14 @@ Creature* Room::creature_by_vnum(unsigned long vnum, unsigned index) {
   if (index == INDEX_DEFAULT) return matches.front();
   for (int i = 1; i < index; ++i) matches.pop_front();
   return matches.front();
+}
+
+void Room::setTerrain(const char* terrain_name) {
+  terrain(TerrainTable::Instance().find(terrain_name));
+  if (!terrain()) {
+    terrain(TerrainTable::Instance().find("city"));
+  }
+  return;
 }
 
 std::string Room::getInformation(Room* room) {
