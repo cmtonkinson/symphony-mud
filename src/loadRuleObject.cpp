@@ -1,10 +1,11 @@
 
+#include "commandTable-default.h"
 #include "loadRuleObject.h"
 #include "room.h"
 #include "world.h"
-#include "commandTable-default.h"
 
 LoadRuleObject::LoadRuleObject(void) {
+  type(OBJECT);
   preposition(ERROR);
   indirectObject(ERROR);
   indirectObjectIndex(ERROR);

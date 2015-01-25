@@ -275,38 +275,71 @@ CmdTest::CmdTest(void) {
  * arbitrary code fragments without exposing any half-baked Command logic
  * to the populace.
  */
-#include "storage.h"
 #include <fstream>
+#include "loadRule.h"
+#include "loadRuleMob.h"
+#include "loadRuleObject.h"
+#include "storage.h"
 bool CmdTest::execute(Creature* creature, const std::vector<std::string>& args) {
+  Area* a         = nullptr;
   Room* r         = nullptr;
   unsigned status = 0;
 
-  FILE* fp = fopen("foo.txt", "w");
+  FILE* fp = fopen("room.txt", "w");
   Storage::dump(fp, creature->room());
   fclose(fp);
-  std::ifstream ifs("foo.txt");
-  std::string content( (std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()) );
-  creature->send("Dumped...\n");
-  creature->send(content);
+  std::ifstream room_ifs("room.txt");
+  std::string room_content( (std::istreambuf_iterator<char>(room_ifs)), (std::istreambuf_iterator<char>()) );
+  creature->send("Dumped Room...\n");
+  creature->send(room_content);
 
-  creature->send("\nLoaded...\n");
-  fp = fopen("foo.txt", "r");
+  creature->send("\nLoaded Room...\n");
+  fp = fopen("room.txt", "r");
   while (!feof(fp)) {
     r = new Room();
     status = Storage::load(fp, r);
     if (status) {
-      creature->send("Loaded Room(%x)::vnum        = %lu\n", r, r->vnum());
-      creature->send("Loaded Room(%x)::name        = %s\n", r, r->name().c_str());
-      creature->send("Loaded Room(%x)::description = %s\n", r, r->description().c_str());
-      creature->send("Loaded Room(%x)::smell       = %s\n", r, r->smell().c_str());
-      creature->send("Loaded Room(%x)::sound       = %s\n", r, r->sound().c_str());
-      creature->send("Loaded Room(%x)::terrain     = %s\n", r, r->terrain()->name().c_str());
+      creature->send("Room(%x)::vnum        = %lu\n", r, r->vnum());
+      creature->send("Room(%x)::name        = %s\n", r, r->name().c_str());
+      creature->send("Room(%x)::description = %s\n", r, r->description().c_str());
+      creature->send("Room(%x)::smell       = %s\n", r, r->smell().c_str());
+      creature->send("Room(%x)::sound       = %s\n", r, r->sound().c_str());
+      creature->send("Room(%x)::terrain     = %s\n", r, r->terrain()->name().c_str());
       for (unsigned u = 0; u < 6; ++u) {
         if (r->exit(u) != nullptr) {
           creature->send("Room(%x)::Exit(%x)::direction = %u\n", r, r->exit(u), r->exit(u)->direction().number());
           creature->send("Room(%x)::Exit(%x)::key       = %lu\n", r, r->exit(u), r->exit(u)->key());
         }
       }
+      for (auto iter : r->loadRules()) {
+        creature->send("Room(%x)::LoadRule(%x)::type        = %s\n",  r, iter, iter->strType());
+        creature->send("Room(%x)::LoadRule(%x)::target      = %lu\n", r, iter, iter->target());
+        creature->send("Room(%x)::LoadRule(%x)::number      = %u\n",  r, iter, iter->number());
+        creature->send("Room(%x)::LoadRule(%x)::max         = %u\n",  r, iter, iter->max());
+        creature->send("Room(%x)::LoadRule(%x)::probability = %u\n",  r, iter, iter->probability());
+      }
+    }
+  }
+  fclose(fp);
+
+  fp = fopen("area.txt", "w");
+  Storage::dump(fp, creature->room()->area());
+  fclose(fp);
+  std::ifstream area_ifs("area.txt");
+  std::string area_content( (std::istreambuf_iterator<char>(area_ifs)), (std::istreambuf_iterator<char>()) );
+  creature->send("Dumped Area...\n");
+  creature->send(area_content);
+
+  creature->send("\nLoaded Area...\n");
+  fp = fopen("area.txt", "r");
+  while (!feof(fp)) {
+    a = new Area();
+    status = Storage::load(fp, a);
+    if (status) {
+      creature->send("Area(%x)::low     = %lu\n", a, a->low());
+      creature->send("Area(%x)::high    = %lu\n", a, a->high());
+      creature->send("Room(%x)::name    = %s\n",  a, a->name().c_str());
+      creature->send("Room(%x)::terrain = %s\n",  a, a->terrain()->name().c_str());
     }
   }
   fclose(fp);

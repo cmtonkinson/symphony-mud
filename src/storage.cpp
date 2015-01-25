@@ -1,12 +1,41 @@
 
 #include <cstring>
+#include "area.h"
 #include "exit.h"
+#include "loadRule.h"
+#include "loadRuleMob.h"
+#include "loadRuleObject.h"
 #include "room.h"
 #include "storage.h"
 
 const unsigned Storage::LOAD_DONE;
 const unsigned Storage::LOAD_NULL;
 const unsigned Storage::LOAD_NEW;
+
+/***************************************************************************************************
+ * AREA
+ **************************************************************************************************/
+void Storage::dump(FILE* fp, Area* area) {
+  BEGIN("AREA")
+  out(fp, "low",          area->low());
+  out(fp, "high",         area->high());
+  out(fp, "name",         area->name());
+  out(fp, "terrain",      area->terrain()->name());
+  END("AREA")
+  return;
+}
+
+bool Storage::load(FILE* fp, Area* loading) {
+  char input[32];
+  unsigned load_status = 0;
+  load_status = load_inner(fp, loading, input, "AREA", [&fp, &loading, &input]() {
+    STORE_CASE("low",       &Area::low)
+    STORE_CASE("high",      &Area::high)
+    STORE_CASE("name",      &Area::name)
+    STORE_CASE("terrain",   &Area::setTerrain)
+  });
+  return load_status == LOAD_DONE;
+}
 
 /***************************************************************************************************
  * ROOM
@@ -22,7 +51,10 @@ void Storage::dump(FILE* fp, Room* room) {
   for (unsigned u = 0; u < 6; ++u) {
     if (room->exit(u)) dump(fp, room->exit(u));
   }
-  END("ROOM")
+  for (auto iter : room->loadRules()) {
+    dump(fp, iter);
+  }
+  END("ROOM\n")
   return;
 }
 
@@ -38,6 +70,14 @@ bool Storage::load(FILE* fp, Room* loading) {
     STORE_CASE("terrain",     &Room::setTerrain)
     STORE_DESCEND("EXIT", Exit,
       loading->exit(instance->direction().number(), instance);
+    )
+    STORE_DESCEND("RULE_OBJ", LoadRuleObject,
+      loading->loadRules().push_back(instance);
+      instance->room(loading);
+    )
+    STORE_DESCEND("RULE_MOB", LoadRuleMob,
+      loading->loadRules().push_back(instance);
+      instance->room(loading);
     )
   });
   return load_status == LOAD_DONE;
@@ -65,24 +105,64 @@ bool Storage::load(FILE* fp, Exit* loading) {
 }
 
 /***************************************************************************************************
+ * LOAD RULES
+ **************************************************************************************************/
+void Storage::dump(FILE* fp, LoadRule* rule) {
+  char buffer[32];
+  sprintf(buffer, "RULE_%s", rule->strType());
+  BEGIN(buffer)
+  out(fp, "target",       rule->target());
+  out(fp, "number",       rule->number());
+  out(fp, "max",          rule->max());
+  out(fp, "probability",  rule->probability());
+  switch (rule->type()) {
+    case LoadRule::OBJECT:
+      out(fp, "preposition",          ((LoadRuleObject*)rule)->preposition());
+      out(fp, "indirectObject",       ((LoadRuleObject*)rule)->indirectObject());
+      out(fp, "indirectObjectIndex",  ((LoadRuleObject*)rule)->indirectObjectIndex());
+      break;
+  }
+  END(buffer)
+  return;
+}
+
+bool Storage::load(FILE* fp, LoadRule* loading) {
+  char input[32];
+  unsigned load_status = 0;
+  load_status = load_inner(fp, loading, input, "RULE_", [&fp, &loading, &input]() {
+    STORE_CASE("target",              &LoadRule::target)
+    STORE_CASE("number",              &LoadRuleObject::number)
+    STORE_CASE("max",                 &LoadRuleObject::max)
+    STORE_CASE("probability",         &LoadRuleObject::probability)
+    switch (loading->type()) {
+      case LoadRule::OBJECT:
+        STORE_CASE_WITH_TYPE("preposition",         &LoadRuleObject::preposition,         LoadRuleObject)
+        STORE_CASE_WITH_TYPE("indirectObject",      &LoadRuleObject::indirectObject,      LoadRuleObject)
+        STORE_CASE_WITH_TYPE("indirectObjectIndex", &LoadRuleObject::indirectObjectIndex, LoadRuleObject)
+        break;
+    }
+  });
+  return load_status == LOAD_DONE;
+}
+
+/***************************************************************************************************
  * INTERNAL METHODS
  **************************************************************************************************/
-
 unsigned Storage::load_inner(FILE* fp, void* loading, char* input, const char* boundary, voidFunc lambda) {
   int next = 0;
   char end_boundary[32];
   sprintf(end_boundary, "/%s", boundary);
 
-  // The first token should be the token for the object.
+  // The first input should be a prefix match on the boundary for the object.
   fscanf(fp, "%s", input);
-  if (feof(fp) || strcmp(input, boundary) != 0) return LOAD_NULL;
+  if (feof(fp) || strstr(input, boundary) == NULL) return LOAD_NULL;
 
   // Iteratively look for new keys.
   while (!feof(fp)) {
     // Get the input.
     fscanf(fp, "%s", input);
     // Stop if this is the end token.
-    if (strcmp(input, end_boundary) == 0) break;
+    if (strstr(input, end_boundary) != NULL) break;
     // Look for valid keys.
     lambda();
     // Test the stream (and reset the pointer).

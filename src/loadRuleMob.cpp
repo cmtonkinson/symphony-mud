@@ -4,6 +4,7 @@
 #include "world.h"
 
 LoadRuleMob::LoadRuleMob(void) {
+  type(MOB);
   return;
 }
 

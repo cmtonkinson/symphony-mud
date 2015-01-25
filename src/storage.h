@@ -21,6 +21,8 @@
 
 class Exit;
 class Room;
+class LoadRuleObject;
+class LoadRuleMob;
 
 typedef std::function<void()> voidFunc;
 
@@ -59,6 +61,12 @@ typedef std::function<void()> voidFunc;
     return;                                       \
   }                                               \
 
+#define STORE_CASE_WITH_TYPE(KEY, METHOD, TYPE)   \
+  if (strcmp(input, KEY) == 0) {                  \
+    in(fp, (TYPE*)loading, METHOD);               \
+    return;                                       \
+  }                                               \
+
 // STORE_DESCEND is anotehr "public" macro for easily defining nested objects. This is used inside
 // of the lambda and should be placed after all STORE_CASE calls. LINK is an arbitrary code fragment
 // which associates the nested object with the parent in whatever way is needed.
@@ -81,11 +89,17 @@ class Storage {
     static const unsigned LOAD_NULL = 1;
     static const unsigned LOAD_NEW  = 2;
 
+    static void dump(FILE* fp, Area* area);
+    static bool load(FILE* fp, Area* loading);
+
     static void dump(FILE* fp, Room* room);
     static bool load(FILE* fp, Room* loading);
 
     static void dump(FILE* fp, Exit* exit);
     static bool load(FILE* fp, Exit* loading);
+
+    static void dump(FILE* fp, LoadRule* rule);
+    static bool load(FILE* fp, LoadRule* loading);
 
   private:
 

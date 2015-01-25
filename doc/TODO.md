@@ -28,7 +28,6 @@
   * performance: stat tracking on turn processing time, job processing time, job execution delay, etc
   * Log logins, logouts, d/c
   * Account emails
-  * No moar MySQL (yaml? json? printf/scanf?)
   * FlagBank to long int
 
 ## General
@@ -41,6 +40,22 @@
     * moon phases
   * recall
   * exit flags not saving
+
+## MySQL -> text
+
+[X] area
+[X]   room
+[X]     exit
+[X]     load_rule
+[ ]   object
+[ ]   mob
+[ ] avatar
+[ ]   objects
+[ ]   abilities
+[ ] disabled_commands
+[ ] socials
+[ ] boards
+[ ]   notes
 
 ---
 

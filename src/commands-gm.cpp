@@ -539,11 +539,11 @@ bool CmdLoadRule::execute(Creature* creature, const std::vector<std::string>& ar
         switch ((*it)->type()) {
           case LoadRule::MOB:
             mobRule = (LoadRuleMob*)*it;
-            avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %3u/100   | %s\n", rule_number, mobRule->strType().c_str(), mobRule->target(), mobRule->number(), mobRule->max(), mobRule->probability(), "N/A");
+            avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %3u/100   | %s\n", rule_number, mobRule->strType(), mobRule->target(), mobRule->number(), mobRule->max(), mobRule->probability(), "N/A");
             break;
           case LoadRule::OBJECT:
             objectRule = (LoadRuleObject*)*it;
-            avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %3u/100   | %s\n", rule_number, objectRule->strType().c_str(), objectRule->target(), objectRule->number(), objectRule->max(), objectRule->probability(), objectRule->notes().c_str());
+            avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %3u/100   | %s\n", rule_number, objectRule->strType(), objectRule->target(), objectRule->number(), objectRule->max(), objectRule->probability(), objectRule->notes().c_str());
             break;
           default:
             break;

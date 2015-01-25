@@ -90,7 +90,7 @@ bool ACmdName::execute(Creature* creature, const std::vector<std::string>& args)
   Avatar* avatar = (Avatar*)creature;
   Area* area = avatar->aedit();
 
-  area->name(args[0]);
+  area->name(args[0].c_str());
   avatar->send("You've reset area %d's name to \"{W%s{x\"!", area->ID(), area->name().c_str());
 
   return true;

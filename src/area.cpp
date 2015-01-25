@@ -11,7 +11,7 @@ Area::Area(void) {
   return;
 }
 
-Area::Area(const unsigned long& low, const unsigned long& high) {
+Area::Area(unsigned long low, unsigned long high) {
   name("Undefined");
   this->low(low);
   this->high(high);
@@ -23,7 +23,7 @@ Area::~Area(void) {
   return;
 }
 
-void Area::name(const std::string& name) {
+void Area::name(const char* name) {
   ColorString cs(name);
   _name = cs.stripColor();
   return;
@@ -270,7 +270,7 @@ void Area::reset(void) {
   return;
 }
 
-unsigned Area::howManyMobs(const unsigned long& vnum) {
+unsigned Area::howManyMobs(unsigned long vnum) {
   unsigned number_of_mobs = 0;
   for (std::map<unsigned long,Room*>::iterator r_it = rooms().begin(); r_it != rooms().end(); ++r_it) {
     for (std::list<Creature*>::iterator c_it = r_it->second->creatures().begin(); c_it != r_it->second->creatures().end(); ++c_it) {
@@ -282,4 +282,12 @@ unsigned Area::howManyMobs(const unsigned long& vnum) {
     }
   }
   return number_of_mobs;
+}
+
+void Area::setTerrain(const char* terrain_name) {
+  terrain(TerrainTable::Instance().find(terrain_name));
+  if (!terrain()) {
+    terrain(TerrainTable::Instance().find("city"));
+  }
+  return;
 }
