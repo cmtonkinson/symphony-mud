@@ -36,11 +36,12 @@ mysql_exec "GRANT ALL PRIVILEGES ON symphony.* TO 'symphony'@'localhost';"
 ###############################################################################
 # Development Environment
 ###############################################################################
-echo 'alias list="ls -alsvh"'     >> /home/vagrant/.bashrc
-echo 'export MAKEFLAGS="-j4"'     >> /home/vagrant/.bashrc
-echo 'export CCACHE_COMPRESS=1'   >> /home/vagrant/.bashrc
-echo 'export CCACHE_CPP2=1'       >> /home/vagrant/.bashrc
-echo 'cd /vagrant'                >> /home/vagrant/.bashrc
+echo 'alias list="ls -alsvh"'           >> /home/vagrant/.bashrc
+echo 'alias c="telnet localhost 6501"'  >> /home/vagrant/.bashrc
+echo 'export MAKEFLAGS="-j4"'           >> /home/vagrant/.bashrc
+echo 'export CCACHE_COMPRESS=1'         >> /home/vagrant/.bashrc
+echo 'export CCACHE_CPP2=1'             >> /home/vagrant/.bashrc
+echo 'cd /vagrant'                      >> /home/vagrant/.bashrc
 
 ###############################################################################
 # Symphony Setup

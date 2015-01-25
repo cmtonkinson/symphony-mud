@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
     vb.customize ["modifyvm", :id,
       # Basics.
       "--name",       NAME,
-      "--memory",     2048,
+      "--memory",     1024,
       # I/O APIC must be enabled to support a multi-core guest.
       "--cpus",       4,
       "--ioapic",     "on",
