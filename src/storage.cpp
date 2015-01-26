@@ -154,8 +154,14 @@ bool Storage::load(FILE* fp, LoadRule* loading) {
 /***************************************************************************************************
  * OBJECT
  **************************************************************************************************/
-void Storage::dump(FILE* fp, Object* object) {
-  BEGIN("OBJECT")
+void Storage::dump(FILE* fp, Object* object, const char* suffix) {
+  char token[32];
+  if (suffix != nullptr) {
+    sprintf(token, "OBJECT_%s", suffix);
+  } else {
+    sprintf(token, "OBJECT");
+  }
+  BEGIN(token)
   out(fp, "vnum",         object->vnum());
   out(fp, "level",        object->level());
   out(fp, "value",        object->value());
@@ -184,7 +190,7 @@ void Storage::dump(FILE* fp, Object* object) {
     default:
       break;
   }
-  END("OBJECT")
+  END(token)
   return;
 }
 
@@ -344,6 +350,8 @@ void Storage::dump_base(FILE* fp, Creature* creature) {
   out(fp, "trains", creature->trains());
   out(fp, "gold",   creature->gold());
   out(fp, "silver", creature->silver());
+  for (auto iter : creature->inventory().objectList()) dump(fp, iter, "INV");
+  for (auto iter : creature->equipment().objectMap()) dump(fp, iter.second, "EQ");
   END("CREATURE")
   return;
 }
@@ -414,6 +422,12 @@ bool Storage::load_base(FILE* fp, Creature* loading) {
     STORE_CASE("trains",  &Creature::trains)
     STORE_CASE("gold",    &Creature::gold)
     STORE_CASE("silver",  &Creature::silver)
+    STORE_DESCEND_NEW("OBJECT_INV", Object, loading->inventory().add(instance);)
+    STORE_DESCEND_NEW("OBJECT_EQ", Object,
+      Object* removed     = nullptr;
+      std::string message = "";
+      loading->wear(instance, message, removed);
+    )
   });
   return load_status == LOAD_DONE;
 }

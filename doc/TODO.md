@@ -51,7 +51,8 @@
 [X]   object
 [X]   mob
 [X] avatar
-[ ]   objects
+[X]   inventory
+[X]   equipment
 [ ]   abilities
 [ ]   pets
 [ ] disabled_commands

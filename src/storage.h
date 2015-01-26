@@ -123,7 +123,7 @@ class Storage {
     static void dump(FILE* fp, LoadRule* rule);
     static bool load(FILE* fp, LoadRule* loading);
 
-    static void dump(FILE* fp, Object* object);
+    static void dump(FILE* fp, Object* object, const char* suffix = nullptr);
     static bool load(FILE* fp, Object* loading);
 
     static void dump(FILE* fp, Mob* mob);

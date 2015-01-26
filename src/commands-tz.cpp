@@ -449,6 +449,8 @@ bool CmdTest::execute(Creature* creature, const std::vector<std::string>& args) 
       creature->send("Creature(%x)::trains          = %u\n", m, m->trains());
       creature->send("Creature(%x)::gold            = %u\n", m, m->gold());
       creature->send("Creature(%x)::silver          = %u\n", m, m->silver());
+      for (auto iter : m->inventory().objectList()) creature->send("Creature(%x)::inventory:\n%s\n", m, iter->printStatus().c_str());
+      for (auto iter : m->equipment().objectMap()) creature->send("Creature(%x)::equipment:\n%s\n", m, iter.second->printStatus().c_str());
       creature->send("Mob(%x)::vnum           = %u\n", m, m->vnum());
       creature->send("Mob(%x)::mobility       = %u\n", m, m->mobility());
       creature->send("Mob(%x)::aggressiveness = %u\n", m, m->aggressiveness());
@@ -505,6 +507,8 @@ bool CmdTest::execute(Creature* creature, const std::vector<std::string>& args) 
       creature->send("Creature(%x)::trains          = %u\n", av, av->trains());
       creature->send("Creature(%x)::gold            = %u\n", av, av->gold());
       creature->send("Creature(%x)::silver          = %u\n", av, av->silver());
+      for (auto iter : av->inventory().objectList()) creature->send("Creature(%x)::inventory:\n%s\n", av, iter->printStatus().c_str());
+      for (auto iter : av->equipment().objectMap()) creature->send("Creature(%x)::equipment:\n%s\n", av, iter.second->printStatus().c_str());
       creature->send("Avatar(%x)::gechoColor        = %c\n", av, av->gechoColor());
       creature->send("Avatar(%x)::title             = %s\n", av, av->title());
       creature->send("Avatar(%x)::poofin            = %s\n", av, av->poofin());
