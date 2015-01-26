@@ -5,6 +5,7 @@
 #include "loadRule.h"
 #include "loadRuleMob.h"
 #include "loadRuleObject.h"
+#include "object.h"
 #include "room.h"
 #include "storage.h"
 
@@ -141,6 +142,47 @@ bool Storage::load(FILE* fp, LoadRule* loading) {
         STORE_CASE_WITH_TYPE("indirectObjectIndex", &LoadRuleObject::indirectObjectIndex, LoadRuleObject)
         break;
     }
+  });
+  return load_status == LOAD_DONE;
+}
+
+/***************************************************************************************************
+ * OBJECT
+ **************************************************************************************************/
+void Storage::dump(FILE* fp, Object* object) {
+  BEGIN("OBJECT")
+  out(fp, "vnum",         object->vnum());
+  out(fp, "level",        object->level());
+  out(fp, "value",        object->value());
+  out(fp, "type",         object->type());
+  out(fp, "wearable",     object->wearable());
+  out(fp, "flags",        object->flags().value());
+  out(fp, "shortname",    object->identifiers().shortname());
+  out(fp, "longname",     object->identifiers().longname());
+  out(fp, "description",  object->identifiers().description());
+  out(fp, "keywords",     object->identifiers().serializeKeywords());
+  out(fp, "modifiers",    object->serializeModifiers());
+  out(fp, "composition",  object->serializeComposition());
+  END("OBJECT")
+  return;
+}
+
+bool Storage::load(FILE* fp, Object* loading) {
+  char input[32];
+  unsigned load_status = 0;
+  load_status = load_inner(fp, loading, input, "OBJECT", [&fp, &loading, &input]() {
+    STORE_CASE("vnum",                &Object::vnum)
+    STORE_CASE("level",               &Object::level)
+    STORE_CASE("value",               &Object::value)
+    STORE_CASE_WITH_CODE("type",      unsigned,       "%u",   loading->type(static_cast<Object::Type>(val));)
+    STORE_CASE_WITH_CODE("wearable",  unsigned,       "%u",   loading->wearable(static_cast<Object::Wearable>(val));)
+    STORE_CASE_WITH_CODE("flags",     unsigned long,  "%lu",  loading->flags().value(val);)
+    STORE_CASE_STRING("shortname",    loading->identifiers().shortname(str);)
+    STORE_CASE_STRING("longname",     loading->identifiers().longname(str);)
+    STORE_CASE_STRING("description",  loading->identifiers().description(str);)
+    STORE_CASE_STRING("keywords",     loading->identifiers().unserializeKeywords(str);)
+    STORE_CASE_STRING("modifiers",    loading->unserializeModifiers(str);)
+    STORE_CASE_STRING("composition",  loading->unserializeComposition(str);)
   });
   return load_status == LOAD_DONE;
 }

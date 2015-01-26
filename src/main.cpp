@@ -22,22 +22,22 @@ int main(int argc, char* argv[], char* envp[]) {
     }
 
   } catch (SocketException e) {
-    fprintf(stderr, "%s: SocketException (error: %s)\n", "top-level", e.getError().c_str());
+    fprintf(stderr, "main.cpp: SocketException (error: %s)\n", e.getError().c_str());
     return World::EXIT_ERROR;
   } catch (MysqlException e) {
-    fprintf(stderr, "%s: MysqlException (message: %s)\n", "top-level", e.getMessage().c_str());
+    fprintf(stderr, "main.cpp: MysqlException (message: %s)\n", e.getMessage().c_str());
     return World::EXIT_ERROR;
   } catch (RegexException e) {
-    fprintf(stderr, "%s: RegexException (message: %s)\n", "top-level", e.getMessage().c_str());
+    fprintf(stderr, "main.cpp: RegexException (message: %s)\n", e.getMessage().c_str());
     return World::EXIT_ERROR;
   } catch (std::string s) {
-    fprintf(stderr, "%s: std::string (%s)\n", "top-level", s.c_str());
+    fprintf(stderr, "main.cpp: std::string (%s)\n", s.c_str());
     return World::EXIT_ERROR;
   } catch (std::exception e) {
-    fprintf(stderr, "%s: std::exception (what: %s)\n", "top-level", e.what());
+    fprintf(stderr, "main.cpp: std::exception (what: %s)\n", e.what());
     return World::EXIT_ERROR;
   } catch (...) {
-    fprintf(stderr, "%s: something failed - good luck!\n", "top-level");
+    fprintf(stderr, "main.cpp: something failed - good luck!\n");
     return World::EXIT_ERROR;
   }
 

@@ -60,27 +60,28 @@ class Object {
     void          stringToWearable(const std::string& src);
 
     std::string   serializeModifiers(void) const;
-    void          unserializeModifiers(const std::string& ser);
-    std::string   implodeComposition(std::string glue = " ") const;
+    void          unserializeModifiers(std::string ser);
+    std::string   serializeComposition(std::string sep = "~") const;
+    void          unserializeComposition(std::string ser);
     std::string   decorativeShortname(void) const;
     std::string   decorativeLongname(void) const;
     std::string   listDecorativeFlags(void) const;
     std::string   printStatus(void) const;
 
-    void          insert(Mysql* db, const unsigned long& areaID);
+    void          insert(Mysql* db, unsigned long areaID);
     void          update(Mysql* db) const;
     void          destroy(Mysql* db) const;
     void          saveInstance(Mysql* db, unsigned long owner_id, std::string placement, unsigned location) const;
     void          saveContainedInstance(Mysql* db, unsigned long owner_id, std::string placement, unsigned location, std::string container_placement = "", unsigned container_location = 0) const;
 
     // public accessors
-    void                        ID(const unsigned long& ID)         { _ID = ID; }
+    void                        ID(unsigned long ID)                { _ID = ID; }
     unsigned long               ID(void) const                      { return _ID; }
-    void                        type(const Type& type);
-    void                        type(const Type& type, ROW row);
-    void                        type(const Type& type, void* extra_ptr);
+    void                        type(Type type);
+    void                        type(Type type, ROW row);
+    void                        type(Type type, void* extra_ptr);
     Type                        type(void) const                    { return _type; }
-    void                        vnum(const unsigned long& vnum)     { _vnum = vnum; }
+    void                        vnum(unsigned long vnum)            { _vnum = vnum; }
     unsigned long               vnum(void) const                    { return _vnum; }
     FlagBank&                   flags(void)                         { return _flags; }
     const FlagBank&             flags(void) const                   { return _flags; }
@@ -88,10 +89,10 @@ class Object {
     const Identifiers&          identifiers(void) const             { return _identifiers; }
     std::set<Compound*>&        composition(void)                   { return _composition; }
     const std::set<Compound*>&  composition(void) const             { return _composition; }
-    void                        level(const unsigned short& level)  { _level = level; }
-    unsigned short              level(void) const                   { return _level; }
-    void                        value(const unsigned short& value)  { _value = value; }
-    unsigned short              value(void) const                   { return _value; }
+    void                        level(unsigned level)               { _level = level; }
+    unsigned                    level(void) const                   { return _level; }
+    void                        value(unsigned value)               { _value = value; }
+    unsigned                    value(void) const                   { return _value; }
     void                        wearable(const Wearable& wearable)  { _wearable = wearable; }
     Wearable                    wearable(void) const                { return _wearable; }
     std::list<Modifier*>&       modifiers(void)                     { return _modifiers; }
@@ -116,8 +117,8 @@ class Object {
     FlagBank              _flags;
     Identifiers           _identifiers;
     std::set<Compound*>   _composition;
-    unsigned short        _level;
-    unsigned short        _value;
+    unsigned              _level;
+    unsigned              _value;
     Wearable              _wearable;
     std::list<Modifier*>  _modifiers;
     void*                 _extra;

@@ -102,7 +102,7 @@ bool OCmdComposition::execute(Creature* creature, const std::vector<std::string>
     }
   }
 
-  avatar()->send("Object composition is now: %s", avatar()->oedit()->implodeComposition().c_str());
+  avatar()->send("Object composition is now: %s", avatar()->oedit()->serializeComposition(" ").c_str());
   return true;
 }
 

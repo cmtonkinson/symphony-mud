@@ -281,10 +281,9 @@ CmdTest::CmdTest(void) {
 #include "loadRuleObject.h"
 #include "storage.h"
 bool CmdTest::execute(Creature* creature, const std::vector<std::string>& args) {
-  Area* a         = nullptr;
-  Room* r         = nullptr;
   unsigned status = 0;
 
+  Room* r = nullptr;
   FILE* fp = fopen("room.txt", "w");
   Storage::dump(fp, creature->room());
   fclose(fp);
@@ -322,6 +321,7 @@ bool CmdTest::execute(Creature* creature, const std::vector<std::string>& args) 
   }
   fclose(fp);
 
+  Area* a = nullptr;
   fp = fopen("area.txt", "w");
   Storage::dump(fp, creature->room()->area());
   fclose(fp);
@@ -340,6 +340,37 @@ bool CmdTest::execute(Creature* creature, const std::vector<std::string>& args) 
       creature->send("Area(%x)::high    = %lu\n", a, a->high());
       creature->send("Room(%x)::name    = %s\n",  a, a->name().c_str());
       creature->send("Room(%x)::terrain = %s\n",  a, a->terrain()->name().c_str());
+    }
+  }
+  fclose(fp);
+
+  fp = fopen("object.txt", "w");
+  for (auto iter : creature->inventory().objectList()) Storage::dump(fp, iter);
+  fclose(fp);
+  std::ifstream object_ifs("object.txt");
+  std::string object_content( (std::istreambuf_iterator<char>(object_ifs)), (std::istreambuf_iterator<char>()) );
+  creature->send("Dumped Objects...\n");
+  creature->send(object_content);
+
+  Object* o = nullptr;
+  creature->send("\nLoaded Objects...\n");
+  fp = fopen("object.txt", "r");
+  while (!feof(fp)) {
+    o = new Object();
+    status = Storage::load(fp, o);
+    if (status) {
+      creature->send("Object(%x)::vnum        = %lu\n", o, o->vnum());
+      creature->send("Object(%x)::level       = %u\n",  o, o->level());
+      creature->send("Object(%x)::value       = %u\n",  o, o->value());
+      creature->send("Object(%x)::type        = %s\n",  o, o->typeToString());
+      creature->send("Object(%x)::wearable    = %s\n",  o, o->wearableToString());
+      creature->send("Object(%x)::flags       = %lu\n", o, o->flags().value());
+      creature->send("Object(%x)::shortname   = %s\n",  o, o->identifiers().shortname().c_str());
+      creature->send("Object(%x)::longname    = %s\n",  o, o->identifiers().longname().c_str());
+      creature->send("Object(%x)::description = %s\n",  o, o->identifiers().description().c_str());
+      creature->send("Object(%x)::keywords    = %s\n",  o, o->identifiers().serializeKeywords().c_str());
+      creature->send("Object(%x)::modifiers   = %s\n",  o, o->serializeModifiers().c_str());
+      creature->send("Object(%x)::composition = %s\n",  o, o->serializeComposition().c_str());
     }
   }
   fclose(fp);

@@ -46,12 +46,11 @@ Object::Object(const Object& ref):
 
 Object::Object(ROW row) {
   extra(NULL);
-  std::vector<std::string> foo = Regex::explode("~", row["composition"], true);
   ID(row["objectID"]);
   type(static_cast<Type>((unsigned)row["type"]), row);
   vnum(row["vnum"]);
   flags().value(row["flags"]);
-  for (auto iter : foo) composition().insert(CompoundTable::Instance().find(iter));
+  unserializeComposition(row["composition"]);
   level(row["level"]);
   value(row["value"]);
   wearable(static_cast<Wearable>((unsigned)row["wearable"]));
@@ -94,7 +93,7 @@ void Object::deleteExtra(void) {
  * holds a pointer to an Obj____ object, and that pointer is interpreted
  * based on the value of Object::_type.
  */
-void Object::type(const Type& type) {
+void Object::type(Type type) {
   if (type == _type) {
     return;
   }
@@ -110,12 +109,12 @@ void Object::type(const Type& type) {
     case Type_Key:        extra(new ObjKey());        break;
     case Type_Trash:      extra(new ObjTrash());      break;
     case Type_Weapon:     extra(new ObjWeapon());     break;
-    default:                                            break;
+    default:                                          break;
   }
   return;
 }
 
-void Object::type(const Type& type, ROW row) {
+void Object::type(Type type, ROW row) {
   if (type == _type) {
     return;
   }
@@ -131,12 +130,12 @@ void Object::type(const Type& type, ROW row) {
     case Type_Key:        extra(new ObjKey(row));       break;
     case Type_Trash:      extra(new ObjTrash(row));     break;
     case Type_Weapon:     extra(new ObjWeapon(row));    break;
-    default:                                                break;
+    default:                                            break;
   }
   return;
 }
 
-void Object::type(const Type& type, void* extra_ptr) {
+void Object::type(Type type, void* extra_ptr) {
   if (type == _type) {
     return;
   }
@@ -152,7 +151,7 @@ void Object::type(const Type& type, void* extra_ptr) {
     case Type_Key:        extra(new ObjKey(*((ObjKey*)extra_ptr)));             break;
     case Type_Trash:      extra(new ObjTrash(*((ObjTrash*)extra_ptr)));         break;
     case Type_Weapon:     extra(new ObjWeapon(*((ObjWeapon*)extra_ptr)));       break;
-    default:                                                                        break;
+    default:                                                                    break;
   }
   return;
 }
@@ -267,20 +266,20 @@ void Object::stringToWearable(const std::string& src) {
 std::string Object::serializeModifiers(void) const {
   std::vector<std::string> foo;
   char buf[128];
-  for (std::list<Modifier*>::const_iterator it = modifiers().begin(); it != modifiers().end(); ++it) {
-    sprintf(buf, "%s:%d", Creature::attributeToString((*it)->attribute()), (*it)->magnitude());
+  for (auto iter : modifiers()) {
+    sprintf(buf, "%s:%d", Creature::attributeToString(iter->attribute()), iter->magnitude());
     foo.push_back(buf);
   }
   return Regex::implode("~", foo);
 }
 
-void Object::unserializeModifiers(const std::string& ser) {
+void Object::unserializeModifiers(std::string ser) {
   std::vector<std::string> foo = Regex::explode("~", ser);
   std::vector<std::string> bar;
   unsigned short attr = 0;
   int mag = 0;
-  for (std::vector<std::string>::iterator it = foo.begin(); it != foo.end(); ++it) {
-    bar = Regex::explode(":", *it);
+  for (auto iter : foo) {
+    bar = Regex::explode(":", iter);
     attr = Creature::stringToAttribute(bar[0]);
     sscanf(bar[1].c_str(), "%d", &mag);
     modifiers().push_back(new Modifier(attr, mag));
@@ -288,15 +287,16 @@ void Object::unserializeModifiers(const std::string& ser) {
   return;
 }
 
-std::string Object::implodeComposition(std::string glue) const {
-  std::string dest;
-  for (std::set<Compound*>::const_iterator it = composition().begin(); it != composition().end(); ++it) {
-    dest.append((*it)->identifiers().shortname()).append(glue);
-  }
-  if (dest.size() > glue.size()) {
-    dest.resize(dest.size() - glue.size());
-  }
-  return dest;
+std::string Object::serializeComposition(std::string sep) const {
+  std::set<std::string> foo;
+  for (auto iter : composition()) foo.insert(iter->identifiers().shortname());
+  return Regex::implode(sep, foo);
+}
+
+void Object::unserializeComposition(std::string ser) {
+  std::vector<std::string> foo = Regex::explode("~", ser);
+  for (auto iter : foo) composition().insert(CompoundTable::Instance().find(iter));
+  return;
 }
 
 std::string Object::decorativeShortname(void) const {
@@ -338,7 +338,7 @@ longname..... %s\n\n\
 ",  vnum(),
     typeToString(),
     flags().list(FTObject::Instance()).c_str(),
-    implodeComposition().c_str(),
+    serializeComposition().c_str(),
     level(),
     value(),
     wearableToString(),
@@ -407,7 +407,7 @@ longname..... %s\n\n\
   return output;
 }
 
-void Object::insert(Mysql* db, const unsigned long& areaID) {
+void Object::insert(Mysql* db, unsigned long areaID) {
   char query[Socket::MAX_BUFFER];
   sprintf(query, "INSERT IGNORE INTO objects (areaID, vnum) VALUES (%lu, %lu);", areaID, vnum());
   db->insert(query);
@@ -443,7 +443,7 @@ void Object::update(Mysql* db) const {
      LIMIT 1;",
     type(),
     flags().value(),
-    Mysql::addslashes(implodeComposition("~")).c_str(),
+    Mysql::addslashes(serializeComposition()).c_str(),
     level(),
     value(),
     wearable(),
@@ -545,7 +545,7 @@ void Object::saveInstance(Mysql* db, unsigned long owner_id, std::string placeme
     vnum(),
     type(),
     flags().value(),
-    Mysql::addslashes(implodeComposition("~")).c_str(),
+    Mysql::addslashes(serializeComposition()).c_str(),
     level(),
     value(),
     wearable(),
@@ -646,7 +646,7 @@ void Object::saveContainedInstance(Mysql* db, unsigned long owner_id, std::strin
     vnum(),
     type(),
     flags().value(),
-    Mysql::addslashes(implodeComposition("~")).c_str(),
+    Mysql::addslashes(serializeComposition()).c_str(),
     level(),
     value(),
     wearable(),
