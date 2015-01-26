@@ -229,8 +229,8 @@ class Creature {
     void                exotic(int exotic)                              { _exotic = exotic; }
     int                 exotic(void) const                              { return _exotic; }
     // Misc
-    void                trains(unsigned short trains)                   { _trains = trains; }
-    unsigned short      trains(void) const                              { return _trains; }
+    void                trains(unsigned trains)                         { _trains = trains; }
+    unsigned            trains(void) const                              { return _trains; }
     void                gold(unsigned gold)                             { _gold = gold; }
     unsigned            gold(void) const                                { return _gold; }
     void                silver(unsigned silver)                         { _silver = silver; }
@@ -336,12 +336,12 @@ class Creature {
     bool                          check_stamina(unsigned stamina_, bool message = true);
 
     // Pure virtual public methods...
-    virtual bool                save(void)                                                      = 0;
-    virtual bool                load(void)                                                      { return false; }
-    virtual bool                destroy(void)                                                   = 0;
+    virtual bool                save(void)                      = 0;
+    virtual bool                load(void)                      { return false; }
+    virtual bool                destroy(void)                   = 0;
 
-    virtual void                send(const std::string& message)                                { }
-    virtual void                send(const char* format, ...)                                   { }
+    virtual void                send(std::string message)       { return; }
+    virtual void                send(const char* format, ...)   { return; }
 
   private:
     // basics...
@@ -395,7 +395,7 @@ class Creature {
     int                         _pierce;
     int                         _exotic;
     // Misc
-    unsigned short              _trains;
+    unsigned                    _trains;
     unsigned                    _gold;
     unsigned                    _silver;
     // Combat

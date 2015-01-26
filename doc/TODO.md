@@ -49,10 +49,11 @@
 [X]     exit
 [X]     load_rule
 [X]   object
-[ ]   mob
-[ ] avatar
+[X]   mob
+[X] avatar
 [ ]   objects
 [ ]   abilities
+[ ]   pets
 [ ] disabled_commands
 [ ] socials
 [ ] boards

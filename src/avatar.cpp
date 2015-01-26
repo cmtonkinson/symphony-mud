@@ -9,13 +9,13 @@
 #include "object-container.h"
 #include "world.h"
 
-Avatar::Avatar(Socket* socket) {
+Avatar::Avatar(Socket* socket_) {
   time(&_loggedOn);
   status().set(CONNECTING);
   disconnected(false);
   deleteMe(false);
-  this->socket(socket);
-  identifiers().shortname(estring(this->socket()->getFd()));
+  socket(socket_);
+  if (socket() != nullptr) identifiers().shortname(estring(socket()->getFd()));
   board(0);
   note(NULL);
   gechoColor('x');
@@ -39,7 +39,7 @@ Avatar::~Avatar(void) {
  * the various overloads of Avatar::send() so that we can do things like
  * color in a central location.
  */
-void Avatar::processOutput(const std::string& src) {
+void Avatar::processOutput(std::string src) {
   output(output() + src);
   return;
 }
@@ -237,7 +237,7 @@ bool Avatar::save(void) {
         `slash` = %d,             \
         `pierce` = %d,            \
         `exotic` = %d,            \
-        `trains` = %hu,           \
+        `trains` = %u,            \
         `age` = %hd,              \
         `gold` = %u,              \
         `silver` = %u,            \
@@ -332,7 +332,7 @@ bool Avatar::destroy(void) {
   return true;
 }
 
-void Avatar::changeName(const std::string& name) {
+void Avatar::changeName(std::string name) {
   World::Instance().getAvatars().erase(identifiers().shortname());
   identifiers().shortname(name);
   World::Instance().getAvatars().insert(std::make_pair(identifiers().shortname(), this));
@@ -538,7 +538,7 @@ std::string Avatar::stringLoggedOn(void) {
 }
 
 /******************************************************* Overloads of virtual methods ********************************************************/
-void Avatar::send(const std::string& message) {
+void Avatar::send(std::string message) {
   processOutput(message);
   return;
 }
@@ -582,7 +582,7 @@ void Avatar::room(Room* room) {
   return;
 }
 
-void Avatar::title(const std::string& title) {
+void Avatar::title(std::string title) {
   std::string foo = Regex::trim(title);
 
   _title.clear();
@@ -606,7 +606,7 @@ void Avatar::title(const std::string& title) {
   return;
 }
 
-bool Avatar::checkPassword(const std::string& attempt) {
+bool Avatar::checkPassword(std::string attempt) {
   Mysql* mysql = World::Instance().getMysql();
   char query[Socket::MAX_BUFFER];
   ROW row;

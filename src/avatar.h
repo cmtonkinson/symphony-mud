@@ -18,7 +18,7 @@ class Note;
 class Avatar: public Creature {
   public:
     // constructors...
-    Avatar(Socket* socket = NULL);
+    Avatar(Socket* socket_ = nullptr);
     virtual ~Avatar(void);
 
     // general methods...
@@ -36,9 +36,9 @@ class Avatar: public Creature {
     virtual bool    save(void);
     virtual bool    load(void);
     virtual bool    destroy(void);
-    void            changeName(const std::string& name);
+    void            changeName(std::string name);
     bool            markForDeletion(const unsigned short& value);
-    virtual void    send(const std::string& message);
+    virtual void    send(std::string message);
     virtual void    send(const char* format, ...);
     void            loadContainerContents(ObjContainer* container, std::string placement, unsigned location);
     time_t          secondsLoggedOn(void)         { return time(NULL) - _loggedOn; }
@@ -47,62 +47,62 @@ class Avatar: public Creature {
     std::string     getInput(void);
     bool            hasOutput(void);
     void            flushOutput(void);
-    bool            checkPassword(const std::string& password);
+    bool            checkPassword(std::string password);
     std::string     listWhoFlags(void);
     void            restoreRoom(void);
     void            adjustStartingStats(void);
 
     // public accessors...
-    void            socket(Socket* socket)                                  { _socket = socket; }
-    Socket*         socket(void)                                            { return _socket; }
-    void            output(const std::string& output)                       { _output = output; }
-    ColorString     output(void) const                                      { return _output; }
-    virtual void    disconnected(const bool& disconnected)                  { _disconnected = disconnected; }
-    virtual bool    disconnected(void) const                                { return _disconnected; }
-    void            deleteMe(const bool& deleteMe)                          { _deleteMe = deleteMe; }
-    bool            deleteMe(void) const                                    { return _deleteMe; }
-    void            password(const std::string& password)                   { _password = password; }
-    std::string     password(void)                                          { return _password; }
-    void            roomNumber(const unsigned long& roomNumber)             { _roomNumber = roomNumber; }
-    unsigned long   roomNumber(void) const                                  { return _roomNumber; }
+    void            socket(Socket* socket)                        { _socket = socket; }
+    Socket*         socket(void)                                  { return _socket; }
+    void            output(std::string output)                    { _output = output; }
+    ColorString     output(void) const                            { return _output; }
+    virtual void    disconnected(const bool& disconnected)        { _disconnected = disconnected; }
+    virtual bool    disconnected(void) const                      { return _disconnected; }
+    void            deleteMe(const bool& deleteMe)                { _deleteMe = deleteMe; }
+    bool            deleteMe(void) const                          { return _deleteMe; }
+    void            password(std::string password)                { _password = password; }
+    std::string     password(void)                                { return _password; }
+    void            roomNumber(unsigned long roomNumber)          { _roomNumber = roomNumber; }
+    unsigned long   roomNumber(void) const                        { return _roomNumber; }
 
-    FlagBank&       adminFlags(void)                                        { return _adminFlags; }
-    FlagBank&       channelFlags(void)                                      { return _channelFlags; }
-    FlagBank&       whoFlags(void)                                          { return _whoFlags; }
-    void            gechoColor(const char& gechoColor)                      { _gechoColor = gechoColor; }
-    char            gechoColor(void) const                                  { return _gechoColor; }
-    void            replyTo(const std::string& replyTo)                     { _replyTo = replyTo; }
-    std::string     replyTo(void)                                           { return _replyTo; }
+    FlagBank&       adminFlags(void)                              { return _adminFlags; }
+    FlagBank&       channelFlags(void)                            { return _channelFlags; }
+    FlagBank&       whoFlags(void)                                { return _whoFlags; }
+    void            gechoColor(char gechoColor)                   { _gechoColor = gechoColor; }
+    char            gechoColor(void) const                        { return _gechoColor; }
+    void            replyTo(std::string replyTo)                  { _replyTo = replyTo; }
+    std::string     replyTo(void)                                 { return _replyTo; }
     virtual void    room(Room* room);
-    virtual Room*   room(void) const                                        { return Creature::room(); }
-    Mode&           mode(void)                                              { return _mode; }
-    const Mode&     mode(void) const                                        { return _mode; }
-    void            pedit(Avatar* pedit)                                    { _pedit = pedit; }
-    Avatar*         pedit(void)                                             { return _pedit; }
-    void            aedit(Area* aedit)                                      { _aedit = aedit; }
-    Area*           aedit(void)                                             { return _aedit; }
-    void            oedit(Object* oedit)                                    { _oedit = oedit; }
-    Object*         oedit(void)                                             { return _oedit; }
-    void            medit(Mob* medit)                                       { _medit = medit; }
-    Mob*            medit(void)                                             { return _medit; }
-    void            sedit(SocialCommand* sedit)                             { _sedit = sedit; }
-    SocialCommand*  sedit(void)                                             { return _sedit; }
-    void            note(Note* note)                                        { _note = note; }
-    Note*           note(void) const                                        { return _note; }
-    void            title(const std::string& title);
-    const char*     title(void) const                                       { return _title.c_str(); }
-    void            poofin(const std::string& poofin)                       { _poofin = poofin; }
-    const char*     poofin(void) const                                      { return _poofin.c_str(); }
-    void            poofout(const std::string& poofout)                     { _poofout = poofout; }
-    const char*     poofout(void) const                                     { return _poofout.c_str(); }
-    void            board(const unsigned short& board)                      { _board = board; }
-    unsigned short  board(void) const                                       { return _board; }
-    void            age(const unsigned short& age)                          { _age = age; }
-    unsigned short  age(void) const                                         { return _age; }
-    void            bankGold(const unsigned long& bankGold)                 { _bankGold = bankGold; }
-    unsigned long   bankGold(void) const                                    { return _bankGold; }
-    void            bankSilver(const unsigned long& bankSilver)             { _bankSilver = bankSilver; }
-    unsigned long   bankSilver(void) const                                  { return _bankSilver; }
+    virtual Room*   room(void) const                              { return Creature::room(); }
+    Mode&           mode(void)                                    { return _mode; }
+    const Mode&     mode(void) const                              { return _mode; }
+    void            pedit(Avatar* pedit)                          { _pedit = pedit; }
+    Avatar*         pedit(void)                                   { return _pedit; }
+    void            aedit(Area* aedit)                            { _aedit = aedit; }
+    Area*           aedit(void)                                   { return _aedit; }
+    void            oedit(Object* oedit)                          { _oedit = oedit; }
+    Object*         oedit(void)                                   { return _oedit; }
+    void            medit(Mob* medit)                             { _medit = medit; }
+    Mob*            medit(void)                                   { return _medit; }
+    void            sedit(SocialCommand* sedit)                   { _sedit = sedit; }
+    SocialCommand*  sedit(void)                                   { return _sedit; }
+    void            note(Note* note)                              { _note = note; }
+    Note*           note(void) const                              { return _note; }
+    void            title(std::string title);
+    const char*     title(void) const                             { return _title.c_str(); }
+    void            poofin(std::string poofin)                    { _poofin = poofin; }
+    const char*     poofin(void) const                            { return _poofin.c_str(); }
+    void            poofout(std::string poofout)                  { _poofout = poofout; }
+    const char*     poofout(void) const                           { return _poofout.c_str(); }
+    void            board(unsigned short board)                   { _board = board; }
+    unsigned short  board(void) const                             { return _board; }
+    void            age(unsigned short age)                       { _age = age; }
+    unsigned short  age(void) const                               { return _age; }
+    void            bankGold(unsigned long bankGold)              { _bankGold = bankGold; }
+    unsigned long   bankGold(void) const                          { return _bankGold; }
+    void            bankSilver(unsigned long bankSilver)          { _bankSilver = bankSilver; }
+    unsigned long   bankSilver(void) const                        { return _bankSilver; }
 
     // Combat...
     virtual void    whatHappensWhenIDie(void);
@@ -141,7 +141,7 @@ class Avatar: public Creature {
     unsigned short          _board;
 
     // Avatar-specific private methods...
-    void                    processOutput(const std::string& text);
+    void                    processOutput(std::string text);
 };
 
 #endif // #ifndef H_SYMPHONY_AVATAR

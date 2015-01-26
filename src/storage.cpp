@@ -1,11 +1,13 @@
 
 #include <cstring>
 #include "area.h"
+#include "avatar.h"
 #include "enumTable.h"
 #include "exit.h"
 #include "loadRule.h"
 #include "loadRuleMob.h"
 #include "loadRuleObject.h"
+#include "mob.h"
 #include "object-furniture.h"
 #include "object-weapon.h"
 #include "object.h"
@@ -72,14 +74,14 @@ bool Storage::load(FILE* fp, Room* loading) {
     STORE_CASE("smell",       &Room::smell)
     STORE_CASE("sound",       &Room::sound)
     STORE_CASE("terrain",     &Room::setTerrain)
-    STORE_DESCEND("EXIT", Exit,
+    STORE_DESCEND_NEW("EXIT", Exit,
       loading->exit(instance->direction().number(), instance);
     )
-    STORE_DESCEND("RULE_OBJ", LoadRuleObject,
+    STORE_DESCEND_NEW("RULE_OBJ", LoadRuleObject,
       loading->loadRules().push_back(instance);
       instance->room(loading);
     )
-    STORE_DESCEND("RULE_MOB", LoadRuleMob,
+    STORE_DESCEND_NEW("RULE_MOB", LoadRuleMob,
       loading->loadRules().push_back(instance);
       instance->room(loading);
     )
@@ -218,6 +220,200 @@ bool Storage::load(FILE* fp, Object* loading) {
       default:
         break;
     }
+  });
+  return load_status == LOAD_DONE;
+}
+
+/***************************************************************************************************
+ * Mob
+ **************************************************************************************************/
+void Storage::dump(FILE* fp, Mob* mob) {
+  BEGIN("MOB")
+  out(fp, "vnum",           mob->vnum());
+  out(fp, "mobility",       mob->mobility());
+  out(fp, "aggressiveness", mob->aggressiveness());
+  dump_base(fp, mob);
+  END("MOB")
+  return;
+}
+
+bool Storage::load(FILE* fp, Mob* loading) {
+  char input[32];
+  unsigned load_status = 0;
+  load_status = load_inner(fp, loading, input, "MOB", [&fp, &loading, &input]() {
+    STORE_CASE("vnum",           &Mob::vnum)
+    STORE_CASE("mobility",       &Mob::mobility)
+    STORE_CASE("aggressiveness", &Mob::aggressiveness)
+    STORE_DESCEND("CREATURE")
+  });
+  return load_status == LOAD_DONE;
+}
+
+/***************************************************************************************************
+ * Avatar
+ **************************************************************************************************/
+void Storage::dump(FILE* fp, Avatar* avatar) {
+  BEGIN("AVATAR")
+  out(fp, "gechoColor",   avatar->gechoColor());
+  out(fp, "title",        avatar->title());
+  out(fp, "poofin",       avatar->poofin());
+  out(fp, "poofout",      avatar->poofout());
+  out(fp, "age",          avatar->age());
+  out(fp, "bankGold",     avatar->bankGold());
+  out(fp, "bankSilver",   avatar->bankSilver());
+  out(fp, "adminFlags",   avatar->adminFlags().value());
+  out(fp, "channelFlags", avatar->channelFlags().value());
+  out(fp, "whoFlags",     avatar->whoFlags().value());
+  out(fp, "roomNumber",   avatar->roomNumber());
+  dump_base(fp, avatar);
+  END("AVATAR")
+  return;
+}
+
+bool Storage::load(FILE* fp, Avatar* loading) {
+  char input[32];
+  unsigned load_status = 0;
+  load_status = load_inner(fp, loading, input, "AVATAR", [&fp, &loading, &input]() {
+    STORE_CASE("gechoColor",    &Avatar::gechoColor)
+    STORE_CASE("title",         &Avatar::title)
+    STORE_CASE("poofin",        &Avatar::poofin)
+    STORE_CASE("poofout",       &Avatar::poofout)
+    STORE_CASE("age",           &Avatar::age)
+    STORE_CASE("bankGold",      &Avatar::bankGold)
+    STORE_CASE("bankSilver",    &Avatar::bankSilver)
+    STORE_CASE("roomNumber",    &Avatar::roomNumber)
+    STORE_CASE_WITH_CODE("adminFlags",    unsigned, "%u", loading->adminFlags().set(val);)
+    STORE_CASE_WITH_CODE("channelFlags",  unsigned, "%u", loading->channelFlags().set(val);)
+    STORE_CASE_WITH_CODE("whoFlags",      unsigned, "%u", loading->whoFlags().set(val);)
+    STORE_DESCEND("CREATURE")
+  });
+  return load_status == LOAD_DONE;
+}
+
+/***************************************************************************************************
+ * Creature
+ **************************************************************************************************/
+void Storage::dump_base(FILE* fp, Creature* creature) {
+  BEGIN("CREATURE")
+  out(fp, "shortname",    creature->identifiers().shortname());
+  out(fp, "longname",     creature->identifiers().longname());
+  out(fp, "description",  creature->identifiers().description());
+  out(fp, "keywords",     creature->identifiers().serializeKeywords());
+  fprintf(fp, "identity %s %s %s\n",
+    creature->gender().string().c_str(),
+    creature->race().string().c_str(),
+    creature->pClass().string().c_str()
+  );
+  fprintf(fp, "level %u %u %u\n",
+    creature->level(),
+    creature->exp(),
+    creature->tnl()
+  );
+  fprintf(fp, "health %d/%d %d/%d %d\n",
+    creature->health(),
+    creature->maxHealth(),
+    creature->mana(),
+    creature->maxMana(),
+    creature->stamina()
+  );
+  fprintf(fp, "stats %hu/%hu %hu/%hu %hu/%hu %hu/%hu %hu/%hu %hu/%hu %hu/%hu %hu/%hu\n",
+    creature->strength(),
+    creature->maxStrength(),
+    creature->dexterity(),
+    creature->maxDexterity(),
+    creature->constitution(),
+    creature->maxConstitution(),
+    creature->intelligence(),
+    creature->maxIntelligence(),
+    creature->focus(),
+    creature->maxFocus(),
+    creature->creativity(),
+    creature->maxCreativity(),
+    creature->charisma(),
+    creature->maxCharisma(),
+    creature->luck(),
+    creature->maxLuck()
+  );
+  fprintf(fp, "armor %d %d %d %d %d\n",
+    creature->armor(),
+    creature->bash(),
+    creature->slash(),
+    creature->pierce(),
+    creature->exotic()
+  );
+  out(fp, "trains", creature->trains());
+  out(fp, "gold",   creature->gold());
+  out(fp, "silver", creature->silver());
+  END("CREATURE")
+  return;
+}
+
+bool Storage::load_base(FILE* fp, Creature* loading) {
+  char input[32];
+  unsigned load_status = 0;
+  load_status = load_inner(fp, loading, input, "CREATURE", [&fp, &loading, &input]() {
+    STORE_CASE_STRING("shortname",    loading->identifiers().shortname(str);)
+    STORE_CASE_STRING("longname",     loading->identifiers().longname(str);)
+    STORE_CASE_STRING("description",  loading->identifiers().description(str);)
+    STORE_CASE_STRING("keywords",     loading->identifiers().unserializeKeywords(str);)
+    if (strcmp("identity", input) == 0) {
+      char gender[32], race[32], klass[32];
+      fscanf(fp, "%s %s %s", gender, race, klass);
+      loading->gender().set(ETGender::Instance().get(gender));
+      loading->race().set(ETRace::Instance().get(race));
+      loading->pClass().set(ETPClass::Instance().get(klass));
+      return;
+    }
+    if (strcmp("level", input) == 0) {
+      unsigned level, exp, tnl;
+      fscanf(fp, "%u %u %u", &level, &exp, &tnl);
+      loading->level(level);
+      loading->exp(exp);
+      loading->tnl(tnl);
+    }
+    if (strcmp("health", input) == 0) {
+      int health, maxHealth, mana, maxMana, stamina;
+      fscanf(fp, "%d/%d %d/%d %d", &health, &maxHealth, &mana, &maxMana, &stamina);
+      loading->maxHealth(maxHealth);
+      loading->health(health);
+      loading->maxMana(maxMana);
+      loading->mana(mana);
+      loading->stamina(stamina);
+    }
+    if (strcmp("stats", input) == 0) {
+      int strength, maxStrength, dexterity, maxDexterity, constitution, maxConstitution, intelligence, maxIntelligence, focus, maxFocus, creativity, maxCreativity, charisma, maxCharisma, luck, maxLuck;
+      fscanf(fp, " %d/%d %d/%d %d/%d %d/%d %d/%d %d/%d %d/%d %d/%d",
+        &strength, &maxStrength, &dexterity, &maxDexterity, &constitution, &maxConstitution, &intelligence, &maxIntelligence, &focus, &maxFocus, &creativity, &maxCreativity, &charisma, &maxCharisma, &luck, &maxLuck
+      );
+      loading->maxStrength(maxStrength);
+      loading->strength(strength);
+      loading->maxDexterity(maxDexterity);
+      loading->dexterity(dexterity);
+      loading->maxConstitution(maxConstitution);
+      loading->constitution(constitution);
+      loading->maxIntelligence(maxIntelligence);
+      loading->intelligence(intelligence);
+      loading->maxFocus(maxFocus);
+      loading->focus(focus);
+      loading->maxCreativity(maxCreativity);
+      loading->creativity(creativity);
+      loading->maxCharisma(maxCharisma);
+      loading->charisma(charisma);
+      loading->maxLuck(maxLuck);
+      loading->luck(luck);
+    }
+    if (strcmp("armor", input) == 0) {
+      int armor, bash, slash, pierce, exotic;
+      fscanf(fp, "%d %d %d %d %d", &armor, &bash, &slash, &pierce, &exotic);
+      loading->armor(armor);
+      loading->bash(bash);
+      loading->slash(slash);
+      loading->pierce(pierce);
+      loading->exotic(exotic);
+    }
+    STORE_CASE("trains",  &Creature::trains)
+    STORE_CASE("gold",    &Creature::gold)
+    STORE_CASE("silver",  &Creature::silver)
   });
   return load_status == LOAD_DONE;
 }

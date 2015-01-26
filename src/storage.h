@@ -22,6 +22,7 @@
 class Exit;
 class LoadRuleMob;
 class LoadRuleObject;
+class Mob;
 class Room;
 
 typedef std::function<void()> voidFunc;
@@ -83,17 +84,23 @@ typedef std::function<void()> voidFunc;
   }                                                       \
 
 // STORE_DESCEND is anotehr "public" macro for easily defining nested objects. This is used inside
-// of the lambda and should be placed after all STORE_CASE calls. LINK is an arbitrary code fragment
+// of the lambda and should be placed after all STORE_CASE calls. CODE is an arbitrary code fragment
 // which associates the nested object with the parent in whatever way is needed.
-#define STORE_DESCEND(KEY, CLASS, LINK)           \
+#define STORE_DESCEND_NEW(KEY, CLASS, CODE)       \
   if (strcmp(input, KEY) == 0) {                  \
     fseek(fp, -strlen(KEY), SEEK_CUR);            \
     CLASS* instance = new CLASS();                \
     if (load(fp, instance)) {                     \
-      { LINK }                                    \
+      { CODE }                                    \
     } else {                                      \
       delete instance;                            \
     }                                             \
+  }                                               \
+
+#define STORE_DESCEND(KEY)                        \
+  if (strcmp(input, KEY) == 0) {                  \
+    fseek(fp, -strlen(KEY), SEEK_CUR);            \
+    load_base(fp, loading);                       \
   }                                               \
 
 class Storage {
@@ -118,6 +125,27 @@ class Storage {
 
     static void dump(FILE* fp, Object* object);
     static bool load(FILE* fp, Object* loading);
+
+    static void dump(FILE* fp, Mob* mob);
+    static bool load(FILE* fp, Mob* loading);
+
+    static void dump(FILE* fp, Avatar* avatar);
+    static bool load(FILE* fp, Avatar* loading);
+
+    // dump() and load() can be overloaded ad nauseum, as long as no method signatures contains a
+    // type which is a subclass of another (e.g. Creature and Mob or Avatar). In that case, the
+    // rules of implicit parametric polymorphism invoke the most-specific method for a given
+    // signature match regardless of explicit casting, etc. In those cases, a different method
+    // name is required to distinguish base class calls from subclass calls.
+    //
+    // This is primarily an issue when there is sufficient state in a base class with more than one
+    // descendent class so as to desire DRYing out the common storage logic (again as in Creature,
+    // Mob, and Avatar).
+    //
+    // For this purpose the names dump_base() and load_base() are arbitrarily used.
+
+    static void dump_base(FILE* fp, Creature* creature);
+    static bool load_base(FILE* fp, Creature* loading);
 
   private:
 
@@ -149,7 +177,7 @@ class Storage {
     template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(unsigned long))   STORE_IN(unsigned long, "%lu")
     template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(float))           STORE_IN(float, "%f")
     template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(double))          STORE_IN(double, "%f")
-    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(char))            STORE_IN(double, "%c")
+    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(char))            STORE_IN(char, " %c") // that space is important
     template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(const char*));
     template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(std::string));
 
