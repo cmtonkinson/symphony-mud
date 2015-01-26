@@ -29,6 +29,7 @@
   * Log logins, logouts, d/c
   * Account emails
   * FlagBank to long int
+  * Logging bugs (switch defaults, bad indices, etc)
 
 ## General
   * hunger, thirst, drunk
@@ -47,7 +48,7 @@
 [X]   room
 [X]     exit
 [X]     load_rule
-[ ]   object
+[X]   object
 [ ]   mob
 [ ] avatar
 [ ]   objects

@@ -279,6 +279,9 @@ CmdTest::CmdTest(void) {
 #include "loadRule.h"
 #include "loadRuleMob.h"
 #include "loadRuleObject.h"
+#include "object-furniture.h"
+#include "object-weapon.h"
+#include "object.h"
 #include "storage.h"
 bool CmdTest::execute(Creature* creature, const std::vector<std::string>& args) {
   unsigned status = 0;
@@ -371,6 +374,22 @@ bool CmdTest::execute(Creature* creature, const std::vector<std::string>& args) 
       creature->send("Object(%x)::keywords    = %s\n",  o, o->identifiers().serializeKeywords().c_str());
       creature->send("Object(%x)::modifiers   = %s\n",  o, o->serializeModifiers().c_str());
       creature->send("Object(%x)::composition = %s\n",  o, o->serializeComposition().c_str());
+      switch (o->type()) {
+        case Object::Type_Furniture:
+          creature->send("Furniture(%x)::capacity = %u\n", o, o->furniture()->capacity());
+          creature->send("Furniture(%x)::layOn    = %u\n", o, o->furniture()->layOn());
+          creature->send("Furniture(%x)::sitAt    = %u\n", o, o->furniture()->sitAt());
+          creature->send("Furniture(%x)::sitOn    = %u\n", o, o->furniture()->sitOn());
+          creature->send("Furniture(%x)::standOn  = %u\n", o, o->furniture()->standOn());
+          break;
+        case Object::Type_Weapon:
+          creature->send("Weapon(%x)::type     = %s\n", o, o->weapon()->type().string().c_str());
+          creature->send("Weapon(%x)::verb     = %s\n", o, o->weapon()->verb().string().c_str());
+          creature->send("Weapon(%x)::damage   = %s\n", o, o->weapon()->damage().serialize().c_str());
+          break;
+        default:
+          break;
+      }
     }
   }
   fclose(fp);

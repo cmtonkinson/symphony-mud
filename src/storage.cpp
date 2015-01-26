@@ -1,10 +1,13 @@
 
 #include <cstring>
 #include "area.h"
+#include "enumTable.h"
 #include "exit.h"
 #include "loadRule.h"
 #include "loadRuleMob.h"
 #include "loadRuleObject.h"
+#include "object-furniture.h"
+#include "object-weapon.h"
 #include "object.h"
 #include "room.h"
 #include "storage.h"
@@ -163,6 +166,22 @@ void Storage::dump(FILE* fp, Object* object) {
   out(fp, "keywords",     object->identifiers().serializeKeywords());
   out(fp, "modifiers",    object->serializeModifiers());
   out(fp, "composition",  object->serializeComposition());
+  switch (object->type()) {
+    case Object::Type_Furniture:
+      out(fp, "furniture_capacity", object->furniture()->capacity());
+      out(fp, "furniture_layOn",    object->furniture()->layOn());
+      out(fp, "furniture_sitAt",    object->furniture()->sitAt());
+      out(fp, "furniture_sitOn",    object->furniture()->sitOn());
+      out(fp, "furniture_standOn",  object->furniture()->standOn());
+      break;
+    case Object::Type_Weapon:
+      out(fp, "weapon_type",     object->weapon()->type().string());
+      out(fp, "weapon_verb",     object->weapon()->verb().string());
+      out(fp, "weapon_damage",   object->weapon()->damage().serialize());
+      break;
+    default:
+      break;
+  }
   END("OBJECT")
   return;
 }
@@ -183,6 +202,22 @@ bool Storage::load(FILE* fp, Object* loading) {
     STORE_CASE_STRING("keywords",     loading->identifiers().unserializeKeywords(str);)
     STORE_CASE_STRING("modifiers",    loading->unserializeModifiers(str);)
     STORE_CASE_STRING("composition",  loading->unserializeComposition(str);)
+    switch (loading->type()) {
+      case Object::Type_Furniture:
+        STORE_CASE_WITH_CODE("furniture_capacity",  unsigned, "%u", loading->furniture()->capacity(val);)
+        STORE_CASE_WITH_CODE("furniture_layOn",     unsigned, "%u", loading->furniture()->layOn(val);)
+        STORE_CASE_WITH_CODE("furniture_sitAt",     unsigned, "%u", loading->furniture()->sitAt(val);)
+        STORE_CASE_WITH_CODE("furniture_sitOn",     unsigned, "%u", loading->furniture()->sitOn(val);)
+        STORE_CASE_WITH_CODE("furniture_standOn",   unsigned, "%u", loading->furniture()->standOn(val);)
+        break;
+      case Object::Type_Weapon:
+        STORE_CASE_STRING("weapon_type",    loading->weapon()->type().set(ETWeaponType::Instance().get(str));)
+        STORE_CASE_STRING("weapon_verb",    loading->weapon()->verb().set(ETDamageVerb::Instance().get(str));)
+        STORE_CASE_STRING("weapon_damage",  loading->weapon()->damage().unserialize(str);)
+        break;
+      default:
+        break;
+    }
   });
   return load_status == LOAD_DONE;
 }

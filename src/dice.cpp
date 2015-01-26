@@ -1,21 +1,15 @@
 
 #include "dice.h"
 
-Dice::Dice(void):
-    _number(0),
-    _faces(0) {
+Dice::Dice(void): _number(0), _faces(0) {
   return;
 }
 
-Dice::Dice(const Dice& ref):
-    _number(ref.number()),
-    _faces(ref.faces()) {
+Dice::Dice(const Dice& ref): _number(ref.number()), _faces(ref.faces()) {
   return;
 }
 
-Dice::Dice(const unsigned short& number, const unsigned short& faces):
-    _number(number),
-    _faces(faces) {
+Dice::Dice(unsigned number, unsigned faces): _number(number), _faces(faces) {
   return;
 }
 
@@ -40,4 +34,13 @@ const char* Dice::toString(void) const {
   std::string dest;
   dest.assign(estring(number())).append(1, 'd').append(estring(faces()));
   return dest.c_str();
+}
+
+std::string Dice::serialize(void) const {
+  return toString();
+}
+
+void Dice::unserialize(std::string ser) {
+  sscanf(ser.c_str(), "%ud%u", &_number, &_faces);
+  return;
 }

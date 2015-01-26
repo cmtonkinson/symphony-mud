@@ -89,19 +89,6 @@ ETFurniturePosition::ETFurniturePosition(void) {
   return;
 }
 
-/*ETObjectType::ETObjectType(void) {
-  add(OBJ_ARMOR,     "armor");
-  add(OBJ_CLOTHING,  "clothing");
-  add(OBJ_CONTAINER, "container");
-  add(OBJ_FOOD,      "food");
-  add(OBJ_FURNITURE, "furniture");
-  add(OBJ_JEWELRY,   "jewelry");
-  add(OBJ_KEY,       "key");
-  add(OBJ_TRASH,     "trash");
-  add(OBJ_WEAPON,    "weapon");
-  return;
-}*/
-
 ETWeaponType::ETWeaponType(void) {
   add(WEAP_AXE,        "axe");
   add(WEAP_CLUB,       "club");
