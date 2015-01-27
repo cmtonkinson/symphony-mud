@@ -437,7 +437,7 @@ bool CmdLearn::execute(Creature* creature, const std::vector<std::string>& args)
     creature->send("You can't learn that ability just yet.");
     return false;
   }
-  creature->learn(iter->second, 25);
+  creature->learn(iter->second, 1);
   creature->trains(creature->trains() - iter->second->trains());
   creature->send("You spend {B%u{x training points learning the {M%s{x ability!\n", iter->second->trains(), iter->second->name().c_str());
   creature->send("You now have {B%u{x remaining training points.\n", creature->trains());

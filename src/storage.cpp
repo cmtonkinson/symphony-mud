@@ -8,6 +8,7 @@
 #include "loadRuleMob.h"
 #include "loadRuleObject.h"
 #include "mob.h"
+#include "object-container.h"
 #include "object-furniture.h"
 #include "object-weapon.h"
 #include "object.h"
@@ -187,6 +188,9 @@ void Storage::dump(FILE* fp, Object* object, const char* suffix) {
       out(fp, "weapon_verb",     object->weapon()->verb().string());
       out(fp, "weapon_damage",   object->weapon()->damage().serialize());
       break;
+    case Object::Type_Container:
+      for (auto iter : object->container()->inventory().objectList()) dump(fp, iter, "BAG");
+      break;
     default:
       break;
   }
@@ -222,6 +226,9 @@ bool Storage::load(FILE* fp, Object* loading) {
         STORE_CASE_STRING("weapon_type",    loading->weapon()->type().set(ETWeaponType::Instance().get(str));)
         STORE_CASE_STRING("weapon_verb",    loading->weapon()->verb().set(ETDamageVerb::Instance().get(str));)
         STORE_CASE_STRING("weapon_damage",  loading->weapon()->damage().unserialize(str);)
+        break;
+      case Object::Type_Container:
+        STORE_DESCEND_NEW("OBJECT_BAG", Object, loading->container()->inventory().add(instance);)
         break;
       default:
         break;
