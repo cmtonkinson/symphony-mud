@@ -53,7 +53,7 @@
 [X] avatar
 [X]   inventory
 [X]   equipment
-[ ]   abilities
+[X]   abilities
 [ ]   pets
 [ ] disabled_commands
 [ ] socials

@@ -1,4 +1,5 @@
 
+#include "ability.h"
 #include "area.h"
 #include "commandTable-default.h"
 #include "creature.h"
@@ -245,6 +246,30 @@ void Creature::naturalStatAdjustment(void) {
   maxCharisma(maxCharisma() + Cha);
   luck(luck() + Luc);
   maxLuck(maxLuck() + Luc);
+  return;
+}
+
+std::string Creature::serializeAbilities(void) {
+  std::vector<std::string> foo;
+  char buf[128];
+  for (auto iter : abilityMastery()) {
+    sprintf(buf, "%s:%u", iter.first->name().c_str(), iter.second);
+    foo.push_back(buf);
+  }
+  return Regex::implode("~", foo);
+}
+
+void Creature::unserializeAbilities(std::string ser) {
+  Ability* ability = nullptr;
+  unsigned mastery = 0;
+  std::vector<std::string> foo = Regex::explode("~", ser);
+  std::vector<std::string> bar;
+  for (auto iter : foo) {
+    bar = Regex::explode(":", iter);
+    if ((ability = klass()->abilities().find(bar[0])) == NULL) continue;
+    sscanf(bar[1].c_str(), "%u", &mastery);
+    learn(ability, mastery);
+  }
   return;
 }
 

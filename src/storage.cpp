@@ -354,9 +354,10 @@ void Storage::dump_base(FILE* fp, Creature* creature) {
     creature->pierce(),
     creature->exotic()
   );
-  out(fp, "trains", creature->trains());
-  out(fp, "gold",   creature->gold());
-  out(fp, "silver", creature->silver());
+  out(fp, "trains",     creature->trains());
+  out(fp, "gold",       creature->gold());
+  out(fp, "silver",     creature->silver());
+  out(fp, "abilities",  creature->serializeAbilities());
   for (auto iter : creature->inventory().objectList()) dump(fp, iter, "INV");
   for (auto iter : creature->equipment().objectMap()) dump(fp, iter.second, "EQ");
   END("CREATURE")
@@ -429,6 +430,7 @@ bool Storage::load_base(FILE* fp, Creature* loading) {
     STORE_CASE("trains",  &Creature::trains)
     STORE_CASE("gold",    &Creature::gold)
     STORE_CASE("silver",  &Creature::silver)
+    STORE_CASE_STRING("abilities",    loading->unserializeAbilities(str);)
     STORE_DESCEND_NEW("OBJECT_INV", Object, loading->inventory().add(instance);)
     STORE_DESCEND_NEW("OBJECT_EQ", Object,
       Object* removed     = nullptr;

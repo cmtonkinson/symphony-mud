@@ -293,6 +293,8 @@ class Creature {
     Object*                     primary(void);
     Object*                     secondary(void);
     void                        naturalStatAdjustment(void);
+    std::string                 serializeAbilities(void);
+    void                        unserializeAbilities(std::string ser);
 
     // Combat...
     void          formGroup(void);
