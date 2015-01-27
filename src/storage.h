@@ -24,6 +24,7 @@ class LoadRuleMob;
 class LoadRuleObject;
 class Mob;
 class Room;
+class SocialCommand;
 
 typedef std::function<void()> voidFunc;
 
@@ -132,6 +133,9 @@ class Storage {
     static void dump(FILE* fp, Avatar* avatar);
     static bool load(FILE* fp, Avatar* loading);
 
+    static void dump(FILE* fp, SocialCommand* social);
+    static bool load(FILE* fp, SocialCommand* loading);
+
     // dump() and load() can be overloaded ad nauseum, as long as no method signatures contains a
     // type which is a subclass of another (e.g. Creature and Mob or Avatar). In that case, the
     // rules of implicit parametric polymorphism invoke the most-specific method for a given
@@ -163,6 +167,7 @@ class Storage {
     static void out(FILE* fp, const char* key, float          value)  STORE_OUT("f")
     static void out(FILE* fp, const char* key, double         value)  STORE_OUT("f")
     static void out(FILE* fp, const char* key, char           value)  STORE_OUT("c")
+    static void out(FILE* fp, const char* key, bool           value);
     static void out(FILE* fp, const char* key, const char*    value);
     // Complex/custom types.
     static void out(FILE* fp, const char* key, std::string  value) { out(fp, key, value.c_str()); }
@@ -178,6 +183,7 @@ class Storage {
     template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(float))           STORE_IN(float, "%f")
     template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(double))          STORE_IN(double, "%f")
     template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(char))            STORE_IN(char, " %c") // that space is important
+    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(bool));
     template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(const char*));
     template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(std::string));
 

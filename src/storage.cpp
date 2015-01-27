@@ -2,6 +2,7 @@
 #include <cstring>
 #include "area.h"
 #include "avatar.h"
+#include "command.h"
 #include "enumTable.h"
 #include "exit.h"
 #include "loadRule.h"
@@ -442,6 +443,45 @@ bool Storage::load_base(FILE* fp, Creature* loading) {
 }
 
 /***************************************************************************************************
+ * SOCIAL COMMAND
+ **************************************************************************************************/
+void Storage::dump(FILE* fp, SocialCommand* social) {
+  BEGIN("SOCIAL")
+  out(fp, "targetNone",   social->targetNone());
+  out(fp, "targetSelf",   social->targetSelf());
+  out(fp, "targetVictim", social->targetVictim());
+  out(fp, "noneActor",    social->noneActor());
+  out(fp, "noneRoom",     social->noneRoom());
+  out(fp, "selfActor",    social->selfActor());
+  out(fp, "selfRoom",     social->selfRoom());
+  out(fp, "victimActor",  social->victimActor());
+  out(fp, "victimVictim", social->victimVictim());
+  out(fp, "victimRoom",   social->victimRoom());
+  out(fp, "flags",        social->flags().value());
+  END("SOCIAL")
+  return;
+}
+
+bool Storage::load(FILE* fp, SocialCommand* loading) {
+  char input[32];
+  unsigned load_status = 0;
+  load_status = load_inner(fp, loading, input, "SOCIAL", [&fp, &loading, &input]() {
+    STORE_CASE("targetNone",    &SocialCommand::targetNone)
+    STORE_CASE("targetSelf",    &SocialCommand::targetSelf)
+    STORE_CASE("targetVictim",  &SocialCommand::targetVictim)
+    STORE_CASE_STRING("noneActor",    loading->noneActor(str);)
+    STORE_CASE_STRING("noneRoom",     loading->noneRoom(str);)
+    STORE_CASE_STRING("selfActor",    loading->selfActor(str);)
+    STORE_CASE_STRING("selfRoom",     loading->selfRoom(str);)
+    STORE_CASE_STRING("victimActor",  loading->victimActor(str);)
+    STORE_CASE_STRING("victimVictim", loading->victimVictim(str);)
+    STORE_CASE_STRING("victimRoom",   loading->victimRoom(str);)
+    STORE_CASE_WITH_CODE("flags", unsigned long, "%lu", loading->flags().set(val);)
+  });
+  return load_status == LOAD_DONE;
+}
+
+/***************************************************************************************************
  * INTERNAL METHODS
  **************************************************************************************************/
 unsigned Storage::load_inner(FILE* fp, void* loading, char* input, const char* boundary, voidFunc lambda) {
@@ -494,8 +534,21 @@ std::string Storage::peek(FILE* fp) {
   return buf;
 }
 
+void Storage::out(FILE* fp, const char* key, bool value) {
+  fprintf(fp, "%s %c\n", key, (value ? 'T' : 'F'));
+  return;
+}
+
 void Storage::out(FILE* fp, const char* key, const char* value) {
   fprintf(fp, "%s %u:%s\n", key, strlen(value), value);
+  return;
+}
+
+template <class ObjectType>
+void Storage::in(FILE* fp, ObjectType* object, void (ObjectType::*method)(bool)) {
+  char x;
+  fscanf(fp, " %c", &x);
+  (*object.*method)(x == 'T');
   return;
 }
 

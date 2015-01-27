@@ -32,7 +32,7 @@ void Command::level(const unsigned short& level) {
   return;
 }
 
-void Command::addSyntax(const short& num_args, const std::string& usage) {
+void Command::addSyntax(const short& num_args, std::string usage) {
   arguments().insert(num_args);
   syntax().push_back(usage);
   return;
@@ -63,12 +63,12 @@ const char* Command::printSyntax(void) const {
   return dest.c_str();
 }
 
-void Command::addOptions(const std::string& argument, const std::string& option_list) {
+void Command::addOptions(std::string argument, std::string option_list) {
   options().insert(std::make_pair(argument, option_list));
   return;
 }
 
-void Command::seeAlso(const std::string& command) {
+void Command::seeAlso(std::string command) {
   _seeAlso.insert(command);
   return;
 }
@@ -78,7 +78,7 @@ SocialCommand::SocialCommand(void) {
   return;
 }
 
-SocialCommand::SocialCommand(const std::string& name, const unsigned long& avatarID): Command() {
+SocialCommand::SocialCommand(std::string name, const unsigned long& avatarID): Command() {
   this->name(name);
   social(true);
   ID(0);
