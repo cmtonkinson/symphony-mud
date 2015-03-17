@@ -512,7 +512,7 @@ unsigned Storage::load_inner(FILE* fp, void* loading, char* input, const char* b
 
 std::string Storage::read_string(FILE* fp) {
   std::string output;
-  unsigned length = 0;
+  size_t length = 0;
   char* buffer    = nullptr;
   // Find the length of the string and allocate a buffer.
   fscanf(fp, "%zu:", &length);
@@ -540,7 +540,7 @@ void Storage::out(FILE* fp, const char* key, bool value) {
 }
 
 void Storage::out(FILE* fp, const char* key, const char* value) {
-  fprintf(fp, "%s %u:%s\n", key, strlen(value), value);
+  fprintf(fp, "%s %zu:%s\n", key, strlen(value), value);
   return;
 }
 

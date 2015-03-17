@@ -6,14 +6,14 @@
  * This Storage API is a horrifying smoke-and-mirror-powered light show beamed through a veritable
  * fun-house-of-horrors of paradigms, techniques, and metaprogramming. You will laugh, you will cry,
  * and you will have nightmares. The roiling concoction of C-style metaprogramming macros and 80's
- * style FILE pointer based IO is crudly and crassly tethered to C++ templates and lambda functions
+ * style FILE pointer-based IO is crudly and crassly tethered to C++ templates and lambda functions
  * in a fashion that just begs for a comparison to some 3rd world despot in a brown baret with a
  * Kalishnikov rifle slung across his back holding an iPhone watching House of Cards while his
  * guards relieve themselves in buckets in the room next door.
  *
  * In short, this is a momentous example of how lives are shattered as worlds collide.
  *
- * It's a great case study in what not to do, and how not to write code.
+ * It's a great case study in what not to do, and how not to do it.
  */
 
 #include <cstdio>
