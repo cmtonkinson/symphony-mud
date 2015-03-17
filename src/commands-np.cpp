@@ -86,7 +86,7 @@ bool CmdOedit::execute(Creature* creature, const std::vector<std::string>& args)
       return false;
     }
     // Check permissions...
-    if (!World::Instance().hasPermission(area, avatar())) {
+    if (!area->hasPermission(avatar())) {
       avatar()->send("You don't have permissions to that object.");
       return false;
     }
@@ -117,7 +117,7 @@ bool CmdOedit::execute(Creature* creature, const std::vector<std::string>& args)
       return false;
     }
     // Check permissions...
-    if (!World::Instance().hasPermission(area, (Avatar*)creature)) {
+    if (!area->hasPermission((Avatar*)creature)) {
       avatar()->send("You don't have permissions to that object.");
       return false;
     }

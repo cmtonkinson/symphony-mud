@@ -4,11 +4,13 @@
 
 #include <ctime>
 #include <map>
+#include <set>
 #include <string>
 #include "mysql.h"
 #include "recurring-job.h"
 #include "terrain.h"
 
+class Avatar;
 class Room;
 class Object;
 class Mob;
@@ -23,6 +25,7 @@ class Area {
     std::map<unsigned long,Object*>         _objects;
     std::map<unsigned long,Mob*>            _mobs;
     Terrain*                                _terrain;
+    std::set<std::string>                   _builders;
 
     void                                    create(void);
 
@@ -48,6 +51,8 @@ class Area {
     const std::map<unsigned long,Mob*>&     mobs(void) const                { return _mobs; }
     void                                    terrain(Terrain* terrain)       { _terrain = terrain; }
     Terrain*                                terrain(void)                   { return _terrain; }
+    std::set<std::string>&                  builders(void)                  { return _builders; }
+    const std::set<std::string>&            builders(void) const            { return _builders; }
 
     // General methods...
     bool            load(ROW& row);
@@ -63,6 +68,12 @@ class Area {
     bool            reset(RecurringJob* job)                 { reset(); return true; }
     unsigned        howManyMobs(unsigned long vnum);
     void            setTerrain(const char* terrain_name);
+    std::string     serializeBuilders(void) const;
+    void            unserializeBuilders(const std::string& serialization);
+
+    bool            hasPermission(Avatar* avatar) const;
+    void            grantPermission(Avatar* avatar);
+    void            revokePermission(Avatar* avatar);
 
 };
 

@@ -31,6 +31,7 @@ void Storage::dump(FILE* fp, Area* area) {
   out(fp, "high",         area->high());
   out(fp, "name",         area->name());
   out(fp, "terrain",      area->terrain()->name());
+  out(fp, "builders",     area->serializeBuilders());
   END("AREA")
   return;
 }
@@ -43,6 +44,7 @@ bool Storage::load(FILE* fp, Area* loading) {
     STORE_CASE("high",      &Area::high)
     STORE_CASE("name",      &Area::name)
     STORE_CASE("terrain",   &Area::setTerrain)
+    STORE_CASE_STRING("builders", loading->unserializeBuilders(str);)
   });
   return load_status == LOAD_DONE;
 }

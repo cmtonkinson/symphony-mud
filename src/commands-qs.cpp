@@ -80,7 +80,7 @@ bool CmdRedit::execute(Creature* creature, const std::vector<std::string>& args)
     }
   } else if (args[0].empty()) {
     // Check permissions...
-    if (!World::Instance().hasPermission(avatar()->room()->area(), avatar())) {
+    if (!avatar()->room()->area()->hasPermission(avatar())) {
       avatar()->send("You don't have permissions to this room.");
       return false;
     }

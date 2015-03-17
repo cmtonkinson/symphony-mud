@@ -43,7 +43,7 @@ bool RCmdCreate::execute(Creature* creature, const std::vector<std::string>& arg
   }
 
   // Do they have permission to the vnum?
-  if (!World::Instance().hasPermission(area, (Avatar*)creature)) {
+  if (!area->hasPermission((Avatar*)creature)) {
     avatar()->send("You can't access that vnum.");
     return false;
   }
@@ -316,7 +316,7 @@ bool RCmdLink::execute(Creature* creature, const std::vector<std::string>& args)
   from = avatar()->room();
 
   // Check permissions...
-  if (!World::Instance().hasPermission(to->area(), (Avatar*)creature)) {
+  if (!to->area()->hasPermission((Avatar*)creature)) {
     avatar()->send("You don't have access to that room.");
     return false;
   }

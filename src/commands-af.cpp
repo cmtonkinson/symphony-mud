@@ -82,14 +82,14 @@ bool CmdAedit::execute(Creature* creature, const std::vector<std::string>& args)
       return false;
     }
     // Check permissions...
-    if ((area->ID() == 1 && avatar()->level() < Creature::CREATOR) || !World::Instance().hasPermission(area, avatar())) {
+    if ((area->ID() == 1 && avatar()->level() < Creature::CREATOR) || !area->hasPermission(avatar())) {
       avatar()->send("You can't edit %s.", area->name().c_str());
       return false;
     }
     // Make sure no one else is editing the area...
-    for (std::map<std::string,Avatar*>::iterator it = World::Instance().getAvatars().begin(); it != World::Instance().getAvatars().end(); ++it) {
-      if (it->second->mode().number() == MODE_AEDIT && it->second->aedit() == area) {
-        avatar()->send("Sorry, %s is currently editing %s (area %lu).", avatar()->seeName(((Creature*)it->second)).c_str(), area->name().c_str(), area->ID());
+    for (auto iter : World::Instance().getAvatars()) {
+      if (iter.second->mode().number() == MODE_AEDIT && iter.second->aedit() == area) {
+        avatar()->send("Sorry, %s is currently editing %s (area %lu).", avatar()->seeName(((Creature*)iter.second)).c_str(), area->name().c_str(), area->ID());
         return false;
       }
     }
@@ -138,15 +138,15 @@ bool CmdAreas::execute(Creature* creature, const std::vector<std::string>& args)
   std::string output("Areas:");
   char buffer[Socket::MAX_BUFFER];
 
-  for (std::set<Area*,area_comp>::iterator it = World::Instance().getAreas().begin(); it != World::Instance().getAreas().end(); ++it) {
+  for (auto iter : World::Instance().getAreas()) {
     if (avatar()->level() >= Creature::DEMIGOD) {
-      if (World::Instance().hasPermission(*it, avatar())) {
-        sprintf(buffer, "\n ({Y%3lu{x) [ {C%4lu{x - {C%4lu{x ] {M%s{x", (*it)->ID(), (*it)->low(), (*it)->high(), (*it)->name().c_str());
+      if (iter->hasPermission(avatar())) {
+        sprintf(buffer, "\n ({Y%3lu{x) [ {C%4lu{x - {C%4lu{x ] {M%s{x", iter->ID(), iter->low(), iter->high(), iter->name().c_str());
       } else {
-        sprintf(buffer, "\n ({y%3lu{x) [ {c%4lu{x - {c%4lu{x ] {m%s{x", (*it)->ID(), (*it)->low(), (*it)->high(), (*it)->name().c_str());
+        sprintf(buffer, "\n ({y%3lu{x) [ {c%4lu{x - {c%4lu{x ] {m%s{x", iter->ID(), iter->low(), iter->high(), iter->name().c_str());
       }
     } else {
-      sprintf(buffer, "\n %s", (*it)->name().c_str());
+      sprintf(buffer, "\n %s", iter->name().c_str());
     }
     output.append(buffer);
   }

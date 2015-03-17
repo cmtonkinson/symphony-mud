@@ -49,29 +49,18 @@ ACmdInformation::ACmdInformation(void) {
 bool ACmdInformation::execute(Creature* creature, const std::vector<std::string>& args) {
   Area* area = avatar()->aedit();
   std::string output;
+  std::string names;
   char buffer[Socket::MAX_BUFFER];
-  char names[Socket::MAX_BUFFER];
-  std::map<unsigned long,std::string> perms;
 
-  for (std::set<std::pair<unsigned long,unsigned long> >::iterator it = World::Instance().permissions().begin(); it != World::Instance().permissions().end(); ++it) {
-    if (it->first == area->ID()) {
-      perms[it->second];
-    }
-  }
-
-  strcpy(names, "{y");
-  if (perms.empty()) {
-    strcat(names, "none");
+  if (area->builders().empty()) {
+    names << "{ynone{x";
   } else {
-    for (std::map<unsigned long,std::string>::const_iterator it = perms.begin(); it != perms.end(); ++it) {
-      strcat(names, "{y");
-      strcat(names, World::Instance().getAvatarNameByID(it->first).c_str());
-      strcat(names, "{x, ");
+    for (auto iter : area->builders()) {
+      names << "{y" << iter << "{x, ";
     }
   }
-  strcat(names, "{x");
 
-  sprintf(buffer, "AreaID: {y%lu{x\nFirst vnum: {y%lu{x\nLast vnum: {y%lu{x\nDefault terrain: {y%s{x\nPermission: %s", area->ID(), area->low(), area->high(), area->terrain()->name().c_str(), names);
+  sprintf(buffer, "AreaID: {y%lu{x\nFirst vnum: {y%lu{x\nLast vnum: {y%lu{x\nDefault terrain: {y%s{x\nPermission: %s", area->ID(), area->low(), area->high(), area->terrain()->name().c_str(), names.c_str());
   output.append(buffer);
 
   avatar()->send(output);
@@ -119,27 +108,27 @@ bool ACmdPermission::execute(Creature* creature, const std::vector<std::string>&
       return false;
     }
     if (target->level() < Creature::DEMIGOD) {
-      avatar()->send("%s isn't a builder.", target->identifiers().shortname().c_str());
+      avatar()->send("%s isn't a builder.", target->name());
       return false;
     }
-    if (World::Instance().hasPermission(avatar()->aedit(), target)) {
-      avatar()->send("%s already has permission to %s.", target->identifiers().shortname().c_str(), avatar()->aedit()->name().c_str());
+    if (avatar()->aedit()->hasPermission(target)) {
+      avatar()->send("%s already has permission to %s.", target->name(), avatar()->aedit()->name().c_str());
       return false;
     }
-    World::Instance().givePermission(avatar()->aedit(), target);
-    avatar()->send("You've {Ggranted{x %s access to %s.", target->identifiers().shortname().c_str(), avatar()->aedit()->name().c_str());
+    avatar()->aedit()->grantPermission(target);
+    avatar()->send("You've {Ggranted{x %s access to %s.", target->name(), avatar()->aedit()->name().c_str());
     target->send("%s has {Ggranted{x you access to %s.", target->seeName(creature, true).c_str(), avatar()->aedit()->name().c_str());
   } else if (args[0] == "revoke") {
     if ((target = World::Instance().findAvatar(args[1])) == NULL) {
       avatar()->send("They couldn't be found.");
       return false;
     }
-    if (!World::Instance().hasPermission(avatar()->aedit(), target)) {
-      avatar()->send("%s doesn't have permission to %s.", target->identifiers().shortname().c_str(), avatar()->aedit()->name().c_str());
+    if (!avatar()->aedit()->hasPermission(target)) {
+      avatar()->send("%s doesn't have permission to %s.", target->name(), avatar()->aedit()->name().c_str());
       return false;
     }
-    World::Instance().removePermission(avatar()->aedit(), target);
-    avatar()->send("You've {rrevoked{x %s's access to %s.", target->identifiers().shortname().c_str(), avatar()->aedit()->name().c_str());
+    avatar()->aedit()->revokePermission(target);
+    avatar()->send("You've {rrevoked{x %s's access to %s.", target->name(), avatar()->aedit()->name().c_str());
     target->send("%s has {rrevoked{x your access to %s.", target->seeName(creature, true).c_str(), avatar()->aedit()->name().c_str());
   } else {
     avatar()->send(printSyntax());

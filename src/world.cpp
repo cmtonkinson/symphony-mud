@@ -171,7 +171,7 @@ bool World::load(void) {
     status = false;
   }
 
-  loadPermissions();
+  loadDisabledCommands();
 
   if (!loadSocials()) {
     status = false;
@@ -586,104 +586,21 @@ Area* World::lookup(const unsigned long& vnum) {
   return NULL;
 }
 
-/************************************************************ AREA PERMISSIONS ************************************************************/
-bool World::hasPermission(Area* area, Avatar* avatar) {
-  // Only the Administrator can fiddle with Limbo...
-  if (area->ID() == 1 && avatar->level() < Creature::CREATOR) {
-    return false;
-  }
-  // The Administrator and the Head Builder can edit anything else...
-  if (avatar->adminFlags().test(ADMIN_HEADBUILDER) || avatar->level() >= Creature::CREATOR) {
-    return true;
-  }
-  // The average Joe needs explicit permission for a given area...
-  if (permissions().find(std::make_pair(area->ID(), avatar->ID())) != permissions().end()) {
-    return true;
-  }
-  return false;
-}
+void World::loadDisabledCommands(void) {
+  char table_name    = 0;
+  char* command_name = nullptr;
+  struct dirent* ent = nullptr;
+  DIR* dir           = nullptr;
 
-void World::givePermission(Area* area, Avatar* avatar) {
-  permissions().insert(std::make_pair(area->ID(), avatar->ID()));
-  try {
-    char query[Socket::MAX_BUFFER];
-    sprintf(query, "INSERT IGNORE INTO permissions (areaID, avatarID) VALUES (%lu, %lu);", area->ID(), avatar->ID());
-    getMysql()->insert(query);
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to create area permission: %s\n", me.getMessage().c_str());
-  }
-  return;
-}
-
-void World::removePermission(Area* area, Avatar* avatar) {
-  permissions().erase(std::make_pair(area->ID(), avatar->ID()));
-  try {
-    char query[Socket::MAX_BUFFER];
-    sprintf(query, "DELETE FROM permissions WHERE areaID = %lu AND avatarID = %lu;", area->ID(), avatar->ID());
-    getMysql()->remove(query);
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to create area permission: %s\n", me.getMessage().c_str());
-  }
-  return;
-}
-
-std::vector<Avatar*> World::getPermissions(Area* area) {
-  std::vector<Avatar*> avatars;
-  Avatar* avatar = NULL;
-
-  for (std::set<std::pair<unsigned long,unsigned long> >::iterator it = permissions().begin(); it != permissions().end(); ++it) {
-    if (it->first == area->ID()) {
-      if ((avatar = findAvatar(it->second)) != NULL) {
-        avatars.push_back(avatar);
-      }
+  if ((dir = opendir("data/disabled_commands"))) {
+    while ((ent = readdir(dir))) {
+      table_name   = ent->d_name[0];
+      command_name = ent->d_name + 2;
+      toggleCommand(table_name, command_name, false);
     }
-  }
-
-  return avatars;
-}
-
-std::vector<Area*> World::getPermissions(Avatar* avatar) {
-  std::vector<Area*> areas;
-  Area* area = NULL;
-
-  for (std::set<std::pair<unsigned long,unsigned long> >::iterator it = permissions().begin(); it != permissions().end(); ++it) {
-    if (it->second == avatar->ID()) {
-      if ((area = findArea(it->first)) != NULL) {
-        areas.push_back(area);
-      }
-    }
-  }
-
-  return areas;
-}
-
-void World::loadPermissions(void) {
-  try {
-    Mysql* mysql = getMysql();
-    ROW row;
-    // Load Area permissions...
-    if (mysql->select("SELECT areaID, avatarID FROM permissions;")) {
-      while ((row = mysql->fetch())) {
-        permissions().insert(std::make_pair(row["areaID"], row["avatarID"]));
-      }
-    }
-    // Load disabled commands...
-    DIR* dir           = nullptr;
-    struct dirent* ent = nullptr;
-    char table_name    = 0;
-    char* command_name = nullptr;
-    if ((dir = opendir("data/disabled_commands"))) {
-      while ((ent = readdir(dir))) {
-        table_name   = ent->d_name[0];
-        command_name = ent->d_name + 2;
-        toggleCommand(table_name, command_name, false);
-      }
-      closedir(dir);
-    } else {
-      fprintf(stderr, "Failed to read data/disabled_commands/.");
-    }
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to load area permissions: %s\n", me.getMessage().c_str());
+    closedir(dir);
+  } else {
+    fprintf(stderr, "Failed to read data/disabled_commands/.");
   }
   return;
 }

@@ -561,16 +561,16 @@ void Avatar::room(Room* room) {
   Creature::room(room);
 
   if (mode().number() == MODE_REDIT) {
-    if (!World::Instance().hasPermission(this->room()->area(), this)) {
+    if (!this->room()->area()->hasPermission(this)) {
       while (mode().number() != MODE_NONE) {
         exit.execute(this, exit_args);
       }
       return;
     }
     // Make sure no one else is editing the room...
-    for (std::map<std::string,Avatar*>::iterator it = World::Instance().getAvatars().begin(); it != World::Instance().getAvatars().end(); ++it) {
-      if (it->second->isConnected() && it->second != this && it->second->mode().number() == MODE_REDIT && it->second->room() == room) {
-        send("Sorry, %s is already editing this room.", seeName(it->second).c_str());
+    for (auto iter : World::Instance().getAvatars()) {
+      if (iter.second->isConnected() && iter.second != this && iter.second->mode().number() == MODE_REDIT && iter.second->room() == room) {
+        send("Sorry, %s is already editing this room.", seeName(iter.second).c_str());
         while (mode().number() != MODE_NONE) {
           exit.execute(this, exit_args);
         }

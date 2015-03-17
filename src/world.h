@@ -70,8 +70,6 @@ class World {
     const std::map<std::string,Avatar*>&                      getAvatars(void) const          { return _avatars; }
     std::set<Area*,area_comp>&                                getAreas(void)                  { return _areas; }
     const std::set<Area*,area_comp>&                          getAreas(void) const            { return _areas; }
-    std::set<std::pair<unsigned long,unsigned long> >&        permissions(void)               { return _permissions; }
-    const std::set<std::pair<unsigned long,unsigned long> >&  permissions(void) const         { return _permissions; }
     std::set<Object*>&                                        getObjects(void)                { return _objects; }
     const std::set<Object*>&                                  getObjects(void) const          { return _objects; }
     std::set<Creature*>&                                      getCreatures(void)              { return _creatures; }
@@ -131,13 +129,7 @@ class World {
     Area*                 findArea(const unsigned long& ID);
     Area*                 lookup(const unsigned long& vnum);
 
-    // Area Permissions
-    bool                  hasPermission(Area* area, Avatar* avatar);
-    void                  givePermission(Area* area, Avatar* avatar);
-    void                  removePermission(Area* area, Avatar* avatar);
-    std::vector<Avatar*>  getPermissions(Area* area);
-    std::vector<Area*>    getPermissions(Avatar* avatar);
-    void                  loadPermissions(void);
+    void                  loadDisabledCommands(void);
 
     // Rooms
     Room*                 findRoom(const unsigned long& vnum);
@@ -173,7 +165,6 @@ class World {
     Socket                                                  _server;
     std::map<std::string,Avatar*>                           _avatars;
     std::set<Area*,area_comp>                               _areas;
-    std::set<std::pair<unsigned long,unsigned long> >       _permissions;
     std::set<Object*>                                       _objects;
     std::set<Creature*>                                     _creatures;
     std::map<unsigned,Board*>                               _boards;

@@ -522,7 +522,7 @@ bool CmdLoadRule::execute(Creature* creature, const std::vector<std::string>& ar
   pieces.insert(pieces.begin(), args.begin(), args.end());
 
   // Check permissions...
-  if (!World::Instance().hasPermission(room->area(), avatar())) {
+  if (!room->area()->hasPermission(avatar())) {
     avatar()->send("You don't have permissions to the LoadRules in this room.");
     return false;
   }
@@ -948,7 +948,7 @@ bool CmdMedit::execute(Creature* creature, const std::vector<std::string>& args)
       return false;
     }
     // Check permissions...
-    if (!World::Instance().hasPermission(area, avatar())) {
+    if (!area->hasPermission(avatar())) {
       avatar()->send("You don't have permissions to that object.");
       return false;
     }
@@ -981,7 +981,7 @@ bool CmdMedit::execute(Creature* creature, const std::vector<std::string>& args)
       return false;
     }
     // Check permissions...
-    if (!World::Instance().hasPermission(area, avatar())) {
+    if (!area->hasPermission(avatar())) {
       avatar()->send("You don't have permissions to that mob.");
       return false;
     }

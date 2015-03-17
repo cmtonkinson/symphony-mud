@@ -55,7 +55,7 @@
 [X]   equipment
 [X]   abilities
 [ ]   pets
-[ ] area permissions
+[X] area permissions
 [X] disabled_commands
 [X] socials
 [X] boards

@@ -291,3 +291,39 @@ void Area::setTerrain(const char* terrain_name) {
   }
   return;
 }
+
+std::string Area::serializeBuilders(void) const {
+  return Regex::implode("|", builders());
+}
+
+void Area::unserializeBuilders(const std::string& serialization) {
+  std::vector<std::string> names = Regex::explode("|", serialization);
+  for (auto iter : names) builders().insert(iter);
+  return;
+}
+
+bool Area::hasPermission(Avatar* avatar) const {
+  // Only the Administrator can fiddle with Limbo...
+  if (ID() == 1 && avatar->level() < Creature::CREATOR) {
+    return false;
+  }
+  // The Administrator and the Head Builder can edit anything else...
+  if (avatar->adminFlags().test(ADMIN_HEADBUILDER) || avatar->level() >= Creature::CREATOR) {
+    return true;
+  }
+  // The average Joe needs explicit permission for a given area...
+  if (builders().find(avatar->name()) != builders().end()) {
+    return true;
+  }
+  return false;
+}
+
+void Area::grantPermission(Avatar* avatar) {
+  builders().insert(avatar->name());
+  return;
+}
+
+void Area::revokePermission(Avatar* avatar) {
+  builders().erase(avatar->name());
+  return;
+}
