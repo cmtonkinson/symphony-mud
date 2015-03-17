@@ -25,6 +25,8 @@ class LoadRuleObject;
 class Mob;
 class Room;
 class SocialCommand;
+class Board;
+class Note;
 
 typedef std::function<void()> voidFunc;
 
@@ -135,6 +137,12 @@ class Storage {
 
     static void dump(FILE* fp, SocialCommand* social);
     static bool load(FILE* fp, SocialCommand* loading);
+
+    static void dump(FILE* fp, Board* board);
+    static bool load(FILE* fp, Board* loading);
+
+    static void dump(FILE* fp, Note* note);
+    static bool load(FILE* fp, Note* loading);
 
     // dump() and load() can be overloaded ad nauseum, as long as no method signatures contains a
     // type which is a subclass of another (e.g. Creature and Mob or Avatar). In that case, the

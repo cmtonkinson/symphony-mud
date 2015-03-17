@@ -58,8 +58,8 @@
 [ ] area permissions
 [ ] disabled_commands
 [X] socials
-[ ] boards
-[ ]   notes
+[X] boards
+[X]   notes
 
 ---
 

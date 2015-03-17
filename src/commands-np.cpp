@@ -20,7 +20,7 @@ CmdNote::CmdNote(void) {
 
 bool CmdNote::execute(Creature* creature, const std::vector<std::string>& args) {
   std::map<unsigned,Board*>::iterator b_it;
-  std::map<unsigned long,Note*>::iterator n_it;
+  std::map<unsigned,Note*>::iterator n_it;
   Board* board = NULL;
   Note* note = NULL;
 
@@ -33,7 +33,7 @@ bool CmdNote::execute(Creature* creature, const std::vector<std::string>& args) 
 
   if (args.size() == 1) {
     if (Regex::strPrefix(args[0], "write")) {
-      avatar()->note(new Note(board->number(), avatar()->ID()));
+      avatar()->note(new Note(board->number(), avatar()->name()));
       avatar()->pushIOHandler(new NoteGetSubjectIOHandler(avatar()));
       return true;
     }
@@ -46,8 +46,7 @@ bool CmdNote::execute(Creature* creature, const std::vector<std::string>& args) 
         return false;
       } else {
         note = n_it->second;
-        avatar()->send("Note: {c%lu{x\n", note->ID());
-        avatar()->send("Author: {y%s{x\n", World::Instance().getAvatarNameByID(note->author()).c_str());
+        avatar()->send("Author: {y%s{x\n", note->author().c_str());
         avatar()->send("Subject: {Y%s{x\n", note->subject().c_str());
         avatar()->send("-------------------------------------------------------------------------------\n");
         avatar()->send(note->body());

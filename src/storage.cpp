@@ -2,6 +2,7 @@
 #include <cstring>
 #include "area.h"
 #include "avatar.h"
+#include "board.h"
 #include "command.h"
 #include "enumTable.h"
 #include "exit.h"
@@ -9,6 +10,7 @@
 #include "loadRuleMob.h"
 #include "loadRuleObject.h"
 #include "mob.h"
+#include "note.h"
 #include "object-container.h"
 #include "object-furniture.h"
 #include "object-weapon.h"
@@ -113,7 +115,7 @@ bool Storage::load(FILE* fp, Exit* loading) {
 }
 
 /***************************************************************************************************
- * LOAD RULES
+ * LOAD RULE
  **************************************************************************************************/
 void Storage::dump(FILE* fp, LoadRule* rule) {
   char buffer[32];
@@ -239,7 +241,7 @@ bool Storage::load(FILE* fp, Object* loading) {
 }
 
 /***************************************************************************************************
- * Mob
+ * MOB
  **************************************************************************************************/
 void Storage::dump(FILE* fp, Mob* mob) {
   BEGIN("MOB")
@@ -264,7 +266,7 @@ bool Storage::load(FILE* fp, Mob* loading) {
 }
 
 /***************************************************************************************************
- * Avatar
+ * AVATAR
  **************************************************************************************************/
 void Storage::dump(FILE* fp, Avatar* avatar) {
   BEGIN("AVATAR")
@@ -305,7 +307,7 @@ bool Storage::load(FILE* fp, Avatar* loading) {
 }
 
 /***************************************************************************************************
- * Creature
+ * CREATURE
  **************************************************************************************************/
 void Storage::dump_base(FILE* fp, Creature* creature) {
   BEGIN("CREATURE")
@@ -477,6 +479,57 @@ bool Storage::load(FILE* fp, SocialCommand* loading) {
     STORE_CASE_STRING("victimVictim", loading->victimVictim(str);)
     STORE_CASE_STRING("victimRoom",   loading->victimRoom(str);)
     STORE_CASE_WITH_CODE("flags", unsigned long, "%lu", loading->flags().set(val);)
+  });
+  return load_status == LOAD_DONE;
+}
+
+/***************************************************************************************************
+ * BOARD
+ **************************************************************************************************/
+void Storage::dump(FILE* fp, Board* board) {
+  BEGIN("BOARD")
+  out(fp, "number", board->number());
+  for (auto iter : board->notes()) dump(fp, iter.second);
+  END("BOARD")
+  return;
+}
+
+bool Storage::load(FILE* fp, Board* loading) {
+  char input[32];
+  unsigned load_status = 0;
+  load_status = load_inner(fp, loading, input, "BOARD", [&fp, &loading, &input]() {
+    STORE_CASE("number", &Board::number)
+    STORE_DESCEND_NEW("NOTE", Note,
+      instance->board(loading->number());
+      loading->notes().insert(std::make_pair(instance->ID(), instance));
+    )
+  });
+  return load_status == LOAD_DONE;
+}
+
+/***************************************************************************************************
+ * NOTE
+ **************************************************************************************************/
+void Storage::dump(FILE* fp, Note* note) {
+  BEGIN("NOTE")
+  out(fp, "ID",      note->ID());
+  out(fp, "board",   note->board());
+  out(fp, "author",  note->author());
+  out(fp, "subject", note->subject());
+  out(fp, "body",    note->body());
+  END("NOTE")
+  return;
+}
+
+bool Storage::load(FILE* fp, Note* loading) {
+  char input[32];
+  unsigned load_status = 0;
+  load_status = load_inner(fp, loading, input, "NOTE", [&fp, &loading, &input]() {
+    STORE_CASE("ID",    &Note::ID)
+    STORE_CASE("board", &Note::board)
+    STORE_CASE_STRING("author",   loading->author(str);)
+    STORE_CASE_STRING("subject",  loading->subject(str);)
+    STORE_CASE_STRING("body",     loading->body(str);)
   });
   return load_status == LOAD_DONE;
 }

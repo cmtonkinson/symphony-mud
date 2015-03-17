@@ -312,7 +312,7 @@ CmdBoards::CmdBoards(void) {
 
 bool CmdBoards::execute(Creature* creature, const std::vector<std::string>& args) {
   std::map<unsigned,Board*>::iterator b_it;
-  std::map<unsigned long,Note*>::iterator n_it;
+  std::map<unsigned,Note*>::iterator n_it;
   unsigned board = 0;
 
   if (args[0] == "") {
@@ -346,7 +346,7 @@ bool CmdBoards::execute(Creature* creature, const std::vector<std::string>& args
       avatar()->send(" | {cNote{x | {yAuthor{x       | {YSubject{x                                            |\n");
       avatar()->send(" +------+--------------+----------------------------------------------------+\n");
       for (n_it = b_it->second->notes().begin(); n_it != b_it->second->notes().end(); ++n_it) {
-        avatar()->send(" | {c%4lu{x | {y%-12s{x | {Y%-50s{x |\n", n_it->second->ID(), World::Instance().getAvatarNameByID(n_it->second->author()).c_str(), n_it->second->subject().c_str());
+        avatar()->send(" | {c%4u{x | {y%-12s{x | {Y%-50s{x |\n", n_it->second->author().c_str(), n_it->second->subject().c_str());
       }
       avatar()->send(" +------+--------------+----------------------------------------------------+\n");
     }

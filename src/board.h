@@ -18,24 +18,24 @@ class Board {
     static const unsigned BUILDING = 6;
 
     // constructors
-    Board(const unsigned short& number);
+    Board(void);
+    Board(unsigned number);
     ~Board(void);
 
     // public accessors...
-    void                                  number(const unsigned short& number)    { _number = number; }
-    unsigned short                        number(void) const                      { return _number; }
-    std::map<unsigned long,Note*>&        notes(void)                             { return _notes; }
-    const std::map<unsigned long,Note*>&  notes(void) const                       { return _notes; }
+    void                            number(unsigned number) { _number = number; }
+    unsigned                        number(void) const      { return _number; }
+    std::map<unsigned,Note*>&       notes(void)             { return _notes; }
+    const std::map<unsigned,Note*>& notes(void) const       { return _notes; }
 
     // general methods...
-    const char*                           name(void) const;
-    bool                                  load(void);
-    void                                  save(void);
+    const char*   name(void) const;
+    void          save(void);
 
   private:
     // data...
-    unsigned short                        _number;
-    std::map<unsigned long,Note*>         _notes;
+    unsigned                  _number;
+    std::map<unsigned,Note*>  _notes;
 };
 
 #endif // #ifndef H_SYMPHONY_AREA
