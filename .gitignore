@@ -7,6 +7,8 @@ mysql.conf
 # App-specific
 /obj/*
 !/obj/.keep
+/tmp/*
+!/tmp/.keep
 src/proto/*
 symphony
 
