@@ -56,7 +56,7 @@
 [X]   abilities
 [ ]   pets
 [ ] area permissions
-[ ] disabled_commands
+[X] disabled_commands
 [X] socials
 [X] boards
 [X]   notes

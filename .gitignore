@@ -9,8 +9,9 @@ mysql.conf
 !/obj/.keep
 /tmp/*
 !/tmp/.keep
-/data/*
-!/data/.keep
+
+/data/disabled_commands/*
+!/data/disabled_commands/.keep
 
 src/proto/*
 symphony

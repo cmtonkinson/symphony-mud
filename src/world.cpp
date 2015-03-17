@@ -1,5 +1,6 @@
 
 #include <cstdarg>
+#include <dirent.h>
 #include "commandTable.h"
 #include "commandTable-default.h"
 #include "world.h"
@@ -207,44 +208,39 @@ bool World::save(void) {
 }
 
 bool World::toggleCommand(char table_prefix, std::string command_name, bool enabled) {
-  try {
-    Mysql* mysql = getMysql();
-    char query[Socket::MAX_BUFFER];
-    CommandTable* table = NULL;
-    Command* command = NULL;
+  CommandTable* table  = NULL;
+  Command* command     = NULL;
+  std::string filepath = "data/disabled_commands/";
 
-    switch (table_prefix) {
-      case 'x': table = &(Commands::Instance());      break;
-      case 'A': table = &(AeditCommands::Instance()); break;
-      case 'M': table = &(MeditCommands::Instance()); break;
-      case 'O': table = &(OeditCommands::Instance()); break;
-      case 'P': table = &(PeditCommands::Instance()); break;
-      case 'R': table = &(ReditCommands::Instance()); break;
-      case 'T': table = &(TeditCommands::Instance()); break;
-      default:  table = NULL;                         break;
-    }
-
-    if (table) {
-      if ((command = table->find(command_name)) != NULL) {
-        if (command->level() >= Creature::CREATOR) {
-          return false;
-        }
-        command->enabled(enabled);
-        if (enabled) {
-          sprintf(query, "DELETE FROM disabled_commands WHERE `table` = '%c' AND `name` = '%s';", table_prefix, Mysql::addslashes(command->name()).c_str());
-          mysql->remove(query);
-        } else {
-          sprintf(query, "INSERT IGNORE INTO disabled_commands (`table`, `name`) VALUES ('%c', '%s');", table_prefix, Mysql::addslashes(command->name()).c_str());
-          mysql->insert(query);
-        }
-        return true;
-      }
-    }
-
-    return false;
-  } catch (MysqlException me) {
-    return false;
+  switch (table_prefix) {
+    case 'x': table = &(Commands::Instance());      break;
+    case 'A': table = &(AeditCommands::Instance()); break;
+    case 'M': table = &(MeditCommands::Instance()); break;
+    case 'O': table = &(OeditCommands::Instance()); break;
+    case 'P': table = &(PeditCommands::Instance()); break;
+    case 'R': table = &(ReditCommands::Instance()); break;
+    case 'T': table = &(TeditCommands::Instance()); break;
+    default:  table = NULL;                         break;
   }
+
+  if (table) {
+    if ((command = table->find(command_name)) != NULL) {
+      if (command->level() >= Creature::CREATOR) return false;
+
+      filepath << table_prefix << "_" << command->name();
+      command->enabled(enabled);
+      if (command->enabled()) {
+        // remove the file
+        unlink(filepath.c_str());
+      } else {
+        // touch the file
+        fclose(fopen(filepath.c_str(), "w"));
+      }
+      return true;
+    }
+  }
+
+  return false;
 
 }
 
@@ -672,10 +668,19 @@ void World::loadPermissions(void) {
       }
     }
     // Load disabled commands...
-    if (mysql->select("SELECT `table`, `name` FROM disabled_commands;")) {
-      while ((row = mysql->fetch())) {
-        toggleCommand((char)row["table"], row["name"], false);
+    DIR* dir           = nullptr;
+    struct dirent* ent = nullptr;
+    char table_name    = 0;
+    char* command_name = nullptr;
+    if ((dir = opendir("data/disabled_commands"))) {
+      while ((ent = readdir(dir))) {
+        table_name   = ent->d_name[0];
+        command_name = ent->d_name + 2;
+        toggleCommand(table_name, command_name, false);
       }
+      closedir(dir);
+    } else {
+      fprintf(stderr, "Failed to read data/disabled_commands/.");
     }
   } catch (MysqlException me) {
     fprintf(stderr, "Failed to load area permissions: %s\n", me.getMessage().c_str());
