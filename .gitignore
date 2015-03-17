@@ -9,6 +9,9 @@ mysql.conf
 !/obj/.keep
 /tmp/*
 !/tmp/.keep
+/data/*
+!/data/.keep
+
 src/proto/*
 symphony
 
