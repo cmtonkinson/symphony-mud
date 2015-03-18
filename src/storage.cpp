@@ -1,5 +1,6 @@
 
 #include <cstring>
+#include <glob.h>
 #include "area.h"
 #include "avatar.h"
 #include "board.h"
@@ -547,11 +548,38 @@ bool Storage::load(FILE* fp, Note* loading) {
 }
 
 std::string Storage::filename(Area* area) {
-  return std::string("data/areas/") + Regex::slugify(area->name()) + ".area.txt";
+  return std::string("data/areas/") + (area ? Regex::slugify(area->name()) : "*") + ".area.txt";
 }
 
 std::string Storage::filename(SocialCommand* social) {
-  return std::string("data/socials/") + Regex::slugify(social->name()) + ".social.txt";
+  return std::string("data/socials/") + (social ? Regex::slugify(social->name()) : "*") + ".social.txt";
+}
+
+std::vector<std::string> Storage::glob(std::string pattern) {
+  std::vector<std::string> paths;
+  glob_t globbuf;
+  int return_status = 0;
+
+  return_status = ::glob(pattern.c_str(), GLOB_NOSORT, NULL, &globbuf);
+
+  switch (return_status) {
+    case 0: // success
+      for (size_t x = 0; x < globbuf.gl_pathc; ++x) paths.push_back(globbuf.gl_pathv[x]);
+      break;
+    case GLOB_NOSPACE:
+      fprintf(stderr, "glob() on \"%s\" - out of memory\n", pattern.c_str());
+      break;
+    case GLOB_NOMATCH:
+      fprintf(stderr, "glob() on \"%s\" - no matches\n", pattern.c_str());
+      break;
+    case GLOB_ABORTED:
+      fprintf(stderr, "glob() on \"%s\" - read error:", pattern.c_str());
+      perror(NULL);
+      break;
+  }
+
+  globfree(&globbuf);
+  return paths;
 }
 
 /***************************************************************************************************

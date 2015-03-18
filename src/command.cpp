@@ -142,7 +142,7 @@ void SocialCommand::save(void) {
     Storage::dump(fp, this);
     fclose(fp);
   } else {
-    fprintf(stderr, "Failed to write %s.\n", filename.c_str());
+    fprintf(stderr, "Failed to write social file %s.\n", filename.c_str());
   }
 
   return;
@@ -158,7 +158,7 @@ SocialCommand* SocialCommand::load(std::string filename) {
     social->initialize();
     fclose(fp);
   } else {
-    fprintf(stderr, "Failed to read %s.\n", filename.c_str());
+    fprintf(stderr, "Failed to read social file %s.\n", filename.c_str());
   }
 
   return social;

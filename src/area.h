@@ -66,9 +66,10 @@ class Area {
     void            setTerrain(const char* terrain_name);
 
     // Setup & teardown...
-    void    initialize(void);
-    void    save(void);
-    bool    destroy(void);
+    void          initialize(void);
+    void          save(void);
+    static Area*  load(std::string filename);
+    bool          destroy(void);
 
     // Builder permissions...
     bool        hasPermission(Avatar* avatar) const;

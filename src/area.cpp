@@ -30,6 +30,7 @@ void Area::name(const char* name) {
 }
 
 void Area::initialize(void) {
+  World::Instance().insert(this);
   World::Instance().schedule()->add(new RecurringJob(this, &Area::reset, 300, 600));
   return;
 }
@@ -42,10 +43,26 @@ void Area::save(void) {
     Storage::dump(fp, this);
     fclose(fp);
   } else {
-    fprintf(stderr, "Failed to open %s.\n", filename.c_str());
+    fprintf(stderr, "Failed to write area file %s.\n", filename.c_str());
   }
 
   return;
+}
+
+Area* Area::load(std::string filename) {
+  Area* area = nullptr;
+  FILE* fp   = nullptr;
+
+  if ((fp = fopen(filename.c_str(), "r")) != NULL) {
+    area = new Area();
+    Storage::load(fp, area);
+    area->initialize();
+    fclose(fp);
+  } else {
+    fprintf(stderr, "Failed to read area file %s.\n", filename.c_str());
+  }
+
+  return area;
 }
 
 bool Area::destroy(void) {

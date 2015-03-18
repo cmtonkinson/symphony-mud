@@ -241,22 +241,7 @@ bool World::toggleCommand(char table_prefix, std::string command_name, bool enab
 }
 
 bool World::loadSocials(void) {
-  struct dirent* ent    = nullptr;
-  DIR* dir              = nullptr;
-  std::string filename;
-
-  if ((dir = opendir("data/socials"))) {
-    while ((ent = readdir(dir))) {
-      if (!Regex::match("\\.social\\.txt$", ent->d_name)) continue;
-      filename = "data/socials/";
-      filename << ent->d_name;
-      SocialCommand::load(filename);
-    }
-    closedir(dir);
-  } else {
-    fprintf(stderr, "Failed to open data/socials/.\n");
-    return false;
-  }
+  for (auto iter : Storage::glob(Storage::filename((SocialCommand*)NULL))) SocialCommand::load(iter);
   return true;
 }
 
@@ -508,31 +493,7 @@ bool World::removeAvatar(const std::string& name) {
 
 /************************************************************ AREAS ************************************************************/
 void World::loadAreas(void) {
-  struct dirent* ent = nullptr;
-  DIR* dir           = nullptr;
-  FILE* fp           = nullptr;
-  Area* area         = nullptr;
-  std::string af;
-
-  if ((dir = opendir("data/areas"))) {
-    while ((ent = readdir(dir))) {
-      if (!Regex::match("\\.area\\.txt$", ent->d_name)) continue;
-      af = "data/areas/";
-      af << ent->d_name;
-      if ((fp = fopen(af.c_str(), "r")) != NULL) {
-        area = new Area();
-        Storage::load(fp, area);
-        insert(area);
-        area->initialize();
-        fclose(fp);
-      } else {
-        fprintf(stderr, "Failed to read %s.\n", af.c_str());
-      }
-    }
-    closedir(dir);
-  } else {
-    fprintf(stderr, "Failed to open data/areas.\n");
-  }
+  for (auto iter : Storage::glob(Storage::filename((Area*)NULL))) Area::load(iter);
   return;
 }
 
@@ -565,20 +526,8 @@ Area* World::lookup(const unsigned long& vnum) {
 }
 
 void World::loadDisabledCommands(void) {
-  char table_name    = 0;
-  char* command_name = nullptr;
-  struct dirent* ent = nullptr;
-  DIR* dir           = nullptr;
-
-  if ((dir = opendir("data/disabled_commands"))) {
-    while ((ent = readdir(dir))) {
-      table_name   = ent->d_name[0];
-      command_name = ent->d_name + 2;
-      toggleCommand(table_name, command_name, false);
-    }
-    closedir(dir);
-  } else {
-    fprintf(stderr, "Failed to read data/disabled_commands/.");
+  for (auto iter : Storage::glob("data/disabled_commands/*_*")) {
+    toggleCommand(iter[0], iter.substr(2), false);
   }
   return;
 }

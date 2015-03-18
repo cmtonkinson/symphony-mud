@@ -71,8 +71,8 @@ bool CmdAedit::execute(Creature* creature, const std::vector<std::string>& args)
       delete area;
       return false;
     }
+    area->initialize();
     avatar()->aedit(area);
-    World::Instance().insert(area);
     avatar()->pushIOHandler(new AeditIOHandler(avatar()));
     avatar()->send("You've created a new area (number %lu) with vnums %lu through %lu.", area->ID(), area->low(), area->high());
   } else if (args.size() == 1) {
