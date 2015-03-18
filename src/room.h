@@ -28,7 +28,6 @@ class Room {
 
     Room(void);
     Room(unsigned long vnum, Area* area);
-    Room(Area* area, ROW& row);
     ~Room(void);
 
     // Public accessor methods...
@@ -75,8 +74,7 @@ class Room {
                                         void* arg2 = NULL, unsigned long target = TO_ROOM);
     void                          send_cond(std::string format, Creature* creature = NULL, void* arg1 = NULL,
                                         void* arg2 = NULL, unsigned long target = TO_ROOM, bool audible = false);
-    void                          save(void);
-    bool                          destroy(void);
+    void                          destroy(void);
     bool                          clear(void);
     std::string                   listFlags(void);
     void                          reset(void);

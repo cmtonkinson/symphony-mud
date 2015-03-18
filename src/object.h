@@ -25,7 +25,6 @@ class Object {
     // constructors...
     Object(void);
     Object(const Object& ref);
-    Object(ROW row);
     ~Object(void);
 
     // constants...

@@ -82,12 +82,8 @@ bool RCmdDelete::execute(Creature* creature, const std::vector<std::string>& arg
     avatar()->send("Error establishing vnum-area association.");
     return false;
   }
-  if (!room->destroy()) {
-    avatar()->send("Failed to destroy room.");
-    return false;
-  }
 
-  // Success!
+  room->destroy();
   avatar()->send("\nRoom %lu deleted.\n", vnum);
   return true;
 }

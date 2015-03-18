@@ -67,12 +67,7 @@ Area* Area::load(std::string filename) {
 
 bool Area::destroy(void) {
   // Destroy rooms.
-  while (rooms().size()) {
-    if (!rooms().begin()->second->destroy()) {
-      World::worldLog(World::LOG_LEVEL_ERROR, World::LOG_TYPE_WORLD, "Room %lu failed to destroy itself with area %lu (%s).", rooms().begin()->second->vnum(), ID(), name().c_str());
-      return false;
-    }
-  }
+  while (rooms().size()) rooms().begin()->second->destroy();
   // Remove this from the World.
   World::Instance().remove(this);
   // Delete the area file.

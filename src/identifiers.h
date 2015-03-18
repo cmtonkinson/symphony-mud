@@ -5,7 +5,6 @@
 #include <set>
 #include <string>
 #include "color-string.h"
-#include "mysql.h"
 #include "regex.h"
 
 /*
@@ -17,7 +16,6 @@ class Identifiers {
   public:
     // Constructors...
     Identifiers(void);
-    Identifiers(ROW row);
     Identifiers(const Identifiers& ref);
     ~Identifiers(void);
 

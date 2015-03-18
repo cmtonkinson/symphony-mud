@@ -23,6 +23,11 @@ Exit::~Exit(void) {
   return;
 }
 
+void Exit::destroy(void) {
+  delete this;
+  return;
+}
+
 /*
  * Note: This method is not designed for efficiency. For optimal runtime computational efficiency
  * Rooms and Exits would be loaded in two passes, and Exits would simply retain pointers to their
@@ -51,51 +56,6 @@ void Exit::flag(const unsigned long& flag, const bool& value, bool stop) {
     if ((other = targetRoom()->exit(inverse(direction().number()))) != NULL) {
       other->flag(flag, value, true);
     }
-  }
-  return;
-}
-
-void Exit::save(void) {
-  try {
-    char query[Socket::MAX_BUFFER];
-
-    sprintf(query,
-      " UPDATE exits SET      \
-          flags = %lu,        \
-          `key` = %lu         \
-        WHERE exitID = %lu    \
-        LIMIT 1;",
-      flags().value(),
-      key(),
-      ID()
-   );
-    World::Instance().getMysql()->update(query);
-
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to save exit %lu: %s\n", ID(), me.getMessage().c_str());
-    return;
-  }
-  return;
-}
-
-void Exit::destroy(void) {
-  unsigned long tempID = ID();
-  try {
-    char query[Socket::MAX_BUFFER];
-
-    sprintf(query,
-      " DELETE              \
-        FROM exits          \
-        WHERE exitID = %lu  \
-        LIMIT 1;",
-      ID()
-   );
-    World::Instance().getMysql()->remove(query);
-    delete this;
-
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to delete exit %lu: %s\n", tempID, me.getMessage().c_str());
-    return;
   }
   return;
 }

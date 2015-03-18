@@ -36,25 +36,6 @@ Room::Room(unsigned long vnum, Area* area): _inventory(&Identifiers::longname) {
   return;
 }
 
-Room::Room(Area* area, ROW& row): _inventory(&Identifiers::longname) {
-  this->area(area);
-  ID(row["roomID"]);
-  vnum(row["vnum"]);
-  name(row["name"]);
-  description(row["description"]);
-  smell(row["smell"]);
-  sound(row["sound"]);
-  terrain(TerrainTable::Instance().find(row["terrain"]));
-  if (!terrain()) {
-    terrain(TerrainTable::Instance().find("city"));
-  }
-  flags().value(row["flags"]);
-  for (unsigned u = 0; u < 6; ++u) {
-    _exits[u] = nullptr;
-  }
-  return;
-}
-
 Room::~Room(void) {
   for (unsigned u = 0; u < 6; ++u) {
     if (_exits[u]) {
@@ -147,104 +128,35 @@ void Room::send_cond(std::string format, Creature* creature, void* arg1, void* a
   return;
 }
 
-void Room::save(void) {
-  try {
-    char query[Socket::MAX_BUFFER];
-
-    sprintf(query,
-      "UPDATE rooms SET     \
-        name = '%s',        \
-        description = '%s', \
-        smell = '%s',       \
-        sound = '%s',       \
-        terrain = '%s',     \
-        flags = %lu         \
-       WHERE roomID = %lu   \
-       LIMIT 1;",
-      Mysql::addslashes(name()).c_str(),
-      Mysql::addslashes(description()).c_str(),
-      Mysql::addslashes(smell()).c_str(),
-      Mysql::addslashes(sound()).c_str(),
-      Mysql::addslashes(terrain()->name()).c_str(),
-      flags().value(),
-      ID()
-   );
-    World::Instance().getMysql()->update(query);
-
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to save room %lu: %s\n", ID(), me.getMessage().c_str());
-    return;
-  }
-
-  // Save exits...
+void Room::destroy(void) {
+  // Remove this Room from the parent Area.
+  area()->rooms().erase(vnum());
+  // Destroy outbound Exits.
   for (unsigned u = 0; u < 6; ++u) {
     if (exit(u)) {
-      exit(u)->save();
+      exit(u)->destroy();
+      exit(u, NULL);
     }
   }
-
-  return;
-}
-
-bool Room::destroy(void) {
-  unsigned long tempID = ID();
-
-  // Get everything out of the room before we annihilate it...
-  if (!clear()) {
-    return false;
-  }
-
-  try {
-    char query[Socket::MAX_BUFFER];
-
-    // Get rid of this (from the DB)...
-    sprintf(query,
-      " DELETE              \
-        FROM rooms          \
-        WHERE roomID = %lu  \
-        LIMIT 1;",
-      ID()
-   );
-    World::Instance().getMysql()->remove(query);
-    // Get rid of this (from parent area)...
-    area()->rooms().erase(vnum());
-    // Get rid of outbound exits...
-    for (unsigned u = 0; u < 6; ++u) {
-      if (exit(u)) {
-        exit(u)->destroy();
-        exit(u, NULL);
-      }
-    }
-    // Get rid of inbound exits (this takes a bit more effort)...
-    for (std::set<Area*,area_comp>::iterator a = World::Instance().getAreas().begin(); a != World::Instance().getAreas().end(); ++a) {
-      for (std::map<unsigned long,Room*>::iterator r = (*a)->rooms().begin(); r != (*a)->rooms().end(); ++r) {
-        for (unsigned u = NORTH; u <= DOWN; ++u) {
-          if (r->second->exit(u) && r->second->exit(u)->targetRoom() == this) {
-            r->second->exit(u)->destroy();
-            r->second->exit(u, NULL);
-          }
+  // Destroy inbound exits (takes a bit more effort).
+  for (std::set<Area*,area_comp>::iterator a = World::Instance().getAreas().begin(); a != World::Instance().getAreas().end(); ++a) {
+    for (std::map<unsigned long,Room*>::iterator r = (*a)->rooms().begin(); r != (*a)->rooms().end(); ++r) {
+      for (unsigned u = NORTH; u <= DOWN; ++u) {
+        if (r->second->exit(u) && r->second->exit(u)->targetRoom() == this) {
+          r->second->exit(u)->destroy();
+          r->second->exit(u, NULL);
         }
       }
     }
-    // Get rid of LoadRules for this room...
-    sprintf(query,
-      " DELETE              \
-        FROM load_rules     \
-        WHERE vnum = %lu    \
-        ;",
-      vnum()
-   );
-    World::Instance().getMysql()->remove(query);
-    // Get rid of this (from memory)...
-    delete this;
-
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to delete room %lu: %s\n", tempID, me.getMessage().c_str());
-    return false;
   }
-
-  // Success!
-  return true;
+  // Destroy LoadRules.
+  for (auto iter : loadRules()) iter->destroy();
+  // If there are any Creatures here, stop short.
+  // TODO - purge Creatures intelligently.
+  if (!creatures().empty()) return;
+  // Self-delete and return.
+  delete this;
+  return;
 }
 
 bool Room::clear(void) {

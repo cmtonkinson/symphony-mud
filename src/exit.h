@@ -4,7 +4,6 @@
 
 #include "enumTable.h"
 #include "flagTable.h"
-#include "mysql.h"
 
 class Room;
 
@@ -32,7 +31,6 @@ class Exit {
     // General methods...
     void                  flag(const unsigned long& flag, const bool& value, bool stop = false);
     bool                  flag(long flag)         { return _flags.test(flag); }
-    void                  save(void);
     void                  destroy(void);
 
     // Statics...
