@@ -3,14 +3,12 @@
 #define H_SYMPHONY_NOTE
 
 #include <string>
-#include "mysql.h"
 
 class Note {
   public:
     // constructors
     Note(void);
     Note(unsigned board, std::string author);
-    Note(ROW row);
     ~Note(void);
 
     // public accessor methods

@@ -3,7 +3,6 @@
 #define H_SYMPHONY_MOB
 
 #include "creature.h"
-#include "mysql.h"
 
 class Area;
 

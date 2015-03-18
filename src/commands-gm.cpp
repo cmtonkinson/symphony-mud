@@ -677,7 +677,6 @@ bool CmdLoadRule::execute(Creature* creature, const std::vector<std::string>& ar
     rule->number(number);
     rule->max(max);
     rule->probability(probability > 100 ? 100 : probability);
-    rule->commit();
     rules->push_back(rule);
     avatar()->send("Rule created: ");
     load_rule_args.push_back("list");

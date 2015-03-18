@@ -12,23 +12,6 @@ LoadRuleObject::LoadRuleObject(void) {
   return;
 }
 
-LoadRuleObject::LoadRuleObject(ROW row): LoadRule(row) {
-  if (row["preposition"] == "ON") {
-    preposition(ON);
-  } else if (row["preposition"] == "IN") {
-    preposition(IN);
-  } else if (row["preposition"] == "CARRY") {
-    preposition(CARRY);
-  } else if (row["preposition"] == "WEAR") {
-    preposition(WEAR);
-  } else {
-    preposition(ERROR);
-  }
-  indirectObject(row["indirect_object"]);
-  indirectObjectIndex(row["indirect_object_index"]);
-  return;
-}
-
 LoadRuleObject::~LoadRuleObject(void) {
   return;
 }
@@ -57,50 +40,9 @@ std::string LoadRuleObject::notes(void) const {
   return foo;
 }
 
-bool LoadRuleObject::save(void) {
-  return false;
-}
-
-bool LoadRuleObject::commit(void) {
-  std::string prep;
-
-  switch (preposition()) {
-    case IN:    prep = "IN";    break;
-    case ON:    prep = "ON";    break;
-    case CARRY: prep = "CARRY"; break;
-    case WEAR:  prep = "WEAR";  break;
-    default:             prep = "NONE";  break;
-  }
-
-  try {
-    char query[Socket::MAX_BUFFER];
-
-    sprintf(query, "                                                                                                        \
-      INSERT IGNORE                                                                                                         \
-      INTO `load_rules`                                                                                                     \
-      (`vnum`, `type`, `target`, `number`, `max`, `probability`, `preposition`, `indirect_object`, `indirect_object_index`) \
-      VALUES                                                                                                                \
-      (%lu, '%s', %lu, %u, %u, %u, '%s', %lu, %u)                                                                           \
-      ;",
-      vnum(),
-      (type() == MOB ? "MOB" : "OBJECT"),
-      target(),
-      number(),
-      max(),
-      probability(),
-      prep.c_str(),
-      indirectObject(),
-      indirectObjectIndex()
-    );
-    World::Instance().getMysql()->insert(query);
-    ID(World::Instance().getMysql()->getInsertID());
-
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to commit load_rule vnum %lu: %s\n", vnum(), me.getMessage().c_str());
-    return false;
-  }
-
-  return true;
+void LoadRuleObject::destroy(void) {
+  delete this;
+  return;
 }
 
 bool LoadRuleObject::execute(std::list<Object*>& new_objects, std::list<Mob*>& new_mobs) {

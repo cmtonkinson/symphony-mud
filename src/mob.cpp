@@ -5,7 +5,6 @@
 #include "commandTable.h"
 #include "io-handler.h"
 #include "mob.h"
-#include "mysql.h"
 #include "world.h"
 
 // Static constants need external linkage.

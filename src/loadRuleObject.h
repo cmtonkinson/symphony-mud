@@ -8,7 +8,6 @@ class LoadRuleObject: public LoadRule {
   public:
     // constructors...
     LoadRuleObject(void);
-    LoadRuleObject(ROW row);
     ~LoadRuleObject(void);
 
     // public accessor methods...
@@ -21,8 +20,7 @@ class LoadRuleObject: public LoadRule {
 
     // general methods...
     virtual std::string notes(void) const;
-    virtual bool        save(void);
-    virtual bool        commit(void);
+    virtual void        destroy(void);
     virtual bool        execute(std::list<Object*>& new_objects, std::list<Mob*>& new_mobs);
 
   private:

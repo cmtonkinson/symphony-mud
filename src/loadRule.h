@@ -3,7 +3,7 @@
 #define H_SYMPHONY_LOADRULE
 
 #include <list>
-#include "mysql.h"
+#include <string>
 
 class Mob;
 class Object;
@@ -24,7 +24,6 @@ class LoadRule {
 
     // constructors...
     LoadRule(void);
-    LoadRule(ROW row);
     virtual ~LoadRule(void);
 
     // public accessor methods...
@@ -48,9 +47,7 @@ class LoadRule {
     // general methods...
     const char*         strType(void) const             { return (type() == OBJECT ? "OBJ" : "MOB"); }
     virtual std::string notes(void) const = 0;
-    virtual bool        save(void) = 0;
-    virtual bool        commit(void) = 0;
-    virtual bool        destroy(void);
+    virtual void        destroy(void) = 0;
     virtual bool        execute(std::list<Object*>& new_objects, std::list<Mob*>& new_mobs) = 0;
 
     static LoadRule*    create(const char* type);

@@ -12,15 +12,6 @@ Note::Note(unsigned board_, std::string author_) {
   return;
 }
 
-Note::Note(ROW row) {
-  ID(0);
-  board(row["board"]);
-  author(row["author"]);
-  subject(row["subject"]);
-  body(row["body"]);
-  return;
-}
-
 Note::~Note(void) {
   return;
 }
