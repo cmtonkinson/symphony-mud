@@ -9,10 +9,6 @@ ObjTrash::ObjTrash(const ObjTrash& ref) {
   return;
 }
 
-ObjTrash::ObjTrash(ROW row) {
-  return;
-}
-
 ObjTrash::~ObjTrash(void) {
   return;
 }

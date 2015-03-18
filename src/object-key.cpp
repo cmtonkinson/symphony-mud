@@ -9,10 +9,6 @@ ObjKey::ObjKey(const ObjKey& ref) {
   return;
 }
 
-ObjKey::ObjKey(ROW row) {
-  return;
-}
-
 ObjKey::~ObjKey(void) {
   return;
 }

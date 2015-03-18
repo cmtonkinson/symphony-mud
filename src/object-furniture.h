@@ -3,7 +3,6 @@
 #define H_SYMPHONY_OBJECT_FURNITURE
 
 #include "enumTable.h"
-#include "mysql.h"
 
 class Creature;
 
@@ -12,7 +11,6 @@ class ObjFurniture {
     // constructors...
     ObjFurniture(void);
     ObjFurniture(const ObjFurniture& ref);
-    ObjFurniture(ROW row);
     ~ObjFurniture(void);
 
     // public accessors

@@ -15,14 +15,6 @@ ObjWeapon::ObjWeapon(const ObjWeapon& ref):
   return;
 }
 
-ObjWeapon::ObjWeapon(ROW row) {
-  type().set((int)row["weapon_type"]);
-  verb().set((int)row["weapon_verb"]);
-  damage().number(row["weapon_damage_number"]);
-  damage().faces(row["weapon_damage_faces"]);
-  return;
-}
-
 ObjWeapon::~ObjWeapon(void) {
   return;
 }

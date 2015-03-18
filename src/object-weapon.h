@@ -4,14 +4,12 @@
 
 #include "dice.h"
 #include "enumTable.h"
-#include "mysql.h"
 
 class ObjWeapon {
   public:
     // constructors
     ObjWeapon(void);
     ObjWeapon(const ObjWeapon& ref);
-    ObjWeapon(ROW row);
     ~ObjWeapon(void);
 
     // public accessors

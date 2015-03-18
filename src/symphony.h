@@ -44,9 +44,6 @@
  catch (SocketException e) {                                                          \
     fprintf(stderr, "%s: SocketException (error: %s)\n", X, e.getError().c_str());    \
     return false;                                                                       \
-  } catch (MysqlException e) {                                                        \
-    fprintf(stderr, "%s: MysqlException (message: %s)\n", X, e.getMessage().c_str()); \
-    return false;                                                                       \
   } catch (RegexException e) {                                                        \
     fprintf(stderr, "%s: RegexException (message: %s)\n", X, e.getMessage().c_str()); \
     return false;                                                                       \

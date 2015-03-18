@@ -130,12 +130,6 @@ bool CmdOedit::execute(Creature* creature, const std::vector<std::string>& args)
     object = new Object();
     object->vnum(vnum);
     area->objects()[object->vnum()] = object;
-    try {
-      object->insert(World::Instance().getMysql(), area->ID());
-    } catch (MysqlException me) {
-      avatar()->send("Failed to create object in database.");
-      return false;
-    }
     avatar()->send("Object %lu created successfully.", object->vnum());
     avatar()->mode().set(MODE_OEDIT);
     avatar()->oedit(object);

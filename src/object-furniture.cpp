@@ -22,16 +22,6 @@ ObjFurniture::ObjFurniture(const ObjFurniture& ref):
   return;
 }
 
-ObjFurniture::ObjFurniture(ROW row):
-    _capacity(row["furniture_capacity"]),
-    _layOn(row["furniture_lay_on"]),
-    _sitAt(row["furniture_sit_at"]),
-    _sitOn(row["furniture_sit_on"]),
-    _standOn(row["furniture_stand_on"]),
-    _current(0) {
-  return;
-}
-
 ObjFurniture::~ObjFurniture(void) {
   return;
 }

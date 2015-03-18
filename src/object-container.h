@@ -3,14 +3,12 @@
 #define H_SYMPHONY_OBJECT_CONTAINER
 
 #include "inventoryContainer.h"
-#include "mysql.h"
 
 class ObjContainer {
   public:
     // constructors...
     ObjContainer(void);
     ObjContainer(const ObjContainer& ref);
-    ObjContainer(ROW row);
     ~ObjContainer(void);
 
     // accessor methods...

@@ -320,4 +320,3 @@ TerrainWater::TerrainWater(void) {
 unsigned TerrainWater::calculate(Creature* creature) {
   return base();
 }
-

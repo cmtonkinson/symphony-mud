@@ -9,10 +9,6 @@ ObjFood::ObjFood(const ObjFood& ref) {
   return;
 }
 
-ObjFood::ObjFood(ROW row) {
-  return;
-}
-
 ObjFood::~ObjFood(void) {
   return;
 }

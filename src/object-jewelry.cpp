@@ -9,10 +9,6 @@ ObjJewelry::ObjJewelry(const ObjJewelry& ref) {
   return;
 }
 
-ObjJewelry::ObjJewelry(ROW row) {
-  return;
-}
-
 ObjJewelry::~ObjJewelry(void) {
   return;
 }

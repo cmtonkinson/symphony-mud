@@ -131,7 +131,6 @@ bool OCmdDelete::execute(Creature* creature, const std::vector<std::string>& arg
   }
 
   area->objects().erase(vnum);
-  object->destroy(World::Instance().getMysql());
   avatar()->oedit(NULL);
   avatar()->send("Object %lu deleted.\n", vnum);
   exit.avatar(avatar());

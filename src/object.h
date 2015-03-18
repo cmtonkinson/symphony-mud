@@ -9,7 +9,6 @@
 #include "flagTable.h"
 #include "identifiers.h"
 #include "modifier.h"
-#include "mysql.h"
 
 class ObjArmor;
 class ObjClothing;
@@ -68,17 +67,10 @@ class Object {
     std::string   listDecorativeFlags(void) const;
     std::string   printStatus(void) const;
 
-    void          insert(Mysql* db, unsigned long areaID);
-    void          update(Mysql* db) const;
-    void          destroy(Mysql* db) const;
-    void          saveInstance(Mysql* db, unsigned long owner_id, std::string placement, unsigned location) const;
-    void          saveContainedInstance(Mysql* db, unsigned long owner_id, std::string placement, unsigned location, std::string container_placement = "", unsigned container_location = 0) const;
-
     // public accessors
     void                        ID(unsigned long ID)                { _ID = ID; }
     unsigned long               ID(void) const                      { return _ID; }
     void                        type(Type type);
-    void                        type(Type type, ROW row);
     void                        type(Type type, void* extra_ptr);
     Type                        type(void) const                    { return _type; }
     void                        vnum(unsigned long vnum)            { _vnum = vnum; }

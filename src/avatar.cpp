@@ -165,10 +165,8 @@ bool Avatar::save(void) {
 
     // Save inventory instances.
     order = 0;
-    for (auto iter : inventory().objectList()) iter->saveInstance(mysql, ID(), "INVENTORY", order++);
 
     // Save equipment instances.
-    for (auto iter : equipment().objectMap()) iter.second->saveInstance(mysql, ID(), "EQUIPMENT", iter.first);
 
     sprintf(query,
       " DELETE                 \
@@ -362,7 +360,6 @@ bool Avatar::load(void) {
   Mysql* mysql = World::Instance().getMysql();
   char query[Socket::MAX_BUFFER];
   ROW row;
-  Object* object   = NULL;
   Ability* ability = NULL;
 
   sprintf(query, "                          \
@@ -452,85 +449,10 @@ bool Avatar::load(void) {
           }
         }
       }
-      // Restore the inventory.
-      sprintf(query, "                  \
-        SELECT                          \
-        *                               \
-        FROM `object_instances`         \
-        WHERE `owner_id` = %lu          \
-          AND `placement` = 'INVENTORY' \
-        ORDER BY `location` ASC         \
-        ;",
-        ID()
-     );
-      if (mysql->select(query)) {
-        while ((row = mysql->fetch())) {
-          object = new Object(row);
-          inventory().add(object);
-          if (object->isContainer()) loadContainerContents(object->container(), row["placement"], row["location"]);
-        }
-      }
-      // Restore the equipment.
-      sprintf(query, "                  \
-        SELECT                          \
-        *                               \
-        FROM `object_instances`         \
-        WHERE `owner_id` = %lu          \
-          AND `placement` = 'EQUIPMENT' \
-        ;",
-        ID()
-     );
-      if (mysql->select(query)) {
-        while ((row = mysql->fetch())) {
-          object = new Object(row);
-          equipment().add(object, row["location"]);
-          if (object->isContainer()) loadContainerContents(object->container(), row["placement"], row["location"]);
-        }
-      }
       return true;
     }
   }
   return false;
-}
-
-void Avatar::loadContainerContents(ObjContainer* container, std::string placement, unsigned location) {
-  Object* object = NULL;
-
-  try {
-    Mysql mysql;
-    ROW row;
-    char query[Socket::MAX_BUFFER];
-
-    sprintf(query, "                      \
-      SELECT                              \
-      *                                   \
-      FROM `object_instances`             \
-      WHERE `owner_id` = %lu              \
-        AND `placement` = 'CONTAINER'     \
-        AND `container_owner_id` = %lu    \
-        AND `container_placement` = '%s'  \
-        AND `container_location` = %u     \
-      ORDER BY `location` ASC             \
-      ;",
-      ID(),
-      ID(),
-      Mysql::addslashes(placement).c_str(),
-      location
-    );
-
-    if (mysql.select(query)) {
-      while ((row = mysql.fetch())) {
-        object = new Object(row);
-        container->inventory().add(object);
-      }
-    }
-
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to get object contents: %s\n", me.getMessage().c_str());
-    return;
-  }
-
-  return;
 }
 
 std::string Avatar::stringLoggedOn(void) {

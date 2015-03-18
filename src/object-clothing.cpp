@@ -9,10 +9,6 @@ ObjClothing::ObjClothing(const ObjClothing& ref) {
   return;
 }
 
-ObjClothing::ObjClothing(ROW row) {
-  return;
-}
-
 ObjClothing::~ObjClothing(void) {
   return;
 }
