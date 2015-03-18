@@ -13,6 +13,10 @@ mysql.conf
 /data/disabled_commands/*
 !/data/disabled_commands/.keep
 
+/data/areas/*
+!/data/areas/the-tundra.area.txt
+!/data/areas/.keep
+
 src/proto/*
 symphony
 

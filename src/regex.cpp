@@ -714,3 +714,9 @@ std::string Regex::decodeEmail(const std::string& target) {
   return dest;
 }
 
+std::string Regex::slugify(const std::string& source) {
+  std::string dest = trim(lower(source));
+  Regex::replace("[^a-z0-9 ]+", "", dest);
+  Regex::replace(" +", "-", dest);
+  return dest;
+}

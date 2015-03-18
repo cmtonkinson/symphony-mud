@@ -11,22 +11,23 @@ class Room;
 class Exit {
   public:
     Exit(void);
-    Exit(Room* target, ROW& row);
-    Exit(Room* room, Room* target, unsigned direction);
+    Exit(Room* room, Room* targetRoom_, unsigned direction);
     ~Exit(void);
 
     // Public accessor methods...
-    void                  ID(long ID)             { _ID = ID; }
-    long                  ID(void) const          { return _ID; }
-    void                  target(Room* target)    { _target = target; }
-    Room*                 target(void)            { return _target; }
-    Direction&            direction(void)         { return _direction; }
-    const Direction&      direction(void) const   { return _direction; }
-    FlagBank&             flags(void)             { return _flags; }
-    const FlagBank&       flags(void) const       { return _flags; }
-    void                  key(long key)           { _key = key; }
-    long                  key(void) const         { return _key; }
-    void                  direction(unsigned x)   { _direction.set(x); }
+    void                  ID(long ID)                     { _ID = ID; }
+    long                  ID(void) const                  { return _ID; }
+    void                  targetVnum(unsigned targetVnum) { _targetVnum = targetVnum; }
+    unsigned              targetVnum(void) const          { return _targetVnum; }
+    void                  targetRoom(Room* targetRoom)    { _targetRoom = targetRoom; }
+    Room*                 targetRoom(void);
+    Direction&            direction(void)                 { return _direction; }
+    const Direction&      direction(void) const           { return _direction; }
+    FlagBank&             flags(void)                     { return _flags; }
+    const FlagBank&       flags(void) const               { return _flags; }
+    void                  key(long key)                   { _key = key; }
+    long                  key(void) const                 { return _key; }
+    void                  direction(unsigned x)           { _direction.set(x); }
 
     // General methods...
     void                  flag(const unsigned long& flag, const bool& value, bool stop = false);
@@ -45,7 +46,8 @@ class Exit {
 
   private:
     long      _ID;
-    Room*     _target;
+    unsigned  _targetVnum;
+    Room*     _targetRoom;
     Direction _direction;
     FlagBank  _flags;
     long      _key;

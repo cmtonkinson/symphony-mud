@@ -32,6 +32,9 @@ void Storage::dump(FILE* fp, Area* area) {
   out(fp, "name",         area->name());
   out(fp, "terrain",      area->terrain()->name());
   out(fp, "builders",     area->serializeBuilders());
+  for (auto iter : area->rooms())   dump(fp, iter.second);
+  for (auto iter : area->objects()) dump(fp, iter.second);
+  for (auto iter : area->mobs())    dump(fp, iter.second);
   END("AREA")
   return;
 }
@@ -44,7 +47,10 @@ bool Storage::load(FILE* fp, Area* loading) {
     STORE_CASE("high",      &Area::high)
     STORE_CASE("name",      &Area::name)
     STORE_CASE("terrain",   &Area::setTerrain)
-    STORE_CASE_STRING("builders", loading->unserializeBuilders(str);)
+    STORE_CASE_STRING("builders",   loading->unserializeBuilders(str);)
+    STORE_DESCEND_NEW("ROOM",   Room,   loading->insert(instance);)
+    STORE_DESCEND_NEW("OBJECT", Object, loading->insert(instance);)
+    STORE_DESCEND_NEW("MOB",    Mob,    loading->insert(instance);)
   });
   return load_status == LOAD_DONE;
 }
@@ -60,11 +66,9 @@ void Storage::dump(FILE* fp, Room* room) {
   out(fp, "smell",        room->smell());
   out(fp, "sound",        room->sound());
   out(fp, "terrain",      room->terrain()->name());
+  for (auto iter : room->loadRules()) dump(fp, iter);
   for (unsigned u = 0; u < 6; ++u) {
     if (room->exit(u)) dump(fp, room->exit(u));
-  }
-  for (auto iter : room->loadRules()) {
-    dump(fp, iter);
   }
   END("ROOM\n")
   return;
@@ -100,6 +104,7 @@ bool Storage::load(FILE* fp, Room* loading) {
  **************************************************************************************************/
 void Storage::dump(FILE* fp, Exit* exit) {
   BEGIN("EXIT")
+  out(fp, "targetVnum", exit->targetVnum());
   out(fp, "direction",  exit->direction());
   out(fp, "key",        exit->key());
   END("EXIT")
@@ -110,8 +115,9 @@ bool Storage::load(FILE* fp, Exit* loading) {
   char input[32];
   unsigned load_status = 0;
   load_status = load_inner(fp, loading, input, "EXIT", [&fp, &loading, &input]() {
-    STORE_CASE("direction", &Exit::direction)
-    STORE_CASE("key",       &Exit::key)
+    STORE_CASE("targetVnum",  &Exit::targetVnum)
+    STORE_CASE("direction",   &Exit::direction)
+    STORE_CASE("key",         &Exit::key)
   });
   return load_status == LOAD_DONE;
 }

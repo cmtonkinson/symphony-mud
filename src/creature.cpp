@@ -744,7 +744,7 @@ bool Creature::move(const unsigned short& direction) {
   // For standard movement...
   Exit* exit = room()->exit(direction);
   Room* from = room();
-  Room* to = exit->target();
+  Room* to = exit->targetRoom();
   CmdLook look;
   std::vector<std::string> look_args(1);
   // For group movement...

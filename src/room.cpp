@@ -219,7 +219,7 @@ bool Room::destroy(void) {
     for (std::set<Area*,area_comp>::iterator a = World::Instance().getAreas().begin(); a != World::Instance().getAreas().end(); ++a) {
       for (std::map<unsigned long,Room*>::iterator r = (*a)->rooms().begin(); r != (*a)->rooms().end(); ++r) {
         for (unsigned u = NORTH; u <= DOWN; ++u) {
-          if (r->second->exit(u) && r->second->exit(u)->target() == this) {
+          if (r->second->exit(u) && r->second->exit(u)->targetRoom() == this) {
             r->second->exit(u)->destroy();
             r->second->exit(u, NULL);
           }
@@ -316,7 +316,7 @@ sound.... {y%s{x\n\n\
   output.append(" --== {Yexit data{x ==--\n");
   for (unsigned u = NORTH; u <= DOWN; ++u) {
     if (room->exit(u)) {
-      sprintf(exit_buf, "{y%s{x to room {y%lu{x ({y%s{x)\n", Exit::name(u), room->exit(u)->target()->vnum(), room->exit(u)->target()->name().c_str());
+      sprintf(exit_buf, "{y%s{x to room {y%lu{x ({y%s{x)\n", Exit::name(u), room->exit(u)->targetRoom()->vnum(), room->exit(u)->targetRoom()->name().c_str());
       output.append(exit_buf);
       sprintf(exit_buf, "  Flags: {y%s{x\n", room->exit(u)->flags().list(FTRoom::Instance()).c_str());
       output.append(exit_buf);

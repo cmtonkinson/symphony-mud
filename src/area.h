@@ -54,26 +54,28 @@ class Area {
     std::set<std::string>&                  builders(void)                  { return _builders; }
     const std::set<std::string>&            builders(void) const            { return _builders; }
 
+    void            insert(Room* room);
+    void            insert(Object* object);
+    void            insert(Mob* mob);
+
     // General methods...
-    bool            load(ROW& row);
-    bool            loadRooms(void);
-    bool            loadExits(void);
-    void            loadObjects(Mysql* db);
-    bool            loadMobs(void);
-    void            save(Mysql* db);
-    Room*           createRoom(void);
-    bool            destroy(Mysql* db);
     unsigned long   lowestAvailableRoom(void);
     void            reset(void);
     bool            reset(RecurringJob* job)                 { reset(); return true; }
     unsigned        howManyMobs(unsigned long vnum);
     void            setTerrain(const char* terrain_name);
-    std::string     serializeBuilders(void) const;
-    void            unserializeBuilders(const std::string& serialization);
 
-    bool            hasPermission(Avatar* avatar) const;
-    void            grantPermission(Avatar* avatar);
-    void            revokePermission(Avatar* avatar);
+    // Setup & teardown...
+    void    initialize(void);
+    void    save(void);
+    bool    destroy(void);
+
+    // Builder permissions...
+    bool        hasPermission(Avatar* avatar) const;
+    void        grantPermission(Avatar* avatar);
+    void        revokePermission(Avatar* avatar);
+    std::string serializeBuilders(void) const;
+    void        unserializeBuilders(const std::string& serialization);
 
 };
 

@@ -33,7 +33,7 @@ bool ACmdDelete::execute(Creature* creature, const std::vector<std::string>& arg
   exit.execute(creature, exit_args);
   avatar()->send("\nYou've deleted Area %lu.\n", area->ID());
   World::Instance().bigBrother(creature, ADMIN_BIGBRO_CHANGES, "%s has deleted area %lu (%s).", avatar()->identifiers().shortname().c_str(), area->ID(), area->name().c_str());
-  area->destroy(World::Instance().getMysql());
+  area->destroy();
 
   return true;
 }

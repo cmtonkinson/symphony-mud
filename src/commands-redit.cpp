@@ -282,7 +282,7 @@ bool RCmdKey::execute(Creature* creature, const std::vector<std::string>& args) 
 
   vnum = estring(args[1]);
   exit->key(vnum);
-  if ((other = exit->target()->exit(Exit::inverse(exit->direction().number()))) != NULL) {
+  if ((other = exit->targetRoom()->exit(Exit::inverse(exit->direction().number()))) != NULL) {
     other->key(vnum);
   }
   avatar()->send("%s exit's key set to object %lu.\n", exit->direction().string().c_str(), exit->key());
@@ -420,7 +420,7 @@ bool RCmdUnlink::execute(Creature* creature, const std::vector<std::string>& arg
   }
 
   // Delete the exit's counterpart first, if it has one...
-  other = avatar()->room()->exit(direction)->target();
+  other = avatar()->room()->exit(direction)->targetRoom();
   if ((exit2 = other->exit(inverse)) != NULL) {
     exit2->destroy();
     other->exit(inverse, NULL);

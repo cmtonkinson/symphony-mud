@@ -122,7 +122,7 @@ class World {
     bool                  removeAvatar(const std::string& name);
 
     // Areas
-    bool                  loadAreas(Mysql* db);
+    void                  loadAreas(void);
     bool                  saveAreas(Mysql* db);
     void                  insert(Area* area);
     void                  remove(Area* area);

@@ -343,8 +343,8 @@ bool CmdOpen::execute(Creature* creature, const std::vector<std::string>& args) 
   exit->flag(EXIT_CLOSED, false);
   creature->send("You open the door.");
   creature->room()->send("$p opened the way $e.", creature, exit);
-  if ((inv = exit->target()->exit(Exit::inverse(exit->direction().number()))) != NULL) {
-    exit->target()->send("The way $e has been opened.", NULL, inv);
+  if ((inv = exit->targetRoom()->exit(Exit::inverse(exit->direction().number()))) != NULL) {
+    exit->targetRoom()->send("The way $e has been opened.", NULL, inv);
   }
 
   return true;

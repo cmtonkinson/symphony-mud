@@ -491,8 +491,8 @@ bool CmdClose::execute(Creature* creature, const std::vector<std::string>& args)
   exit->flag(EXIT_CLOSED, true);
   creature->send("You close the door.");
   creature->room()->send("$p closed the way $e.", creature, exit);
-  if ((inv = exit->target()->exit(Exit::inverse(exit->direction().number()))) != NULL) {
-    exit->target()->send("The way $e has been closed.", NULL, inv);
+  if ((inv = exit->targetRoom()->exit(Exit::inverse(exit->direction().number()))) != NULL) {
+    exit->targetRoom()->send("The way $e has been closed.", NULL, inv);
   }
   return true;
 }

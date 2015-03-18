@@ -5,41 +5,41 @@
 #include "world.h"
 
 Exit::Exit(void) {
+  _targetVnum = 0;
+  _targetRoom = nullptr;
   return;
 }
 
-Exit::Exit(Room* target, ROW& row):
-    _flags(row["flags"]) {
-  this->target(target);
-  ID(row["exitID"]);
-  direction().set((unsigned)row["direction"]);
-  key(row["key"]);
-  return;
-}
-
-Exit::Exit(Room* room, Room* target, unsigned direction) {
-  try {
-    char query[Socket::MAX_BUFFER];
-
-    sprintf(query, "INSERT IGNORE INTO exits (vnum, target, direction) VALUES (%lu, %lu, %u);", room->vnum(), target->vnum(), direction);
-    World::Instance().getMysql()->insert(query);
-    ID(World::Instance().getMysql()->getInsertID());
-
-    this->target(target);
-    this->direction().set(direction);
-    flags().value(0);
-    key(0);
-
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to create exit for room %lu: %s\n", room->ID(), me.getMessage().c_str());
-    return;
-  }
-
+Exit::Exit(Room* room, Room* targetRoom_, unsigned direction_) {
+  targetRoom(targetRoom_);
+  targetVnum(targetRoom()->vnum());
+  direction().set(direction_);
+  flags().value(0);
+  key(0);
   return;
 }
 
 Exit::~Exit(void) {
   return;
+}
+
+/*
+ * Note: This method is not designed for efficiency. For optimal runtime computational efficiency
+ * Rooms and Exits would be loaded in two passes, and Exits would simply retain pointers to their
+ * targets (obviating the need to store derived data - the vnum - separately in memory).
+ *
+ * But because of how Areas are loaded (specifically, how Exits for a Room are nested within the
+ * serialization of the Room itself, this isn't feasible and a single-pass loading paradigm makes
+ * more sense from a code maintainability standpoint. So instead we load the vnums from the data
+ * files and lazy-load the target pointers.
+ */
+Room* Exit::targetRoom(void) {
+  // Is the target Room cached?
+  if (_targetRoom != nullptr) return _targetRoom;
+  // Find, cache, and return the target Room.
+  _targetRoom = World::Instance().findRoom(targetVnum());
+  if (_targetRoom == nullptr) fprintf(stderr, "Failed to find Room %u in Exit::targetRoom().\n", targetVnum());
+  return _targetRoom;
 }
 
 void Exit::flag(const unsigned long& flag, const bool& value, bool stop) {
@@ -48,7 +48,7 @@ void Exit::flag(const unsigned long& flag, const bool& value, bool stop) {
   _flags.set(flag, value);
   // If we find an opposite exit, also change that flag...
   if (!stop) { // this prevents recursion
-    if ((other = target()->exit(inverse(direction().number()))) != NULL) {
+    if ((other = targetRoom()->exit(inverse(direction().number()))) != NULL) {
       other->flag(flag, value, true);
     }
   }

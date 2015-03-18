@@ -69,7 +69,7 @@ class Regex {
     static const unsigned DEFAULT_OPTIONS = (PCRE_CASELESS|PCRE_DOTALL|PCRE_MULTILINE);
     static const unsigned MAX_SUBPATTERNS = 20; // Maximum number of supatterns to capture
     static const unsigned OVECTOR_SIZE    = MAX_SUBPATTERNS * 3;
-    static const unsigned CACHE_SIZE      = 4; // Maximum number of compiled regular expressions to store
+    static const unsigned CACHE_SIZE      = 32; // Maximum number of compiled regular expressions to store
 
     static std::map<std::pair<std::string,int>,RegexInfo*>                        _cache;
     static std::list<std::map<std::pair<std::string,int>,RegexInfo*>::iterator>   _cache_meta;
@@ -123,8 +123,8 @@ class Regex {
     static unsigned int                 levenshtein(const std::string& string1, const std::string& string2);
     static std::string                  encodeEmail(const std::string& target);
     static std::string                  decodeEmail(const std::string& target);
+
+    static std::string                  slugify(const std::string& source);
 };
-
-
 
 #endif // #ifndef H_REGEX

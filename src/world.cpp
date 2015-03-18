@@ -1,8 +1,9 @@
 
 #include <cstdarg>
 #include <dirent.h>
-#include "commandTable.h"
 #include "commandTable-default.h"
+#include "commandTable.h"
+#include "storage.h"
 #include "world.h"
 
 const char* World::REBOOT_FILE = "sockets.copy";
@@ -167,10 +168,7 @@ void World::recover(const unsigned int& fd) {
 bool World::load(void) {
   bool status = true;
 
-  if (!loadAreas(getMysql())) {
-    status = false;
-  }
-
+  loadAreas();
   loadDisabledCommands();
 
   if (!loadSocials()) {
@@ -190,9 +188,7 @@ bool World::load(void) {
 bool World::save(void) {
   bool status = true;
 
-  if (!saveAreas(getMysql())) {
-    status = false;
-  }
+  for (auto iter : getAreas()) iter->save();
 
   for (std::map<std::string,Avatar*>::iterator a_it = getAvatars().begin(); a_it != getAvatars().end(); ++a_it) {
     if (a_it->second->isConnected()) {
@@ -512,50 +508,33 @@ bool World::removeAvatar(const std::string& name) {
 }
 
 /************************************************************ AREAS ************************************************************/
-bool World::loadAreas(Mysql* db) {
-  Area* area = NULL;
-  ROW row;
+void World::loadAreas(void) {
+  struct dirent* ent = nullptr;
+  DIR* dir           = nullptr;
+  FILE* fp           = nullptr;
+  Area* area         = nullptr;
+  std::string af;
 
-  // Grab areas...
-  try {
-    if (db->select("SELECT * FROM areas ORDER BY low ASC;")) {
-      while ((row = db->fetch())) {
+  if ((dir = opendir("data/areas"))) {
+    while ((ent = readdir(dir))) {
+      if (!Regex::match("\\.area\\.txt$", ent->d_name)) continue;
+      af = "data/areas/";
+      af << ent->d_name;
+      if ((fp = fopen(af.c_str(), "r")) != NULL) {
         area = new Area();
-        area->load(row);
+        Storage::load(fp, area);
         insert(area);
+        area->initialize();
+        fclose(fp);
+      } else {
+        fprintf(stderr, "Failed to read %s.\n", af.c_str());
       }
     }
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to load areas: %s\n", me.getMessage().c_str());
-    return false;
+    closedir(dir);
+  } else {
+    fprintf(stderr, "Failed to open data/areas.\n");
   }
-
-  // Load World components...
-  for (std::set<Area*,area_comp>::iterator it = getAreas().begin(); it != getAreas().end(); ++it) {
-    try {
-      (*it)->loadMobs();
-      (*it)->loadObjects(db);
-      (*it)->loadRooms();
-      (*it)->loadExits();
-      (*it)->reset();
-    } catch (MysqlException me) {
-      fprintf(stderr, "Failed to fully load area %lu: %s\n", (*it)->ID(), me.getMessage().c_str());
-    }
-  }
-
-  return true;
-}
-
-bool World::saveAreas(Mysql* db) {
-  bool status = true;
-  for (std::set<Area*,area_comp>::iterator it = getAreas().begin(); it != getAreas().end(); ++it) {
-    try {
-      (*it)->save(db);
-    } catch (MysqlException me) {
-      status = false;
-    }
-  }
-  return status;
+  return;
 }
 
 void World::insert(Area* area) {
@@ -882,10 +861,10 @@ bool World::search_map(Creature* creature, Room*** map, const unsigned short& ym
       default: return false;
     }
     if ((exit = room->exit(u)) && new_y >= 0 && new_x >= 0) {
-      if (exit->flags().test(EXIT_HIDDEN) || exit->target()->flags().test(ROOM_NOMAP)) {
+      if (exit->flags().test(EXIT_HIDDEN) || exit->targetRoom()->flags().test(ROOM_NOMAP)) {
         continue;
       }
-      if (!World::search_map(creature, map, ymax, xmax, new_y, new_x, room->exit(u)->target(), display)) {
+      if (!World::search_map(creature, map, ymax, xmax, new_y, new_x, room->exit(u)->targetRoom(), display)) {
         return false;
       }
       display[dis_y][dis_x] = dis_s;
