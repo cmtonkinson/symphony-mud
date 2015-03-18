@@ -337,11 +337,6 @@ class Creature {
     bool                          deplete_stamina(unsigned stamina_, bool message = true);
     bool                          check_stamina(unsigned stamina_, bool message = true);
 
-    // Pure virtual public methods...
-    bool    save(void)      { return false; }
-    bool    load(void)      { return false; }
-    bool    destroy(void)   { return false; }
-
     virtual void                send(std::string message)       { return; }
     virtual void                send(const char* format, ...)   { return; }
 

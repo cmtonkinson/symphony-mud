@@ -296,12 +296,13 @@ bool CmdRlist::execute(Creature* creature, const std::vector<std::string>& args)
 CmdSave::CmdSave(void) {
   name("save");
   addSyntax(0, "");
+  playerOnly(true);
   brief("Saves your Player data.");
   return;
 }
 
 bool CmdSave::execute(Creature* creature, const std::vector<std::string>& args) {
-  if (creature->save()) {
+  if (avatar()->save()) {
     creature->send("Information saved.");
     return true;
   } else {
