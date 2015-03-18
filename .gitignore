@@ -17,6 +17,9 @@ mysql.conf
 !/data/areas/the-tundra.area.txt
 !/data/areas/.keep
 
+/data/avatars/*
+!/data/avatars/.keep
+
 src/proto/*
 symphony
 
