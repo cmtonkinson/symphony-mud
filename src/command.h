@@ -7,7 +7,6 @@
 #include <vector>
 #include "avatar.h"
 #include "flagBank.h"
-#include "mysql.h"
 
 typedef std::map<std::string,std::string> OptionMap;
 

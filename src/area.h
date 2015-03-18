@@ -6,7 +6,6 @@
 #include <map>
 #include <set>
 #include <string>
-#include "mysql.h"
 #include "recurring-job.h"
 #include "terrain.h"
 
