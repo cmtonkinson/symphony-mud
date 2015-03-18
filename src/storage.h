@@ -160,8 +160,13 @@ class Storage {
     static bool load_base(FILE* fp, Creature* loading);
 
     // Centralized file pathing.
-    static std::string filename(Area* area = nullptr);
+    static std::string area_glob_pattern(void);
+    static std::string filename(Area* area);
+
+    static std::string social_glob_pattern(void);
     static std::string filename(SocialCommand* social = nullptr);
+
+    static std::string disabled_command_glob_pattern(void);
 
     static std::vector<std::string> glob(std::string pattern);
 

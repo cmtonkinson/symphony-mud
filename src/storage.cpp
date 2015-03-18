@@ -550,12 +550,24 @@ bool Storage::load(FILE* fp, Note* loading) {
 /***************************************************************************************************
  * HELPERS
  **************************************************************************************************/
+std::string Storage::area_glob_pattern(void) {
+  return "data/areas/*.area.txt";
+}
+
 std::string Storage::filename(Area* area) {
-  return std::string("data/areas/") + (area ? Regex::slugify(area->name()) : "*") + ".area.txt";
+  return std::string("data/areas/") + Regex::slugify(area->name()) + ".area.txt";
+}
+
+std::string Storage::social_glob_pattern(void) {
+  return "data/socials/*.social.txt";
 }
 
 std::string Storage::filename(SocialCommand* social) {
-  return std::string("data/socials/") + (social ? Regex::slugify(social->name()) : "*") + ".social.txt";
+  return std::string("data/socials/") + Regex::slugify(social->name()) + ".social.txt";
+}
+
+std::string Storage::disabled_command_glob_pattern(void) {
+  return "data/disabled_commands/*_*";
 }
 
 std::vector<std::string> Storage::glob(std::string pattern) {

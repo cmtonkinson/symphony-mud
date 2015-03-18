@@ -241,7 +241,7 @@ bool World::toggleCommand(char table_prefix, std::string command_name, bool enab
 }
 
 bool World::loadSocials(void) {
-  for (auto iter : Storage::glob(Storage::filename((SocialCommand*)NULL))) SocialCommand::load(iter);
+  for (auto iter : Storage::glob(Storage::social_glob_pattern())) SocialCommand::load(iter);
   return true;
 }
 
@@ -493,7 +493,7 @@ bool World::removeAvatar(const std::string& name) {
 
 /************************************************************ AREAS ************************************************************/
 void World::loadAreas(void) {
-  for (auto iter : Storage::glob(Storage::filename((Area*)NULL))) Area::load(iter);
+  for (auto iter : Storage::glob(Storage::area_glob_pattern())) Area::load(iter);
   return;
 }
 
@@ -526,7 +526,7 @@ Area* World::lookup(const unsigned long& vnum) {
 }
 
 void World::loadDisabledCommands(void) {
-  for (auto iter : Storage::glob("data/disabled_commands/*_*")) {
+  for (auto iter : Storage::glob(Storage::disabled_command_glob_pattern())) {
     toggleCommand(iter[0], iter.substr(2), false);
   }
   return;
