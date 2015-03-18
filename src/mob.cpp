@@ -30,50 +30,6 @@ Mob::Mob(const Mob& ref): Creature(ref) {
   return;
 }
 
-Mob::Mob(ROW row): Mob() {
-  ID(row["mobID"]);
-  vnum(row["vnum"]);
-  gender().set((unsigned)row["gender"]);
-  race().set((unsigned)row["race"]);
-  pClass().set((unsigned)row["pClass"]);
-  identifiers().shortname(row["shortname"]);
-  identifiers().longname(row["longname"]);
-  identifiers().unserializeKeywords(row["keywords"]);
-  identifiers().description(row["description"]);
-  level(row["level"]);
-  exp(row["exp"]);
-  tnl(row["tnl"]);
-  maxHealth(row["maxHealth"]);
-  health(row["health"]);
-  maxMana(row["maxMana"]);
-  mana(row["mana"]);
-  stamina(row["stamina"]);
-  maxStrength(row["maxStrength"]);
-  strength(row["strength"]);
-  maxDexterity(row["maxDexterity"]);
-  dexterity(row["dexterity"]);
-  maxConstitution(row["maxConstitution"]);
-  constitution(row["constitution"]);
-  maxIntelligence(row["maxIntelligence"]);
-  intelligence(row["intelligence"]);
-  maxFocus(row["maxFocus"]);
-  focus(row["focus"]);
-  maxCreativity(row["maxCreativity"]);
-  creativity(row["creativity"]);
-  maxCharisma(row["maxCharisma"]);
-  charisma(row["charisma"]);
-  maxLuck(row["maxLuck"]);
-  luck(row["luck"]);
-  armor(row["armor"]);
-  bash(row["bash"]);
-  slash(row["slash"]);
-  pierce(row["pierce"]);
-  exotic(row["exotic"]);
-  mobility(row["mobility"]);
-  aggressiveness(row["aggressiveness"]);
-  return;
-}
-
 Mob::Mob(Area* area, unsigned vnum): Mob() {
 
   try {
@@ -107,125 +63,6 @@ void Mob::mobility(unsigned mobility) {
 void Mob::aggressiveness(unsigned aggressiveness) {
   _aggressiveness = std::max(MIN_AGGRESSIVENESS, std::min(MAX_AGGRESSIVENESS, aggressiveness));
   return;
-}
-
-bool Mob::save(void) {
-  try {
-    Mysql* mysql = World::Instance().getMysql();
-    char query[Socket::MAX_BUFFER];
-
-    sprintf(query,
-      "UPDATE mobs SET            \
-        `gender` = %u ,           \
-        `race` = %u ,             \
-        `pClass` = %u ,           \
-        `keywords` = '%s',        \
-        `shortname` = '%s',       \
-        `longname` = '%s',        \
-        `description` = '%s',     \
-        `level` = %u,             \
-        `exp` = %u,               \
-        `tnl` = %u,               \
-        `health` = %d,            \
-        `maxHealth` = %d,         \
-        `mana` = %d,              \
-        `maxMana` = %d,           \
-        `stamina` = %d,           \
-        `strength` = %hu,         \
-        `maxStrength` = %hu,      \
-        `dexterity` = %hu,        \
-        `maxDexterity` = %hu,     \
-        `constitution` = %hu,     \
-        `maxConstitution` = %hu,  \
-        `intelligence` = %hu,     \
-        `maxIntelligence` = %hu,  \
-        `focus` = %hu,            \
-        `maxFocus` = %hu,         \
-        `creativity` = %hu,       \
-        `maxCreativity` = %hu,    \
-        `charisma` = %hu,         \
-        `maxCharisma` = %hu,      \
-        `luck` = %hu,             \
-        `maxLuck` = %hu,          \
-        `armor` = %d,             \
-        `bash` = %d,              \
-        `slash` = %d,             \
-        `pierce` = %d,            \
-        `exotic` = %d,            \
-        `mobility` = %u,          \
-        `aggressiveness` = %u     \
-       WHERE mobID = %lu          \
-       LIMIT 1;",
-      gender().number(),
-      race().number(),
-      pClass().number(),
-      Mysql::addslashes(identifiers().serializeKeywords()).c_str(),
-      Mysql::addslashes(identifiers().shortname()).c_str(),
-      Mysql::addslashes(identifiers().longname()).c_str(),
-      Mysql::addslashes(identifiers().description()).c_str(),
-      level(),
-      exp(),
-      tnl(),
-      health(),
-      maxHealth(),
-      mana(),
-      maxMana(),
-      stamina(),
-      strength(),
-      maxStrength(),
-      dexterity(),
-      maxDexterity(),
-      constitution(),
-      maxConstitution(),
-      intelligence(),
-      maxIntelligence(),
-      focus(),
-      maxFocus(),
-      creativity(),
-      maxCreativity(),
-      charisma(),
-      maxCharisma(),
-      luck(),
-      maxLuck(),
-      armor(),
-      bash(),
-      slash(),
-      pierce(),
-      exotic(),
-      mobility(),
-      aggressiveness(),
-      ID()
-   );
-    mysql->update(query);
-
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to save mob %lu: %s\n", ID(), me.getMessage().c_str());
-    return false;
-  }
-
-  return true;
-}
-
-bool Mob::destroy(void) {
-  unsigned long tempID = ID();
-  try {
-    char query[Socket::MAX_BUFFER];
-
-    sprintf(query,
-      " DELETE                \
-        FROM mobs             \
-        WHERE mobID = %lu     \
-        LIMIT 1;",
-      ID()
-   );
-    World::Instance().getMysql()->remove(query);
-    delete this;
-
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to delete mob %lu: %s\n", tempID, me.getMessage().c_str());
-    return false;
-  }
-  return true;
 }
 
 void Mob::whatHappensWhenIDie(void) {
@@ -274,10 +111,6 @@ bool Mob::auto_move(Job* job) {
 
 Mob* Mob::create(Area* area, unsigned vnum) {
   return new Mob(area, vnum);
-}
-
-Mob* Mob::create(ROW row) {
-  return new Mob(row);
 }
 
 Mob* Mob::create(Mob* mob, Room* room) {

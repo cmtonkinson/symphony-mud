@@ -22,7 +22,6 @@ class Mob: public Creature {
     Mob(void);
     Mob(Area* area, unsigned vnum);
     Mob(const Mob& ref);
-    Mob(ROW row);
     virtual ~Mob(void);
 
     // public accessors...
@@ -44,13 +43,8 @@ class Mob: public Creature {
 
     bool auto_move(Job* job);
 
-    // pure virtual overrides...
-    virtual bool        save(void);
-    virtual bool        destroy(void);
-
     // statics...
     static Mob*         create(Area* area, unsigned vnum);
-    static Mob*         create(ROW row);
     static Mob*         create(Mob* mob, Room* room);
     static std::string  getInformation(Mob* mob);
 
