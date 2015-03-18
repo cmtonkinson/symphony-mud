@@ -100,6 +100,12 @@ bool IOHandler::handle(const std::string& text) {
    *        `insert 4 a string of text`   (will insert 'a string of text' at line 4)
    */
 
+  // Failsafe...
+  if (command->arguments().empty()) {
+    fprintf(stderr, "Command (\"%s\") has no arguments in IOHandler::handle().\n", command->name().c_str());
+    return false;
+  }
+
   // Get the largest number of accpted arguments and split()
   max_num_args = *command->arguments().rbegin();
   args = Regex::split(input, max_num_args);

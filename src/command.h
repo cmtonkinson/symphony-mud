@@ -109,15 +109,12 @@ class SocialCommand: public Command {
   public:
     // constructors...
     SocialCommand(void);
-    SocialCommand(std::string name, const unsigned long& avatarID);
-    SocialCommand(ROW row);
+    SocialCommand(std::string name_, std::string creator_);
     virtual ~SocialCommand(void);
 
     // public accessors...
-    void          ID(const unsigned long& ID)             { _ID = ID; }
-    unsigned long ID(void) const                          { return _ID; }
-    void          creator(const unsigned long& creator)   { _creator = creator; }
-    unsigned long creator(void) const                     { return _creator; }
+    void          creator(std::string creator)            { _creator = creator; }
+    std::string   creator(void) const                     { return _creator; }
 
     void          targetNone(bool targetNone)             { _targetNone = targetNone; }
     bool          targetNone(void) const                  { return _targetNone; }
@@ -143,14 +140,14 @@ class SocialCommand: public Command {
     std::string   victimRoom(void) const                  { return _victimRoom; }
 
     // general methods...
-    void          save(void);
-    bool          destroy(void);
-    virtual bool  execute(Creature* creature, const std::vector<std::string>& args);
+    void                  initialize(void);
+    void                  destroy(void);
+    void                  save(void);
+    static SocialCommand* load(std::string filename);
+    virtual bool          execute(Creature* creature, const std::vector<std::string>& args);
 
   private:
-    // data...
-    unsigned long _ID;
-    unsigned long _creator;
+    std::string   _creator;
     /* Can the social be entered without any targets?  (example: "blink") */
     bool          _targetNone;
     std::string   _noneActor;

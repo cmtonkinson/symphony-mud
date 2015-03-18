@@ -241,30 +241,29 @@ bool World::toggleCommand(char table_prefix, std::string command_name, bool enab
 }
 
 bool World::loadSocials(void) {
-  try {
-    Mysql* mysql = getMysql();
-    ROW row;
-    char query[Socket::MAX_BUFFER];
-    sprintf(query, "SELECT * FROM socials ORDER BY name ASC;");
-    if (mysql->select(query)) {
-      while ((row = mysql->fetch())) {
-        Commands::Instance().add(new SocialCommand(row));
-      }
+  struct dirent* ent    = nullptr;
+  DIR* dir              = nullptr;
+  std::string filename;
+
+  if ((dir = opendir("data/socials"))) {
+    while ((ent = readdir(dir))) {
+      if (!Regex::match("\\.social\\.txt$", ent->d_name)) continue;
+      filename = "data/socials/";
+      filename << ent->d_name;
+      SocialCommand::load(filename);
     }
-    return true;
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to load social commands: %s\n", me.getMessage().c_str());
+    closedir(dir);
+  } else {
+    fprintf(stderr, "Failed to open data/socials/.\n");
     return false;
   }
-
-  return false;
+  return true;
 }
 
 void World::saveSocials(void) {
-  for (std::vector<Command*>::iterator it = Commands::Instance().commands().begin(); it != Commands::Instance().commands().end(); ++it) {
-    if ((*it)->social()) {
-      ((SocialCommand*)*it)->save();
-    }
+  for (auto iter : Commands::Instance().commands()) {
+    if (!iter->social()) continue;
+    dynamic_cast<SocialCommand*>(iter)->save();
   }
   return;
 }

@@ -61,6 +61,9 @@
 [X] boards
 [X]   notes
 
+  * Make to all instance/static methods for save/load instead of doing it in World (like SocialCommand)
+  * Move to glob() for searching data files
+
 ---
 
 # Specific pending actionables from existing logic - alphabetical order

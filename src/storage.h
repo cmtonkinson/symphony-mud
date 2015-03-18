@@ -159,6 +159,10 @@ class Storage {
     static void dump_base(FILE* fp, Creature* creature);
     static bool load_base(FILE* fp, Creature* loading);
 
+    // Centralized file pathing.
+    static std::string filename(Area* area);
+    static std::string filename(SocialCommand* social);
+
   private:
 
     static unsigned     load_inner(FILE* fp, void* loading, char* input, const char* boundary, voidFunc lambda);

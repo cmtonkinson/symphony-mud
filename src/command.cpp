@@ -5,6 +5,7 @@
 #include "regex.h"
 #include "room.h"
 #include "socket.h"
+#include "storage.h"
 #include "world.h"
 
 ///////////////////////////////////////////// BASE CLASS /////////////////////////////////////////////
@@ -75,14 +76,15 @@ void Command::seeAlso(std::string command) {
 
 ///////////////////////////////////////////// SOCIALS /////////////////////////////////////////////
 SocialCommand::SocialCommand(void) {
+  social(true);
   return;
 }
 
-SocialCommand::SocialCommand(std::string name, const unsigned long& avatarID): Command() {
-  this->name(name);
+SocialCommand::SocialCommand(std::string name_, std::string creator_) {
   social(true);
-  ID(0);
-  creator(avatarID);
+  name(name_);
+  creator(creator_);
+
   targetNone(false);
   targetSelf(false);
   targetVictim(false);
@@ -94,48 +96,7 @@ SocialCommand::SocialCommand(std::string name, const unsigned long& avatarID): C
   victimVictim("$c does something to you.");
   victimRoom("$c does something to $C.");
 
-  try {
-    char query[Socket::MAX_BUFFER];
-    sprintf(query, "INSERT IGNORE INTO socials (name, creator) VALUES ('%s', %lu);", Mysql::addslashes(name).c_str(), avatarID);
-    World::Instance().getMysql()->insert(query);
-    ID(World::Instance().getMysql()->getInsertID());
-    Commands::Instance().add(this);
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to create social command \"%s\": %s\n", this->name().c_str(), me.getMessage().c_str());
-    return;
-  }
-
-  return;
-}
-
-SocialCommand::SocialCommand(ROW row) {
-  social(true);
-  ID(row["id"]);
-  creator(row["creator"]);
-  name(row["name"]);
-  flags().value(row["flags"]);
-  targetNone(row["targetNone"]);
-  targetSelf(row["targetSelf"]);
-  targetVictim(row["targetVictim"]);
-  noneActor(row["noneActor"]);
-  noneRoom(row["noneRoom"]);
-  selfActor(row["selfActor"]);
-  selfRoom(row["selfRoom"]);
-  victimActor(row["victimActor"]);
-  victimVictim(row["victimVictim"]);
-  victimRoom(row["victimRoom"]);
-  if (targetNone()) {
-    arguments().insert(0);
-  }
-  if (targetSelf() || targetVictim()) {
-    arguments().insert(1);
-  }
-  if (arguments().empty()) {
-    // In case the author of the social smoked his breakfast and
-    // forgot to activate any modes of operation for the command
-    // this will keep the engine from seg faulting in IOHandler::handle().
-    arguments().insert(0);
-  }
+  Commands::Instance().add(this);
   return;
 }
 
@@ -143,70 +104,64 @@ SocialCommand::~SocialCommand(void) {
   return;
 }
 
+void SocialCommand::initialize(void) {
+  // Add default argument counts.
+  if (targetNone()) arguments().insert(0);
+  if (targetSelf() || targetVictim()) arguments().insert(1);
+  // Register with the global table.
+  Commands::Instance().add(this);
+  return;
+}
+
+void SocialCommand::destroy(void) {
+  std::vector<Command*> commands = Commands::Instance().commands();
+  std::vector<Command*>::iterator iter;
+
+  // Delete the data file.
+  remove(Storage::filename(this).c_str());
+
+  // Remove the Social from the CommandTable.
+  for (iter = commands.begin(); iter != commands.end(); ++iter) {
+    if (!(*iter)->social()) continue;
+    if (dynamic_cast<SocialCommand*>(*iter) == this) {
+      Commands::Instance().commands().erase(iter);
+      break;
+    }
+  }
+
+  // Self-delete.
+  delete this;
+  return;
+}
+
 void SocialCommand::save(void) {
-  try {
-    char query[Socket::MAX_BUFFER];
+  std::string filename = Storage::filename(this);
+  FILE* fp             = nullptr;
 
-    sprintf(query, "               \
-          UPDATE socials            \
-          SET creator = %lu,        \
-            flags = %lu,            \
-            targetNone = %u,        \
-            targetSelf = %u,        \
-            targetVictim = %u,      \
-            noneActor = '%s',       \
-            noneRoom = '%s',        \
-            selfActor = '%s',       \
-            selfRoom = '%s',        \
-            victimActor = '%s',     \
-            victimVictim = '%s',    \
-            victimRoom = '%s'       \
-          WHERE id = %lu            \
-          ;",
-      creator(),
-      flags().value(),
-      targetNone(),
-      targetSelf(),
-      targetVictim(),
-      Mysql::addslashes(noneActor()).c_str(),
-      Mysql::addslashes(noneRoom()).c_str(),
-      Mysql::addslashes(selfActor()).c_str(),
-      Mysql::addslashes(selfRoom()).c_str(),
-      Mysql::addslashes(victimActor()).c_str(),
-      Mysql::addslashes(victimVictim()).c_str(),
-      Mysql::addslashes(victimRoom()).c_str(),
-      ID()
-   );
-    World::Instance().getMysql()->update(query);
-
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to save command %lu (\"%s\"): %s\n", ID(), name().c_str(), me.getMessage().c_str());
-    return;
+  if ((fp = fopen(filename.c_str(), "w")) != NULL) {
+    Storage::dump(fp, this);
+    fclose(fp);
+  } else {
+    fprintf(stderr, "Failed to write %s.\n", filename.c_str());
   }
 
   return;
 }
 
-bool SocialCommand::destroy(void) {
-  unsigned long tempID = ID();
-  try {
-    char query[Socket::MAX_BUFFER];
+SocialCommand* SocialCommand::load(std::string filename) {
+  SocialCommand* social = nullptr;
+  FILE* fp              = nullptr;
 
-    sprintf(query,
-      " DELETE          \
-        FROM socials    \
-        WHERE id = %lu  \
-        LIMIT 1;",
-      ID()
-   );
-    World::Instance().getMysql()->remove(query);
-    delete this;
-
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to delete social %lu: %s\n", tempID, me.getMessage().c_str());
-    return false;
+  if ((fp = fopen(filename.c_str(), "r")) != NULL) {
+    social = new SocialCommand();
+    Storage::load(fp, social);
+    social->initialize();
+    fclose(fp);
+  } else {
+    fprintf(stderr, "Failed to read %s.\n", filename.c_str());
   }
-  return true;
+
+  return social;
 }
 
 bool SocialCommand::execute(Creature* creature, const std::vector<std::string>& args) {

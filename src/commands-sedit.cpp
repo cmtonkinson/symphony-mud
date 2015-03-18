@@ -36,14 +36,6 @@ bool SCmdDelete::execute(Creature* creature, const std::vector<std::string>& arg
     return false;
   }
 
-  avatar()->send("Social command \"%s\" has been deleted.", name.c_str());
-  for (std::vector<Command*>::iterator it = Commands::Instance().commands().begin(); it != Commands::Instance().commands().end(); ++it) {
-    if ((*it)->name() == avatar()->sedit()->name()) {
-      Commands::Instance().commands().erase(it);
-      break;
-    }
-  }
-
   avatar()->sedit()->destroy();
   avatar()->sedit(NULL);
   avatar()->send("Social command \"%s\" deleted.\n", name.c_str());
@@ -63,7 +55,7 @@ SCmdInformation::SCmdInformation(void) {
 bool SCmdInformation::execute(Creature* creature, const std::vector<std::string>& args) {
   avatar()->send("Command name: {Y%s{x\nCreated by: {y%s{x\nAudible: {y%s{x\nTactile: {y%s{x\n",
                   avatar()->sedit()->name().c_str(),
-                  World::Instance().getAvatarNameByID(avatar()->sedit()->creator()).c_str(),
+                  avatar()->sedit()->creator().c_str(),
                   avatar()->sedit()->isAudible() ? "yes" : "no",
                   avatar()->sedit()->isTactile() ? "yes" : "no"
                );

@@ -386,7 +386,7 @@ bool CmdSedit::execute(Creature* creature, const std::vector<std::string>& args)
         avatar()->send("A command by that name already exists.");
         return false;
       } else {
-        command = new SocialCommand(args[1], avatar()->ID());
+        command = new SocialCommand(args[1], avatar()->name());
         avatar()->mode().set(MODE_SEDIT);
         avatar()->sedit((SocialCommand*)command);
         avatar()->pushIOHandler(new SeditIOHandler(avatar()));

@@ -457,6 +457,8 @@ bool Storage::load_base(FILE* fp, Creature* loading) {
  **************************************************************************************************/
 void Storage::dump(FILE* fp, SocialCommand* social) {
   BEGIN("SOCIAL")
+  out(fp, "name",         social->name());
+  out(fp, "creator",      social->creator());
   out(fp, "targetNone",   social->targetNone());
   out(fp, "targetSelf",   social->targetSelf());
   out(fp, "targetVictim", social->targetVictim());
@@ -476,6 +478,8 @@ bool Storage::load(FILE* fp, SocialCommand* loading) {
   char input[32];
   unsigned load_status = 0;
   load_status = load_inner(fp, loading, input, "SOCIAL", [&fp, &loading, &input]() {
+    STORE_CASE_STRING("name",     loading->name(str);)
+    STORE_CASE_STRING("creator",  loading->creator(str);)
     STORE_CASE("targetNone",    &SocialCommand::targetNone)
     STORE_CASE("targetSelf",    &SocialCommand::targetSelf)
     STORE_CASE("targetVictim",  &SocialCommand::targetVictim)
@@ -540,6 +544,14 @@ bool Storage::load(FILE* fp, Note* loading) {
     STORE_CASE_STRING("body",     loading->body(str);)
   });
   return load_status == LOAD_DONE;
+}
+
+std::string Storage::filename(Area* area) {
+  return std::string("data/areas/") + Regex::slugify(area->name()) + ".area.txt";
+}
+
+std::string Storage::filename(SocialCommand* social) {
+  return std::string("data/socials/") + Regex::slugify(social->name()) + ".social.txt";
 }
 
 /***************************************************************************************************
