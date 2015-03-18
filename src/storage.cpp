@@ -307,9 +307,9 @@ bool Storage::load(FILE* fp, Avatar* loading) {
     STORE_CASE("bankGold",      &Avatar::bankGold)
     STORE_CASE("bankSilver",    &Avatar::bankSilver)
     STORE_CASE("roomNumber",    &Avatar::roomNumber)
-    STORE_CASE_WITH_CODE("adminFlags",    unsigned, "%u", loading->adminFlags().set(val);)
-    STORE_CASE_WITH_CODE("channelFlags",  unsigned, "%u", loading->channelFlags().set(val);)
-    STORE_CASE_WITH_CODE("whoFlags",      unsigned, "%u", loading->whoFlags().set(val);)
+    STORE_CASE_WITH_CODE("adminFlags",    unsigned, "%u", loading->adminFlags().value(val);)
+    STORE_CASE_WITH_CODE("channelFlags",  unsigned, "%u", loading->channelFlags().value(val);)
+    STORE_CASE_WITH_CODE("whoFlags",      unsigned, "%u", loading->whoFlags().value(val);)
     STORE_DESCEND("CREATURE")
   });
   return load_status == LOAD_DONE;
@@ -491,7 +491,7 @@ bool Storage::load(FILE* fp, SocialCommand* loading) {
     STORE_CASE_STRING("victimActor",  loading->victimActor(str);)
     STORE_CASE_STRING("victimVictim", loading->victimVictim(str);)
     STORE_CASE_STRING("victimRoom",   loading->victimRoom(str);)
-    STORE_CASE_WITH_CODE("flags", unsigned long, "%lu", loading->flags().set(val);)
+    STORE_CASE_WITH_CODE("flags", unsigned long, "%lu", loading->flags().value(val);)
   });
   return load_status == LOAD_DONE;
 }
@@ -547,6 +547,9 @@ bool Storage::load(FILE* fp, Note* loading) {
   return load_status == LOAD_DONE;
 }
 
+/***************************************************************************************************
+ * HELPERS
+ **************************************************************************************************/
 std::string Storage::filename(Area* area) {
   return std::string("data/areas/") + (area ? Regex::slugify(area->name()) : "*") + ".area.txt";
 }
