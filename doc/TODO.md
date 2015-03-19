@@ -42,25 +42,6 @@
   * recall
   * exit flags not saving
 
-## MySQL -> text
-
-[X] area
-[X]   room
-[X]     exit
-[X]     load_rule
-[X]   object
-[X]   mob
-[X] avatar
-[X]   inventory
-[X]   equipment
-[X]   abilities
-[ ]   pets
-[X] area permissions
-[X] disabled_commands
-[X] socials
-[X] boards
-[X]   notes
-
 ---
 
 # Specific pending actionables from existing logic - alphabetical order
