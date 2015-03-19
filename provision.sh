@@ -6,7 +6,6 @@
 apt-get -y update
 apt-get -yfV dist-upgrade
 
-# Install package dependencies.
 DEBIAN_FRONTEND=noninteractive apt-get install -yfV \
   clang ccache gdb                                  \
   libpcre3 libpcre3-dbg libpcre3-dev                \
@@ -18,6 +17,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -yfV \
 ###############################################################################
 cd /vagrant/vendor/libsodium
 autoreconf --verbose --install --force
+./configure
 make
 sudo make install
 sudo ldconfig
