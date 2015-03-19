@@ -5,7 +5,7 @@ CPPC					= ccache clang++
 FLAGS_ALL			= --std=c++11 -fcolor-diagnostics
 FLAGS_DEV			= $(FLAGS_ALL) -O0 -g -Wall -Werror -pedantic
 FLAGS_PROD		= $(FLAGS_ALL) -O3
-LIBS					= `pcre-config --libs` `mysql_config --libs`
+LIBS					= `pcre-config --libs` -lsodium
 SRC_DIR				= src
 OBJ_DIR				= obj
 BIN_DIR				= bin

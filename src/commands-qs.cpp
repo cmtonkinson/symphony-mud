@@ -21,13 +21,9 @@ CmdQuit::CmdQuit(void) {
 
 bool CmdQuit::execute(Creature* creature, const std::vector<std::string>& args) {
   Quote q = QuoteTable::Instance().getRandomQuote();
-  if (avatar()->save()) {
-    avatar()->send("%s\n        -%s", q.second.c_str(), q.first.c_str());
-    avatar()->disconnected(true);
-  } else {
-    avatar()->send("There was a problem saving your profile data.  Try again in a minute.");
-    return false;
-  }
+  avatar()->save();
+  avatar()->send("%s\n        -%s", q.second.c_str(), q.first.c_str());
+  avatar()->disconnected(true);
   return true;
 }
 
@@ -302,13 +298,9 @@ CmdSave::CmdSave(void) {
 }
 
 bool CmdSave::execute(Creature* creature, const std::vector<std::string>& args) {
-  if (avatar()->save()) {
-    creature->send("Information saved.");
-    return true;
-  } else {
-    creature->send("There was a problem saving your information.");
-    return false;
-  }
+  avatar()->save();
+  creature->send("Your profile has been saved.");
+  return true;
 }
 
 CmdSay::CmdSay(void) {

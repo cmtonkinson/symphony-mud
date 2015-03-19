@@ -1,6 +1,5 @@
 
 #include "board.h"
-#include "mysql.h"
 #include "world.h"
 
 Board::Board(void): _number(0) {

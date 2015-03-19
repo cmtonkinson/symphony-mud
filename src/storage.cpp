@@ -1,5 +1,6 @@
 
 #include <cstring>
+#include <sys/stat.h>
 #include <glob.h>
 #include "area.h"
 #include "avatar.h"
@@ -279,17 +280,19 @@ bool Storage::load(FILE* fp, Mob* loading) {
  **************************************************************************************************/
 void Storage::dump(FILE* fp, Avatar* avatar) {
   BEGIN("AVATAR")
-  out(fp, "gechoColor",   avatar->gechoColor());
-  out(fp, "title",        avatar->title());
-  out(fp, "poofin",       avatar->poofin());
-  out(fp, "poofout",      avatar->poofout());
-  out(fp, "age",          avatar->age());
-  out(fp, "bankGold",     avatar->bankGold());
-  out(fp, "bankSilver",   avatar->bankSilver());
-  out(fp, "adminFlags",   avatar->adminFlags().value());
-  out(fp, "channelFlags", avatar->channelFlags().value());
-  out(fp, "whoFlags",     avatar->whoFlags().value());
-  out(fp, "roomNumber",   avatar->roomNumber());
+  out(fp, "password",         avatar->password());
+  out(fp, "gechoColor",       avatar->gechoColor());
+  out(fp, "title",            avatar->title());
+  out(fp, "poofin",           avatar->poofin());
+  out(fp, "poofout",          avatar->poofout());
+  out(fp, "age",              avatar->age());
+  out(fp, "bankGold",         avatar->bankGold());
+  out(fp, "bankSilver",       avatar->bankSilver());
+  out(fp, "adminFlags",       avatar->adminFlags().value());
+  out(fp, "channelFlags",     avatar->channelFlags().value());
+  out(fp, "whoFlags",         avatar->whoFlags().value());
+  out(fp, "roomNumber",       avatar->roomNumber());
+  out(fp, "deletionStatus",   avatar->deletionStatus());
   dump_base(fp, avatar);
   END("AVATAR")
   return;
@@ -299,14 +302,16 @@ bool Storage::load(FILE* fp, Avatar* loading) {
   char input[32];
   unsigned load_status = 0;
   load_status = load_inner(fp, loading, input, "AVATAR", [&fp, &loading, &input]() {
-    STORE_CASE("gechoColor",    &Avatar::gechoColor)
-    STORE_CASE("title",         &Avatar::title)
-    STORE_CASE("poofin",        &Avatar::poofin)
-    STORE_CASE("poofout",       &Avatar::poofout)
-    STORE_CASE("age",           &Avatar::age)
-    STORE_CASE("bankGold",      &Avatar::bankGold)
-    STORE_CASE("bankSilver",    &Avatar::bankSilver)
-    STORE_CASE("roomNumber",    &Avatar::roomNumber)
+    STORE_CASE_STRING("password", loading->password(str);)
+    STORE_CASE("gechoColor",      &Avatar::gechoColor)
+    STORE_CASE("title",           &Avatar::title)
+    STORE_CASE("poofin",          &Avatar::poofin)
+    STORE_CASE("poofout",         &Avatar::poofout)
+    STORE_CASE("age",             &Avatar::age)
+    STORE_CASE("bankGold",        &Avatar::bankGold)
+    STORE_CASE("bankSilver",      &Avatar::bankSilver)
+    STORE_CASE("roomNumber",      &Avatar::roomNumber)
+    STORE_CASE("deletionStatus",  &Avatar::deletionStatus)
     STORE_CASE_WITH_CODE("adminFlags",    unsigned, "%u", loading->adminFlags().value(val);)
     STORE_CASE_WITH_CODE("channelFlags",  unsigned, "%u", loading->channelFlags().value(val);)
     STORE_CASE_WITH_CODE("whoFlags",      unsigned, "%u", loading->whoFlags().value(val);)
@@ -550,6 +555,14 @@ bool Storage::load(FILE* fp, Note* loading) {
 /***************************************************************************************************
  * HELPERS
  **************************************************************************************************/
+std::string Storage::avatar_glob_pattern(void) {
+  return "data/avatars/*.avatar.txt";
+}
+
+std::string Storage::filename(Avatar* avatar) {
+  return std::string("data/avatars/") + Regex::slugify(avatar->name()) + ".avatar.txt";
+}
+
 std::string Storage::area_glob_pattern(void) {
   return "data/areas/*.area.txt";
 }
@@ -595,6 +608,11 @@ std::vector<std::string> Storage::glob(std::string pattern) {
 
   globfree(&globbuf);
   return paths;
+}
+
+bool Storage::file_exists(std::string path) {
+  struct stat buffer;
+  return (stat(path.c_str(), &buffer) == 0);
 }
 
 /***************************************************************************************************

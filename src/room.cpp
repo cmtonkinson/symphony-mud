@@ -12,17 +12,6 @@ Room::Room(void): _inventory(&Identifiers::longname) {
 }
 
 Room::Room(unsigned long vnum, Area* area): _inventory(&Identifiers::longname) {
-  try {
-    char query[Socket::MAX_BUFFER];
-
-    sprintf(query, "INSERT IGNORE INTO rooms (areaID, vnum) VALUES (%lu, %lu);", area->ID(), vnum);
-    World::Instance().getMysql()->insert(query);
-    ID(World::Instance().getMysql()->getInsertID());
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to create room for area %lu: %s\n", area->ID(), me.getMessage().c_str());
-    return;
-  }
-
   this->area(area);
   area->rooms().insert(std::make_pair(vnum, this));
   this->vnum(vnum);
@@ -32,7 +21,6 @@ Room::Room(unsigned long vnum, Area* area): _inventory(&Identifiers::longname) {
   for (unsigned u = 0; u < 6; ++u) {
     _exits[u] = nullptr;
   }
-
   return;
 }
 

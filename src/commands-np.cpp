@@ -348,44 +348,21 @@ CmdPassword::CmdPassword(void) {
   name("password");
   addSyntax(3, "<old pw> <new pw> <confirm new pw>");
   brief("Changes your account password.");
+  playerOnly(true);
   return;
 }
 
 bool CmdPassword::execute(Creature* creature, const std::vector<std::string>& args) {
-  try {
-    Mysql* mysql = World::Instance().getMysql();
-    char query[Socket::MAX_BUFFER];
 
-    if (args[1].compare(args[2]) != 0) {
-      creature->send("The password you entered does not match the confirmation.");
-      return false;
-    }
-
-    sprintf(query,
-      "UPDATE avatars                 \
-       SET password = PASSWORD('%s')  \
-       WHERE avatarID = %lu           \
-       AND password = PASSWORD('%s')  \
-       LIMIT 1;",
-      args[1].c_str(),
-      creature->ID(),
-      args[0].c_str()
-   );
-    if (mysql->update(query) == 1) {
-      creature->send("Password successfully updated.");
-      return true;
-    } else {
-      creature->send("Password update failed.");
-      return false;
-    }
-
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to save avatar %lu: %s\n", creature->ID(), me.getMessage().c_str());
-    World::Instance().playerLog(World::LOG_LEVEL_ERROR, World::LOG_TYPE_AVATAR, "failed password reset for %s (%lu)", creature->identifiers().shortname().c_str(), creature->ID());
-    creature->send("Command failed. This issue has been logged.");
+  if (args[1].compare(args[2]) != 0) {
+    creature->send("The password you entered does not match the confirmation.");
     return false;
   }
 
+  avatar()->setPassword(args[1]);
+  avatar()->send("Password successfully updated.");
+  avatar()->save();
+  return true;
 }
 
 CmdPeace::CmdPeace(void) {

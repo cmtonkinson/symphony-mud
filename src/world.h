@@ -13,7 +13,6 @@
 #include "exit.h"
 #include "io-handler.h"
 #include "mob.h"
-#include "mysql.h"
 #include "object.h"
 #include "regex.h"
 #include "room.h"
@@ -64,7 +63,6 @@ class World {
     bool                                                      exists(void) const              { return _exists; }
     void                                                      copyover(const bool& copyover)  { _copyover = copyover; }
     bool                                                      copyover(void) const            { return _copyover; }
-    Mysql*                                                    getMysql(void)                  { return &_mysql; }
     Socket*                                                   getServer(void)                 { return &_server; }
     std::map<std::string,Avatar*>&                            getAvatars(void)                { return _avatars; }
     const std::map<std::string,Avatar*>&                      getAvatars(void) const          { return _avatars; }
@@ -118,12 +116,10 @@ class World {
     // Avatars (these should be deprecated soon)
     void                  updateByName(Avatar* avatar);
     Avatar*               findAvatar(const unsigned long& ID);
-    std::string           getAvatarNameByID(const unsigned long& ID);
     bool                  removeAvatar(const std::string& name);
 
     // Areas
     void                  loadAreas(void);
-    bool                  saveAreas(Mysql* db);
     void                  insert(Area* area);
     void                  remove(Area* area);
     Area*                 findArea(const unsigned long& ID);
@@ -161,7 +157,6 @@ class World {
     time_t                                                  _booted;
     bool                                                    _exists;
     bool                                                    _copyover;
-    Mysql                                                   _mysql;
     Socket                                                  _server;
     std::map<std::string,Avatar*>                           _avatars;
     std::set<Area*,area_comp>                               _areas;

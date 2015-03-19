@@ -17,6 +17,12 @@ class Note;
 
 class Avatar: public Creature {
   public:
+
+    // Deletion status...
+    static const unsigned DO_NOT_DELETE   = 0;
+    static const unsigned DELETE_ON_LOGIN = 1;
+    static const unsigned DESTROY_NOW     = 2;
+
     // constructors...
     Avatar(Socket* socket_ = nullptr);
     virtual ~Avatar(void);
@@ -32,12 +38,18 @@ class Avatar: public Creature {
     Composing&        composing(void)             { return _composing; }
     const Composing&  composing(void) const       { return _composing; }
 
-    bool            create(void);
-    virtual bool    save(void);
-    virtual bool    load(void);
-    virtual bool    destroy(void);
+    // Persistence...
+    void            save(void);
+    bool            load(void);
     void            changeName(std::string name);
-    bool            markForDeletion(const unsigned short& value);
+    bool            rename(std::string new_name);
+    std::string     hashPassword(std::string source);
+    void            setPassword(std::string str);
+    bool            checkPassword(std::string attempt);
+    void            destroy(void);
+    bool            shouldDelete(void) const;
+    bool            shouldDestroy(void) const;
+
     virtual void    send(std::string message);
     virtual void    send(const char* format, ...);
     time_t          secondsLoggedOn(void)         { return time(NULL) - _loggedOn; }
@@ -46,7 +58,6 @@ class Avatar: public Creature {
     std::string     getInput(void);
     bool            hasOutput(void);
     void            flushOutput(void);
-    bool            checkPassword(std::string password);
     std::string     listWhoFlags(void);
     void            restoreRoom(void);
     void            adjustStartingStats(void);
@@ -57,14 +68,13 @@ class Avatar: public Creature {
     void            output(std::string output)                    { _output = output; }
     ColorString     output(void) const                            { return _output; }
     virtual void    disconnected(const bool& disconnected)        { _disconnected = disconnected; }
+    void            deletionStatus(unsigned deletionStatus)       { _deletionStatus = deletionStatus; }
+    unsigned        deletionStatus(void) const                    { return _deletionStatus; }
     virtual bool    disconnected(void) const                      { return _disconnected; }
-    void            deleteMe(const bool& deleteMe)                { _deleteMe = deleteMe; }
-    bool            deleteMe(void) const                          { return _deleteMe; }
     void            password(std::string password)                { _password = password; }
     std::string     password(void)                                { return _password; }
     void            roomNumber(unsigned long roomNumber)          { _roomNumber = roomNumber; }
     unsigned long   roomNumber(void) const                        { return _roomNumber; }
-
     FlagBank&       adminFlags(void)                              { return _adminFlags; }
     FlagBank&       channelFlags(void)                            { return _channelFlags; }
     FlagBank&       whoFlags(void)                                { return _whoFlags; }
@@ -114,7 +124,7 @@ class Avatar: public Creature {
     time_t                  _loggedOn;
     Composing               _composing;
     bool                    _disconnected;
-    bool                    _deleteMe;
+    unsigned                _deletionStatus;
     std::string             _password;    // only used during creation
     unsigned long           _roomNumber;  // only used during login & reboot
 

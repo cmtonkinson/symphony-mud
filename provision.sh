@@ -9,11 +9,6 @@ as_user() {
   su -l $USER_NAME -c "$*"
 }
 
-mysql_exec() {
-  echo "mysql: ${*}"
-  mysql -u root -e "$*"
-}
-
 ###############################################################################
 # Base System
 ###############################################################################
@@ -24,14 +19,11 @@ apt-get -yfV dist-upgrade
 DEBIAN_FRONTEND=noninteractive apt-get install -yfV \
   clang ccache gdb                                  \
   libpcre3 libpcre3-dbg libpcre3-dev                \
-  mysql-server mysql-client libmysqlclient-dev      \
 
 ###############################################################################
-# MySQL Server
+# libsodium
 ###############################################################################
-mysql_exec "CREATE USER 'symphony'@'localhost' IDENTIFIED BY 'secure';"
-mysql_exec "CREATE DATABASE symphony;"
-mysql_exec "GRANT ALL PRIVILEGES ON symphony.* TO 'symphony'@'localhost';"
+
 
 ###############################################################################
 # Development Environment
@@ -42,8 +34,3 @@ echo 'export MAKEFLAGS="-j4"'           >> /home/vagrant/.bashrc
 echo 'export CCACHE_COMPRESS=1'         >> /home/vagrant/.bashrc
 echo 'export CCACHE_CPP2=1'             >> /home/vagrant/.bashrc
 echo 'cd /vagrant'                      >> /home/vagrant/.bashrc
-
-###############################################################################
-# Symphony Setup
-###############################################################################
-as_user "cd /vagrant && bash bin/migrate.sh"

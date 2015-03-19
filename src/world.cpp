@@ -321,7 +321,7 @@ void World::handleDisconnects(void) {
         a_it->second->room()->remove(a_it->second);
       }
       remove(a_it->second);
-      if (a_it->second->deleteMe()) { // permanently delete this account
+      if (a_it->second->shouldDestroy()) { // permanently delete this account
         a_it->second->destroy();
       } else { // just logging out
         delete a_it->second;
@@ -455,31 +455,6 @@ Avatar* World::findAvatar(const unsigned long& ID) {
   return NULL;
 }
 
-std::string World::getAvatarNameByID(const unsigned long& ID) {
-  try {
-    ROW row;
-    char query[Socket::MAX_BUFFER];
-
-    sprintf(query,
-      " SELECT shortname      \
-        FROM avatars          \
-        WHERE avatarID = %lu  \
-        LIMIT 1;",
-      ID
-   );
-    if (getMysql()->select(query)) {
-      if ((row = getMysql()->fetch())) {
-        return row["shortname"];
-      }
-    }
-    return std::string("none");
-
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to save area %lu: %s\n", ID, me.getMessage().c_str());
-    return std::string("error");
-  }
-}
-
 bool World::removeAvatar(const std::string& name) {
   for (std::map<std::string,Avatar*>::iterator it = getAvatars().begin(); it != getAvatars().end(); ++it) {
     if (it->first == name) {
@@ -606,7 +581,6 @@ unsigned World::rand(const unsigned& min, const unsigned& max) {
 
 void World::worldLog(unsigned level, unsigned type, const char* format, ...) {
   char buffer[Socket::MAX_BUFFER];
-  char query[Socket::MAX_BUFFER];
   va_list args;
 
   // Process our arguments...
@@ -615,13 +589,7 @@ void World::worldLog(unsigned level, unsigned type, const char* format, ...) {
   va_end(args);
 
   // Prep and send our query...
-  sprintf(query, "INSERT INTO world_log (level, type, text) VALUES (%u, %u, '%s');", level, type, Mysql::addslashes(buffer).c_str());
-
-  try {
-    World::Instance().getMysql()->insert(query);
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to log world event: %s\n", query);
-  }
+  fprintf(stderr, "LOG: %s\n", buffer);
 
   // Depending on the level (and the current system log level) we may also print the message...
   if (level == LOG_LEVEL_SYSTEM || level >= LOG_LEVEL_WARNING) {
@@ -634,7 +602,6 @@ void World::worldLog(unsigned level, unsigned type, const char* format, ...) {
 
 void World::playerLog(unsigned level, unsigned type, const char* format, ...) {
   char buffer[Socket::MAX_BUFFER];
-  char query[Socket::MAX_BUFFER];
   va_list args;
 
   // Process our arguments...
@@ -643,13 +610,7 @@ void World::playerLog(unsigned level, unsigned type, const char* format, ...) {
   va_end(args);
 
   // Prep and send our query...
-  sprintf(query, "INSERT INTO player_log (level, type, text) VALUES (%u, %u, '%s');", level, type, Mysql::addslashes(buffer).c_str());
-
-  try {
-    World::Instance().getMysql()->insert(query);
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to log player event: %s\n", query);
-  }
+  fprintf(stderr, "ERROR: %s\n", buffer);
 
   return;
 }

@@ -24,9 +24,6 @@ int main(int argc, char* argv[], char* envp[]) {
   } catch (SocketException e) {
     fprintf(stderr, "main.cpp: SocketException (error: %s)\n", e.getError().c_str());
     return World::EXIT_ERROR;
-  } catch (MysqlException e) {
-    fprintf(stderr, "main.cpp: MysqlException (message: %s)\n", e.getMessage().c_str());
-    return World::EXIT_ERROR;
   } catch (RegexException e) {
     fprintf(stderr, "main.cpp: RegexException (message: %s)\n", e.getMessage().c_str());
     return World::EXIT_ERROR;

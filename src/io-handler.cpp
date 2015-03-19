@@ -6,6 +6,7 @@
 #include "commandTable.h"
 #include "display.h"
 #include "io-handler.h"
+#include "storage.h"
 #include "world.h"
 
 /************************************** BASE CLASS HANDLE METHOD **************************************/
@@ -175,11 +176,13 @@ bool LoginNameIOHandler::handle(void) {
   std::string input = ColorString(avatar()->getInput()).stripColor();
   input = Regex::trim(input.substr(0, input.find_first_of(' ')));
   Avatar* test = NULL;
+  size_t min_length = 3;
+  size_t max_length = 15;
 
   // Sanitize...
-  Regex::replace("[^a-z]", "", input);
-  if (input.size() > 12 || input.size() < 3) {
-    avatar()->send("Sorry - names must be between 3 and 12 characters long (%s is %u).\n", input.c_str(), input.size());
+  Regex::replace("[^a-z'-]", "", input);
+  if (input.size() > max_length || input.size() < min_length) {
+    avatar()->send("Sorry - names must be between %zu and %zu characters long (%s is %zu).\n", min_length, max_length, input.c_str(), input.size());
     return false;
   }
   input[0] = toupper(input[0]);
@@ -228,7 +231,7 @@ bool LoginPasswordIOHandler::handle(void) {
   if (avatar()->checkPassword(input)) {
     World::Instance().removeAvatar(fd);
     World::Instance().insert(avatar());
-    if (avatar()->deleteMe()) {
+    if (avatar()->deletionStatus() == Avatar::DELETE_ON_LOGIN) {
       avatar()->status().set(DELETING);
       avatar()->replaceIOHandler(new LoginDeleteIOHandler(avatar()));
       return true;
@@ -242,8 +245,7 @@ bool LoginPasswordIOHandler::handle(void) {
     return true;
   } else {
     avatar()->send("That password is invalid.\n");
-    avatar()->deleteMe(false);
-    avatar()->markForDeletion(0);
+    avatar()->deletionStatus(Avatar::DO_NOT_DELETE);
     avatar()->disconnected(true);
     return false;
   }
@@ -255,7 +257,7 @@ std::string LoginPasswordIOHandler::prompt(void) {
 
 /************************************** LOGIN (DELETE) HANDLER **************************************/
 void LoginDeleteIOHandler::activate(void) {
-  avatar()->deleteMe(false);
+  avatar()->deletionStatus(Avatar::DO_NOT_DELETE);
   avatar()->send("\n");
   return;
 }
@@ -267,10 +269,10 @@ void LoginDeleteIOHandler::deactivate(void) {
 bool LoginDeleteIOHandler::handle(void) {
   if (avatar()->getInput() == "delete") {
     avatar()->send("\n{RCharacter deleted.{x\n\nFarewell, traveler. May you find happiness in another realm.\n");
-    avatar()->deleteMe(true);
+    avatar()->deletionStatus(Avatar::DESTROY_NOW);
     avatar()->disconnected(true);
   } else {
-    avatar()->markForDeletion(0);
+    avatar()->deletionStatus(Avatar::DO_NOT_DELETE);
     avatar()->send("\nCharacter deletion {YCANCELLED{x!!  Whew - that was a close one.");
     World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_LOGINS, "%s has cancelled deletion and logged in from %s.", avatar()->identifiers().shortname().c_str(), avatar()->socket()->getIP().c_str());
     World::Instance().playerLog(World::LOG_LEVEL_NOTICE, World::LOG_TYPE_PLAYER, "%s (%lu) has cancelled deletion and logged in from %s", avatar()->identifiers().shortname().c_str(), avatar()->ID(), avatar()->socket()->getIP().c_str());
@@ -285,8 +287,9 @@ bool LoginDeleteIOHandler::handle(void) {
 std::string LoginDeleteIOHandler::prompt(void) {
   return "{RThis character has been marked for deletion!{x\n\
 To delete this character, enter \"delete\" - any other input will cancel\n\
-the process and log you into the game.\n\
-Note: Character deletion IS permanent. All data will be instantly lost.";
+the process and log you into the game.\n\n\
+Note: Character deletion IS permanent. All data will be instantly and\n\
+permanently lost.";
 }
 
 /************************************** CREATION (NAME) HANDLER **************************************/
@@ -337,7 +340,7 @@ bool CreationPasswordIOHandler::handle(void) {
     avatar()->send("Sorry - it needs to be at least 6 characters long (no spaces). ");
     return false;
   } else {
-    avatar()->password(input);
+    avatar()->setPassword(input);
     avatar()->replaceIOHandler(new CreationPasswordConfirmIOHandler(avatar()));
     return true;
   }
@@ -360,7 +363,7 @@ void CreationPasswordConfirmIOHandler::deactivate(void) {
 bool CreationPasswordConfirmIOHandler::handle(void) {
   std::string input = avatar()->getInput();
   input = Regex::trim(input.substr(0, input.find_first_of(' ')));
-  if (input == avatar()->password()) {
+  if (avatar()->checkPassword(input)) {
     avatar()->send("Great - now on to more interesting matters.\n");
     avatar()->replaceIOHandler(new CreationGenderIOHandler(avatar()));
     return true;
@@ -510,15 +513,17 @@ bool CreationSummaryIOHandler::handle(void) {
     avatar()->naturalStatAdjustment();
     avatar()->status().set(CONNECTED);
     avatar()->room(World::Instance().findRoom(0));
-    if (avatar()->create() && avatar()->save() && avatar()->load()) {
-      avatar()->send("\n\n{WWelcome to the realm, young %s!{x\n", avatar()->identifiers().shortname().c_str());
-      avatar()->restoreRoom();
+    avatar()->save();
+    avatar()->load();
+    avatar()->send("\n\n{WWelcome to the realm, young %s!{x\n", avatar()->identifiers().shortname().c_str());
+    avatar()->restoreRoom();
+    // If this is the first account, promote it to CREATOR.
+    if (Storage::avatar_glob_pattern().size() == 1) {
+      while (avatar()->level() < Creature::CREATOR) avatar()->gainLevel();
       avatar()->save();
-      success = true;
-    } else {
-      avatar()->send("Terribly sorry - there was a problem finalizing your account.");
-      success = false;
+      avatar()->send("\n\n{WYou are now the system administrator.{x\n");
     }
+    success = true;
   } else {
     avatar()->send("\n{RCharacter cancelled.{x\n\nFarewell, traveler. May you find happiness in another realm.\n");
     success = false;

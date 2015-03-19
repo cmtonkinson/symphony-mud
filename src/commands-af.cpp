@@ -654,15 +654,11 @@ bool CmdDelete::execute(Creature* creature, const std::vector<std::string>& args
   CmdQuit quit;
   std::vector<std::string> quit_args(1);
   if (args[0] == "delete") {
-    if (avatar()->markForDeletion(1)) {
-      avatar()->send("You will need to log in to confirm the deletion.\n\n");
-      quit.avatar(avatar());
-      quit.execute(creature, quit_args);
-      return true;
-    } else {
-      avatar()->send("Something went wrong; your account could not me marked for deletion.\n\n");
-      return false;
-    }
+    avatar()->deletionStatus(Avatar::DELETE_ON_LOGIN);
+    avatar()->send("You will need to log in to confirm the deletion.\n\n");
+    quit.avatar(avatar());
+    quit.execute(creature, quit_args);
+    return true;
   } else {
     avatar()->send("You must type \"delete delete\" exactly in order to delete your character.\n\n");
     avatar()->send(printSyntax());
@@ -764,10 +760,7 @@ bool CmdDisconnect::execute(Creature* creature, const std::vector<std::string>& 
     avatar()->send("Wouldn't it be easier to just quit?");
     return false;
   }
-  if (!target->save()) {
-    avatar()->send("There was a problem saving their profile.");
-    return false;
-  }
+  target->save();
   target->disconnected(true);
   target->send("%s has cut your link - what a buzzkill!", target->seeName(avatar(), true).c_str());
   avatar()->send("You've ripped the game IV from %s's veins!", avatar()->seeName(target).c_str());

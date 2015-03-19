@@ -29,24 +29,10 @@ Mob::Mob(const Mob& ref): Creature(ref) {
   return;
 }
 
-Mob::Mob(Area* area, unsigned vnum): Mob() {
-
-  try {
-    char query[Socket::MAX_BUFFER];
-
-    sprintf(query, "INSERT IGNORE INTO mobs (areaID, vnum) VALUES (%lu, %u);", area->ID(), vnum);
-    World::Instance().getMysql()->insert(query);
-    ID(World::Instance().getMysql()->getInsertID());
-
-    area->mobs().insert(std::make_pair(vnum, this));
-    this->vnum(vnum);
-    level(1);
-
-  } catch (MysqlException me) {
-    fprintf(stderr, "Failed to create mob for area %lu: %s\n", area->ID(), me.getMessage().c_str());
-    return;
-  }
-
+Mob::Mob(Area* area, unsigned vnum_): Mob() {
+  area->mobs().insert(std::make_pair(vnum_, this));
+  vnum(vnum_);
+  level(1);
   return;
 }
 
