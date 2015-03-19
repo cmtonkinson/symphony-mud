@@ -139,14 +139,18 @@ void Room::destroy(void) {
   }
   // Destroy LoadRules.
   for (auto iter : loadRules()) iter->destroy();
-  // If there are any Creatures here, stop short.
-  // TODO - purge Creatures intelligently.
-  if (!creatures().empty()) return;
-  // Self-delete and return.
+  // Make sure the Room is empty first.
+  if (!clear()) {
+    fprintf(stderr, "Couldn't clear() Room #%lu during destruction.\n", vnum());
+    return; // shouldn't delete if it couldn't be clear()ed
+  }
+  // Self-delete
   delete this;
   return;
 }
 
+// Uses a wormhole to clear all Creatures and Objects from the Room,
+// moving them to the Tundra.
 bool Room::clear(void) {
   // Clear Creatures...
   while (creatures().size()) {
