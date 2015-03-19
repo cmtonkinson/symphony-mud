@@ -40,7 +40,6 @@
   * time
     * moon phases
   * recall
-  * exit flags not saving
 
 ---
 

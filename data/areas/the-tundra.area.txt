@@ -15,6 +15,7 @@ EXIT
 targetVnum 1
 direction 2
 key 0
+flags 0
 /EXIT
 /ROOM
 
@@ -29,16 +30,19 @@ EXIT
 targetVnum 2
 direction 1
 key 0
+flags 0
 /EXIT
 EXIT
 targetVnum 3
 direction 2
 key 0
+flags 0
 /EXIT
 EXIT
 targetVnum 0
 direction 4
 key 0
+flags 0
 /EXIT
 /ROOM
 
@@ -53,6 +57,7 @@ EXIT
 targetVnum 1
 direction 3
 key 0
+flags 0
 /EXIT
 /ROOM
 
@@ -67,6 +72,7 @@ EXIT
 targetVnum 1
 direction 4
 key 0
+flags 0
 /EXIT
 /ROOM
 

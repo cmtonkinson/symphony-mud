@@ -109,6 +109,7 @@ void Storage::dump(FILE* fp, Exit* exit) {
   out(fp, "targetVnum", exit->targetVnum());
   out(fp, "direction",  exit->direction());
   out(fp, "key",        exit->key());
+  out(fp, "flags",      exit->flags().value());
   END("EXIT")
   return;
 }
@@ -120,6 +121,7 @@ bool Storage::load(FILE* fp, Exit* loading) {
     STORE_CASE("targetVnum",  &Exit::targetVnum)
     STORE_CASE("direction",   &Exit::direction)
     STORE_CASE("key",         &Exit::key)
+    STORE_CASE_WITH_CODE("flags",     unsigned long,  "%lu",  loading->flags().value(val);)
   });
   return load_status == LOAD_DONE;
 }
