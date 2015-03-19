@@ -413,6 +413,7 @@ fprintf(stderr, "  -> avatar\n");
 
 Creature* World::findCreature(const std::string& name) {
   for (std::set<Creature*>::iterator it = getCreatures().begin(); it != getCreatures().end(); ++it) {
+fprintf(stdout, "Searching through '%s'\n", (*it)->name());
     if ((*it)->identifiers().matchesKeyword(name)) {
       if ((*it)->isAvatar()) {
         if (((Avatar*)*it)->isConnected()) {

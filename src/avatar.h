@@ -150,7 +150,8 @@ class Avatar: public Creature {
     unsigned short          _board;
 
     // Avatar-specific private methods...
-    void                    processOutput(std::string text);
+    void      changeIdentifiers(std::string name);
+    void      processOutput(std::string text);
 };
 
 #endif // #ifndef H_SYMPHONY_AVATAR

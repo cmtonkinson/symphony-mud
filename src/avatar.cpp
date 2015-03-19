@@ -46,8 +46,18 @@ Avatar::~Avatar(void) {
  * the various overloads of Avatar::send() so that we can do things like
  * color in a central location.
  */
+
+// private
 void Avatar::processOutput(std::string src) {
   output(output() + src);
+  return;
+}
+
+// private
+void Avatar::changeIdentifiers(std::string str) {
+  identifiers().shortname(str);
+  identifiers().getKeywords().clear();
+  identifiers().getKeywords().insert(str);
   return;
 }
 
@@ -151,7 +161,7 @@ bool Avatar::load(void) {
 // changeName is used for internal procedural purposes
 void Avatar::changeName(std::string name) {
   World::Instance().remove(this);
-  identifiers().shortname(name);
+  changeIdentifiers(name);
   World::Instance().insert(this);
   return;
 }
@@ -160,19 +170,19 @@ void Avatar::changeName(std::string name) {
 bool Avatar::rename(std::string new_name) {
   std::string old_name = name();
 
-  identifiers().shortname(new_name);
+  changeIdentifiers(new_name);
   std::string new_filename = Storage::filename(this);
 
   if (Storage::file_exists(new_filename)) {
     // Already taken
-    identifiers().shortname(old_name);
+    changeIdentifiers(old_name);
     return false;
   } else {
     // Good to go; there's a bit of a song and dance because of how World::insert()
     // and World::remove() operate on both the Creature and Avatar containers.
-    identifiers().shortname(old_name);
+    changeIdentifiers(old_name);
     World::Instance().remove(this);
-    identifiers().shortname(new_name);
+    changeIdentifiers(new_name);
     World::Instance().insert(this);
     // TODO - delete the old file
     save();
