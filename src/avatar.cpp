@@ -185,6 +185,10 @@ std::string Avatar::hashPassword(std::string source) {
   char buf[3];
   std::string dest;
 
+  // Copy the source string into the buffer
+  for (int x = 0; x < length; ++x) str[x] = source[x];
+  str[length] = 0;
+
   // libsodium gives us the SHA512
   crypto_hash(hash, str, length);
 
@@ -193,7 +197,7 @@ std::string Avatar::hashPassword(std::string source) {
     sprintf(buf, "%02X", hash[b]);
     dest += buf;
   }
-fprintf(stdout, "SHA512:\n  %s\n  %s\n", source.c_str(), dest.c_str());
+
   delete str;
   return dest;
 }
