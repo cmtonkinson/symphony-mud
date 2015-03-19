@@ -1,4 +1,4 @@
-# Generic features and concepts
+# Generic features, concepts, and pipe dreams
 
 ## Combat, Abilities
   * offense/defense calculations
@@ -23,13 +23,26 @@
   * loadrule enhancements
 
 ## Engine
-  * security: login throttling, password storage
-  * performance: jobs per turn, turn sleep
-  * performance: stat tracking on turn processing time, job processing time, job execution delay, etc
-  * Log logins, logouts, d/c
+  * Security
+    * login throttling
+    * banning
+    * password storage (will libsodium support PBKDF2?)
+  * Performance
+    * jobs per turn
+    * turn sleep
+    * stat tracking on
+      * turn processing time
+      * job processing time
+      * job execution delay
+  * Possible rename "Object" -> "Item"
+  * More flexible logging system
+    * Engine-level events (bugs, diagnostics)
+    * World-level events (timers, resets)
+    * Player-level events (logins, pk's, levels)
   * Account emails
-  * FlagBank to long int
-  * Logging bugs (switch defaults, bad indices, etc)
+    * Integrate with POP/SMTP for email validation?
+    * Integrate board system with email?
+  * Re-examine FlagBank: convert to uint64?
 
 ## General
   * hunger, thirst, drunk
@@ -40,6 +53,7 @@
   * time
     * moon phases
   * recall
+  * spell objects (wands, scrolls)
 
 ---
 

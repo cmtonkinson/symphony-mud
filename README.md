@@ -2,6 +2,7 @@
 
 Symphony MUD is a modern, extensible, open source MUD server codebase intended as a replacement for the Diku/Merc/ROM line of games.
 
+---
 ## Features
 
   * Hot-reboot ("copyover")
@@ -18,6 +19,7 @@ Symphony MUD is a modern, extensible, open source MUD server codebase intended a
   * Dynamic enabling/disabling of commands
   * A customizable character creation sequence
 
+---
 ## Getting Started
 
 Symphony MUD is built, tested, and hacked in a [Vagrant](https://www.vagrantup.com/) virtual machine. If you're familiar with Vagrant, the instructions couldn't be easier:
@@ -40,6 +42,7 @@ bin/symphony
 
 If you're not familiar with Vagrant, you should be. Worst case, if you have a Linux system you should be able to get Symphony MUD to compile and run as long as you meet the dependencies (check out [provision.sh](provision.sh) and the [makefile](makefile) for more details).
 
+---
 ## Code
 
 The code is moving toward C++11 (still with large sections of older C and C++) but compiles cleanly against clang on Linux. The following third party libraries are prerequisite:
@@ -47,14 +50,17 @@ The code is moving toward C++11 (still with large sections of older C and C++) b
   * PCRE (not included)
   * libsodium (included)
 
+---
 ## Data
 
 All data is persisted to disk in plain old text format. A conversion to YAML (instead of the custom serialization format) would be a very welcome pull request indeed.
 
+---
 ## Changelog
 
 [Available in markdown format.](doc/CHANGELOG.md)
 
+---
 ## Get Involved
 
 #### Reporting Bugs
@@ -69,21 +75,23 @@ Bug reports should be submitted on [Github][bugs].
   1. Push your branch (`git push origin my-feature-branch`)
   1. Create a pull request
 
+---
 ## Credits
 
 ### Author:
 
   * Xantiloth ([Chris Tonkinson][chris])
 
-### Contributors:
+### Contributors (alphabetical):
 
   * Dromynus
-  * Zantix
-  * Turin
   * Marek
+  * Turin
+  * Zantix
 
 Original inpsiration for Symphony MUD comes from the excellent (sadly now defunct) ROM-derived *Feudal Realms* by Charles Webber (aka "Turloch"). Some internals take initial inspiration from *Scratch*, a telnet chat server by Jared Devall (aka Rendelven).
 
+---
 ## License
 
 Copyright © Chris Tonkinson 2004-2015. Symphony MUD is published under the [MIT license](doc/LICENSE.md).
