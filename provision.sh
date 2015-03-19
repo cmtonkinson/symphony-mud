@@ -1,36 +1,34 @@
 #!/bin/bash
 
 ###############################################################################
-# Functions
-###############################################################################
-# Most of the time we can get by with this DRY wrapper for sudo commands.
-as_user() {
-  echo "$USER_NAME:~$ > ${*}"
-  su -l $USER_NAME -c "$*"
-}
-
-###############################################################################
 # Base System
 ###############################################################################
 apt-get -y update
 apt-get -yfV dist-upgrade
 
-# Install dependencies.
+# Install package dependencies.
 DEBIAN_FRONTEND=noninteractive apt-get install -yfV \
   clang ccache gdb                                  \
   libpcre3 libpcre3-dbg libpcre3-dev                \
+  libtool automake                                  \
 
 ###############################################################################
-# libsodium
+# Dependency: libsodium
+# Thanks to http://askubuntu.com/a/215378
 ###############################################################################
-
+cd /vagrant/vendor/libsodium
+autoreconf --verbose --install --force
+make
+sudo make install
+sudo ldconfig
 
 ###############################################################################
 # Development Environment
 ###############################################################################
-echo 'alias list="ls -alsvh"'           >> /home/vagrant/.bashrc
-echo 'alias c="telnet localhost 6501"'  >> /home/vagrant/.bashrc
-echo 'export MAKEFLAGS="-j4"'           >> /home/vagrant/.bashrc
-echo 'export CCACHE_COMPRESS=1'         >> /home/vagrant/.bashrc
-echo 'export CCACHE_CPP2=1'             >> /home/vagrant/.bashrc
-echo 'cd /vagrant'                      >> /home/vagrant/.bashrc
+BASHRC=/home/vagrant/.bashrc
+echo 'alias list="ls -alsvh"'           >> $BASHRC
+echo 'alias c="telnet localhost 6501"'  >> $BASHRC
+echo 'export MAKEFLAGS="-j4"'           >> $BASHRC
+echo 'export CCACHE_COMPRESS=1'         >> $BASHRC
+echo 'export CCACHE_CPP2=1'             >> $BASHRC
+echo 'cd /vagrant'                      >> $BASHRC
