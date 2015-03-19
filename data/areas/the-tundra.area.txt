@@ -12,4 +12,5 @@ smell 0:
 sound 0:
 terrain 4:snow
 /ROOM
+
 /AREA
