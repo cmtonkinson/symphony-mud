@@ -573,7 +573,12 @@ bool CmdConnections::execute(Creature* creature, const std::vector<std::string>&
 
   for (std::map<std::string,Avatar*>::const_iterator it = World::Instance().getAvatars().begin(); it != World::Instance().getAvatars().end(); ++it) {
     if (creature->canSee(it->second) == Creature::SEE_NAME) {
-      sprintf(buffer, "  {x%-15s{g%-15s{W%-20s{C%-10d\n", it->second->identifiers().shortname().c_str(), it->second->status().string().c_str(), it->second->socket()->getIP().c_str(), it->second->socket()->getFd());
+      sprintf(buffer, "  {x%-15s{g%-15s{W%-20s{C%-10d\n",
+        it->second->identifiers().shortname().c_str(),
+        it->second->status().string().c_str(),
+        it->second->socket()->getIP().c_str(),
+        it->second->socket()->getFd()
+      );
       output.append(buffer);
     }
   }

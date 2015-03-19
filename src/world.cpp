@@ -94,7 +94,11 @@ bool World::reboot(Creature* creature) {
 
   for (it = getAvatars().begin(); it != getAvatars().end(); ++it) {
     if (it->second->isConnected()) {
-      fprintf(fp, "%d %s %s\n", it->second->socket()->getFd(), it->second->socket()->getIP().c_str(), it->second->identifiers().shortname().c_str());
+      fprintf(fp, "%d %s %s\n",
+        it->second->socket()->getFd(),
+        it->second->socket()->getIP().c_str(),
+        it->second->name()
+      );
     }
   }
 
@@ -388,17 +392,21 @@ void World::handleJobs(void) {
 
 /************************************************************ CREATURES ************************************************************/
 void World::insert(Creature* creature) {
+fprintf(stderr, "World::insert(%s)\n", creature->name());
   getCreatures().insert(creature);
   if (creature->isAvatar()) {
-    getAvatars().insert(std::make_pair(creature->identifiers().shortname(), (Avatar*)creature));
+fprintf(stderr, "  -> avatar\n");
+    getAvatars().insert(std::make_pair(creature->name(), dynamic_cast<Avatar*>(creature)));
   }
   return;
 }
 
 void World::remove(Creature* creature) {
+fprintf(stderr, "World::remove(%s)\n", creature->name());
   getCreatures().erase(creature);
   if (creature->isAvatar()) {
-    getAvatars().erase(creature->identifiers().shortname());
+fprintf(stderr, "  -> avatar\n");
+    getAvatars().erase(creature->name());
   }
   return;
 }

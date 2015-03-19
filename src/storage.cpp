@@ -583,6 +583,10 @@ std::string Storage::disabled_command_glob_pattern(void) {
   return "data/disabled_commands/*_*";
 }
 
+std::string Storage::deadpool_directory(void) {
+  return "data/deadpool/";
+}
+
 std::vector<std::string> Storage::glob(std::string pattern) {
   std::vector<std::string> paths;
   glob_t globbuf;

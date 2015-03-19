@@ -229,8 +229,6 @@ bool LoginPasswordIOHandler::handle(void) {
   input = Regex::trim(input.substr(0, input.find_first_of(' ')));
 
   if (avatar()->checkPassword(input)) {
-    World::Instance().removeAvatar(fd);
-    World::Instance().insert(avatar());
     if (avatar()->deletionStatus() == Avatar::DELETE_ON_LOGIN) {
       avatar()->status().set(DELETING);
       avatar()->replaceIOHandler(new LoginDeleteIOHandler(avatar()));
@@ -285,11 +283,10 @@ bool LoginDeleteIOHandler::handle(void) {
 }
 
 std::string LoginDeleteIOHandler::prompt(void) {
-  return "{RThis character has been marked for deletion!{x\n\
-To delete this character, enter \"delete\" - any other input will cancel\n\
+  return "{YThis character has been marked for deletion!{x\n\
+To delete this character, enter \"{Wdelete{x\" - any other input will cancel\n\
 the process and log you into the game.\n\n\
-Note: Character deletion IS permanent. All data will be instantly and\n\
-permanently lost.";
+Note: {RCHARACTER DELETION IS PERMANENT{x. All data will be instantly lost.\n\n";
 }
 
 /************************************** CREATION (NAME) HANDLER **************************************/

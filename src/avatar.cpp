@@ -25,6 +25,7 @@ Avatar::Avatar(Socket* socket_) {
   board(0);
   note(NULL);
   gechoColor('x');
+  roomNumber(0);
   room(NULL);
   mode().set(MODE_NONE);
   title(", adventurer.");
@@ -149,9 +150,9 @@ bool Avatar::load(void) {
 
 // changeName is used for internal procedural purposes
 void Avatar::changeName(std::string name) {
-  World::Instance().getAvatars().erase(identifiers().shortname());
+  World::Instance().remove(this);
   identifiers().shortname(name);
-  World::Instance().getAvatars().insert(std::make_pair(identifiers().shortname(), this));
+  World::Instance().insert(this);
   return;
 }
 
@@ -167,9 +168,12 @@ bool Avatar::rename(std::string new_name) {
     identifiers().shortname(old_name);
     return false;
   } else {
-    // Good to go
-    World::Instance().getAvatars().erase(old_name);
-    World::Instance().getAvatars().insert(std::make_pair(new_name, this));
+    // Good to go; there's a bit of a song and dance because of how World::insert()
+    // and World::remove() operate on both the Creature and Avatar containers.
+    identifiers().shortname(old_name);
+    World::Instance().remove(this);
+    identifiers().shortname(new_name);
+    World::Instance().insert(this);
     // TODO - delete the old file
     save();
     return true;
@@ -212,15 +216,34 @@ bool Avatar::checkPassword(std::string attempt) {
 }
 
 void Avatar::destroy(void) {
+  std::string original_path = Storage::filename(this);
+  std::string original_base = basename(original_path.c_str());
+  std::string deadpool_path = Storage::deadpool_directory();
+  std::string deadpool_base = original_base;
+
+  // Append a timestamp to the filename.
+  std::string now = World::strnow();
+  Regex::replace("[^0-9]+", "-", now);
+  deadpool_base += "_time_" + now;
+
+  // Append the IP address to the filename.
+  std::string ip = socket()->getIP();
+  Regex::replace("[^0-9]+", "-", ip);
+  deadpool_base += "_ip_" + ip;
+
+  // Move the avatar data file to the deadpool.
+  ::rename(original_path.c_str(), (deadpool_path + deadpool_base).c_str());
+
+  delete this;
   return;
 }
 
 bool Avatar::shouldDelete(void) const {
-  return deletionStatus() == DELETE_ON_LOGIN;
+  return _deletionStatus == DELETE_ON_LOGIN;
 }
 
 bool Avatar::shouldDestroy(void) const {
-  return deletionStatus() == DESTROY_NOW;
+  return _deletionStatus == DESTROY_NOW;
 }
 
 /******************************************************* Overloads of virtual methods ********************************************************/

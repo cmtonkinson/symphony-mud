@@ -20,6 +20,9 @@ mysql.conf
 /data/avatars/*
 !/data/avatars/.keep
 
+/data/deadpool/*
+!/data/deadpool/.keep
+
 src/proto/*
 symphony
 

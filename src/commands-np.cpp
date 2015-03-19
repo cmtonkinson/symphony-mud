@@ -360,8 +360,8 @@ bool CmdPassword::execute(Creature* creature, const std::vector<std::string>& ar
   }
 
   avatar()->setPassword(args[1]);
-  avatar()->send("Password successfully updated.");
   avatar()->save();
+  avatar()->send("Password updated (your profile has been saved for you automatically).");
   return true;
 }
 

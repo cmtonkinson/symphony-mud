@@ -171,6 +171,8 @@ class Storage {
 
     static std::string disabled_command_glob_pattern(void);
 
+    static std::string deadpool_directory(void);
+
     static std::vector<std::string> glob(std::string pattern);
     static bool                     file_exists(std::string path);
 
