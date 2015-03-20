@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_OBJECT_ARMOR
-#define H_SYMPHONY_OBJECT_ARMOR
+#ifndef H_SYMPHONY_ITEM_ARMOR
+#define H_SYMPHONY_ITEM_ARMOR
 
 class ObjArmor {
   public:
@@ -10,4 +10,4 @@ class ObjArmor {
     ~ObjArmor(void);
 };
 
-#endif // H_SYMPHONY_OBJECT_ARMOR
+#endif // H_SYMPHONY_ITEM_ARMOR

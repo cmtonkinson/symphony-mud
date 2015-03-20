@@ -9,7 +9,7 @@ Symphony MUD is a modern, extensible, open source MUD server codebase intended a
   * Global autosaving
   * Flexible character creation sequence
   * Modular and extensible API for defining new commands
-  * Persistent world (with persistent objects & equipment)
+  * Persistent world (with persistent items & equipment)
   * In-game editor suite for world building ("OLC" in Rom-speak)
   * In-game social command editor
   * In-game message board system

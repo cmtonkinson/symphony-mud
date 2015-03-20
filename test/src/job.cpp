@@ -29,8 +29,8 @@ class JobTest: public ::testing::Test {
     Thing* thing;
 
     template <class T,class EventT>
-    Job* createJob(time_t when, T* object, bool (T::*method)(EventT*)) {
-      return new Job(when, new EventHandlerMethod<T,EventT>(object, method));
+    Job* createJob(time_t when, T* item, bool (T::*method)(EventT*)) {
+      return new Job(when, new EventHandlerMethod<T,EventT>(item, method));
     }
 
     virtual void SetUp(void) {

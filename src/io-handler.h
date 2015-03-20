@@ -99,7 +99,7 @@ DEF_FULL_IOHANDLER(InputIOHandler);
 // Editors...
 DEF_FULL_IOHANDLER(AeditIOHandler); // areas
 DEF_FULL_IOHANDLER(MeditIOHandler); // mobs
-DEF_FULL_IOHANDLER(OeditIOHandler); // objects
+DEF_FULL_IOHANDLER(IeditIOHandler); // items
 DEF_FULL_IOHANDLER(PeditIOHandler); // players
 DEF_FULL_IOHANDLER(ReditIOHandler); // rooms
 DEF_FULL_IOHANDLER(SeditIOHandler); // social commands

@@ -1,5 +1,5 @@
 
-#include "object-clothing.h"
+#include "item-clothing.h"
 
 ObjClothing::ObjClothing(void) {
   return;

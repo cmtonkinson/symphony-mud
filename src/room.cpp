@@ -69,10 +69,10 @@ void Room::removeLoadRule(unsigned index) {
 }
 
 void Room::executeLoadRules(void) {
-  std::list<Object*> new_objects;
+  std::list<Item*> new_items;
   std::list<Mob*> new_mobs;
   for (std::list<LoadRule*>::iterator it = loadRules().begin(); it != loadRules().end(); ++it) {
-    (*it)->execute(new_objects, new_mobs);
+    (*it)->execute(new_items, new_mobs);
   }
   return;
 }
@@ -149,7 +149,7 @@ void Room::destroy(void) {
   return;
 }
 
-// Uses a wormhole to clear all Beings and Objects from the Room,
+// Uses a wormhole to clear all Beings and Items from the Room,
 // moving them to the Tundra.
 bool Room::clear(void) {
   // Clear Beings...
@@ -158,9 +158,9 @@ bool Room::clear(void) {
       return false;
     }
   }
-  // Clear Objects...
-  while (inventory().objectList().size()) {
-    if (!World::Instance().transport(*(inventory().objectList().begin()), this, 0)) {
+  // Clear Items...
+  while (inventory().itemList().size()) {
+    if (!World::Instance().transport(*(inventory().itemList().begin()), this, 0)) {
       return false;
     }
   }
@@ -168,10 +168,10 @@ bool Room::clear(void) {
 }
 
 void Room::reset(void) {
-  std::list<Object*> new_objects;
+  std::list<Item*> new_items;
   std::list<Mob*> new_mobs;
   for (std::list<LoadRule*>::iterator it = loadRules().begin(); it != loadRules().end(); ++it) {
-    (*it)->execute(new_objects, new_mobs);
+    (*it)->execute(new_items, new_mobs);
   }
   return;
 }

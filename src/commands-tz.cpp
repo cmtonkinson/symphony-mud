@@ -137,9 +137,9 @@ CmdUnlock::CmdUnlock(void) {
 }
 
 bool CmdUnlock::execute(Being* being, const std::vector<std::string>& args) {
-  std::list<Object*> foo;
+  std::list<Item*> foo;
   Exit* exit = NULL;
-  Object* key = NULL;
+  Item* key = NULL;
 
   if ((exit = being->room()->exit(args[0])) == NULL) {
     being->send("There is no door in that direction.");
@@ -153,7 +153,7 @@ bool CmdUnlock::execute(Being* being, const std::vector<std::string>& args) {
     being->send("It's already unlocked.");
     return false;
   }
-  foo = being->inventory().searchObjects(exit->key());
+  foo = being->inventory().searchItems(exit->key());
   if (!foo.empty()) {
     key = foo.front();
   }
@@ -170,19 +170,19 @@ bool CmdUnlock::execute(Being* being, const std::vector<std::string>& args) {
 
 CmdWear::CmdWear(void) {
   name("wear");
-  addSyntax(1, "<object>");
-  brief("Equips an object.");
+  addSyntax(1, "<item>");
+  brief("Equips an item.");
   return;
 }
 
 bool CmdWear::execute(Being* being, const std::vector<std::string>& args) {
-  std::list<Object*> objects;
-  Object* removed = NULL;
+  std::list<Item*> items;
+  Item* removed = NULL;
   std::string error;
 
-  objects = being->inventory().searchObjects(args[0]);
-  if (!objects.empty()) {
-    for (std::list<Object*>::iterator it = objects.begin(); it != objects.end(); ++it) {
+  items = being->inventory().searchItems(args[0]);
+  if (!items.empty()) {
+    for (std::list<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
       if (being->wear(*it, error, removed)) {
         being->inventory().remove(*it);
         if (removed) {

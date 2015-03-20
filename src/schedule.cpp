@@ -60,10 +60,10 @@ long Schedule::size(void) const {
 
 // Though _index is routinely manipulated in add() and remove(), cleanup() is the primary logic for
 // which the _index exists. cleanup() is meant as a callback to be made in the destructor of classes
-// which are passed as the ObjectType pointers in Job constructors.
-void Schedule::cleanup(void* object) {
-  if (_index.count(object) > 0) {
-    for (auto iter : _index[object]) {
+// which are passed as the ItemType pointers in Job constructors.
+void Schedule::cleanup(void* item) {
+  if (_index.count(item) > 0) {
+    for (auto iter : _index[item]) {
       remove(iter);
       delete iter;
     }

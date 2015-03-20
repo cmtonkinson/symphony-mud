@@ -205,7 +205,7 @@ class GTEST_API_ String {
   }
 
   // The copy c'tor creates a new copy of the string.  The two
-  // String objects do not share content.
+  // String items do not share content.
   String(const String& str) : c_str_(NULL), length_(0) { *this = str; }
 
   // D'tor.  String is intended to be a final class, so the d'tor
@@ -263,17 +263,17 @@ class GTEST_API_ String {
   // string is NULL.
   size_t length() const { return length_; }
 
-  // Gets the 0-terminated C string this String object represents.
-  // The String object still owns the string.  Therefore the caller
+  // Gets the 0-terminated C string this String item represents.
+  // The String item still owns the string.  Therefore the caller
   // should NOT delete the return value.
   const char* c_str() const { return c_str_; }
 
-  // Assigns a C string to this object.  Self-assignment works.
+  // Assigns a C string to this item.  Self-assignment works.
   const String& operator=(const char* a_c_str) {
     return *this = String(a_c_str);
   }
 
-  // Assigns a String object to this object.  Self-assignment works.
+  // Assigns a String item to this item.  Self-assignment works.
   const String& operator=(const String& rhs) {
     if (this != &rhs) {
       delete[] c_str_;
@@ -329,7 +329,7 @@ GTEST_API_ String StrStreamToString(StrStream* stream);
 
 // Converts a streamable value to a String.  A NULL pointer is
 // converted to "(null)".  When the input value is a ::string,
-// ::std::string, ::wstring, or ::std::wstring object, each NUL
+// ::std::string, ::wstring, or ::std::wstring item, each NUL
 // character in it is replaced with "\\0".
 
 // Declared here but defined in gtest.h, so that it has access

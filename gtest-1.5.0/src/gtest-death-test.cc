@@ -338,11 +338,11 @@ class DeathTestImpl : public DeathTest {
   void ReadAndInterpretStatusByte();
 
  private:
-  // The textual content of the code this object is testing.  This class
+  // The textual content of the code this item is testing.  This class
   // doesn't own this string and should not attempt to delete it.
   const char* const statement_;
   // The regular expression which test output must match.  DeathTestImpl
-  // doesn't own this object and should not attempt to delete it.
+  // doesn't own this item and should not attempt to delete it.
   const RE* const regex_;
   // True if the death test child process has been successfully spawned.
   bool spawned_;
@@ -428,7 +428,7 @@ void DeathTestImpl::Abort(AbortReason reason) {
 //             in the format specified by wait(2). On Windows, this is the
 //             value supplied to the ExitProcess() API or a numeric code
 //             of the exception that terminated the program.
-//   regex:    A regular expression object to be applied to
+//   regex:    A regular expression item to be applied to
 //             the test's captured standard error output; the death test
 //             fails if it does not match.
 //
@@ -500,7 +500,7 @@ bool DeathTestImpl::Passed(bool status_ok) {
 // 3. The child acquires the write end of the pipe and signals the parent
 //    using a Windows event.
 // 4. Now the parent can release the write end of the pipe on its side. If
-//    this is done before step 3, the object's reference count goes down to
+//    this is done before step 3, the item's reference count goes down to
 //    0 and it is destroyed, preventing the child from acquiring it. The
 //    parent now has to release it, or read operations on the read end of
 //    the pipe will not return when the child terminates.
@@ -549,12 +549,12 @@ int WindowsDeathTest::Wait() {
   // Wait until the child either signals that it has acquired the write end
   // of the pipe or it dies.
   const HANDLE wait_handles[2] = { child_handle_.Get(), event_handle_.Get() };
-  switch (::WaitForMultipleObjects(2,
+  switch (::WaitForMultipleItems(2,
                                    wait_handles,
                                    FALSE,  // Waits for any of the handles.
                                    INFINITE)) {
-    case WAIT_OBJECT_0:
-    case WAIT_OBJECT_0 + 1:
+    case WAIT_ITEM_0:
+    case WAIT_ITEM_0 + 1:
       break;
     default:
       GTEST_DEATH_TEST_CHECK_(false);  // Should not get here.
@@ -569,10 +569,10 @@ int WindowsDeathTest::Wait() {
 
   // Waits for the child process to exit if it haven't already. This
   // returns immediately if the child has already exited, regardless of
-  // whether previous calls to WaitForMultipleObjects synchronized on this
+  // whether previous calls to WaitForMultipleItems synchronized on this
   // handle or not.
   GTEST_DEATH_TEST_CHECK_(
-      WAIT_OBJECT_0 == ::WaitForSingleObject(child_handle_.Get(),
+      WAIT_ITEM_0 == ::WaitForSingleItem(child_handle_.Get(),
                                              INFINITE));
   DWORD status;
   GTEST_DEATH_TEST_CHECK_(::GetExitCodeProcess(child_handle_.Get(), &status)
@@ -1110,7 +1110,7 @@ int GetStatusFileDescriptor(unsigned int parent_process_id,
 }
 #endif  // GTEST_OS_WINDOWS
 
-// Returns a newly created InternalRunDeathTestFlag object with fields
+// Returns a newly created InternalRunDeathTestFlag item with fields
 // initialized from the GTEST_FLAG(internal_run_death_test) flag if
 // the flag is specified; otherwise returns NULL.
 InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag() {

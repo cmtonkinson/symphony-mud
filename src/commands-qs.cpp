@@ -6,7 +6,7 @@
 #include "commandTable.h"
 #include "display.h"
 #include "io-handler.h"
-#include "object-furniture.h"
+#include "item-furniture.h"
 #include "quoteTable.h"
 #include "room.h"
 #include "world.h"
@@ -100,21 +100,21 @@ bool CmdRedit::execute(Being* being, const std::vector<std::string>& args) {
 
 CmdRemove::CmdRemove(void) {
   name("remove");
-  addSyntax(1, "<object>");
+  addSyntax(1, "<item>");
   brief("Removes the given piece of equipment.");
   return;
 }
 
 bool CmdRemove::execute(Being* being, const std::vector<std::string>& args) {
-  std::list<Object*> objects = being->equipment().searchObjects(args[0]);
+  std::list<Item*> items = being->equipment().searchItems(args[0]);
   std::string error;
 
-  if (objects.empty()) {
+  if (items.empty()) {
     being->send("You aren't wearing that.");
     return false;
   }
 
-  for (std::list<Object*>::iterator it = objects.begin(); it != objects.end(); ++it) {
+  for (std::list<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
     if (being->unwear(*it, error)) {
       being->send("You remove %s{x.\n", (*it)->identifiers().shortname().c_str());
       being->room()->send_cond("$p removes $o.\n", being, *it);
@@ -157,35 +157,35 @@ bool CmdReply::execute(Being* being, const std::vector<std::string>& args) {
 CmdRestring::CmdRestring(void) {
   name("restring");
   level(Being::DEMIGOD);
-  addSyntax(-3, "<object> shortname <string>");
-  addSyntax(-3, "<object> longname <string>");
-  addSyntax(-3, "<object> keywords <key1 key2 key3 ...>");
-  brief("Alters the appearance of an Object.");
+  addSyntax(-3, "<item> shortname <string>");
+  addSyntax(-3, "<item> longname <string>");
+  addSyntax(-3, "<item> keywords <key1 key2 key3 ...>");
+  brief("Alters the appearance of an Item.");
   return;
 }
 
 bool CmdRestring::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> keywords;
-  Object* object = NULL;
+  Item* item = NULL;
 
-  if ((object = being->inventory().searchSingleObject(args[0])) == NULL) {
+  if ((item = being->inventory().searchSingleItem(args[0])) == NULL) {
     being->send("You don't have that.");
     return false;
   }
 
   if (Regex::strPrefix(args[1], "shortname")) {
-    object->identifiers().shortname(args[2]);
-    being->send("Object shortname reset to \"%s\".", object->identifiers().shortname().c_str());
+    item->identifiers().shortname(args[2]);
+    being->send("Item shortname reset to \"%s\".", item->identifiers().shortname().c_str());
   } else if (Regex::strPrefix(args[1], "longname")) {
-    object->identifiers().longname(args[2]);
-    being->send("Object longname reset to \"%s\".", object->identifiers().longname().c_str());
+    item->identifiers().longname(args[2]);
+    being->send("Item longname reset to \"%s\".", item->identifiers().longname().c_str());
   } else if (Regex::strPrefix(args[1], "keywords")) {
-    object->identifiers().getKeywords().clear();
+    item->identifiers().getKeywords().clear();
     keywords = Regex::explode(" ", args[2]);
     for (std::vector<std::string>::const_iterator it = keywords.begin(); it != keywords.end(); ++it) {
-      object->identifiers().addKeyword(*it);
+      item->identifiers().addKeyword(*it);
     }
-    being->send("Object keywords reset to \"%s\".", object->identifiers().getKeywordList().c_str());
+    being->send("Item keywords reset to \"%s\".", item->identifiers().getKeywordList().c_str());
   } else {
     being->send(printSyntax());
     return false;
@@ -420,12 +420,12 @@ CmdSit::CmdSit(void) {
 }
 
 bool CmdSit::execute(Being* being, const std::vector<std::string>& args) {
-  Object* furniture = NULL;
+  Item* furniture = NULL;
   std::string error;
 
   if (args.size() == 2) {
     // get the target furniture...
-    if ((furniture = being->room()->inventory().searchSingleObject(args[1])) != NULL) {
+    if ((furniture = being->room()->inventory().searchSingleItem(args[1])) != NULL) {
       if (!furniture->isFurniture()) {
         being->send("That's not furniture.");
         return false;
@@ -653,7 +653,7 @@ bool CmdSummary::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->send("{w||{xtotem:  {C%-9s{w ||{xluck:  {B%2u{x/{b%2u{w ||              ||                  ||\n", "-", avatar()->luck(), avatar()->maxLuck());
   avatar()->send("{w||__________________||_____________||______________||__________________||\n");
   avatar()->send("{w||_____________________________________________________________________||\n");
-  avatar()->send("{w||{xitems: {G%3u{x/{g%-3u{w ||{xcoins: {W%3u{x/{y%-4u{w    ||                               {w||\n", avatar()->inventory().objectList().size(), avatar()->inventory().objectList().size(), avatar()->silver(), avatar()->gold());
+  avatar()->send("{w||{xitems: {G%3u{x/{g%-3u{w ||{xcoins: {W%3u{x/{y%-4u{w    ||                               {w||\n", avatar()->inventory().itemList().size(), avatar()->inventory().itemList().size(), avatar()->silver(), avatar()->gold());
   avatar()->send("{w||{xweight: {g%-5u{w  || {xbank: {W%3u{x/{y%-7u{w ||                               {w||\n", 0, avatar()->bankSilver(), avatar()->bankGold());
   avatar()->send("{w||_______________||___________________||_______________________________||\n");
   avatar()->send("{w|/_____________________________________________________________________\\|{x\n");

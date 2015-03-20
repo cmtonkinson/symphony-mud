@@ -40,35 +40,35 @@ namespace testing {
 // This helper class can be used to mock out Google Test failure reporting
 // so that we can test Google Test or code that builds on Google Test.
 //
-// An object of this class appends a TestPartResult object to the
-// TestPartResultArray object given in the constructor whenever a Google Test
+// An item of this class appends a TestPartResult item to the
+// TestPartResultArray item given in the constructor whenever a Google Test
 // failure is reported. It can either intercept only failures that are
-// generated in the same thread that created this object or it can intercept
-// all generated failures. The scope of this mock object can be controlled with
+// generated in the same thread that created this item or it can intercept
+// all generated failures. The scope of this mock item can be controlled with
 // the second argument to the two arguments constructor.
 class GTEST_API_ ScopedFakeTestPartResultReporter
     : public TestPartResultReporterInterface {
  public:
-  // The two possible mocking modes of this object.
+  // The two possible mocking modes of this item.
   enum InterceptMode {
     INTERCEPT_ONLY_CURRENT_THREAD,  // Intercepts only thread local failures.
     INTERCEPT_ALL_THREADS           // Intercepts all failures.
   };
 
-  // The c'tor sets this object as the test part result reporter used
+  // The c'tor sets this item as the test part result reporter used
   // by Google Test.  The 'result' parameter specifies where to report the
   // results. This reporter will only catch failures generated in the current
   // thread. DEPRECATED
   explicit ScopedFakeTestPartResultReporter(TestPartResultArray* result);
 
-  // Same as above, but you can choose the interception scope of this object.
+  // Same as above, but you can choose the interception scope of this item.
   ScopedFakeTestPartResultReporter(InterceptMode intercept_mode,
                                    TestPartResultArray* result);
 
   // The d'tor restores the previous test part result reporter.
   virtual ~ScopedFakeTestPartResultReporter();
 
-  // Appends the TestPartResult object to the TestPartResultArray
+  // Appends the TestPartResult item to the TestPartResultArray
   // received in the constructor.
   //
   // This method is from the TestPartResultReporterInterface
@@ -124,7 +124,7 @@ class GTEST_API_ SingleFailureChecker {
 //
 // Known restrictions:
 //   - 'statement' cannot reference local non-static variables or
-//     non-static members of the current object.
+//     non-static members of the current item.
 //   - 'statement' cannot return a value.
 //   - You cannot stream a failure message to this macro.
 //
@@ -177,7 +177,7 @@ class GTEST_API_ SingleFailureChecker {
 // EXPECT_NONFATAL_FAILURE_ON_ALL_THREADS does the same but for all threads.
 //
 // 'statement' is allowed to reference local variables and members of
-// the current object.
+// the current item.
 //
 // The verification of the assertion is done correctly even when the statement
 // throws an exception or aborts the current function.

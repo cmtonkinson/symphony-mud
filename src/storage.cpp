@@ -10,13 +10,13 @@
 #include "exit.h"
 #include "loadRule.h"
 #include "loadRuleMob.h"
-#include "loadRuleObject.h"
+#include "loadRuleItem.h"
 #include "mob.h"
 #include "note.h"
-#include "object-container.h"
-#include "object-furniture.h"
-#include "object-weapon.h"
-#include "object.h"
+#include "item-container.h"
+#include "item-furniture.h"
+#include "item-weapon.h"
+#include "item.h"
 #include "room.h"
 #include "storage.h"
 
@@ -35,7 +35,7 @@ void Storage::dump(FILE* fp, Area* area) {
   out(fp, "terrain",      area->terrain()->name());
   out(fp, "builders",     area->serializeBuilders());
   for (auto iter : area->rooms())   dump(fp, iter.second);
-  for (auto iter : area->objects()) dump(fp, iter.second);
+  for (auto iter : area->items()) dump(fp, iter.second);
   for (auto iter : area->mobs())    dump(fp, iter.second);
   END("AREA")
   return;
@@ -51,7 +51,7 @@ bool Storage::load(FILE* fp, Area* loading) {
     STORE_CASE("terrain",   &Area::setTerrain)
     STORE_CASE_STRING("builders",   loading->unserializeBuilders(str);)
     STORE_DESCEND_NEW("ROOM",   Room,   loading->insert(instance);)
-    STORE_DESCEND_NEW("OBJECT", Object, loading->insert(instance);)
+    STORE_DESCEND_NEW("ITEM", Item, loading->insert(instance);)
     STORE_DESCEND_NEW("MOB",    Mob,    loading->insert(instance);)
   });
   return load_status == LOAD_DONE;
@@ -89,7 +89,7 @@ bool Storage::load(FILE* fp, Room* loading) {
     STORE_DESCEND_NEW("EXIT", Exit,
       loading->exit(instance->direction().number(), instance);
     )
-    STORE_DESCEND_NEW("RULE_OBJ", LoadRuleObject,
+    STORE_DESCEND_NEW("RULE_OBJ", LoadRuleItem,
       loading->loadRules().push_back(instance);
       instance->room(loading);
     )
@@ -138,10 +138,10 @@ void Storage::dump(FILE* fp, LoadRule* rule) {
   out(fp, "max",          rule->max());
   out(fp, "probability",  rule->probability());
   switch (rule->type()) {
-    case LoadRule::OBJECT:
-      out(fp, "preposition",          ((LoadRuleObject*)rule)->preposition());
-      out(fp, "indirectObject",       ((LoadRuleObject*)rule)->indirectObject());
-      out(fp, "indirectObjectIndex",  ((LoadRuleObject*)rule)->indirectObjectIndex());
+    case LoadRule::ITEM:
+      out(fp, "preposition",          ((LoadRuleItem*)rule)->preposition());
+      out(fp, "indirectItem",       ((LoadRuleItem*)rule)->indirectItem());
+      out(fp, "indirectItemIndex",  ((LoadRuleItem*)rule)->indirectItemIndex());
       break;
   }
   END(buffer)
@@ -153,14 +153,14 @@ bool Storage::load(FILE* fp, LoadRule* loading) {
   unsigned load_status = 0;
   load_status = load_inner(fp, loading, input, "RULE_", [&fp, &loading, &input]() {
     STORE_CASE("target",              &LoadRule::target)
-    STORE_CASE("number",              &LoadRuleObject::number)
-    STORE_CASE("max",                 &LoadRuleObject::max)
-    STORE_CASE("probability",         &LoadRuleObject::probability)
+    STORE_CASE("number",              &LoadRuleItem::number)
+    STORE_CASE("max",                 &LoadRuleItem::max)
+    STORE_CASE("probability",         &LoadRuleItem::probability)
     switch (loading->type()) {
-      case LoadRule::OBJECT:
-        STORE_CASE_WITH_TYPE("preposition",         &LoadRuleObject::preposition,         LoadRuleObject)
-        STORE_CASE_WITH_TYPE("indirectObject",      &LoadRuleObject::indirectObject,      LoadRuleObject)
-        STORE_CASE_WITH_TYPE("indirectObjectIndex", &LoadRuleObject::indirectObjectIndex, LoadRuleObject)
+      case LoadRule::ITEM:
+        STORE_CASE_WITH_TYPE("preposition",         &LoadRuleItem::preposition,         LoadRuleItem)
+        STORE_CASE_WITH_TYPE("indirectItem",      &LoadRuleItem::indirectItem,      LoadRuleItem)
+        STORE_CASE_WITH_TYPE("indirectItemIndex", &LoadRuleItem::indirectItemIndex, LoadRuleItem)
         break;
     }
   });
@@ -168,43 +168,43 @@ bool Storage::load(FILE* fp, LoadRule* loading) {
 }
 
 /***************************************************************************************************
- * OBJECT
+ * ITEM
  **************************************************************************************************/
-void Storage::dump(FILE* fp, Object* object, const char* suffix) {
+void Storage::dump(FILE* fp, Item* item, const char* suffix) {
   char token[32];
   if (suffix != nullptr) {
-    sprintf(token, "OBJECT_%s", suffix);
+    sprintf(token, "ITEM_%s", suffix);
   } else {
-    sprintf(token, "OBJECT");
+    sprintf(token, "ITEM");
   }
   BEGIN(token)
-  out(fp, "vnum",         object->vnum());
-  out(fp, "level",        object->level());
-  out(fp, "value",        object->value());
-  out(fp, "type",         object->type());
-  out(fp, "wearable",     object->wearable());
-  out(fp, "flags",        object->flags().value());
-  out(fp, "shortname",    object->identifiers().shortname());
-  out(fp, "longname",     object->identifiers().longname());
-  out(fp, "description",  object->identifiers().description());
-  out(fp, "keywords",     object->identifiers().serializeKeywords());
-  out(fp, "modifiers",    object->serializeModifiers());
-  out(fp, "composition",  object->serializeComposition());
-  switch (object->type()) {
-    case Object::Type_Furniture:
-      out(fp, "furniture_capacity", object->furniture()->capacity());
-      out(fp, "furniture_layOn",    object->furniture()->layOn());
-      out(fp, "furniture_sitAt",    object->furniture()->sitAt());
-      out(fp, "furniture_sitOn",    object->furniture()->sitOn());
-      out(fp, "furniture_standOn",  object->furniture()->standOn());
+  out(fp, "vnum",         item->vnum());
+  out(fp, "level",        item->level());
+  out(fp, "value",        item->value());
+  out(fp, "type",         item->type());
+  out(fp, "wearable",     item->wearable());
+  out(fp, "flags",        item->flags().value());
+  out(fp, "shortname",    item->identifiers().shortname());
+  out(fp, "longname",     item->identifiers().longname());
+  out(fp, "description",  item->identifiers().description());
+  out(fp, "keywords",     item->identifiers().serializeKeywords());
+  out(fp, "modifiers",    item->serializeModifiers());
+  out(fp, "composition",  item->serializeComposition());
+  switch (item->type()) {
+    case Item::Type_Furniture:
+      out(fp, "furniture_capacity", item->furniture()->capacity());
+      out(fp, "furniture_layOn",    item->furniture()->layOn());
+      out(fp, "furniture_sitAt",    item->furniture()->sitAt());
+      out(fp, "furniture_sitOn",    item->furniture()->sitOn());
+      out(fp, "furniture_standOn",  item->furniture()->standOn());
       break;
-    case Object::Type_Weapon:
-      out(fp, "weapon_type",     object->weapon()->type().string());
-      out(fp, "weapon_verb",     object->weapon()->verb().string());
-      out(fp, "weapon_damage",   object->weapon()->damage().serialize());
+    case Item::Type_Weapon:
+      out(fp, "weapon_type",     item->weapon()->type().string());
+      out(fp, "weapon_verb",     item->weapon()->verb().string());
+      out(fp, "weapon_damage",   item->weapon()->damage().serialize());
       break;
-    case Object::Type_Container:
-      for (auto iter : object->container()->inventory().objectList()) dump(fp, iter, "BAG");
+    case Item::Type_Container:
+      for (auto iter : item->container()->inventory().itemList()) dump(fp, iter, "BAG");
       break;
     default:
       break;
@@ -213,15 +213,15 @@ void Storage::dump(FILE* fp, Object* object, const char* suffix) {
   return;
 }
 
-bool Storage::load(FILE* fp, Object* loading) {
+bool Storage::load(FILE* fp, Item* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "OBJECT", [&fp, &loading, &input]() {
-    STORE_CASE("vnum",                &Object::vnum)
-    STORE_CASE("level",               &Object::level)
-    STORE_CASE("value",               &Object::value)
-    STORE_CASE_WITH_CODE("type",      unsigned,       "%u",   loading->type(static_cast<Object::Type>(val));)
-    STORE_CASE_WITH_CODE("wearable",  unsigned,       "%u",   loading->wearable(static_cast<Object::Wearable>(val));)
+  load_status = load_inner(fp, loading, input, "ITEM", [&fp, &loading, &input]() {
+    STORE_CASE("vnum",                &Item::vnum)
+    STORE_CASE("level",               &Item::level)
+    STORE_CASE("value",               &Item::value)
+    STORE_CASE_WITH_CODE("type",      unsigned,       "%u",   loading->type(static_cast<Item::Type>(val));)
+    STORE_CASE_WITH_CODE("wearable",  unsigned,       "%u",   loading->wearable(static_cast<Item::Wearable>(val));)
     STORE_CASE_WITH_CODE("flags",     unsigned long,  "%lu",  loading->flags().value(val);)
     STORE_CASE_STRING("shortname",    loading->identifiers().shortname(str);)
     STORE_CASE_STRING("longname",     loading->identifiers().longname(str);)
@@ -230,20 +230,20 @@ bool Storage::load(FILE* fp, Object* loading) {
     STORE_CASE_STRING("modifiers",    loading->unserializeModifiers(str);)
     STORE_CASE_STRING("composition",  loading->unserializeComposition(str);)
     switch (loading->type()) {
-      case Object::Type_Furniture:
+      case Item::Type_Furniture:
         STORE_CASE_WITH_CODE("furniture_capacity",  unsigned, "%u", loading->furniture()->capacity(val);)
         STORE_CASE_WITH_CODE("furniture_layOn",     unsigned, "%u", loading->furniture()->layOn(val);)
         STORE_CASE_WITH_CODE("furniture_sitAt",     unsigned, "%u", loading->furniture()->sitAt(val);)
         STORE_CASE_WITH_CODE("furniture_sitOn",     unsigned, "%u", loading->furniture()->sitOn(val);)
         STORE_CASE_WITH_CODE("furniture_standOn",   unsigned, "%u", loading->furniture()->standOn(val);)
         break;
-      case Object::Type_Weapon:
+      case Item::Type_Weapon:
         STORE_CASE_STRING("weapon_type",    loading->weapon()->type().set(ETWeaponType::Instance().get(str));)
         STORE_CASE_STRING("weapon_verb",    loading->weapon()->verb().set(ETDamageVerb::Instance().get(str));)
         STORE_CASE_STRING("weapon_damage",  loading->weapon()->damage().unserialize(str);)
         break;
-      case Object::Type_Container:
-        STORE_DESCEND_NEW("OBJECT_BAG", Object, loading->container()->inventory().add(instance);)
+      case Item::Type_Container:
+        STORE_DESCEND_NEW("ITEM_BAG", Item, loading->container()->inventory().add(instance);)
         break;
       default:
         break;
@@ -377,8 +377,8 @@ void Storage::dump_base(FILE* fp, Being* being) {
   out(fp, "gold",       being->gold());
   out(fp, "silver",     being->silver());
   out(fp, "abilities",  being->serializeAbilities());
-  for (auto iter : being->inventory().objectList()) dump(fp, iter, "INV");
-  for (auto iter : being->equipment().objectMap()) dump(fp, iter.second, "EQ");
+  for (auto iter : being->inventory().itemList()) dump(fp, iter, "INV");
+  for (auto iter : being->equipment().itemMap()) dump(fp, iter.second, "EQ");
   END("BEING")
   return;
 }
@@ -450,9 +450,9 @@ bool Storage::load_base(FILE* fp, Being* loading) {
     STORE_CASE("gold",    &Being::gold)
     STORE_CASE("silver",  &Being::silver)
     STORE_CASE_STRING("abilities",    loading->unserializeAbilities(str);)
-    STORE_DESCEND_NEW("OBJECT_INV", Object, loading->inventory().add(instance);)
-    STORE_DESCEND_NEW("OBJECT_EQ", Object,
-      Object* removed     = nullptr;
+    STORE_DESCEND_NEW("ITEM_INV", Item, loading->inventory().add(instance);)
+    STORE_DESCEND_NEW("ITEM_EQ", Item,
+      Item* removed     = nullptr;
       std::string message = "";
       loading->wear(instance, message, removed);
     )
@@ -629,7 +629,7 @@ unsigned Storage::load_inner(FILE* fp, void* loading, char* input, const char* b
   char end_boundary[32];
   sprintf(end_boundary, "/%s", boundary);
 
-  // The first input should be a prefix match on the boundary for the object.
+  // The first input should be a prefix match on the boundary for the item.
   fscanf(fp, "%s", input);
   if (feof(fp) || strstr(input, boundary) == NULL) return LOAD_NULL;
 
@@ -684,24 +684,24 @@ void Storage::out(FILE* fp, const char* key, const char* value) {
   return;
 }
 
-template <class ObjectType>
-void Storage::in(FILE* fp, ObjectType* object, void (ObjectType::*method)(bool)) {
+template <class ItemType>
+void Storage::in(FILE* fp, ItemType* item, void (ItemType::*method)(bool)) {
   char x;
   fscanf(fp, " %c", &x);
-  (*object.*method)(x == 'T');
+  (*item.*method)(x == 'T');
   return;
 }
 
-template <class ObjectType>
-void Storage::in(FILE* fp, ObjectType* object, void (ObjectType::*method)(const char*)) {
+template <class ItemType>
+void Storage::in(FILE* fp, ItemType* item, void (ItemType::*method)(const char*)) {
   std::string buf = read_string(fp);
-  (*object.*method)(buf.c_str());
+  (*item.*method)(buf.c_str());
   return;
 }
 
-template <class ObjectType>
-void Storage::in(FILE* fp, ObjectType* object, void (ObjectType::*method)(std::string)) {
+template <class ItemType>
+void Storage::in(FILE* fp, ItemType* item, void (ItemType::*method)(std::string)) {
   std::string buf = read_string(fp);
-  (*object.*method)(buf);
+  (*item.*method)(buf);
   return;
 }

@@ -70,7 +70,7 @@ class GTEST_API_ DeathTest {
   // case.  Otherwise, the DeathTest pointer pointed to by the "test"
   // argument is set.  If the death test should be skipped, the pointer
   // is set to NULL; otherwise, it is set to the address of a new concrete
-  // DeathTest object that controls the execution of the current test.
+  // DeathTest item that controls the execution of the current test.
   static bool Create(const char* statement, const RE* regex,
                      const char* file, int line, DeathTest** test);
   DeathTest();
@@ -212,7 +212,7 @@ class InternalRunDeathTestFlag {
   GTEST_DISALLOW_COPY_AND_ASSIGN_(InternalRunDeathTestFlag);
 };
 
-// Returns a newly created InternalRunDeathTestFlag object with fields
+// Returns a newly created InternalRunDeathTestFlag item with fields
 // initialized from the GTEST_FLAG(internal_run_death_test) flag if
 // the flag is specified; otherwise returns NULL.
 InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag();

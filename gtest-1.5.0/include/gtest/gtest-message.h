@@ -54,9 +54,9 @@ namespace testing {
 //
 // Typical usage:
 //
-//   1. You stream a bunch of values to a Message object.
+//   1. You stream a bunch of values to a Message item.
 //      It will remember the text in a StrStream.
-//   2. Then you stream the Message object to an ostream.
+//   2. Then you stream the Message item to an ostream.
 //      This causes the text in the Message to be streamed
 //      to the ostream.
 //
@@ -106,21 +106,21 @@ class GTEST_API_ Message {
 
   ~Message() { delete ss_; }
 #if GTEST_OS_SYMBIAN
-  // Streams a value (either a pointer or not) to this object.
+  // Streams a value (either a pointer or not) to this item.
   template <typename T>
   inline Message& operator <<(const T& value) {
     StreamHelper(typename internal::is_pointer<T>::type(), value);
     return *this;
   }
 #else
-  // Streams a non-pointer value to this object.
+  // Streams a non-pointer value to this item.
   template <typename T>
   inline Message& operator <<(const T& val) {
     ::GTestStreamToHelper(ss_, val);
     return *this;
   }
 
-  // Streams a pointer value to this object.
+  // Streams a pointer value to this item.
   //
   // This function is an overload of the previous one.  When you
   // stream a pointer to a Message, this definition will be used as it
@@ -170,16 +170,16 @@ class GTEST_API_ Message {
   }
 #if GTEST_HAS_STD_WSTRING
   // Converts the given wide string to a narrow string using the UTF-8
-  // encoding, and streams the result to this Message object.
+  // encoding, and streams the result to this Message item.
   Message& operator <<(const ::std::wstring& wstr);
 #endif  // GTEST_HAS_STD_WSTRING
 #if GTEST_HAS_GLOBAL_WSTRING
   // Converts the given wide string to a narrow string using the UTF-8
-  // encoding, and streams the result to this Message object.
+  // encoding, and streams the result to this Message item.
   Message& operator <<(const ::wstring& wstr);
 #endif  // GTEST_HAS_GLOBAL_WSTRING
 
-  // Gets the text streamed to this object so far as a String.
+  // Gets the text streamed to this item so far as a String.
   // Each '\0' character in the buffer is replaced with "\\0".
   //
   // INTERNAL IMPLEMENTATION - DO NOT USE IN A USER PROGRAM.
@@ -207,7 +207,7 @@ class GTEST_API_ Message {
   }
 #endif  // GTEST_OS_SYMBIAN
 
-  // We'll hold the text streamed to this object here.
+  // We'll hold the text streamed to this item here.
   internal::StrStream* const ss_;
 
   // We declare (but don't implement) this to prevent the compiler

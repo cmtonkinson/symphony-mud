@@ -1,5 +1,5 @@
 
-#include "object-weapon.h"
+#include "item-weapon.h"
 #include "regex.h"
 
 ObjWeapon::ObjWeapon(void) {

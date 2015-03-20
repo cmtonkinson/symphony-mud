@@ -8,7 +8,7 @@
 #include "container.h"
 #include "identifiers.h"
 
-class Object;
+class Item;
 
 class EquipmentContainer: public Container {
   public:
@@ -18,23 +18,23 @@ class EquipmentContainer: public Container {
     virtual ~EquipmentContainer(void);
 
     // virtual methods....
-    virtual void                add(Object* object, const int& location);
-    virtual void                remove(Object* object);
-    virtual void                remove(const std::list<Object*>& objects);
-    virtual void                purgeObjects(void);
-    virtual std::list<Object*>  searchObjects(const std::string& q);
-    virtual Object*             searchSingleObject(const std::string& q);
+    virtual void                add(Item* item, const int& location);
+    virtual void                remove(Item* item);
+    virtual void                remove(const std::list<Item*>& items);
+    virtual void                purgeItems(void);
+    virtual std::list<Item*>  searchItems(const std::string& q);
+    virtual Item*             searchSingleItem(const std::string& q);
 
     // general methods...
-    std::string                 listObjects(void) const;
-    Object*                     at(int location);
+    std::string                 listItems(void) const;
+    Item*                     at(int location);
 
     // public accessor methods...
-    std::map<int,Object*>&                                  objectMap(void)       { return _objectMap; }
-    const std::map<int,Object*>&                            objectMap(void) const { return _objectMap; }
+    std::map<int,Item*>&                                  itemMap(void)       { return _itemMap; }
+    const std::map<int,Item*>&                            itemMap(void) const { return _itemMap; }
 
   private:
-    std::map<int,Object*> _objectMap;
+    std::map<int,Item*> _itemMap;
 };
 
 #endif // !H_SYMPHONY_CONTAINER_MAP

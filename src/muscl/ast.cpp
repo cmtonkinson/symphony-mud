@@ -35,9 +35,9 @@ const char* Ast::stringType(void) const {
     case AST_JUMP_CONT:   return "continue";
     case AST_JUMP_BREAK:  return "break";
 
-    case AST_OBJ:       return "object reference";
-    case AST_OBJ_READ:  return "object read";
-    case AST_OBJ_WRITE: return "object write";
+    case AST_OBJ:       return "item reference";
+    case AST_OBJ_READ:  return "item read";
+    case AST_OBJ_WRITE: return "item write";
 
     case AST_PARAM_LIST:  return "parameter list";
     case AST_FUNC_DECL:   return "function declaration";
@@ -72,7 +72,7 @@ const char* Ast::stringType(void) const {
     case AST_ASS_DIV:   return "assignment (w/division)";
     case AST_ASS_MOD:   return "assignment (w/mod)";
     case AST_ASS_POW:   return "assignment (w/pow)";
-    case AST_ASS_OBJ:   return "assignment (to object)";
+    case AST_ASS_OBJ:   return "assignment (to item)";
 
     case AST_CONT_IF:       return "conditional (if)";
     case AST_CONT_IF_ELSE:  return "conditional (if-else)";

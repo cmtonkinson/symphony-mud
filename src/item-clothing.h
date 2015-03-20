@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_OBJECT_CLOTHING
-#define H_SYMPHONY_OBJECT_CLOTHING
+#ifndef H_SYMPHONY_ITEM_CLOTHING
+#define H_SYMPHONY_ITEM_CLOTHING
 
 class ObjClothing {
   public:
@@ -10,4 +10,4 @@ class ObjClothing {
     ~ObjClothing(void);
 };
 
-#endif // H_SYMPHONY_OBJECT_CLOTHING
+#endif // H_SYMPHONY_ITEM_CLOTHING

@@ -26,7 +26,7 @@ Socket::Socket(int sock_fd, int domain, int type, int protocol) {
    * If a valid file descriptor was passed into the constructor,
    * then we know that the socket (described by sockfd) already
    * exists and is open, and we're just filling in the blanks of
-   * the Socket object.  If a valid file descriptor isn't given,
+   * the Socket item.  If a valid file descriptor isn't given,
    * we assume that we're supposed to create a new socket and go
    * from there.
    */

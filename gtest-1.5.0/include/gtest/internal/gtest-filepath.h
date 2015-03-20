@@ -47,7 +47,7 @@ namespace internal {
 // handles platform-specific conventions (like the pathname separator).
 // Used for helper functions for naming files in a directory for xml output.
 // Except for Set methods, all methods are const or static, which provides an
-// "immutable value object" -- useful for peace of mind.
+// "immutable value item" -- useful for peace of mind.
 // A FilePath with a value ending in a path separator ("like/this/") represents
 // a directory, otherwise it is assumed to represent a file. In either case,
 // it may or may not represent an actual file or directory in the file system.

@@ -1,18 +1,18 @@
 
 #include <stdio.h>
-#include "ast-object.h"
+#include "ast-item.h"
 #include "datum.h"
 #include "record.h"
 #include "vm.h"
 
-AstObject::AstObject(void):
+AstItem::AstItem(void):
     _parent(NULL),
     _child(NULL),
     _name(NULL) {
   return;
 }
 
-AstObject::AstObject(const std::string& name):
+AstItem::AstItem(const std::string& name):
     Ast(AST_OBJ),
     _parent(NULL),
     _child(NULL),
@@ -20,13 +20,13 @@ AstObject::AstObject(const std::string& name):
   return;
 }
 
-AstObject::~AstObject(void) {
+AstItem::~AstItem(void) {
   return;
 }
 
-std::string AstObject::fullName(void) const {
+std::string AstItem::fullName(void) const {
   std::string n;
-  AstObject const* o = this;
+  AstItem const* o = this;
   do {
     n.append(1, ':').append(o->name()->toString());
     o = o->child();
@@ -34,17 +34,17 @@ std::string AstObject::fullName(void) const {
   return n;
 }
 
-void AstObject::addChild(AstObject* child) {
+void AstItem::addChild(AstItem* child) {
   this->child(child);
   child->parent(this);
   return;
 }
 
-Datum* AstObject::eval(void) {
+Datum* AstItem::eval(void) {
   return NULL;
 }
 
-void AstObject::print(std::string indent, bool last) {
+void AstItem::print(std::string indent, bool last) {
   printf("%s", indent.c_str());
   if (last) {
     printf("\\-");
@@ -58,6 +58,6 @@ void AstObject::print(std::string indent, bool last) {
   return;
 }
 
-InstrList& AstObject::codegen(void) {
+InstrList& AstItem::codegen(void) {
   return instructions();
 }

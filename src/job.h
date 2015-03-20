@@ -18,11 +18,11 @@ class Job: public Event {
     Job(time_t when, bool (*function)(EventType*)): _when(when), _what(new EventHandlerFunction<EventType>(function)) { setup(); }
 
     // WARNING: Whenever this constructor is used, the _who pointer will be set. That triggers
-    // accounting logic in the Schedule class, and requires that your ObjectType destructor clean up
-    // after itself so that Jobs for destroyed objects are cleared from the Schedule.
-    // Your ObjectType destructor must call `Schedule::cleanup()` and pass itself as the argument.
-    template <class ObjectType,class EventType>
-    Job(time_t when, ObjectType* object, bool (ObjectType::*method)(EventType*)): _when(when), _what(new EventHandlerMethod<ObjectType,EventType>(object, method)) { setup(object); }
+    // accounting logic in the Schedule class, and requires that your ItemType destructor clean up
+    // after itself so that Jobs for destroyed items are cleared from the Schedule.
+    // Your ItemType destructor must call `Schedule::cleanup()` and pass itself as the argument.
+    template <class ItemType,class EventType>
+    Job(time_t when, ItemType* item, bool (ItemType::*method)(EventType*)): _when(when), _what(new EventHandlerMethod<ItemType,EventType>(item, method)) { setup(item); }
 
     virtual ~Job(void);
 
@@ -48,8 +48,8 @@ class Job: public Event {
   protected:
     time_t            _when;
     EventHandlerBase* _what;
-    // Even though the pointer is called "who" it represents any ObjectType as specified in the
-    // constructors above (be they Areas, Beings, Objects, whatever).
+    // Even though the pointer is called "who" it represents any ItemType as specified in the
+    // constructors above (be they Areas, Beings, Items, whatever).
     void*             _who;
 
   private:

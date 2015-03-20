@@ -1,5 +1,5 @@
 
-#include "object-container.h"
+#include "item-container.h"
 
 ObjContainer::ObjContainer(void): _inventory(&Identifiers::shortname) {
   return;

@@ -1,5 +1,5 @@
 
-#include "object-jewelry.h"
+#include "item-jewelry.h"
 
 ObjJewelry::ObjJewelry(void) {
   return;

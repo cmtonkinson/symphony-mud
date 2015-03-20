@@ -18,7 +18,7 @@
 #define OPCODE_CONST    101
 #define OPCODE_VAR      102
 #define OPCODE_STORE    105
-// objects
+// items
 #define OPCODE_OBJ_NAME   200
 #define OPCODE_OBJ_INIT   201
 #define OPCODE_OBJ_READ   202
@@ -135,7 +135,7 @@ class VirtualMachine {
     CodeVect*           _instructions;  // code to be executed
     std::stack<Frame>   _frames;        // activation records
     ResultList          _results;       // array (parallel to instructions) for opcode results
-    ContextLayer        _context;       // for resolving object paths
+    ContextLayer        _context;       // for resolving item paths
 
     // methods
     void    init(CodeVect* code);
@@ -156,7 +156,7 @@ class VirtualMachine {
     void  op_const(void);
     void  op_var(void);
     void  op_store(void);
-    // objects
+    // items
     void  op_obj_read(void);
     void  op_obj_write(void);
     // lists

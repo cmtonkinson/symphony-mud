@@ -21,7 +21,7 @@
 
 class Exit;
 class LoadRuleMob;
-class LoadRuleObject;
+class LoadRuleItem;
 class Mob;
 class Room;
 class SocialCommand;
@@ -46,13 +46,13 @@ typedef std::function<void()> voidFunc;
 #define STORE_IN(TYPE, SPECIFIER) {               \
   TYPE x;                                         \
   fscanf(fp, SPECIFIER, &x);                      \
-  (*object.*method)(x);                           \
+  (*item.*method)(x);                           \
   return;                                         \
 }                                                 \
 
 // BEGIN and END are to be used in the various Storage::dump() methods to signal the boundaries of
-// an objects serialization. All object keys should appear between matching BEGIN/END markers, only
-// one set of BEGIN/END markers is permissable per object, and all nested objects must be placed
+// an items serialization. All item keys should appear between matching BEGIN/END markers, only
+// one set of BEGIN/END markers is permissable per item, and all nested items must be placed
 // within the parents markers.
 #define BEGIN(BOUNDARY) fprintf(fp, "%s\n", BOUNDARY);
 #define END(BOUNDARY)   fprintf(fp, "/%s\n", BOUNDARY);
@@ -86,9 +86,9 @@ typedef std::function<void()> voidFunc;
     return;                                               \
   }                                                       \
 
-// STORE_DESCEND is anotehr "public" macro for easily defining nested objects. This is used inside
+// STORE_DESCEND is anotehr "public" macro for easily defining nested items. This is used inside
 // of the lambda and should be placed after all STORE_CASE calls. CODE is an arbitrary code fragment
-// which associates the nested object with the parent in whatever way is needed.
+// which associates the nested item with the parent in whatever way is needed.
 #define STORE_DESCEND_NEW(KEY, CLASS, CODE)       \
   if (strcmp(input, KEY) == 0) {                  \
     fseek(fp, -strlen(KEY), SEEK_CUR);            \
@@ -126,8 +126,8 @@ class Storage {
     static void dump(FILE* fp, LoadRule* rule);
     static bool load(FILE* fp, LoadRule* loading);
 
-    static void dump(FILE* fp, Object* object, const char* suffix = nullptr);
-    static bool load(FILE* fp, Object* loading);
+    static void dump(FILE* fp, Item* item, const char* suffix = nullptr);
+    static bool load(FILE* fp, Item* loading);
 
     static void dump(FILE* fp, Mob* mob);
     static bool load(FILE* fp, Mob* loading);
@@ -199,18 +199,18 @@ class Storage {
     static void out(FILE* fp, const char* key, Enum         value) { out(fp, key, value.number()); }
 
     // Hybrid typing saver.
-    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(short))           STORE_IN(short, "%hd")
-    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(int))             STORE_IN(int, "%d")
-    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(long))            STORE_IN(long, "%ld")
-    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(unsigned short))  STORE_IN(unsigned short, "%hu")
-    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(unsigned int))    STORE_IN(unsigned int, "%u")
-    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(unsigned long))   STORE_IN(unsigned long, "%lu")
-    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(float))           STORE_IN(float, "%f")
-    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(double))          STORE_IN(double, "%f")
-    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(char))            STORE_IN(char, " %c") // that space is important
-    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(bool));
-    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(const char*));
-    template <class ObjectType> static void in(FILE* fp, ObjectType* object, void (ObjectType::*method)(std::string));
+    template <class ItemType> static void in(FILE* fp, ItemType* item, void (ItemType::*method)(short))           STORE_IN(short, "%hd")
+    template <class ItemType> static void in(FILE* fp, ItemType* item, void (ItemType::*method)(int))             STORE_IN(int, "%d")
+    template <class ItemType> static void in(FILE* fp, ItemType* item, void (ItemType::*method)(long))            STORE_IN(long, "%ld")
+    template <class ItemType> static void in(FILE* fp, ItemType* item, void (ItemType::*method)(unsigned short))  STORE_IN(unsigned short, "%hu")
+    template <class ItemType> static void in(FILE* fp, ItemType* item, void (ItemType::*method)(unsigned int))    STORE_IN(unsigned int, "%u")
+    template <class ItemType> static void in(FILE* fp, ItemType* item, void (ItemType::*method)(unsigned long))   STORE_IN(unsigned long, "%lu")
+    template <class ItemType> static void in(FILE* fp, ItemType* item, void (ItemType::*method)(float))           STORE_IN(float, "%f")
+    template <class ItemType> static void in(FILE* fp, ItemType* item, void (ItemType::*method)(double))          STORE_IN(double, "%f")
+    template <class ItemType> static void in(FILE* fp, ItemType* item, void (ItemType::*method)(char))            STORE_IN(char, " %c") // that space is important
+    template <class ItemType> static void in(FILE* fp, ItemType* item, void (ItemType::*method)(bool));
+    template <class ItemType> static void in(FILE* fp, ItemType* item, void (ItemType::*method)(const char*));
+    template <class ItemType> static void in(FILE* fp, ItemType* item, void (ItemType::*method)(std::string));
 
 };
 

@@ -24,8 +24,8 @@ class RecurringJob: public Job {
     RecurringJob(EventHandlerBase* what, time_t lower, time_t upper = 0, long togo = -1): Job(0, what), _lower(lower), _upper(upper), _togo(togo) { calculateNextTime(); }
     template <class EventType>
     RecurringJob(bool (*function)(EventType*), time_t lower, time_t upper = 0, long togo = -1): Job(0, function), _lower(lower), _upper(upper), _togo(togo) { calculateNextTime(); }
-    template <class ObjectType,class EventType>
-    RecurringJob(ObjectType* object, bool (ObjectType::*method)(EventType*), time_t lower, time_t upper = 0, long togo = -1): Job(0, object, method), _lower(lower), _upper(upper), _togo(togo) { calculateNextTime(); }
+    template <class ItemType,class EventType>
+    RecurringJob(ItemType* item, bool (ItemType::*method)(EventType*), time_t lower, time_t upper = 0, long togo = -1): Job(0, item, method), _lower(lower), _upper(upper), _togo(togo) { calculateNextTime(); }
     virtual ~RecurringJob(void);
 
     virtual bool  isRecurring(void) const     { return true; }

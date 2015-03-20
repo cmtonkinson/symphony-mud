@@ -18,9 +18,9 @@
 #include "ast-map-pair.h"
 #include "ast-map-list.h"
 #include "ast-map.h"
-#include "ast-object.h"
-#include "ast-object-read.h"
-#include "ast-object-write.h"
+#include "ast-item.h"
+#include "ast-item-read.h"
+#include "ast-item-write.h"
 #include "ast-param-list.h"
 #include "ast-reference.h"
 #include "ast-send.h"
@@ -103,28 +103,28 @@ void assertFunction(AstReference* ref) {
   return;
 }
 
-AstObject* assertObject(AstObject* object) {
-  if (!context.isValidReference(object->fullName())) {
-    std::string err(object->fullName());
-    err.append(" is not a valid object reference.");
+AstItem* assertItem(AstItem* item) {
+  if (!context.isValidReference(item->fullName())) {
+    std::string err(item->fullName());
+    err.append(" is not a valid item reference.");
     yyerror(err.c_str());
   }
-  return object;
+  return item;
 }
 
-void assertObjectRead(AstObject* object) {
-  if (!context.readable(object->fullName())) {
-    std::string err(object->fullName());
-    err.append(" is not a readable object.");
+void assertItemRead(AstItem* item) {
+  if (!context.readable(item->fullName())) {
+    std::string err(item->fullName());
+    err.append(" is not a readable item.");
     yyerror(err.c_str());
   }
   return;
 }
 
-void assertObjectWrite(AstObject* object) {
-  if (!context.writable(object->fullName())) {
-    std::string err(object->fullName());
-    err.append(" is not a writable object.");
+void assertItemWrite(AstItem* item) {
+  if (!context.writable(item->fullName())) {
+    std::string err(item->fullName());
+    err.append(" is not a writable item.");
     yyerror(err.c_str());
   }
   return;
@@ -247,7 +247,7 @@ assignment
   | id_lookup DIV_ASSIGN expression                           { assertVariable((AstReference*)$1); $$ = new AstAssignment(AST_ASS_DIV, (AstReference*)$1, $3); }
   | id_lookup MOD_ASSIGN expression                           { assertVariable((AstReference*)$1); $$ = new AstAssignment(AST_ASS_MOD, (AstReference*)$1, $3); }
   | id_lookup POW_ASSIGN expression                           { assertVariable((AstReference*)$1); $$ = new AstAssignment(AST_ASS_POW, (AstReference*)$1, $3); }
-  | object    EQUAL expression                                { assertObjectWrite((AstObject*)$1); $$ = new AstObjectWrite((AstObject*)$1, $3); }
+  | item    EQUAL expression                                { assertItemWrite((AstItem*)$1); $$ = new AstItemWrite((AstItem*)$1, $3); }
   ;
 
 primary_expression
@@ -257,7 +257,7 @@ primary_expression
   | list_initialization                                       { $$ = $1; }
   | map_initialization                                        { $$ = $1; }
   | function_call                                             { $$ = $1; }
-  | object                                                    { assertObjectRead((AstObject*)$1); $$ = new AstObjectRead((AstObject*)$1); }
+  | item                                                    { assertItemRead((AstItem*)$1); $$ = new AstItemRead((AstItem*)$1); }
   ;
 
 constant_value
@@ -286,21 +286,21 @@ map_initialization
   : L_BRACE map_list R_BRACE                                  { $$ = new AstMap((AstMapList*)$2); }
   ;
 
-object
-  : object_reference                                          { $$ = assertObject((AstObject*)$1); }
+item
+  : item_reference                                          { $$ = assertItem((AstItem*)$1); }
   ;
 
-object_reference
-  : DOLLAR object_name ARROW more_objects                     { ((AstObject*)$2)->addChild((AstObject*)$4); $$ = $2; }
+item_reference
+  : DOLLAR item_name ARROW more_items                     { ((AstItem*)$2)->addChild((AstItem*)$4); $$ = $2; }
   ;
 
-more_objects
-  : object_name                                               { $$ = $1; }
-  | object_name ARROW more_objects                            { ((AstObject*)$1)->addChild((AstObject*)$3); $$ = $1; }
+more_items
+  : item_name                                               { $$ = $1; }
+  | item_name ARROW more_items                            { ((AstItem*)$1)->addChild((AstItem*)$3); $$ = $1; }
   ;
 
-object_name
-  : IDENTIFIER                                                { $$ = new AstObject(yytext); }
+item_name
+  : IDENTIFIER                                                { $$ = new AstItem(yytext); }
   ;
 
 expression_list

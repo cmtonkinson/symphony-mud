@@ -7,12 +7,12 @@
 #include "container.h"
 #include "identifiers.h"
 
-class Object;
+class Item;
 
 /*
  * The reason for the getName pointer is that sometimse it's necessary to to display a different
- * identifier when producing a list of Objects. For example, a Being inventory will display the
- * shortname() of an Object, while a Room inventory will display the longname().
+ * identifier when producing a list of Items. For example, a Being inventory will display the
+ * shortname() of an Item, while a Room inventory will display the longname().
  */
 class InventoryContainer: public Container {
   public:
@@ -26,26 +26,26 @@ class InventoryContainer: public Container {
     std::string (Identifiers::*_getName)(void) const;
 
     // virtual methods....
-    virtual void                add(Object* object);
-    virtual void                add(const std::list<Object*>& objects);
-    virtual void                remove(Object* object);
-    virtual void                remove(const std::list<Object*>& objects);
-    virtual void                purgeObjects(void);
-    virtual std::list<Object*>  searchObjects(const std::string& q);
-    virtual Object*             searchSingleObject(const std::string& q);
+    virtual void                add(Item* item);
+    virtual void                add(const std::list<Item*>& items);
+    virtual void                remove(Item* item);
+    virtual void                remove(const std::list<Item*>& items);
+    virtual void                purgeItems(void);
+    virtual std::list<Item*>  searchItems(const std::string& q);
+    virtual Item*             searchSingleItem(const std::string& q);
 
     // general methods...
-    std::list<Object*>  searchObjects(const unsigned long& vnum);
-    unsigned            howManyObjects(const unsigned long& vnum) const;
-    std::string         listObjects(bool compact = true) const;
+    std::list<Item*>  searchItems(const unsigned long& vnum);
+    unsigned            howManyItems(const unsigned long& vnum) const;
+    std::string         listItems(bool compact = true) const;
 
     // public accessor methods...
-    std::list<Object*>&                                   objectList(void)        { return _objectList; }
-    const std::list<Object*>&                             objectList(void) const  { return _objectList; }
+    std::list<Item*>&                                   itemList(void)        { return _itemList; }
+    const std::list<Item*>&                             itemList(void) const  { return _itemList; }
     std::string (Identifiers::*getName(void))(void) const                         { return _getName; }
 
   private:
-    std::list<Object*> _objectList;
+    std::list<Item*> _itemList;
 };
 
 #endif // H_SYMPHONY_CONTAINER_LIST

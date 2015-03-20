@@ -7,7 +7,7 @@
 #include <sodium/crypto_hash.h>
 #include "estring.h"
 #include "io-handler.h"
-#include "object-container.h"
+#include "item-container.h"
 #include "storage.h"
 #include "world.h"
 

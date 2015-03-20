@@ -53,7 +53,7 @@ internal::String TestPartResult::ExtractSummary(const char* message) {
       internal::String(message, stack_trace - message);
 }
 
-// Prints a TestPartResult object.
+// Prints a TestPartResult item.
 std::ostream& operator<<(std::ostream& os, const TestPartResult& result) {
   return os
       << result.file_name() << ":" << result.line_number() << ": "
@@ -78,7 +78,7 @@ const TestPartResult& TestPartResultArray::GetTestPartResult(int index) const {
   return array_[index];
 }
 
-// Returns the number of TestPartResult objects in the array.
+// Returns the number of TestPartResult items in the array.
 int TestPartResultArray::size() const {
   return static_cast<int>(array_.size());
 }

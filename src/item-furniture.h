@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_OBJECT_FURNITURE
-#define H_SYMPHONY_OBJECT_FURNITURE
+#ifndef H_SYMPHONY_ITEM_FURNITURE
+#define H_SYMPHONY_ITEM_FURNITURE
 
 #include "enumTable.h"
 
@@ -43,4 +43,4 @@ class ObjFurniture {
     std::map<EnumInt,std::list<Being*> > _beings; // who's here?
 };
 
-#endif // H_SYMPHONY_OBJECT_FURNITURE
+#endif // H_SYMPHONY_ITEM_FURNITURE

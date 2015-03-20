@@ -1,21 +1,21 @@
 
-#ifndef H_SYMPHONY_MUSCL_AST_OBJECT_WRITE
-#define H_SYMPHONY_MUSCL_AST_OBJECT_WRITE
+#ifndef H_SYMPHONY_MUSCL_AST_ITEM_WRITE
+#define H_SYMPHONY_MUSCL_AST_ITEM_WRITE
 
 #include "ast.h"
 
-class AstObject;
+class AstItem;
 
-class AstObjectWrite: public Ast {
+class AstItemWrite: public Ast {
   public:
     // constructors...
-    AstObjectWrite(void);
-    AstObjectWrite(AstObject* object, Ast* value);
-    virtual ~AstObjectWrite(void);
+    AstItemWrite(void);
+    AstItemWrite(AstItem* item, Ast* value);
+    virtual ~AstItemWrite(void);
 
     // public accessors...
-    void        object(AstObject* object) { _object = object; }
-    AstObject*  object(void) const        { return _object; }
+    void        item(AstItem* item) { _item = item; }
+    AstItem*  item(void) const        { return _item; }
     void        value(Ast* value)         { _value = value; }
     Ast*        value(void) const         { return _value; }
 
@@ -26,8 +26,8 @@ class AstObjectWrite: public Ast {
 
   private:
     // data...
-    AstObject*  _object;
+    AstItem*  _item;
     Ast*        _value;
 };
 
-#endif // H_SYMPHONY_MUSCL_AST_OBJECT_WRITE
+#endif // H_SYMPHONY_MUSCL_AST_ITEM_WRITE

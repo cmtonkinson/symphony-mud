@@ -13,7 +13,7 @@
 #include "exit.h"
 #include "io-handler.h"
 #include "mob.h"
-#include "object.h"
+#include "item.h"
 #include "regex.h"
 #include "room.h"
 #include "schedule.h"
@@ -68,8 +68,8 @@ class World {
     const std::map<std::string,Avatar*>&                      getAvatars(void) const          { return _avatars; }
     std::set<Area*,area_comp>&                                getAreas(void)                  { return _areas; }
     const std::set<Area*,area_comp>&                          getAreas(void) const            { return _areas; }
-    std::set<Object*>&                                        getObjects(void)                { return _objects; }
-    const std::set<Object*>&                                  getObjects(void) const          { return _objects; }
+    std::set<Item*>&                                        getItems(void)                { return _items; }
+    const std::set<Item*>&                                  getItems(void) const          { return _items; }
     std::set<Being*>&                                      getBeings(void)              { return _beings; }
     const std::set<Being*>&                                getBeings(void) const        { return _beings; }
     std::map<unsigned,Board*>&                                boards(void)                    { return _boards; }
@@ -130,11 +130,11 @@ class World {
     // Rooms
     Room*                 findRoom(const unsigned long& vnum);
 
-    // Objects
-    void                  insert(Object* object);
-    void                  remove(Object* object);
-    Object*               findObject(const std::string& name);
-    bool                  transport(Object* object, Room* from, const unsigned long& vnum);
+    // Items
+    void                  insert(Item* item);
+    void                  remove(Item* item);
+    Item*               findItem(const std::string& name);
+    bool                  transport(Item* item, Room* from, const unsigned long& vnum);
 
     // Boards
     void                  add(Board* board);
@@ -160,7 +160,7 @@ class World {
     Socket                                                  _server;
     std::map<std::string,Avatar*>                           _avatars;
     std::set<Area*,area_comp>                               _areas;
-    std::set<Object*>                                       _objects;
+    std::set<Item*>                                       _items;
     std::set<Being*>                                     _beings;
     std::map<unsigned,Board*>                               _boards;
     InputIOHandler                                          _npcIOHandler;

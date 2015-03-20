@@ -312,7 +312,7 @@ inline void Shuffle(internal::Random* random, std::vector<E>* v) {
   ShuffleRange(random, 0, static_cast<int>(v->size()), v);
 }
 
-// A function for deleting an object.  Handy for being used as a
+// A function for deleting an item.  Handy for being used as a
 // functor.
 template <typename T>
 static void Delete(T* x) {
@@ -384,21 +384,21 @@ class TestInfoImpl {
   TestResult* result() { return &result_; }
   const TestResult* result() const { return &result_; }
 
-  // Creates the test object, runs it, records its result, and then
+  // Creates the test item, runs it, records its result, and then
   // deletes it.
   void Run();
 
   // Clears the test result.
   void ClearResult() { result_.Clear(); }
 
-  // Clears the test result in the given TestInfo object.
+  // Clears the test result in the given TestInfo item.
   static void ClearTestResult(TestInfo * test_info) {
     test_info->impl()->ClearResult();
   }
 
  private:
   // These fields are immutable properties of the test.
-  TestInfo* const parent_;          // The owner of this object
+  TestInfo* const parent_;          // The owner of this item
   const String test_case_name_;     // Test case name
   const String name_;               // Test name
   const String test_case_comment_;  // Test case comment
@@ -409,7 +409,7 @@ class TestInfoImpl {
   bool matches_filter_;             // True if this test matches the
                                     // user-specified filter.
   internal::TestFactoryBase* const factory_;  // The factory that creates
-                                              // the test object
+                                              // the test item
 
   // This field is mutable and needs to be reset before running the
   // test for the second time.
@@ -693,7 +693,7 @@ class GTEST_API_ UnitTestImpl {
   //
   //   set_up_tc:    pointer to the function that sets up the test case
   //   tear_down_tc: pointer to the function that tears down the test case
-  //   test_info:    the TestInfo object
+  //   test_info:    the TestInfo item
   void AddTestInfo(Test::SetUpTestCaseFunc set_up_tc,
                    Test::TearDownTestCaseFunc tear_down_tc,
                    TestInfo * test_info) {
@@ -716,19 +716,19 @@ class GTEST_API_ UnitTestImpl {
                 tear_down_tc)->AddTestInfo(test_info);
   }
 #if GTEST_HAS_PARAM_TEST
-  // Returns ParameterizedTestCaseRegistry object used to keep track of
+  // Returns ParameterizedTestCaseRegistry item used to keep track of
   // value-parameterized tests and instantiate and register them.
   internal::ParameterizedTestCaseRegistry& parameterized_test_registry() {
     return parameterized_test_registry_;
   }
 #endif  // GTEST_HAS_PARAM_TEST
 
-  // Sets the TestCase object for the test that's currently running.
+  // Sets the TestCase item for the test that's currently running.
   void set_current_test_case(TestCase* a_current_test_case) {
     current_test_case_ = a_current_test_case;
   }
 
-  // Sets the TestInfo object for the test that's currently running.  If
+  // Sets the TestInfo item for the test that's currently running.  If
   // current_test_info is NULL, the assertion results will be stored in
   // ad_hoc_test_result_.
   void set_current_test_info(TestInfo* a_current_test_info) {
@@ -743,7 +743,7 @@ class GTEST_API_ UnitTestImpl {
   // is present but does nothing.
   void RegisterParameterizedTests();
 
-  // Runs all tests in this UnitTest object, prints the result, and
+  // Runs all tests in this UnitTest item, prints the result, and
   // returns 0 if all tests are successful, or 1 otherwise.  If any
   // exception is thrown during a test on Windows, this test is
   // considered to be failed, but the rest of the tests will still be
@@ -764,7 +764,7 @@ class GTEST_API_ UnitTestImpl {
 
   // Matches the full name of each test against the user-specified
   // filter to decide whether the test should run, then records the
-  // result in each TestCase and TestInfo object.
+  // result in each TestCase and TestInfo item.
   // If shard_tests == HONOR_SHARDING_PROTOCOL, further filters tests
   // based on sharding variables in the environment.
   // Returns the number of tests that should run.
@@ -837,7 +837,7 @@ class GTEST_API_ UnitTestImpl {
  private:
   friend class ::testing::UnitTest;
 
-  // The UnitTest object that owns this implementation object.
+  // The UnitTest item that owns this implementation item.
   UnitTest* const parent_;
 
   // The working directory when the first TEST() or TEST_F() was
@@ -873,7 +873,7 @@ class GTEST_API_ UnitTestImpl {
   // shuffled order.
   std::vector<int> test_case_indices_;
 #if GTEST_HAS_PARAM_TEST
-  // ParameterizedTestRegistry object used to register value-parameterized
+  // ParameterizedTestRegistry item used to register value-parameterized
   // tests.
   internal::ParameterizedTestCaseRegistry parameterized_test_registry_;
 
@@ -911,7 +911,7 @@ class GTEST_API_ UnitTestImpl {
   TestEventListeners listeners_;
 
   // The OS stack trace getter.  Will be deleted when the UnitTest
-  // object is destructed.  By default, an OsStackTraceGetter is used,
+  // item is destructed.  By default, an OsStackTraceGetter is used,
   // but the user can set this field to use a custom getter if that is
   // desired.
   OsStackTraceGetterInterface* os_stack_trace_getter_;
@@ -941,7 +941,7 @@ class GTEST_API_ UnitTestImpl {
 };  // class UnitTestImpl
 
 // Convenience function for accessing the global UnitTest
-// implementation object.
+// implementation item.
 inline UnitTestImpl* GetUnitTestImpl() {
   return UnitTest::GetInstance()->impl();
 }

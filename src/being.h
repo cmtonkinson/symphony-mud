@@ -16,7 +16,7 @@
 #include "job.h"
 #include "klass.h"
 #include "modifier.h"
-#include "object.h"
+#include "item.h"
 
 class Area;
 class Ability;
@@ -134,11 +134,11 @@ class Being {
      * then the operation is performed and true is returned.  If the being can't wear the item,
      * then message is appropriately set and false is returned.
      */
-    bool                        wear(Object* article, std::string& message, Object*& removed);
-    // `remove(Object*)` is already implemented via `Container`, so we call equipment removal `unwear()`
-    bool                        unwear(Object* article, std::string& message, bool force = false);
-    Object*                     worn(const int& location) const;
-    static bool                 isSingleWearLoc(const unsigned short& object_weartype);
+    bool                        wear(Item* article, std::string& message, Item*& removed);
+    // `remove(Item*)` is already implemented via `Container`, so we call equipment removal `unwear()`
+    bool                        unwear(Item* article, std::string& message, bool force = false);
+    Item*                     worn(const int& location) const;
+    static bool                 isSingleWearLoc(const unsigned short& item_weartype);
     Identifiers&                identifiers(void)                                               { return _identifiers; }
     const Identifiers&          identifiers(void) const                                         { return _identifiers; }
     InventoryContainer&         inventory(void)                                                 { return _inventory; }
@@ -266,18 +266,18 @@ class Being {
     bool                        lay(std::string& error, ObjFurniture* furniture = NULL);
     bool                        sit(std::string& error, ObjFurniture* furniture = NULL, bool on = false);
     bool                        stand(std::string& error);
-    void                        setModifications(Object* object);
-    void                        unsetModifications(Object* object);
+    void                        setModifications(Item* item);
+    void                        unsetModifications(Item* item);
     void                        modify(Modifier* modifier);
     void                        unmodify(Modifier* modifier);
     void                        doModification(const unsigned short& attribute, const int& magnitude);
     unsigned short              canSee(Being* target);
     std::string                 seeName(Being* target, bool capitalize = false);
     const char*                 seeReflexivePronoun(Being* target, bool capitalize = false); // e.g. "himself"
-    const char*                 seeObjectPronoun(Being* target, bool capitalize = false);    // e.g. "him"
+    const char*                 seeItemPronoun(Being* target, bool capitalize = false);    // e.g. "him"
     const char*                 seePosessivePronoun(Being* target, bool capitalize = false); // e.g. "his"
-    unsigned short              canSee(Object* target);
-    std::string                 seeName(Object* target, bool capitalize = false);
+    unsigned short              canSee(Item* target);
+    std::string                 seeName(Item* target, bool capitalize = false);
     bool                        canAlter(Being* target);
     bool                        canMove(const unsigned short& direction, std::string& message);
     bool                        move(const unsigned short& direction);
@@ -287,11 +287,11 @@ class Being {
     void                        replaceIOHandler(IOHandler* handler);
     void                        handle(void);
     Being*                   findBeing(const std::string& name);
-    Object*                     findObject(const std::string& query);
-    unsigned short              getWearloc(const Object::Wearable& wearable) const;
+    Item*                     findItem(const std::string& query);
+    unsigned short              getWearloc(const Item::Wearable& wearable) const;
     static const char*          wearLocName(const unsigned short& wearloc);
-    Object*                     primary(void);
-    Object*                     secondary(void);
+    Item*                     primary(void);
+    Item*                     secondary(void);
     void                        naturalStatAdjustment(void);
     std::string                 serializeAbilities(void);
     void                        unserializeAbilities(std::string ser);

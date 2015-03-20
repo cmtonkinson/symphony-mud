@@ -26,9 +26,9 @@ class EventHandler {
     }
 
     // to register a [non-static] member method...
-    template <class ObjectType,class EventType>
-    void registerHandler(ObjectType* object, bool (ObjectType::*method)(EventType*)) {
-      _handlers[Typeinfo(typeid(EventType))].push_back(new EventHandlerMethod<ObjectType,EventType>(object, method));
+    template <class ItemType,class EventType>
+    void registerHandler(ItemType* item, bool (ItemType::*method)(EventType*)) {
+      _handlers[Typeinfo(typeid(EventType))].push_back(new EventHandlerMethod<ItemType,EventType>(item, method));
       return;
     }
 

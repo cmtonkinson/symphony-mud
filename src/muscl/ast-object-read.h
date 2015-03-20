@@ -5,18 +5,18 @@
 #include "ast.h"
 
 class Datum;
-class AstObject;
+class AstItem;
 
-class AstObjectRead: public Ast {
+class AstItemRead: public Ast {
   public:
     // constructors...
-    AstObjectRead(void);
-    AstObjectRead(AstObject* object);
-    virtual ~AstObjectRead(void);
+    AstItemRead(void);
+    AstItemRead(AstItem* item);
+    virtual ~AstItemRead(void);
 
     // public accessors...
-    void                object(AstObject* object)             { _object = object; }
-    AstObject*          object(void) const                    { return _object; }
+    void                item(AstItem* item)             { _item = item; }
+    AstItem*          item(void) const                    { return _item; }
 
     // general methods...
     virtual Datum*      eval(void);
@@ -25,7 +25,7 @@ class AstObjectRead: public Ast {
 
   private:
     // data...
-    AstObject*          _object;
+    AstItem*          _item;
 };
 
 #endif // H_SYMPHONY_MUSCL_AST_OBJ_READ

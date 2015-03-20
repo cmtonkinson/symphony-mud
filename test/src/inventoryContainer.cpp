@@ -6,7 +6,7 @@
 #include "../../src/estring.h"
 #include "../../src/inventoryContainer.h"
 #include "../../src/identifiers.h"
-#include "../../src/object.h"
+#include "../../src/item.h"
 #include "../../src/regex.h"
 
 class InventoryContainerTest: public ::testing::Test {
@@ -18,19 +18,19 @@ class InventoryContainerTest: public ::testing::Test {
     std::vector<std::string>  keywords;
     std::vector<std::string>  one_comparison;
     std::vector<std::string>  many_comparison;
-    /* for object identification tests */
-    std::list<Object*>        objects;
-    Object*                   object;
+    /* for item identification tests */
+    std::list<Item*>        items;
+    Item*                   item;
 
     virtual void SetUp(void) {
-      Object* foo = NULL;
+      Item* foo = NULL;
       inventory = new InventoryContainer(&Identifiers::shortname);
       one_comparison.push_back("glass");
       many_comparison.push_back("glass");
       many_comparison.push_back("red");
       many_comparison.push_back("wine");
       for (int i=1; i < 11; ++i) {
-        foo = new Object();
+        foo = new Item();
         foo->identifiers().shortname("short sword");
         foo->identifiers().longname("a short sword is here");
         foo->identifiers().addKeyword("short");
@@ -40,7 +40,7 @@ class InventoryContainerTest: public ::testing::Test {
         inventory->add(foo);
       }
       for (int i=11; i < 21; ++i) {
-        foo = new Object();
+        foo = new Item();
         foo->identifiers().shortname("long sword");
         foo->identifiers().longname("a long sword is here");
         foo->identifiers().addKeyword("long");
@@ -99,34 +99,34 @@ TEST_F(InventoryContainerTest, MultipleKeywordParseQuery) {
   EXPECT_TRUE(many_comparison == keywords) << "keywords were: \"" << Regex::implode(", ", keywords) << "\"";
 }
 
-TEST_F(InventoryContainerTest, ObjectManipulation) {
+TEST_F(InventoryContainerTest, ItemManipulation) {
   // single keyword
-  objects = inventory->searchObjects("short");
-  EXPECT_EQ(1, objects.size());
-  EXPECT_TRUE(objects.front()->identifiers().matchesKeyword("short"));
+  items = inventory->searchItems("short");
+  EXPECT_EQ(1, items.size());
+  EXPECT_TRUE(items.front()->identifiers().matchesKeyword("short"));
   // single keyword with index
-  objects = inventory->searchObjects("short#3");
-  EXPECT_EQ(1, objects.size());
-  EXPECT_EQ(3, objects.front()->vnum());
-  EXPECT_TRUE(objects.front()->identifiers().matchesKeyword("short"));
+  items = inventory->searchItems("short#3");
+  EXPECT_EQ(1, items.size());
+  EXPECT_EQ(3, items.front()->vnum());
+  EXPECT_TRUE(items.front()->identifiers().matchesKeyword("short"));
   // single keyword with multiplier
-  objects = inventory->searchObjects("3*short");
-  EXPECT_EQ(3, objects.size());
-  EXPECT_TRUE(objects.front()->identifiers().matchesKeyword("short"));
+  items = inventory->searchItems("3*short");
+  EXPECT_EQ(3, items.size());
+  EXPECT_TRUE(items.front()->identifiers().matchesKeyword("short"));
   // multiple keywords
-  objects = inventory->searchObjects("'long sword'");
-  EXPECT_EQ(1, objects.size());
-  EXPECT_TRUE(objects.front()->identifiers().matchesKeyword("long"));
-  EXPECT_TRUE(objects.front()->identifiers().matchesKeyword("sword"));
+  items = inventory->searchItems("'long sword'");
+  EXPECT_EQ(1, items.size());
+  EXPECT_TRUE(items.front()->identifiers().matchesKeyword("long"));
+  EXPECT_TRUE(items.front()->identifiers().matchesKeyword("sword"));
   // multiple keywords with index
-  objects = inventory->searchObjects("'long sword'#7");
-  EXPECT_EQ(1, objects.size());
-  EXPECT_EQ(17, objects.front()->vnum());
-  EXPECT_TRUE(objects.front()->identifiers().matchesKeyword("long"));
-  EXPECT_TRUE(objects.front()->identifiers().matchesKeyword("sword"));
+  items = inventory->searchItems("'long sword'#7");
+  EXPECT_EQ(1, items.size());
+  EXPECT_EQ(17, items.front()->vnum());
+  EXPECT_TRUE(items.front()->identifiers().matchesKeyword("long"));
+  EXPECT_TRUE(items.front()->identifiers().matchesKeyword("sword"));
   // multiple keywords with multiplier
-  objects = inventory->searchObjects("5*'long sword'");
-  EXPECT_EQ(5, objects.size());
-  EXPECT_TRUE(objects.front()->identifiers().matchesKeyword("long"));
-  EXPECT_TRUE(objects.front()->identifiers().matchesKeyword("sword"));
+  items = inventory->searchItems("5*'long sword'");
+  EXPECT_EQ(5, items.size());
+  EXPECT_TRUE(items.front()->identifiers().matchesKeyword("long"));
+  EXPECT_TRUE(items.front()->identifiers().matchesKeyword("sword"));
 }

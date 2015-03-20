@@ -36,13 +36,13 @@ CommandTable::CommandTable(void) {
   add(new CmdGoto());
   add(new CmdHeal());
   add(new CmdIdentify());
+  add(new CmdIlist());
+  add(new CmdIload());
   add(new CmdIncognito());
   add(new CmdInventory());
   add(new CmdLoadRule());
   add(new CmdMlist());
   add(new CmdMload());
-  add(new CmdOlist());
-  add(new CmdOload());
   add(new CmdPeace());
   add(new CmdPoofin());
   add(new CmdPoofout());
@@ -51,8 +51,8 @@ CommandTable::CommandTable(void) {
   add(new CmdRestring());
   add(new CmdRlist());
   add(new CmdSummon());
-  add(new CmdTimers());
   add(new CmdTest());
+  add(new CmdTimers());
   add(new CmdWorldSave());
   // Normal commands...
   add(new CmdAfk());
@@ -112,7 +112,7 @@ Commands::Commands(void) {
   add(new CmdDisable());
   add(new CmdEnable());
   add(new CmdMedit());
-  add(new CmdOedit());
+  add(new CmdIedit());
   add(new CmdPedit());
   add(new CmdReboot());
   add(new CmdRedit());

@@ -445,7 +445,7 @@ GTestLog::~GTestLog() {
 #endif  // _MSC_VER
 #if GTEST_HAS_STREAM_REDIRECTION_
 
-// Object that captures an output stream (stdout/stderr).
+// Item that captures an output stream (stdout/stderr).
 class CapturedStream {
  public:
   // The ctor redirects the stream to a temporary file.

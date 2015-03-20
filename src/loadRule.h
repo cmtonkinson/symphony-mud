@@ -6,7 +6,7 @@
 #include <string>
 
 class Mob;
-class Object;
+class Item;
 class Room;
 
 class LoadRule {
@@ -14,13 +14,13 @@ class LoadRule {
 
     static const unsigned ERROR  = 0;
     // rule types...
-    static const unsigned OBJECT = 1;
+    static const unsigned ITEM = 1;
     static const unsigned MOB    = 2;
     // rule prepositions...
-    static const unsigned ON     = 1;  // the indirect object is an object
-    static const unsigned IN     = 2;  // the indirect object is an object
-    static const unsigned CARRY  = 3;  // the indirect object is a mob
-    static const unsigned WEAR   = 4;  // the indirect object is a mob
+    static const unsigned ON     = 1;  // the indirect item is an item
+    static const unsigned IN     = 2;  // the indirect item is an item
+    static const unsigned CARRY  = 3;  // the indirect item is a mob
+    static const unsigned WEAR   = 4;  // the indirect item is a mob
 
     // constructors...
     LoadRule(void);
@@ -45,10 +45,10 @@ class LoadRule {
     unsigned        probability(void) const             { return _probability; }
 
     // general methods...
-    const char*         strType(void) const             { return (type() == OBJECT ? "OBJ" : "MOB"); }
+    const char*         strType(void) const             { return (type() == ITEM ? "OBJ" : "MOB"); }
     virtual std::string notes(void) const = 0;
     virtual void        destroy(void) = 0;
-    virtual bool        execute(std::list<Object*>& new_objects, std::list<Mob*>& new_mobs) = 0;
+    virtual bool        execute(std::list<Item*>& new_items, std::list<Mob*>& new_mobs) = 0;
 
     static LoadRule*    create(const char* type);
 
@@ -57,11 +57,11 @@ class LoadRule {
     unsigned long   _ID;
     unsigned long   _vnum;
     Room*           _room;
-    unsigned        _type;            // object or mob
-    unsigned long   _target;          // vnum of the object/mob
+    unsigned        _type;            // item or mob
+    unsigned long   _target;          // vnum of the item/mob
     unsigned        _number;          // number to load per reset
-    unsigned        _max;             // max in the area for mobs, max in the room for objects
-    unsigned        _probability;     // 1-100 percent probability that the object/mob will load per reset
+    unsigned        _max;             // max in the area for mobs, max in the room for items
+    unsigned        _probability;     // 1-100 percent probability that the item/mob will load per reset
 };
 
 #endif // #ifndef H_SYMPHONY_LOADRULE

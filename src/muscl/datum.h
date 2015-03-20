@@ -108,10 +108,10 @@ class Datum {
     unsigned  size(void);
     unsigned  size(void) const;
 
-    // these methods provide "type coversion" for CONST objects
-    // note: if the object being "converted" is known to be the type desired, these
-    //       methods are pretty fast.  If the object is a different type though,
-    //       these methods make a value copy and non-const-ly convert THAT object
+    // these methods provide "type coversion" for CONST items
+    // note: if the item being "converted" is known to be the type desired, these
+    //       methods are pretty fast.  If the item is a different type though,
+    //       these methods make a value copy and non-const-ly convert THAT item
     //       which takes some overhead (the most costly being creating said value copy)
     long        longVal(void) const;
     double      doubleVal(void) const;

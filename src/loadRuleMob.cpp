@@ -21,7 +21,7 @@ void LoadRuleMob::destroy(void) {
   return;
 }
 
-bool LoadRuleMob::execute(std::list<Object*>& new_objects, std::list<Mob*>& new_mobs) {
+bool LoadRuleMob::execute(std::list<Item*>& new_items, std::list<Mob*>& new_mobs) {
   unsigned mobs_added = 0;
   int level           = 0;
   std::map<unsigned long,Mob*>::iterator it;

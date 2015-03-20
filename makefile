@@ -30,7 +30,7 @@ clean: muscl-clean test-clean
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CPPC) -c $(FLAGS_DEV) $< -o $@
 
-# Generate dependencies for application, dependency files, and unit test object files
+# Generate dependencies for application, dependency files, and unit test item files
 $(OBJ_DIR)/%.d: $(SRC_DIR)/%.cpp
 	@$(CPPC) -MM $< -o $@
 	@sed -i -e 's|\(.*\)\.o:|$(OBJ_DIR)/\1.o $(OBJ_DIR)/\1.d $(TEST_OBJ_DIR)/\1_utest.o:|' $@

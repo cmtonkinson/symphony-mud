@@ -1,19 +1,19 @@
 
 #include "compoundTable.h"
 #include "being.h"
-#include "object-armor.h"
-#include "object-clothing.h"
-#include "object-container.h"
-#include "object-food.h"
-#include "object-furniture.h"
-#include "object-jewelry.h"
-#include "object-key.h"
-#include "object-trash.h"
-#include "object-weapon.h"
-#include "object.h"
+#include "item-armor.h"
+#include "item-clothing.h"
+#include "item-container.h"
+#include "item-food.h"
+#include "item-furniture.h"
+#include "item-jewelry.h"
+#include "item-key.h"
+#include "item-trash.h"
+#include "item-weapon.h"
+#include "item.h"
 #include "socket.h"
 
-Object::Object(void) {
+Item::Item(void) {
   extra(NULL);
   ID(0);
   type(Type_Undefined);
@@ -26,7 +26,7 @@ Object::Object(void) {
   return;
 }
 
-Object::Object(const Object& ref):
+Item::Item(const Item& ref):
     _flags(ref.flags()),
     _identifiers(ref.identifiers()),
     _composition(ref.composition()) {
@@ -43,7 +43,7 @@ Object::Object(const Object& ref):
   return;
 }
 
-Object::~Object(void) {
+Item::~Item(void) {
   for (std::list<Modifier*>::const_iterator it = modifiers().begin(); it != modifiers().end(); ++it) {
     delete *it;
   }
@@ -51,7 +51,7 @@ Object::~Object(void) {
   return;
 }
 
-void Object::deleteExtra(void) {
+void Item::deleteExtra(void) {
   if (extra()) {
     switch (type()) {
       case Type_Armor:      delete armor();     break;
@@ -70,11 +70,11 @@ void Object::deleteExtra(void) {
   _type = Type_Undefined;
 }
 
-/* Changing Object::_type is a non-trivial operation, since Object::_extra
- * holds a pointer to an Obj____ object, and that pointer is interpreted
- * based on the value of Object::_type.
+/* Changing Item::_type is a non-trivial operation, since Item::_extra
+ * holds a pointer to an Obj____ item, and that pointer is interpreted
+ * based on the value of Item::_type.
  */
-void Object::type(Type type) {
+void Item::type(Type type) {
   if (type == _type) {
     return;
   }
@@ -95,7 +95,7 @@ void Object::type(Type type) {
   return;
 }
 
-void Object::type(Type type, void* extra_ptr) {
+void Item::type(Type type, void* extra_ptr) {
   if (type == _type) {
     return;
   }
@@ -116,7 +116,7 @@ void Object::type(Type type, void* extra_ptr) {
   return;
 }
 
-const char* Object::typeToString(void) const {
+const char* Item::typeToString(void) const {
   switch (type()) {
     case Type_Armor:      return "armor";
     case Type_Clothing:   return "clothing";
@@ -131,7 +131,7 @@ const char* Object::typeToString(void) const {
   }
 }
 
-void Object::stringToType(const std::string& src) {
+void Item::stringToType(const std::string& src) {
   if (Regex::strPrefix(src, "armor")) {
     type(Type_Armor);
   } else if (Regex::strPrefix(src, "clothing")) {
@@ -156,7 +156,7 @@ void Object::stringToType(const std::string& src) {
   return;
 }
 
-const char* Object::wearableToString(void) const {
+const char* Item::wearableToString(void) const {
   switch (wearable()) {
     case Wearable_Head:       return "head";
     case Wearable_Ear:        return "ear";
@@ -180,7 +180,7 @@ const char* Object::wearableToString(void) const {
   }
 }
 
-void Object::stringToWearable(const std::string& src) {
+void Item::stringToWearable(const std::string& src) {
   if (Regex::strPrefix(src, "head")) {
     wearable(Wearable_Head);
   } else if (Regex::strPrefix(src, "ear")) {
@@ -223,7 +223,7 @@ void Object::stringToWearable(const std::string& src) {
   return;
 }
 
-std::string Object::serializeModifiers(void) const {
+std::string Item::serializeModifiers(void) const {
   std::vector<std::string> foo;
   char buf[128];
   for (auto iter : modifiers()) {
@@ -233,7 +233,7 @@ std::string Object::serializeModifiers(void) const {
   return Regex::implode("~", foo);
 }
 
-void Object::unserializeModifiers(std::string ser) {
+void Item::unserializeModifiers(std::string ser) {
   std::vector<std::string> foo = Regex::explode("~", ser);
   std::vector<std::string> bar;
   unsigned short attr = 0;
@@ -247,27 +247,27 @@ void Object::unserializeModifiers(std::string ser) {
   return;
 }
 
-std::string Object::serializeComposition(std::string sep) const {
+std::string Item::serializeComposition(std::string sep) const {
   std::set<std::string> foo;
   for (auto iter : composition()) foo.insert(iter->identifiers().shortname());
   return Regex::implode(sep, foo);
 }
 
-void Object::unserializeComposition(std::string ser) {
+void Item::unserializeComposition(std::string ser) {
   std::vector<std::string> foo = Regex::explode("~", ser);
   for (auto iter : foo) composition().insert(CompoundTable::Instance().find(iter));
   return;
 }
 
-std::string Object::decorativeShortname(void) const {
+std::string Item::decorativeShortname(void) const {
   return listDecorativeFlags().append(identifiers().shortname());
 }
 
-std::string Object::decorativeLongname(void) const {
+std::string Item::decorativeLongname(void) const {
   return listDecorativeFlags().append(identifiers().longname());
 }
 
-std::string Object::listDecorativeFlags(void) const {
+std::string Item::listDecorativeFlags(void) const {
   std::string output;
   if (glowing()) {
     output.append("{x({cglowing{x) ");
@@ -278,12 +278,12 @@ std::string Object::listDecorativeFlags(void) const {
   return output;
 }
 
-std::string Object::printStatus(void) const {
+std::string Item::printStatus(void) const {
   std::string output;
   char buffer[Socket::MAX_BUFFER];
 
-  output.append("  --== {Ybasic object data{x ==--\n");
-  // Basic object information...
+  output.append("  --== {Ybasic item data{x ==--\n");
+  // Basic item information...
   sprintf(buffer, "vnum......... {y%lu{x\n\
 type......... {y%s{x\n\
 flags........ {y%s{x\n\
@@ -297,7 +297,7 @@ longname..... %s\n\n\
   --== {Ydescription{x ==--\n%s\n\
 ",  vnum(),
     typeToString(),
-    flags().list(FTObject::Instance()).c_str(),
+    flags().list(FTItem::Instance()).c_str(),
     serializeComposition().c_str(),
     level(),
     value(),
@@ -328,7 +328,7 @@ longname..... %s\n\n\
       case Type_Clothing:
         break;
       case Type_Container:
-        sprintf(buffer, "Contains {y%zd{x items.\n", container()->inventory().objectList().size());
+        sprintf(buffer, "Contains {y%zd{x items.\n", container()->inventory().itemList().size());
         output.append(buffer);
         break;
       case Type_Food:

@@ -83,15 +83,15 @@ DEF_FLAGTABLE(FTAvatarWho)
 #define COM_TACTILE     6
 DEF_FLAGTABLE(FTCommand)
 
-//////////////////////////////////////////////// Object...
-#define OBJECT_NOREMOVE   1
-#define OBJECT_NODROP     2
-#define OBJECT_NOGET      3
-#define OBJECT_MELTDROP   4
-#define OBJECT_GLOWING    5
-#define OBJECT_HUMMING    6
-#define OBJECT_BURNPROOF  7
-DEF_FLAGTABLE(FTObject)
+//////////////////////////////////////////////// Item...
+#define ITEM_NOREMOVE   1
+#define ITEM_NODROP     2
+#define ITEM_NOGET      3
+#define ITEM_MELTDROP   4
+#define ITEM_GLOWING    5
+#define ITEM_HUMMING    6
+#define ITEM_BURNPROOF  7
+DEF_FLAGTABLE(FTItem)
 
 #define CONTAINER_CLOSEABLE 1
 #define CONTAINER_CLOSED    2

@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_OBJECT_KEY
-#define H_SYMPHONY_OBJECT_KEY
+#ifndef H_SYMPHONY_ITEM_KEY
+#define H_SYMPHONY_ITEM_KEY
 
 class ObjKey {
   public:
@@ -10,4 +10,4 @@ class ObjKey {
     ~ObjKey(void);
 };
 
-#endif // H_SYMPHONY_OBJECT_KEY
+#endif // H_SYMPHONY_ITEM_KEY

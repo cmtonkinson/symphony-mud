@@ -5,10 +5,10 @@
 #include "cl-node.h"
 #include "datum.h"
 
-template <class ObjectType, class DataType>
+template <class ItemType, class DataType>
 class PropertyNode: public ContextNode {
   public:
-    PropertyNode(ObjectType* target, DataType (ObjectType::*getter)(void)const, void (ObjectType::*setter)(const DataType& ref)):
+    PropertyNode(ItemType* target, DataType (ItemType::*getter)(void)const, void (ItemType::*setter)(const DataType& ref)):
         ContextNode(~0),
         _target(target),
         _getter(getter),
@@ -37,9 +37,9 @@ class PropertyNode: public ContextNode {
     }
 
   private:
-    ObjectType* _target;
-    DataType (ObjectType::*_getter)(void)const;
-    void (ObjectType::*_setter)(const DataType& ref);
+    ItemType* _target;
+    DataType (ItemType::*_getter)(void)const;
+    void (ItemType::*_setter)(const DataType& ref);
 };
 
 /* These two utility functions are added as syntax-sugar so our eyes don't bleed as much casting
@@ -47,13 +47,13 @@ class PropertyNode: public ContextNode {
  * http://stackoverflow.com/questions/3946955/unable-to-resolve-overloaded-class-methods-in-template-delegate/3948560#3948560
  * Thanks, UncleBens!
  */
-template <class ObjectType, class DataType>
-DataType (ObjectType::*as_getter(DataType (ObjectType::*g)(void)const))() const {
+template <class ItemType, class DataType>
+DataType (ItemType::*as_getter(DataType (ItemType::*g)(void)const))() const {
   return g;
 }
 
-template <class ObjectType, class DataType>
-void (ObjectType::*as_setter(void (ObjectType::*s)(const DataType&)))(const DataType&) {
+template <class ItemType, class DataType>
+void (ItemType::*as_setter(void (ItemType::*s)(const DataType&)))(const DataType&) {
   return s;
 }
 

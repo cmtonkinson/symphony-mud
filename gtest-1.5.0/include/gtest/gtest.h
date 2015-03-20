@@ -157,7 +157,7 @@ class XmlUnitTestResultPrinter;
 
 // Converts a streamable value to a String.  A NULL pointer is
 // converted to "(null)".  When the input value is a ::string,
-// ::std::string, ::wstring, or ::std::wstring object, each NUL
+// ::std::string, ::wstring, or ::std::wstring item, each NUL
 // character in it is replaced with "\\0".
 // Declared in gtest-internal.h but defined here, so that it has access
 // to the definition of the Message class, required by the ARM
@@ -170,7 +170,7 @@ String StreamableToString(const T& streamable) {
 }  // namespace internal
 
 // A class for indicating whether an assertion was successful.  When
-// the assertion wasn't successful, the AssertionResult object
+// the assertion wasn't successful, the AssertionResult item
 // remembers a non-empty message that describes how it failed.
 //
 // To create an instance of this class, use one of the factory functions
@@ -265,7 +265,7 @@ class GTEST_API_ AssertionResult {
   // Returns the text streamed into this AssertionResult. Test assertions
   // use it when they fail (i.e., the predicate's outcome doesn't match the
   // assertion's expectation). When nothing has been streamed into the
-  // object, returns an empty string.
+  // item, returns an empty string.
   const char* message() const {
     return message_.get() != NULL && message_->c_str() != NULL ?
            message_->c_str() : "";
@@ -274,7 +274,7 @@ class GTEST_API_ AssertionResult {
   // Deprecated; please use message() instead.
   const char* failure_message() const { return message(); }
 
-  // Streams a custom failure message into this object.
+  // Streams a custom failure message into this item.
   template <typename T> AssertionResult& operator<<(const T& value);
 
  private:
@@ -291,7 +291,7 @@ class GTEST_API_ AssertionResult {
   internal::scoped_ptr<internal::String> message_;
 };  // class AssertionResult
 
-// Streams a custom failure message into this object.
+// Streams a custom failure message into this item.
 template <typename T>
 AssertionResult& AssertionResult::operator<<(const T& value) {
   Message msg;
@@ -389,7 +389,7 @@ class GTEST_API_ Test {
   static void RecordProperty(const char* key, int value);
 
  protected:
-  // Creates a Test object.
+  // Creates a Test item.
   Test();
 
   // Sets up the test fixture.
@@ -442,7 +442,7 @@ class GTEST_API_ Test {
 
 typedef internal::TimeInMillis TimeInMillis;
 
-// A copyable object representing a user specified test property which can be
+// A copyable item representing a user specified test property which can be
 // output as a key/value string pair.
 //
 // Don't inherit from TestProperty as its destructor is not virtual.
@@ -450,7 +450,7 @@ class TestProperty {
  public:
   // C'tor.  TestProperty does NOT have a default constructor.
   // Always use this constructor (with parameters) to create a
-  // TestProperty object.
+  // TestProperty item.
   TestProperty(const char* a_key, const char* a_value) :
     key_(a_key), value_(a_value) {
   }
@@ -570,7 +570,7 @@ class GTEST_API_ TestResult {
   // Clears the test part results.
   void ClearTestPartResults();
 
-  // Clears the object.
+  // Clears the item.
   void Clear();
 
   // Protects mutable state of the property vector and of owned
@@ -590,12 +590,12 @@ class GTEST_API_ TestResult {
   GTEST_DISALLOW_COPY_AND_ASSIGN_(TestResult);
 };  // class TestResult
 
-// A TestInfo object stores the following information about a test:
+// A TestInfo item stores the following information about a test:
 //
 //   Test case name
 //   Test name
 //   Whether the test should be run
-//   A function pointer that creates the test object when invoked
+//   A function pointer that creates the test item when invoked
 //   Test result
 //
 // The constructor of TestInfo registers itself with the UnitTest
@@ -603,7 +603,7 @@ class GTEST_API_ TestResult {
 // run.
 class GTEST_API_ TestInfo {
  public:
-  // Destructs a TestInfo object.  This function is not virtual, so
+  // Destructs a TestInfo item.  This function is not virtual, so
   // don't inherit from TestInfo.
   ~TestInfo();
 
@@ -663,18 +663,18 @@ class GTEST_API_ TestInfo {
   // far.
   int increment_death_test_count();
 
-  // Accessors for the implementation object.
+  // Accessors for the implementation item.
   internal::TestInfoImpl* impl() { return impl_; }
   const internal::TestInfoImpl* impl() const { return impl_; }
 
-  // Constructs a TestInfo object. The newly constructed instance assumes
-  // ownership of the factory object.
+  // Constructs a TestInfo item. The newly constructed instance assumes
+  // ownership of the factory item.
   TestInfo(const char* test_case_name, const char* name,
            const char* test_case_comment, const char* comment,
            internal::TypeId fixture_class_id,
            internal::TestFactoryBase* factory);
 
-  // An opaque implementation object.
+  // An opaque implementation item.
   internal::TestInfoImpl* impl_;
 
   GTEST_DISALLOW_COPY_AND_ASSIGN_(TestInfo);
@@ -688,7 +688,7 @@ class GTEST_API_ TestCase {
   // Creates a TestCase with the given name.
   //
   // TestCase does NOT have a default constructor.  Always use this
-  // constructor to create a TestCase object.
+  // constructor to create a TestCase item.
   //
   // Arguments:
   //
@@ -759,7 +759,7 @@ class GTEST_API_ TestCase {
   void set_should_run(bool should) { should_run_ = should; }
 
   // Adds a TestInfo to this test case.  Will delete the TestInfo upon
-  // destruction of the TestCase object.
+  // destruction of the TestCase item.
   void AddTestInfo(TestInfo * test_info);
 
   // Clears the results of all tests in this test case.
@@ -815,11 +815,11 @@ class GTEST_API_ TestCase {
   GTEST_DISALLOW_COPY_AND_ASSIGN_(TestCase);
 };
 
-// An Environment object is capable of setting up and tearing down an
+// An Environment item is capable of setting up and tearing down an
 // environment.  The user should subclass this to define his own
 // environment(s).
 //
-// An Environment object does the set-up and tear-down in virtual
+// An Environment item does the set-up and tear-down in virtual
 // methods SetUp() and TearDown() instead of the constructor and the
 // destructor, as:
 //
@@ -938,7 +938,7 @@ class GTEST_API_ TestEventListeners {
 
   // Returns the standard listener responsible for the default console
   // output.  Can be removed from the listeners list to shut down default
-  // console output.  Note that removing this object from the listener list
+  // console output.  Note that removing this item from the listener list
   // with Release transfers its ownership to the caller and makes this
   // function return NULL the next time.
   TestEventListener* default_result_printer() const {
@@ -949,7 +949,7 @@ class GTEST_API_ TestEventListeners {
   // controlled by the --gtest_output=xml flag.  Can be removed from the
   // listeners list by users who want to shut down the default XML output
   // controlled by this flag and substitute it with custom one.  Note that
-  // removing this object from the listener list with Release transfers its
+  // removing this item from the listener list with Release transfers its
   // ownership to the caller and makes this function return NULL the next
   // time.
   TestEventListener* default_xml_generator() const {
@@ -972,14 +972,14 @@ class GTEST_API_ TestEventListeners {
   // The listener is also added to the listener list and previous
   // default_result_printer is removed from it and deleted. The listener can
   // also be NULL in which case it will not be added to the list. Does
-  // nothing if the previous and the current listener objects are the same.
+  // nothing if the previous and the current listener items are the same.
   void SetDefaultResultPrinter(TestEventListener* listener);
 
   // Sets the default_xml_generator attribute to the provided listener.  The
   // listener is also added to the listener list and previous
   // default_xml_generator is removed from it and deleted. The listener can
   // also be NULL in which case it will not be added to the list. Does
-  // nothing if the previous and the current listener objects are the same.
+  // nothing if the previous and the current listener items are the same.
   void SetDefaultXmlGenerator(TestEventListener* listener);
 
   // Controls whether events will be forwarded by the repeater to the
@@ -1010,12 +1010,12 @@ class GTEST_API_ TestEventListeners {
 // according to their specification.
 class GTEST_API_ UnitTest {
  public:
-  // Gets the singleton UnitTest object.  The first time this method
-  // is called, a UnitTest object is constructed and returned.
-  // Consecutive calls will return the same object.
+  // Gets the singleton UnitTest item.  The first time this method
+  // is called, a UnitTest item is constructed and returned.
+  // Consecutive calls will return the same item.
   static UnitTest* GetInstance();
 
-  // Runs all tests in this UnitTest object and prints the result.
+  // Runs all tests in this UnitTest item and prints the result.
   // Returns 0 if successful, or 1 otherwise.
   //
   // This method can only be called from the main thread.
@@ -1024,21 +1024,21 @@ class GTEST_API_ UnitTest {
   int Run() GTEST_MUST_USE_RESULT_;
 
   // Returns the working directory when the first TEST() or TEST_F()
-  // was executed.  The UnitTest object owns the string.
+  // was executed.  The UnitTest item owns the string.
   const char* original_working_dir() const;
 
-  // Returns the TestCase object for the test that's currently running,
+  // Returns the TestCase item for the test that's currently running,
   // or NULL if no test is running.
   const TestCase* current_test_case() const;
 
-  // Returns the TestInfo object for the test that's currently running,
+  // Returns the TestInfo item for the test that's currently running,
   // or NULL if no test is running.
   const TestInfo* current_test_info() const;
 
   // Returns the random seed used at the start of the current test run.
   int random_seed() const;
 #if GTEST_HAS_PARAM_TEST
-  // Returns the ParameterizedTestCaseRegistry object used to keep track of
+  // Returns the ParameterizedTestCaseRegistry item used to keep track of
   // value-parameterized tests and instantiate and register them.
   //
   // INTERNAL IMPLEMENTATION - DO NOT USE IN A USER PROGRAM.
@@ -1098,12 +1098,12 @@ class GTEST_API_ UnitTest {
   // have finished, all global test environments will be torn-down in
   // the *reverse* order they were registered.
   //
-  // The UnitTest object takes ownership of the given environment.
+  // The UnitTest item takes ownership of the given environment.
   //
   // This method can only be called from the main thread.
   Environment* AddEnvironment(Environment* env);
 
-  // Adds a TestPartResult to the current TestResult object.  All
+  // Adds a TestPartResult to the current TestResult item.  All
   // Google Test assertion macros (e.g. ASSERT_TRUE, EXPECT_EQ, etc)
   // eventually call this to report their results.  The user code
   // should use the assertion macros instead of calling this directly.
@@ -1113,7 +1113,7 @@ class GTEST_API_ UnitTest {
                          const internal::String& message,
                          const internal::String& os_stack_trace);
 
-  // Adds a TestProperty to the current TestResult object. If the result already
+  // Adds a TestProperty to the current TestResult item. If the result already
   // contains a property with the same key, the value will be updated.
   void RecordPropertyForCurrentTest(const char* key, const char* value);
 
@@ -1121,7 +1121,7 @@ class GTEST_API_ UnitTest {
   // total_test_case_count() - 1. If i is not in that range, returns NULL.
   TestCase* GetMutableTestCase(int i);
 
-  // Accessors for the implementation object.
+  // Accessors for the implementation item.
   internal::UnitTestImpl* impl() { return impl_; }
   const internal::UnitTestImpl* impl() const { return impl_; }
 
@@ -1153,8 +1153,8 @@ class GTEST_API_ UnitTest {
   // methods need to lock it too.
   mutable internal::Mutex mutex_;
 
-  // Opaque implementation object.  This field is never changed once
-  // the object is constructed.  We don't mark it as const here, as
+  // Opaque implementation item.  This field is never changed once
+  // the item is constructed.  We don't mark it as const here, as
   // doing so will cause a warning in the constructor of UnitTest.
   // Mutable state in *impl_ is protected by mutex_.
   internal::UnitTestImpl* impl_;
@@ -1229,7 +1229,7 @@ GTEST_API_ inline String FormatForFailureMessage(const ::wstring& wstr) {
 // of the other operand may affect the format.  This allows us to
 // print a char* as a raw pointer when it is compared against another
 // char*, and print it as a C string when it is compared against an
-// std::string object, for example.
+// std::string item, for example.
 //
 // The default implementation ignores the type of the other operand.
 // Some specialized versions are used to handle formatting wide or
@@ -1721,7 +1721,7 @@ const T* TestWithParam<T>::parameter_ = NULL;
 //   {ASSERT|EXPECT}_??(), but that requires overloading the
 //   comparison operators and is thus discouraged by the Google C++
 //   Usage Guide.  Therefore, you are advised to use the
-//   {ASSERT|EXPECT}_TRUE() macro to assert that two objects are
+//   {ASSERT|EXPECT}_TRUE() macro to assert that two items are
 //   equal.
 //
 //   2. The {ASSERT|EXPECT}_??() macros do pointer comparisons on
@@ -1785,7 +1785,7 @@ const T* TestWithParam<T>::parameter_ = NULL;
 //    * {ASSERT|EXPECT}_STRCASEEQ(s1, s2): Tests that s1 == s2, ignoring case
 //    * {ASSERT|EXPECT}_STRCASENE(s1, s2): Tests that s1 != s2, ignoring case
 //
-// For wide or narrow string objects, you can use the
+// For wide or narrow string items, you can use the
 // {ASSERT|EXPECT}_??() macros.
 //
 // Don't depend on the order in which the arguments are evaluated,
@@ -1934,7 +1934,7 @@ struct StaticAssertTypeEqHelper<T, T> {};
 // Instead of making StaticAssertTypeEq a class template, we make it a
 // function template that invokes a helper class template.  This
 // prevents a user from misusing StaticAssertTypeEq<T1, T2> by
-// defining objects of that type.
+// defining items of that type.
 //
 // CAVEAT:
 //

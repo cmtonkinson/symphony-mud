@@ -1,66 +1,66 @@
 ﻿
 #include "being.h"
 #include "equipmentContainer.h"
-#include "object.h"
+#include "item.h"
 
 EquipmentContainer::EquipmentContainer(void) {
   return;
 }
 
 EquipmentContainer::EquipmentContainer(const EquipmentContainer& ref) {
-  for (std::map<int,Object*>::const_iterator it = ref.objectMap().begin(); it != ref.objectMap().end(); ++it) {
-    objectMap()[it->first] = new Object(*(it->second));
+  for (std::map<int,Item*>::const_iterator it = ref.itemMap().begin(); it != ref.itemMap().end(); ++it) {
+    itemMap()[it->first] = new Item(*(it->second));
   }
   return;
 }
 
 EquipmentContainer::~EquipmentContainer(void) {
-  purgeObjects();
+  purgeItems();
   return;
 }
 
-void EquipmentContainer::add(Object* object, const int& location) {
-  objectMap()[location] = object;
+void EquipmentContainer::add(Item* item, const int& location) {
+  itemMap()[location] = item;
   return;
 }
 
-void EquipmentContainer::remove(Object* object) {
-  for (std::map<int,Object*>::iterator it = objectMap().begin(); it != objectMap().end(); ++it) {
-    if (it->second == object) {
-      objectMap().erase(it);
+void EquipmentContainer::remove(Item* item) {
+  for (std::map<int,Item*>::iterator it = itemMap().begin(); it != itemMap().end(); ++it) {
+    if (it->second == item) {
+      itemMap().erase(it);
       break;
     }
   }
   return;
 }
 
-void EquipmentContainer::remove(const std::list<Object*>& objects) {
-  for (std::list<Object*>::const_iterator it = objects.begin(); it != objects.end(); ++it) {
+void EquipmentContainer::remove(const std::list<Item*>& items) {
+  for (std::list<Item*>::const_iterator it = items.begin(); it != items.end(); ++it) {
     remove(*it);
   }
   return;
 }
 
-void EquipmentContainer::purgeObjects(void) {
-  for (std::map<int,Object*>::iterator it = objectMap().begin(); it != objectMap().end(); ++it) {
+void EquipmentContainer::purgeItems(void) {
+  for (std::map<int,Item*>::iterator it = itemMap().begin(); it != itemMap().end(); ++it) {
     if (it->second) {
       delete it->second;
     }
   }
-  objectMap().clear();
+  itemMap().clear();
   return;
 }
 
-std::list<Object*> EquipmentContainer::searchObjects(const std::string& q) {
+std::list<Item*> EquipmentContainer::searchItems(const std::string& q) {
   std::vector<std::string> keywords;
   int multiplier = 0;
   int index = 0;
   keywords = Container::parseQuery(q, multiplier, index);
-  return Container::search(objectMap(), keywords, multiplier, index);
+  return Container::search(itemMap(), keywords, multiplier, index);
 }
 
-Object* EquipmentContainer::searchSingleObject(const std::string& q) {
-  std::list<Object*> l = searchObjects(q);
+Item* EquipmentContainer::searchSingleItem(const std::string& q) {
+  std::list<Item*> l = searchItems(q);
   if (l.empty()) {
     return NULL;
   } else {
@@ -68,10 +68,10 @@ Object* EquipmentContainer::searchSingleObject(const std::string& q) {
   }
 }
 
-std::string EquipmentContainer::listObjects(void) const {
+std::string EquipmentContainer::listItems(void) const {
   std::map<std::string,unsigned> map;
   std::string dest;
-  for (std::map<int,Object*>::const_iterator it = objectMap().begin(); it != objectMap().end(); ++it) {
+  for (std::map<int,Item*>::const_iterator it = itemMap().begin(); it != itemMap().end(); ++it) {
     dest.append(Being::wearLocName(it->first));
     dest.append(it->second->decorativeShortname());
     dest.append("\n");
@@ -79,8 +79,8 @@ std::string EquipmentContainer::listObjects(void) const {
   return Regex::trim(dest);
 }
 
-Object* EquipmentContainer::at(int location) {
-  std::map<int,Object*>::iterator iter = objectMap().find(location);
-  if (iter != objectMap().end()) return iter->second;
+Item* EquipmentContainer::at(int location) {
+  std::map<int,Item*>::iterator iter = itemMap().find(location);
+  if (iter != itemMap().end()) return iter->second;
   return NULL;
 }

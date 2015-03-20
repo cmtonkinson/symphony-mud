@@ -10,9 +10,9 @@
 #include "io-handler.h"
 #include "loadRule.h"
 #include "loadRuleMob.h"
-#include "loadRuleObject.h"
+#include "loadRuleItem.h"
 #include "mob.h"
-#include "object-container.h"
+#include "item-container.h"
 #include "room.h"
 #include "world.h"
 
@@ -35,25 +35,25 @@ bool CmdGecho::execute(Being* being, const std::vector<std::string>& args) {
 
 CmdGet::CmdGet(void) {
   name("get");
-  addSyntax(1, "<object>");
-  addSyntax(2, "<object> <container>");
-  brief("Picks up an object.");
+  addSyntax(1, "<item>");
+  addSyntax(2, "<item> <container>");
+  brief("Picks up an item.");
   return;
 }
 
 bool CmdGet::execute(Being* being, const std::vector<std::string>& args) {
-  std::list<Object*> objects;
-  Object* container = NULL;
+  std::list<Item*> items;
+  Item* container = NULL;
 
   if (args.size() == 1) {
     /* look for items lying in the room */
-    objects = being->room()->inventory().searchObjects(args[0]);
-    if (objects.empty()) {
+    items = being->room()->inventory().searchItems(args[0]);
+    if (items.empty()) {
       being->send("There aren't any of those here.");
       return false;
     }
-    for (std::list<Object*>::iterator it = objects.begin(); it != objects.end(); ++it) {
-      if ((*it)->flags().test(OBJECT_NOGET)) {
+    for (std::list<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
+      if ((*it)->flags().test(ITEM_NOGET)) {
         being->send("You can't get %s{x.\n", (*it)->identifiers().shortname().c_str());
       } else {
         being->send("You get %s.\n", (*it)->identifiers().shortname().c_str());
@@ -64,7 +64,7 @@ bool CmdGet::execute(Being* being, const std::vector<std::string>& args) {
     }
   } else if (args.size() == 2) {
     /* look for items in a container */
-    if ((container = being->findObject(args[1])) == NULL) {
+    if ((container = being->findItem(args[1])) == NULL) {
       being->send("You can't find that.");
       return false;
     }
@@ -72,13 +72,13 @@ bool CmdGet::execute(Being* being, const std::vector<std::string>& args) {
       being->send("That's not a container.");
       return false;
     }
-    objects = container->container()->inventory().searchObjects(args[0]);
-    if (objects.empty()) {
+    items = container->container()->inventory().searchItems(args[0]);
+    if (items.empty()) {
       being->send("There aren't any of those in %s{x.", container->identifiers().shortname().c_str());
       return false;
     }
-    for (std::list<Object*>::iterator it = objects.begin(); it != objects.end(); ++it) {
-      // transfer each object
+    for (std::list<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
+      // transfer each item
       container->container()->inventory().remove(*it);
       being->inventory().add(*it);
       being->send("You get %s{x from %s{x.\n", (*it)->identifiers().shortname().c_str(), container->identifiers().shortname().c_str());
@@ -91,39 +91,39 @@ bool CmdGet::execute(Being* being, const std::vector<std::string>& args) {
 
 CmdGive::CmdGive(void) {
   name("give");
-  addSyntax(2, "<object> <player>");
-  addSyntax(2, "<object> <mob>");
-  brief("Gives an object to the target.");
+  addSyntax(2, "<item> <player>");
+  addSyntax(2, "<item> <mob>");
+  brief("Gives an item to the target.");
   return;
 }
 
 bool CmdGive::execute(Being* being, const std::vector<std::string>& args) {
-  std::list<Object*> objects;
+  std::list<Item*> items;
   Being* target = NULL;
-  Object* object = NULL;
+  Item* item = NULL;
 
   if ((target = being->findBeing(args[1])) == NULL) {
     being->send("They're not around at the moment.");
     return false;
   }
-  if ((objects = being->inventory().searchObjects(args[0])).empty()) {
+  if ((items = being->inventory().searchItems(args[0])).empty()) {
     being->send("You don't have that.");
     return false;
   }
-  if (objects.empty()) {
+  if (items.empty()) {
     being->send("You don't have that.");
     return false;
   }
-  for (std::list<Object*>::iterator it = objects.begin(); it != objects.end(); ++it) {
-    object = *it;
-    if (object->flags().test(OBJECT_NODROP)) {
-      being->send("You can't let go of %s.\n", object->identifiers().shortname().c_str());
+  for (std::list<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
+    item = *it;
+    if (item->flags().test(ITEM_NODROP)) {
+      being->send("You can't let go of %s.\n", item->identifiers().shortname().c_str());
     } else {
-      being->inventory().remove(object);
-      target->inventory().add(object);
-      being->send("You give %s to %s.\n", object->identifiers().shortname().c_str(), target->identifiers().shortname().c_str());
-      target->send("%s gives you %s.\n", target->seeName(being, true).c_str(), object->identifiers().shortname().c_str());
-      being->room()->send_cond("$p gives $c $O.\n", being, target, object, Room::TO_NOTVICT);
+      being->inventory().remove(item);
+      target->inventory().add(item);
+      being->send("You give %s to %s.\n", item->identifiers().shortname().c_str(), target->identifiers().shortname().c_str());
+      target->send("%s gives you %s.\n", target->seeName(being, true).c_str(), item->identifiers().shortname().c_str());
+      being->room()->send_cond("$p gives $c $O.\n", being, target, item, Room::TO_NOTVICT);
     }
   }
 
@@ -300,23 +300,23 @@ bool CmdHelp::execute(Being* being, const std::vector<std::string>& args) {
 CmdIdentify::CmdIdentify(void) {
   name("identify");
   level(Being::DEMIGOD);
-  addSyntax(1, "<object>");
+  addSyntax(1, "<item>");
   addSyntax(1, "<mob>");
   brief("Displays diagnostic information on the target.");
   return;
 }
 
 bool CmdIdentify::execute(Being* being, const std::vector<std::string>& args) {
-  Object* o = NULL;
+  Item* i = NULL;
   Being* b = NULL;
   std::string output;
   if ((b = avatar()->findBeing(args[0])) == NULL) {
-    // check for objects matching the arg
-    if ((o = avatar()->findObject(args[0])) == NULL) {
+    // check for items matching the arg
+    if ((i = avatar()->findItem(args[0])) == NULL) {
       avatar()->send("You don't see that here.");
       return false;
     } else {
-      avatar()->send(o->printStatus());
+      avatar()->send(i->printStatus());
     }
   } else {
     if (b->isMob()) {
@@ -327,6 +327,214 @@ bool CmdIdentify::execute(Being* being, const std::vector<std::string>& args) {
     }
   }
   return true;
+}
+
+CmdIedit::CmdIedit(void) {
+  name("iedit");
+  level(Being::DEMIGOD);
+  addSyntax(1, "<vnum>");
+  addSyntax(2, "create <vnum>");
+  brief("Invokes the Item Editor.");
+  return;
+}
+
+bool CmdIedit::execute(Being* being, const std::vector<std::string>& args) {
+  std::map<unsigned long,Item*>::iterator it;
+  Area* area = NULL;
+  Item* item = NULL;
+  unsigned long vnum = 0;
+
+  if (args.size() == 1) {
+    vnum = estring(args[0]);
+    // Get the area...
+    if ((area = World::Instance().lookup(vnum)) == NULL) {
+      avatar()->send("That vnum doesn't exist.");
+      return false;
+    }
+    // Check permissions...
+    if (!area->hasPermission(avatar())) {
+      avatar()->send("You don't have permissions to that item.");
+      return false;
+    }
+    // Make sure the Item exists...
+    if ((it = area->items().find(vnum)) == area->items().end()) {
+      avatar()->send("That item doesn't exist.");
+      return false;
+    }
+    // Make sure no one else is editing the item...
+    for (std::map<std::string,Avatar*>::iterator a_it = World::Instance().getAvatars().begin(); a_it != World::Instance().getAvatars().end(); ++a_it) {
+      if (a_it->second->mode().number() == MODE_IEDIT && a_it->second->iedit() == it->second) {
+        avatar()->send("Sorry, %s is currently editing %s (item %lu).", avatar()->seeName(((Being*)a_it->second)).c_str(), it->second->identifiers().shortname().c_str(), it->second->vnum());
+        return false;
+      }
+    }
+    // All looks well; send them to iedit...
+    avatar()->iedit(it->second);
+    avatar()->pushIOHandler(new IeditIOHandler(avatar()));
+    avatar()->send("You're editing item %lu.", avatar()->iedit()->vnum());
+    return true;
+  }
+
+  if (args.size() == 2 && Regex::strPrefix(args[0], "create")) {
+    vnum = estring(args[1]);
+    // Get the area...
+    if ((area = World::Instance().lookup(vnum)) == NULL) {
+      avatar()->send("That vnum doesn't exist.");
+      return false;
+    }
+    // Check permissions...
+    if (!area->hasPermission((Avatar*)being)) {
+      avatar()->send("You don't have permissions to that item.");
+      return false;
+    }
+    // Make sure the Item doesn't already exist...
+    if ((it = area->items().find(vnum)) != area->items().end()) {
+      avatar()->send("That item already exists.");
+      return false;
+    }
+    // Everything checks out; let's make us a new Item!
+    item = new Item();
+    item->vnum(vnum);
+    area->items()[item->vnum()] = item;
+    avatar()->send("Item %lu created successfully.", item->vnum());
+    avatar()->mode().set(MODE_IEDIT);
+    avatar()->iedit(item);
+    avatar()->pushIOHandler(new IeditIOHandler(being));
+    return true;
+  }
+
+  avatar()->send(printSyntax());
+  return false;
+}
+
+CmdIlist::CmdIlist(void) {
+  name("ilist");
+  level(Being::DEMIGOD);
+  addSyntax(1, "<areaID>                       (list all Items in the area)");
+  addSyntax(2, "<first vnum> <last vnum>       (list all Items in the vnum range)");
+  addSyntax(1, "<keyword>                      (list all Items by keyword)");
+  addSyntax(1, "/<regex>                       (list all Items matching the PCRE)");
+  return;
+}
+
+bool CmdIlist::execute(Being* being, const std::vector<std::string>& args) {
+  std::vector<std::string> mutable_args = args;
+  std::vector<Item*> items;
+  Area* area = NULL;
+  unsigned long low = 0;
+  unsigned long high = 0;
+  std::string search;
+  std::string output;
+  char buffer[Socket::MAX_BUFFER];
+
+  if (mutable_args.size() == 1) {
+    if (Regex::match("^[0-9]+$", mutable_args[0])) {
+      // We got an areaID...
+      if ((area = World::Instance().findArea(estring(mutable_args[0]))) == NULL) {
+        being->send("That area couldn't be found.");
+        return false;
+      }
+      for (std::map<unsigned long,Item*>::iterator o_it = area->items().begin(); o_it != area->items().end(); ++o_it) {
+        items.push_back(o_it->second);
+      }
+    } else {
+      if (mutable_args[0][0] == '/') {
+        mutable_args[0].erase(0, 1);
+        // This search is a regex...
+        for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+          for (std::map<unsigned long,Item*>::iterator o_it = (*a_it)->items().begin(); o_it != (*a_it)->items().end(); ++o_it) {
+            if (o_it->second->identifiers().matchesKeyword(mutable_args[0])) {
+              items.push_back(o_it->second);
+            }
+          }
+        }
+      } else {
+        search = Regex::lower(mutable_args[0]);
+        // We got a search string...
+        for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+          for (std::map<unsigned long,Item*>::iterator o_it = (*a_it)->items().begin(); o_it != (*a_it)->items().end(); ++o_it) {
+            if (o_it->second->identifiers().matchesKeyword(search)) {
+              items.push_back(o_it->second);
+            }
+          }
+        }
+      }
+    }
+  } else if (mutable_args.size() == 2) {
+    /* We're looking for a vnum range here */
+    // Grab our range values...
+    low = estring(mutable_args[0]);
+    high = estring(mutable_args[1]);
+    // Check our range...
+    if (!high || low >= high) {
+      being->send("Invalid vnum range.");
+      return false;
+    }
+    if (low+400 < high) {
+      being->send("The maximum vnum range is 400.");
+      return false;
+    }
+    // Grab the rooms...
+    for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+      for (std::map<unsigned long,Item*>::iterator o_it = (*a_it)->items().begin(); o_it != (*a_it)->items().end(); ++o_it) {
+        if (o_it->second->vnum() >= low && o_it->second->vnum() <= high) {
+          items.push_back(o_it->second);
+        }
+      }
+    }
+  } else {
+    being->send(printSyntax());
+    return false;
+  }
+
+  if (items.empty()) {
+    being->send("No matches for \"%s\"", mutable_args[0].c_str());
+    return false;
+  }
+
+  output.append(" [{y vnum{x] {gname{x\n -------------------\n");
+  for (std::vector<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
+    sprintf(buffer, " [{y%5lu{x] %s{x\n", (*it)->vnum(), (*it)->identifiers().shortname().c_str());
+    output.append(buffer);
+  }
+
+  being->send(output);
+  return true;
+}
+
+CmdIload::CmdIload(void) {
+  name("iload");
+  level(Being::DEMIGOD);
+  addSyntax(1, "<vnum>");
+  brief("Fabricates an Item.");
+}
+
+bool CmdIload::execute(Being* being, const std::vector<std::string>& args) {
+  unsigned long vnum = estring(args[0]);
+  std::map<unsigned long,Item*>::iterator o_it;
+  Item* item = NULL;
+
+  for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+    if ((o_it = (*a_it)->items().find(vnum)) != (*a_it)->items().end()) {
+      item = new Item(*o_it->second);
+      if (item == NULL) {
+        being->send("Oload failed.");
+        return false;
+      }
+      if (item->identifiers().shortname().empty() || item->identifiers().longname().empty() || item->identifiers().getKeywords().empty()) {
+        avatar()->send("Sorry; that item isn't complete yet.");
+        return false;
+      }
+      World::Instance().insert(item);
+      being->inventory().add(item);
+      being->send("You load %s.", item->identifiers().shortname().c_str());
+      being->room()->send_cond("$p has created $o.", being, item);
+      return true;
+    }
+  }
+
+  being->send("There is no item of that vnum.");
+  return false;
 }
 
 CmdIncognito::CmdIncognito(void) {
@@ -351,18 +559,18 @@ bool CmdIncognito::execute(Being* being, const std::vector<std::string>& args) {
 CmdInventory::CmdInventory(void) {
   name("inventory");
   addSyntax(0, "");
-  brief("Displays the objects currently carried.");
+  brief("Displays the items currently carried.");
   return;
 }
 
 bool CmdInventory::execute(Being* being, const std::vector<std::string>& args) {
   std::string output;
-  if (being->inventory().objectList().empty()) {
+  if (being->inventory().itemList().empty()) {
     being->send("You aren't carrying anything at the moment.");
     return true;
   }
   being->send("You are carrying:\n");
-  being->send(being->inventory().listObjects().c_str());
+  being->send(being->inventory().listItems().c_str());
   return true;
 }
 
@@ -451,16 +659,16 @@ CmdLoadRule::CmdLoadRule(void) {
   addSyntax(2, "delete <rule>");
   addSyntax(5, "add mob <vnum> <number> <max>");
   addSyntax(6, "add mob <vnum> <number> <max> <probability>");
-  addSyntax(5, "add object <vnum> <number> <max>");
-  addSyntax(6, "add object <vnum> <number> <max> <probability>");
-  addSyntax(7, "add object <vnum> <number> <max> in <target>[#index]");
-  addSyntax(8, "add object <vnum> <number> <max> in <target>[#index] <probability>");
-  addSyntax(7, "add object <vnum> <number> <max> on <target>[#index]");
-  addSyntax(8, "add object <vnum> <number> <max> on <target>[#index] <probability>");
-  addSyntax(7, "add object <vnum> <number> <max> <target>[#index] carry");
-  addSyntax(8, "add object <vnum> <number> <max> <target>[#index] carry <probability>");
-  addSyntax(7, "add object <vnum> <number> <max> <target>[#index] wear");
-  addSyntax(8, "add object <vnum> <number> <max> <target>[#index] wear <probability>");
+  addSyntax(5, "add item <vnum> <number> <max>");
+  addSyntax(6, "add item <vnum> <number> <max> <probability>");
+  addSyntax(7, "add item <vnum> <number> <max> in <target>[#index]");
+  addSyntax(8, "add item <vnum> <number> <max> in <target>[#index] <probability>");
+  addSyntax(7, "add item <vnum> <number> <max> on <target>[#index]");
+  addSyntax(8, "add item <vnum> <number> <max> on <target>[#index] <probability>");
+  addSyntax(7, "add item <vnum> <number> <max> <target>[#index] carry");
+  addSyntax(8, "add item <vnum> <number> <max> <target>[#index] carry <probability>");
+  addSyntax(7, "add item <vnum> <number> <max> <target>[#index] wear");
+  addSyntax(8, "add item <vnum> <number> <max> <target>[#index] wear <probability>");
   brief("Manipulates the reset rules for the room.");
   return;
 }
@@ -469,16 +677,16 @@ CmdLoadRule::CmdLoadRule(void) {
 1) View the Load Rules for the current room.\n\
 2) Delete the given Load Rule.\n\
 3) Create a Load Rule for mob <vnum>.\n\
-4) Create a Load Rule for object <vnum>.\n\
-5) Like #4, but this object should then be placed in the object specified by vnum <target>, which must be a container.\n\
-6) Like #4, but this object should then be placed on the object specified by vnum <target>, which must be a piece of furniture.\n\
-7) Like #4, but this object should then be placed in the inventory of the mob specified by vnum <target>.\n\
-8) Like #4, but this object should then be worn by the mob specified by vnum <target>.\n\n\
+4) Create a Load Rule for item <vnum>.\n\
+5) Like #4, but this item should then be placed in the item specified by vnum <target>, which must be a container.\n\
+6) Like #4, but this item should then be placed on the item specified by vnum <target>, which must be a piece of furniture.\n\
+7) Like #4, but this item should then be placed in the inventory of the mob specified by vnum <target>.\n\
+8) Like #4, but this item should then be worn by the mob specified by vnum <target>.\n\n\
 --------Notes:\n\
 Load Rules are the rules by which the server automatically loads mobs and\n\
-objects into the game when areas are \"reset.\"  Every room has it's own list\n\
+items into the game when areas are \"reset.\"  Every room has it's own list\n\
 of Rules that get evaluated when the area resets. For all Load Rules, <number>\n\
-specifies how many clones (objects or mobs) should be generated. No more of\n\
+specifies how many clones (items or mobs) should be generated. No more of\n\
 these clones will be created after there are <max> copies already anywhere in\n\
 the area. By default the engine will create <number> clones on every single\n\
 area reset until the <max> is reached, however by specifying the optional\n\
@@ -490,9 +698,9 @@ pouch vnum is 934) into a room, and you want a potion to load into the second\n\
 pouch, your \"<target>[.index]\" argument should look like \"934#2\"\n\n\
 --------Examples:\n\
 \"loadrule add mob 654 1 4\" would specify that 1 of mob 654 should be loaded on every reset, until there are 4 total in the area.\n\
-\"loadrule add object 3967 5 5\" would specify a rule to load up to five instances of object 3967.\n\
-\"loadrule add object 1234 1 1 5\" would create a rule to load object 1234 approximately 5% of the time.\n\
-\"loadrule add object 4354 1 1 654 carry\" loads one instance of object 4354, and puts it in the inventory of mob 654."*/
+\"loadrule add item 3967 5 5\" would specify a rule to load up to five instances of item 3967.\n\
+\"loadrule add item 1234 1 1 5\" would create a rule to load item 1234 approximately 5% of the time.\n\
+\"loadrule add item 4354 1 1 654 carry\" loads one instance of item 4354, and puts it in the inventory of mob 654."*/
 
 bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
   std::deque<std::string> pieces;
@@ -503,7 +711,7 @@ bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
   std::list<LoadRule*>::iterator it;
   LoadRule* rule = NULL;
   LoadRuleMob* mobRule = NULL;
-  LoadRuleObject* objectRule = NULL;
+  LoadRuleItem* itemRule = NULL;
   CmdLoadRule cmdLoadRule;
   std::vector<std::string> load_rule_args;
   unsigned rule_number = 0;
@@ -541,9 +749,9 @@ bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
             mobRule = (LoadRuleMob*)*it;
             avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %3u/100   | %s\n", rule_number, mobRule->strType(), mobRule->target(), mobRule->number(), mobRule->max(), mobRule->probability(), "N/A");
             break;
-          case LoadRule::OBJECT:
-            objectRule = (LoadRuleObject*)*it;
-            avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %3u/100   | %s\n", rule_number, objectRule->strType(), objectRule->target(), objectRule->number(), objectRule->max(), objectRule->probability(), objectRule->notes().c_str());
+          case LoadRule::ITEM:
+            itemRule = (LoadRuleItem*)*it;
+            avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %3u/100   | %s\n", rule_number, itemRule->strType(), itemRule->target(), itemRule->number(), itemRule->max(), itemRule->probability(), itemRule->notes().c_str());
             break;
           default:
             break;
@@ -580,8 +788,8 @@ bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
     // What kind of rule?
     if (pieces[0] == "mob") {
       type = LoadRule::MOB;
-    } else if (pieces[0] == "object") {
-      type = LoadRule::OBJECT;
+    } else if (pieces[0] == "item") {
+      type = LoadRule::ITEM;
     } else {
       avatar()->send(printSyntax());
       return false;
@@ -612,8 +820,8 @@ bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
           probability = estring(pieces[0]);
         }
         break;
-      case LoadRule::OBJECT:
-        rule = new LoadRuleObject();
+      case LoadRule::ITEM:
+        rule = new LoadRuleItem();
         if (pieces.empty()) {
           probability = 100;
           break;
@@ -623,16 +831,16 @@ bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
           break;
         } else if (pieces.size() == 2 || pieces.size() == 3) {
           if (pieces[0] == "in") {
-            ((LoadRuleObject*)rule)->preposition(LoadRule::IN);
+            ((LoadRuleItem*)rule)->preposition(LoadRule::IN);
             foo = estring(pieces[1]);
           } else if (pieces[0] == "on") {
-            ((LoadRuleObject*)rule)->preposition(LoadRule::ON);
+            ((LoadRuleItem*)rule)->preposition(LoadRule::ON);
             foo = estring(pieces[1]);
           } else if (pieces[1] == "carry") {
-            ((LoadRuleObject*)rule)->preposition(LoadRule::CARRY);
+            ((LoadRuleItem*)rule)->preposition(LoadRule::CARRY);
             foo = estring(pieces[0]);
           } else if (pieces[1] == "wear") {
-            ((LoadRuleObject*)rule)->preposition(LoadRule::WEAR);
+            ((LoadRuleItem*)rule)->preposition(LoadRule::WEAR);
             foo = estring(pieces[0]);
           } else {
             avatar()->send(printSyntax());
@@ -643,12 +851,12 @@ bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
           bar = Regex::explode("#", foo);
           switch (bar.size()) {
             case 1:
-              ((LoadRuleObject*)rule)->indirectObject(estring(bar[0]));
-              ((LoadRuleObject*)rule)->indirectObjectIndex(1);
+              ((LoadRuleItem*)rule)->indirectItem(estring(bar[0]));
+              ((LoadRuleItem*)rule)->indirectItemIndex(1);
               break;
             case 2:
-              ((LoadRuleObject*)rule)->indirectObject(estring(bar[0]));
-              ((LoadRuleObject*)rule)->indirectObjectIndex(estring(bar[1]));
+              ((LoadRuleItem*)rule)->indirectItem(estring(bar[0]));
+              ((LoadRuleItem*)rule)->indirectItemIndex(estring(bar[1]));
               break;
             default:
               avatar()->send(printSyntax());
@@ -697,9 +905,9 @@ CmdLock::CmdLock(void) {
 }
 
 bool CmdLock::execute(Being* being, const std::vector<std::string>& args) {
-  std::list<Object*> foo;
+  std::list<Item*> foo;
   Exit* exit = NULL;
-  Object* key = NULL;
+  Item* key = NULL;
 
   if ((exit = being->room()->exit(args[0])) == NULL) {
     being->send("There is no door in that direction.");
@@ -718,7 +926,7 @@ bool CmdLock::execute(Being* being, const std::vector<std::string>& args) {
     return false;
   }
 
-  foo = being->inventory().searchObjects(exit->key());
+  foo = being->inventory().searchItems(exit->key());
   if (!foo.empty()) {
     key = foo.front();
   }
@@ -738,11 +946,11 @@ CmdLook::CmdLook(void) {
   name("look");
   shortcut("l");
   addSyntax(0, "                  (look around you)");
-  addSyntax(1, "<object>          (examine an object)");
+  addSyntax(1, "<item>          (examine an item)");
   addSyntax(1, "<player>          (examine a player)");
   addSyntax(1, "<mob>             (examine a mob)");
   addSyntax(2, "in <container>    (examine the contents)");
-  brief("Examines the room or target object, player, or mob.");
+  brief("Examines the room or target item, player, or mob.");
   return;
 }
 
@@ -750,9 +958,9 @@ bool CmdLook::execute(Being* being, const std::vector<std::string>& args) {
   std::string output;
   char buffer[Socket::MAX_BUFFER];
   bool has_exits = false;
-  Object* container = NULL;
+  Item* container = NULL;
   Being* btarget = NULL;
-  Object* otarget = NULL;
+  Item* otarget = NULL;
 
   if (args[0].empty()) {
     /*************** looking at the room */
@@ -797,8 +1005,8 @@ bool CmdLook::execute(Being* being, const std::vector<std::string>& args) {
     if (has_exits) {
       output.append("[ {WExits{x: {C").append(buffer).append("{x]");
     }
-    // Objects...
-    output.append(1, '\n').append(being->room()->inventory().listObjects());
+    // Items...
+    output.append(1, '\n').append(being->room()->inventory().listItems());
     // Beings...
     for (auto iter : being->room()->beings()) {
       if (iter != being && being->canSee(iter) == Being::SEE_NAME) {
@@ -831,8 +1039,8 @@ bool CmdLook::execute(Being* being, const std::vector<std::string>& args) {
       }
       being->room()->send_cond("$p looks at $c.\n", being, btarget, NULL, Room::TO_NOTVICT);
       return true;
-    } else if ((otarget = being->room()->inventory().searchSingleObject(args[0])) != NULL) {
-      // looking at an object
+    } else if ((otarget = being->room()->inventory().searchSingleItem(args[0])) != NULL) {
+      // looking at an item
       being->send("You look at %s:\n%s{x\n", otarget->identifiers().shortname().c_str(), otarget->identifiers().description().c_str());
       being->room()->send_cond("$p looks at $o.\n", being, otarget);
       return true;
@@ -843,7 +1051,7 @@ bool CmdLook::execute(Being* being, const std::vector<std::string>& args) {
   } else if (args.size() == 2) {
     /*************** looking in something */
     if (args[0] == "i" || args[0] == "in") {
-      if ((container = being->findObject(args[1])) == NULL) {
+      if ((container = being->findItem(args[1])) == NULL) {
         being->send("You don't see that here.");
         return false;
       }
@@ -851,12 +1059,12 @@ bool CmdLook::execute(Being* being, const std::vector<std::string>& args) {
         being->send("That's not a container.");
         return false;
       }
-      if (container->container()->inventory().objectList().empty()) {
+      if (container->container()->inventory().itemList().empty()) {
         being->send("%s{x is empty.", container->identifiers().shortname().c_str());
         return true;
       }
       being->send("You look in %s:\n", container->identifiers().shortname().c_str());
-      being->send(container->container()->inventory().listObjects());
+      being->send(container->container()->inventory().listItems());
       return true;
     } else {
       being->send(printSyntax());
@@ -948,15 +1156,15 @@ bool CmdMedit::execute(Being* being, const std::vector<std::string>& args) {
     }
     // Check permissions...
     if (!area->hasPermission(avatar())) {
-      avatar()->send("You don't have permissions to that object.");
+      avatar()->send("You don't have permissions to that item.");
       return false;
     }
-    // Make sure the Object exists...
+    // Make sure the Item exists...
     if ((it = area->mobs().find(vnum)) == area->mobs().end()) {
       avatar()->send("That mob doesn't exist.");
       return false;
     }
-    // Make sure no one else is editing the object...
+    // Make sure no one else is editing the item...
     for (std::map<std::string,Avatar*>::iterator a_it = World::Instance().getAvatars().begin(); a_it != World::Instance().getAvatars().end(); ++a_it) {
       if (a_it->second->mode().number() == MODE_MEDIT && a_it->second->medit() == it->second) {
         avatar()->send("Sorry, %s is currently editing %s (mob %lu).", avatar()->seeName(((Being*)a_it->second)).c_str(), it->second->identifiers().shortname().c_str(), it->second->vnum());

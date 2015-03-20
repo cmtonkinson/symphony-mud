@@ -40,19 +40,19 @@ bool ContextLayer::write(const string& name, const Datum& value) {
 bool ContextLayer::add(const string& name, ContextNode* node) {
   ContextMap::const_iterator it;
   bool overwriting = false;
-  if ((it = _objects.find(name)) != _objects.end()) {
+  if ((it = _items.find(name)) != _items.end()) {
     overwriting = true;
     remove(name);
   }
-  _objects[name] = node;
+  _items[name] = node;
   return overwriting;
 }
 
 bool ContextLayer::remove(const string& name) {
   ContextMap::const_iterator it;
-  if ((it = _objects.find(name)) != _objects.end()) {
+  if ((it = _items.find(name)) != _items.end()) {
     delete it->second;
-    _objects.erase(name);
+    _items.erase(name);
     return true;
   }
   return false;
@@ -60,6 +60,6 @@ bool ContextLayer::remove(const string& name) {
 
 ContextNode* ContextLayer::resolve(const string& name) const {
   ContextMap::const_iterator it;
-  if ((it = _objects.find(name)) != _objects.end()) return it->second;
+  if ((it = _items.find(name)) != _items.end()) return it->second;
   return NULL;
 }

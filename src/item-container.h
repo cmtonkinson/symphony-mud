@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_OBJECT_CONTAINER
-#define H_SYMPHONY_OBJECT_CONTAINER
+#ifndef H_SYMPHONY_ITEM_CONTAINER
+#define H_SYMPHONY_ITEM_CONTAINER
 
 #include "inventoryContainer.h"
 
@@ -19,4 +19,4 @@ class ObjContainer {
     InventoryContainer        _inventory;
 };
 
-#endif // H_SYMPHONY_OBJECT_CONTAINER
+#endif // H_SYMPHONY_ITEM_CONTAINER

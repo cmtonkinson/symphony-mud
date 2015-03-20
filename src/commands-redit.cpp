@@ -281,7 +281,7 @@ bool RCmdKey::execute(Being* being, const std::vector<std::string>& args) {
   if ((other = exit->targetRoom()->exit(Exit::inverse(exit->direction().number()))) != NULL) {
     other->key(vnum);
   }
-  avatar()->send("%s exit's key set to object %lu.\n", exit->direction().string().c_str(), exit->key());
+  avatar()->send("%s exit's key set to item %lu.\n", exit->direction().string().c_str(), exit->key());
   return true;
 }
 

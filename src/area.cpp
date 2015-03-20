@@ -2,7 +2,7 @@
 #include "area.h"
 #include "exit.h"
 #include "loadRuleMob.h"
-#include "loadRuleObject.h"
+#include "loadRuleItem.h"
 #include "room.h"
 #include "storage.h"
 #include "terrainTable.h"
@@ -85,8 +85,8 @@ void Area::insert(Room* room) {
   return;
 }
 
-void Area::insert(Object* object) {
-  _objects.insert(std::make_pair(object->vnum(), object));
+void Area::insert(Item* item) {
+  _items.insert(std::make_pair(item->vnum(), item));
   return;
 }
 

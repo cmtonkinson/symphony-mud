@@ -1,5 +1,5 @@
 
-#include "object-food.h"
+#include "item-food.h"
 
 ObjFood::ObjFood(void) {
   return;

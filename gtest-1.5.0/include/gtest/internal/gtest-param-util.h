@@ -74,7 +74,7 @@ class ParamIteratorInterface {
   // for not calling Advance() on an iterator equal to
   // BaseGenerator()->End().
   virtual void Advance() = 0;
-  // Clones the iterator object. Used for implementing copy semantics
+  // Clones the iterator item. Used for implementing copy semantics
   // of ParamIterator<T>.
   virtual ParamIteratorInterface* Clone() const = 0;
   // Dereferences the current iterator and provides (read-only) access
@@ -150,7 +150,7 @@ class ParamGeneratorInterface {
 // compatible with the STL Container concept.
 // This class implements copy initialization semantics and the contained
 // ParamGeneratorInterface<T> instance is shared among all copies
-// of the original object. This is possible because that instance is immutable.
+// of the original item. This is possible because that instance is immutable.
 template<typename T>
 class ParamGenerator {
  public:
@@ -296,7 +296,7 @@ class ValuesInIteratorRangeGenerator : public ParamGeneratorInterface<T> {
       return new Iterator(*this);
     }
     // We need to use cached value referenced by iterator_ because *iterator_
-    // can return a temporary object (and of type other then T), so just
+    // can return a temporary item (and of type other then T), so just
     // having "return &*iterator_;" doesn't work.
     // value_ is updated here and not in Advance() because Advance()
     // can advance iterator_ beyond the end of the range, and we cannot
@@ -378,7 +378,7 @@ class TestMetaFactoryBase {
 //
 // TestMetaFactory creates test factories for passing into
 // MakeAndRegisterTestInfo function. Since MakeAndRegisterTestInfo receives
-// ownership of test factory pointer, same factory object cannot be passed
+// ownership of test factory pointer, same factory item cannot be passed
 // into that method twice. But ParameterizedTestCaseInfo is going to call
 // it for each Test/Parameter value combination. Thus it needs meta factory
 // creator class.
@@ -406,7 +406,7 @@ class TestMetaFactory
 // and generators provided by INSTANTIATE_TEST_CASE_P macro invocations
 // and uses that information to register all resulting test instances
 // in RegisterTests method. The ParameterizeTestCaseRegistry class holds
-// a collection of pointers to the ParameterizedTestCaseInfo objects
+// a collection of pointers to the ParameterizedTestCaseInfo items
 // and calls RegisterTests() on each of them when asked.
 class ParameterizedTestCaseInfoBase {
  public:
@@ -578,7 +578,7 @@ class ParameterizedTestCaseRegistry {
           ReportInvalidTestCaseType(test_case_name,  file, line);
           abort();
         } else {
-          // At this point we are sure that the object we found is of the same
+          // At this point we are sure that the item we found is of the same
           // type we are looking for, so we downcast it to that type
           // without further checks.
           typed_test_info = CheckedDowncastToActualType<

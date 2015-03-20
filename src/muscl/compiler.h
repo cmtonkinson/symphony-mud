@@ -4,7 +4,7 @@
 
 /*
  * I'm not even pretending that this class is OOP-y. This basically
- * just provides a wrapper object around yyparse() so that the other
+ * just provides a wrapper item around yyparse() so that the other
  * language processing components can continue on with their decoupled
  * lives, believing my well-crafted delusion that the rest of their
  * family adheres to proper paradigm.

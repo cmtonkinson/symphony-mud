@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_OBJECT_TRASH
-#define H_SYMPHONY_OBJECT_TRASH
+#ifndef H_SYMPHONY_ITEM_TRASH
+#define H_SYMPHONY_ITEM_TRASH
 
 class ObjTrash {
   public:
@@ -10,4 +10,4 @@ class ObjTrash {
     ~ObjTrash(void);
 };
 
-#endif // H_SYMPHONY_OBJECT_TRASH
+#endif // H_SYMPHONY_ITEM_TRASH

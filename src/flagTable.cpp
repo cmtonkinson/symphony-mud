@@ -99,15 +99,15 @@ FTCommand::FTCommand(void) {
   return;
 }
 
-//////////////////////////////////////////////// Object
-FTObject::FTObject(void) {
-  add("noremove",  OBJECT_NOREMOVE);
-  add("nodrop",    OBJECT_NODROP);
-  add("noget",     OBJECT_NOGET);
-  add("meltdrop",  OBJECT_MELTDROP);
-  add("glowing",   OBJECT_GLOWING, "{x({Yglowing{x)");
-  add("humming",   OBJECT_HUMMING, "{x({yhumming{x)");
-  add("burnproof", OBJECT_BURNPROOF);
+//////////////////////////////////////////////// Item
+FTItem::FTItem(void) {
+  add("noremove",  ITEM_NOREMOVE);
+  add("nodrop",    ITEM_NODROP);
+  add("noget",     ITEM_NOGET);
+  add("meltdrop",  ITEM_MELTDROP);
+  add("glowing",   ITEM_GLOWING, "{x({Yglowing{x)");
+  add("humming",   ITEM_HUMMING, "{x({yhumming{x)");
+  add("burnproof", ITEM_BURNPROOF);
   return;
 }
 

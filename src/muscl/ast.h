@@ -19,7 +19,7 @@
 #define AST_JUMP_CONT    9
 #define AST_JUMP_BREAK  10
 
-// object access
+// item access
 #define AST_OBJ         15
 #define AST_OBJ_READ    16
 #define AST_OBJ_WRITE   17

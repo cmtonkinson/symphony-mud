@@ -1,11 +1,11 @@
 
 #include "loadRule.h"
 #include "loadRuleMob.h"
-#include "loadRuleObject.h"
+#include "loadRuleItem.h"
 #include "world.h"
 
 const unsigned LoadRule::ERROR;
-const unsigned LoadRule::OBJECT;
+const unsigned LoadRule::ITEM;
 const unsigned LoadRule::MOB;
 const unsigned LoadRule::ON;
 const unsigned LoadRule::IN;
@@ -30,7 +30,7 @@ LoadRule::~LoadRule(void) {
 
 LoadRule* LoadRule::create(const char* type) {
   if (strcmp(type, "OBJ") == 0) {
-    return new LoadRuleObject();
+    return new LoadRuleItem();
   } else if (strcmp(type, "MOB") == 0) {
     return new LoadRuleMob();
   } else {

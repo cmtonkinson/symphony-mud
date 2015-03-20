@@ -421,18 +421,18 @@ bool CmdChannels::execute(Being* being, const std::vector<std::string>& args) {
 CmdClone::CmdClone(void) {
   name("clone");
   level(Being::DEMIGOD);
-  addSyntax(2, "<object> <times>");
-  brief("Make an exact copy of an existing object.");
+  addSyntax(2, "<item> <times>");
+  brief("Make an exact copy of an existing item.");
   return;
 }
 
 bool CmdClone::execute(Being* being, const std::vector<std::string>& args) {
-  Object* object = NULL;
-  Object* clone = NULL;
+  Item* item = NULL;
+  Item* clone = NULL;
   unsigned times = 0;
   char buf[10];
 
-  if ((object = avatar()->inventory().searchSingleObject(args[0])) == NULL) {
+  if ((item = avatar()->inventory().searchSingleItem(args[0])) == NULL) {
     avatar()->send("You aren't carrying that.");
     return false;
   }
@@ -449,16 +449,16 @@ bool CmdClone::execute(Being* being, const std::vector<std::string>& args) {
   }
 
   for (unsigned u = 0; u < times; ++u) {
-    clone = new Object(*object);
+    clone = new Item(*item);
     avatar()->inventory().add(clone);
   }
 
   if (times == 1) {
     avatar()->send("You've created a clone of %s.\n", clone->identifiers().shortname().c_str());
-    avatar()->room()->send_cond("$p has created a clone of $o.\n", avatar(), object);
+    avatar()->room()->send_cond("$p has created a clone of $o.\n", avatar(), item);
   } else {
     avatar()->send("You've created %d clones of %s.\n", times, clone->identifiers().shortname().c_str());
-    avatar()->room()->send_cond("$p has created $s clones of $O.\n", avatar(), buf, object);
+    avatar()->room()->send_cond("$p has created $s clones of $O.\n", avatar(), buf, item);
   }
 
   return true;
@@ -774,19 +774,19 @@ bool CmdDisconnect::execute(Being* being, const std::vector<std::string>& args) 
 
 CmdDrop::CmdDrop(void) {
   name("drop");
-  addSyntax(1, "<object>");
-  brief("Drops an object to the ground.");
+  addSyntax(1, "<item>");
+  brief("Drops an item to the ground.");
   return;
 }
 
 bool CmdDrop::execute(Being* being, const std::vector<std::string>& args) {
-  std::list<Object*> objects = being->inventory().searchObjects(args[0]);
-  if (objects.empty()) {
+  std::list<Item*> items = being->inventory().searchItems(args[0]);
+  if (items.empty()) {
     being->send("You aren't carrying that.");
     return false;
   }
-  for (std::list<Object*>::iterator it = objects.begin(); it != objects.end(); ++it) {
-    if ((*it)->flags().test(OBJECT_NODROP)) {
+  for (std::list<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
+    if ((*it)->flags().test(ITEM_NODROP)) {
       being->send("You can't drop %s.\n", (*it)->identifiers().shortname().c_str());
     } else {
       being->send("You drop %s.\n", (*it)->identifiers().shortname().c_str());
@@ -841,18 +841,18 @@ bool CmdDunce::execute(Being* being, const std::vector<std::string>& args) {
 CmdEat::CmdEat(void) {
   name("eat");
   level(Being::DEMIGOD);
-  addSyntax(1, "<object>");
-  brief("Destroys an object.");
+  addSyntax(1, "<item>");
+  brief("Destroys an item.");
   return;
 }
 
 bool CmdEat::execute(Being* being, const std::vector<std::string>& args) {
-  std::list<Object*> dead = avatar()->inventory().searchObjects(args[0]);
+  std::list<Item*> dead = avatar()->inventory().searchItems(args[0]);
   if (dead.empty()) {
     avatar()->send("You aren't carrying that.");
     return false;
   }
-  for (std::list<Object*>::iterator it = dead.begin(); it != dead.end(); ++it) {
+  for (std::list<Item*>::iterator it = dead.begin(); it != dead.end(); ++it) {
     avatar()->inventory().remove(*it);
     avatar()->send("You eat %s.\n", (*it)->identifiers().shortname().c_str());
     avatar()->room()->send_cond("$p eats $o.\n", avatar(), *it);
@@ -889,11 +889,11 @@ CmdEquipment::CmdEquipment(void) {
 
 bool CmdEquipment::execute(Being* being, const std::vector<std::string>& args) {
   being->send("You're wearing:");
-  if (being->equipment().objectMap().empty()) {
+  if (being->equipment().itemMap().empty()) {
     being->send(" nothing!");
   } else {
     being->send("\n");
-    being->send(being->equipment().listObjects());
+    being->send(being->equipment().listItems());
   }
   return true;
 }

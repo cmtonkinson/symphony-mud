@@ -649,7 +649,7 @@ class scoped_ptr {
 // Regular Expression syntax.
 class GTEST_API_ RE {
  public:
-  // A copy constructor is required by the Standard to initialize object
+  // A copy constructor is required by the Standard to initialize item
   // references from r-values.
   RE(const RE& other) { Init(other.pattern()); }
 
@@ -722,7 +722,7 @@ enum GTestLogSeverity {
   GTEST_FATAL
 };
 
-// Formats log entry severity, provides a stream object for streaming the
+// Formats log entry severity, provides a stream item for streaming the
 // log message, and terminates the message with a newline when going out of
 // scope.
 class GTEST_API_ GTestLog {
@@ -934,7 +934,7 @@ class ThreadWithParam : public ThreadWithParamBase {
   // notifies.
   Notification* const thread_can_start_;
   bool finished_;  // true iff we know that the thread function has finished.
-  pthread_t thread_;  // The native thread object.
+  pthread_t thread_;  // The native thread item.
 
   GTEST_DISALLOW_COPY_AND_ASSIGN_(ThreadWithParam);
 };
@@ -961,7 +961,7 @@ class ThreadWithParam : public ThreadWithParamBase {
 //
 //   GTEST_DECLARE_STATIC_MUTEX_(g_some_mutex);
 //
-// To create a dynamic mutex, just define an object of type Mutex.
+// To create a dynamic mutex, just define an item of type Mutex.
 class MutexBase {
  public:
   // Acquires this mutex.
@@ -988,7 +988,7 @@ class MutexBase {
 
   // A static mutex may be used before main() is entered.  It may even
   // be used before the dynamic initialization stage.  Therefore we
-  // must be able to initialize a static mutex object at link time.
+  // must be able to initialize a static mutex item at link time.
   // This means MutexBase has to be a POD and its member variables
   // have to be public.
  public:
@@ -1073,16 +1073,16 @@ extern "C" inline void DeleteThreadLocalValue(void* value_holder) {
 // In addition, the default ThreadLocal constructor requires T to have
 // a public default constructor.
 //
-// An object managed for a thread by a ThreadLocal instance is deleted
+// An item managed for a thread by a ThreadLocal instance is deleted
 // when the thread exits.  Or, if the ThreadLocal instance dies in
 // that thread, when the ThreadLocal dies.  It's the user's
 // responsibility to ensure that all other threads using a ThreadLocal
-// have exited when it dies, or the per-thread objects for those
+// have exited when it dies, or the per-thread items for those
 // threads will not be deleted.
 //
-// Google Test only uses global ThreadLocal objects.  That means they
+// Google Test only uses global ThreadLocal items.  That means they
 // will die after main() has returned.  Therefore, no per-thread
-// object managed by Google Test will be leaked as long as all threads
+// item managed by Google Test will be leaked as long as all threads
 // using Google Test have exited when main() returns.
 template <typename T>
 class ThreadLocal {
@@ -1093,11 +1093,11 @@ class ThreadLocal {
                                          default_(value) {}
 
   ~ThreadLocal() {
-    // Destroys the managed object for the current thread, if any.
+    // Destroys the managed item for the current thread, if any.
     DeleteThreadLocalValue(pthread_getspecific(key_));
 
     // Releases resources associated with the key.  This will *not*
-    // delete managed objects for other threads.
+    // delete managed items for other threads.
     GTEST_CHECK_POSIX_SUCCESS_(pthread_key_delete(key_));
   }
 
@@ -1122,7 +1122,7 @@ class ThreadLocal {
   static pthread_key_t CreateKey() {
     pthread_key_t key;
     // When a thread exits, DeleteThreadLocalValue() will be called on
-    // the object managed for that thread.
+    // the item managed for that thread.
     GTEST_CHECK_POSIX_SUCCESS_(
         pthread_key_create(&key, &DeleteThreadLocalValue));
     return key;
@@ -1201,8 +1201,8 @@ GTEST_API_ size_t GetThreadCount();
 // Passing non-POD classes through ellipsis (...) crashes the ARM
 // compiler and generates a warning in Sun Studio.  The Nokia Symbian
 // and the IBM XL C/C++ compiler try to instantiate a copy constructor
-// for objects passed through ellipsis (...), failing for uncopyable
-// objects.  We define this to ensure that only POD is passed through
+// for items passed through ellipsis (...), failing for uncopyable
+// items.  We define this to ensure that only POD is passed through
 // ellipsis on these systems.
 #if defined(__SYMBIAN32__) || defined(__IBMCPP__) || defined(__SUNPRO_CC)
 // We lose support for NULL detection where the compiler doesn't like

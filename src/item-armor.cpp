@@ -1,5 +1,5 @@
 
-#include "object-armor.h"
+#include "item-armor.h"
 
 ObjArmor::ObjArmor(void) {
   return;

@@ -5,7 +5,7 @@
 #include "commandTable.h"
 #include "display.h"
 #include "io-handler.h"
-#include "object-container.h"
+#include "item-container.h"
 #include "room.h"
 #include "world.h"
 
@@ -60,214 +60,6 @@ bool CmdNote::execute(Being* being, const std::vector<std::string>& args) {
   }
 
   avatar()->send(printSyntax());
-  return false;
-}
-
-CmdOedit::CmdOedit(void) {
-  name("oedit");
-  level(Being::DEMIGOD);
-  addSyntax(1, "<vnum>");
-  addSyntax(2, "create <vnum>");
-  brief("Invokes the Object Editor.");
-  return;
-}
-
-bool CmdOedit::execute(Being* being, const std::vector<std::string>& args) {
-  std::map<unsigned long,Object*>::iterator it;
-  Area* area = NULL;
-  Object* object = NULL;
-  unsigned long vnum = 0;
-
-  if (args.size() == 1) {
-    vnum = estring(args[0]);
-    // Get the area...
-    if ((area = World::Instance().lookup(vnum)) == NULL) {
-      avatar()->send("That vnum doesn't exist.");
-      return false;
-    }
-    // Check permissions...
-    if (!area->hasPermission(avatar())) {
-      avatar()->send("You don't have permissions to that object.");
-      return false;
-    }
-    // Make sure the Object exists...
-    if ((it = area->objects().find(vnum)) == area->objects().end()) {
-      avatar()->send("That object doesn't exist.");
-      return false;
-    }
-    // Make sure no one else is editing the object...
-    for (std::map<std::string,Avatar*>::iterator a_it = World::Instance().getAvatars().begin(); a_it != World::Instance().getAvatars().end(); ++a_it) {
-      if (a_it->second->mode().number() == MODE_OEDIT && a_it->second->oedit() == it->second) {
-        avatar()->send("Sorry, %s is currently editing %s (object %lu).", avatar()->seeName(((Being*)a_it->second)).c_str(), it->second->identifiers().shortname().c_str(), it->second->vnum());
-        return false;
-      }
-    }
-    // All looks well; send them to oedit...
-    avatar()->oedit(it->second);
-    avatar()->pushIOHandler(new OeditIOHandler(avatar()));
-    avatar()->send("You're editing object %lu.", avatar()->oedit()->vnum());
-    return true;
-  }
-
-  if (args.size() == 2 && Regex::strPrefix(args[0], "create")) {
-    vnum = estring(args[1]);
-    // Get the area...
-    if ((area = World::Instance().lookup(vnum)) == NULL) {
-      avatar()->send("That vnum doesn't exist.");
-      return false;
-    }
-    // Check permissions...
-    if (!area->hasPermission((Avatar*)being)) {
-      avatar()->send("You don't have permissions to that object.");
-      return false;
-    }
-    // Make sure the Object doesn't already exist...
-    if ((it = area->objects().find(vnum)) != area->objects().end()) {
-      avatar()->send("That object already exists.");
-      return false;
-    }
-    // Everything checks out; let's make us a new Object!
-    object = new Object();
-    object->vnum(vnum);
-    area->objects()[object->vnum()] = object;
-    avatar()->send("Object %lu created successfully.", object->vnum());
-    avatar()->mode().set(MODE_OEDIT);
-    avatar()->oedit(object);
-    avatar()->pushIOHandler(new OeditIOHandler(being));
-    return true;
-  }
-
-  avatar()->send(printSyntax());
-  return false;
-}
-
-CmdOlist::CmdOlist(void) {
-  name("olist");
-  level(Being::DEMIGOD);
-  addSyntax(1, "<areaID>                       (list all Objects in the area)");
-  addSyntax(2, "<first vnum> <last vnum>       (list all Objects in the vnum range)");
-  addSyntax(1, "<keyword>                      (list all Objects by keyword)");
-  addSyntax(1, "/<regex>                       (list all Objects matching the PCRE)");
-  return;
-}
-
-bool CmdOlist::execute(Being* being, const std::vector<std::string>& args) {
-  std::vector<std::string> mutable_args = args;
-  std::vector<Object*> objects;
-  Area* area = NULL;
-  unsigned long low = 0;
-  unsigned long high = 0;
-  std::string search;
-  std::string output;
-  char buffer[Socket::MAX_BUFFER];
-
-  if (mutable_args.size() == 1) {
-    if (Regex::match("^[0-9]+$", mutable_args[0])) {
-      // We got an areaID...
-      if ((area = World::Instance().findArea(estring(mutable_args[0]))) == NULL) {
-        being->send("That area couldn't be found.");
-        return false;
-      }
-      for (std::map<unsigned long,Object*>::iterator o_it = area->objects().begin(); o_it != area->objects().end(); ++o_it) {
-        objects.push_back(o_it->second);
-      }
-    } else {
-      if (mutable_args[0][0] == '/') {
-        mutable_args[0].erase(0, 1);
-        // This search is a regex...
-        for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
-          for (std::map<unsigned long,Object*>::iterator o_it = (*a_it)->objects().begin(); o_it != (*a_it)->objects().end(); ++o_it) {
-            if (o_it->second->identifiers().matchesKeyword(mutable_args[0])) {
-              objects.push_back(o_it->second);
-            }
-          }
-        }
-      } else {
-        search = Regex::lower(mutable_args[0]);
-        // We got a search string...
-        for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
-          for (std::map<unsigned long,Object*>::iterator o_it = (*a_it)->objects().begin(); o_it != (*a_it)->objects().end(); ++o_it) {
-            if (o_it->second->identifiers().matchesKeyword(search)) {
-              objects.push_back(o_it->second);
-            }
-          }
-        }
-      }
-    }
-  } else if (mutable_args.size() == 2) {
-    /* We're looking for a vnum range here */
-    // Grab our range values...
-    low = estring(mutable_args[0]);
-    high = estring(mutable_args[1]);
-    // Check our range...
-    if (!high || low >= high) {
-      being->send("Invalid vnum range.");
-      return false;
-    }
-    if (low+400 < high) {
-      being->send("The maximum vnum range is 400.");
-      return false;
-    }
-    // Grab the rooms...
-    for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
-      for (std::map<unsigned long,Object*>::iterator o_it = (*a_it)->objects().begin(); o_it != (*a_it)->objects().end(); ++o_it) {
-        if (o_it->second->vnum() >= low && o_it->second->vnum() <= high) {
-          objects.push_back(o_it->second);
-        }
-      }
-    }
-  } else {
-    being->send(printSyntax());
-    return false;
-  }
-
-  if (objects.empty()) {
-    being->send("No matches for \"%s\"", mutable_args[0].c_str());
-    return false;
-  }
-
-  output.append(" [{y vnum{x] {gname{x\n -------------------\n");
-  for (std::vector<Object*>::iterator it = objects.begin(); it != objects.end(); ++it) {
-    sprintf(buffer, " [{y%5lu{x] %s{x\n", (*it)->vnum(), (*it)->identifiers().shortname().c_str());
-    output.append(buffer);
-  }
-
-  being->send(output);
-  return true;
-}
-
-CmdOload::CmdOload(void) {
-  name("oload");
-  level(Being::DEMIGOD);
-  addSyntax(1, "<vnum>");
-  brief("Fabricates an Object.");
-}
-
-bool CmdOload::execute(Being* being, const std::vector<std::string>& args) {
-  unsigned long vnum = estring(args[0]);
-  std::map<unsigned long,Object*>::iterator o_it;
-  Object* object = NULL;
-
-  for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
-    if ((o_it = (*a_it)->objects().find(vnum)) != (*a_it)->objects().end()) {
-      object = new Object(*o_it->second);
-      if (object == NULL) {
-        being->send("Oload failed.");
-        return false;
-      }
-      if (object->identifiers().shortname().empty() || object->identifiers().longname().empty() || object->identifiers().getKeywords().empty()) {
-        avatar()->send("Sorry; that object isn't complete yet.");
-        return false;
-      }
-      World::Instance().insert(object);
-      being->inventory().add(object);
-      being->send("You load %s.", object->identifiers().shortname().c_str());
-      being->room()->send_cond("$p has created $o.", being, object);
-      return true;
-    }
-  }
-
-  being->send("There is no object of that vnum.");
   return false;
 }
 
@@ -412,7 +204,7 @@ bool CmdPedit::execute(Being* being, const std::vector<std::string>& args) {
   }
 
   // Make sure noone else is in Pedit mode for the player...
-  // Make sure no one else is editing the object...
+  // Make sure no one else is editing the item...
   for (std::map<std::string,Avatar*>::iterator a_it = World::Instance().getAvatars().begin(); a_it != World::Instance().getAvatars().end(); ++a_it) {
     if (a_it->second->mode().number() == MODE_PEDIT && a_it->second->pedit() == target) {
       avatar()->send("Sorry, %s is currently editing %s.", avatar()->seeName(((Being*)a_it->second)).c_str(), target->identifiers().shortname().c_str());
@@ -552,7 +344,7 @@ CmdPurge::CmdPurge(void) {
   name("purge");
   addSyntax(0, "");
   level(Being::GOD);
-  brief("Destroys all Objects lying in the room.");
+  brief("Destroys all Items lying in the room.");
   return;
 }
 
@@ -577,8 +369,8 @@ bool CmdPurge::execute(Being* being, const std::vector<std::string>& args) {
       ++it;
     }
   }
-  // destroy objects...
-  r->inventory().purgeObjects();
+  // destroy items...
+  r->inventory().purgeItems();
   // some flair...
   being->send("You've purged the room.");
   being->room()->send_cond("$p has purged the room.", being);
@@ -587,16 +379,16 @@ bool CmdPurge::execute(Being* being, const std::vector<std::string>& args) {
 
 CmdPut::CmdPut(void) {
   name("put");
-  addSyntax(2, "<object> <container>");
-  brief("Places an object into a container.");
+  addSyntax(2, "<item> <container>");
+  brief("Places an item into a container.");
   return;
 }
 
 bool CmdPut::execute(Being* being, const std::vector<std::string>& args) {
-  std::list<Object*> objects;
-  Object* container = NULL;
+  std::list<Item*> items;
+  Item* container = NULL;
 
-  if ((container = being->findObject(args[1])) == NULL) {
+  if ((container = being->findItem(args[1])) == NULL) {
     being->send("You can't find that.");
     return false;
   }
@@ -605,20 +397,20 @@ bool CmdPut::execute(Being* being, const std::vector<std::string>& args) {
     return false;
   }
 
-  objects = being->inventory().searchObjects(args[0]);
-  for (std::list<Object*>::iterator it = objects.begin(); it != objects.end(); ++it) {
+  items = being->inventory().searchItems(args[0]);
+  for (std::list<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
     if ((*it) == container) {
       // we don't want anyone to be able to fold a knapsack up inside itself ;-)
       continue;
     }
-    if ((*it)->flags().test(OBJECT_NODROP)) {
+    if ((*it)->flags().test(ITEM_NODROP)) {
       // make sure they can let go of it
       being->send("You can't let go of %s{x.\n", (*it)->identifiers().shortname().c_str());
     } else if ((*it)->isContainer()) {
       // until MySQL gets das boot, this is too much hassle
       being->send("You can't put a container inside another container.\n");
     } else {
-      // transfer the object
+      // transfer the item
       being->inventory().remove(*it);
       container->container()->inventory().add(*it);
       being->send("You put %s{x in %s{x.\n", (*it)->identifiers().shortname().c_str(), container->identifiers().shortname().c_str());

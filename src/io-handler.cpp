@@ -713,26 +713,26 @@ std::string MeditIOHandler::prompt(void) {
   return buffer;
 }
 
-/************************************** OEDIT HANDLER **************************************/
-void OeditIOHandler::activate(void) {
-  commandTable(&(OeditCommands::Instance()));
+/************************************** IEDIT HANDLER **************************************/
+void IeditIOHandler::activate(void) {
+  commandTable(&(IeditCommands::Instance()));
   avatar()->whoFlags().set(WHO_BUSY);
-  avatar()->mode().set(MODE_OEDIT);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has entered object editing mode.", avatar()->identifiers().shortname().c_str());
+  avatar()->mode().set(MODE_IEDIT);
+  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has entered item editing mode.", avatar()->identifiers().shortname().c_str());
   return;
 }
 
-void OeditIOHandler::deactivate(void) {
+void IeditIOHandler::deactivate(void) {
   avatar()->send("Goodbye!\n");
   avatar()->whoFlags().clear(WHO_BUSY);
   avatar()->mode().set(MODE_NONE);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has left object editing mode.", avatar()->identifiers().shortname().c_str());
+  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has left item editing mode.", avatar()->identifiers().shortname().c_str());
   return;
 }
 
-std::string OeditIOHandler::prompt(void) {
+std::string IeditIOHandler::prompt(void) {
   char buffer[Socket::MAX_BUFFER];
-  sprintf(buffer, "\n\n{W[{cOedit {x- {G%lu{W] ", avatar()->oedit()->vnum());
+  sprintf(buffer, "\n\n{W[{cIedit {x- {G%lu{W] ", avatar()->iedit()->vnum());
   return buffer;
 }
 

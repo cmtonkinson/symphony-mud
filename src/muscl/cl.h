@@ -30,7 +30,7 @@ class ContextLayer {
     ContextNode*  resolve(const string& name) const;
 
   private:
-    ContextMap  _objects;
+    ContextMap  _items;
 };
 
 #endif // #ifndef SYMPHONY_CL

@@ -217,7 +217,7 @@ bool World::toggleCommand(char table_prefix, std::string command_name, bool enab
     case 'x': table = &(Commands::Instance());      break;
     case 'A': table = &(AeditCommands::Instance()); break;
     case 'M': table = &(MeditCommands::Instance()); break;
-    case 'O': table = &(OeditCommands::Instance()); break;
+    case 'O': table = &(IeditCommands::Instance()); break;
     case 'P': table = &(PeditCommands::Instance()); break;
     case 'R': table = &(ReditCommands::Instance()); break;
     case 'T': table = &(TeditCommands::Instance()); break;
@@ -529,21 +529,21 @@ Room* World::findRoom(const unsigned long& vnum) {
   return NULL;
 }
 
-/************************************************************ OBJECTS ************************************************************/
-void World::insert(Object* object) {
-  getObjects().insert(object);
+/************************************************************ ITEMS ************************************************************/
+void World::insert(Item* item) {
+  getItems().insert(item);
   return;
 }
 
-void World::remove(Object* object) {
-  getObjects().erase(object);
+void World::remove(Item* item) {
+  getItems().erase(item);
   return;
 }
 
-Object* World::findObject(const std::string& name) {
-  std::set<Object*>::iterator it;
-  std::set<Object*>::iterator end = getObjects().end();
-  for (it = getObjects().begin(); it != end; ++it) {
+Item* World::findItem(const std::string& name) {
+  std::set<Item*>::iterator it;
+  std::set<Item*>::iterator end = getItems().end();
+  for (it = getItems().begin(); it != end; ++it) {
     if ((*it)->identifiers().matchesKeyword(name)) {
       return *it;
     }
@@ -551,17 +551,17 @@ Object* World::findObject(const std::string& name) {
   return NULL;
 }
 
-bool World::transport(Object* object, Room* from, const unsigned long& vnum) {
+bool World::transport(Item* item, Room* from, const unsigned long& vnum) {
   Room* to = NULL;
 
   if ((to = findRoom(vnum)) == NULL) {
     return false;
   }
 
-  from->remove(object);
-  from->send("$o disappears in small puff of smoke.\n", NULL, object);
-  to->add(object);
-  to->send("$o appears with a small \"pop!\"\n", NULL, object);
+  from->remove(item);
+  from->send("$o disappears in small puff of smoke.\n", NULL, item);
+  to->add(item);
+  to->send("$o appears with a small \"pop!\"\n", NULL, item);
   return true;
 }
 

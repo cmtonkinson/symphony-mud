@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_MUSCL_AST_OBJECT
-#define H_SYMPHONY_MUSCL_AST_OBJECT
+#ifndef H_SYMPHONY_MUSCL_AST_ITEM
+#define H_SYMPHONY_MUSCL_AST_ITEM
 
 #include "ast.h"
 #include <string>
@@ -10,32 +10,32 @@ using std::queue;
 
 class Datum;
 
-class AstObject: public Ast {
+class AstItem: public Ast {
   public:
     // constructors...
-    AstObject(void);
-    AstObject(const std::string& name);
-    virtual ~AstObject(void);
+    AstItem(void);
+    AstItem(const std::string& name);
+    virtual ~AstItem(void);
 
     // public accessors...
-    void                parent(AstObject* const parent)         { _parent = parent; }
-    AstObject*          parent(void) const                      { return _parent; }
-    void                child(AstObject* const child)           { _child = child; }
-    AstObject*          child(void) const                       { return _child; }
+    void                parent(AstItem* const parent)         { _parent = parent; }
+    AstItem*          parent(void) const                      { return _parent; }
+    void                child(AstItem* const child)           { _child = child; }
+    AstItem*          child(void) const                       { return _child; }
     Datum*              name(void) const                        { return _name; }
     std::string         fullName(void) const;
 
     // general methods...
-    void                addChild(AstObject* child);
+    void                addChild(AstItem* child);
     virtual Datum*      eval(void);
     virtual void        print(std::string indent, bool last);
     virtual InstrList&  codegen(void);
 
   private:
     // data...
-    AstObject*  _parent;
-    AstObject*  _child;
+    AstItem*  _parent;
+    AstItem*  _child;
     Datum*      _name;
 };
 
-#endif // H_SYMPHONY_MUSCL_AST_OBJECT
+#endif // H_SYMPHONY_MUSCL_AST_ITEM

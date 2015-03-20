@@ -5,7 +5,7 @@
 #include <list>
 #include <string>
 #include "inventoryContainer.h"
-#include "object.h"
+#include "item.h"
 #include "terrain.h"
 
 
@@ -68,8 +68,8 @@ class Room {
     void                          add(LoadRule* loadRule)                                                       { loadRules().push_back(loadRule); }
     void                          removeLoadRule(unsigned index);
     void                          executeLoadRules(void);
-    void                          add(Object* object)                                                           { inventory().add(object); }
-    void                          remove(Object* object)                                                        { inventory().remove(object); }
+    void                          add(Item* item)                                                           { inventory().add(item); }
+    void                          remove(Item* item)                                                        { inventory().remove(item); }
     void                          send(std::string format, Being* being = NULL, void* arg1 = NULL,
                                         void* arg2 = NULL, unsigned long target = TO_ROOM);
     void                          send_cond(std::string format, Being* being = NULL, void* arg1 = NULL,

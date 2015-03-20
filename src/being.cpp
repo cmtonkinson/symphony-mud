@@ -9,7 +9,7 @@
 #include "identifiers.h"
 #include "io-handler.h"
 #include "job.h"
-#include "object-furniture.h"
+#include "item-furniture.h"
 #include "room.h"
 #include "stats.h"
 #include "world.h"
@@ -285,38 +285,38 @@ Being* Being::findBeing(const std::string& name) {
   return NULL;
 }
 
-Object* Being::findObject(const std::string& query) {
-  Object* o = NULL;
-  if ((o = inventory().searchSingleObject(query)) == NULL) {
-    if ((o = equipment().searchSingleObject(query)) == NULL) {
-      if ((o = room()->inventory().searchSingleObject(query)) == NULL) {
+Item* Being::findItem(const std::string& query) {
+  Item* i = NULL;
+  if ((i = inventory().searchSingleItem(query)) == NULL) {
+    if ((i = equipment().searchSingleItem(query)) == NULL) {
+      if ((i = room()->inventory().searchSingleItem(query)) == NULL) {
         return NULL;
       }
     }
   }
-  return o;
+  return i;
 }
 
-unsigned short Being::getWearloc(const Object::Wearable& wearable) const {
+unsigned short Being::getWearloc(const Item::Wearable& wearable) const {
   switch (wearable) {
-    case Object::Wearable_Head:       return WEARLOC_HEAD;
-    case Object::Wearable_Ear:        return WEARLOC_EAR_L;
-    case Object::Wearable_Face:       return WEARLOC_FACE;
-    case Object::Wearable_Neck:       return WEARLOC_NECK;
-    case Object::Wearable_Shoulders:  return WEARLOC_SHOULDERS;
-    case Object::Wearable_Arms:       return WEARLOC_ARMS;
-    case Object::Wearable_Torso:      return WEARLOC_TORSO;
-    case Object::Wearable_Forearm:    return WEARLOC_FOREARM_L;
-    case Object::Wearable_Wrist:      return WEARLOC_WRIST_L;
-    case Object::Wearable_Hands:      return WEARLOC_HANDS;
-    case Object::Wearable_Hold:       return WEARLOC_HOLD_L;
-    case Object::Wearable_Finger:     return WEARLOC_FINGER_L;
-    case Object::Wearable_Waist:      return WEARLOC_WAIST_1;
-    case Object::Wearable_Legs:       return WEARLOC_LEGS;
-    case Object::Wearable_Knee:       return WEARLOC_KNEE_L;
-    case Object::Wearable_Shin:       return WEARLOC_SHIN_L;
-    case Object::Wearable_Ankle:      return WEARLOC_ANKLE_L;
-    case Object::Wearable_Feet:       return WEARLOC_FEET;
+    case Item::Wearable_Head:       return WEARLOC_HEAD;
+    case Item::Wearable_Ear:        return WEARLOC_EAR_L;
+    case Item::Wearable_Face:       return WEARLOC_FACE;
+    case Item::Wearable_Neck:       return WEARLOC_NECK;
+    case Item::Wearable_Shoulders:  return WEARLOC_SHOULDERS;
+    case Item::Wearable_Arms:       return WEARLOC_ARMS;
+    case Item::Wearable_Torso:      return WEARLOC_TORSO;
+    case Item::Wearable_Forearm:    return WEARLOC_FOREARM_L;
+    case Item::Wearable_Wrist:      return WEARLOC_WRIST_L;
+    case Item::Wearable_Hands:      return WEARLOC_HANDS;
+    case Item::Wearable_Hold:       return WEARLOC_HOLD_L;
+    case Item::Wearable_Finger:     return WEARLOC_FINGER_L;
+    case Item::Wearable_Waist:      return WEARLOC_WAIST_1;
+    case Item::Wearable_Legs:       return WEARLOC_LEGS;
+    case Item::Wearable_Knee:       return WEARLOC_KNEE_L;
+    case Item::Wearable_Shin:       return WEARLOC_SHIN_L;
+    case Item::Wearable_Ankle:      return WEARLOC_ANKLE_L;
+    case Item::Wearable_Feet:       return WEARLOC_FEET;
     default:                          return WEARLOC_END;
   }
 }
@@ -354,7 +354,7 @@ const char* Being::wearLocName(const unsigned short& wearloc) {
   }
 }
 
-bool Being::wear(Object* article, std::string& message, Object*& removed) {
+bool Being::wear(Item* article, std::string& message, Item*& removed) {
   int location = getWearloc(article->wearable());
 
   // make sure we can wear it...
@@ -412,14 +412,14 @@ bool Being::wear(Object* article, std::string& message, Object*& removed) {
   return true;
 }
 
-bool Being::unwear(Object* article, std::string& message, bool force) {
+bool Being::unwear(Item* article, std::string& message, bool force) {
   if (!force) {
-    if (article->flags().test(OBJECT_NOREMOVE)) {
+    if (article->flags().test(ITEM_NOREMOVE)) {
       message.assign("You can't remove ").append(article->identifiers().shortname().c_str()).append("{x.");
       return false;
     }
   }
-  for (std::map<int,Object*>::iterator it = equipment().objectMap().begin(); it != equipment().objectMap().end(); ++it) {
+  for (std::map<int,Item*>::iterator it = equipment().itemMap().begin(); it != equipment().itemMap().end(); ++it) {
     if (it->second == article) {
       equipment().remove(article);
       inventory().add(article);
@@ -431,36 +431,36 @@ bool Being::unwear(Object* article, std::string& message, bool force) {
   return false;
 }
 
-Object* Being::worn(const int& location) const {
-  std::map<int,Object*>::const_iterator it;
-  if ((it = equipment().objectMap().find(location)) != equipment().objectMap().end()) {
+Item* Being::worn(const int& location) const {
+  std::map<int,Item*>::const_iterator it;
+  if ((it = equipment().itemMap().find(location)) != equipment().itemMap().end()) {
     return it->second;
   }
   return NULL;
 }
 
-bool Being::isSingleWearLoc(const unsigned short& object_weartype) {
-  switch (object_weartype) {
-    case Object::Wearable_Head:
-    case Object::Wearable_Face:
-    case Object::Wearable_Neck:
-    case Object::Wearable_Shoulders:
-    case Object::Wearable_Arms:
-    case Object::Wearable_Torso:
-    case Object::Wearable_Hands:
-    case Object::Wearable_Legs:
-    case Object::Wearable_Feet:
+bool Being::isSingleWearLoc(const unsigned short& item_weartype) {
+  switch (item_weartype) {
+    case Item::Wearable_Head:
+    case Item::Wearable_Face:
+    case Item::Wearable_Neck:
+    case Item::Wearable_Shoulders:
+    case Item::Wearable_Arms:
+    case Item::Wearable_Torso:
+    case Item::Wearable_Hands:
+    case Item::Wearable_Legs:
+    case Item::Wearable_Feet:
       return true;
     default:
       return false;
   }
 }
 
-Object* Being::primary(void) {
+Item* Being::primary(void) {
   return equipment().at(hand());
 }
 
-Object* Being::secondary(void) {
+Item* Being::secondary(void) {
   return equipment().at(off_hand());
 }
 
@@ -603,15 +603,15 @@ std::string Being::listAttributes(void) {
   return output;
 }
 
-void Being::setModifications(Object* object) {
-  for (std::list<Modifier*>::const_iterator it = object->modifiers().begin(); it != object->modifiers().end(); ++it) {
+void Being::setModifications(Item* item) {
+  for (std::list<Modifier*>::const_iterator it = item->modifiers().begin(); it != item->modifiers().end(); ++it) {
     modify(*it);
   }
   return;
 }
 
-void Being::unsetModifications(Object* object) {
-  for (std::list<Modifier*>::const_iterator it = object->modifiers().begin(); it != object->modifiers().end(); ++it) {
+void Being::unsetModifications(Item* item) {
+  for (std::list<Modifier*>::const_iterator it = item->modifiers().begin(); it != item->modifiers().end(); ++it) {
     unmodify(*it);
   }
   return;
@@ -682,7 +682,7 @@ const char* Being::seeReflexivePronoun(Being* target, bool capitalize) {
   }
 }
 
-const char* Being::seeObjectPronoun(Being* target, bool capitalize) {
+const char* Being::seeItemPronoun(Being* target, bool capitalize) {
   switch (canSee(target)) {
     case Being::SEE_NAME:
       switch (target->gender().number()) {
@@ -708,11 +708,11 @@ const char* Being::seePosessivePronoun(Being* target, bool capitalize) {
   }
 }
 
-unsigned short Being::canSee(Object* target) {
+unsigned short Being::canSee(Item* target) {
   return Being::SEE_NAME;
 }
 
-std::string Being::seeName(Object* target, bool capitalize) {
+std::string Being::seeName(Item* target, bool capitalize) {
   if (canSee(target) == Being::SEE_NAME) {
     return target->identifiers().shortname();
   } else {

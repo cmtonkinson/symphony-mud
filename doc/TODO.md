@@ -34,7 +34,6 @@
       * turn processing time
       * job processing time
       * job execution delay
-  * Possible rename "Object" -> "Item"
   * More flexible logging system
     * Engine-level events (bugs, diagnostics)
     * World-level events (timers, resets)
@@ -53,7 +52,7 @@
   * time
     * moon phases
   * recall
-  * spell objects (wands, scrolls)
+  * spell items (wands, scrolls)
 
 ---
 

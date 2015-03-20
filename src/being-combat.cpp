@@ -3,7 +3,7 @@
 #include "command.h"
 #include "being.h"
 #include "display.h"
-#include "object-weapon.h"
+#include "item-weapon.h"
 #include "skills.h"
 #include "stats.h"
 #include "world.h"
@@ -116,7 +116,7 @@ void Being::acquireTarget(void) {
 void Being::strike(void) {
   int damage = 0;
   std::string weapon_damage;
-  Object* object = NULL;
+  Item* item = NULL;
   // Can we even move?
   if (!deplete_stamina(1)) return;
   // Initial damage calculation (based on the attacker).
@@ -126,8 +126,8 @@ void Being::strike(void) {
   // Ensure that SOME damage gets dealt.
   if (damage < 1) damage = 1;
   // Tell the world.
-  object = primary();
-  weapon_damage = (object && object->isWeapon()) ? object->weapon()->verb().string() : "punch";
+  item = primary();
+  weapon_damage = (item && item->isWeapon()) ? item->weapon()->verb().string() : "punch";
   weapon_damage.append(" ").append(Display::formatDamage(damage));
   send("Your %s %s!\n", weapon_damage.c_str(), _target->name());
   _target->send("%s's %s you!\n", name(), weapon_damage.c_str());

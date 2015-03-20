@@ -3,7 +3,7 @@
 #include "being.h"
 #include "display.h"
 #include "exit.h"
-#include "object.h"
+#include "item.h"
 
 Display::Display(void) {
   return;
@@ -67,15 +67,15 @@ std::string Display::formatAction(const char* format, Being* being, void* arg1, 
         // reflexive pronouns
         case 'f': message.append(withRespectTo ? withRespectTo->seeReflexivePronoun((Being*)arg1) : "[f]");  break;
         case 'F': message.append(withRespectTo ? withRespectTo->seeReflexivePronoun((Being*)arg2) : "[F]");  break;
-        // object pronouns
-        case 'b': message.append(withRespectTo ? withRespectTo->seeObjectPronoun((Being*)arg1) : "[b]");     break;
-        case 'B': message.append(withRespectTo ? withRespectTo->seeObjectPronoun((Being*)arg2) : "[B]");     break;
+        // item pronouns
+        case 'b': message.append(withRespectTo ? withRespectTo->seeItemPronoun((Being*)arg1) : "[b]");     break;
+        case 'B': message.append(withRespectTo ? withRespectTo->seeItemPronoun((Being*)arg2) : "[B]");     break;
         // possessive pronouns
         case 'r': message.append(withRespectTo ? withRespectTo->seePosessivePronoun((Being*)arg1) : "[r]");  break;
         case 'R': message.append(withRespectTo ? withRespectTo->seePosessivePronoun((Being*)arg2) : "[R]");  break;
-        // objects
-        case 'o': message.append(arg1 ? ((Object*)arg1)->identifiers().shortname() : "[o]");                    break;
-        case 'O': message.append(arg2 ? ((Object*)arg2)->identifiers().shortname() : "[O]");                    break;
+        // items
+        case 'o': message.append(arg1 ? ((Item*)arg1)->identifiers().shortname() : "[o]");                    break;
+        case 'O': message.append(arg2 ? ((Item*)arg2)->identifiers().shortname() : "[O]");                    break;
         // exits
         case 'e': message.append(arg1 ? Exit::name(((Exit*)arg1)->direction().number()) : "[e]");             break;
         case 'E': message.append(arg2 ? Exit::name(((Exit*)arg2)->direction().number()) : "[E]");             break;

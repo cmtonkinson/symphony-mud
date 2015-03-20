@@ -1,6 +1,6 @@
 
 #include "being.h"
-#include "object-furniture.h"
+#include "item-furniture.h"
 
 ObjFurniture::ObjFurniture(void):
     _capacity(0),

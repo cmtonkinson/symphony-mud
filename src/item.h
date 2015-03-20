@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_OBJECT
-#define H_SYMPHONY_OBJECT
+#ifndef H_SYMPHONY_ITEM
+#define H_SYMPHONY_ITEM
 
 #include <list>
 #include <set>
@@ -20,12 +20,12 @@ class ObjKey;
 class ObjTrash;
 class ObjWeapon;
 
-class Object {
+class Item {
   public:
     // constructors...
-    Object(void);
-    Object(const Object& ref);
-    ~Object(void);
+    Item(void);
+    Item(const Item& ref);
+    ~Item(void);
 
     // constants...
     enum Type { Type_Undefined = 0, Type_Armor, Type_Clothing, Type_Container, Type_Food, Type_Furniture, Type_Jewelry, Type_Key, Type_Trash, Type_Weapon };
@@ -92,13 +92,13 @@ class Object {
     void*                       extra(void) const                   { return _extra; }
 
     // additional accessors
-    bool  noremove(void) const  { return flags().test(OBJECT_NOREMOVE); }
-    bool  nodrop(void) const    { return flags().test(OBJECT_NODROP); }
-    bool  noget(void) const     { return flags().test(OBJECT_NOGET); }
-    bool  meltdrop(void) const  { return flags().test(OBJECT_MELTDROP); }
-    bool  humming(void) const   { return flags().test(OBJECT_HUMMING); }
-    bool  glowing(void) const   { return flags().test(OBJECT_GLOWING); }
-    bool  burnproof(void) const { return flags().test(OBJECT_BURNPROOF); }
+    bool  noremove(void) const  { return flags().test(ITEM_NOREMOVE); }
+    bool  nodrop(void) const    { return flags().test(ITEM_NODROP); }
+    bool  noget(void) const     { return flags().test(ITEM_NOGET); }
+    bool  meltdrop(void) const  { return flags().test(ITEM_MELTDROP); }
+    bool  humming(void) const   { return flags().test(ITEM_HUMMING); }
+    bool  glowing(void) const   { return flags().test(ITEM_GLOWING); }
+    bool  burnproof(void) const { return flags().test(ITEM_BURNPROOF); }
 
   private:
     // data
@@ -118,4 +118,4 @@ class Object {
     void  deleteExtra(void);
 };
 
-#endif // H_SYMPHONY_OBJECT
+#endif // H_SYMPHONY_ITEM

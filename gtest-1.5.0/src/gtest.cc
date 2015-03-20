@@ -500,7 +500,7 @@ int UnitTestOptions::GTestShouldProcessSEH(DWORD exception_code) {
 
 }  // namespace internal
 
-// The c'tor sets this object as the test part result reporter used by
+// The c'tor sets this item as the test part result reporter used by
 // Google Test.  The 'result' parameter specifies where to report the
 // results. Intercepts only failures from the current thread.
 ScopedFakeTestPartResultReporter::ScopedFakeTestPartResultReporter(
@@ -510,7 +510,7 @@ ScopedFakeTestPartResultReporter::ScopedFakeTestPartResultReporter(
   Init();
 }
 
-// The c'tor sets this object as the test part result reporter used by
+// The c'tor sets this item as the test part result reporter used by
 // Google Test.  The 'result' parameter specifies where to report the
 // results.
 ScopedFakeTestPartResultReporter::ScopedFakeTestPartResultReporter(
@@ -867,10 +867,10 @@ bool String::CStringEquals(const char * lhs, const char * rhs) {
 #if GTEST_HAS_STD_WSTRING || GTEST_HAS_GLOBAL_WSTRING
 
 // Converts an array of wide chars to a narrow string using the UTF-8
-// encoding, and streams the result to the given Message object.
+// encoding, and streams the result to the given Message item.
 static void StreamWideCharsToMessage(const wchar_t* wstr, size_t length,
                                      Message* msg) {
-  // TODO(wan): consider allowing a testing::String object to
+  // TODO(wan): consider allowing a testing::String item to
   // contain '\0'.  This will make it behave more like std::string,
   // and will allow ToUtf8String() to return the correct encoding
   // for '\0' s.t. we can get rid of the conditional here (and in
@@ -892,7 +892,7 @@ static void StreamWideCharsToMessage(const wchar_t* wstr, size_t length,
 }  // namespace internal
 #if GTEST_HAS_STD_WSTRING
 // Converts the given wide string to a narrow string using the UTF-8
-// encoding, and streams the result to this Message object.
+// encoding, and streams the result to this Message item.
 Message& Message::operator <<(const ::std::wstring& wstr) {
   internal::StreamWideCharsToMessage(wstr.c_str(), wstr.length(), this);
   return *this;
@@ -900,7 +900,7 @@ Message& Message::operator <<(const ::std::wstring& wstr) {
 #endif  // GTEST_HAS_STD_WSTRING
 #if GTEST_HAS_GLOBAL_WSTRING
 // Converts the given wide string to a narrow string using the UTF-8
-// encoding, and streams the result to this Message object.
+// encoding, and streams the result to this Message item.
 Message& Message::operator <<(const ::wstring& wstr) {
   internal::StreamWideCharsToMessage(wstr.c_str(), wstr.length(), this);
   return *this;
@@ -915,7 +915,7 @@ namespace internal {
 // unsigned integer (both in decimal and in hexadecimal).
 String FormatForFailureMessage(char ch) {
   const unsigned int ch_as_uint = ch;
-  // A String object cannot contain '\0', so we print "\\0" when ch is
+  // A String item cannot contain '\0', so we print "\\0" when ch is
   // '\0'.
   return String::Format("'%s' (%u, 0x%X)",
                         ch ? String::Format("%c", ch).c_str() : "\\0",
@@ -937,7 +937,7 @@ String FormatForFailureMessage(wchar_t wchar) {
   // correctly with MSVC 7.1.
   const UInt64 wchar_as_uint64 = wchar;
   Message msg;
-  // A String object cannot contain '\0', so we print "\\0" when wchar is
+  // A String item cannot contain '\0', so we print "\\0" when wchar is
   // L'\0'.
   char buffer[32];  // CodePointToUtf8 requires a buffer that big.
   msg << "L'"
@@ -1848,7 +1848,7 @@ bool TestResult::ValidateTestProperty(const TestProperty& test_property) {
   return true;
 }
 
-// Clears the object.
+// Clears the item.
 void TestResult::Clear() {
   test_part_results_.clear();
   test_properties_.clear();
@@ -1898,7 +1898,7 @@ int TestResult::test_property_count() const {
 
 // class Test
 
-// Creates a Test object.
+// Creates a Test item.
 
 // The c'tor saves the values of all Google Test flags.
 Test::Test()
@@ -2102,8 +2102,8 @@ bool Test::HasNonfatalFailure() {
 
 // class TestInfo
 
-// Constructs a TestInfo object. It assumes ownership of the test factory
-// object via impl_.
+// Constructs a TestInfo item. It assumes ownership of the test factory
+// item via impl_.
 TestInfo::TestInfo(const char* a_test_case_name,
                    const char* a_name,
                    const char* a_test_case_comment,
@@ -2115,15 +2115,15 @@ TestInfo::TestInfo(const char* a_test_case_name,
                                      fixture_class_id, factory);
 }
 
-// Destructs a TestInfo object.
+// Destructs a TestInfo item.
 TestInfo::~TestInfo() {
   delete impl_;
 }
 
 namespace internal {
 
-// Creates a new TestInfo object and registers it with Google Test;
-// returns the created object.
+// Creates a new TestInfo item and registers it with Google Test;
+// returns the created item.
 //
 // Arguments:
 //
@@ -2136,9 +2136,9 @@ namespace internal {
 //   fixture_class_id: ID of the test fixture class
 //   set_up_tc:        pointer to the function that sets up the test case
 //   tear_down_tc:     pointer to the function that tears down the test case
-//   factory:          pointer to the factory that creates a test object.
+//   factory:          pointer to the factory that creates a test item.
 //                     The newly created TestInfo instance will assume
-//                     ownership of the factory object.
+//                     ownership of the factory item.
 TestInfo* MakeAndRegisterTestInfo(
     const char* test_case_name, const char* name,
     const char* test_case_comment, const char* comment,
@@ -2251,7 +2251,7 @@ void UnitTestImpl::RegisterParameterizedTests() {
 #endif
 }
 
-// Creates the test object, runs it, records its result, and then
+// Creates the test item, runs it, records its result, and then
 // deletes it.
 void TestInfoImpl::Run() {
   if (!should_run_) return;
@@ -2273,7 +2273,7 @@ void TestInfoImpl::Run() {
   Test* test = NULL;
 
   __try {
-    // Creates the test object.
+    // Creates the test item.
     test = factory_->CreateTest();
   } __except(internal::UnitTestOptions::GTestShouldProcessSEH(
       GetExceptionCode())) {
@@ -2288,7 +2288,7 @@ void TestInfoImpl::Run() {
   // enable exceptions, we should revise the following to be
   // exception-safe.
 
-  // Creates the test object.
+  // Creates the test item.
   Test* test = factory_->CreateTest();
 #endif  // GTEST_HAS_SEH
 
@@ -2298,7 +2298,7 @@ void TestInfoImpl::Run() {
     test->Run();
   }
 
-  // Deletes the test object.
+  // Deletes the test item.
   impl->os_stack_trace_getter()->UponLeavingGTest();
   delete test;
   test = NULL;
@@ -2380,7 +2380,7 @@ TestInfo* TestCase::GetMutableTestInfo(int i) {
 }
 
 // Adds a test to this test case.  Will delete the test upon
-// destruction of the TestCase object.
+// destruction of the TestCase item.
 void TestCase::AddTestInfo(TestInfo * test_info) {
   test_info_list_.push_back(test_info);
   test_indices_.push_back(static_cast<int>(test_indices_.size()));
@@ -3010,12 +3010,12 @@ class XmlUnitTestResultPrinter : public EmptyTestEventListener {
   // Streams an XML CDATA section, escaping invalid CDATA sequences as needed.
   static void OutputXmlCDataSection(::std::ostream* stream, const char* data);
 
-  // Streams an XML representation of a TestInfo object.
+  // Streams an XML representation of a TestInfo item.
   static void OutputXmlTestInfo(::std::ostream* stream,
                                 const char* test_case_name,
                                 const TestInfo& test_info);
 
-  // Prints an XML representation of a TestCase object
+  // Prints an XML representation of a TestCase item
   static void PrintXmlTestCase(FILE* out, const TestCase& test_case);
 
   // Prints an XML summary of unit_test to output stream out.
@@ -3145,13 +3145,13 @@ String XmlUnitTestResultPrinter::RemoveInvalidXmlCharacters(const char* str) {
 }
 
 // The following routines generate an XML representation of a UnitTest
-// object.
+// item.
 //
 // This is how Google Test concepts map to the DTD:
 //
-// <testsuites name="AllTests">        <-- corresponds to a UnitTest object
-//   <testsuite name="testcase-name">  <-- corresponds to a TestCase object
-//     <testcase name="test-name">     <-- corresponds to a TestInfo object
+// <testsuites name="AllTests">        <-- corresponds to a UnitTest item
+//   <testsuite name="testcase-name">  <-- corresponds to a TestCase item
+//     <testcase name="test-name">     <-- corresponds to a TestInfo item
 //       <failure message="...">...</failure>
 //       <failure message="...">...</failure>
 //       <failure message="...">...</failure>
@@ -3187,7 +3187,7 @@ void XmlUnitTestResultPrinter::OutputXmlCDataSection(::std::ostream* stream,
   *stream << "]]>";
 }
 
-// Prints an XML representation of a TestInfo object.
+// Prints an XML representation of a TestInfo item.
 // TODO(wan): There is also value in printing properties with the plain printer.
 void XmlUnitTestResultPrinter::OutputXmlTestInfo(::std::ostream* stream,
                                                  const char* test_case_name,
@@ -3226,7 +3226,7 @@ void XmlUnitTestResultPrinter::OutputXmlTestInfo(::std::ostream* stream,
     *stream << "    </testcase>\n";
 }
 
-// Prints an XML representation of a TestCase object
+// Prints an XML representation of a TestCase item
 void XmlUnitTestResultPrinter::PrintXmlTestCase(FILE* out,
                                                 const TestCase& test_case) {
   fprintf(out,
@@ -3340,7 +3340,7 @@ TestEventListeners::~TestEventListeners() { delete repeater_; }
 
 // Returns the standard listener responsible for the default console
 // output.  Can be removed from the listeners list to shut down default
-// console output.  Note that removing this object from the listener list
+// console output.  Note that removing this item from the listener list
 // with Release transfers its ownership to the user.
 void TestEventListeners::Append(TestEventListener* listener) {
   repeater_->Append(listener);
@@ -3365,7 +3365,7 @@ TestEventListener* TestEventListeners::repeater() { return repeater_; }
 // The listener is also added to the listener list and previous
 // default_result_printer is removed from it and deleted. The listener can
 // also be NULL in which case it will not be added to the list. Does
-// nothing if the previous and the current listener objects are the same.
+// nothing if the previous and the current listener items are the same.
 void TestEventListeners::SetDefaultResultPrinter(TestEventListener* listener) {
   if (default_result_printer_ != listener) {
     // It is an error to pass this method a listener that is already in the
@@ -3381,7 +3381,7 @@ void TestEventListeners::SetDefaultResultPrinter(TestEventListener* listener) {
 // listener is also added to the listener list and previous
 // default_xml_generator is removed from it and deleted. The listener can
 // also be NULL in which case it will not be added to the list. Does
-// nothing if the previous and the current listener objects are the same.
+// nothing if the previous and the current listener items are the same.
 void TestEventListeners::SetDefaultXmlGenerator(TestEventListener* listener) {
   if (default_xml_generator_ != listener) {
     // It is an error to pass this method a listener that is already in the
@@ -3405,20 +3405,20 @@ void TestEventListeners::SuppressEventForwarding() {
 
 // class UnitTest
 
-// Gets the singleton UnitTest object.  The first time this method is
-// called, a UnitTest object is constructed and returned.  Consecutive
-// calls will return the same object.
+// Gets the singleton UnitTest item.  The first time this method is
+// called, a UnitTest item is constructed and returned.  Consecutive
+// calls will return the same item.
 //
 // We don't protect this under mutex_ as a user is not supposed to
 // call this before main() starts, from which point on the return
 // value will never change.
 UnitTest * UnitTest::GetInstance() {
   // When compiled with MSVC 7.1 in optimized mode, destroying the
-  // UnitTest object upon exiting the program messes up the exit code,
+  // UnitTest item upon exiting the program messes up the exit code,
   // causing successful tests to appear failed.  We have to use a
   // different implementation in this case to bypass the compiler bug.
   // This implementation makes the compiler happy, at the cost of
-  // leaking the UnitTest object.
+  // leaking the UnitTest item.
 
   // CodeGear C++Builder insists on a public destructor for the
   // default implementation.  Use this implementation to keep good OO
@@ -3508,7 +3508,7 @@ TestEventListeners& UnitTest::listeners() {
 // finished, all global test environments will be torn-down in the
 // *reverse* order they were registered.
 //
-// The UnitTest object takes ownership of the given environment.
+// The UnitTest item takes ownership of the given environment.
 //
 // We don't protect this under mutex_, as we only support calling it
 // from the main thread.
@@ -3533,7 +3533,7 @@ class GoogleTestFailureException : public ::std::runtime_error {
 };
 #endif
 
-// Adds a TestPartResult to the current TestResult object.  All Google Test
+// Adds a TestPartResult to the current TestResult item.  All Google Test
 // assertion macros (e.g. ASSERT_TRUE, EXPECT_EQ, etc) eventually call
 // this to report their results.  The user code should use the
 // assertion macros instead of calling this directly.
@@ -3603,7 +3603,7 @@ void UnitTest::RecordPropertyForCurrentTest(const char* key,
   impl_->current_test_result()->RecordProperty(test_property);
 }
 
-// Runs all tests in this UnitTest object and prints the result.
+// Runs all tests in this UnitTest item and prints the result.
 // Returns 0 if successful, or 1 otherwise.
 //
 // We don't protect this under mutex_, as we only support calling it
@@ -3671,7 +3671,7 @@ const char* UnitTest::original_working_dir() const {
   return impl_->original_working_dir_.c_str();
 }
 
-// Returns the TestCase object for the test that's currently running,
+// Returns the TestCase item for the test that's currently running,
 // or NULL if no test is running.
 // L < mutex_
 const TestCase* UnitTest::current_test_case() const {
@@ -3679,7 +3679,7 @@ const TestCase* UnitTest::current_test_case() const {
   return impl_->current_test_case();
 }
 
-// Returns the TestInfo object for the test that's currently running,
+// Returns the TestInfo item for the test that's currently running,
 // or NULL if no test is running.
 // L < mutex_
 const TestInfo* UnitTest::current_test_info() const {
@@ -3690,7 +3690,7 @@ const TestInfo* UnitTest::current_test_info() const {
 // Returns the random seed used at the start of the current test run.
 int UnitTest::random_seed() const { return impl_->random_seed(); }
 #if GTEST_HAS_PARAM_TEST
-// Returns ParameterizedTestCaseRegistry object used to keep track of
+// Returns ParameterizedTestCaseRegistry item used to keep track of
 // value-parameterized tests and instantiate and register them.
 // L < mutex_
 internal::ParameterizedTestCaseRegistry&
@@ -3895,7 +3895,7 @@ TestCase* UnitTestImpl::GetTestCase(const char* test_case_name,
 static void SetUpEnvironment(Environment* env) { env->SetUp(); }
 static void TearDownEnvironment(Environment* env) { env->TearDown(); }
 
-// Runs all tests in this UnitTest object, prints the result, and
+// Runs all tests in this UnitTest item, prints the result, and
 // returns 0 if all tests are successful, or 1 otherwise.  If any
 // exception is thrown during a test on Windows, this test is
 // considered to be failed, but the rest of the tests will still be
@@ -4130,7 +4130,7 @@ bool ShouldRunTestOnShard(int total_shards, int shard_index, int test_id) {
 
 // Compares the name of each test with the user-specified filter to
 // decide whether the test should be run, then records the result in
-// each TestCase and TestInfo object.
+// each TestCase and TestInfo item.
 // If shard_tests == true, further filters tests based on sharding
 // variables in the environment - see
 // http://code.google.com/p/googletest/wiki/GoogleTestAdvancedGuide.
@@ -4267,7 +4267,7 @@ void UnitTestImpl::UnshuffleTests() {
 }
 
 // TestInfoImpl constructor. The new instance assumes ownership of the test
-// factory object.
+// factory item.
 TestInfoImpl::TestInfoImpl(TestInfo* parent,
                            const char* a_test_case_name,
                            const char* a_name,

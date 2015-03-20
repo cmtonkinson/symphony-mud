@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_OBJECT_FOOD
-#define H_SYMPHONY_OBJECT_FOOD
+#ifndef H_SYMPHONY_ITEM_FOOD
+#define H_SYMPHONY_ITEM_FOOD
 
 class ObjFood {
   public:
@@ -10,4 +10,4 @@ class ObjFood {
     ~ObjFood(void);
 };
 
-#endif // H_SYMPHONY_OBJECT_FOOD
+#endif // H_SYMPHONY_ITEM_FOOD

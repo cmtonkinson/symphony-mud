@@ -49,7 +49,7 @@ DEF_ENUM(Mode)
 #define MODE_NONE   1
 #define MODE_AEDIT  2
 #define MODE_MEDIT  3
-#define MODE_OEDIT  4
+#define MODE_IEDIT  4
 #define MODE_PEDIT  5
 #define MODE_REDIT  6
 #define MODE_SEDIT  7
@@ -77,7 +77,7 @@ DEF_ENUM(FurniturePosition)
 #define FURN_SIT_ON   3
 #define FURN_STAND_ON 4
 
-/*DEF_ENUM(ObjectType)
+/*DEF_ENUM(ItemType)
 #define OBJ_ARMOR     1
 #define OBJ_CLOTHING  2
 #define OBJ_CONTAINER 3

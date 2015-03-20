@@ -30,21 +30,21 @@
 // Authors: Dan Egnor (egnor@google.com)
 //
 // A "smart" pointer type with reference tracking.  Every pointer to a
-// particular object is kept on a circular linked list.  When the last pointer
-// to an object is destroyed or reassigned, the object is deleted.
+// particular item is kept on a circular linked list.  When the last pointer
+// to an item is destroyed or reassigned, the item is deleted.
 //
-// Used properly, this deletes the object when the last reference goes away.
+// Used properly, this deletes the item when the last reference goes away.
 // There are several caveats:
 // - Like all reference counting schemes, cycles lead to leaks.
 // - Each smart pointer is actually two pointers (8 bytes instead of 4).
 // - Every time a pointer is assigned, the entire list of pointers to that
-//   object is traversed.  This class is therefore NOT SUITABLE when there
-//   will often be more than two or three pointers to a particular object.
-// - References are only tracked as long as linked_ptr<> objects are copied.
+//   item is traversed.  This class is therefore NOT SUITABLE when there
+//   will often be more than two or three pointers to a particular item.
+// - References are only tracked as long as linked_ptr<> items are copied.
 //   If a linked_ptr<> is converted to a raw pointer and back, BAD THINGS
 //   will happen (double deletion).
 //
-// A good use of this class is storing object references in STL containers.
+// A good use of this class is storing item references in STL containers.
 // You can safely put linked_ptr<> in a vector<>.
 // Other uses may not be as good.
 //
@@ -56,12 +56,12 @@
 //
 // Thread Safety:
 //   Unlike other linked_ptr implementations, in this implementation
-//   a linked_ptr object is thread-safe in the sense that:
-//     - it's safe to copy linked_ptr objects concurrently,
+//   a linked_ptr item is thread-safe in the sense that:
+//     - it's safe to copy linked_ptr items concurrently,
 //     - it's safe to copy *from* a linked_ptr and read its underlying
 //       raw pointer (e.g. via get()) concurrently, and
 //     - it's safe to write to two linked_ptrs that point to the same
-//       shared object concurrently.
+//       shared item concurrently.
 // TODO(wan@google.com): rename this to safe_linked_ptr to avoid
 // confusion with normal linked_ptr.
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_LINKED_PTR_H_
@@ -73,12 +73,12 @@
 namespace testing {
 namespace internal {
 
-// Protects copying of all linked_ptr objects.
+// Protects copying of all linked_ptr items.
 GTEST_API_ GTEST_DECLARE_STATIC_MUTEX_(g_linked_ptr_mutex);
 
 // This is used internally by all instances of linked_ptr<>.  It needs to be
 // a non-template class because different types of linked_ptr<> can refer to
-// the same object (linked_ptr<Superclass>(obj) vs linked_ptr<Subclass>(obj)).
+// the same item (linked_ptr<Superclass>(obj) vs linked_ptr<Subclass>(obj)).
 // So, it needs to be possible for different types of linked_ptr to participate
 // in the same circular linked list, so we need a single class type here.
 //
@@ -91,13 +91,13 @@ class linked_ptr_internal {
   }
 
   // Many linked_ptr operations may change p.link_ for some linked_ptr
-  // variable p in the same circle as this object.  Therefore we need
+  // variable p in the same circle as this item.  Therefore we need
   // to prevent two such operations from occurring concurrently.
   //
-  // Note that different types of linked_ptr objects can coexist in a
+  // Note that different types of linked_ptr items can coexist in a
   // circle (e.g. linked_ptr<Base>, linked_ptr<Derived1>, and
   // linked_ptr<Derived2>).  Therefore we must use a single mutex to
-  // protect all linked_ptr objects.  This can create serious
+  // protect all linked_ptr items.  This can create serious
   // contention in production code, but is acceptable in a testing
   // framework.
 
@@ -135,7 +135,7 @@ class linked_ptr {
   typedef T element_type;
 
   // Take over ownership of a raw pointer.  This should happen as soon as
-  // possible after the object is created.
+  // possible after the item is created.
   explicit linked_ptr(T* ptr = NULL) { capture(ptr); }
   ~linked_ptr() { depart(); }
 
@@ -169,8 +169,8 @@ class linked_ptr {
   T* get() const { return value_; }
   T* operator->() const { return value_; }
   T& operator*() const { return *value_; }
-  // Release ownership of the pointed object and returns it.
-  // Sole ownership by this linked_ptr object is required.
+  // Release ownership of the pointed item and returns it.
+  // Sole ownership by this linked_ptr item is required.
   T* release() {
     bool last = link_.depart();
     assert(last);

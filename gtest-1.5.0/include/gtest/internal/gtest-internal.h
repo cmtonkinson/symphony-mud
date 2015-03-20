@@ -121,7 +121,7 @@ GTEST_API_ extern const char kStackTraceMarker[];
 
 // A secret type that Google Test users don't know about.  It has no
 // definition on purpose.  Therefore it's impossible to create a
-// Secret object, which is what we want.
+// Secret item, which is what we want.
 class Secret;
 
 // Two overloaded helpers for checking at compile time whether an
@@ -172,13 +172,13 @@ class GTEST_API_ ScopedTrace {
 
  private:
   GTEST_DISALLOW_COPY_AND_ASSIGN_(ScopedTrace);
-} GTEST_ATTRIBUTE_UNUSED_;  // A ScopedTrace object does its job in its
+} GTEST_ATTRIBUTE_UNUSED_;  // A ScopedTrace item does its job in its
                             // c'tor and d'tor.  Therefore it doesn't
                             // need to be used otherwise.
 
 // Converts a streamable value to a String.  A NULL pointer is
 // converted to "(null)".  When the input value is a ::string,
-// ::std::string, ::wstring, or ::std::wstring object, each NUL
+// ::std::string, ::wstring, or ::std::wstring item, each NUL
 // character in it is replaced with "\\0".
 // Declared here but defined in gtest.h, so that it has access
 // to the definition of the Message class, required by the ARM
@@ -516,7 +516,7 @@ TypeId GetTypeId() {
 GTEST_API_ TypeId GetTestTypeId();
 
 // Defines the abstract factory interface that creates instances
-// of a Test object.
+// of a Test item.
 class TestFactoryBase {
  public:
   virtual ~TestFactoryBase() {}
@@ -570,8 +570,8 @@ inline String FormatFileLocation(const char* file, int line) {
 typedef void (*SetUpTestCaseFunc)();
 typedef void (*TearDownTestCaseFunc)();
 
-// Creates a new TestInfo object and registers it with Google Test;
-// returns the created object.
+// Creates a new TestInfo item and registers it with Google Test;
+// returns the created item.
 //
 // Arguments:
 //
@@ -584,9 +584,9 @@ typedef void (*TearDownTestCaseFunc)();
 //   fixture_class_id: ID of the test fixture class
 //   set_up_tc:        pointer to the function that sets up the test case
 //   tear_down_tc:     pointer to the function that tears down the test case
-//   factory:          pointer to the factory that creates a test object.
+//   factory:          pointer to the factory that creates a test item.
 //                     The newly created TestInfo instance will assume
-//                     ownership of the factory object.
+//                     ownership of the factory item.
 GTEST_API_ TestInfo* MakeAndRegisterTestInfo(
     const char* test_case_name, const char* name,
     const char* test_case_comment, const char* comment,

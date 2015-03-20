@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_OBJECT_WEAPON
-#define H_SYMPHONY_OBJECT_WEAPON
+#ifndef H_SYMPHONY_ITEM_WEAPON
+#define H_SYMPHONY_ITEM_WEAPON
 
 #include "dice.h"
 #include "enumTable.h"
@@ -26,4 +26,4 @@ class ObjWeapon {
     Dice        _damage;
 };
 
-#endif // H_SYMPHONY_OBJECT_WEAPON
+#endif // H_SYMPHONY_ITEM_WEAPON

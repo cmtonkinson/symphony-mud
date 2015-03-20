@@ -11,7 +11,7 @@
 
 class Avatar;
 class Room;
-class Object;
+class Item;
 class Mob;
 
 class Area {
@@ -21,7 +21,7 @@ class Area {
     unsigned long                           _high;
     std::string                             _name;
     std::map<unsigned long,Room*>           _rooms;
-    std::map<unsigned long,Object*>         _objects;
+    std::map<unsigned long,Item*>         _items;
     std::map<unsigned long,Mob*>            _mobs;
     Terrain*                                _terrain;
     std::set<std::string>                   _builders;
@@ -44,8 +44,8 @@ class Area {
     std::string                             name(void) const                { return _name; }
     std::map<unsigned long,Room*>&          rooms(void)                     { return _rooms; }
     const std::map<unsigned long,Room*>&    rooms(void) const               { return _rooms; }
-    std::map<unsigned long,Object*>&        objects(void)                   { return _objects; }
-    const std::map<unsigned long,Object*>&  objects(void) const             { return _objects; }
+    std::map<unsigned long,Item*>&        items(void)                   { return _items; }
+    const std::map<unsigned long,Item*>&  items(void) const             { return _items; }
     std::map<unsigned long,Mob*>&           mobs(void)                      { return _mobs; }
     const std::map<unsigned long,Mob*>&     mobs(void) const                { return _mobs; }
     void                                    terrain(Terrain* terrain)       { _terrain = terrain; }
@@ -54,7 +54,7 @@ class Area {
     const std::set<std::string>&            builders(void) const            { return _builders; }
 
     void            insert(Room* room);
-    void            insert(Object* object);
+    void            insert(Item* item);
     void            insert(Mob* mob);
 
     // General methods...

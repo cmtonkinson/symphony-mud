@@ -10,7 +10,7 @@
 #include "socket.h"
 
 class Area;
-class Object;
+class Item;
 class ObjContainer;
 class IOHandler;
 class Note;
@@ -90,8 +90,8 @@ class Avatar: public Being {
     Avatar*         pedit(void)                                   { return _pedit; }
     void            aedit(Area* aedit)                            { _aedit = aedit; }
     Area*           aedit(void)                                   { return _aedit; }
-    void            oedit(Object* oedit)                          { _oedit = oedit; }
-    Object*         oedit(void)                                   { return _oedit; }
+    void            iedit(Item* iedit)                          { _iedit = iedit; }
+    Item*         iedit(void)                                   { return _iedit; }
     void            medit(Mob* medit)                             { _medit = medit; }
     Mob*            medit(void)                                   { return _medit; }
     void            sedit(SocialCommand* sedit)                   { _sedit = sedit; }
@@ -137,7 +137,7 @@ class Avatar: public Being {
     Mode                    _mode;
     Avatar*                 _pedit;
     Area*                   _aedit;
-    Object*                 _oedit;
+    Item*                 _iedit;
     Mob*                    _medit;
     SocialCommand*          _sedit;
     Note*                   _note;

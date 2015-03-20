@@ -51,7 +51,7 @@ ETMode::ETMode(void) {
   add(MODE_NONE,   "none");
   add(MODE_AEDIT,  "aedit");
   add(MODE_MEDIT,  "medit");
-  add(MODE_OEDIT,  "oedit");
+  add(MODE_IEDIT,  "iedit");
   add(MODE_PEDIT,  "pedit");
   add(MODE_REDIT,  "redit");
   add(MODE_SEDIT,  "sedit");

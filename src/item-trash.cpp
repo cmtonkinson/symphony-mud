@@ -1,5 +1,5 @@
 
-#include "object-trash.h"
+#include "item-trash.h"
 
 ObjTrash::ObjTrash(void) {
   return;

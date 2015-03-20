@@ -1,30 +1,30 @@
 
 #include <stdio.h>
-#include "ast-object-write.h"
-#include "ast-object.h"
+#include "ast-item-write.h"
+#include "ast-item.h"
 #include "record.h"
 #include "vm.h"
 
-AstObjectWrite::AstObjectWrite(void) {
+AstItemWrite::AstItemWrite(void) {
   return;
 }
 
-AstObjectWrite::AstObjectWrite(AstObject* object, Ast* value):
+AstItemWrite::AstItemWrite(AstItem* item, Ast* value):
     Ast(AST_OBJ_WRITE),
-    _object(object),
+    _item(item),
     _value(value) {
   return;
 }
 
-AstObjectWrite::~AstObjectWrite(void) {
+AstItemWrite::~AstItemWrite(void) {
   return;
 }
 
-Datum* AstObjectWrite::eval(void) {
+Datum* AstItemWrite::eval(void) {
   return NULL;
 }
 
-void AstObjectWrite::print(std::string indent, bool last) {
+void AstItemWrite::print(std::string indent, bool last) {
   printf("%s", indent.c_str());
   if (last) {
     printf("\\-");
@@ -34,15 +34,15 @@ void AstObjectWrite::print(std::string indent, bool last) {
     indent += "| ";
   }
   printf("%s\n", stringType());
-  object()->print(indent, false);
+  item()->print(indent, false);
   value()->print(indent, true);
   return;
 }
 
-InstrList& AstObjectWrite::codegen(void) {
+InstrList& AstItemWrite::codegen(void) {
   Record r(toOpcode());
   append(value()->codegen());
-  r.left().value(object()->fullName());
+  r.left().value(item()->fullName());
   getArg(r.right(), value(), -1);
   append(r);
   return instructions();

@@ -1,30 +1,30 @@
 
 #include <stdio.h>
-#include "ast-object-read.h"
-#include "ast-object.h"
+#include "ast-item-read.h"
+#include "ast-item.h"
 #include "datum.h"
 #include "record.h"
 //#include "vm.h"
 
-AstObjectRead::AstObjectRead(void) {
+AstItemRead::AstItemRead(void) {
   return;
 }
 
-AstObjectRead::AstObjectRead(AstObject* object):
+AstItemRead::AstItemRead(AstItem* item):
     Ast(AST_OBJ_READ),
-    _object(object) {
+    _item(item) {
   return;
 }
 
-AstObjectRead::~AstObjectRead(void) {
+AstItemRead::~AstItemRead(void) {
   return;
 }
 
-Datum* AstObjectRead::eval(void) {
+Datum* AstItemRead::eval(void) {
   return NULL;
 }
 
-void AstObjectRead::print(std::string indent, bool last) {
+void AstItemRead::print(std::string indent, bool last) {
   printf("%s", indent.c_str());
   if (last) {
     printf("\\-");
@@ -34,13 +34,13 @@ void AstObjectRead::print(std::string indent, bool last) {
     indent += "| ";
   }
   printf("%s\n", stringType());
-  printf("%s\\-%s (%s)\n", indent.c_str(), object()->fullName().c_str(), object()->stringType());
+  printf("%s\\-%s (%s)\n", indent.c_str(), item()->fullName().c_str(), item()->stringType());
   return;
 }
 
-InstrList& AstObjectRead::codegen(void) {
+InstrList& AstItemRead::codegen(void) {
   Record r(toOpcode());
-  r.left().value(object()->fullName());
+  r.left().value(item()->fullName());
   append(r);
   return instructions();
 }

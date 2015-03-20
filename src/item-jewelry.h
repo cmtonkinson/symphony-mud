@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_OBJECT_JEWELRY
-#define H_SYMPHONY_OBJECT_JEWELRY
+#ifndef H_SYMPHONY_ITEM_JEWELRY
+#define H_SYMPHONY_ITEM_JEWELRY
 
 class ObjJewelry {
   public:
@@ -10,4 +10,4 @@ class ObjJewelry {
     ~ObjJewelry(void);
 };
 
-#endif // H_SYMPHONY_OBJECT_JEWELRY
+#endif // H_SYMPHONY_ITEM_JEWELRY

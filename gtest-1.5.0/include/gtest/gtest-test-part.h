@@ -38,7 +38,7 @@
 
 namespace testing {
 
-// A copyable object representing the result of a test part (i.e. an
+// A copyable item representing the result of a test part (i.e. an
 // assertion or an explicit FAIL(), ADD_FAILURE(), or SUCCESS()).
 //
 // Don't inherit from TestPartResult as its destructor is not virtual.
@@ -54,7 +54,7 @@ class GTEST_API_ TestPartResult {
 
   // C'tor.  TestPartResult does NOT have a default constructor.
   // Always use this constructor (with parameters) to create a
-  // TestPartResult object.
+  // TestPartResult item.
   TestPartResult(Type a_type,
                  const char* a_file_name,
                  int a_line_number,
@@ -111,10 +111,10 @@ class GTEST_API_ TestPartResult {
   internal::String message_;  // The test failure message.
 };
 
-// Prints a TestPartResult object.
+// Prints a TestPartResult item.
 std::ostream& operator<<(std::ostream& os, const TestPartResult& result);
 
-// An array of TestPartResult objects.
+// An array of TestPartResult items.
 //
 // Don't inherit from TestPartResultArray as its destructor is not
 // virtual.
@@ -128,7 +128,7 @@ class GTEST_API_ TestPartResultArray {
   // Returns the TestPartResult at the given index (0-based).
   const TestPartResult& GetTestPartResult(int index) const;
 
-  // Returns the number of TestPartResult objects in the array.
+  // Returns the number of TestPartResult items in the array.
   int size() const;
 
  private:

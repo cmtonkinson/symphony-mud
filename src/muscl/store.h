@@ -3,7 +3,7 @@
 #define SYMPHONY_STORE
 
 /*
- * This class handles serves as a container for Program objects.
+ * This class handles serves as a container for Program items.
  */
 class Store {
   public:

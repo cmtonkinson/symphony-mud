@@ -15,7 +15,7 @@ VirtualMachine::VirtualMachine(void) {
   _functions[OPCODE_CONST]  = &VirtualMachine::op_const;
   _functions[OPCODE_VAR]    = &VirtualMachine::op_var;
   _functions[OPCODE_STORE]  = &VirtualMachine::op_store;
-  // objects
+  // items
   _functions[OPCODE_OBJ_READ]   = &VirtualMachine::op_obj_read;
   _functions[OPCODE_OBJ_WRITE]  = &VirtualMachine::op_obj_write;
   // lists
@@ -184,13 +184,13 @@ void VirtualMachine::op_store(void) {
   return;
 }
 
-// objects
+// items
 void VirtualMachine::op_obj_read(void) {
   context()->read(fetch(*left()).toString(), results()[ip()]);
   return;
 }
 
-void VirtualMachine::op_obj_write(void) { // (replacement of op_store for objects)
+void VirtualMachine::op_obj_write(void) { // (replacement of op_store for items)
   context()->write(fetch(*left()).toString(), fetch(*right()));
   return;
 }
