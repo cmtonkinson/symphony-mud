@@ -1,5 +1,4 @@
 # Symphony MUD
-
 Symphony MUD is a modern, extensible, open source MUD server codebase intended as a replacement for the Diku/Merc/ROM line of games.
 
 ---
@@ -21,7 +20,6 @@ Symphony MUD is a modern, extensible, open source MUD server codebase intended a
 
 ---
 ## Getting Started
-
 Symphony MUD is built, tested, and hacked in a [Vagrant](https://www.vagrantup.com/) virtual machine. If you're familiar with Vagrant, the instructions couldn't be easier:
 
 ```bash
@@ -44,7 +42,6 @@ If you're not familiar with Vagrant, you should be. Worst case, if you have a Li
 
 ---
 ## Detailed Setup
-
 Symphony MUD is developed with clang (using the C++11 standard) on Ubuntu 14.04 x64 with the 3.13 kernel. `libpcre` and `libsodium` are prerequisites. `libpcre` is used throughout the code for various string manipulation, while `libsodium` is at present only used for password storage.
 
 PCRE is installed (as per [provision.sh](provision.sh)) via `apt`, while `libsodium` is included as a submodule which is built and installed using autotools.
@@ -53,19 +50,15 @@ PCRE is installed (as per [provision.sh](provision.sh)) via `apt`, while `libsod
 
 ---
 ## Data
-
 All data is persisted to disk in plain old human readable text format under `data/`. MySQL has been used previously, but turns out not to be a great fit for a MUD. Currently most data is stored in a custom serialization format due to trouble getting a YAML library (particularly, [yaml-cpp][yaml-cpp]) to compile cleanly. A pull request integrating a YAML-based replacement for the current `Storage` class would be accepted enthusiastically.
 
 ---
 ## Changelog
-
 [Available in markdown format.](doc/CHANGELOG.md)
 
 ---
 ## Get Involved
-
 #### Reporting Bugs
-
 Bug reports should be submitted on [Github][bugs].
 
 #### Contributing Code
@@ -78,23 +71,13 @@ Bug reports should be submitted on [Github][bugs].
 
 ---
 ## Credits
+### Author: [Chris Tonkinson][chris] (aka "Xantiloth")
 
-### Author:
-
-  * Xantiloth ([Chris Tonkinson][chris])
-
-### Contributors (alphabetical):
-
-  * Dromynus
-  * Marek
-  * Turin
-  * Zantix
-
+### Contributors:
 Original inspiration for Symphony MUD comes from the excellent (sadly now defunct) ROM-derived *Feudal Realms* by Charles Webber (aka "Turloch"). Some internals take initial inspiration from *Scratch*, a telnet chat server by Jared Devall (aka Rendelven).
 
 ---
 ## License
-
 Copyright © Chris Tonkinson 2004-2015. Symphony MUD is published under the [MIT license](doc/LICENSE.md).
 
 
