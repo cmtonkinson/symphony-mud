@@ -1,22 +1,20 @@
 
 #include <cstring>
-#include "zone.h"
 #include "avatar.h"
 #include "board.h"
 #include "command.h"
 #include "enumTable.h"
 #include "exit.h"
-#include "placement.h"
-#include "placementNpc.h"
-#include "placementItem.h"
-#include "npc.h"
-#include "note.h"
-#include "item-container.h"
-#include "item-furniture.h"
-#include "item-weapon.h"
+#include "item-types.h"
 #include "item.h"
+#include "note.h"
+#include "npc.h"
+#include "placement.h"
+#include "placementItem.h"
+#include "placementNpc.h"
 #include "room.h"
 #include "storage.h"
+#include "zone.h"
 
 const unsigned Storage::LOAD_DONE;
 const unsigned Storage::LOAD_NULL;

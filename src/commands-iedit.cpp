@@ -1,5 +1,4 @@
 
-#include "zone.h"
 #include "avatar.h"
 #include "commands-iedit.h"
 #include "commandTable-default.h"
@@ -8,10 +7,10 @@
 #include "display.h"
 #include "flagTable.h"
 #include "io-handler.h"
-#include "item-furniture.h"
-#include "item-weapon.h"
+#include "item-types.h"
 #include "room.h"
 #include "world.h"
+#include "zone.h"
 
 ICmdAttribute::ICmdAttribute(void) {
   name("attribute");

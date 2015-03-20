@@ -1,15 +1,15 @@
 
-#include "zone.h"
 #include "avatar.h"
 #include "commands-redit.h"
 #include "commandTable-default.h"
 #include "commandTable.h"
 #include "display.h"
 #include "io-handler.h"
-#include "item-furniture.h"
+#include "item-types.h"
 #include "quoteTable.h"
 #include "room.h"
 #include "world.h"
+#include "zone.h"
 
 CmdQuit::CmdQuit(void) {
   name("quit");

@@ -7,7 +7,7 @@
 #include "commandTable-default.h"
 #include "estring.h"
 #include "io-handler.h"
-#include "item-container.h"
+#include "item-types.h"
 #include "os.h"
 #include "storage.h"
 #include "world.h"

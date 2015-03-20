@@ -1,18 +1,18 @@
 
 #include "ability.h"
-#include "zone.h"
-#include "commandTable-default.h"
 #include "being.h"
+#include "commandTable-default.h"
 #include "display.h"
 #include "exit.h"
 #include "group.h"
 #include "identifiers.h"
 #include "io-handler.h"
+#include "item-types.h"
 #include "job.h"
-#include "item-furniture.h"
 #include "room.h"
 #include "stats.h"
 #include "world.h"
+#include "zone.h"
 
 Being::Being(void):
     _inventory(&Identifiers::shortname) {

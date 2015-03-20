@@ -4,7 +4,7 @@
 #include "commands-iedit.h"
 #include "commandTable-default.h"
 #include "commandTable.h"
-#include "item-container.h"
+#include "item-types.h"
 #include "world.h"
 #include "zone.h"
 

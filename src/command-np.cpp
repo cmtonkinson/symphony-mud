@@ -1,13 +1,13 @@
 
-#include "zone.h"
 #include "avatar.h"
 #include "commandTable-default.h"
 #include "commandTable.h"
 #include "display.h"
 #include "io-handler.h"
-#include "item-container.h"
+#include "item-types.h"
 #include "room.h"
 #include "world.h"
+#include "zone.h"
 
 CmdNedit::CmdNedit(void) {
   name("nedit");

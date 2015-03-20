@@ -1,15 +1,7 @@
 
-#include "compoundTable.h"
 #include "being.h"
-#include "item-armor.h"
-#include "item-clothing.h"
-#include "item-container.h"
-#include "item-food.h"
-#include "item-furniture.h"
-#include "item-jewelry.h"
-#include "item-key.h"
-#include "item-trash.h"
-#include "item-weapon.h"
+#include "compoundTable.h"
+#include "item-types.h"
 #include "item.h"
 #include "socket.h"
 

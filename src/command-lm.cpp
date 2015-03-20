@@ -4,7 +4,7 @@
 #include "command.h"
 #include "commandTable-default.h"
 #include "exit.h"
-#include "item-container.h"
+#include "item-types.h"
 #include "placement.h"
 #include "placementItem.h"
 #include "placementNpc.h"

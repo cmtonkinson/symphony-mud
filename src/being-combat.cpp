@@ -3,7 +3,7 @@
 #include "command.h"
 #include "being.h"
 #include "display.h"
-#include "item-weapon.h"
+#include "item-types.h"
 #include "skills.h"
 #include "stats.h"
 #include "world.h"
