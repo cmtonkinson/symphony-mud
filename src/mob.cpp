@@ -15,13 +15,13 @@ const unsigned Mob::MIN_AGGRESSIVENESS;
 const unsigned Mob::DEFAULT_AGGRESSIVENESS;
 const unsigned Mob::MAX_AGGRESSIVENESS;
 
-Mob::Mob(void): Creature() {
+Mob::Mob(void): Being() {
   mobility(DEFAULT_MOBILITY);
   aggressiveness(DEFAULT_AGGRESSIVENESS);
   return;
 }
 
-Mob::Mob(const Mob& ref): Creature(ref) {
+Mob::Mob(const Mob& ref): Being(ref) {
   vnum(ref.vnum());
   mobility(ref.mobility());
   aggressiveness(ref.aggressiveness());

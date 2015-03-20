@@ -4,7 +4,7 @@
 
 #include <string>
 
-class Creature;
+class Being;
 
 class Terrain {
   public:
@@ -31,7 +31,7 @@ class Terrain {
     bool          flag(unsigned flag)             { return ((flags()&flag) == flag ? true : false); }
 
     // Public methods...
-    virtual unsigned  calculate(Creature* creature) = 0;
+    virtual unsigned  calculate(Being* being) = 0;
 
   private:
     std::string _name;
@@ -47,7 +47,7 @@ class NAME: public Terrain {                          \
   public:                                             \
     NAME(void);                                       \
     virtual ~NAME(void) { }                           \
-    virtual unsigned  calculate(Creature* creature);  \
+    virtual unsigned  calculate(Being* being);  \
 };
 
 DEF_TERRAIN(TerrainBeach)

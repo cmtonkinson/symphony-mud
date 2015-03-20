@@ -13,13 +13,13 @@
 
 ACmdDelete::ACmdDelete(void) {
   name("delete");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(1, "delete");
   brief("Deletes the area.  This is NOT reversible.");
   return;
 }
 
-bool ACmdDelete::execute(Creature* creature, const std::vector<std::string>& args) {
+bool ACmdDelete::execute(Being* being, const std::vector<std::string>& args) {
   Area* area = avatar()->aedit();
   CmdExit exit;
   std::vector<std::string> exit_args(1);
@@ -30,9 +30,9 @@ bool ACmdDelete::execute(Creature* creature, const std::vector<std::string>& arg
   }
 
   exit.avatar(avatar());
-  exit.execute(creature, exit_args);
+  exit.execute(being, exit_args);
   avatar()->send("\nYou've deleted Area %lu.\n", area->ID());
-  World::Instance().bigBrother(creature, ADMIN_BIGBRO_CHANGES, "%s has deleted area %lu (%s).", avatar()->identifiers().shortname().c_str(), area->ID(), area->name().c_str());
+  World::Instance().bigBrother(being, ADMIN_BIGBRO_CHANGES, "%s has deleted area %lu (%s).", avatar()->identifiers().shortname().c_str(), area->ID(), area->name().c_str());
   area->destroy();
 
   return true;
@@ -40,13 +40,13 @@ bool ACmdDelete::execute(Creature* creature, const std::vector<std::string>& arg
 
 ACmdInformation::ACmdInformation(void) {
   name("information");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(0, "");
   brief("Displays the status of the area.");
   return;
 }
 
-bool ACmdInformation::execute(Creature* creature, const std::vector<std::string>& args) {
+bool ACmdInformation::execute(Being* being, const std::vector<std::string>& args) {
   Area* area = avatar()->aedit();
   std::string output;
   std::string names;
@@ -69,14 +69,14 @@ bool ACmdInformation::execute(Creature* creature, const std::vector<std::string>
 
 ACmdName::ACmdName(void) {
   name("name");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-1, "<string>");
   brief("Changes the name of the area.");
   return;
 }
 
-bool ACmdName::execute(Creature* creature, const std::vector<std::string>& args) {
-  Avatar* avatar = (Avatar*)creature;
+bool ACmdName::execute(Being* being, const std::vector<std::string>& args) {
+  Avatar* avatar = (Avatar*)being;
   Area* area = avatar->aedit();
 
   area->name(args[0].c_str());
@@ -87,17 +87,17 @@ bool ACmdName::execute(Creature* creature, const std::vector<std::string>& args)
 
 ACmdPermission::ACmdPermission(void) {
   name("permission");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(2, "grant <player>");
   addSyntax(2, "revoke <player>");
   brief("Updates access privileges for the area.");
   return;
 }
 
-bool ACmdPermission::execute(Creature* creature, const std::vector<std::string>& args) {
+bool ACmdPermission::execute(Being* being, const std::vector<std::string>& args) {
   Avatar* target = NULL;
 
-  if (!(avatar()->adminFlags().test(ADMIN_HEADBUILDER) || avatar()->level() >= Creature::CREATOR)) {
+  if (!(avatar()->adminFlags().test(ADMIN_HEADBUILDER) || avatar()->level() >= Being::CREATOR)) {
     avatar()->send("Sorry, only the Head Builder can fiddle with permissions.");
     return false;
   }
@@ -107,7 +107,7 @@ bool ACmdPermission::execute(Creature* creature, const std::vector<std::string>&
       avatar()->send("They couldn't be found.");
       return false;
     }
-    if (target->level() < Creature::DEMIGOD) {
+    if (target->level() < Being::DEMIGOD) {
       avatar()->send("%s isn't a builder.", target->name());
       return false;
     }
@@ -117,7 +117,7 @@ bool ACmdPermission::execute(Creature* creature, const std::vector<std::string>&
     }
     avatar()->aedit()->grantPermission(target);
     avatar()->send("You've {Ggranted{x %s access to %s.", target->name(), avatar()->aedit()->name().c_str());
-    target->send("%s has {Ggranted{x you access to %s.", target->seeName(creature, true).c_str(), avatar()->aedit()->name().c_str());
+    target->send("%s has {Ggranted{x you access to %s.", target->seeName(being, true).c_str(), avatar()->aedit()->name().c_str());
   } else if (args[0] == "revoke") {
     if ((target = World::Instance().findAvatar(args[1])) == NULL) {
       avatar()->send("They couldn't be found.");
@@ -129,7 +129,7 @@ bool ACmdPermission::execute(Creature* creature, const std::vector<std::string>&
     }
     avatar()->aedit()->revokePermission(target);
     avatar()->send("You've {rrevoked{x %s's access to %s.", target->name(), avatar()->aedit()->name().c_str());
-    target->send("%s has {rrevoked{x your access to %s.", target->seeName(creature, true).c_str(), avatar()->aedit()->name().c_str());
+    target->send("%s has {rrevoked{x your access to %s.", target->seeName(being, true).c_str(), avatar()->aedit()->name().c_str());
   } else {
     avatar()->send(printSyntax());
     return false;
@@ -140,14 +140,14 @@ bool ACmdPermission::execute(Creature* creature, const std::vector<std::string>&
 
 ACmdTerrain::ACmdTerrain(void) {
   name("terrain");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<string>");
   brief("Changes the default terrain type of the area.");
   addOptions("terrain", std::string("\n").append(TerrainTable::Instance().list()));
   return;
 }
 
-bool ACmdTerrain::execute(Creature* creature, const std::vector<std::string>& args) {
+bool ACmdTerrain::execute(Being* being, const std::vector<std::string>& args) {
   Terrain* t = TerrainTable::Instance().find(args[0]);
   if (t) {
     avatar()->aedit()->terrain(t);

@@ -11,13 +11,13 @@
 
 PCmdColor::PCmdColor(void) {
   name("color");
-  level(Creature::CREATOR);
+  level(Being::CREATOR);
   addSyntax(1, "<color code>");
   brief("Changes the message color of 'gecho'.");
   return;
 }
 
-bool PCmdColor::execute(Creature* creature, const std::vector<std::string>& args) {
+bool PCmdColor::execute(Being* being, const std::vector<std::string>& args) {
   Avatar* target = avatar()->pedit();
   target->gechoColor(args[0][0]);
   target->send("Your {%cgecho color {xhas been reset!", target->gechoColor());
@@ -27,16 +27,16 @@ bool PCmdColor::execute(Creature* creature, const std::vector<std::string>& args
 
 PCmdHeadBuilder::PCmdHeadBuilder(void) {
   name("headbuilder");
-  level(Creature::CREATOR);
+  level(Being::CREATOR);
   addSyntax(0, "");
   brief("Toggles whether the Player is marked as a 'Head Builder' or not.");
   return;
 }
 
-bool PCmdHeadBuilder::execute(Creature* creature, const std::vector<std::string>& args) {
+bool PCmdHeadBuilder::execute(Being* being, const std::vector<std::string>& args) {
   Avatar* target = avatar()->pedit();
-  if (target->level() < Creature::DEMIGOD) {
-    avatar()->send("%s must be promoted at least to level %d before being granted Head Builder status.", target->identifiers().shortname().c_str(), Creature::DEMIGOD);
+  if (target->level() < Being::DEMIGOD) {
+    avatar()->send("%s must be promoted at least to level %d before being granted Head Builder status.", target->identifiers().shortname().c_str(), Being::DEMIGOD);
     return false;
   }
   if (target->adminFlags().toggle(ADMIN_HEADBUILDER)) {

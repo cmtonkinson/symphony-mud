@@ -10,9 +10,9 @@
 #include "world.h"
 
 /************************************** BASE CLASS HANDLE METHOD **************************************/
-IOHandler::IOHandler(Creature* creature) {
-  this->creature(creature);
-  this->avatar((Avatar*)creature);
+IOHandler::IOHandler(Being* being) {
+  this->being(being);
+  this->avatar((Avatar*)being);
   this->commandTable(&(Commands::Instance()));
   return;
 }
@@ -24,7 +24,7 @@ bool IOHandler::handle(const std::string& text) {
   short max_num_args = 0;
   short negative_args = 0;
   bool status = false;
-  unsigned long position = creature()->position().number();
+  unsigned long position = being()->position().number();
 
   /* '!' is a shortcut for 'execute the previous command again.' */
   if (input == "!") {
@@ -35,36 +35,36 @@ bool IOHandler::handle(const std::string& text) {
 
   /* Search the CommandTable for a match of the first token in `input`. */
   if ((command = commandTable()->find(input)) == NULL) {
-    creature()->send("Huh?");
+    being()->send("Huh?");
     return false;
   }
 
-  /* Make sure that the Creature is allowed to execute the
+  /* Make sure that the Being is allowed to execute the
    * specified Command.  Assert:
-   *   1) That the Creature has a high enough level
+   *   1) That the Being has a high enough level
    *   2) That the Command is enabled
    *   3) Kirby Wuz Here
    *   4) That a "player only" command can't be executed by a Mob
    */
-  if (creature()->level() < command->level() || !command->enabled()) {
-    creature()->send("Huh?");
+  if (being()->level() < command->level() || !command->enabled()) {
+    being()->send("Huh?");
     return false;
   }
   if (command->playerOnly()) {
-    if (creature()->isAvatar()) {
-      command->avatar((Avatar*)creature());
+    if (being()->isAvatar()) {
+      command->avatar((Avatar*)being());
     } else {
-      creature()->send("Huh?");
+      being()->send("Huh?");
       return false;
     }
   }
 
-  /* We need to make sure that the Creature is in one of the
+  /* We need to make sure that the Being is in one of the
    * allowed positions (sleeping, sitting, standing, etc) to
    * execute the Command.
    */
   if ((position & command->allowedPositions()) != position) {
-    creature()->send("You can't do that while %s.", creature()->position().string().c_str());
+    being()->send("You can't do that while %s.", being()->position().string().c_str());
     return false;
   }
 
@@ -113,7 +113,7 @@ bool IOHandler::handle(const std::string& text) {
   // This is special case #1 from above...
   if (args[0].empty()) {
     if (command->arguments().find(0) == command->arguments().end()) {
-      creature()->send(command->printSyntax());
+      being()->send(command->printSyntax());
       return false;
     }
   // This is special case #2 from above...
@@ -122,20 +122,20 @@ bool IOHandler::handle(const std::string& text) {
     if ((signed)args.size() < (signed)-negative_args) {
       // This is for special case #3 above...
       if (command->arguments().find(args.size()) == command->arguments().end()) {
-        creature()->send(command->printSyntax());
+        being()->send(command->printSyntax());
         return false;
       }
     }
   // The general case...
   } else {
     if (command->arguments().find(args.size()) == command->arguments().end()) {
-      creature()->send(command->printSyntax());
+      being()->send(command->printSyntax());
       return false;
     }
   }
 
   // Reset the Avatar pointer after executing the command, just to be safe...
-  status = command->execute(creature(), args);
+  status = command->execute(being(), args);
   command->avatar(NULL);
   return status;
 }
@@ -516,7 +516,7 @@ bool CreationSummaryIOHandler::handle(void) {
     avatar()->restoreRoom();
     // If this is the first account, promote it to CREATOR.
     if (Storage::glob(Storage::avatar_glob_pattern()).size() == 1) {
-      while (avatar()->level() < Creature::CREATOR) avatar()->gainLevel();
+      while (avatar()->level() < Being::CREATOR) avatar()->gainLevel();
       avatar()->save();
       avatar()->send("\n\n{WYou are now the system administrator.{x\n");
     }

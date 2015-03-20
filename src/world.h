@@ -70,8 +70,8 @@ class World {
     const std::set<Area*,area_comp>&                          getAreas(void) const            { return _areas; }
     std::set<Object*>&                                        getObjects(void)                { return _objects; }
     const std::set<Object*>&                                  getObjects(void) const          { return _objects; }
-    std::set<Creature*>&                                      getCreatures(void)              { return _creatures; }
-    const std::set<Creature*>&                                getCreatures(void) const        { return _creatures; }
+    std::set<Being*>&                                      getBeings(void)              { return _beings; }
+    const std::set<Being*>&                                getBeings(void) const        { return _beings; }
     std::map<unsigned,Board*>&                                boards(void)                    { return _boards; }
     const std::map<unsigned,Board*>&                          boards(void) const              { return _boards; }
     InputIOHandler*                                           npcIOHandler(void)              { return &_npcIOHandler; }
@@ -80,7 +80,7 @@ class World {
     void                  startup(void);
     void                  exist(const unsigned int& fd = 0);
     void                  turn(void);
-    bool                  reboot(Creature* creature = NULL);
+    bool                  reboot(Being* being = NULL);
     void                  recover(const unsigned int& fd);
     bool                  load(void);
     bool                  save(void);
@@ -97,7 +97,7 @@ class World {
     void                  handleOutput(void);
     void                  handleDisconnects(void);
     void                  broadcast(const std::string& message);
-    void                  bigBrother(Creature* creature, const unsigned long& type, const char* format, ...);
+    void                  bigBrother(Being* being, const unsigned long& type, const char* format, ...);
 
     // Events
     Schedule*             schedule(void) { return &_schedule; }
@@ -106,12 +106,12 @@ class World {
     unsigned              jobsPerTurn(void) const             { return _jobsPerTurn; }
     unsigned              jobsInQueue(void) const             { return _schedule.size(); }
 
-    // Creatures
-    void                  insert(Creature* creature);
-    void                  remove(Creature* creature);
-    Creature*             findCreature(const std::string& name);
+    // Beings
+    void                  insert(Being* being);
+    void                  remove(Being* being);
+    Being*             findBeing(const std::string& name);
     Avatar*               findAvatar(const std::string& name);
-    bool                  transport(Creature* creature, const unsigned long& vnum);
+    bool                  transport(Being* being, const unsigned long& vnum);
 
     // Avatars (these should be deprecated soon)
     void                  updateByName(Avatar* avatar);
@@ -150,8 +150,8 @@ class World {
     static std::string    strnow(void);
     static std::string    strtime(time_t t = 0);
     static std::string    realtime(const unsigned long& seconds, unsigned granularity = GRAN_DAY);
-    static bool           search_map(Creature* creature, Room*** map, const unsigned short& ymax, const unsigned short& xmax, const short& y, const short& x, Room* room, std::string** display);
-    static std::string    get_marker(Creature* creature, Room* room);
+    static bool           search_map(Being* being, Room*** map, const unsigned short& ymax, const unsigned short& xmax, const short& y, const short& x, Room* room, std::string** display);
+    static std::string    get_marker(Being* being, Room* room);
 
   private:
     time_t                                                  _booted;
@@ -161,7 +161,7 @@ class World {
     std::map<std::string,Avatar*>                           _avatars;
     std::set<Area*,area_comp>                               _areas;
     std::set<Object*>                                       _objects;
-    std::set<Creature*>                                     _creatures;
+    std::set<Being*>                                     _beings;
     std::map<unsigned,Board*>                               _boards;
     InputIOHandler                                          _npcIOHandler;
     Schedule                                                _schedule;

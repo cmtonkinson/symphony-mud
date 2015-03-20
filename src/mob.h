@@ -2,11 +2,11 @@
 #ifndef H_SYMPHONY_MOB
 #define H_SYMPHONY_MOB
 
-#include "creature.h"
+#include "being.h"
 
 class Area;
 
-class Mob: public Creature {
+class Mob: public Being {
   public:
 
     static const unsigned MIN_MOBILITY     = 1;

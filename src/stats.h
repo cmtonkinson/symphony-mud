@@ -5,7 +5,7 @@
 /*
  * Terminology:
  *
- * gain: A non-negative integer intended primarily as a modifier to some Creature attribute upon
+ * gain: A non-negative integer intended primarily as a modifier to some Being attribute upon
  *       leveling up. The magnitude of the gain may be completely deterministic, completely random,
  *       or anything in between, depending on the usage.
  */
@@ -16,7 +16,7 @@ class Stats {
     /*
      * Returns a gain for a stat based on a deterministic logistic function.
      *
-     * level - The level of the Creature (in the context of a level up, this is the NEW level).
+     * level - The level of the Being (in the context of a level up, this is the NEW level).
      * base - The minimum gain for the growth function (i.e. the theoretical gain at level 1).
      * target - The maximum sum of all gains for a particular growth function from level 1 to 100.
      *

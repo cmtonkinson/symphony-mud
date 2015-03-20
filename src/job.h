@@ -49,7 +49,7 @@ class Job: public Event {
     time_t            _when;
     EventHandlerBase* _what;
     // Even though the pointer is called "who" it represents any ObjectType as specified in the
-    // constructors above (be they Areas, Creatures, Objects, whatever).
+    // constructors above (be they Areas, Beings, Objects, whatever).
     void*             _who;
 
   private:

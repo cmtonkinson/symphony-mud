@@ -6,11 +6,11 @@
 #include <string>
 
 class CommandTable;
-class Creature;
+class Being;
 
 class IOHandler {
   private:
-    Creature*                           _creature;
+    Being*                           _being;
     Avatar*                             _avatar;
     CommandTable*                       _commandTable;
     std::map<std::string,void*>   	    _state;
@@ -18,12 +18,12 @@ class IOHandler {
 
   public:
     // Constructors...
-    IOHandler(Creature* creature = NULL);
+    IOHandler(Being* being = NULL);
     virtual ~IOHandler(void)                                                        { }
 
     // Public accessor methods...
-    void                                creature(Creature* creature)              { _creature = creature; }
-    Creature*                           creature(void)                            { return _creature; }
+    void                                being(Being* being)              { _being = being; }
+    Being*                           being(void)                            { return _being; }
     void                                avatar(Avatar* avatar)                    { _avatar = avatar; }
     Avatar*                             avatar(void)                              { return _avatar; }
     void                                commandTable(CommandTable* commandTable)  { _commandTable = commandTable; }
@@ -36,7 +36,7 @@ class IOHandler {
     // Public methods...
     virtual void                        activate(void)                            = 0;
     virtual void                        deactivate(void)                          = 0;
-    //virtual bool                        handle(Creature* creature, const std::string& input) { return false; }
+    //virtual bool                        handle(Being* being, const std::string& input) { return false; }
     virtual bool                        handle(const std::string& input);
     virtual bool                        handle(void);
     virtual std::string                 prompt(void)                              = 0;
@@ -45,9 +45,9 @@ class IOHandler {
 #define DEF_TRIVIAL_IOHANDLER(NAME)                                       \
 class NAME: public IOHandler {                                            \
   public:                                                                 \
-    NAME(Creature* creature = NULL) {                                   \
-      this->creature(creature);                                         \
-      this->avatar((Avatar*)creature);                                  \
+    NAME(Being* being = NULL) {                                   \
+      this->being(being);                                         \
+      this->avatar((Avatar*)being);                                  \
       return;                                                             \
     }                                                                     \
     virtual ~NAME(void) { }                                             \
@@ -60,9 +60,9 @@ class NAME: public IOHandler {                                            \
 #define DEF_FULL_IOHANDLER(NAME)                                          \
 class NAME: public IOHandler {                                            \
   public:                                                                 \
-    NAME(Creature* creature = NULL) {                                   \
-      this->creature(creature);                                         \
-      this->avatar((Avatar*)creature);                                  \
+    NAME(Being* being = NULL) {                                   \
+      this->being(being);                                         \
+      this->avatar((Avatar*)being);                                  \
       return;                                                             \
     }                                                                     \
     virtual ~NAME(void) { }                                             \

@@ -4,7 +4,7 @@
 
 #include <string>
 #include "color-string.h"
-#include "creature.h"
+#include "being.h"
 #include "enumTable.h"
 #include "flagTable.h"
 #include "socket.h"
@@ -15,7 +15,7 @@ class ObjContainer;
 class IOHandler;
 class Note;
 
-class Avatar: public Creature {
+class Avatar: public Being {
   public:
 
     // Deletion status...
@@ -83,7 +83,7 @@ class Avatar: public Creature {
     void            replyTo(std::string replyTo)                  { _replyTo = replyTo; }
     std::string     replyTo(void)                                 { return _replyTo; }
     virtual void    room(Room* room);
-    virtual Room*   room(void) const                              { return Creature::room(); }
+    virtual Room*   room(void) const                              { return Being::room(); }
     Mode&           mode(void)                                    { return _mode; }
     const Mode&     mode(void) const                              { return _mode; }
     void            pedit(Avatar* pedit)                          { _pedit = pedit; }

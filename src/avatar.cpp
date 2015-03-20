@@ -3,7 +3,7 @@
 #include <time.h>
 #include "avatar.h"
 #include "commandTable-default.h"
-#include "creature.h"
+#include "being.h"
 #include <sodium/crypto_hash.h>
 #include "estring.h"
 #include "io-handler.h"
@@ -179,7 +179,7 @@ bool Avatar::rename(std::string new_name) {
     return false;
   } else {
     // Good to go; there's a bit of a song and dance because of how World::insert()
-    // and World::remove() operate on both the Creature and Avatar containers.
+    // and World::remove() operate on both the Being and Avatar containers.
     changeIdentifiers(old_name);
     World::Instance().remove(this);
     changeIdentifiers(new_name);
@@ -277,7 +277,7 @@ void Avatar::room(Room* room) {
   std::vector<std::string> exit_args(1);
   exit.avatar(this);
 
-  Creature::room(room);
+  Being::room(room);
 
   if (mode().number() == MODE_REDIT) {
     if (!this->room()->area()->hasPermission(this)) {

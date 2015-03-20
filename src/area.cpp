@@ -119,7 +119,7 @@ void Area::reset(void) {
 unsigned Area::howManyMobs(unsigned long vnum) {
   unsigned number_of_mobs = 0;
   for (std::map<unsigned long,Room*>::iterator r_it = rooms().begin(); r_it != rooms().end(); ++r_it) {
-    for (std::list<Creature*>::iterator c_it = r_it->second->creatures().begin(); c_it != r_it->second->creatures().end(); ++c_it) {
+    for (std::list<Being*>::iterator c_it = r_it->second->beings().begin(); c_it != r_it->second->beings().end(); ++c_it) {
       if (*c_it && (*c_it)->isMob()) {
         if (((Mob*)(*c_it))->vnum() == vnum) {
           number_of_mobs++;
@@ -150,11 +150,11 @@ void Area::unserializeBuilders(const std::string& serialization) {
 
 bool Area::hasPermission(Avatar* avatar) const {
   // Only the Administrator can fiddle with Limbo...
-  if (ID() == 1 && avatar->level() < Creature::CREATOR) {
+  if (ID() == 1 && avatar->level() < Being::CREATOR) {
     return false;
   }
   // The Administrator and the Head Builder can edit anything else...
-  if (avatar->adminFlags().test(ADMIN_HEADBUILDER) || avatar->level() >= Creature::CREATOR) {
+  if (avatar->adminFlags().test(ADMIN_HEADBUILDER) || avatar->level() >= Being::CREATOR) {
     return true;
   }
   // The average Joe needs explicit permission for a given area...

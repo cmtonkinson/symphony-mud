@@ -15,20 +15,20 @@
 
 OCmdAttribute::OCmdAttribute(void) {
   name("attribute");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(2, "remove <attribute>");
   addSyntax(3, "add <attribute> <number>");
   brief("Updates the attribute modifiers of the Object.");
-  addOptions("attribute", Creature::listAttributes());
+  addOptions("attribute", Being::listAttributes());
   return;
 }
 
-bool OCmdAttribute::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdAttribute::execute(Being* being, const std::vector<std::string>& args) {
   unsigned short attr = 0;
   int mag = 0;
 
   if (args.size() == 3 && Regex::strPrefix(args[0], "add")) {
-    if ((attr = Creature::stringToAttribute(args[1])) == Creature::ATTR_END) {
+    if ((attr = Being::stringToAttribute(args[1])) == Being::ATTR_END) {
       avatar()->send("Sorry, that attribute wasn't recognized.");
       return false;
     }
@@ -37,27 +37,27 @@ bool OCmdAttribute::execute(Creature* creature, const std::vector<std::string>& 
       avatar()->send("That wouldn't do anything.");
       return false;
     }
-    if (attr == Creature::ATTR_ARMOR || attr == Creature::ATTR_BASH || attr == Creature::ATTR_SLASH || attr == Creature::ATTR_PIERCE || attr == Creature::ATTR_EXOTIC) {
+    if (attr == Being::ATTR_ARMOR || attr == Being::ATTR_BASH || attr == Being::ATTR_SLASH || attr == Being::ATTR_PIERCE || attr == Being::ATTR_EXOTIC) {
       if (!avatar()->oedit()->isArmor()) {
         avatar()->send("Only objects of type `armor` can modify armor class.");
         return false;
       }
     }
     avatar()->oedit()->modifiers().push_back(new Modifier(attr, mag));
-    avatar()->send("You've added a modification of %d to %s.", mag, Creature::attributeToString(attr));
+    avatar()->send("You've added a modification of %d to %s.", mag, Being::attributeToString(attr));
   } else if (args.size() == 2 && Regex::strPrefix(args[0], "remove")) {
-    if ((attr = Creature::stringToAttribute(args[1])) == Creature::ATTR_END) {
+    if ((attr = Being::stringToAttribute(args[1])) == Being::ATTR_END) {
       avatar()->send("Sorry, that attribute wasn't recognized.");
       return false;
     }
     for (std::list<Modifier*>::iterator it = avatar()->oedit()->modifiers().begin(); it != avatar()->oedit()->modifiers().end(); ++it) {
       if ((*it)->attribute() == attr) {
         avatar()->oedit()->modifiers().erase(it);
-        avatar()->send("You've dropped the %s modification.", Creature::attributeToString(attr));
+        avatar()->send("You've dropped the %s modification.", Being::attributeToString(attr));
         return true;
       }
     }
-    avatar()->send("There aren't any %s modifications currently set.", Creature::attributeToString(attr));
+    avatar()->send("There aren't any %s modifications currently set.", Being::attributeToString(attr));
     return false;
   } else {
     avatar()->send(printSyntax());
@@ -69,7 +69,7 @@ bool OCmdAttribute::execute(Creature* creature, const std::vector<std::string>& 
 
 OCmdComposition::OCmdComposition(void) {
   name("composition");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-2, "add <type1 type2 type3 ...>");
   addSyntax(-2, "remove <type1 type2 type3 ...>");
   brief("Updates the composition of the Object.");
@@ -77,7 +77,7 @@ OCmdComposition::OCmdComposition(void) {
   return;
 }
 
-bool OCmdComposition::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdComposition::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string>comps;
   Compound* compound = NULL;
   bool add = false;
@@ -108,13 +108,13 @@ bool OCmdComposition::execute(Creature* creature, const std::vector<std::string>
 
 OCmdDelete::OCmdDelete(void) {
   name("delete");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "delete");
   brief("Erases the Object entirely.");
   return;
 }
 
-bool OCmdDelete::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdDelete::execute(Being* being, const std::vector<std::string>& args) {
   CmdExit exit;
   std::vector<std::string> exit_args(1);
   Area* area = NULL;
@@ -134,7 +134,7 @@ bool OCmdDelete::execute(Creature* creature, const std::vector<std::string>& arg
   avatar()->oedit(NULL);
   avatar()->send("Object %lu deleted.\n", vnum);
   exit.avatar(avatar());
-  exit.execute(creature, exit_args);
+  exit.execute(being, exit_args);
   return true;
 }
 
@@ -145,8 +145,8 @@ OCmdDescription::OCmdDescription(void) {
   return;
 }
 
-bool OCmdDescription::execute(Creature* creature, const std::vector<std::string>& args) {
-  IOHandler* h = new TeditIOHandler(creature);
+bool OCmdDescription::execute(Being* being, const std::vector<std::string>& args) {
+  IOHandler* h = new TeditIOHandler(being);
   h->getState()["vector"] = (void*)(new std::vector<std::string>(Regex::explode("\n",avatar()->oedit()->identifiers().description())));
   h->getState()["name"] = (void*)(new std::string("Object Description"));
   h->getState()["pointer"] = (void*)avatar()->oedit()->identifiers().descriptionp();
@@ -156,7 +156,7 @@ bool OCmdDescription::execute(Creature* creature, const std::vector<std::string>
 
 OCmdFlag::OCmdFlag(void) {
   name("flag");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-2, "add <flag1 flag2 flag3 ...>");
   addSyntax(-2, "remove <flag1 flag2 flag3 ...>");
   brief("Updates which flags are set for the Object.");
@@ -164,7 +164,7 @@ OCmdFlag::OCmdFlag(void) {
   return;
 }
 
-bool OCmdFlag::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdFlag::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> mutable_args = args;
   std::vector<std::string> flags;
   FlagInt f = 0;
@@ -201,13 +201,13 @@ bool OCmdFlag::execute(Creature* creature, const std::vector<std::string>& args)
 
 OCmdFurnitureCapacity::OCmdFurnitureCapacity(void) {
   name("furn_capacity");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<number>");
   brief("Updates the total overal capacity of the furniture.");
   return;
 }
 
-bool OCmdFurnitureCapacity::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdFurnitureCapacity::execute(Being* being, const std::vector<std::string>& args) {
   Object* furniture = avatar()->oedit();
   unsigned number = estring(args[0]);
 
@@ -234,13 +234,13 @@ bool OCmdFurnitureCapacity::execute(Creature* creature, const std::vector<std::s
 
 OCmdFurnitureLayOn::OCmdFurnitureLayOn(void) {
   name("furn_layon");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<number>");
-  brief("Updates the number of creatures that can 'lay on' this furniture.");
+  brief("Updates the number of beings that can 'lay on' this furniture.");
   return;
 }
 
-bool OCmdFurnitureLayOn::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdFurnitureLayOn::execute(Being* being, const std::vector<std::string>& args) {
   Object* furniture = avatar()->oedit();
   unsigned number = estring(args[0]);
 
@@ -258,13 +258,13 @@ bool OCmdFurnitureLayOn::execute(Creature* creature, const std::vector<std::stri
 
 OCmdFurnitureSitAt::OCmdFurnitureSitAt(void) {
   name("furn_sitat");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<number>");
-  brief("Updates the number of creatures that can 'sit at' this furniture.");
+  brief("Updates the number of beings that can 'sit at' this furniture.");
   return;
 }
 
-bool OCmdFurnitureSitAt::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdFurnitureSitAt::execute(Being* being, const std::vector<std::string>& args) {
   Object* furniture = avatar()->oedit();
   unsigned number = estring(args[0]);
 
@@ -282,13 +282,13 @@ bool OCmdFurnitureSitAt::execute(Creature* creature, const std::vector<std::stri
 
 OCmdFurnitureSitOn::OCmdFurnitureSitOn(void) {
   name("furn_siton");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<number>");
-  brief("Updates the number of creatures that can 'sit on' this furniture.");
+  brief("Updates the number of beings that can 'sit on' this furniture.");
   return;
 }
 
-bool OCmdFurnitureSitOn::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdFurnitureSitOn::execute(Being* being, const std::vector<std::string>& args) {
   Object* furniture = avatar()->oedit();
   unsigned number = estring(args[0]);
 
@@ -306,13 +306,13 @@ bool OCmdFurnitureSitOn::execute(Creature* creature, const std::vector<std::stri
 
 OCmdFurnitureStandOn::OCmdFurnitureStandOn(void) {
   name("furn_standon");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<number>");
-  brief("Updates the number of creatures that can 'stand on' this furniture.");
+  brief("Updates the number of beings that can 'stand on' this furniture.");
   return;
 }
 
-bool OCmdFurnitureStandOn::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdFurnitureStandOn::execute(Being* being, const std::vector<std::string>& args) {
   Object* furniture = avatar()->oedit();
   unsigned number = estring(args[0]);
 
@@ -330,26 +330,26 @@ bool OCmdFurnitureStandOn::execute(Creature* creature, const std::vector<std::st
 
 OCmdInformation::OCmdInformation(void) {
   name("information");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(0, "");
   brief("Displays the status of the Object.");
   return;
 }
 
-bool OCmdInformation::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdInformation::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->send(avatar()->oedit()->printStatus());
   return true;
 }
 
 OCmdKeywords::OCmdKeywords(void) {
   name("keywords");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-1, "<key1 key2 key3 ...>");
   brief("Updates the Object keyword list.");
   return;
 }
 
-bool OCmdKeywords::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdKeywords::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> keywords = Regex::explode(" ", args[0]);
   avatar()->oedit()->identifiers().getKeywords().clear();
   for (std::vector<std::string>::iterator it = keywords.begin(); it != keywords.end(); ++it) {
@@ -361,13 +361,13 @@ bool OCmdKeywords::execute(Creature* creature, const std::vector<std::string>& a
 
 OCmdLevel::OCmdLevel(void) {
   name("level");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<number>");
   brief("Updates the Object level.");
   return;
 }
 
-bool OCmdLevel::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdLevel::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->oedit()->level(estring(args[0]));
   avatar()->send("You've set the object level to %u.", avatar()->oedit()->level());
   return true;
@@ -375,13 +375,13 @@ bool OCmdLevel::execute(Creature* creature, const std::vector<std::string>& args
 
 OCmdLongname::OCmdLongname(void) {
   name("longname");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-1, "<string>");
   brief("Updates the Objects long name.");
   return;
 }
 
-bool OCmdLongname::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdLongname::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->oedit()->identifiers().longname(args[0]);
   avatar()->send("You've set the object longname to \"%s{x\".", avatar()->oedit()->identifiers().longname().c_str());
 
@@ -390,13 +390,13 @@ bool OCmdLongname::execute(Creature* creature, const std::vector<std::string>& a
 
 OCmdShortname::OCmdShortname(void) {
   name("shortname");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-1, "<string>");
   brief("Updates the Objects short name.");
   return;
 }
 
-bool OCmdShortname::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdShortname::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->oedit()->identifiers().shortname(args[0]);
   avatar()->send("You've set the object shortname to \"%s{x\".", avatar()->oedit()->identifiers().shortname().c_str());
   return true;
@@ -404,14 +404,14 @@ bool OCmdShortname::execute(Creature* creature, const std::vector<std::string>& 
 
 OCmdType::OCmdType(void) {
   name("type");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<value>");
   brief("Updates the type of the Object.");
   addOptions("type", std::string("armor clothing container food furniture jewelry key trash weapon"));
   return;
 }
 
-bool OCmdType::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdType::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->oedit()->stringToType(args[0]);
   avatar()->send("Object %lu is now \"%s\".\n", avatar()->oedit()->vnum(), avatar()->oedit()->typeToString());
   return true;
@@ -419,13 +419,13 @@ bool OCmdType::execute(Creature* creature, const std::vector<std::string>& args)
 
 OCmdValue::OCmdValue(void) {
   name("value");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<number>");
   brief("Updates the worth (in silver) of the Object.");
   return;
 }
 
-bool OCmdValue::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdValue::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->oedit()->value(estring(args[0]));
   avatar()->send("You've set the object value to %u.", avatar()->oedit()->value());
   return true;
@@ -433,13 +433,13 @@ bool OCmdValue::execute(Creature* creature, const std::vector<std::string>& args
 
 OCmdWeaponDamage::OCmdWeaponDamage(void) {
   name("weap_damage");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "XdY            (X and Y are numbers)");
   brief("Changes the damage dice of the weapon.");
   return;
 }
 
-bool OCmdWeaponDamage::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdWeaponDamage::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> pieces = Regex::explode("d", args[0]);
   Object* weapon = avatar()->oedit();
   unsigned number_of_dice = 0;
@@ -473,14 +473,14 @@ bool OCmdWeaponDamage::execute(Creature* creature, const std::vector<std::string
 
 OCmdWeaponType::OCmdWeaponType(void) {
   name("weap_type");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<type>");
   brief("Changes the kind of weapon the Object is.");
   addOptions("type", ETWeaponType::Instance().list());
   return;
 }
 
-bool OCmdWeaponType::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdWeaponType::execute(Being* being, const std::vector<std::string>& args) {
   if (!avatar()->oedit()->isWeapon()) {
     avatar()->send("Object %ld isn't a weapon.", avatar()->oedit()->vnum());
     return false;
@@ -492,14 +492,14 @@ bool OCmdWeaponType::execute(Creature* creature, const std::vector<std::string>&
 
 OCmdWeaponVerb::OCmdWeaponVerb(void) {
   name("weap_verb");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<verb>");
   brief("Changes the type of damange inflicted by the weapon.");
   addOptions("verb", ETDamageVerb::Instance().list());
   return;
 }
 
-bool OCmdWeaponVerb::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdWeaponVerb::execute(Being* being, const std::vector<std::string>& args) {
   if (!avatar()->oedit()->isWeapon()) {
     avatar()->send("Object %ld isn't a weapon.", avatar()->oedit()->vnum());
     return false;
@@ -511,14 +511,14 @@ bool OCmdWeaponVerb::execute(Creature* creature, const std::vector<std::string>&
 
 OCmdWearable::OCmdWearable(void) {
   name("wearable");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<where>");
   brief("Changes where the Object can be worn (if it can be).");
   addOptions("where", "ankle arms ear face feet finger forearm hands head hold knee legs neck shin shoulders torso waist wrist");
   return;
 }
 
-bool OCmdWearable::execute(Creature* creature, const std::vector<std::string>& args) {
+bool OCmdWearable::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->oedit()->stringToWearable(args[0]);
   avatar()->send("Object can now be worn: {y%s{x", avatar()->oedit()->wearableToString());
   return true;

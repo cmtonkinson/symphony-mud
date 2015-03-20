@@ -6,7 +6,7 @@
 #include <string>
 #include "enumTable.h"
 
-class Creature;
+class Being;
 
 //////////////////////////////////////////// BASE CLASS ////////////////////////////////////////////
 class Ability {
@@ -59,8 +59,8 @@ class Ability {
     bool                  is_skill(void) const;
     bool                  is_spell(void) const;
 
-    bool                  invoke(Creature* creature);
-    virtual bool          execute(Creature* creature) const = 0;
+    bool                  invoke(Being* being);
+    virtual bool          execute(Being* being) const = 0;
 
   private:
 
@@ -97,7 +97,7 @@ class CLASS: public Ability {                         \
       return;                                         \
     }                                                 \
     virtual ~CLASS(void) { return; }                  \
-    virtual bool execute(Creature* creature) const;   \
+    virtual bool execute(Being* being) const;   \
 };                                                    \
 
 //////////////////////////////////////////// SPELL /////////////////////////////////////////////////
@@ -121,7 +121,7 @@ class CLASS: public Ability {                         \
       return;                                         \
     }                                                 \
     virtual ~CLASS(void) { return; }                  \
-    virtual bool execute(Creature* creature) const;   \
+    virtual bool execute(Being* being) const;   \
 };                                                    \
 
 #endif // #ifndef H_SYMPHONY_ABILITY

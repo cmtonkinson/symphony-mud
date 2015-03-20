@@ -63,23 +63,23 @@
 
 Factor difficulty into learning probabilities.
 
-## Creature::aquireTarget()
+## Being::aquireTarget()
 
 Aggro/threat analysis instead of just returning the first attackable opponent.
 
-## Creature::autoassist()
+## Being::autoassist()
 
 Make autoassist a togglable setting.
 
-## Creature::die()
+## Being::die()
 
 Leave a corpse with loot.
 
-## Creature::scheduleAttack()
+## Being::scheduleAttack()
 
 Stat-based attack timing.
 
-## Creature::targetTNL()
+## Being::targetTNL()
 
 Is there anything worthwhile from the character creation sequence that can be used to make the TNL calculations dynamic?
 

@@ -78,7 +78,7 @@ void World::turn(void) {
   return;
 }
 
-bool World::reboot(Creature* creature) {
+bool World::reboot(Being* being) {
   std::map<std::string,Avatar*>::iterator it;
   estring fd;
   FILE* fp = NULL;
@@ -86,8 +86,8 @@ bool World::reboot(Creature* creature) {
   fp = fopen(REBOOT_FILE, "w");
 
   if (!fp) {
-    if (creature) {
-      creature->send("Copyover file couldn't be opened for writing! Copyover aborted!");
+    if (being) {
+      being->send("Copyover file couldn't be opened for writing! Copyover aborted!");
     }
     worldLog(World::LOG_LEVEL_ERROR, World::LOG_TYPE_SYSTEM, "Copyover file couldn't be opened for writing! Copyover aborted!");
     return false;
@@ -226,7 +226,7 @@ bool World::toggleCommand(char table_prefix, std::string command_name, bool enab
 
   if (table) {
     if ((command = table->find(command_name)) != NULL) {
-      if (command->level() >= Creature::CREATOR) return false;
+      if (command->level() >= Being::CREATOR) return false;
 
       filepath << table_prefix << "_" << command->name();
       command->enabled(enabled);
@@ -349,7 +349,7 @@ void World::broadcast(const std::string& message) {
   return;
 }
 
-void World::bigBrother(Creature* creature, const unsigned long& type, const char* format, ...) {
+void World::bigBrother(Being* being, const unsigned long& type, const char* format, ...) {
   char buffer[Socket::MAX_BUFFER];
   va_list args;
 
@@ -357,9 +357,9 @@ void World::bigBrother(Creature* creature, const unsigned long& type, const char
   vsprintf(buffer, format, args);
   va_end(args);
 
-  if (creature && type) {
+  if (being && type) {
     for (std::map<std::string,Avatar*>::iterator it = getAvatars().begin(); it != getAvatars().end(); ++it) {
-      if (it->second->isConnected() && it->second->adminFlags().test(ADMIN_BIGBROTHER) && it->second->adminFlags().test(type) && it->second->level() >= creature->level() && it->second != creature) {
+      if (it->second->isConnected() && it->second->adminFlags().test(ADMIN_BIGBROTHER) && it->second->adminFlags().test(type) && it->second->level() >= being->level() && it->second != being) {
         it->second->send("BigBrother: %s\n", buffer);
       }
     }
@@ -391,29 +391,29 @@ void World::handleJobs(void) {
   return;
 }
 
-/************************************************************ CREATURES ************************************************************/
-void World::insert(Creature* creature) {
-fprintf(stderr, "World::insert(%s)\n", creature->name());
-  getCreatures().insert(creature);
-  if (creature->isAvatar()) {
+/************************************************************ BEINGS ************************************************************/
+void World::insert(Being* being) {
+fprintf(stderr, "World::insert(%s)\n", being->name());
+  getBeings().insert(being);
+  if (being->isAvatar()) {
 fprintf(stderr, "  -> avatar\n");
-    getAvatars().insert(std::make_pair(creature->name(), dynamic_cast<Avatar*>(creature)));
+    getAvatars().insert(std::make_pair(being->name(), dynamic_cast<Avatar*>(being)));
   }
   return;
 }
 
-void World::remove(Creature* creature) {
-fprintf(stderr, "World::remove(%s)\n", creature->name());
-  getCreatures().erase(creature);
-  if (creature->isAvatar()) {
+void World::remove(Being* being) {
+fprintf(stderr, "World::remove(%s)\n", being->name());
+  getBeings().erase(being);
+  if (being->isAvatar()) {
 fprintf(stderr, "  -> avatar\n");
-    getAvatars().erase(creature->name());
+    getAvatars().erase(being->name());
   }
   return;
 }
 
-Creature* World::findCreature(const std::string& name) {
-  for (std::set<Creature*>::iterator it = getCreatures().begin(); it != getCreatures().end(); ++it) {
+Being* World::findBeing(const std::string& name) {
+  for (std::set<Being*>::iterator it = getBeings().begin(); it != getBeings().end(); ++it) {
     if ((*it)->identifiers().matchesKeyword(name)) {
       if ((*it)->isAvatar()) {
         if (((Avatar*)*it)->isConnected()) {
@@ -437,7 +437,7 @@ Avatar* World::findAvatar(const std::string& name) {
   return NULL;
 }
 
-bool World::transport(Creature* creature, const unsigned long& vnum) {
+bool World::transport(Being* being, const unsigned long& vnum) {
   Room* room = NULL;
   CmdLook look;
   std::vector<std::string> look_args(1);
@@ -446,11 +446,11 @@ bool World::transport(Creature* creature, const unsigned long& vnum) {
     return false;
   }
 
-  creature->room()->remove(creature);
-  room->add(creature);
-  creature->room(room);
-  creature->send("You've been transported to %s.\n", creature->room()->name().c_str());
-  look.execute(creature, look_args);
+  being->room()->remove(being);
+  room->add(being);
+  being->room(room);
+  being->send("You've been transported to %s.\n", being->room()->name().c_str());
+  look.execute(being, look_args);
   return true;
 }
 
@@ -467,7 +467,7 @@ Avatar* World::findAvatar(const unsigned long& ID) {
 bool World::removeAvatar(const std::string& name) {
   for (std::map<std::string,Avatar*>::iterator it = getAvatars().begin(); it != getAvatars().end(); ++it) {
     if (it->first == name) {
-      getCreatures().erase(it->second);
+      getBeings().erase(it->second);
       getAvatars().erase(name);
       return true;
     }
@@ -744,7 +744,7 @@ std::string World::realtime(const unsigned long& seconds, unsigned granularity) 
   return buffer;
 }
 
-bool World::search_map(Creature* creature, Room*** map, const unsigned short& ymax, const unsigned short& xmax, const short& y, const short& x, Room* room, std::string** display) {
+bool World::search_map(Being* being, Room*** map, const unsigned short& ymax, const unsigned short& xmax, const short& y, const short& x, Room* room, std::string** display) {
   Exit* exit = NULL;
   short new_x = 0;
   short new_y = 0;
@@ -766,7 +766,7 @@ bool World::search_map(Creature* creature, Room*** map, const unsigned short& ym
   }
   // Store our pointer and map position...
   map[y][x] = room;
-  display[y*2][x*2] = get_marker(creature, room);
+  display[y*2][x*2] = get_marker(being, room);
   // Search from here...
   for (unsigned u = NORTH; u < UP; ++u) {
     new_x = x;
@@ -782,7 +782,7 @@ bool World::search_map(Creature* creature, Room*** map, const unsigned short& ym
       if (exit->flags().test(EXIT_HIDDEN) || exit->targetRoom()->flags().test(ROOM_NOMAP)) {
         continue;
       }
-      if (!World::search_map(creature, map, ymax, xmax, new_y, new_x, room->exit(u)->targetRoom(), display)) {
+      if (!World::search_map(being, map, ymax, xmax, new_y, new_x, room->exit(u)->targetRoom(), display)) {
         return false;
       }
       display[dis_y][dis_x] = dis_s;
@@ -791,9 +791,9 @@ bool World::search_map(Creature* creature, Room*** map, const unsigned short& ym
   return true;
 }
 
-std::string World::get_marker(Creature* creature, Room* room) {
+std::string World::get_marker(Being* being, Room* room) {
   char buf[8];
-  if (creature->room() == room) {
+  if (being->room() == room) {
     return "{c@{x";
   } else {
     sprintf(buf, "{%c%c{x", room->terrain()->map(), '+');

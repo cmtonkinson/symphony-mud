@@ -5,7 +5,7 @@
 #include <set>
 #include "room.h"
 
-class Creature;
+class Being;
 
 class Group {
   public:
@@ -14,22 +14,22 @@ class Group {
     ~Group(void);
 
     // public accessors...
-    std::set<Creature*>&    members(void)       { return _members; }
-    Creature*               leader(void)        { return _leader; }
-    void                    leader(Creature* new_leader);
+    std::set<Being*>&    members(void)       { return _members; }
+    Being*               leader(void)        { return _leader; }
+    void                    leader(Being* new_leader);
 
     // general methods...
     size_t  size(void) const                    { return _members.size(); }
-    void    add_member(Creature* member);
-    void    remove_member(Creature* member);
-    bool    is_member(Creature* c);
+    void    add_member(Being* member);
+    void    remove_member(Being* member);
+    bool    is_member(Being* b);
 
-    void    send(std::string format, Creature* creature, void* arg1 = NULL, void* arg2 = NULL, const unsigned long& target = Room::TO_ROOM);
+    void    send(std::string format, Being* being, void* arg1 = NULL, void* arg2 = NULL, const unsigned long& target = Room::TO_ROOM);
 
   private:
     // data...
-    std::set<Creature*>     _members;
-    Creature*               _leader;
+    std::set<Being*>     _members;
+    Being*               _leader;
 
 };
 

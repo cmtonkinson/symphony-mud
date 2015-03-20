@@ -6,13 +6,13 @@
 
 SCmdAudible::SCmdAudible(void) {
   name("audible");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(0, "");
   brief("Toggles whether or not the social makes a sound when used.");
   return;
 }
 
-bool SCmdAudible::execute(Creature* creature, const std::vector<std::string>& args) {
+bool SCmdAudible::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->sedit()->flags().toggle(COM_AUDIBLE);
   avatar()->send("Audible set to {y%s{x.", avatar()->sedit()->isAudible() ? "yes" : "no");
   return true;
@@ -20,13 +20,13 @@ bool SCmdAudible::execute(Creature* creature, const std::vector<std::string>& ar
 
 SCmdDelete::SCmdDelete(void) {
   name("delete");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(1, "delete");
   brief("Erases the Social Command.");
   return;
 }
 
-bool SCmdDelete::execute(Creature* creature, const std::vector<std::string>& args) {
+bool SCmdDelete::execute(Being* being, const std::vector<std::string>& args) {
   std::string name = avatar()->sedit()->name();
   CmdExit exit;
   std::vector<std::string> exit_args(1);
@@ -40,19 +40,19 @@ bool SCmdDelete::execute(Creature* creature, const std::vector<std::string>& arg
   avatar()->sedit(NULL);
   avatar()->send("Social command \"%s\" deleted.\n", name.c_str());
   exit.avatar(avatar());
-  exit.execute(creature, exit_args);
+  exit.execute(being, exit_args);
   return true;
 }
 
 SCmdInformation::SCmdInformation(void) {
   name("information");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(0, "");
   brief("Displays the current status of the Social Command.");
   return;
 }
 
-bool SCmdInformation::execute(Creature* creature, const std::vector<std::string>& args) {
+bool SCmdInformation::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->send("Command name: {Y%s{x\nCreated by: {y%s{x\nAudible: {y%s{x\nTactile: {y%s{x\n",
                   avatar()->sedit()->name().c_str(),
                   avatar()->sedit()->creator().c_str(),
@@ -90,13 +90,13 @@ bool SCmdInformation::execute(Creature* creature, const std::vector<std::string>
 
 SCmdTactile::SCmdTactile(void) {
   name("tactile");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(0, "");
   brief("Toggles whether or not the social makes contact with the target when used.");
   return;
 }
 
-bool SCmdTactile::execute(Creature* creature, const std::vector<std::string>& args) {
+bool SCmdTactile::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->sedit()->flags().toggle(COM_TACTILE);
   avatar()->send("Tactile set to {y%s{x.", avatar()->sedit()->isTactile() ? "yes" : "no");
   return true;
@@ -104,13 +104,13 @@ bool SCmdTactile::execute(Creature* creature, const std::vector<std::string>& ar
 
 SCmdTargetNone::SCmdTargetNone(void) {
   name("targetnone");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(0, "");
   brief("Toggles whether the Command can be used without a target.");
   return;
 }
 
-bool SCmdTargetNone::execute(Creature* creature, const std::vector<std::string>& args) {
+bool SCmdTargetNone::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->sedit()->targetNone(!avatar()->sedit()->targetNone());
   if (avatar()->sedit()->targetNone()) {
     avatar()->send("{Y%s{x can now be used without any arguments.", avatar()->sedit()->name().c_str());
@@ -124,13 +124,13 @@ bool SCmdTargetNone::execute(Creature* creature, const std::vector<std::string>&
 
 SCmdTargetSelf::SCmdTargetSelf(void) {
   name("targetself");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(0, "");
   brief("Toggles whether the Command can be used on oneself.");
   return;
 }
 
-bool SCmdTargetSelf::execute(Creature* creature, const std::vector<std::string>& args) {
+bool SCmdTargetSelf::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->sedit()->targetSelf(!avatar()->sedit()->targetSelf());
   if (avatar()->sedit()->targetSelf()) {
     avatar()->send("{Y%s{x can now be used on oneself.", avatar()->sedit()->name().c_str());
@@ -144,13 +144,13 @@ bool SCmdTargetSelf::execute(Creature* creature, const std::vector<std::string>&
 
 SCmdTargetVictim::SCmdTargetVictim(void) {
   name("targetvictim");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(0, "");
   brief("Toggles whether the Command can be used on someone else.");
   return;
 }
 
-bool SCmdTargetVictim::execute(Creature* creature, const std::vector<std::string>& args) {
+bool SCmdTargetVictim::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->sedit()->targetVictim(!avatar()->sedit()->targetVictim());
   if (avatar()->sedit()->targetVictim()) {
     avatar()->send("{Y%s{x can now be used on someone else.", avatar()->sedit()->name().c_str());
@@ -164,13 +164,13 @@ bool SCmdTargetVictim::execute(Creature* creature, const std::vector<std::string
 
 SCmdNoneActor::SCmdNoneActor(void) {
   name("noneactor");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(-1, "<string>");
   brief("Changes what the actor sees when using the Command without a target.");
   return;
 }
 
-bool SCmdNoneActor::execute(Creature* creature, const std::vector<std::string>& args) {
+bool SCmdNoneActor::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->sedit()->noneActor(args[0]);
   avatar()->send("noneActor has been set to: {y%s{x", avatar()->sedit()->noneActor().c_str());
   return true;
@@ -178,13 +178,13 @@ bool SCmdNoneActor::execute(Creature* creature, const std::vector<std::string>& 
 
 SCmdNoneRoom::SCmdNoneRoom(void) {
   name("noneroom");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(-1, "<string>");
   brief("Changes what others see when the actor uses Command without a target.");
   return;
 }
 
-bool SCmdNoneRoom::execute(Creature* creature, const std::vector<std::string>& args) {
+bool SCmdNoneRoom::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->sedit()->noneRoom(args[0]);
   avatar()->send("noneRoom has been set to: {y%s{x", avatar()->sedit()->noneRoom().c_str());
   return true;
@@ -192,13 +192,13 @@ bool SCmdNoneRoom::execute(Creature* creature, const std::vector<std::string>& a
 
 SCmdSelfActor::SCmdSelfActor(void) {
   name("selfactor");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(-1, "<string>");
   brief("Changes what the actor sees when using the Social Command on itself.");
   return;
 }
 
-bool SCmdSelfActor::execute(Creature* creature, const std::vector<std::string>& args) {
+bool SCmdSelfActor::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->sedit()->selfActor(args[0]);
   avatar()->send("selfActor has been set to: {y%s{x", avatar()->sedit()->selfActor().c_str());
   return true;
@@ -206,13 +206,13 @@ bool SCmdSelfActor::execute(Creature* creature, const std::vector<std::string>& 
 
 SCmdSelfRoom::SCmdSelfRoom(void) {
   name("selfroom");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(-1, "<string>");
   brief("Changes what others see when the actor uses the Command on itself.");
   return;
 }
 
-bool SCmdSelfRoom::execute(Creature* creature, const std::vector<std::string>& args) {
+bool SCmdSelfRoom::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->sedit()->selfRoom(args[0]);
   avatar()->send("selfRoom has been set to: {y%s{x", avatar()->sedit()->selfRoom().c_str());
   return true;
@@ -220,13 +220,13 @@ bool SCmdSelfRoom::execute(Creature* creature, const std::vector<std::string>& a
 
 SCmdVictimActor::SCmdVictimActor(void) {
   name("victimactor");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(-1, "<string>");
   brief("Changes what the actor sees when using the Command on another.");
   return;
 }
 
-bool SCmdVictimActor::execute(Creature* creature, const std::vector<std::string>& args) {
+bool SCmdVictimActor::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->sedit()->victimActor(args[0]);
   avatar()->send("victimActor has been set to: {y%s{x", avatar()->sedit()->victimActor().c_str());
   return true;
@@ -234,13 +234,13 @@ bool SCmdVictimActor::execute(Creature* creature, const std::vector<std::string>
 
 SCmdVictimVictim::SCmdVictimVictim(void) {
   name("victimvictim");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(-1, "<string>");
   brief("Changes what the victim of the Command sees.");
   return;
 }
 
-bool SCmdVictimVictim::execute(Creature* creature, const std::vector<std::string>& args) {
+bool SCmdVictimVictim::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->sedit()->victimVictim(args[0]);
   avatar()->send("victimVictim has been set to: {y%s{x", avatar()->sedit()->victimVictim().c_str());
   return true;
@@ -248,13 +248,13 @@ bool SCmdVictimVictim::execute(Creature* creature, const std::vector<std::string
 
 SCmdVictimRoom::SCmdVictimRoom(void) {
   name("victimroom");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(-1, "<string>");
   brief("Changes what others see when an actor uses the Command on a victim.");
   return;
 }
 
-bool SCmdVictimRoom::execute(Creature* creature, const std::vector<std::string>& args) {
+bool SCmdVictimRoom::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->sedit()->victimRoom(args[0]);
   avatar()->send("victimRoom has been set to: {y%s{x", avatar()->sedit()->victimRoom().c_str());
   return true;

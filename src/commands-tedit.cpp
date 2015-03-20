@@ -18,7 +18,7 @@ TCmdAppend::TCmdAppend(void) {
   return;
 }
 
-bool TCmdAppend::execute(Creature* creature, const std::vector<std::string>& args) {
+bool TCmdAppend::execute(Being* being, const std::vector<std::string>& args) {
   std::string src = Regex::trim(args[0]);
   std::string* current_line = NULL;
   std::vector<ColorString>* v = (std::vector<ColorString>*)avatar()->IOhandler()->getState()["vector"];
@@ -77,10 +77,10 @@ TCmdCancel::TCmdCancel(void) {
   return;
 }
 
-bool TCmdCancel::execute(Creature* creature, const std::vector<std::string>& args) {
+bool TCmdCancel::execute(Being* being, const std::vector<std::string>& args) {
   switch (avatar()->composing().number()) {
     case COMP_NOTE:
-      avatar()->replaceIOHandler(new NoteCancelIOHandler(creature));
+      avatar()->replaceIOHandler(new NoteCancelIOHandler(being));
       break;
     default:
       avatar()->send("You're not doing anything that can be 'cancelled.'");
@@ -98,7 +98,7 @@ TCmdDelete::TCmdDelete(void) {
   return;
 }
 
-bool TCmdDelete::execute(Creature* creature, const std::vector<std::string>& args) {
+bool TCmdDelete::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<ColorString>* l = (std::vector<ColorString>*)avatar()->IOhandler()->getState()["vector"];
   std::vector<ColorString> copy = *l;
   unsigned int line = estring(args[0]);
@@ -135,7 +135,7 @@ TCmdClear::TCmdClear(void) {
   return;
 }
 
-bool TCmdClear::execute(Creature* creature, const std::vector<std::string>& args) {
+bool TCmdClear::execute(Being* being, const std::vector<std::string>& args) {
   ((std::vector<ColorString>*)avatar()->IOhandler()->getState()["vector"])->clear();
   avatar()->send("Text cleared.");
   return true;
@@ -150,7 +150,7 @@ TCmdInsert::TCmdInsert(void) {
   return;
 }
 
-bool TCmdInsert::execute(Creature* creature, const std::vector<std::string>& args) {
+bool TCmdInsert::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<ColorString>* l = (std::vector<ColorString>*)avatar()->IOhandler()->getState()["vector"];
   unsigned int line = 0;
   unsigned int i = 0;
@@ -184,7 +184,7 @@ TCmdReplace::TCmdReplace(void) {
   return;
 }
 
-bool TCmdReplace::execute(Creature* creature, const std::vector<std::string>& args) {
+bool TCmdReplace::execute(Being* being, const std::vector<std::string>& args) {
   TCmdDelete del;
   std::vector<std::string> del_args;
   TCmdInsert ins;
@@ -192,7 +192,7 @@ bool TCmdReplace::execute(Creature* creature, const std::vector<std::string>& ar
 
   del_args.push_back(args[0]);
   del.avatar(avatar());
-  del.execute(creature, del_args);
+  del.execute(being, del_args);
   ins_args.push_back(args[0]);
   if (args.size() == 2) {
     ins_args.push_back(args[1]);
@@ -200,7 +200,7 @@ bool TCmdReplace::execute(Creature* creature, const std::vector<std::string>& ar
     ins_args.push_back(std::string());
   }
   ins.avatar(avatar());
-  ins.execute(creature, ins_args);
+  ins.execute(being, ins_args);
   return true;
 }
 
@@ -211,10 +211,10 @@ TCmdSend::TCmdSend(void) {
   return;
 }
 
-bool TCmdSend::execute(Creature* creature, const std::vector<std::string>& args) {
+bool TCmdSend::execute(Being* being, const std::vector<std::string>& args) {
   switch (avatar()->composing().number()) {
     case COMP_NOTE:
-      avatar()->replaceIOHandler(new NoteSendIOHandler(creature));
+      avatar()->replaceIOHandler(new NoteSendIOHandler(being));
       break;
     default:
       avatar()->send("You're not doing anything that can be 'sent.'");
@@ -231,7 +231,7 @@ TCmdShow::TCmdShow(void) {
   return;
 }
 
-bool TCmdShow::execute(Creature* creature, const std::vector<std::string>& args) {
+bool TCmdShow::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<ColorString>* l = (std::vector<ColorString>*)avatar()->IOhandler()->getState()["vector"];
   char buffer[4096];
   std::string output;

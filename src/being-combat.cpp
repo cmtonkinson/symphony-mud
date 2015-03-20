@@ -1,26 +1,26 @@
 
 #include "ability.h"
 #include "command.h"
-#include "creature.h"
+#include "being.h"
 #include "display.h"
 #include "object-weapon.h"
 #include "skills.h"
 #include "stats.h"
 #include "world.h"
 
-void Creature::formGroup(void) {
+void Being::formGroup(void) {
   group(new Group());
   group()->add_member(this);
   group()->leader(this);
   return;
 }
 
-void Creature::ungroup(void) {
+void Being::ungroup(void) {
   if (group()->size() == 1) return;
   if (this == group()->leader()) {
     group()->send("$p has disbanded the company.\n", this);
-    std::set<Creature*> temp(group()->members());
-    for (std::set<Creature*>::iterator iter = temp.begin(); iter != temp.end(); ++iter) {
+    std::set<Being*> temp(group()->members());
+    for (std::set<Being*>::iterator iter = temp.begin(); iter != temp.end(); ++iter) {
       if (*iter != this) (*iter)->ungroup();
     }
   }
@@ -31,12 +31,12 @@ void Creature::ungroup(void) {
   return;
 }
 
-void Creature::add_opponent(Creature* opponent, bool reciprocal) {
+void Being::add_opponent(Being* opponent, bool reciprocal) {
   // Clone each pointer set for clarity.
-  std::set<Creature*> groupies(group()->members());
-  std::set<Creature*> other_groupies(opponent->group()->members());
+  std::set<Being*> groupies(group()->members());
+  std::set<Being*> other_groupies(opponent->group()->members());
   // Everyone should be tracking the entire opposing Group, and scheduled to attack.
-  for (std::set<Creature*>::iterator iter = groupies.begin(); iter != groupies.end(); ++iter) {
+  for (std::set<Being*>::iterator iter = groupies.begin(); iter != groupies.end(); ++iter) {
     (*iter)->opponents().insert(other_groupies.begin(), other_groupies.end());
     (*iter)->scheduleAttack();
   }
@@ -45,23 +45,23 @@ void Creature::add_opponent(Creature* opponent, bool reciprocal) {
   return;
 }
 
-void Creature::remove_opponent(Creature* opponent, bool reciprocal) {
+void Being::remove_opponent(Being* opponent, bool reciprocal) {
   opponents().erase(opponent);
   if (reciprocal) opponent->remove_opponent(this, false);
   return;
 }
 
-void Creature::scheduleAttack(void) {
+void Being::scheduleAttack(void) {
   // If there's already a Job scheduled, don't add another.
   if (_next_attack) return;
   // Create the Job, and keep a pointer for future reference.
-  _next_attack = new Job(time(NULL) + 2, this, &Creature::attack);
+  _next_attack = new Job(time(NULL) + 2, this, &Being::attack);
   // Add it to the master schedule.
   World::Instance().schedule()->add(_next_attack);
   return;
 }
 
-bool Creature::attack(Job* job) {
+bool Being::attack(Job* job) {
   Ability* skill = NULL;
   // Clear the Job pointer so a new attack can be scheduled. (The Schedule will automatically
   // delete the Job when it fires, so the pointer will be invalid once this method returns anyway).
@@ -89,8 +89,8 @@ bool Creature::attack(Job* job) {
   return true;
 }
 
-void Creature::acquireTarget(void) {
-  Creature* target  = NULL;
+void Being::acquireTarget(void) {
+  Being* target  = NULL;
   bool valid_target = false;
   _target           = NULL;
   while (!opponents().empty()) {
@@ -99,7 +99,7 @@ void Creature::acquireTarget(void) {
     // You can't attack someone in a different room.
     if (target->room() != room()) valid_target = false;
     // You can't attack someone you can't see.
-    if (canSee(target) != Creature::SEE_NAME) valid_target = false;
+    if (canSee(target) != Being::SEE_NAME) valid_target = false;
     // Either return the target, or remove it from the opponent list.
     if (valid_target) {
       _target = target;
@@ -113,7 +113,7 @@ void Creature::acquireTarget(void) {
   return;
 }
 
-void Creature::strike(void) {
+void Being::strike(void) {
   int damage = 0;
   std::string weapon_damage;
   Object* object = NULL;
@@ -137,7 +137,7 @@ void Creature::strike(void) {
   return;
 }
 
-void Creature::takeDamage(int damage, Creature* damager) {
+void Being::takeDamage(int damage, Being* damager) {
   if (damager) add_opponent(damager);
   health(health() - damage);
   deplete_stamina(1);
@@ -146,7 +146,7 @@ void Creature::takeDamage(int damage, Creature* damager) {
   return;
 }
 
-void Creature::die(Creature* killer) {
+void Being::die(Being* killer) {
   unsigned experience = 0;
   // Stop fighting. Ain't nobody got time for zombies.
   peace();
@@ -166,7 +166,7 @@ void Creature::die(Creature* killer) {
   if (killer) {
     experience = killer->level() * 10;
     if (killer->group()->size() > 1) {
-      for (std::set<Creature*>::iterator iter = killer->group()->members().begin(); iter != killer->group()->members().end(); ++iter) {
+      for (std::set<Being*>::iterator iter = killer->group()->members().begin(); iter != killer->group()->members().end(); ++iter) {
         (*iter)->awardExperience(experience / killer->group()->size());
       }
     } else {
@@ -176,7 +176,7 @@ void Creature::die(Creature* killer) {
   return;
 }
 
-void Creature::peace(void) {
+void Being::peace(void) {
   // Stop tracking opponents.
   while (!opponents().empty()) remove_opponent(*opponents().begin());
   // Don't attack anymore.
@@ -187,7 +187,7 @@ void Creature::peace(void) {
   return;
 }
 
-void Creature::awardExperience(unsigned experience) {
+void Being::awardExperience(unsigned experience) {
   if (level() >= HERO) return;
   send("You gain {Y%u{x experience points!\n", experience);
   exp(exp() + experience);
@@ -204,7 +204,7 @@ void Creature::awardExperience(unsigned experience) {
   return;
 }
 
-void Creature::gainLevel(void) {
+void Being::gainLevel(void) {
   unsigned new_level = level() + 1;
   unsigned new_tnl   = Stats::polynomial(new_level, BASE_TNL, targetTNL());
   int health_boost   = Stats::logistic(new_level, MIN_HEALTH_GAIN, targetHealth());
@@ -215,7 +215,7 @@ void Creature::gainLevel(void) {
   maxHealth(maxHealth() + health_boost);
   maxMana(maxMana() + mana_boost);
   trains(trains() + trains_boost);
-  // Clear TNL if the Creature just hero'd
+  // Clear TNL if the Being just hero'd
   if (level() < HERO) {
     tnl(new_tnl);
   } else {
@@ -235,18 +235,18 @@ void Creature::gainLevel(void) {
   return;
 }
 
-bool Creature::autoassist(void) const {
+bool Being::autoassist(void) const {
   return true;
 }
 
-void Creature::heal(void) {
+void Being::heal(void) {
   health(maxHealth());
   mana(maxMana());
   stamina(MAX_STAMINA);
   return;
 }
 
-unsigned Creature::targetHealth(void) const {
+unsigned Being::targetHealth(void) const {
   switch (pClass().number()) {
     case CLERIC:  return 2500;
     case MAGE:    return 2000;
@@ -256,7 +256,7 @@ unsigned Creature::targetHealth(void) const {
   return 1;
 }
 
-unsigned Creature::targetMana(void) const {
+unsigned Being::targetMana(void) const {
   switch (pClass().number()) {
     case CLERIC:  return 2500;
     case MAGE:    return 3000;
@@ -266,15 +266,15 @@ unsigned Creature::targetMana(void) const {
   return 1;
 }
 
-unsigned Creature::targetMovement(void) const {
+unsigned Being::targetMovement(void) const {
   return 1000;
 }
 
-unsigned Creature::targetTNL(void) const {
+unsigned Being::targetTNL(void) const {
   return TARGET_TNL;
 }
 
-void Creature::resetStats(void) {
+void Being::resetStats(void) {
   level(1);
   exp(BASE_EXP);
   tnl(BASE_TNL);

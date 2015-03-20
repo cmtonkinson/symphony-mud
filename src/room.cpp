@@ -77,40 +77,40 @@ void Room::executeLoadRules(void) {
   return;
 }
 
-void Room::send(std::string format, Creature* creature, void* arg1, void* arg2, unsigned long target) {
+void Room::send(std::string format, Being* being, void* arg1, void* arg2, unsigned long target) {
   std::string message;
 
   format = Regex::trim(format).append(1, '\n');
-  for (std::list<Creature*>::iterator c_it = creatures().begin(); c_it != creatures().end(); ++c_it) {
+  for (std::list<Being*>::iterator c_it = beings().begin(); c_it != beings().end(); ++c_it) {
     // Skip if the target is wrong...
-    if  (   (target == TO_CREATURE  && *c_it != creature)
+    if  (   (target == TO_BEING  && *c_it != being)
           || (target == TO_VICT      && (*c_it != arg1 || *c_it != arg2))
-          || (target == TO_NOTVICT   && (*c_it == creature || *c_it == arg1 || *c_it == arg2))
-          || (target == TO_ROOM      && *c_it == creature)
+          || (target == TO_NOTVICT   && (*c_it == being || *c_it == arg1 || *c_it == arg2))
+          || (target == TO_ROOM      && *c_it == being)
        ) {
       continue;
     }
-    (*c_it)->send(Display::formatAction(format.c_str(), creature, arg1, arg2, *c_it));
+    (*c_it)->send(Display::formatAction(format.c_str(), being, arg1, arg2, *c_it));
   }
   return;
 }
 
-void Room::send_cond(std::string format, Creature* creature, void* arg1, void* arg2, unsigned long target, bool audible) {
+void Room::send_cond(std::string format, Being* being, void* arg1, void* arg2, unsigned long target, bool audible) {
   std::string message;
 
   format = Regex::trim(format).append(1, '\n');
-  for (std::list<Creature*>::iterator c_it = creatures().begin(); c_it != creatures().end(); ++c_it) {
+  for (std::list<Being*>::iterator c_it = beings().begin(); c_it != beings().end(); ++c_it) {
     // Skip if the target is wrong...
-    if  (   (target == TO_CREATURE  && *c_it != creature)
+    if  (   (target == TO_BEING  && *c_it != being)
           || (target == TO_VICT      && (*c_it != arg1 || *c_it != arg2))
-          || (target == TO_NOTVICT   && (*c_it == creature || *c_it == arg1 || *c_it == arg2))
-          || (target == TO_ROOM      && *c_it == creature)
+          || (target == TO_NOTVICT   && (*c_it == being || *c_it == arg1 || *c_it == arg2))
+          || (target == TO_ROOM      && *c_it == being)
        ) {
       continue;
     }
     // Only send if the actor can be seen or heard...
-    if ((*c_it)->canSee(creature) > Creature::SEE_NOTHING || audible) {
-      (*c_it)->send(Display::formatAction(format.c_str(), creature, arg1, arg2, *c_it));
+    if ((*c_it)->canSee(being) > Being::SEE_NOTHING || audible) {
+      (*c_it)->send(Display::formatAction(format.c_str(), being, arg1, arg2, *c_it));
     }
   }
   return;
@@ -149,12 +149,12 @@ void Room::destroy(void) {
   return;
 }
 
-// Uses a wormhole to clear all Creatures and Objects from the Room,
+// Uses a wormhole to clear all Beings and Objects from the Room,
 // moving them to the Tundra.
 bool Room::clear(void) {
-  // Clear Creatures...
-  while (creatures().size()) {
-    if (!World::Instance().transport(*(creatures().begin()), 0)) {
+  // Clear Beings...
+  while (beings().size()) {
+    if (!World::Instance().transport(*(beings().begin()), 0)) {
       return false;
     }
   }
@@ -176,11 +176,11 @@ void Room::reset(void) {
   return;
 }
 
-Creature* Room::creature_by_vnum(unsigned long vnum, unsigned index) {
-  std::list<Creature*>::iterator iter;
-  std::list<Creature*> matches;
+Being* Room::being_by_vnum(unsigned long vnum, unsigned index) {
+  std::list<Being*>::iterator iter;
+  std::list<Being*> matches;
   // Find all vnum matches.
-  for (iter = creatures().begin(); iter != creatures().end(); ++iter) {
+  for (iter = beings().begin(); iter != beings().end(); ++iter) {
     if (!(*iter)->isMob()) continue;
     if (((Mob*)(*iter))->vnum() == vnum) matches.push_back(*iter);
   }

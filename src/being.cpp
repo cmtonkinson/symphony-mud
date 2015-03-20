@@ -2,7 +2,7 @@
 #include "ability.h"
 #include "area.h"
 #include "commandTable-default.h"
-#include "creature.h"
+#include "being.h"
 #include "display.h"
 #include "exit.h"
 #include "group.h"
@@ -14,7 +14,7 @@
 #include "stats.h"
 #include "world.h"
 
-Creature::Creature(void):
+Being::Being(void):
     _inventory(&Identifiers::shortname) {
   ID(0);
   room(NULL);
@@ -70,7 +70,7 @@ Creature::Creature(void):
   return;
 }
 
-Creature::Creature(const Creature& ref):
+Being::Being(const Being& ref):
     _identifiers(ref.identifiers()),
     _inventory(ref.inventory()),
     _equipment(ref.equipment()),
@@ -127,46 +127,46 @@ Creature::Creature(const Creature& ref):
   return;
 }
 
-Creature::~Creature(void) {
+Being::~Being(void) {
   for (std::vector<IOHandler*>::iterator it = IOhandlers().begin(); IOhandlers().size();) {
     delete *it;
     it = IOhandlers().erase(it);
   }
-  // Remove the Creature from its group.
+  // Remove the Being from its group.
   ungroup();
-  // Remove any Jobs set on this Creature.
+  // Remove any Jobs set on this Being.
   World::Instance().schedule()->cleanup(this);
   return;
 }
 
-IOHandler* Creature::IOhandler(void) {
+IOHandler* Being::IOhandler(void) {
   return IOhandlers().back();
 }
 
-void Creature::pushIOHandler(IOHandler* handler) {
+void Being::pushIOHandler(IOHandler* handler) {
   IOhandlers().push_back(handler);
   handler->activate();
   return;
 }
 
-void Creature::popIOHandler(void) {
+void Being::popIOHandler(void) {
   IOhandlers().back()->deactivate();
   IOhandlers().pop_back();
   return;
 }
 
-void Creature::replaceIOHandler(IOHandler* handler) {
+void Being::replaceIOHandler(IOHandler* handler) {
   popIOHandler();
   pushIOHandler(handler);
   return;
 }
 
-void Creature::handle(void) {
+void Being::handle(void) {
   IOhandlers().back()->handle();
   return;
 }
 
-Klass* Creature::klass(void) const {
+Klass* Being::klass(void) const {
   switch (pClass().number()) {
     case CLERIC:  return &Cleric::Instance();
     case MAGE:    return &Mage::Instance();
@@ -176,7 +176,7 @@ Klass* Creature::klass(void) const {
   }
 }
 
-void Creature::naturalStatAdjustment(void) {
+void Being::naturalStatAdjustment(void) {
   unsigned short Str = 0;
   unsigned short Dex = 0;
   unsigned short Con = 0;
@@ -249,7 +249,7 @@ void Creature::naturalStatAdjustment(void) {
   return;
 }
 
-std::string Creature::serializeAbilities(void) {
+std::string Being::serializeAbilities(void) {
   std::vector<std::string> foo;
   char buf[128];
   for (auto iter : abilityMastery()) {
@@ -259,7 +259,7 @@ std::string Creature::serializeAbilities(void) {
   return Regex::implode("~", foo);
 }
 
-void Creature::unserializeAbilities(std::string ser) {
+void Being::unserializeAbilities(std::string ser) {
   Ability* ability = nullptr;
   unsigned mastery = 0;
   std::vector<std::string> foo = Regex::explode("~", ser);
@@ -273,19 +273,19 @@ void Creature::unserializeAbilities(std::string ser) {
   return;
 }
 
-Creature* Creature::findCreature(const std::string& name) {
+Being* Being::findBeing(const std::string& name) {
   if (name == "self") {
     return this;
   }
-  for (std::list<Creature*>::iterator it = room()->creatures().begin(); it != room()->creatures().end(); ++it) {
-    if ((*it)->identifiers().matchesKeyword(name) && canSee(*it) == Creature::SEE_NAME) {
+  for (std::list<Being*>::iterator it = room()->beings().begin(); it != room()->beings().end(); ++it) {
+    if ((*it)->identifiers().matchesKeyword(name) && canSee(*it) == Being::SEE_NAME) {
       return *it;
     }
   }
   return NULL;
 }
 
-Object* Creature::findObject(const std::string& query) {
+Object* Being::findObject(const std::string& query) {
   Object* o = NULL;
   if ((o = inventory().searchSingleObject(query)) == NULL) {
     if ((o = equipment().searchSingleObject(query)) == NULL) {
@@ -297,7 +297,7 @@ Object* Creature::findObject(const std::string& query) {
   return o;
 }
 
-unsigned short Creature::getWearloc(const Object::Wearable& wearable) const {
+unsigned short Being::getWearloc(const Object::Wearable& wearable) const {
   switch (wearable) {
     case Object::Wearable_Head:       return WEARLOC_HEAD;
     case Object::Wearable_Ear:        return WEARLOC_EAR_L;
@@ -321,7 +321,7 @@ unsigned short Creature::getWearloc(const Object::Wearable& wearable) const {
   }
 }
 
-const char* Creature::wearLocName(const unsigned short& wearloc) {
+const char* Being::wearLocName(const unsigned short& wearloc) {
   switch (wearloc) {
     case WEARLOC_HEAD:      return "<{ghead{x>          ";
     case WEARLOC_EAR_L:     return "<{gleft ear{x>      ";
@@ -354,7 +354,7 @@ const char* Creature::wearLocName(const unsigned short& wearloc) {
   }
 }
 
-bool Creature::wear(Object* article, std::string& message, Object*& removed) {
+bool Being::wear(Object* article, std::string& message, Object*& removed) {
   int location = getWearloc(article->wearable());
 
   // make sure we can wear it...
@@ -412,7 +412,7 @@ bool Creature::wear(Object* article, std::string& message, Object*& removed) {
   return true;
 }
 
-bool Creature::unwear(Object* article, std::string& message, bool force) {
+bool Being::unwear(Object* article, std::string& message, bool force) {
   if (!force) {
     if (article->flags().test(OBJECT_NOREMOVE)) {
       message.assign("You can't remove ").append(article->identifiers().shortname().c_str()).append("{x.");
@@ -431,7 +431,7 @@ bool Creature::unwear(Object* article, std::string& message, bool force) {
   return false;
 }
 
-Object* Creature::worn(const int& location) const {
+Object* Being::worn(const int& location) const {
   std::map<int,Object*>::const_iterator it;
   if ((it = equipment().objectMap().find(location)) != equipment().objectMap().end()) {
     return it->second;
@@ -439,7 +439,7 @@ Object* Creature::worn(const int& location) const {
   return NULL;
 }
 
-bool Creature::isSingleWearLoc(const unsigned short& object_weartype) {
+bool Being::isSingleWearLoc(const unsigned short& object_weartype) {
   switch (object_weartype) {
     case Object::Wearable_Head:
     case Object::Wearable_Face:
@@ -456,15 +456,15 @@ bool Creature::isSingleWearLoc(const unsigned short& object_weartype) {
   }
 }
 
-Object* Creature::primary(void) {
+Object* Being::primary(void) {
   return equipment().at(hand());
 }
 
-Object* Creature::secondary(void) {
+Object* Being::secondary(void) {
   return equipment().at(off_hand());
 }
 
-bool Creature::lay(std::string& error, ObjFurniture* furniture) {
+bool Being::lay(std::string& error, ObjFurniture* furniture) {
   if (isLaying()) {
     error.assign("You're already laying down.");
     return false;
@@ -487,7 +487,7 @@ bool Creature::lay(std::string& error, ObjFurniture* furniture) {
   return true;
 }
 
-bool Creature::sit(std::string& error, ObjFurniture* furniture, bool on) {
+bool Being::sit(std::string& error, ObjFurniture* furniture, bool on) {
   EnumInt pos = on? FURN_SIT_ON : FURN_SIT_AT;
   if (isSitting()) {
     error.assign("You're already sitting.");
@@ -515,7 +515,7 @@ bool Creature::sit(std::string& error, ObjFurniture* furniture, bool on) {
   return true;
 }
 
-bool Creature::stand(std::string& error) {
+bool Being::stand(std::string& error) {
   if (isStanding()) {
     error.assign("You're already standing.");
     return false;
@@ -532,7 +532,7 @@ bool Creature::stand(std::string& error) {
   return true;
 }
 
-unsigned short Creature::stringToAttribute(const std::string& name) {
+unsigned short Being::stringToAttribute(const std::string& name) {
   if (Regex::strPrefix(name, "health")) {
     return ATTR_MAX_HEALTH;
   } else if (Regex::strPrefix(name, "mana")) {
@@ -570,7 +570,7 @@ unsigned short Creature::stringToAttribute(const std::string& name) {
   }
 }
 
-const char* Creature::attributeToString(const unsigned short& index) {
+const char* Being::attributeToString(const unsigned short& index) {
   switch (index) {
     case ATTR_MAX_HEALTH: return "health";
     case ATTR_MAX_MANA:   return "mana";
@@ -592,7 +592,7 @@ const char* Creature::attributeToString(const unsigned short& index) {
   }
 }
 
-std::string Creature::listAttributes(void) {
+std::string Being::listAttributes(void) {
   std::string output;
   for (unsigned i = ATTR_BEGIN; i < ATTR_END; ++i) {
     output.append(attributeToString(i)).append(1, ' ');
@@ -603,33 +603,33 @@ std::string Creature::listAttributes(void) {
   return output;
 }
 
-void Creature::setModifications(Object* object) {
+void Being::setModifications(Object* object) {
   for (std::list<Modifier*>::const_iterator it = object->modifiers().begin(); it != object->modifiers().end(); ++it) {
     modify(*it);
   }
   return;
 }
 
-void Creature::unsetModifications(Object* object) {
+void Being::unsetModifications(Object* object) {
   for (std::list<Modifier*>::const_iterator it = object->modifiers().begin(); it != object->modifiers().end(); ++it) {
     unmodify(*it);
   }
   return;
 }
 
-void Creature::modify(Modifier* modifier) {
+void Being::modify(Modifier* modifier) {
   doModification(modifier->attribute(), modifier->magnitude());
   modifiers().push_back(modifier);
   return;
 }
 
-void Creature::unmodify(Modifier* modifier) {
+void Being::unmodify(Modifier* modifier) {
   doModification(modifier->attribute(), -(modifier->magnitude()));
   modifiers().remove(modifier);
   return;
 }
 
-void Creature::doModification(const unsigned short& attribute, const int& magnitude) {
+void Being::doModification(const unsigned short& attribute, const int& magnitude) {
   switch (attribute) {
     case ATTR_MAX_HEALTH: _maxHealth    += magnitude; break;
     case ATTR_MAX_MANA:   _maxMana      += magnitude; break;
@@ -651,27 +651,27 @@ void Creature::doModification(const unsigned short& attribute, const int& magnit
   return;
 }
 
-unsigned short Creature::canSee(Creature* target) {
+unsigned short Being::canSee(Being* target) {
   // Check for immortal invisibility...
   if (target->isAvatar()) {
     if (((Avatar*)target)->adminFlags().test(ADMIN_INCOGNITO) && target->level() > level() && ((Avatar*)target)->isConnected()) {
-      return Creature::SEE_NOTHING;
+      return Being::SEE_NOTHING;
     }
   }
-  return Creature::SEE_NAME;
+  return Being::SEE_NAME;
 }
 
-std::string Creature::seeName(Creature* target, bool capitalize) {
-  if (canSee(target) == Creature::SEE_NAME) {
+std::string Being::seeName(Being* target, bool capitalize) {
+  if (canSee(target) == Being::SEE_NAME) {
     return target->identifiers().shortname();
   } else {
     return capitalize ? "Someone" : "someone";
   }
 }
 
-const char* Creature::seeReflexivePronoun(Creature* target, bool capitalize) {
+const char* Being::seeReflexivePronoun(Being* target, bool capitalize) {
   switch (canSee(target)) {
-    case Creature::SEE_NAME:
+    case Being::SEE_NAME:
       switch (target->gender().number()) {
         case MALE:    return capitalize ? "Himself" : "himself";
         case FEMALE:  return capitalize ? "Herself" : "herself";
@@ -682,9 +682,9 @@ const char* Creature::seeReflexivePronoun(Creature* target, bool capitalize) {
   }
 }
 
-const char* Creature::seeObjectPronoun(Creature* target, bool capitalize) {
+const char* Being::seeObjectPronoun(Being* target, bool capitalize) {
   switch (canSee(target)) {
-    case Creature::SEE_NAME:
+    case Being::SEE_NAME:
       switch (target->gender().number()) {
         case MALE:    return capitalize ? "Him" : "him";
         case FEMALE:  return capitalize ? "Her" : "her";
@@ -695,9 +695,9 @@ const char* Creature::seeObjectPronoun(Creature* target, bool capitalize) {
   }
 }
 
-const char* Creature::seePosessivePronoun(Creature* target, bool capitalize) {
+const char* Being::seePosessivePronoun(Being* target, bool capitalize) {
   switch (canSee(target)) {
-    case Creature::SEE_NAME:
+    case Being::SEE_NAME:
       switch (target->gender().number()) {
         case MALE:    return capitalize ? "His" : "his";
         case FEMALE:  return capitalize ? "Her" : "her";
@@ -708,23 +708,23 @@ const char* Creature::seePosessivePronoun(Creature* target, bool capitalize) {
   }
 }
 
-unsigned short Creature::canSee(Object* target) {
-  return Creature::SEE_NAME;
+unsigned short Being::canSee(Object* target) {
+  return Being::SEE_NAME;
 }
 
-std::string Creature::seeName(Object* target, bool capitalize) {
-  if (canSee(target) == Creature::SEE_NAME) {
+std::string Being::seeName(Object* target, bool capitalize) {
+  if (canSee(target) == Being::SEE_NAME) {
     return target->identifiers().shortname();
   } else {
     return capitalize ? "Something" : "something";
   }
 }
 
-bool Creature::canAlter(Creature* target) {
+bool Being::canAlter(Being* target) {
   return target->level() < level() - ALTERABILITY_LEVEL_DIFFERENCE;
 }
 
-bool Creature::canMove(const unsigned short& direction, std::string& message) {
+bool Being::canMove(const unsigned short& direction, std::string& message) {
   Exit* exit = NULL;
 
   if ((exit = room()->exit(direction)) == NULL) {
@@ -740,7 +740,7 @@ bool Creature::canMove(const unsigned short& direction, std::string& message) {
   return true;
 }
 
-bool Creature::move(const unsigned short& direction) {
+bool Being::move(const unsigned short& direction) {
   // For standard movement...
   Exit* exit = room()->exit(direction);
   Room* from = room();
@@ -748,7 +748,7 @@ bool Creature::move(const unsigned short& direction) {
   CmdLook look;
   std::vector<std::string> look_args(1);
   // For group movement...
-  Creature* member = NULL;
+  Being* member = NULL;
   std::string message;
 
   if (!deplete_stamina(1)) return false;
@@ -784,7 +784,7 @@ bool Creature::move(const unsigned short& direction) {
   // If this is the leader of a non-empty Group, invoke movement in the other
   // members as well.
   if (group()->leader() == this && group()->members().size() > 1) {
-    for (std::set<Creature*>::iterator it = group()->members().begin(); it != group()->members().end(); ++it) {
+    for (std::set<Being*>::iterator it = group()->members().begin(); it != group()->members().end(); ++it) {
       member = *it;
       // Don't follow yourself.
       if (member == this) continue;
@@ -804,19 +804,19 @@ bool Creature::move(const unsigned short& direction) {
   return true;
 }
 
-// Precondition: the Creature has learned the Ability.
-unsigned Creature::mastery(Ability* ability) {
+// Precondition: the Being has learned the Ability.
+unsigned Being::mastery(Ability* ability) {
   std::map<Ability*,unsigned>::const_iterator iter = abilityMastery().find(ability);
   return iter->second;
 }
 
-void Creature::learn(Ability* ability, unsigned mastery) {
+void Being::learn(Ability* ability, unsigned mastery) {
   learned().insert(ability);
   abilityMastery()[ability] = mastery;
   return;
 }
 
-void Creature::improve(Ability* ability, bool success) {
+void Being::improve(Ability* ability, bool success) {
   if (success) {
     send("You improve upon your '{m%s{x' ability!\n", ability->name().c_str());
   } else {
@@ -827,7 +827,7 @@ void Creature::improve(Ability* ability, bool success) {
   return;
 }
 
-std::set<Ability*> Creature::available_abilities(void) const {
+std::set<Ability*> Being::available_abilities(void) const {
   std::set<Ability*> available;
   for (std::set<Ability*>::const_iterator iter = klass()->abilities().abilities().begin(); iter != klass()->abilities().abilities().end(); ++iter) {
     if (can_learn(*iter)) available.insert(*iter);
@@ -835,7 +835,7 @@ std::set<Ability*> Creature::available_abilities(void) const {
   return available;
 }
 
-bool Creature::can_learn(Ability* ability) const {
+bool Being::can_learn(Ability* ability) const {
   // Can't learn something twice.
   if (learned().contains(ability)) return false;
   // You need to be a high enough level.
@@ -850,7 +850,7 @@ bool Creature::can_learn(Ability* ability) const {
   return true;
 }
 
-Ability* Creature::find_spell(std::string name) const {
+Ability* Being::find_spell(std::string name) const {
   AbilityMap::const_iterator map_iter;
   std::set<Ability*>::const_iterator set_iter;
 
@@ -867,13 +867,13 @@ Ability* Creature::find_spell(std::string name) const {
   return NULL;
 }
 
-bool Creature::deplete_mana(unsigned mana_, bool message) {
+bool Being::deplete_mana(unsigned mana_, bool message) {
   if (!check_mana(mana_, message)) return false;
   mana(mana() - mana_);
   return true;
 }
 
-bool Creature::check_mana(unsigned mana_, bool message) {
+bool Being::check_mana(unsigned mana_, bool message) {
   if (mana() < mana_) {
     if (message) send("You don't have enough mana for that.\n");
     return false;
@@ -881,11 +881,11 @@ bool Creature::check_mana(unsigned mana_, bool message) {
   return true;
 }
 
-bool Creature::exhausted(void) const {
+bool Being::exhausted(void) const {
   return stamina() < 1;
 }
 
-bool Creature::deplete_stamina(unsigned stamina_, bool message) {
+bool Being::deplete_stamina(unsigned stamina_, bool message) {
   if (exhausted()) {
     if (message) send("You are exhausted.\n");
     return false;
@@ -895,7 +895,7 @@ bool Creature::deplete_stamina(unsigned stamina_, bool message) {
   return true;
 }
 
-bool Creature::check_stamina(unsigned stamina_, bool message) {
+bool Being::check_stamina(unsigned stamina_, bool message) {
   if (stamina() < stamina_) {
     if (message) send("You don't have the stamina for that.\n");
     return false;

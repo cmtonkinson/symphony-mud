@@ -145,19 +145,19 @@ class Storage {
     static bool load(FILE* fp, Note* loading);
 
     // dump() and load() can be overloaded ad nauseum, as long as no method signatures contains a
-    // type which is a subclass of another (e.g. Creature and Mob or Avatar). In that case, the
+    // type which is a subclass of another (e.g. Being and Mob or Avatar). In that case, the
     // rules of implicit parametric polymorphism invoke the most-specific method for a given
     // signature match regardless of explicit casting, etc. In those cases, a different method
     // name is required to distinguish base class calls from subclass calls.
     //
     // This is primarily an issue when there is sufficient state in a base class with more than one
-    // descendent class so as to desire DRYing out the common storage logic (again as in Creature,
+    // descendent class so as to desire DRYing out the common storage logic (again as in Being,
     // Mob, and Avatar).
     //
     // For this purpose the names dump_base() and load_base() are arbitrarily used.
 
-    static void dump_base(FILE* fp, Creature* creature);
-    static bool load_base(FILE* fp, Creature* loading);
+    static void dump_base(FILE* fp, Being* being);
+    static bool load_base(FILE* fp, Being* loading);
 
     // Centralized file pathing.
     static std::string avatar_glob_pattern(void);

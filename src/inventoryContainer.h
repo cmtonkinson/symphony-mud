@@ -11,7 +11,7 @@ class Object;
 
 /*
  * The reason for the getName pointer is that sometimse it's necessary to to display a different
- * identifier when producing a list of Objects. For example, a Creature inventory will display the
+ * identifier when producing a list of Objects. For example, a Being inventory will display the
  * shortname() of an Object, while a Room inventory will display the longname().
  */
 class InventoryContainer: public Container {

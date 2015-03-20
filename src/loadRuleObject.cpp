@@ -49,7 +49,7 @@ bool LoadRuleObject::execute(std::list<Object*>& new_objects, std::list<Mob*>& n
   std::map<unsigned long,Object*>::iterator it;
   Area* area = room()->area();
   Object* object = NULL;
-  Creature* creature = NULL;
+  Being* being = NULL;
   unsigned already_there = room()->inventory().howManyObjects(target());
   unsigned objects_added = 0;
   CmdGet get;
@@ -74,16 +74,16 @@ bool LoadRuleObject::execute(std::list<Object*>& new_objects, std::list<Mob*>& n
       new_objects.push_back(object);
       objects_added++;
       if (preposition() == CARRY || preposition() == WEAR) {
-        creature = room()->creature_by_vnum(indirectObject(), indirectObjectIndex());
-        if (creature == NULL) {
+        being = room()->being_by_vnum(indirectObject(), indirectObjectIndex());
+        if (being == NULL) {
           World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset an object. Object %lu in area %lu loaded, but can't find mob %lu#%hu ", target(), area->ID(), indirectObject(), indirectObjectIndex());
           return false;
         }
         args[0] = object->identifiers().longestKeyword();
         // Pick up the item.
-        get.execute(creature, args);
+        get.execute(being, args);
         // Wear it, if applicable.
-        if (preposition() == WEAR) wear.execute(creature, args);
+        if (preposition() == WEAR) wear.execute(being, args);
       }
     }
   }

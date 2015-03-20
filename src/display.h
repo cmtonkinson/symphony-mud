@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
-#include "creature.h"
+#include "being.h"
 #include "regex.h"
 
 class Display {
@@ -19,7 +19,7 @@ class Display {
     ~Display(void);
 
     static std::string  formatColumns(const std::vector<std::string>& items);
-    static std::string  formatAction(const char* format, Creature* creature, void* arg1, void* arg2, Creature* withRespectTo);
+    static std::string  formatAction(const char* format, Being* being, void* arg1, void* arg2, Being* withRespectTo);
     static std::string  formatDamage(unsigned int damage);
 };
 

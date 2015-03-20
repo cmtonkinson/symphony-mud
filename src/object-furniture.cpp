@@ -1,5 +1,5 @@
 
-#include "creature.h"
+#include "being.h"
 #include "object-furniture.h"
 
 ObjFurniture::ObjFurniture(void):
@@ -26,7 +26,7 @@ ObjFurniture::~ObjFurniture(void) {
   return;
 }
 
-bool ObjFurniture::add(Creature* creature, const EnumInt& position) {
+bool ObjFurniture::add(Being* being, const EnumInt& position) {
   // check overall capacity...
   if (current() >= capacity()) {
     return false;
@@ -34,41 +34,41 @@ bool ObjFurniture::add(Creature* creature, const EnumInt& position) {
   // check specific positional capacities...
   switch (position) {
     case FURN_LAY_ON:
-      if (creatures()[FURN_LAY_ON].size() >= layOn()) {
+      if (beings()[FURN_LAY_ON].size() >= layOn()) {
         return false;
       }
       break;
     case FURN_SIT_AT:
-      if (creatures()[FURN_SIT_AT].size() >= sitAt()) {
+      if (beings()[FURN_SIT_AT].size() >= sitAt()) {
         return false;
       }
       break;
     case FURN_SIT_ON:
-      if (creatures()[FURN_SIT_ON].size() >= sitOn()) {
+      if (beings()[FURN_SIT_ON].size() >= sitOn()) {
         return false;
       }
       break;
     case FURN_STAND_ON:
-      if (creatures()[FURN_STAND_ON].size() >= standOn()) {
+      if (beings()[FURN_STAND_ON].size() >= standOn()) {
         return false;
       }
       break;
     default:
       return false;
   }
-  // add the creature...
-  creatures()[position].push_back(creature);
+  // add the being...
+  beings()[position].push_back(being);
   current(current()+1);
   return true;
 }
 
-bool ObjFurniture::remove(Creature* creature) {
-  std::map<EnumInt,std::list<Creature*> >::iterator map_it;
-  std::list<Creature*>::iterator list_it;
-  if (!creatures().empty()) {
-    for (map_it = creatures().begin(); map_it != creatures().end(); ++map_it) {
+bool ObjFurniture::remove(Being* being) {
+  std::map<EnumInt,std::list<Being*> >::iterator map_it;
+  std::list<Being*>::iterator list_it;
+  if (!beings().empty()) {
+    for (map_it = beings().begin(); map_it != beings().end(); ++map_it) {
       for (list_it = map_it->second.begin(); list_it != map_it->second.end(); ++list_it) {
-        if (*list_it == creature) {
+        if (*list_it == being) {
           map_it->second.erase(list_it);
           current(current()-1);
           return true;

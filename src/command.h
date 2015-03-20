@@ -12,7 +12,7 @@ typedef std::map<std::string,std::string> OptionMap;
 
 class Avatar;
 class CommandTable;
-class Creature;
+class Being;
 
 ///////////////////////////////////////////// BASE CLASS /////////////////////////////////////////////
 class Command {
@@ -63,7 +63,7 @@ class Command {
     void            notAllowedWhile(const unsigned long& positions)       { allowedPositions(~positions); }
     void            addOptions(std::string argument, std::string option_list);
     void            seeAlso(std::string command);
-    virtual bool    execute(Creature* creature, const std::vector<std::string>& args) { return false; }
+    virtual bool    execute(Being* being, const std::vector<std::string>& args) { return false; }
 
     bool            isEnabled(void) const     { return flags().test(COM_ENABLED); }
     bool            isPlayerOnly(void) const  { return flags().test(COM_PLAYERONLY); }
@@ -88,7 +88,7 @@ class Command {
     std::set<std::string>     _seeAlso;           // set of other commands to reference while trawling the documentation.
     OptionMap                 _options;           // lists any finite and enumerable options for the help view
     CommandTable*             _commandTable;      // in which CommandTable does this Command live?
-    Avatar*                   _avatar;            // automatically assigned from the Creature* parameter when _playerOnly is set
+    Avatar*                   _avatar;            // automatically assigned from the Being* parameter when _playerOnly is set
     FlagBank                  _flags;
 };
 
@@ -100,7 +100,7 @@ class NAME: public Command {                                                    
     NAME(void);                                                                     \
     virtual ~NAME(void) { }                                                         \
                                                                                     \
-    virtual bool execute(Creature* creature, const std::vector<std::string>& args); \
+    virtual bool execute(Being* being, const std::vector<std::string>& args); \
 };                                                                                  \
 
 ///////////////////////////////////////////// SOCIALS /////////////////////////////////////////////
@@ -143,7 +143,7 @@ class SocialCommand: public Command {
     void                  destroy(void);
     void                  save(void);
     static SocialCommand* load(std::string filename);
-    virtual bool          execute(Creature* creature, const std::vector<std::string>& args);
+    virtual bool          execute(Being* being, const std::vector<std::string>& args);
 
   private:
     std::string   _creator;

@@ -19,7 +19,7 @@ CmdQuit::CmdQuit(void) {
   return;
 }
 
-bool CmdQuit::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdQuit::execute(Being* being, const std::vector<std::string>& args) {
   Quote q = QuoteTable::Instance().getRandomQuote();
   avatar()->save();
   avatar()->send("%s\n        -%s", q.second.c_str(), q.first.c_str());
@@ -29,31 +29,31 @@ bool CmdQuit::execute(Creature* creature, const std::vector<std::string>& args) 
 
 CmdReboot::CmdReboot(void) {
   name("reboot");
-  level(Creature::CREATOR);
+  level(Being::CREATOR);
   addSyntax(1, "reboot");
   brief("Perform a hot-reboot (aka \"copyover\") of the game engine.");
 }
 
-bool CmdReboot::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdReboot::execute(Being* being, const std::vector<std::string>& args) {
   if (args[0] == "reboot") {
     World::Instance().save();
-    return World::Instance().reboot(creature);
+    return World::Instance().reboot(being);
   } else {
-    creature->send(printSyntax());
+    being->send(printSyntax());
     return false;
   }
 }
 
 CmdRedit::CmdRedit(void) {
   name("redit");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(0, "");
   addSyntax(2, "create <vnum>");
   brief("Invokes the Room Editor.");
   return;
 }
 
-bool CmdRedit::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdRedit::execute(Being* being, const std::vector<std::string>& args) {
   RCmdCreate create;
   std::vector<std::string> create_args;
   CmdGoto go;
@@ -83,7 +83,7 @@ bool CmdRedit::execute(Creature* creature, const std::vector<std::string>& args)
     // Make sure no one else is editing the room...
     for (std::map<std::string,Avatar*>::iterator it = World::Instance().getAvatars().begin(); it != World::Instance().getAvatars().end(); ++it) {
       if (it->second->mode().number() == MODE_REDIT && it->second->room() == avatar()->room()) {
-        creature->send("Sorry, %s is currently editing room %lu.", avatar()->seeName(((Creature*)it->second)).c_str(), avatar()->room()->vnum());
+        being->send("Sorry, %s is currently editing room %lu.", avatar()->seeName(((Being*)it->second)).c_str(), avatar()->room()->vnum());
         return false;
       }
     }
@@ -105,21 +105,21 @@ CmdRemove::CmdRemove(void) {
   return;
 }
 
-bool CmdRemove::execute(Creature* creature, const std::vector<std::string>& args) {
-  std::list<Object*> objects = creature->equipment().searchObjects(args[0]);
+bool CmdRemove::execute(Being* being, const std::vector<std::string>& args) {
+  std::list<Object*> objects = being->equipment().searchObjects(args[0]);
   std::string error;
 
   if (objects.empty()) {
-    creature->send("You aren't wearing that.");
+    being->send("You aren't wearing that.");
     return false;
   }
 
   for (std::list<Object*>::iterator it = objects.begin(); it != objects.end(); ++it) {
-    if (creature->unwear(*it, error)) {
-      creature->send("You remove %s{x.\n", (*it)->identifiers().shortname().c_str());
-      creature->room()->send_cond("$p removes $o.\n", creature, *it);
+    if (being->unwear(*it, error)) {
+      being->send("You remove %s{x.\n", (*it)->identifiers().shortname().c_str());
+      being->room()->send_cond("$p removes $o.\n", being, *it);
     } else {
-      creature->send(error);
+      being->send(error);
     }
   }
 
@@ -134,7 +134,7 @@ CmdReply::CmdReply(void) {
   return;
 }
 
-bool CmdReply::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdReply::execute(Being* being, const std::vector<std::string>& args) {
   Avatar* target = NULL;
 
   if (avatar()->replyTo().empty() || (target = World::Instance().findAvatar(avatar()->replyTo())) == NULL) {
@@ -156,7 +156,7 @@ bool CmdReply::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdRestring::CmdRestring(void) {
   name("restring");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-3, "<object> shortname <string>");
   addSyntax(-3, "<object> longname <string>");
   addSyntax(-3, "<object> keywords <key1 key2 key3 ...>");
@@ -164,30 +164,30 @@ CmdRestring::CmdRestring(void) {
   return;
 }
 
-bool CmdRestring::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdRestring::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> keywords;
   Object* object = NULL;
 
-  if ((object = creature->inventory().searchSingleObject(args[0])) == NULL) {
-    creature->send("You don't have that.");
+  if ((object = being->inventory().searchSingleObject(args[0])) == NULL) {
+    being->send("You don't have that.");
     return false;
   }
 
   if (Regex::strPrefix(args[1], "shortname")) {
     object->identifiers().shortname(args[2]);
-    creature->send("Object shortname reset to \"%s\".", object->identifiers().shortname().c_str());
+    being->send("Object shortname reset to \"%s\".", object->identifiers().shortname().c_str());
   } else if (Regex::strPrefix(args[1], "longname")) {
     object->identifiers().longname(args[2]);
-    creature->send("Object longname reset to \"%s\".", object->identifiers().longname().c_str());
+    being->send("Object longname reset to \"%s\".", object->identifiers().longname().c_str());
   } else if (Regex::strPrefix(args[1], "keywords")) {
     object->identifiers().getKeywords().clear();
     keywords = Regex::explode(" ", args[2]);
     for (std::vector<std::string>::const_iterator it = keywords.begin(); it != keywords.end(); ++it) {
       object->identifiers().addKeyword(*it);
     }
-    creature->send("Object keywords reset to \"%s\".", object->identifiers().getKeywordList().c_str());
+    being->send("Object keywords reset to \"%s\".", object->identifiers().getKeywordList().c_str());
   } else {
-    creature->send(printSyntax());
+    being->send(printSyntax());
     return false;
   }
 
@@ -196,7 +196,7 @@ bool CmdRestring::execute(Creature* creature, const std::vector<std::string>& ar
 
 CmdRlist::CmdRlist(void) {
   name("rlist");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<areaID>                       (list all Rooms in the area)");
   addSyntax(2, "<first vnum> <last vnum>       (list all Rooms in the vnum range)");
   addSyntax(1, "<keyword>                      (list all Rooms by name)");
@@ -204,7 +204,7 @@ CmdRlist::CmdRlist(void) {
   return;
 }
 
-bool CmdRlist::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdRlist::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> mutable_args(args);
   std::vector<Room*> rooms;
   Area* area = NULL;
@@ -218,7 +218,7 @@ bool CmdRlist::execute(Creature* creature, const std::vector<std::string>& args)
     if (Regex::match("^[0-9]+$", mutable_args[0])) {
       // We got an areaID...
       if ((area = World::Instance().findArea(estring(mutable_args[0]))) == NULL) {
-        creature->send("That area couldn't be found.");
+        being->send("That area couldn't be found.");
         return false;
       }
       for (std::map<unsigned long,Room*>::iterator r_it = area->rooms().begin(); r_it != area->rooms().end(); ++r_it) {
@@ -254,11 +254,11 @@ bool CmdRlist::execute(Creature* creature, const std::vector<std::string>& args)
     high = estring(mutable_args[1]);
     // Check our range...
     if (!high || low >= high) {
-      creature->send("Invalid vnum range.");
+      being->send("Invalid vnum range.");
       return false;
     }
     if (low+400 < high) {
-      creature->send("The maximum vnum range is 400.");
+      being->send("The maximum vnum range is 400.");
       return false;
     }
     // Grab the rooms...
@@ -270,12 +270,12 @@ bool CmdRlist::execute(Creature* creature, const std::vector<std::string>& args)
       }
     }
   } else {
-    creature->send(printSyntax());
+    being->send(printSyntax());
     return false;
   }
 
   if (rooms.empty()) {
-    creature->send("No matches for \"%s\"", mutable_args[0].c_str());
+    being->send("No matches for \"%s\"", mutable_args[0].c_str());
     return false;
   }
 
@@ -285,7 +285,7 @@ bool CmdRlist::execute(Creature* creature, const std::vector<std::string>& args)
     output.append(buffer);
   }
 
-  creature->send(output);
+  being->send(output);
   return true;
 }
 
@@ -297,9 +297,9 @@ CmdSave::CmdSave(void) {
   return;
 }
 
-bool CmdSave::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdSave::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->save();
-  creature->send("Your profile has been saved.");
+  being->send("Your profile has been saved.");
   return true;
 }
 
@@ -310,20 +310,20 @@ CmdSay::CmdSay(void) {
   return;
 }
 
-bool CmdSay::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdSay::execute(Being* being, const std::vector<std::string>& args) {
   std::string verb;
   switch (args[0][args[0].size()-1]) {
     case '?':
-      creature->room()->send("$p asks '{G$s{x'", creature, (void*)args[0].c_str());
-      creature->send("You ask '{G%s{x'", args[0].c_str());
+      being->room()->send("$p asks '{G$s{x'", being, (void*)args[0].c_str());
+      being->send("You ask '{G%s{x'", args[0].c_str());
       break;
     case '!':
-      creature->room()->send("$p exclaims '{G$s{x'", creature, (void*)args[0].c_str());
-      creature->send("You exclaim '{G%s{x'", args[0].c_str());
+      being->room()->send("$p exclaims '{G$s{x'", being, (void*)args[0].c_str());
+      being->send("You exclaim '{G%s{x'", args[0].c_str());
       break;
     default:
-      creature->room()->send("$p says '{G$s{x'", creature, (void*)args[0].c_str());
-      creature->send("You say '{G%s{x'", args[0].c_str());
+      being->room()->send("$p says '{G$s{x'", being, (void*)args[0].c_str());
+      being->send("You say '{G%s{x'", args[0].c_str());
       break;
   }
   return true;
@@ -331,14 +331,14 @@ bool CmdSay::execute(Creature* creature, const std::vector<std::string>& args) {
 
 CmdSedit::CmdSedit(void) {
   name("sedit");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(1, "<name>");
   addSyntax(2, "create <name>");
   brief("Invokes the Social Command Editor.");
   return;
 }
 
-bool CmdSedit::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdSedit::execute(Being* being, const std::vector<std::string>& args) {
   std::string name;
   Command* command = NULL;
 
@@ -356,7 +356,7 @@ bool CmdSedit::execute(Creature* creature, const std::vector<std::string>& args)
       // is anyone else editing it at the moment?
       for (std::map<std::string,Avatar*>::iterator a_it = World::Instance().getAvatars().begin(); a_it != World::Instance().getAvatars().end(); ++a_it) {
         if (a_it->second->mode().number() == MODE_SEDIT && a_it->second->sedit() == command) {
-          avatar()->send("Sorry, %s is currently editing the \"%s\" command.", avatar()->seeName(((Creature*)a_it->second)).c_str(), command->name().c_str());
+          avatar()->send("Sorry, %s is currently editing the \"%s\" command.", avatar()->seeName(((Being*)a_it->second)).c_str(), command->name().c_str());
           return false;
         }
       }
@@ -394,18 +394,18 @@ bool CmdSedit::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdShutdown::CmdShutdown(void) {
   name("shutdown");
-  level(Creature::CREATOR);
+  level(Being::CREATOR);
   addSyntax(1, "shutdown");
   brief("Shut down the game engine.");
   return;
 }
 
-bool CmdShutdown::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdShutdown::execute(Being* being, const std::vector<std::string>& args) {
   if (args[0] == "shutdown") {
     World::Instance().exists(false);
     return true;
   } else {
-    creature->send(printSyntax());
+    being->send(printSyntax());
     return false;
   }
 }
@@ -419,49 +419,49 @@ CmdSit::CmdSit(void) {
   return;
 }
 
-bool CmdSit::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdSit::execute(Being* being, const std::vector<std::string>& args) {
   Object* furniture = NULL;
   std::string error;
 
   if (args.size() == 2) {
     // get the target furniture...
-    if ((furniture = creature->room()->inventory().searchSingleObject(args[1])) != NULL) {
+    if ((furniture = being->room()->inventory().searchSingleObject(args[1])) != NULL) {
       if (!furniture->isFurniture()) {
-        creature->send("That's not furniture.");
+        being->send("That's not furniture.");
         return false;
       }
     } else {
-      creature->send("You don't see that here.");
+      being->send("You don't see that here.");
       return false;
     }
     // sit at it...
     if (Regex::strPrefix(args[0], "at")) {
-      if (creature->sit(error, furniture->furniture(), false)) {
-        creature->send("You sit down at %s.", furniture->identifiers().shortname().c_str());
-        creature->room()->send_cond("$p sits down at $o.", creature, furniture);
+      if (being->sit(error, furniture->furniture(), false)) {
+        being->send("You sit down at %s.", furniture->identifiers().shortname().c_str());
+        being->room()->send_cond("$p sits down at $o.", being, furniture);
       } else {
-        creature->send(error);
+        being->send(error);
         return false;
       }
     // sit on it...
     } else if (Regex::strPrefix(args[0], "on")) {
-      if (creature->sit(error, furniture->furniture(), true)) {
-        creature->send("You sit down on %s.", furniture->identifiers().shortname().c_str());
-        creature->room()->send_cond("$p sits down on $o.", creature, furniture);
+      if (being->sit(error, furniture->furniture(), true)) {
+        being->send("You sit down on %s.", furniture->identifiers().shortname().c_str());
+        being->room()->send_cond("$p sits down on $o.", being, furniture);
       } else {
-        creature->send(error);
+        being->send(error);
         return false;
       }
     // who knows what they were trying to do...
     } else {
-      creature->send(printSyntax());
+      being->send(printSyntax());
     }
   } else {
-    if (!creature->sit(error)) {
-      creature->send(error);
+    if (!being->sit(error)) {
+      being->send(error);
     } else {
-      creature->send("You sit down.");
-      creature->room()->send_cond("$p sits down.", creature);
+      being->send("You sit down.");
+      being->room()->send_cond("$p sits down.", being);
       return true;
     }
   }
@@ -475,15 +475,15 @@ CmdSocials::CmdSocials(void) {
   return;
 }
 
-bool CmdSocials::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdSocials::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> names;
   for (std::vector<Command*>::iterator it = Commands::Instance().commands().begin(); it != Commands::Instance().commands().end(); ++it) {
     if ((*it)->social()) {
       names.push_back((*it)->name());
     }
   }
-  creature->send(" \n--== {cSocial Commands ({C%u{c) {x==--\n", names.size());
-  creature->send(Display::formatColumns(names));
+  being->send(" \n--== {cSocial Commands ({C%u{c) {x==--\n", names.size());
+  being->send(Display::formatColumns(names));
   return true;
 }
 
@@ -494,18 +494,18 @@ CmdStand::CmdStand(void) {
   return;
 }
 
-bool CmdStand::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdStand::execute(Being* being, const std::vector<std::string>& args) {
   std::string error;
-  if (!creature->stand(error)) {
-    creature->send(error);
+  if (!being->stand(error)) {
+    being->send(error);
     return false;
   }
-  if (creature->furniture()) {
-    creature->furniture(NULL);
-    creature->furniture()->remove(creature);
+  if (being->furniture()) {
+    being->furniture(NULL);
+    being->furniture()->remove(being);
   }
-  creature->send("You stand up.");
-  creature->room()->send_cond("$p stands up.", creature);
+  being->send("You stand up.");
+  being->room()->send_cond("$p stands up.", being);
   return true;
 }
 
@@ -518,21 +518,21 @@ CmdSkills::CmdSkills(void) {
   return;
 }
 
-bool CmdSkills::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdSkills::execute(Being* being, const std::vector<std::string>& args) {
   std::set<Ability*> learned;
   std::set<Ability*> available;
   std::set<Ability*> unavailable;
   std::set<Ability*>::const_iterator iter;
   std::set<std::string> prereqs;
 
-  for (iter = creature->klass()->abilities().abilities().begin(); iter != creature->klass()->abilities().abilities().end(); ++iter) {
+  for (iter = being->klass()->abilities().abilities().begin(); iter != being->klass()->abilities().abilities().end(); ++iter) {
     // We're only concerned with skills here.
     if (!(*iter)->is_skill()) continue;
     // Sort skills into one of three buckets.
-    if (creature->learned().contains(*iter)) {
+    if (being->learned().contains(*iter)) {
       learned.insert(*iter);
       continue;
-    } else if (creature->can_learn(*iter)) {
+    } else if (being->can_learn(*iter)) {
       available.insert(*iter);
       continue;
     } else {
@@ -541,30 +541,30 @@ bool CmdSkills::execute(Creature* creature, const std::vector<std::string>& args
   }
 
   if (learned.empty() && available.empty() && unavailable.empty()) {
-    creature->send("No skills to display.\n");
+    being->send("No skills to display.\n");
     return false;
   }
 
   // Print each bucket.
   if (!learned.empty()) {
-    creature->send("Learned skills:\n");
+    being->send("Learned skills:\n");
     for (iter = learned.begin(); iter != learned.end(); ++iter) {
-      creature->send("  %-20s (%u%% learned)\n", (*iter)->name().c_str(), creature->abilityMastery()[*iter]);
+      being->send("  %-20s (%u%% learned)\n", (*iter)->name().c_str(), being->abilityMastery()[*iter]);
     }
   }
   if (!available.empty()) {
-    creature->send("\nAvailable skills:\n");
+    being->send("\nAvailable skills:\n");
     for (iter = available.begin(); iter != available.end(); ++iter) {
-      creature->send("  %-20s (costs {B%u{x training points)\n", (*iter)->name().c_str(), (*iter)->trains());
+      being->send("  %-20s (costs {B%u{x training points)\n", (*iter)->name().c_str(), (*iter)->trains());
     }
   }
   if (!unavailable.empty()) {
-    creature->send("\nUnavailable skills:\n");
+    being->send("\nUnavailable skills:\n");
     for (iter = unavailable.begin(); iter != unavailable.end(); ++iter) {
       prereqs = (*iter)->dependency_names();
-      creature->send("  %-20s (level {Y%u{x", (*iter)->name().c_str(), (*iter)->level());
-      if (!prereqs.empty()) creature->send(", requires %s", Regex::implode(", ", prereqs).c_str());
-      creature->send(")\n");
+      being->send("  %-20s (level {Y%u{x", (*iter)->name().c_str(), (*iter)->level());
+      if (!prereqs.empty()) being->send(", requires %s", Regex::implode(", ", prereqs).c_str());
+      being->send(")\n");
     }
   }
   return true;
@@ -579,21 +579,21 @@ CmdSpells::CmdSpells(void) {
   return;
 }
 
-bool CmdSpells::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdSpells::execute(Being* being, const std::vector<std::string>& args) {
   std::set<Ability*> learned;
   std::set<Ability*> available;
   std::set<Ability*> unavailable;
   std::set<Ability*>::const_iterator iter;
   std::set<std::string> prereqs;
 
-  for (iter = creature->klass()->abilities().abilities().begin(); iter != creature->klass()->abilities().abilities().end(); ++iter) {
+  for (iter = being->klass()->abilities().abilities().begin(); iter != being->klass()->abilities().abilities().end(); ++iter) {
     // We're only concerned with skills here.
     if (!(*iter)->is_spell()) continue;
     // Sort skills into one of three buckets.
-    if (creature->learned().contains(*iter)) {
+    if (being->learned().contains(*iter)) {
       learned.insert(*iter);
       continue;
-    } else if (creature->can_learn(*iter)) {
+    } else if (being->can_learn(*iter)) {
       available.insert(*iter);
       continue;
     } else {
@@ -602,30 +602,30 @@ bool CmdSpells::execute(Creature* creature, const std::vector<std::string>& args
   }
 
   if (learned.empty() && available.empty() && unavailable.empty()) {
-    creature->send("No spells to display.\n");
+    being->send("No spells to display.\n");
     return false;
   }
 
   // Print each bucket.
   if (!learned.empty()) {
-    creature->send("Learned spells:\n");
+    being->send("Learned spells:\n");
     for (iter = learned.begin(); iter != learned.end(); ++iter) {
-      creature->send("  %-20s (%u%% learned)\n", (*iter)->name().c_str(), creature->abilityMastery()[*iter]);
+      being->send("  %-20s (%u%% learned)\n", (*iter)->name().c_str(), being->abilityMastery()[*iter]);
     }
   }
   if (!available.empty()) {
-    creature->send("\nAvailable spells:\n");
+    being->send("\nAvailable spells:\n");
     for (iter = available.begin(); iter != available.end(); ++iter) {
-      creature->send("  %-20s (costs {B%u{x training points)\n", (*iter)->name().c_str(), (*iter)->trains());
+      being->send("  %-20s (costs {B%u{x training points)\n", (*iter)->name().c_str(), (*iter)->trains());
     }
   }
   if (!unavailable.empty()) {
-    creature->send("\nUnavailable spells:\n");
+    being->send("\nUnavailable spells:\n");
     for (iter = unavailable.begin(); iter != unavailable.end(); ++iter) {
       prereqs = (*iter)->dependency_names();
-      creature->send("  %-20s (level {Y%u{x", (*iter)->name().c_str(), (*iter)->level());
-      if (!prereqs.empty()) creature->send(", requires %s", Regex::implode(", ", prereqs).c_str());
-      creature->send(")\n");
+      being->send("  %-20s (level {Y%u{x", (*iter)->name().c_str(), (*iter)->level());
+      if (!prereqs.empty()) being->send(", requires %s", Regex::implode(", ", prereqs).c_str());
+      being->send(")\n");
     }
   }
   return true;
@@ -639,7 +639,7 @@ CmdSummary::CmdSummary(void) {
   return;
 }
 
-bool CmdSummary::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdSummary::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->send("\n %s{x\n", avatar()->identifiers().shortname().c_str());
   avatar()->send("{w _______________________________________________________________________\n");
   avatar()->send("{w|\\_____________________________________________________________________/|\n");
@@ -647,7 +647,7 @@ bool CmdSummary::execute(Creature* creature, const std::vector<std::string>& arg
   avatar()->send("{w||{xclass:  {C%-9s{w ||{xdexte: {B%2u{x/{b%2u{w || {xbash:   {w%-4d{w ||{xhealth: {G%4u{x/{g%-4u{w ||\n", avatar()->pClass().string().c_str(), avatar()->dexterity(), avatar()->maxDexterity(), avatar()->bash(), avatar()->health(), avatar()->maxHealth());
   avatar()->send("{w||{xgender: {C%-7s{w   ||{xconst: {B%2u{x/{b%2u{w || {xslash:  {w%-4d{w ||{xmana: {C%4u{x/{c%-4u{w   ||\n", avatar()->gender().string().c_str(), avatar()->constitution(), avatar()->maxConstitution(), avatar()->slash(), avatar()->mana(), avatar()->maxMana());
   avatar()->send("{w||{xage:    {C%-3u{w       ||{xintel: {B%2u{x/{b%2u{w || {xpierce: {w%-4d{w ||{xstamina: {M%3u{w      ||\n", avatar()->age(), avatar()->intelligence(), avatar()->maxIntelligence(), avatar()->pierce(), avatar()->stamina());
-  avatar()->send("{w||{xhand:   {C%-5s{w     ||{xfocus: {B%2u{x/{b%2u{w || {xexotic: {w%-4d{w ||{xexp: {Y%-7u{w      ||\n", ((avatar()->hand() == Creature::WEARLOC_HOLD_R) ? "right" : "left"), avatar()->focus(), avatar()->maxFocus(), avatar()->exotic(), avatar()->exp());
+  avatar()->send("{w||{xhand:   {C%-5s{w     ||{xfocus: {B%2u{x/{b%2u{w || {xexotic: {w%-4d{w ||{xexp: {Y%-7u{w      ||\n", ((avatar()->hand() == Being::WEARLOC_HOLD_R) ? "right" : "left"), avatar()->focus(), avatar()->maxFocus(), avatar()->exotic(), avatar()->exp());
   avatar()->send("{w||{xheight: {C%-9s{w ||{xcreat: {B%2u{x/{b%2u{w ||              ||{xtnl: {Y%-5u{w        ||\n", "-", avatar()->creativity(), avatar()->maxCreativity(), avatar()->tnl());
   avatar()->send("{w||{xweight: {C%-9s{w ||{xchari: {B%2u{x/{b%2u{w ||              ||{xtrains: {B%-3u{w       ||\n", "-", avatar()->charisma(), avatar()->maxCharisma(), avatar()->trains());
   avatar()->send("{w||{xtotem:  {C%-9s{w ||{xluck:  {B%2u{x/{b%2u{w ||              ||                  ||\n", "-", avatar()->luck(), avatar()->maxLuck());
@@ -675,22 +675,22 @@ bool CmdSummary::execute(Creature* creature, const std::vector<std::string>& arg
 
 CmdSummon::CmdSummon(void) {
   name("summon");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<player>");
   addSyntax(1, "<mob>");
   brief("Transports the target to the current room.");
   return;
 }
 
-bool CmdSummon::execute(Creature* creature, const std::vector<std::string>& args) {
-  Creature* target = NULL;
+bool CmdSummon::execute(Being* being, const std::vector<std::string>& args) {
+  Being* target = NULL;
   Room* from = NULL;
   Room* to = avatar()->room();
   CmdLook look;
   std::vector<std::string> look_args(1);
 
   // Aquire target...
-  if ((target = World::Instance().findCreature(args[0])) == NULL) {
+  if ((target = World::Instance().findBeing(args[0])) == NULL) {
     avatar()->send("They're not around at the moment.");
     return false;
   }

@@ -1,6 +1,6 @@
 
 #include <math.h>
-#include "creature.h"
+#include "being.h"
 #include "display.h"
 #include "exit.h"
 #include "object.h"
@@ -49,7 +49,7 @@ std::string Display::formatColumns(const std::vector<std::string>& items) {
   return dest;
 }
 
-std::string Display::formatAction(const char* format, Creature* creature, void* arg1, void* arg2, Creature* withRespectTo) {
+std::string Display::formatAction(const char* format, Being* being, void* arg1, void* arg2, Being* withRespectTo) {
   std::string input(format);
   std::string message;
 
@@ -60,19 +60,19 @@ std::string Display::formatAction(const char* format, Creature* creature, void* 
         case 's': message.append(arg1 ? (const char*)arg1 : "[s]");                                             break;
         case 'S': message.append(arg2 ? (const char*)arg2 : "[S]");                                             break;
         // the 'actor'
-        case 'p': message.append(withRespectTo ? withRespectTo->seeName(creature) : "[p]");                     break;
-        // arbitrary creatures
-        case 'c': message.append(withRespectTo ? withRespectTo->seeName((Creature*)arg1) : "[c]");              break;
-        case 'C': message.append(withRespectTo ? withRespectTo->seeName((Creature*)arg2) : "[C]");              break;
+        case 'p': message.append(withRespectTo ? withRespectTo->seeName(being) : "[p]");                     break;
+        // arbitrary beings
+        case 'c': message.append(withRespectTo ? withRespectTo->seeName((Being*)arg1) : "[c]");              break;
+        case 'C': message.append(withRespectTo ? withRespectTo->seeName((Being*)arg2) : "[C]");              break;
         // reflexive pronouns
-        case 'f': message.append(withRespectTo ? withRespectTo->seeReflexivePronoun((Creature*)arg1) : "[f]");  break;
-        case 'F': message.append(withRespectTo ? withRespectTo->seeReflexivePronoun((Creature*)arg2) : "[F]");  break;
+        case 'f': message.append(withRespectTo ? withRespectTo->seeReflexivePronoun((Being*)arg1) : "[f]");  break;
+        case 'F': message.append(withRespectTo ? withRespectTo->seeReflexivePronoun((Being*)arg2) : "[F]");  break;
         // object pronouns
-        case 'b': message.append(withRespectTo ? withRespectTo->seeObjectPronoun((Creature*)arg1) : "[b]");     break;
-        case 'B': message.append(withRespectTo ? withRespectTo->seeObjectPronoun((Creature*)arg2) : "[B]");     break;
+        case 'b': message.append(withRespectTo ? withRespectTo->seeObjectPronoun((Being*)arg1) : "[b]");     break;
+        case 'B': message.append(withRespectTo ? withRespectTo->seeObjectPronoun((Being*)arg2) : "[B]");     break;
         // possessive pronouns
-        case 'r': message.append(withRespectTo ? withRespectTo->seePosessivePronoun((Creature*)arg1) : "[r]");  break;
-        case 'R': message.append(withRespectTo ? withRespectTo->seePosessivePronoun((Creature*)arg2) : "[R]");  break;
+        case 'r': message.append(withRespectTo ? withRespectTo->seePosessivePronoun((Being*)arg1) : "[r]");  break;
+        case 'R': message.append(withRespectTo ? withRespectTo->seePosessivePronoun((Being*)arg2) : "[R]");  break;
         // objects
         case 'o': message.append(arg1 ? ((Object*)arg1)->identifiers().shortname() : "[o]");                    break;
         case 'O': message.append(arg2 ? ((Object*)arg2)->identifiers().shortname() : "[O]");                    break;

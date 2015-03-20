@@ -1,30 +1,30 @@
 
-#include "creature.h"
+#include "being.h"
 #include "skills.h"
 
-bool SecondStrikeSkill::execute(Creature* creature) const {
-  creature->strike();
+bool SecondStrikeSkill::execute(Being* being) const {
+  being->strike();
   return true;
 }
 
-bool ThirdStrikeSkill::execute(Creature* creature) const {
-  creature->strike();
+bool ThirdStrikeSkill::execute(Being* being) const {
+  being->strike();
   return true;
 }
 
-bool FourthStrikeSkill::execute(Creature* creature) const {
-  creature->strike();
+bool FourthStrikeSkill::execute(Being* being) const {
+  being->strike();
   return true;
 }
 
-bool BlockSkill::execute(Creature* creature) const {
+bool BlockSkill::execute(Being* being) const {
   return true;
 }
 
-bool ParrySkill::execute(Creature* creature) const {
+bool ParrySkill::execute(Being* being) const {
   return true;
 }
 
-bool RiposteSkill::execute(Creature* creature) const {
+bool RiposteSkill::execute(Being* being) const {
   return true;
 }

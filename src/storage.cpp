@@ -272,7 +272,7 @@ bool Storage::load(FILE* fp, Mob* loading) {
     STORE_CASE("vnum",           &Mob::vnum)
     STORE_CASE("mobility",       &Mob::mobility)
     STORE_CASE("aggressiveness", &Mob::aggressiveness)
-    STORE_DESCEND("CREATURE")
+    STORE_DESCEND("BEING")
   });
   return load_status == LOAD_DONE;
 }
@@ -317,76 +317,76 @@ bool Storage::load(FILE* fp, Avatar* loading) {
     STORE_CASE_WITH_CODE("adminFlags",    unsigned, "%u", loading->adminFlags().value(val);)
     STORE_CASE_WITH_CODE("channelFlags",  unsigned, "%u", loading->channelFlags().value(val);)
     STORE_CASE_WITH_CODE("whoFlags",      unsigned, "%u", loading->whoFlags().value(val);)
-    STORE_DESCEND("CREATURE")
+    STORE_DESCEND("BEING")
   });
   return load_status == LOAD_DONE;
 }
 
 /***************************************************************************************************
- * CREATURE
+ * BEING
  **************************************************************************************************/
-void Storage::dump_base(FILE* fp, Creature* creature) {
-  BEGIN("CREATURE")
-  out(fp, "shortname",    creature->identifiers().shortname());
-  out(fp, "longname",     creature->identifiers().longname());
-  out(fp, "description",  creature->identifiers().description());
-  out(fp, "keywords",     creature->identifiers().serializeKeywords());
+void Storage::dump_base(FILE* fp, Being* being) {
+  BEGIN("BEING")
+  out(fp, "shortname",    being->identifiers().shortname());
+  out(fp, "longname",     being->identifiers().longname());
+  out(fp, "description",  being->identifiers().description());
+  out(fp, "keywords",     being->identifiers().serializeKeywords());
   fprintf(fp, "identity %s %s %s\n",
-    creature->gender().string().c_str(),
-    creature->race().string().c_str(),
-    creature->pClass().string().c_str()
+    being->gender().string().c_str(),
+    being->race().string().c_str(),
+    being->pClass().string().c_str()
   );
   fprintf(fp, "level %u %u %u\n",
-    creature->level(),
-    creature->exp(),
-    creature->tnl()
+    being->level(),
+    being->exp(),
+    being->tnl()
   );
   fprintf(fp, "health %d/%d %d/%d %d\n",
-    creature->health(),
-    creature->maxHealth(),
-    creature->mana(),
-    creature->maxMana(),
-    creature->stamina()
+    being->health(),
+    being->maxHealth(),
+    being->mana(),
+    being->maxMana(),
+    being->stamina()
   );
   fprintf(fp, "stats %hu/%hu %hu/%hu %hu/%hu %hu/%hu %hu/%hu %hu/%hu %hu/%hu %hu/%hu\n",
-    creature->strength(),
-    creature->maxStrength(),
-    creature->dexterity(),
-    creature->maxDexterity(),
-    creature->constitution(),
-    creature->maxConstitution(),
-    creature->intelligence(),
-    creature->maxIntelligence(),
-    creature->focus(),
-    creature->maxFocus(),
-    creature->creativity(),
-    creature->maxCreativity(),
-    creature->charisma(),
-    creature->maxCharisma(),
-    creature->luck(),
-    creature->maxLuck()
+    being->strength(),
+    being->maxStrength(),
+    being->dexterity(),
+    being->maxDexterity(),
+    being->constitution(),
+    being->maxConstitution(),
+    being->intelligence(),
+    being->maxIntelligence(),
+    being->focus(),
+    being->maxFocus(),
+    being->creativity(),
+    being->maxCreativity(),
+    being->charisma(),
+    being->maxCharisma(),
+    being->luck(),
+    being->maxLuck()
   );
   fprintf(fp, "armor %d %d %d %d %d\n",
-    creature->armor(),
-    creature->bash(),
-    creature->slash(),
-    creature->pierce(),
-    creature->exotic()
+    being->armor(),
+    being->bash(),
+    being->slash(),
+    being->pierce(),
+    being->exotic()
   );
-  out(fp, "trains",     creature->trains());
-  out(fp, "gold",       creature->gold());
-  out(fp, "silver",     creature->silver());
-  out(fp, "abilities",  creature->serializeAbilities());
-  for (auto iter : creature->inventory().objectList()) dump(fp, iter, "INV");
-  for (auto iter : creature->equipment().objectMap()) dump(fp, iter.second, "EQ");
-  END("CREATURE")
+  out(fp, "trains",     being->trains());
+  out(fp, "gold",       being->gold());
+  out(fp, "silver",     being->silver());
+  out(fp, "abilities",  being->serializeAbilities());
+  for (auto iter : being->inventory().objectList()) dump(fp, iter, "INV");
+  for (auto iter : being->equipment().objectMap()) dump(fp, iter.second, "EQ");
+  END("BEING")
   return;
 }
 
-bool Storage::load_base(FILE* fp, Creature* loading) {
+bool Storage::load_base(FILE* fp, Being* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "CREATURE", [&fp, &loading, &input]() {
+  load_status = load_inner(fp, loading, input, "BEING", [&fp, &loading, &input]() {
     STORE_CASE_STRING("shortname",    loading->identifiers().shortname(str);)
     STORE_CASE_STRING("longname",     loading->identifiers().longname(str);)
     STORE_CASE_STRING("description",  loading->identifiers().description(str);)
@@ -446,9 +446,9 @@ bool Storage::load_base(FILE* fp, Creature* loading) {
       loading->pierce(pierce);
       loading->exotic(exotic);
     }
-    STORE_CASE("trains",  &Creature::trains)
-    STORE_CASE("gold",    &Creature::gold)
-    STORE_CASE("silver",  &Creature::silver)
+    STORE_CASE("trains",  &Being::trains)
+    STORE_CASE("gold",    &Being::gold)
+    STORE_CASE("silver",  &Being::silver)
     STORE_CASE_STRING("abilities",    loading->unserializeAbilities(str);)
     STORE_DESCEND_NEW("OBJECT_INV", Object, loading->inventory().add(instance);)
     STORE_DESCEND_NEW("OBJECT_EQ", Object,

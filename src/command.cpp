@@ -27,7 +27,7 @@ Command::~Command(void) {
 
 void Command::level(const unsigned short& level) {
   _level = level;
-  if (_level > Creature::HERO) {
+  if (_level > Being::HERO) {
     playerOnly(true);
   }
   return;
@@ -164,46 +164,46 @@ SocialCommand* SocialCommand::load(std::string filename) {
   return social;
 }
 
-bool SocialCommand::execute(Creature* creature, const std::vector<std::string>& args) {
-  Creature* victim = NULL;
+bool SocialCommand::execute(Being* being, const std::vector<std::string>& args) {
+  Being* victim = NULL;
 
   if (args[0].empty()) {
     if (targetNone()) {
-      creature->send(noneActor());
-      creature->room()->send_cond(noneRoom().c_str(), creature, creature, NULL, Room::TO_ROOM, isAudible());
+      being->send(noneActor());
+      being->room()->send_cond(noneRoom().c_str(), being, being, NULL, Room::TO_ROOM, isAudible());
       return true;
     }
   } else if (args.size() == 1) {
-    victim = creature->findCreature(args[0]);
+    victim = being->findBeing(args[0]);
     if (victim == NULL) {
-      creature->send("They're not around at the moment.");
+      being->send("They're not around at the moment.");
       return false;
     }
-    if (victim == creature) {
+    if (victim == being) {
       if (targetSelf()) {
-        creature->send(selfActor());
-        creature->room()->send_cond(selfRoom().c_str(), creature, creature, creature, Room::TO_ROOM, isAudible());
+        being->send(selfActor());
+        being->room()->send_cond(selfRoom().c_str(), being, being, being, Room::TO_ROOM, isAudible());
         return true;
       } else {
-        creature->send("You'd look pretty silly doing that to yourself.");
+        being->send("You'd look pretty silly doing that to yourself.");
         return false;
       }
     } else {
       if (targetVictim()) {
-        creature->send(Display::formatAction(victimActor().c_str(), creature, creature, victim, creature));
+        being->send(Display::formatAction(victimActor().c_str(), being, being, victim, being));
         // Unless the social is audible or tactile, the victim shouldn't see it if they can't see the actor...
-        if (victim->canSee(creature) > Creature::SEE_NOTHING || isAudible() || isTactile()) {
-          victim->send(Display::formatAction(victimVictim().c_str(), creature, creature, victim, victim));
+        if (victim->canSee(being) > Being::SEE_NOTHING || isAudible() || isTactile()) {
+          victim->send(Display::formatAction(victimVictim().c_str(), being, being, victim, victim));
         }
-        creature->room()->send_cond(victimRoom().c_str(), creature, creature, victim, Room::TO_NOTVICT, isAudible());
+        being->room()->send_cond(victimRoom().c_str(), being, being, victim, Room::TO_NOTVICT, isAudible());
         return true;
       } else {
-        creature->send("You can't do that to someone else.");
+        being->send("You can't do that to someone else.");
         return false;
       }
     }
   }
 
-  creature->send("social error");
+  being->send("social error");
   return false;
 }

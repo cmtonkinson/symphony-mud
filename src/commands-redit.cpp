@@ -12,14 +12,14 @@
 
 RCmdCreate::RCmdCreate(void) {
   name("create");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(0, "");
   addSyntax(1, "<vnum>");
   brief("Creates a new Room in the area.");
   return;
 }
 
-bool RCmdCreate::execute(Creature* creature, const std::vector<std::string>& args) {
+bool RCmdCreate::execute(Being* being, const std::vector<std::string>& args) {
   unsigned long vnum = 0;
   Area* area = NULL;
   Room* room = NULL;
@@ -43,7 +43,7 @@ bool RCmdCreate::execute(Creature* creature, const std::vector<std::string>& arg
   }
 
   // Do they have permission to the vnum?
-  if (!area->hasPermission((Avatar*)creature)) {
+  if (!area->hasPermission((Avatar*)being)) {
     avatar()->send("You can't access that vnum.");
     return false;
   }
@@ -63,13 +63,13 @@ bool RCmdCreate::execute(Creature* creature, const std::vector<std::string>& arg
 
 RCmdDelete::RCmdDelete(void) {
   name("delete");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "delete");
   brief("Erases the Room.");
   return;
 }
 
-bool RCmdDelete::execute(Creature* creature, const std::vector<std::string>& args) {
+bool RCmdDelete::execute(Being* being, const std::vector<std::string>& args) {
   Area* area = NULL;
   Room* room = avatar()->room();
   unsigned long vnum = room->vnum();
@@ -95,8 +95,8 @@ RCmdDescription::RCmdDescription(void) {
   return;
 }
 
-bool RCmdDescription::execute(Creature* creature, const std::vector<std::string>& args) {
-  IOHandler* h = new TeditIOHandler(creature);
+bool RCmdDescription::execute(Being* being, const std::vector<std::string>& args) {
+  IOHandler* h = new TeditIOHandler(being);
   h->getState()["vector"] = (void*)(new std::vector<std::string>(Regex::explode("\n",avatar()->room()->description())));
   h->getState()["name"] = (void*)(new std::string("Room Description"));
   h->getState()["pointer"] = (void*)avatar()->room()->descriptionp();
@@ -106,14 +106,14 @@ bool RCmdDescription::execute(Creature* creature, const std::vector<std::string>
 
 RCmdDig::RCmdDig(void) {
   name("dig");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<direction>");
   addSyntax(2, "<direction> <vnum>");
   brief("Create a new Room in the Area, and automatically link with the current Room.");
   return;
 }
 
-bool RCmdDig::execute(Creature* creature, const std::vector<std::string>& args) {
+bool RCmdDig::execute(Being* being, const std::vector<std::string>& args) {
   unsigned long target = 0;
   RCmdCreate create;
   std::vector<std::string> create_args;
@@ -138,7 +138,7 @@ bool RCmdDig::execute(Creature* creature, const std::vector<std::string>& args) 
   // Create the room...
   create_args.push_back(estring(target));
   create.avatar(avatar());
-  if (!create.execute(creature, create_args)) {
+  if (!create.execute(being, create_args)) {
     avatar()->send("dig failed: create");
     return false;
   }
@@ -151,7 +151,7 @@ bool RCmdDig::execute(Creature* creature, const std::vector<std::string>& args) 
   link_args.push_back(args[0]);
   link_args.push_back(estring(target));
   link.avatar(avatar());
-  if (!link.execute(creature, link_args)) {
+  if (!link.execute(being, link_args)) {
     avatar()->send("dig failed: link");
     return false;
   }
@@ -159,7 +159,7 @@ bool RCmdDig::execute(Creature* creature, const std::vector<std::string>& args) 
   // Goto the new room...
   go_args.push_back(estring(target));
   go.avatar(avatar());
-  if (!go.execute(creature, go_args)) {
+  if (!go.execute(being, go_args)) {
     avatar()->send("dig failed: goto");
     return false;
   }
@@ -169,7 +169,7 @@ bool RCmdDig::execute(Creature* creature, const std::vector<std::string>& args) 
 
 RCmdExitflag::RCmdExitflag(void) {
   name("exitflag");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-3, "<direction> add <flag1 flag2 flag3 ...>");
   addSyntax(-3, "<direction> remove <flag1 flag2 flag3 ...>");
   brief("Modifies flags on Exits in the Room.");
@@ -177,7 +177,7 @@ RCmdExitflag::RCmdExitflag(void) {
   return;
 }
 
-bool RCmdExitflag::execute(Creature* creature, const std::vector<std::string>& args) {
+bool RCmdExitflag::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> flags;
   Exit* exit = NULL;
   unsigned short direction = 0;
@@ -213,7 +213,7 @@ bool RCmdExitflag::execute(Creature* creature, const std::vector<std::string>& a
 
 RCmdFlag::RCmdFlag(void) {
   name("flag");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-2, "add <flag1 flag2 flag3 ...>");
   addSyntax(-2, "remove <flag1 flag2 flag3 ...>");
   brief("Modify the list of Room flags.");
@@ -221,7 +221,7 @@ RCmdFlag::RCmdFlag(void) {
   return;
 }
 
-bool RCmdFlag::execute(Creature* creature, const std::vector<std::string>& args) {
+bool RCmdFlag::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> flags;
   bool value = false;
   FlagInt f = 0;
@@ -247,26 +247,26 @@ bool RCmdFlag::execute(Creature* creature, const std::vector<std::string>& args)
 
 RCmdInformation::RCmdInformation(void) {
   name("information");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(0, "");
   brief("Displays the current status of the Room.");
   return;
 }
 
-bool RCmdInformation::execute(Creature* creature, const std::vector<std::string>& args) {
+bool RCmdInformation::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->send(Room::getInformation(avatar()->room()));
   return true;
 }
 
 RCmdKey::RCmdKey(void) {
   name("key");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(2, "<direction> <key vnum>");
   brief("Sets a door lock to work with the specified key.");
   return;
 }
 
-bool RCmdKey::execute(Creature* creature, const std::vector<std::string>& args) {
+bool RCmdKey::execute(Being* being, const std::vector<std::string>& args) {
   Exit* exit = NULL;
   Exit* other = NULL;
   unsigned long vnum = 0;
@@ -287,13 +287,13 @@ bool RCmdKey::execute(Creature* creature, const std::vector<std::string>& args) 
 
 RCmdLink::RCmdLink(void) {
   name("link");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(2, "<direction> <vnum>");
   brief("Create a two-way Exit to the Room specified by <vnum>.");
   return;
 }
 
-bool RCmdLink::execute(Creature* creature, const std::vector<std::string>& args) {
+bool RCmdLink::execute(Being* being, const std::vector<std::string>& args) {
   Room* from = NULL;
   Room* to = NULL;
   unsigned short from_dir = 0;
@@ -312,7 +312,7 @@ bool RCmdLink::execute(Creature* creature, const std::vector<std::string>& args)
   from = avatar()->room();
 
   // Check permissions...
-  if (!to->area()->hasPermission((Avatar*)creature)) {
+  if (!to->area()->hasPermission((Avatar*)being)) {
     avatar()->send("You don't have access to that room.");
     return false;
   }
@@ -340,13 +340,13 @@ bool RCmdLink::execute(Creature* creature, const std::vector<std::string>& args)
 
 RCmdName::RCmdName(void) {
   name("name");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-1, "<name>");
   brief("Resets the Room name.");
   return;
 }
 
-bool RCmdName::execute(Creature* creature, const std::vector<std::string>& args) {
+bool RCmdName::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->room()->name(args[0]);
   avatar()->send("You've set room %lu's name to \"{W%s{x\".", avatar()->room()->vnum(), avatar()->room()->name().c_str());
   return true;
@@ -354,13 +354,13 @@ bool RCmdName::execute(Creature* creature, const std::vector<std::string>& args)
 
 RCmdSmell::RCmdSmell(void) {
   name("smell");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-1, "<string>");
   brief("Changes the smells in the Room.");
   return;
 }
 
-bool RCmdSmell::execute(Creature* creature, const std::vector<std::string>& args) {
+bool RCmdSmell::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->room()->smell(args[0]);
   avatar()->send("Room smell set to: {y%s{x", avatar()->room()->smell().c_str());
   return true;
@@ -368,13 +368,13 @@ bool RCmdSmell::execute(Creature* creature, const std::vector<std::string>& args
 
 RCmdSound::RCmdSound(void) {
   name("sound");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-1, "<string>");
   brief("Changes the sounds in the Room.");
   return;
 }
 
-bool RCmdSound::execute(Creature* creature, const std::vector<std::string>& args) {
+bool RCmdSound::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->room()->sound(args[0]);
   avatar()->send("Room sound set to: {y%s{x", avatar()->room()->sound().c_str());
   return true;
@@ -382,14 +382,14 @@ bool RCmdSound::execute(Creature* creature, const std::vector<std::string>& args
 
 RCmdTerrain::RCmdTerrain(void) {
   name("terrain");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<terrain>");
   brief("Changes the terrain of the Room.");
   addOptions("terrain", std::string("\n").append(TerrainTable::Instance().list()));
   return;
 }
 
-bool RCmdTerrain::execute(Creature* creature, const std::vector<std::string>& args) {
+bool RCmdTerrain::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->room()->terrain(TerrainTable::Instance().find(args[0]));
   avatar()->send("Room terrain set to {%c%s{x.", avatar()->room()->terrain()->title(), avatar()->room()->terrain()->name().c_str());
   return true;
@@ -397,13 +397,13 @@ bool RCmdTerrain::execute(Creature* creature, const std::vector<std::string>& ar
 
 RCmdUnlink::RCmdUnlink(void) {
   name("unlink");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<direction>");
   brief("Erases the Exit link in the given direction.");
   return;
 }
 
-bool RCmdUnlink::execute(Creature* creature, const std::vector<std::string>& args) {
+bool RCmdUnlink::execute(Being* being, const std::vector<std::string>& args) {
   unsigned short direction = Exit::string2dir(Regex::trim(args[0]));
   unsigned short inverse = Exit::inverse(direction);
   Room* other = NULL;

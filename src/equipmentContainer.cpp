@@ -1,5 +1,5 @@
 ﻿
-#include "creature.h"
+#include "being.h"
 #include "equipmentContainer.h"
 #include "object.h"
 
@@ -72,7 +72,7 @@ std::string EquipmentContainer::listObjects(void) const {
   std::map<std::string,unsigned> map;
   std::string dest;
   for (std::map<int,Object*>::const_iterator it = objectMap().begin(); it != objectMap().end(); ++it) {
-    dest.append(Creature::wearLocName(it->first));
+    dest.append(Being::wearLocName(it->first));
     dest.append(it->second->decorativeShortname());
     dest.append("\n");
   }

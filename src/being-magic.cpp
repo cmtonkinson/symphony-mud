@@ -1,8 +1,8 @@
 
-#include "creature.h"
+#include "being.h"
 #include "spells.h"
 
-bool Creature::intone(Ability* spell) {
+bool Being::intone(Ability* spell) {
   bool status = false;
 
   if (mana() < spell->mana()) {

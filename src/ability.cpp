@@ -47,43 +47,43 @@ bool Ability::is_spell(void) const {
   return _type == SPELL;
 }
 
-bool Ability::invoke(Creature* creature) {
+bool Ability::invoke(Being* being) {
   bool status = false;
   // A positive value for mana or stamina indicates that the Ability requires a static amount and
-  // that it can/should be deducted from the Creatures resources automatically. A non-positive value
+  // that it can/should be deducted from the Beings resources automatically. A non-positive value
   // indicates that either no resource is required for the Ability, or that execute() is going to
   // perform its own checks and deductions dynamically - in either case, invoke() should not perform
   // any automatic checks or deductions.
 
   // Because some Abilities require both stamina and mana, we need to verify that both are in
   // sufficient quantity before we begin deductions.
-  if (creature->stamina() > 0 && !creature->check_mana(mana())) return false;
-  if (creature->mana() > 0 && !creature->check_stamina(stamina())) return false;
+  if (being->stamina() > 0 && !being->check_mana(mana())) return false;
+  if (being->mana() > 0 && !being->check_stamina(stamina())) return false;
 
-  if (stamina() > 0) creature->deplete_stamina(stamina());
-  if (mana() > 0) creature->deplete_mana(mana());
+  if (stamina() > 0) being->deplete_stamina(stamina());
+  if (mana() > 0) being->deplete_mana(mana());
 
   // There is a random chance any non-mastered ability will be a dud.
-  if (rand() % 100 + 1 > creature->mastery(this)) {
-    creature->send("You get confused and your '{m%s{x' fails.\n", name().c_str());
+  if (rand() % 100 + 1 > being->mastery(this)) {
+    being->send("You get confused and your '{m%s{x' fails.\n", name().c_str());
     // Randomly improve upon the ability. The more advanced you are, the more instructive failure is.
-    if (rand() % 100 + 1 < creature->mastery(this)) {
+    if (rand() % 100 + 1 < being->mastery(this)) {
       // The higher the difficulty, the less your chances of improving.
       if (rand() % difficulty() == 0) {
-        creature->improve(this, false);
+        being->improve(this, false);
       }
     }
     return false;
   }
 
   // Capture the return value of the Ability.
-  status = execute(creature);
+  status = execute(being);
 
   // Randomly improve upon the ability. The more novice you are, the more instructive success is.
-  if (status && rand() % 100 + 1 > creature->mastery(this)) {
+  if (status && rand() % 100 + 1 > being->mastery(this)) {
     // The higher the difficulty, the less your chances of improving.
     if (rand() % difficulty() == 0) {
-      creature->improve(this, true);
+      being->improve(this, true);
     }
   }
 

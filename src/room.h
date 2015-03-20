@@ -10,7 +10,7 @@
 
 
 class Area;
-class Creature;
+class Being;
 class Exit;
 class LoadRule;
 
@@ -20,7 +20,7 @@ class Room {
     static const unsigned INDEX_DEFAULT = (unsigned)-1;
 
     // Message targets...
-    static const unsigned TO_CREATURE = 0;
+    static const unsigned TO_BEING = 0;
     static const unsigned TO_VICT     = 1;
     static const unsigned TO_NOTVICT  = 2;
     static const unsigned TO_ROOM     = 3;
@@ -54,8 +54,8 @@ class Room {
     void                          exit(unsigned direction, Exit* exit);
     Exit*                         exit(unsigned direction);
     Exit*                         exit(std::string direction);
-    std::list<Creature*>&         creatures(void)                         { return _creatures; }
-    const std::list<Creature*>&   creatures(void) const                   { return _creatures; }
+    std::list<Being*>&         beings(void)                         { return _beings; }
+    const std::list<Being*>&   beings(void) const                   { return _beings; }
     InventoryContainer&           inventory(void)                         { return _inventory; }
     const InventoryContainer&     inventory(void) const                   { return _inventory; }
     std::list<LoadRule*>&         loadRules(void)                         { return _loadRules; }
@@ -63,22 +63,22 @@ class Room {
 
     // General methods...
     bool                          loadExits(void);
-    void                          add(Creature* creature)                                                       { creatures().push_back(creature); }
-    void                          remove(Creature* creature)                                                    { creatures().remove(creature); }
+    void                          add(Being* being)                                                       { beings().push_back(being); }
+    void                          remove(Being* being)                                                    { beings().remove(being); }
     void                          add(LoadRule* loadRule)                                                       { loadRules().push_back(loadRule); }
     void                          removeLoadRule(unsigned index);
     void                          executeLoadRules(void);
     void                          add(Object* object)                                                           { inventory().add(object); }
     void                          remove(Object* object)                                                        { inventory().remove(object); }
-    void                          send(std::string format, Creature* creature = NULL, void* arg1 = NULL,
+    void                          send(std::string format, Being* being = NULL, void* arg1 = NULL,
                                         void* arg2 = NULL, unsigned long target = TO_ROOM);
-    void                          send_cond(std::string format, Creature* creature = NULL, void* arg1 = NULL,
+    void                          send_cond(std::string format, Being* being = NULL, void* arg1 = NULL,
                                         void* arg2 = NULL, unsigned long target = TO_ROOM, bool audible = false);
     void                          destroy(void);
     bool                          clear(void);
     std::string                   listFlags(void);
     void                          reset(void);
-    Creature*                     creature_by_vnum(unsigned long vnum, unsigned index = INDEX_DEFAULT);
+    Being*                     being_by_vnum(unsigned long vnum, unsigned index = INDEX_DEFAULT);
     void                          setTerrain(const char* terrain_name);
 
     // Statics...
@@ -97,7 +97,7 @@ class Room {
     Terrain*                _terrain;
     FlagBank                _flags;
     Exit*                   _exits[6];
-    std::list<Creature*>    _creatures;
+    std::list<Being*>    _beings;
     InventoryContainer      _inventory;
     std::list<LoadRule*>    _loadRules;
 };

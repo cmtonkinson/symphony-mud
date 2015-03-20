@@ -6,7 +6,7 @@
 #include <vector>
 
 class Command;
-class Creature;
+class Being;
 
 class CommandTable {
   public:

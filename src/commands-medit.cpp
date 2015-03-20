@@ -1,6 +1,6 @@
 
 #include "commands-medit.h"
-#include "creature.h"
+#include "being.h"
 #include "display.h"
 #include "io-handler.h"
 #include "mob.h"
@@ -8,18 +8,18 @@
 
 MCmdAggressiveness::MCmdAggressiveness(void) {
   name("aggressivenes");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<aggressivenes>");
   brief("Change the aggressivenes type of the Mob.");
   addOptions("aggressivenes", "Five point scale:\n  1 - scared\n  2 - passive\n  3 - neutral (default)\n  4 - aggressive\n  5 - mean");
   return;
 }
 
-bool MCmdAggressiveness::execute(Creature* creature, const std::vector<std::string>& args) {
+bool MCmdAggressiveness::execute(Being* being, const std::vector<std::string>& args) {
   unsigned aggressiveness = estring(args[0]);
   if (aggressiveness < Mob::MIN_AGGRESSIVENESS || aggressiveness > Mob::MAX_AGGRESSIVENESS) {
-    creature->send("Invalid aggressivenes.");
-    creature->send(printSyntax());
+    being->send("Invalid aggressivenes.");
+    being->send(printSyntax());
     return false;
   }
   avatar()->medit()->aggressiveness(aggressiveness);
@@ -29,17 +29,17 @@ bool MCmdAggressiveness::execute(Creature* creature, const std::vector<std::stri
 
 MCmdClass::MCmdClass(void) {
   name("class");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<class>");
   brief("Change the class type of the Mob.");
   addOptions("class", ETPClass::Instance().list());
   return;
 }
 
-bool MCmdClass::execute(Creature* creature, const std::vector<std::string>& args) {
+bool MCmdClass::execute(Being* being, const std::vector<std::string>& args) {
   int pclass = 0;
   if ((pclass = ETPClass::Instance().get(args[0])) == 0) {
-    creature->send("Invalid class.");
+    being->send("Invalid class.");
     return false;
   }
   avatar()->medit()->pClass().set(pclass);
@@ -49,14 +49,14 @@ bool MCmdClass::execute(Creature* creature, const std::vector<std::string>& args
 
 MCmdDescription::MCmdDescription(void) {
   name("description");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(0, "");
   brief("Invokes the Text Editor for the Mobs' description.");
   return;
 }
 
-bool MCmdDescription::execute(Creature* creature, const std::vector<std::string>& args) {
-  IOHandler* h = new TeditIOHandler(creature);
+bool MCmdDescription::execute(Being* being, const std::vector<std::string>& args) {
+  IOHandler* h = new TeditIOHandler(being);
   h->getState()["vector"] = (void*)(new std::vector<std::string>(Regex::explode("\n",avatar()->medit()->identifiers().description())));
   h->getState()["name"] = (void*)(new std::string("Mob Description"));
   h->getState()["pointer"] = (void*)avatar()->medit()->identifiers().descriptionp();
@@ -66,17 +66,17 @@ bool MCmdDescription::execute(Creature* creature, const std::vector<std::string>
 
 MCmdGender::MCmdGender(void) {
   name("gender");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<gender>");
   brief("Change the gender of the Mob.");
   addOptions("gender", ETGender::Instance().list());
   return;
 }
 
-bool MCmdGender::execute(Creature* creature, const std::vector<std::string>& args) {
+bool MCmdGender::execute(Being* being, const std::vector<std::string>& args) {
   int gender = 0;
   if ((gender = ETGender::Instance().get(args[0])) == 0) {
-    creature->send("Invalid gender.");
+    being->send("Invalid gender.");
     return false;
   }
   avatar()->medit()->gender().set(gender);
@@ -86,26 +86,26 @@ bool MCmdGender::execute(Creature* creature, const std::vector<std::string>& arg
 
 MCmdInformation::MCmdInformation(void) {
   name("information");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(0, "");
   brief("Displays information about the Mob.");
   return;
 }
 
-bool MCmdInformation::execute(Creature* creature, const std::vector<std::string>& args) {
+bool MCmdInformation::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->send(Mob::getInformation(avatar()->medit()));
   return true;
 }
 
 MCmdKeywords::MCmdKeywords(void) {
   name("keywords");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-1, "<key1 key2 key3 ...>");
   brief("Updtes the Mobs keywords.");
   return;
 }
 
-bool MCmdKeywords::execute(Creature* creature, const std::vector<std::string>& args) {
+bool MCmdKeywords::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> keywords = Regex::explode(" ", args[0]);
   avatar()->medit()->identifiers().getKeywords().clear();
   for (std::vector<std::string>::iterator it = keywords.begin(); it != keywords.end(); ++it) {
@@ -117,14 +117,14 @@ bool MCmdKeywords::execute(Creature* creature, const std::vector<std::string>& a
 
 MCmdLevel::MCmdLevel(void) {
   name("level");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<number>");
   brief("Updates the Mobs level.");
   addOptions("level", "must be between 1 and 100, inclusive");
   return;
 }
 
-bool MCmdLevel::execute(Creature* creature, const std::vector<std::string>& args) {
+bool MCmdLevel::execute(Being* being, const std::vector<std::string>& args) {
   int level = estring(args[0]);
   if (level > 0 && level < 101) {
     avatar()->medit()->level(level);
@@ -138,13 +138,13 @@ bool MCmdLevel::execute(Creature* creature, const std::vector<std::string>& args
 
 MCmdLongname::MCmdLongname(void) {
   name("longname");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-1, "<string>");
   brief("Updates the Mobs long name.");
   return;
 }
 
-bool MCmdLongname::execute(Creature* creature, const std::vector<std::string>& args) {
+bool MCmdLongname::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->medit()->identifiers().longname(args[0]);
   avatar()->send("You've set the mob longname to \"%s\".", avatar()->medit()->identifiers().longname().c_str());
   return true;
@@ -152,18 +152,18 @@ bool MCmdLongname::execute(Creature* creature, const std::vector<std::string>& a
 
 MCmdMobility::MCmdMobility(void) {
   name("mobility");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<mobility>");
   brief("Change the mobility type of the Mob.");
   addOptions("mobility", "Five point scale:\n  1 - stationary\n  2 - sluggish\n  3 - normal (default)\n  4 - roving\n  5 - hyperactive");
   return;
 }
 
-bool MCmdMobility::execute(Creature* creature, const std::vector<std::string>& args) {
+bool MCmdMobility::execute(Being* being, const std::vector<std::string>& args) {
   unsigned mobility = estring(args[0]);
   if (mobility < Mob::MIN_AGGRESSIVENESS || mobility > Mob::MAX_AGGRESSIVENESS) {
-    creature->send("Invalid mobility.");
-    creature->send(printSyntax());
+    being->send("Invalid mobility.");
+    being->send(printSyntax());
     return false;
   }
   avatar()->medit()->mobility(mobility);
@@ -173,17 +173,17 @@ bool MCmdMobility::execute(Creature* creature, const std::vector<std::string>& a
 
 MCmdRace::MCmdRace(void) {
   name("race");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<race>");
   brief("Change the race of the Mob.");
   addOptions("race", ETRace::Instance().list());
   return;
 }
 
-bool MCmdRace::execute(Creature* creature, const std::vector<std::string>& args) {
+bool MCmdRace::execute(Being* being, const std::vector<std::string>& args) {
   int race = 0;
   if ((race = ETRace::Instance().get(args[0])) == 0) {
-    creature->send("Invalid race.");
+    being->send("Invalid race.");
     return false;
   }
   avatar()->medit()->race().set(race);
@@ -193,13 +193,13 @@ bool MCmdRace::execute(Creature* creature, const std::vector<std::string>& args)
 
 MCmdShortname::MCmdShortname(void) {
   name("shortname");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-1, "<string>");
   brief("Updates the Mobs short name.");
   return;
 }
 
-bool MCmdShortname::execute(Creature* creature, const std::vector<std::string>& args) {
+bool MCmdShortname::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->medit()->identifiers().shortname(args[0]);
   avatar()->send("You've set the mob shortname to \"%s\".", avatar()->medit()->identifiers().shortname().c_str());
   return true;

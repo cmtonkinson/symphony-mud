@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_CREATURE
-#define H_SYMPHONY_CREATURE
+#ifndef H_SYMPHONY_BEING
+#define H_SYMPHONY_BEING
 
 #include <list>
 #include <map>
@@ -27,7 +27,7 @@ class Mob;
 class SocialCommand;
 class Group;
 
-class Creature {
+class Being {
   public:
 
     // Wear Locations...
@@ -118,9 +118,9 @@ class Creature {
     static const unsigned ALTERABILITY_LEVEL_DIFFERENCE = 5;
 
     // constructors...
-    Creature(void);
-    Creature(const Creature& ref);
-    virtual ~Creature(void);
+    Being(void);
+    Being(const Being& ref);
+    virtual ~Being(void);
 
     // public accessors...
     std::vector<IOHandler*>&    IOhandlers(void)                                                { return _IOhandlers; }
@@ -130,8 +130,8 @@ class Creature {
     virtual Room*               room(void) const                                                { return _room; }
     emap&                       values(void)                                                    { return _values; }
     const emap&                 values(void) const                                              { return _values; }
-    /* wear() assesses weather or not the creature can don the particular equipment given.  If it can,
-     * then the operation is performed and true is returned.  If the creature can't wear the item,
+    /* wear() assesses weather or not the being can don the particular equipment given.  If it can,
+     * then the operation is performed and true is returned.  If the being can't wear the item,
      * then message is appropriately set and false is returned.
      */
     bool                        wear(Object* article, std::string& message, Object*& removed);
@@ -236,7 +236,7 @@ class Creature {
     void                silver(unsigned silver)                         { _silver = silver; }
     unsigned            silver(void) const                              { return _silver; }
     // combat
-    std::set<Creature*>&  opponents(void)                               { return _opponents; }
+    std::set<Being*>&  opponents(void)                               { return _opponents; }
 
     // Public static methods...
     static unsigned short       stringToAttribute(const std::string& name);
@@ -271,14 +271,14 @@ class Creature {
     void                        modify(Modifier* modifier);
     void                        unmodify(Modifier* modifier);
     void                        doModification(const unsigned short& attribute, const int& magnitude);
-    unsigned short              canSee(Creature* target);
-    std::string                 seeName(Creature* target, bool capitalize = false);
-    const char*                 seeReflexivePronoun(Creature* target, bool capitalize = false); // e.g. "himself"
-    const char*                 seeObjectPronoun(Creature* target, bool capitalize = false);    // e.g. "him"
-    const char*                 seePosessivePronoun(Creature* target, bool capitalize = false); // e.g. "his"
+    unsigned short              canSee(Being* target);
+    std::string                 seeName(Being* target, bool capitalize = false);
+    const char*                 seeReflexivePronoun(Being* target, bool capitalize = false); // e.g. "himself"
+    const char*                 seeObjectPronoun(Being* target, bool capitalize = false);    // e.g. "him"
+    const char*                 seePosessivePronoun(Being* target, bool capitalize = false); // e.g. "his"
     unsigned short              canSee(Object* target);
     std::string                 seeName(Object* target, bool capitalize = false);
-    bool                        canAlter(Creature* target);
+    bool                        canAlter(Being* target);
     bool                        canMove(const unsigned short& direction, std::string& message);
     bool                        move(const unsigned short& direction);
     IOHandler*                  IOhandler(void);
@@ -286,7 +286,7 @@ class Creature {
     void                        popIOHandler(void);
     void                        replaceIOHandler(IOHandler* handler);
     void                        handle(void);
-    Creature*                   findCreature(const std::string& name);
+    Being*                   findBeing(const std::string& name);
     Object*                     findObject(const std::string& query);
     unsigned short              getWearloc(const Object::Wearable& wearable) const;
     static const char*          wearLocName(const unsigned short& wearloc);
@@ -299,14 +299,14 @@ class Creature {
     // Combat...
     void          formGroup(void);
     void          ungroup(void);
-    void          add_opponent(Creature* opponent, bool reciprocal = true);
-    void          remove_opponent(Creature* opponent, bool reciprocal = true);
+    void          add_opponent(Being* opponent, bool reciprocal = true);
+    void          remove_opponent(Being* opponent, bool reciprocal = true);
     void          scheduleAttack(void);
     bool          attack(Job* job);
     void          acquireTarget(void);
     void          strike(void);
-    void          takeDamage(int damage, Creature* damager = NULL);
-    void          die(Creature* killer = NULL);
+    void          takeDamage(int damage, Being* damager = NULL);
+    void          die(Being* killer = NULL);
     void          peace(void);
     void          awardExperience(unsigned experience);
     void          gainLevel(void);
@@ -396,12 +396,12 @@ class Creature {
     unsigned                    _gold;
     unsigned                    _silver;
     // Combat
-    std::set<Creature*>         _opponents;
-    Creature*                   _target;
+    std::set<Being*>         _opponents;
+    Being*                   _target;
     Job*                        _next_attack;
     AbilityTable                _learned;
     std::map<Ability*,unsigned> _ability_mastery;
 
 };
 
-#endif // #ifndef H_SYMPHONY_CREATURE
+#endif // #ifndef H_SYMPHONY_BEING

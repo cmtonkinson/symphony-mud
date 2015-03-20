@@ -4,7 +4,7 @@
 
 #include "enumTable.h"
 
-class Creature;
+class Being;
 
 class ObjFurniture {
   public:
@@ -26,12 +26,12 @@ class ObjFurniture {
     unsigned  standOn(void) const                     { return _standOn; }
     void      current(const unsigned& current)        { _current = current; }
     unsigned  current(void) const                     { return _current; }
-    std::map<EnumInt,std::list<Creature*> >&        creatures(void)       { return _creatures; }
-    const std::map<EnumInt,std::list<Creature*> >&  creatures(void) const { return _creatures; }
+    std::map<EnumInt,std::list<Being*> >&        beings(void)       { return _beings; }
+    const std::map<EnumInt,std::list<Being*> >&  beings(void) const { return _beings; }
 
     // general methods
-    bool  add(Creature* creature, const EnumInt& position);
-    bool  remove(Creature* creature);
+    bool  add(Being* being, const EnumInt& position);
+    bool  remove(Being* being);
 
   private:
     unsigned _capacity; // how many, in total, can be using this at once?
@@ -40,7 +40,7 @@ class ObjFurniture {
     unsigned _sitOn;    // how many can sit on this?
     unsigned _standOn;  // how many can stand on this?
     unsigned _current;  // how many, in total, are currently here?
-    std::map<EnumInt,std::list<Creature*> > _creatures; // who's here?
+    std::map<EnumInt,std::list<Being*> > _beings; // who's here?
 };
 
 #endif // H_SYMPHONY_OBJECT_FURNITURE

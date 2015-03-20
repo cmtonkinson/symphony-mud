@@ -1,5 +1,5 @@
 
-#include "creature.h"
+#include "being.h"
 #include "display.h"
 #include "group.h"
 #include "room.h"
@@ -12,18 +12,18 @@ Group::~Group(void) {
   return;
 }
 
-void Group::leader(Creature* new_leader) {
+void Group::leader(Being* new_leader) {
   _leader = new_leader;
   return;
 }
 
-void Group::add_member(Creature* member) {
+void Group::add_member(Being* member) {
   _members.insert(member);
   member->group(this);
   return;
 }
 
-void Group::remove_member(Creature* member) {
+void Group::remove_member(Being* member) {
   _members.erase(member);
   member->group(NULL);
   if (_members.empty()) {
@@ -32,23 +32,23 @@ void Group::remove_member(Creature* member) {
   return;
 }
 
-bool Group::is_member(Creature* c) {
-  return _members.find(c) != _members.end();
+bool Group::is_member(Being* b) {
+  return _members.find(b) != _members.end();
 }
 
-void Group::send(std::string format, Creature* creature, void* arg1, void* arg2, const unsigned long& target) {
+void Group::send(std::string format, Being* being, void* arg1, void* arg2, const unsigned long& target) {
   std::string message;
   format = Regex::trim(format).append(1, '\n');
-  for (std::set<Creature*>::iterator c_it = members().begin(); c_it != members().end(); ++c_it) {
+  for (std::set<Being*>::iterator c_it = members().begin(); c_it != members().end(); ++c_it) {
     // Skip if the target is wrong...
-    if  (   (target == Room::TO_CREATURE  && *c_it != creature)
+    if  (   (target == Room::TO_BEING  && *c_it != being)
           || (target == Room::TO_VICT      && (*c_it != arg1 || *c_it != arg2))
-          || (target == Room::TO_NOTVICT   && (*c_it == creature || *c_it == arg1 || *c_it == arg2))
-          || (target == Room::TO_ROOM      && *c_it == creature)
+          || (target == Room::TO_NOTVICT   && (*c_it == being || *c_it == arg1 || *c_it == arg2))
+          || (target == Room::TO_ROOM      && *c_it == being)
        ) {
       continue;
     }
-    (*c_it)->send(Display::formatAction(format.c_str(), creature, arg1, arg2, *c_it));
+    (*c_it)->send(Display::formatAction(format.c_str(), being, arg1, arg2, *c_it));
   }
   return;
 }

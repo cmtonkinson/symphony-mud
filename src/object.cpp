@@ -1,6 +1,6 @@
 
 #include "compoundTable.h"
-#include "creature.h"
+#include "being.h"
 #include "object-armor.h"
 #include "object-clothing.h"
 #include "object-container.h"
@@ -227,7 +227,7 @@ std::string Object::serializeModifiers(void) const {
   std::vector<std::string> foo;
   char buf[128];
   for (auto iter : modifiers()) {
-    sprintf(buf, "%s:%d", Creature::attributeToString(iter->attribute()), iter->magnitude());
+    sprintf(buf, "%s:%d", Being::attributeToString(iter->attribute()), iter->magnitude());
     foo.push_back(buf);
   }
   return Regex::implode("~", foo);
@@ -240,7 +240,7 @@ void Object::unserializeModifiers(std::string ser) {
   int mag = 0;
   for (auto iter : foo) {
     bar = Regex::explode(":", iter);
-    attr = Creature::stringToAttribute(bar[0]);
+    attr = Being::stringToAttribute(bar[0]);
     sscanf(bar[1].c_str(), "%d", &mag);
     modifiers().push_back(new Modifier(attr, mag));
   }
@@ -313,7 +313,7 @@ longname..... %s\n\n\
   if (!modifiers().empty()) {
     output.append("\n  --== {Yattribute modifiers ==--\n");
     for (std::list<Modifier*>::const_iterator it = modifiers().begin(); it != modifiers().end(); ++it) {
-      sprintf(buffer, "{x%s: {%c%+d{x\n", Creature::attributeToString((*it)->attribute()), (*it)->magnitude() > 0 ? 'G' : 'R', (*it)->magnitude());
+      sprintf(buffer, "{x%s: {%c%+d{x\n", Being::attributeToString((*it)->attribute()), (*it)->magnitude() > 0 ? 'G' : 'R', (*it)->magnitude());
       output.append(buffer);
     }
   }

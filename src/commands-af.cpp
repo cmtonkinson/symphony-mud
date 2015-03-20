@@ -12,13 +12,13 @@
 
 CmdAdminNote::CmdAdminNote(void) {
   name("adminnote");
-  level(Creature::CREATOR);
+  level(Being::CREATOR);
   addSyntax(-1, "<string>");
   brief("Broadcasts a message to all connected players.");
   return;
 }
 
-bool CmdAdminNote::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdAdminNote::execute(Being* being, const std::vector<std::string>& args) {
   std::string message;
   message.assign("{YAdministrative Note{x: {y").append(args[0]).append("{x\n");
   World::Instance().broadcast(message);
@@ -27,14 +27,14 @@ bool CmdAdminNote::execute(Creature* creature, const std::vector<std::string>& a
 
 CmdAedit::CmdAedit(void) {
   name("aedit");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(1, "<areaID>");
   addSyntax(3, "create <first vnum> <area size>");
   brief("Launches the Area Editor.");
   return;
 }
 
-bool CmdAedit::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdAedit::execute(Being* being, const std::vector<std::string>& args) {
   std::set<Area*,area_comp>::iterator it;
   Area* area = NULL;
   unsigned short minimum = 25;
@@ -45,7 +45,7 @@ bool CmdAedit::execute(Creature* creature, const std::vector<std::string>& args)
     unsigned long size = estring(args[2]);
     unsigned long high = low + size - 1;
     // Check permissions...
-    if (!(avatar()->adminFlags().test(ADMIN_HEADBUILDER) || avatar()->level() >= Creature::CREATOR)) {
+    if (!(avatar()->adminFlags().test(ADMIN_HEADBUILDER) || avatar()->level() >= Being::CREATOR)) {
       avatar()->send("Only the Head Builder can create new areas.");
       return false;
     }
@@ -82,14 +82,14 @@ bool CmdAedit::execute(Creature* creature, const std::vector<std::string>& args)
       return false;
     }
     // Check permissions...
-    if ((area->ID() == 1 && avatar()->level() < Creature::CREATOR) || !area->hasPermission(avatar())) {
+    if ((area->ID() == 1 && avatar()->level() < Being::CREATOR) || !area->hasPermission(avatar())) {
       avatar()->send("You can't edit %s.", area->name().c_str());
       return false;
     }
     // Make sure no one else is editing the area...
     for (auto iter : World::Instance().getAvatars()) {
       if (iter.second->mode().number() == MODE_AEDIT && iter.second->aedit() == area) {
-        avatar()->send("Sorry, %s is currently editing %s (area %lu).", avatar()->seeName(((Creature*)iter.second)).c_str(), area->name().c_str(), area->ID());
+        avatar()->send("Sorry, %s is currently editing %s (area %lu).", avatar()->seeName(((Being*)iter.second)).c_str(), area->name().c_str(), area->ID());
         return false;
       }
     }
@@ -111,7 +111,7 @@ CmdAfk::CmdAfk(void) {
   return;
 }
 
-bool CmdAfk::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdAfk::execute(Being* being, const std::vector<std::string>& args) {
   std::string message;
 
   if (avatar()->whoFlags().test(WHO_AFK)) {
@@ -134,12 +134,12 @@ CmdAreas::CmdAreas(void) {
   return;
 }
 
-bool CmdAreas::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdAreas::execute(Being* being, const std::vector<std::string>& args) {
   std::string output("Areas:");
   char buffer[Socket::MAX_BUFFER];
 
   for (auto iter : World::Instance().getAreas()) {
-    if (avatar()->level() >= Creature::DEMIGOD) {
+    if (avatar()->level() >= Being::DEMIGOD) {
       if (iter->hasPermission(avatar())) {
         sprintf(buffer, "\n ({Y%3lu{x) [ {C%4lu{x - {C%4lu{x ] {M%s{x", iter->ID(), iter->low(), iter->high(), iter->name().c_str());
       } else {
@@ -158,7 +158,7 @@ bool CmdAreas::execute(Creature* creature, const std::vector<std::string>& args)
 CmdAt::CmdAt(void) {
   name("at");
   playerOnly(true);
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-2, "<player> <command>");
   addSyntax(-2, "<mob> <command>");
   addSyntax(-2, "<vnum> <command>");
@@ -166,8 +166,8 @@ CmdAt::CmdAt(void) {
   return;
 }
 
-bool CmdAt::execute(Creature* creature, const std::vector<std::string>& args) {
-  Creature* foo = NULL;
+bool CmdAt::execute(Being* being, const std::vector<std::string>& args) {
+  Being* foo = NULL;
   Room* current = avatar()->room();
   Room* target = NULL;
   bool success = false;
@@ -178,7 +178,7 @@ bool CmdAt::execute(Creature* creature, const std::vector<std::string>& args) {
       return false;
     }
   } else {
-    if ((foo = World::Instance().findCreature(args[0])) == NULL) {
+    if ((foo = World::Instance().findBeing(args[0])) == NULL) {
       avatar()->send("They aren't around at the moment.");
       return false;
     }
@@ -198,7 +198,7 @@ bool CmdAt::execute(Creature* creature, const std::vector<std::string>& args) {
 
 CmdBigBrother::CmdBigBrother(void) {
   name("bigbrother");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(0, "");
   addSyntax(1, "on");
   addSyntax(1, "off");
@@ -208,7 +208,7 @@ CmdBigBrother::CmdBigBrother(void) {
   return;
 }
 
-bool CmdBigBrother::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdBigBrother::execute(Being* being, const std::vector<std::string>& args) {
   std::string output;
   std::string on = "[{GON{x]";
   std::string off = "[{rOFF{x]";
@@ -285,7 +285,7 @@ CmdBored::CmdBored(void) {
   return;
 }
 
-bool CmdBored::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdBored::execute(Being* being, const std::vector<std::string>& args) {
   std::string message;
 
   if (avatar()->whoFlags().test(WHO_BORED)) {
@@ -310,7 +310,7 @@ CmdBoards::CmdBoards(void) {
   return;
 }
 
-bool CmdBoards::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdBoards::execute(Being* being, const std::vector<std::string>& args) {
   std::map<unsigned,Board*>::iterator b_it;
   std::map<unsigned,Note*>::iterator n_it;
   unsigned board = 0;
@@ -363,7 +363,7 @@ CmdBusy::CmdBusy(void) {
   return;
 }
 
-bool CmdBusy::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdBusy::execute(Being* being, const std::vector<std::string>& args) {
   std::string message;
 
   if (avatar()->whoFlags().test(WHO_BUSY)) {
@@ -388,15 +388,15 @@ CmdCast::CmdCast(void) {
   return;
 }
 
-bool CmdCast::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdCast::execute(Being* being, const std::vector<std::string>& args) {
   Ability* spell = NULL;
 
-  if ((spell = creature->find_spell(args[0])) == NULL) {
-    creature->send("What spell was that again?\n");
+  if ((spell = being->find_spell(args[0])) == NULL) {
+    being->send("What spell was that again?\n");
     return false;
   }
 
-  return creature->intone(spell);
+  return being->intone(spell);
 }
 
 CmdChannels::CmdChannels(void) {
@@ -407,7 +407,7 @@ CmdChannels::CmdChannels(void) {
   return;
 }
 
-bool CmdChannels::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdChannels::execute(Being* being, const std::vector<std::string>& args) {
   std::string output;
   std::string on = "{x[{GON{x]";
   std::string off = "{x[{rOFF{x]";
@@ -420,13 +420,13 @@ bool CmdChannels::execute(Creature* creature, const std::vector<std::string>& ar
 
 CmdClone::CmdClone(void) {
   name("clone");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(2, "<object> <times>");
   brief("Make an exact copy of an existing object.");
   return;
 }
 
-bool CmdClone::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdClone::execute(Being* being, const std::vector<std::string>& args) {
   Object* object = NULL;
   Object* clone = NULL;
   unsigned times = 0;
@@ -471,26 +471,26 @@ CmdClose::CmdClose(void) {
   return;
 }
 
-bool CmdClose::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdClose::execute(Being* being, const std::vector<std::string>& args) {
   Exit* exit = NULL;
   Exit* inv = NULL;
 
-  if ((exit = creature->room()->exit(args[0])) == NULL) {
-    creature->send("There is no door in that direction.");
+  if ((exit = being->room()->exit(args[0])) == NULL) {
+    being->send("There is no door in that direction.");
     return false;
   }
   if (exit->flag(EXIT_CLOSED)) {
-    creature->send("It's already closed.");
+    being->send("It's already closed.");
     return false;
   }
   if (!exit->flag(EXIT_CLOSEABLE)) {
-    creature->send("You can't close that.");
+    being->send("You can't close that.");
     return false;
   }
 
   exit->flag(EXIT_CLOSED, true);
-  creature->send("You close the door.");
-  creature->room()->send("$p closed the way $e.", creature, exit);
+  being->send("You close the door.");
+  being->room()->send("$p closed the way $e.", being, exit);
   if ((inv = exit->targetRoom()->exit(Exit::inverse(exit->direction().number()))) != NULL) {
     exit->targetRoom()->send("The way $e has been closed.", NULL, inv);
   }
@@ -505,7 +505,7 @@ CmdCommands::CmdCommands(void) {
   return;
 }
 
-bool CmdCommands::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdCommands::execute(Being* being, const std::vector<std::string>& args) {
   CommandTable* table = avatar()->IOhandler()->commandTable();
   std::map<unsigned short,std::vector<std::string> > commands;
   std::vector<std::string> special_commands;
@@ -515,7 +515,7 @@ bool CmdCommands::execute(Creature* creature, const std::vector<std::string>& ar
 
   // Find and display all 'special' commands (i.e. mode-specific commands) if we've got any...
   for (std::vector<Command*>::iterator it = table->commands().begin(); it != table->commands().end(); ++it) {
-    if (creature->level() >= (*it)->level() && (*it)->special()) {
+    if (being->level() >= (*it)->level() && (*it)->special()) {
       special_commands.push_back((*it)->name());
     }
   }
@@ -527,7 +527,7 @@ bool CmdCommands::execute(Creature* creature, const std::vector<std::string>& ar
 
   // Find and display all standard commands...
   for (std::vector<Command*>::iterator it = table->commands().begin(); it != table->commands().end(); ++it) {
-    if (creature->level() >= (*it)->level() && !(*it)->special() && !(*it)->social()) {
+    if (being->level() >= (*it)->level() && !(*it)->special() && !(*it)->social()) {
       if ((*it)->enabled()) {
         foo.assign((*it)->name());
       } else {
@@ -539,31 +539,31 @@ bool CmdCommands::execute(Creature* creature, const std::vector<std::string>& ar
   for (std::map<unsigned short,std::vector<std::string> >::reverse_iterator m_it = commands.rbegin(); m_it != commands.rend(); ++m_it) {
     sort(m_it->second.begin(), m_it->second.end());
     switch (m_it->first) {
-      case Creature::CREATOR:   output.append("\n--== {cAdministrator");  break;
-      case Creature::GOD:       output.append("\n--== {cGod");            break;
-      case Creature::DEMIGOD:   output.append("\n--== {cDemigod");        break;
-      case Creature::DUKE:      output.append("\n--== {cDuke");           break;
-      case Creature::LORD:      output.append("\n--== {cLord");           break;
-      case Creature::HERO:      output.append("\n--== {cHero");           break;
+      case Being::CREATOR:   output.append("\n--== {cAdministrator");  break;
+      case Being::GOD:       output.append("\n--== {cGod");            break;
+      case Being::DEMIGOD:   output.append("\n--== {cDemigod");        break;
+      case Being::DUKE:      output.append("\n--== {cDuke");           break;
+      case Being::LORD:      output.append("\n--== {cLord");           break;
+      case Being::HERO:      output.append("\n--== {cHero");           break;
       default:        output.append("\n--== {cGeneral");        break;
     }
     sprintf(buf, " Commands ({C%u{c) {x==--\n", (unsigned)m_it->second.size());
     output.append(buf).append(Display::formatColumns(m_it->second));
   }
 
-  creature->send(output);
+  being->send(output);
   return true;
 }
 
 CmdConnections::CmdConnections(void) {
   name("connections");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(0, "");
   brief("Displays the status of all current connections.");
   return;
 }
 
-bool CmdConnections::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdConnections::execute(Being* being, const std::vector<std::string>& args) {
   estring output;
   char buffer[Socket::MAX_BUFFER];
 
@@ -572,7 +572,7 @@ bool CmdConnections::execute(Creature* creature, const std::vector<std::string>&
   output.append("  ------------------------------------------------------------\n");
 
   for (std::map<std::string,Avatar*>::const_iterator it = World::Instance().getAvatars().begin(); it != World::Instance().getAvatars().end(); ++it) {
-    if (creature->canSee(it->second) == Creature::SEE_NAME) {
+    if (being->canSee(it->second) == Being::SEE_NAME) {
       sprintf(buffer, "  {x%-15s{g%-15s{W%-20s{C%-10d\n",
         it->second->identifiers().shortname().c_str(),
         it->second->status().string().c_str(),
@@ -583,7 +583,7 @@ bool CmdConnections::execute(Creature* creature, const std::vector<std::string>&
     }
   }
 
-  creature->send(output);
+  being->send(output);
 
   return true;
 }
@@ -595,7 +595,7 @@ CmdColors::CmdColors(void) {
   return;
 }
 
-bool CmdColors::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdColors::execute(Being* being, const std::vector<std::string>& args) {
   std::string output;
   output.append("Supported color codes:\n\n");
   output.append("  {{r {rdark red      {x{{R {Rbright red{x\n");
@@ -607,19 +607,19 @@ bool CmdColors::execute(Creature* creature, const std::vector<std::string>& args
   output.append("  {{w {wdark gray     {x{{W {Wpure white{x\n\n");
   output.append("  {{? {?a single random color{x\n");
   output.append("  Any other characters will be treated to mean \"default\".");
-  creature->send(output);
+  being->send(output);
   return true;
 }
 
 CmdCrash::CmdCrash(void) {
   name("crash");
-  level(Creature::CREATOR);
+  level(Being::CREATOR);
   addSyntax(1, "crash");
   brief("Crashes the mud with a SIGSEG_V.  Why?  Well, you just never know...");
   return;
 }
 
-bool CmdCrash::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdCrash::execute(Being* being, const std::vector<std::string>& args) {
   if (args[0] == "crash") {
     ((Avatar*)NULL)->send("DIE!!");
   } else {
@@ -631,13 +631,13 @@ bool CmdCrash::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdDashboard::CmdDashboard(void) {
   name("dashboard");
-  level(Creature::CREATOR);
+  level(Being::CREATOR);
   addSyntax(0, "");
   brief("Displays server status information.");
   return;
 }
 
-bool CmdDashboard::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdDashboard::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->send("  System time:   {y%s{x\n", World::strtime().c_str());
   avatar()->send("  Engine booted: {y%s{x\n", World::strtime(World::Instance().booted()).c_str());
   avatar()->send("  Engine online: {y%s{x\n", World::realtime(World::now() - World::Instance().booted()).c_str());
@@ -655,14 +655,14 @@ CmdDelete::CmdDelete(void) {
   return;
 }
 
-bool CmdDelete::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdDelete::execute(Being* being, const std::vector<std::string>& args) {
   CmdQuit quit;
   std::vector<std::string> quit_args(1);
   if (args[0] == "delete") {
     avatar()->deletionStatus(Avatar::DELETE_ON_LOGIN);
     avatar()->send("You will need to log in to confirm the deletion.\n\n");
     quit.avatar(avatar());
-    quit.execute(creature, quit_args);
+    quit.execute(being, quit_args);
     return true;
   } else {
     avatar()->send("You must type \"delete delete\" exactly in order to delete your character.\n\n");
@@ -675,17 +675,17 @@ CmdDemote::CmdDemote(void) {
   name("demote");
   addSyntax(2, "<player> <level>");
   addSyntax(2, "<mob> <level>");
-  level(Creature::CREATOR);
+  level(Being::CREATOR);
   brief("Reduces the target to the given level.");
   return;
 }
 
-bool CmdDemote::execute(Creature* creature, const std::vector<std::string>& args) {
-  Creature* target = NULL;
+bool CmdDemote::execute(Being* being, const std::vector<std::string>& args) {
+  Being* target = NULL;
   unsigned level = estring(args[1]);
 
   // do the checks...
-  if ((target = avatar()->findCreature(args[0])) == NULL) {
+  if ((target = avatar()->findBeing(args[0])) == NULL) {
     avatar()->send("They're not around at the moment.");
     return false;
   }
@@ -719,7 +719,7 @@ CmdDescription::CmdDescription(void) {
   return;
 }
 
-bool CmdDescription::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdDescription::execute(Being* being, const std::vector<std::string>& args) {
   IOHandler* h = new TeditIOHandler(avatar());
   h->getState()["vector"] = (void*)(new std::vector<std::string>(Regex::explode("\n",avatar()->identifiers().description())));
   h->getState()["name"] = (void*)(new std::string("Avatar Description"));
@@ -730,13 +730,13 @@ bool CmdDescription::execute(Creature* creature, const std::vector<std::string>&
 
 CmdDisable::CmdDisable(void) {
   name("disable");
-  level(Creature::CREATOR);
+  level(Being::CREATOR);
   addSyntax(2, "<command table> <command name>");
   brief("Makes a command (from a certain command table) unusable.");
   return;
 }
 
-bool CmdDisable::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdDisable::execute(Being* being, const std::vector<std::string>& args) {
   if (World::Instance().toggleCommand(args[0][0], args[1], false)) {
     avatar()->send("%s has been {Rdisabled{x!\n", args[1].c_str());
     return true;
@@ -748,16 +748,16 @@ bool CmdDisable::execute(Creature* creature, const std::vector<std::string>& arg
 
 CmdDisconnect::CmdDisconnect(void) {
   name("disconnect");
-  level(Creature::CREATOR);
+  level(Being::CREATOR);
   addSyntax(1, "<player>");
   brief("Terminates the targets connection (their account is saved first)");
   return;
 }
 
-bool CmdDisconnect::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdDisconnect::execute(Being* being, const std::vector<std::string>& args) {
   Avatar* target = NULL;
   target = World::Instance().findAvatar(args[0]);
-  if (!target || avatar()->canSee(target) < Creature::SEE_NAME) {
+  if (!target || avatar()->canSee(target) < Being::SEE_NAME) {
     avatar()->send("They aren't around right now.");
     return false;
   }
@@ -779,20 +779,20 @@ CmdDrop::CmdDrop(void) {
   return;
 }
 
-bool CmdDrop::execute(Creature* creature, const std::vector<std::string>& args) {
-  std::list<Object*> objects = creature->inventory().searchObjects(args[0]);
+bool CmdDrop::execute(Being* being, const std::vector<std::string>& args) {
+  std::list<Object*> objects = being->inventory().searchObjects(args[0]);
   if (objects.empty()) {
-    creature->send("You aren't carrying that.");
+    being->send("You aren't carrying that.");
     return false;
   }
   for (std::list<Object*>::iterator it = objects.begin(); it != objects.end(); ++it) {
     if ((*it)->flags().test(OBJECT_NODROP)) {
-      creature->send("You can't drop %s.\n", (*it)->identifiers().shortname().c_str());
+      being->send("You can't drop %s.\n", (*it)->identifiers().shortname().c_str());
     } else {
-      creature->send("You drop %s.\n", (*it)->identifiers().shortname().c_str());
-      creature->room()->send_cond("$p drops $o.\n", creature, *it);
-      creature->inventory().remove(*it);
-      creature->room()->inventory().add(*it);
+      being->send("You drop %s.\n", (*it)->identifiers().shortname().c_str());
+      being->room()->send_cond("$p drops $o.\n", being, *it);
+      being->inventory().remove(*it);
+      being->room()->inventory().add(*it);
     }
   }
   return false;
@@ -800,17 +800,17 @@ bool CmdDrop::execute(Creature* creature, const std::vector<std::string>& args) 
 
 CmdDunce::CmdDunce(void) {
   name("dunce");
-  level(Creature::GOD);
+  level(Being::GOD);
   addSyntax(1, "<player>");
   brief("Toggles the \"dunce\" status of the target player.  That'll teach 'em.");
   return;
 }
 
-bool CmdDunce::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdDunce::execute(Being* being, const std::vector<std::string>& args) {
   Avatar* target = World::Instance().findAvatar(args[0]);
   char* dunce = strdup(FTAvatarWho::Instance().find(WHO_DUNCE));
 
-  if (!target || avatar()->canSee(target) != Creature::SEE_NAME) {
+  if (!target || avatar()->canSee(target) != Being::SEE_NAME) {
     avatar()->send("They're not around at the moment.");
     return false;
   }
@@ -840,13 +840,13 @@ bool CmdDunce::execute(Creature* creature, const std::vector<std::string>& args)
 
 CmdEat::CmdEat(void) {
   name("eat");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(1, "<object>");
   brief("Destroys an object.");
   return;
 }
 
-bool CmdEat::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdEat::execute(Being* being, const std::vector<std::string>& args) {
   std::list<Object*> dead = avatar()->inventory().searchObjects(args[0]);
   if (dead.empty()) {
     avatar()->send("You aren't carrying that.");
@@ -868,14 +868,14 @@ CmdEmote::CmdEmote(void) {
   return;
 }
 
-bool CmdEmote::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdEmote::execute(Being* being, const std::vector<std::string>& args) {
   switch (args[0][0]) {
     case ',':
     case '\'':
-      creature->room()->send("$p$s", creature, (void*)args[0].c_str(), NULL, Room::TO_ALL);
+      being->room()->send("$p$s", being, (void*)args[0].c_str(), NULL, Room::TO_ALL);
       break;
     default:
-      creature->room()->send("$p $s", creature, (void*)args[0].c_str(), NULL, Room::TO_ALL);
+      being->room()->send("$p $s", being, (void*)args[0].c_str(), NULL, Room::TO_ALL);
   }
   return true;
 }
@@ -887,31 +887,31 @@ CmdEquipment::CmdEquipment(void) {
   return;
 }
 
-bool CmdEquipment::execute(Creature* creature, const std::vector<std::string>& args) {
-  creature->send("You're wearing:");
-  if (creature->equipment().objectMap().empty()) {
-    creature->send(" nothing!");
+bool CmdEquipment::execute(Being* being, const std::vector<std::string>& args) {
+  being->send("You're wearing:");
+  if (being->equipment().objectMap().empty()) {
+    being->send(" nothing!");
   } else {
-    creature->send("\n");
-    creature->send(creature->equipment().listObjects());
+    being->send("\n");
+    being->send(being->equipment().listObjects());
   }
   return true;
 }
 
 CmdEnable::CmdEnable(void) {
   name("enable");
-  level(Creature::CREATOR);
+  level(Being::CREATOR);
   addSyntax(2, "<command table> <command name>");
   brief("Makes a command (from a certain command table) usable once again.");
   return;
 }
 
-bool CmdEnable::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdEnable::execute(Being* being, const std::vector<std::string>& args) {
   if (World::Instance().toggleCommand(args[0][0], args[1], true)) {
-    creature->send("%s has been {Genabled{x!\n", args[1].c_str());
+    being->send("%s has been {Genabled{x!\n", args[1].c_str());
     return true;
   } else {
-    creature->send("Sorry - either the table prefix or command name you entered wasn't recognized.\n");
+    being->send("Sorry - either the table prefix or command name you entered wasn't recognized.\n");
     return false;
   }
 }
@@ -924,10 +924,10 @@ CmdExit::CmdExit(void) {
   return;
 }
 
-bool CmdExit::execute(Creature* creature, const std::vector<std::string>& args) {
+bool CmdExit::execute(Being* being, const std::vector<std::string>& args) {
   switch (avatar()->composing().number()) {
     case COMP_NOTE:
-      avatar()->replaceIOHandler(new NoteExitIOHandler(creature));
+      avatar()->replaceIOHandler(new NoteExitIOHandler(being));
       break;
     default:
       avatar()->popIOHandler();
@@ -938,19 +938,19 @@ bool CmdExit::execute(Creature* creature, const std::vector<std::string>& args) 
 
 CmdForce::CmdForce(void) {
   name("force");
-  level(Creature::DEMIGOD);
+  level(Being::DEMIGOD);
   addSyntax(-2, "<player> <command>");
   addSyntax(-2, "<mob> <command>");
   brief("Cause the victim to perform the given command.");
   return;
 }
 
-bool CmdForce::execute(Creature* creature, const std::vector<std::string>& args) {
-  Creature* target = NULL;
+bool CmdForce::execute(Being* being, const std::vector<std::string>& args) {
+  Being* target = NULL;
   bool success = false;
 
   // Aquire target...
-  if ((target = avatar()->findCreature(args[0])) == NULL) {
+  if ((target = avatar()->findBeing(args[0])) == NULL) {
     avatar()->send("They're not around at the moment.");
     return false;
   }
@@ -968,9 +968,9 @@ bool CmdForce::execute(Creature* creature, const std::vector<std::string>& args)
   if (target->isAvatar()) {
     success = target->IOhandler()->handle(args[1]);
   } else {
-    World::Instance().npcIOHandler()->creature(target);
+    World::Instance().npcIOHandler()->being(target);
     success = World::Instance().npcIOHandler()->handle(args[1]);
-    World::Instance().npcIOHandler()->creature(NULL);
+    World::Instance().npcIOHandler()->being(NULL);
   }
 
   return success;

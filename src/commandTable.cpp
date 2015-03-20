@@ -1,7 +1,7 @@
 
 #include "command.h"
 #include "commandTable.h"
-#include "creature.h"
+#include "being.h"
 #include "regex.h"
 
 CommandTable::~CommandTable(void) {
@@ -11,7 +11,7 @@ CommandTable::~CommandTable(void) {
 void CommandTable::add(Command* command, bool special) {
   command->commandTable(this);
   commands().push_back(command);
-  if (command->level() > Creature::HERO) {
+  if (command->level() > Being::HERO) {
     command->playerOnly(true);
   }
   if (special) {
