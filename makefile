@@ -12,12 +12,13 @@ BIN_DIR				= bin
 SRC_FILES			:= $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES			:= $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES)) $(PROTO_OBJ_FILES)
 DEP_FILES			:= $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.d,$(SRC_FILES))
+HASH_FILE			= $(SRC_DIR)/githash.h
 
 # Main directives
-dev: $(OBJ_FILES)
+dev: $(OBJ_FILES) $(HASH_FILE)
 	$(CPPC) $(FLAGS_DEV) $(OBJ_FILES) $(LIBS) -o $(BIN_DIR)/$(PROJECT)
 
-prod: $(SRC_FILES)
+prod: $(SRC_FILES) $(HASH_FILE)
 	$(CPPC) $(FLAGS_PROD) $(SRC_FILES) $(LIBS) -o $(BIN_DIR)/$(PROJECT)
 
 clean: muscl-clean test-clean
@@ -35,6 +36,9 @@ $(OBJ_DIR)/%.d: $(SRC_DIR)/%.cpp
 	@sed -i -e 's|\(.*\)\.o:|$(OBJ_DIR)/\1.o $(OBJ_DIR)/\1.d $(TEST_OBJ_DIR)/\1_utest.o:|' $@
 
 -include $(DEP_FILES)
+
+$(HASH_FILE):
+	bin/update_githash.sh > $@
 
 ######################## MUSCL ########################
 MUSCL_SRC_DIR     = src/muscl

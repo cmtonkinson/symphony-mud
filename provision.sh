@@ -7,7 +7,7 @@ apt-get -y update
 apt-get -yfV dist-upgrade
 
 DEBIAN_FRONTEND=noninteractive apt-get install -yfV \
-  clang ccache gdb                                  \
+  git clang ccache gdb                              \
   libpcre3 libpcre3-dbg libpcre3-dev                \
   libtool automake                                  \
 
