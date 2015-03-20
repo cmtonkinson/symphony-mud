@@ -3,6 +3,7 @@
 #include <dirent.h>
 #include "commandTable-default.h"
 #include "commandTable.h"
+#include "log.h"
 #include "storage.h"
 #include "world.h"
 
