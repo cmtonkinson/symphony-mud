@@ -139,7 +139,7 @@ void SocialCommand::save(void) {
   FILE* fp             = nullptr;
 
   if ((fp = fopen(filename.c_str(), "w")) != NULL) {
-    Storage::dump(fp, this);
+    Storage::write(fp, this);
     fclose(fp);
   } else {
     fprintf(stderr, "Failed to write social file %s.\n", filename.c_str());
@@ -154,7 +154,7 @@ SocialCommand* SocialCommand::load(std::string filename) {
 
   if ((fp = fopen(filename.c_str(), "r")) != NULL) {
     social = new SocialCommand();
-    Storage::load(fp, social);
+    Storage::read(fp, social);
     social->initialize();
     fclose(fp);
   } else {

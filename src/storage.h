@@ -46,18 +46,18 @@ typedef std::function<void()> voidFunc;
 #define STORE_IN(TYPE, SPECIFIER) {               \
   TYPE x;                                         \
   fscanf(fp, SPECIFIER, &x);                      \
-  (*item.*method)(x);                           \
+  (*item.*method)(x);                             \
   return;                                         \
 }                                                 \
 
-// BEGIN and END are to be used in the various Storage::dump() methods to signal the boundaries of
+// BEGIN and END are to be used in the various Storage::write() methods to signal the boundaries of
 // an items serialization. All item keys should appear between matching BEGIN/END markers, only
 // one set of BEGIN/END markers is permissable per item, and all nested items must be placed
 // within the parents markers.
 #define BEGIN(BOUNDARY) fprintf(fp, "%s\n", BOUNDARY);
 #define END(BOUNDARY)   fprintf(fp, "/%s\n", BOUNDARY);
 
-// STORE_KEY is meant to be used "publicly" in the various Storage::load() methods to perform the
+// STORE_KEY is meant to be used "publicly" in the various Storage::read() methods to perform the
 // key lookup and proxy to the appropriate template in(...) variant given a method pointer.
 #define STORE_CASE(KEY, METHOD)                   \
   if (strcmp(input, KEY) == 0) {                  \
@@ -93,7 +93,7 @@ typedef std::function<void()> voidFunc;
   if (strcmp(input, KEY) == 0) {                  \
     fseek(fp, -strlen(KEY), SEEK_CUR);            \
     CLASS* instance = new CLASS();                \
-    if (load(fp, instance)) {                     \
+    if (read(fp, instance)) {                     \
       { CODE }                                    \
     } else {                                      \
       delete instance;                            \
@@ -103,7 +103,7 @@ typedef std::function<void()> voidFunc;
 #define STORE_DESCEND(KEY)                        \
   if (strcmp(input, KEY) == 0) {                  \
     fseek(fp, -strlen(KEY), SEEK_CUR);            \
-    load_base(fp, loading);                       \
+    read_base(fp, loading);                       \
   }                                               \
 
 class Storage {
@@ -114,37 +114,37 @@ class Storage {
     static const unsigned LOAD_NULL = 1;
     static const unsigned LOAD_NEW  = 2;
 
-    static void dump(FILE* fp, Zone* zone);
-    static bool load(FILE* fp, Zone* loading);
+    static void write(FILE* fp, Zone* zone);
+    static bool read(FILE* fp, Zone* loading);
 
-    static void dump(FILE* fp, Room* room);
-    static bool load(FILE* fp, Room* loading);
+    static void write(FILE* fp, Room* room);
+    static bool read(FILE* fp, Room* loading);
 
-    static void dump(FILE* fp, Exit* exit);
-    static bool load(FILE* fp, Exit* loading);
+    static void write(FILE* fp, Exit* exit);
+    static bool read(FILE* fp, Exit* loading);
 
-    static void dump(FILE* fp, Placement* rule);
-    static bool load(FILE* fp, Placement* loading);
+    static void write(FILE* fp, Placement* rule);
+    static bool read(FILE* fp, Placement* loading);
 
-    static void dump(FILE* fp, Item* item, const char* suffix = nullptr);
-    static bool load(FILE* fp, Item* loading);
+    static void write(FILE* fp, Item* item, const char* suffix = nullptr);
+    static bool read(FILE* fp, Item* loading);
 
-    static void dump(FILE* fp, Npc* npc);
-    static bool load(FILE* fp, Npc* loading);
+    static void write(FILE* fp, Npc* npc);
+    static bool read(FILE* fp, Npc* loading);
 
-    static void dump(FILE* fp, Avatar* avatar);
-    static bool load(FILE* fp, Avatar* loading);
+    static void write(FILE* fp, Avatar* avatar);
+    static bool read(FILE* fp, Avatar* loading);
 
-    static void dump(FILE* fp, SocialCommand* social);
-    static bool load(FILE* fp, SocialCommand* loading);
+    static void write(FILE* fp, SocialCommand* social);
+    static bool read(FILE* fp, SocialCommand* loading);
 
-    static void dump(FILE* fp, Board* board);
-    static bool load(FILE* fp, Board* loading);
+    static void write(FILE* fp, Board* board);
+    static bool read(FILE* fp, Board* loading);
 
-    static void dump(FILE* fp, Note* note);
-    static bool load(FILE* fp, Note* loading);
+    static void write(FILE* fp, Note* note);
+    static bool read(FILE* fp, Note* loading);
 
-    // dump() and load() can be overloaded ad nauseum, as long as no method signatures contains a
+    // write() and read() can be overloaded ad nauseum, as long as no method signatures contains a
     // type which is a subclass of another (e.g. Being and Npc or Avatar). In that case, the
     // rules of implicit parametric polymorphism invoke the most-specific method for a given
     // signature match regardless of explicit casting, etc. In those cases, a different method
@@ -156,8 +156,8 @@ class Storage {
     //
     // For this purpose the names dump_base() and load_base() are arbitrarily used.
 
-    static void dump_base(FILE* fp, Being* being);
-    static bool load_base(FILE* fp, Being* loading);
+    static void write_base(FILE* fp, Being* being);
+    static bool read_base(FILE* fp, Being* loading);
 
     // Centralized file pathing.
     static std::string avatar_glob_pattern(void);
@@ -178,7 +178,7 @@ class Storage {
 
   private:
 
-    static unsigned     load_inner(FILE* fp, void* loading, char* input, const char* boundary, voidFunc lambda);
+    static unsigned     read_inner(FILE* fp, void* loading, char* input, const char* boundary, voidFunc lambda);
     static std::string  read_string(FILE* fp);
     static std::string  peek(FILE* fp);
 

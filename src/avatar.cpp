@@ -135,7 +135,7 @@ void Avatar::save(void) {
   const char* filename = Storage::filename(this).c_str();
 
   if ((fp = fopen(filename, "w")) != NULL) {
-    Storage::dump(fp, this);
+    Storage::write(fp, this);
     fclose(fp);
   } else {
     fprintf(stderr, "Failed to write avatar file %s.\n", filename);
@@ -149,7 +149,7 @@ bool Avatar::load(void) {
   FILE* fp = nullptr;
 
   if ((fp = fopen(filename, "r")) != NULL) {
-    Storage::load(fp, this);
+    Storage::read(fp, this);
     fclose(fp);
     return true;
   } else {

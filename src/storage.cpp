@@ -27,24 +27,24 @@ const unsigned Storage::LOAD_NEW;
 /***************************************************************************************************
  * ZONE
  **************************************************************************************************/
-void Storage::dump(FILE* fp, Zone* zone) {
+void Storage::write(FILE* fp, Zone* zone) {
   BEGIN("ZONE")
   out(fp, "low",          zone->low());
   out(fp, "high",         zone->high());
   out(fp, "name",         zone->name());
   out(fp, "terrain",      zone->terrain()->name());
   out(fp, "builders",     zone->serializeBuilders());
-  for (auto iter : zone->rooms())   dump(fp, iter.second);
-  for (auto iter : zone->items()) dump(fp, iter.second);
-  for (auto iter : zone->npcs())    dump(fp, iter.second);
+  for (auto iter : zone->rooms())   write(fp, iter.second);
+  for (auto iter : zone->items()) write(fp, iter.second);
+  for (auto iter : zone->npcs())    write(fp, iter.second);
   END("ZONE")
   return;
 }
 
-bool Storage::load(FILE* fp, Zone* loading) {
+bool Storage::read(FILE* fp, Zone* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "ZONE", [&fp, &loading, &input]() {
+  load_status = read_inner(fp, loading, input, "ZONE", [&fp, &loading, &input]() {
     STORE_CASE("low",       &Zone::low)
     STORE_CASE("high",      &Zone::high)
     STORE_CASE("name",      &Zone::name)
@@ -60,7 +60,7 @@ bool Storage::load(FILE* fp, Zone* loading) {
 /***************************************************************************************************
  * ROOM
  **************************************************************************************************/
-void Storage::dump(FILE* fp, Room* room) {
+void Storage::write(FILE* fp, Room* room) {
   BEGIN("ROOM")
   out(fp, "vnum",         room->vnum());
   out(fp, "name",         room->name());
@@ -68,18 +68,18 @@ void Storage::dump(FILE* fp, Room* room) {
   out(fp, "smell",        room->smell());
   out(fp, "sound",        room->sound());
   out(fp, "terrain",      room->terrain()->name());
-  for (auto iter : room->placements()) dump(fp, iter);
+  for (auto iter : room->placements()) write(fp, iter);
   for (unsigned u = 0; u < 6; ++u) {
-    if (room->exit(u)) dump(fp, room->exit(u));
+    if (room->exit(u)) write(fp, room->exit(u));
   }
   END("ROOM\n")
   return;
 }
 
-bool Storage::load(FILE* fp, Room* loading) {
+bool Storage::read(FILE* fp, Room* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "ROOM", [&fp, &loading, &input]() {
+  load_status = read_inner(fp, loading, input, "ROOM", [&fp, &loading, &input]() {
     STORE_CASE("vnum",        &Room::vnum)
     STORE_CASE("name",        &Room::name)
     STORE_CASE("description", &Room::description)
@@ -104,7 +104,7 @@ bool Storage::load(FILE* fp, Room* loading) {
 /***************************************************************************************************
  * EXIT
  **************************************************************************************************/
-void Storage::dump(FILE* fp, Exit* exit) {
+void Storage::write(FILE* fp, Exit* exit) {
   BEGIN("EXIT")
   out(fp, "targetVnum", exit->targetVnum());
   out(fp, "direction",  exit->direction());
@@ -114,10 +114,10 @@ void Storage::dump(FILE* fp, Exit* exit) {
   return;
 }
 
-bool Storage::load(FILE* fp, Exit* loading) {
+bool Storage::read(FILE* fp, Exit* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "EXIT", [&fp, &loading, &input]() {
+  load_status = read_inner(fp, loading, input, "EXIT", [&fp, &loading, &input]() {
     STORE_CASE("targetVnum",  &Exit::targetVnum)
     STORE_CASE("direction",   &Exit::direction)
     STORE_CASE("key",         &Exit::key)
@@ -129,7 +129,7 @@ bool Storage::load(FILE* fp, Exit* loading) {
 /***************************************************************************************************
  * PLACEMENT
  **************************************************************************************************/
-void Storage::dump(FILE* fp, Placement* rule) {
+void Storage::write(FILE* fp, Placement* rule) {
   char buffer[32];
   sprintf(buffer, "PLACEMENT_%s", rule->strType());
   BEGIN(buffer)
@@ -148,10 +148,10 @@ void Storage::dump(FILE* fp, Placement* rule) {
   return;
 }
 
-bool Storage::load(FILE* fp, Placement* loading) {
+bool Storage::read(FILE* fp, Placement* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "PLACEMENT_", [&fp, &loading, &input]() {
+  load_status = read_inner(fp, loading, input, "PLACEMENT_", [&fp, &loading, &input]() {
     STORE_CASE("target",              &Placement::target)
     STORE_CASE("number",              &PlacementItem::number)
     STORE_CASE("max",                 &PlacementItem::max)
@@ -170,7 +170,7 @@ bool Storage::load(FILE* fp, Placement* loading) {
 /***************************************************************************************************
  * ITEM
  **************************************************************************************************/
-void Storage::dump(FILE* fp, Item* item, const char* suffix) {
+void Storage::write(FILE* fp, Item* item, const char* suffix) {
   char token[32];
   if (suffix != nullptr) {
     sprintf(token, "ITEM_%s", suffix);
@@ -204,7 +204,7 @@ void Storage::dump(FILE* fp, Item* item, const char* suffix) {
       out(fp, "weapon_damage",   item->weapon()->damage().serialize());
       break;
     case Item::Type_Container:
-      for (auto iter : item->container()->inventory().itemList()) dump(fp, iter, "BAG");
+      for (auto iter : item->container()->inventory().itemList()) write(fp, iter, "BAG");
       break;
     default:
       break;
@@ -213,10 +213,10 @@ void Storage::dump(FILE* fp, Item* item, const char* suffix) {
   return;
 }
 
-bool Storage::load(FILE* fp, Item* loading) {
+bool Storage::read(FILE* fp, Item* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "ITEM", [&fp, &loading, &input]() {
+  load_status = read_inner(fp, loading, input, "ITEM", [&fp, &loading, &input]() {
     STORE_CASE("vnum",                &Item::vnum)
     STORE_CASE("level",               &Item::level)
     STORE_CASE("value",               &Item::value)
@@ -255,20 +255,20 @@ bool Storage::load(FILE* fp, Item* loading) {
 /***************************************************************************************************
  * NPC
  **************************************************************************************************/
-void Storage::dump(FILE* fp, Npc* npc) {
+void Storage::write(FILE* fp, Npc* npc) {
   BEGIN("NPC")
   out(fp, "vnum",           npc->vnum());
   out(fp, "mobility",       npc->mobility());
   out(fp, "aggressiveness", npc->aggressiveness());
-  dump_base(fp, npc);
+  write_base(fp, npc);
   END("NPC")
   return;
 }
 
-bool Storage::load(FILE* fp, Npc* loading) {
+bool Storage::read(FILE* fp, Npc* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "NPC", [&fp, &loading, &input]() {
+  load_status = read_inner(fp, loading, input, "NPC", [&fp, &loading, &input]() {
     STORE_CASE("vnum",           &Npc::vnum)
     STORE_CASE("mobility",       &Npc::mobility)
     STORE_CASE("aggressiveness", &Npc::aggressiveness)
@@ -280,7 +280,7 @@ bool Storage::load(FILE* fp, Npc* loading) {
 /***************************************************************************************************
  * AVATAR
  **************************************************************************************************/
-void Storage::dump(FILE* fp, Avatar* avatar) {
+void Storage::write(FILE* fp, Avatar* avatar) {
   BEGIN("AVATAR")
   out(fp, "password",         avatar->password());
   out(fp, "gechoColor",       avatar->gechoColor());
@@ -295,15 +295,15 @@ void Storage::dump(FILE* fp, Avatar* avatar) {
   out(fp, "whoFlags",         avatar->whoFlags().value());
   out(fp, "roomNumber",       avatar->roomNumber());
   out(fp, "deletionStatus",   avatar->deletionStatus());
-  dump_base(fp, avatar);
+  write_base(fp, avatar);
   END("AVATAR")
   return;
 }
 
-bool Storage::load(FILE* fp, Avatar* loading) {
+bool Storage::read(FILE* fp, Avatar* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "AVATAR", [&fp, &loading, &input]() {
+  load_status = read_inner(fp, loading, input, "AVATAR", [&fp, &loading, &input]() {
     STORE_CASE_STRING("password", loading->password(str);)
     STORE_CASE("gechoColor",      &Avatar::gechoColor)
     STORE_CASE("title",           &Avatar::title)
@@ -325,7 +325,7 @@ bool Storage::load(FILE* fp, Avatar* loading) {
 /***************************************************************************************************
  * BEING
  **************************************************************************************************/
-void Storage::dump_base(FILE* fp, Being* being) {
+void Storage::write_base(FILE* fp, Being* being) {
   BEGIN("BEING")
   out(fp, "shortname",    being->identifiers().shortname());
   out(fp, "longname",     being->identifiers().longname());
@@ -377,16 +377,16 @@ void Storage::dump_base(FILE* fp, Being* being) {
   out(fp, "gold",       being->gold());
   out(fp, "silver",     being->silver());
   out(fp, "abilities",  being->serializeAbilities());
-  for (auto iter : being->inventory().itemList()) dump(fp, iter, "INV");
-  for (auto iter : being->equipment().itemMap()) dump(fp, iter.second, "EQ");
+  for (auto iter : being->inventory().itemList()) write(fp, iter, "INV");
+  for (auto iter : being->equipment().itemMap()) write(fp, iter.second, "EQ");
   END("BEING")
   return;
 }
 
-bool Storage::load_base(FILE* fp, Being* loading) {
+bool Storage::read_base(FILE* fp, Being* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "BEING", [&fp, &loading, &input]() {
+  load_status = read_inner(fp, loading, input, "BEING", [&fp, &loading, &input]() {
     STORE_CASE_STRING("shortname",    loading->identifiers().shortname(str);)
     STORE_CASE_STRING("longname",     loading->identifiers().longname(str);)
     STORE_CASE_STRING("description",  loading->identifiers().description(str);)
@@ -463,7 +463,7 @@ bool Storage::load_base(FILE* fp, Being* loading) {
 /***************************************************************************************************
  * SOCIAL COMMAND
  **************************************************************************************************/
-void Storage::dump(FILE* fp, SocialCommand* social) {
+void Storage::write(FILE* fp, SocialCommand* social) {
   BEGIN("SOCIAL")
   out(fp, "name",         social->name());
   out(fp, "creator",      social->creator());
@@ -482,10 +482,10 @@ void Storage::dump(FILE* fp, SocialCommand* social) {
   return;
 }
 
-bool Storage::load(FILE* fp, SocialCommand* loading) {
+bool Storage::read(FILE* fp, SocialCommand* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "SOCIAL", [&fp, &loading, &input]() {
+  load_status = read_inner(fp, loading, input, "SOCIAL", [&fp, &loading, &input]() {
     STORE_CASE_STRING("name",     loading->name(str);)
     STORE_CASE_STRING("creator",  loading->creator(str);)
     STORE_CASE("targetNone",    &SocialCommand::targetNone)
@@ -506,18 +506,18 @@ bool Storage::load(FILE* fp, SocialCommand* loading) {
 /***************************************************************************************************
  * BOARD
  **************************************************************************************************/
-void Storage::dump(FILE* fp, Board* board) {
+void Storage::write(FILE* fp, Board* board) {
   BEGIN("BOARD")
   out(fp, "number", board->number());
-  for (auto iter : board->notes()) dump(fp, iter.second);
+  for (auto iter : board->notes()) write(fp, iter.second);
   END("BOARD")
   return;
 }
 
-bool Storage::load(FILE* fp, Board* loading) {
+bool Storage::read(FILE* fp, Board* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "BOARD", [&fp, &loading, &input]() {
+  load_status = read_inner(fp, loading, input, "BOARD", [&fp, &loading, &input]() {
     STORE_CASE("number", &Board::number)
     STORE_DESCEND_NEW("NOTE", Note,
       instance->board(loading->number());
@@ -530,7 +530,7 @@ bool Storage::load(FILE* fp, Board* loading) {
 /***************************************************************************************************
  * NOTE
  **************************************************************************************************/
-void Storage::dump(FILE* fp, Note* note) {
+void Storage::write(FILE* fp, Note* note) {
   BEGIN("NOTE")
   out(fp, "ID",      note->ID());
   out(fp, "board",   note->board());
@@ -541,10 +541,10 @@ void Storage::dump(FILE* fp, Note* note) {
   return;
 }
 
-bool Storage::load(FILE* fp, Note* loading) {
+bool Storage::read(FILE* fp, Note* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "NOTE", [&fp, &loading, &input]() {
+  load_status = read_inner(fp, loading, input, "NOTE", [&fp, &loading, &input]() {
     STORE_CASE("ID",    &Note::ID)
     STORE_CASE("board", &Note::board)
     STORE_CASE_STRING("author",   loading->author(str);)
@@ -624,7 +624,7 @@ bool Storage::file_exists(std::string path) {
 /***************************************************************************************************
  * INTERNAL METHODS
  **************************************************************************************************/
-unsigned Storage::load_inner(FILE* fp, void* loading, char* input, const char* boundary, voidFunc lambda) {
+unsigned Storage::read_inner(FILE* fp, void* loading, char* input, const char* boundary, voidFunc lambda) {
   int next = 0;
   char end_boundary[32];
   sprintf(end_boundary, "/%s", boundary);

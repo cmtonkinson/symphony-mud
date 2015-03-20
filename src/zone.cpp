@@ -40,7 +40,7 @@ void Zone::save(void) {
   FILE* fp = 0;
 
   if ((fp = fopen(filename.c_str(), "w")) != NULL) {
-    Storage::dump(fp, this);
+    Storage::write(fp, this);
     fclose(fp);
   } else {
     fprintf(stderr, "Failed to write zone file %s.\n", filename.c_str());
@@ -55,7 +55,7 @@ Zone* Zone::load(std::string filename) {
 
   if ((fp = fopen(filename.c_str(), "r")) != NULL) {
     zone = new Zone();
-    Storage::load(fp, zone);
+    Storage::read(fp, zone);
     zone->initialize();
     fclose(fp);
   } else {
