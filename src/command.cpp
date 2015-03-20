@@ -2,6 +2,7 @@
 #include "command.h"
 #include "commandTable.h"
 #include "display.h"
+#include "os.h"
 #include "regex.h"
 #include "room.h"
 #include "socket.h"
@@ -118,7 +119,7 @@ void SocialCommand::destroy(void) {
   std::vector<Command*>::iterator iter;
 
   // Delete the data file.
-  remove(Storage::filename(this).c_str());
+  remove(os::filename(this).c_str());
 
   // Remove the Social from the CommandTable.
   for (iter = commands.begin(); iter != commands.end(); ++iter) {
@@ -135,7 +136,7 @@ void SocialCommand::destroy(void) {
 }
 
 void SocialCommand::save(void) {
-  std::string filename = Storage::filename(this);
+  std::string filename = os::filename(this);
   FILE* fp             = nullptr;
 
   if ((fp = fopen(filename.c_str(), "w")) != NULL) {

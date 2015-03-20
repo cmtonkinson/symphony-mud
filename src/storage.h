@@ -159,23 +159,6 @@ class Storage {
     static void write_base(FILE* fp, Being* being);
     static bool read_base(FILE* fp, Being* loading);
 
-    // Centralized file pathing.
-    static std::string avatar_glob_pattern(void);
-    static std::string filename(Avatar* avatar);
-
-    static std::string zone_glob_pattern(void);
-    static std::string filename(Zone* zone);
-
-    static std::string social_glob_pattern(void);
-    static std::string filename(SocialCommand* social = nullptr);
-
-    static std::string disabled_command_glob_pattern(void);
-
-    static std::string deadpool_directory(void);
-
-    static std::vector<std::string> glob(std::string pattern);
-    static bool                     file_exists(std::string path);
-
   private:
 
     static unsigned     read_inner(FILE* fp, void* loading, char* input, const char* boundary, voidFunc lambda);

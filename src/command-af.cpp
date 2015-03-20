@@ -7,6 +7,7 @@
 #include "display.h"
 #include "flagTable.h"
 #include "io-handler.h"
+#include "os.h"
 #include "room.h"
 #include "world.h"
 
@@ -638,9 +639,9 @@ CmdDashboard::CmdDashboard(void) {
 }
 
 bool CmdDashboard::execute(Being* being, const std::vector<std::string>& args) {
-  avatar()->send("  System time:   {y%s{x\n", World::strtime().c_str());
-  avatar()->send("  Engine booted: {y%s{x\n", World::strtime(World::Instance().booted()).c_str());
-  avatar()->send("  Engine online: {y%s{x\n", World::realtime(World::now() - World::Instance().booted()).c_str());
+  avatar()->send("  System time:   {y%s{x\n", os::strtime().c_str());
+  avatar()->send("  Engine booted: {y%s{x\n", os::strtime(World::Instance().booted()).c_str());
+  avatar()->send("  Engine online: {y%s{x\n", os::realtime(os::now() - World::Instance().booted()).c_str());
   avatar()->send("  Connections:   {y%u{x\n", World::Instance().getAvatars().size());
   avatar()->send("  Jobs in queue: {y%u{x\n", World::Instance().jobsInQueue());
   avatar()->send("  Jobs per turn: {y%u{x\n", World::Instance().jobsPerTurn());

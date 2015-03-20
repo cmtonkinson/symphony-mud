@@ -1,13 +1,14 @@
 
 #include <cstdarg>
+#include <sodium/crypto_hash.h>
 #include <time.h>
 #include "avatar.h"
-#include "commandTable-default.h"
 #include "being.h"
-#include <sodium/crypto_hash.h>
+#include "commandTable-default.h"
 #include "estring.h"
 #include "io-handler.h"
 #include "item-container.h"
+#include "os.h"
 #include "storage.h"
 #include "world.h"
 
@@ -126,13 +127,13 @@ void Avatar::restoreRoom(void) {
 }
 
 std::string Avatar::stringLoggedOn(void) {
-  return World::realtime(secondsLoggedOn());
+  return os::realtime(secondsLoggedOn());
 }
 
 /****************************** Persistence ******************************/
 void Avatar::save(void) {
   FILE* fp = nullptr;
-  const char* filename = Storage::filename(this).c_str();
+  const char* filename = os::filename(this).c_str();
 
   if ((fp = fopen(filename, "w")) != NULL) {
     Storage::write(fp, this);
@@ -145,7 +146,7 @@ void Avatar::save(void) {
 }
 
 bool Avatar::load(void) {
-  const char* filename = Storage::filename(this).c_str();
+  const char* filename = os::filename(this).c_str();
   FILE* fp = nullptr;
 
   if ((fp = fopen(filename, "r")) != NULL) {
@@ -171,9 +172,9 @@ bool Avatar::rename(std::string new_name) {
   std::string old_name = name();
 
   changeIdentifiers(new_name);
-  std::string new_filename = Storage::filename(this);
+  std::string new_filename = os::filename(this);
 
-  if (Storage::file_exists(new_filename)) {
+  if (os::file_exists(new_filename)) {
     // Already taken
     changeIdentifiers(old_name);
     return false;
@@ -226,13 +227,13 @@ bool Avatar::checkPassword(std::string attempt) {
 }
 
 void Avatar::destroy(void) {
-  std::string original_path = Storage::filename(this);
+  std::string original_path = os::filename(this);
   std::string original_base = basename(original_path.c_str());
-  std::string deadpool_path = Storage::deadpool_directory();
+  std::string deadpool_path = os::deadpool_directory();
   std::string deadpool_base = original_base;
 
   // Append a timestamp to the filename.
-  std::string now = World::strnow();
+  std::string now = os::strnow();
   Regex::replace("[^0-9]+", "-", now);
   deadpool_base += "_time_" + now;
 

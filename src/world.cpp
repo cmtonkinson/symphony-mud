@@ -3,7 +3,7 @@
 #include <dirent.h>
 #include "commandTable-default.h"
 #include "commandTable.h"
-#include "log.h"
+#include "os.h"
 #include "storage.h"
 #include "world.h"
 
@@ -246,7 +246,7 @@ bool World::toggleCommand(char table_prefix, std::string command_name, bool enab
 }
 
 bool World::loadSocials(void) {
-  for (auto iter : Storage::glob(Storage::social_glob_pattern())) SocialCommand::load(iter);
+  for (auto iter : os::glob(os::social_glob_pattern())) SocialCommand::load(iter);
   return true;
 }
 
@@ -477,7 +477,7 @@ bool World::removeAvatar(const std::string& name) {
 
 /************************************************************ ZONES ************************************************************/
 void World::loadZones(void) {
-  for (auto iter : Storage::glob(Storage::zone_glob_pattern())) Zone::load(iter);
+  for (auto iter : os::glob(os::zone_glob_pattern())) Zone::load(iter);
   return;
 }
 
@@ -510,7 +510,7 @@ Zone* World::lookup(const unsigned long& vnum) {
 }
 
 void World::loadDisabledCommands(void) {
-  for (auto iter : Storage::glob(Storage::disabled_command_glob_pattern())) {
+  for (auto iter : os::glob(os::disabled_command_glob_pattern())) {
     toggleCommand(iter[0], iter.substr(2), false);
   }
   return;
@@ -603,7 +603,7 @@ void World::worldLog(unsigned level, unsigned type, const char* format, ...) {
   // Depending on the level (and the current system log level) we may also print the message...
   if (level == LOG_LEVEL_SYSTEM || level >= LOG_LEVEL_WARNING) {
     Instance().bigBrother(NULL, ADMIN_BIGBRO_SYSTEM, buffer);
-    fprintf(stderr, "Log %s: %s\n", strnow().c_str(), buffer);
+    fprintf(stderr, "Log %s: %s\n", os::strnow().c_str(), buffer);
   }
 
   return;
@@ -622,126 +622,6 @@ void World::playerLog(unsigned level, unsigned type, const char* format, ...) {
   fprintf(stderr, "ERROR: %s\n", buffer);
 
   return;
-}
-
-unsigned long World::now(void) {
-  return time(NULL);
-}
-
-std::string World::strnow(void) {
-  char buffer[Socket::MAX_BUFFER];
-  time_t seconds = time(NULL);
-  tm* info = localtime(&seconds);
-  strftime(buffer, Socket::MAX_BUFFER, "%Y/%m/%d %H:%M:%S", info);
-  return buffer;
-}
-
-std::string World::strtime(time_t in_time) {
-  char buffer[Socket::MAX_BUFFER];
-  time_t seconds = 0;
-  if (in_time) {
-    seconds = in_time;
-  } else {
-    seconds = time(NULL);
-  }
-  tm* info = localtime(&seconds);
-  strftime(buffer, Socket::MAX_BUFFER, "%A, %B %d, %Y  %H:%M:%S", info);
-  return buffer;
-}
-
-std::string World::realtime(const unsigned long& seconds, unsigned granularity) {
-  char buffer[Socket::MAX_BUFFER];
-  char foo[100];
-  unsigned long sec = seconds;
-  unsigned long min = 0;
-  unsigned long hour = 0;
-  unsigned long day = 0;
-  unsigned long year = 0;
-
-  memset(buffer, 0, Socket::MAX_BUFFER);
-
-  while (sec >= 60) {
-    ++min;
-    sec -= 60;
-  }
-
-  if (granularity > GRAN_MINUTE) {
-    while (min >= 60) {
-      ++hour;
-      min -= 60;
-    }
-    if (granularity > GRAN_HOUR) {
-      while (hour >= 24) {
-        ++day;
-        hour -= 24;
-      }
-      if (granularity > GRAN_DAY) {
-        while (day >= 365) {
-          ++year;
-          day -= 365;
-        }
-      }
-    }
-  }
-
-  if (year) {
-    if (year == 1) {
-      sprintf(foo, "%lu year", year);
-    } else {
-      sprintf(foo, "%lu years", year);
-    }
-    strcat(buffer, foo);
-  }
-
-  if (day) {
-    if (day == 1) {
-      sprintf(foo, "%lu day", day);
-    } else {
-      sprintf(foo, "%lu days", day);
-    }
-    if (year) {
-      strcat(buffer, ", ");
-    }
-    strcat(buffer, foo);
-  }
-
-  if (hour) {
-    if (hour == 1) {
-      sprintf(foo, "%lu hour", hour);
-    } else {
-      sprintf(foo, "%lu hours", hour);
-    }
-    if (year || day) {
-      strcat(buffer, ", ");
-    }
-    strcat(buffer, foo);
-  }
-
-  if (min) {
-    if (min == 1) {
-      sprintf(foo, "%lu minute", min);
-    } else {
-      sprintf(foo, "%lu minutes", min);
-    }
-    if (year || day || hour) {
-      strcat(buffer, ", ");
-    }
-    strcat(buffer, foo);
-  }
-
-  if (sec) {
-    if (sec == 1) {
-      sprintf(foo, "%lu second", sec);
-    } else {
-      sprintf(foo, "%lu seconds", sec);
-    }
-    if (year || day || hour || min) {
-      strcat(buffer, ", ");
-    }
-    strcat(buffer, foo);
-  }
-
-  return buffer;
 }
 
 bool World::search_map(Being* being, Room*** map, const unsigned short& ymax, const unsigned short& xmax, const short& y, const short& x, Room* room, std::string** display) {

@@ -28,15 +28,6 @@ class World {
     static const unsigned EXIT_ERROR         = 1;
     static const unsigned EXIT_FAILED_BOOT   = 2;
     static const unsigned EXIT_FAILED_REBOOT = 3;
-    // Time definitions...
-    static const unsigned GRAN_MINUTE = 0;
-    static const unsigned GRAN_HOUR   = 1;
-    static const unsigned GRAN_DAY    = 2;
-    static const unsigned GRAN_YEAR   = 3;
-    static const unsigned MINUTE      = 60;
-    static const unsigned HOUR        = MINUTE*60;
-    static const unsigned DAY         = HOUR*24;
-    static const unsigned YEAR        = DAY*365;
     // Log levels...
     static const unsigned LOG_LEVEL_SYSTEM  = 0;
     static const unsigned LOG_LEVEL_NOTICE  = 1;
@@ -109,7 +100,7 @@ class World {
     // Beings
     void                  insert(Being* being);
     void                  remove(Being* being);
-    Being*             findBeing(const std::string& name);
+    Being*                findBeing(const std::string& name);
     Avatar*               findAvatar(const std::string& name);
     bool                  transport(Being* being, const unsigned long& vnum);
 
@@ -133,7 +124,7 @@ class World {
     // Items
     void                  insert(Item* item);
     void                  remove(Item* item);
-    Item*               findItem(const std::string& name);
+    Item*                 findItem(const std::string& name);
     bool                  transport(Item* item, Room* from, const unsigned long& vnum);
 
     // Boards
@@ -146,10 +137,6 @@ class World {
     static World&         Instance(void);
     static void           worldLog(unsigned level, unsigned type, const char* format, ...);
     static void           playerLog(unsigned level, unsigned type, const char* format, ...);
-    static unsigned long  now(void);
-    static std::string    strnow(void);
-    static std::string    strtime(time_t t = 0);
-    static std::string    realtime(const unsigned long& seconds, unsigned granularity = GRAN_DAY);
     static bool           search_map(Being* being, Room*** map, const unsigned short& ymax, const unsigned short& xmax, const short& y, const short& x, Room* room, std::string** display);
     static std::string    get_marker(Being* being, Room* room);
 

@@ -6,7 +6,7 @@
 #include "commandTable.h"
 #include "display.h"
 #include "io-handler.h"
-#include "storage.h"
+#include "os.h"
 #include "world.h"
 
 /************************************** BASE CLASS HANDLE METHOD **************************************/
@@ -515,7 +515,7 @@ bool CreationSummaryIOHandler::handle(void) {
     avatar()->send("\n\n{WWelcome to the realm, young %s!{x\n", avatar()->identifiers().shortname().c_str());
     avatar()->restoreRoom();
     // If this is the first account, promote it to CREATOR.
-    if (Storage::glob(Storage::avatar_glob_pattern()).size() == 1) {
+    if (os::glob(os::avatar_glob_pattern()).size() == 1) {
       while (avatar()->level() < Being::CREATOR) avatar()->gainLevel();
       avatar()->save();
       avatar()->send("\n\n{WYou are now the system administrator.{x\n");

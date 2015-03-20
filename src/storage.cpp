@@ -1,7 +1,5 @@
 
 #include <cstring>
-#include <sys/stat.h>
-#include <glob.h>
 #include "zone.h"
 #include "avatar.h"
 #include "board.h"
@@ -552,73 +550,6 @@ bool Storage::read(FILE* fp, Note* loading) {
     STORE_CASE_STRING("body",     loading->body(str);)
   });
   return load_status == LOAD_DONE;
-}
-
-/***************************************************************************************************
- * HELPERS
- **************************************************************************************************/
-std::string Storage::avatar_glob_pattern(void) {
-  return "data/avatars/*.avatar.txt";
-}
-
-std::string Storage::filename(Avatar* avatar) {
-  return std::string("data/avatars/") + Regex::slugify(avatar->name()) + ".avatar.txt";
-}
-
-std::string Storage::zone_glob_pattern(void) {
-  return "data/zones/*.zone.txt";
-}
-
-std::string Storage::filename(Zone* zone) {
-  return std::string("data/zones/") + Regex::slugify(zone->name()) + ".zone.txt";
-}
-
-std::string Storage::social_glob_pattern(void) {
-  return "data/socials/*.social.txt";
-}
-
-std::string Storage::filename(SocialCommand* social) {
-  return std::string("data/socials/") + Regex::slugify(social->name()) + ".social.txt";
-}
-
-std::string Storage::disabled_command_glob_pattern(void) {
-  return "data/disabled_commands/*_*";
-}
-
-std::string Storage::deadpool_directory(void) {
-  return "data/deadpool/";
-}
-
-std::vector<std::string> Storage::glob(std::string pattern) {
-  std::vector<std::string> paths;
-  glob_t globbuf;
-  int return_status = 0;
-
-  return_status = ::glob(pattern.c_str(), GLOB_NOSORT, NULL, &globbuf);
-
-  switch (return_status) {
-    case 0: // success
-      for (size_t x = 0; x < globbuf.gl_pathc; ++x) paths.push_back(globbuf.gl_pathv[x]);
-      break;
-    case GLOB_NOSPACE:
-      fprintf(stderr, "glob() on \"%s\" - out of memory\n", pattern.c_str());
-      break;
-    case GLOB_NOMATCH:
-      fprintf(stderr, "glob() on \"%s\" - no matches\n", pattern.c_str());
-      break;
-    case GLOB_ABORTED:
-      fprintf(stderr, "glob() on \"%s\" - read error:", pattern.c_str());
-      perror(NULL);
-      break;
-  }
-
-  globfree(&globbuf);
-  return paths;
-}
-
-bool Storage::file_exists(std::string path) {
-  struct stat buffer;
-  return (stat(path.c_str(), &buffer) == 0);
 }
 
 /***************************************************************************************************
