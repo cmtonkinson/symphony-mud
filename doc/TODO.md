@@ -34,10 +34,6 @@
       * turn processing time
       * job processing time
       * job execution delay
-  * More flexible logging system
-    * Engine-level events (bugs, diagnostics)
-    * World-level events (timers, resets)
-    * Player-level events (logins, pk's, levels)
   * Account emails
     * Integrate with POP/SMTP for email validation?
     * Integrate board system with email?
