@@ -1,6 +1,6 @@
 
-#ifndef _H_SYMPHONY_STORAGE
-#define _H_SYMPHONY_STORAGE
+#ifndef H_SYMPHONY_STORAGE
+#define H_SYMPHONY_STORAGE
 
 /*
  * This Storage API is a horrifying smoke-and-mirror-powered light show beamed through a veritable
@@ -214,4 +214,4 @@ class Storage {
 
 };
 
-#endif // #ifndef _H_SYMPHONY_STORAGE
+#endif // #ifndef H_SYMPHONY_STORAGE
