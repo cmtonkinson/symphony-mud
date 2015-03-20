@@ -7,7 +7,6 @@
 #include "avatar.h"
 #include "being.h"
 #include "command.h"
-#include "githash.h"
 #include "npc.h"
 #include "os.h"
 #include "zone.h"
@@ -160,7 +159,7 @@ void os::log_(const char* file, unsigned line, unsigned level, Being* being, con
   // Timestamp
   message << os::strnow() << " ";
   // File/line
-  message << "[" << file << ":" << line << " " << GIT_HASH << "] ";
+  message << "[" << file << ":" << line << "] ";
   // Being details (if given)
   if (being) message << "(" << being->ident() << ") ";
   // Content
