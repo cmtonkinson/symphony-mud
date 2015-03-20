@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Link to this script from .git/hooks/post-commit
+# See also update_githash.sh
+
+rm -f src/githash.h

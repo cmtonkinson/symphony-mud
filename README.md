@@ -43,17 +43,18 @@ bin/symphony
 If you're not familiar with Vagrant, you should be. Worst case, if you have a Linux system you should be able to get Symphony MUD to compile and run as long as you meet the dependencies (check out [provision.sh](provision.sh) and the [makefile](makefile) for more details).
 
 ---
-## Code
+## Detailed Setup
 
-The code is moving toward C++11 (still with large sections of older C and C++) but compiles cleanly against clang on Linux. The following third party libraries are prerequisite:
+Symphony MUD is developed with clang (using the C++11 standard) on Ubuntu 14.04 x64 with the 3.13 kernel. `libpcre` and `libsodium` are prerequisites. `libpcre` is used throughout the code for various string manipulation, while `libsodium` is at present only used for password storage.
 
-  * PCRE (not included)
-  * libsodium (included)
+PCRE is installed (as per [provision.sh](provision.sh)) via `apt`, while `libsodium` is included as a submodule which is built and installed using autotools.
+
+`ccache` and `gdb` are used for ease of development and testing, but are not required. Settings for these can be found in the [makefile](makefile) as well as in the additions to `~/.bashrc` made by [provision.sh](provision.sh).
 
 ---
 ## Data
 
-All data is persisted to disk in plain old text format. A conversion to YAML (instead of the custom serialization format) would be a very welcome pull request indeed.
+All data is persisted to disk in plain old human readable text format under `data/`. MySQL has been used previously, but turns out not to be a great fit for a MUD. Currently most data is stored in a custom serialization format due to trouble getting a YAML library (particularly, [yaml-cpp][yaml-cpp]) to compile cleanly. A pull request integrating a YAML-based replacement for the current `Storage` class would be accepted enthusiastically.
 
 ---
 ## Changelog
@@ -89,7 +90,7 @@ Bug reports should be submitted on [Github][bugs].
   * Turin
   * Zantix
 
-Original inpsiration for Symphony MUD comes from the excellent (sadly now defunct) ROM-derived *Feudal Realms* by Charles Webber (aka "Turloch"). Some internals take initial inspiration from *Scratch*, a telnet chat server by Jared Devall (aka Rendelven).
+Original inspiration for Symphony MUD comes from the excellent (sadly now defunct) ROM-derived *Feudal Realms* by Charles Webber (aka "Turloch"). Some internals take initial inspiration from *Scratch*, a telnet chat server by Jared Devall (aka Rendelven).
 
 ---
 ## License

@@ -3,7 +3,7 @@ FQDN = "#{NAME}.example.com"
 
 Vagrant.configure("2") do |config|
   config.vm.box       = "trusty64"
-  config.vm.box_url   = 
+  config.vm.box_url   =
 "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
 
   config.vm.provider :virtualbox do |vb|
@@ -27,5 +27,5 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.hostname = FQDN
-  config.vm.provision :shell, path: "provision.sh"
+  config.vm.provision :shell, path: "bin/provision.sh"
 end

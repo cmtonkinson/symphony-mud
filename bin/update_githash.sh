@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Thanks to http://plindenbaum.blogspot.com/2014/07/including-hash-for-current-git-commit.html
 
 FULL_HASH=$(git rev-parse HEAD)
