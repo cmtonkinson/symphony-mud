@@ -1,27 +1,27 @@
 
-#include "loadRuleNpc.h"
+#include "placementNpc.h"
 #include "room.h"
 #include "world.h"
 
-LoadRuleNpc::LoadRuleNpc(void) {
+PlacementNpc::PlacementNpc(void) {
   type(NPC);
   return;
 }
 
-LoadRuleNpc::~LoadRuleNpc(void) {
+PlacementNpc::~PlacementNpc(void) {
   return;
 }
 
-std::string LoadRuleNpc::notes(void) const {
+std::string PlacementNpc::notes(void) const {
   return std::string();
 }
 
-void LoadRuleNpc::destroy(void) {
+void PlacementNpc::destroy(void) {
   delete this;
   return;
 }
 
-bool LoadRuleNpc::execute(std::list<Item*>& new_items, std::list<Npc*>& new_npcs) {
+bool PlacementNpc::execute(std::list<Item*>& new_items, std::list<Npc*>& new_npcs) {
   unsigned npcs_added = 0;
   int level           = 0;
   std::map<unsigned long,Npc*>::iterator it;

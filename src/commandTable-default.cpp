@@ -40,7 +40,7 @@ CommandTable::CommandTable(void) {
   add(new CmdIload());
   add(new CmdIncognito());
   add(new CmdInventory());
-  add(new CmdLoadRule());
+  add(new CmdPlacement());
   add(new CmdNlist());
   add(new CmdNload());
   add(new CmdPeace());

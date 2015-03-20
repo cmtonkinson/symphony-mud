@@ -1,14 +1,14 @@
 
-#ifndef H_SYMPHONY_LOADRULE_ITEM
-#define H_SYMPHONY_LOADRULE_ITEM
+#ifndef H_SYMPHONY_PLACEMENT_ITEM
+#define H_SYMPHONY_PLACEMENT_ITEM
 
-#include "loadRule.h"
+#include "placement.h"
 
-class LoadRuleItem: public LoadRule {
+class PlacementItem: public Placement {
   public:
     // constructors...
-    LoadRuleItem(void);
-    ~LoadRuleItem(void);
+    PlacementItem(void);
+    ~PlacementItem(void);
 
     // public accessor methods...
     void            preposition(unsigned preposition)                   { _preposition = preposition; }
@@ -29,4 +29,4 @@ class LoadRuleItem: public LoadRule {
     short           _indirectItemIndex; // which _indirectItem gets the item (e.g. if there are more than one in the room)
 };
 
-#endif // #ifndef H_SYMPHONY_LOADRULE_ITEM
+#endif // #ifndef H_SYMPHONY_PLACEMENT_ITEM

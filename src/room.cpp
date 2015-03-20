@@ -2,7 +2,7 @@
 #include "zone.h"
 #include "display.h"
 #include "exit.h"
-#include "loadRule.h"
+#include "placement.h"
 #include "terrainTable.h"
 #include "world.h"
 
@@ -30,9 +30,9 @@ Room::~Room(void) {
       delete _exits[u];
     }
   }
-  while (!loadRules().empty()) {
-    delete loadRules().front();
-    loadRules().pop_front();
+  while (!placements().empty()) {
+    delete placements().front();
+    placements().pop_front();
   }
   return;
 }
@@ -51,15 +51,15 @@ Exit* Room::exit(std::string direction) {
   return exit(Exit::string2dir(direction));
 }
 
-void Room::removeLoadRule(unsigned index) {
-  std::list<LoadRule*>::iterator it = loadRules().begin();
-  LoadRule* rule = NULL;
+void Room::removePlacement(unsigned index) {
+  std::list<Placement*>::iterator it = placements().begin();
+  Placement* rule = NULL;
   unsigned short i = 0;
-  if (index && index <= loadRules().size()) {
-    for (i = 1; i <= loadRules().size(); ++i, ++it) {
+  if (index && index <= placements().size()) {
+    for (i = 1; i <= placements().size(); ++i, ++it) {
       if (i == index) {
         rule = *it;
-        loadRules().erase(it);
+        placements().erase(it);
         rule->destroy();
         return;
       }
@@ -68,10 +68,10 @@ void Room::removeLoadRule(unsigned index) {
   return;
 }
 
-void Room::executeLoadRules(void) {
+void Room::executePlacements(void) {
   std::list<Item*> new_items;
   std::list<Npc*> new_npcs;
-  for (std::list<LoadRule*>::iterator it = loadRules().begin(); it != loadRules().end(); ++it) {
+  for (std::list<Placement*>::iterator it = placements().begin(); it != placements().end(); ++it) {
     (*it)->execute(new_items, new_npcs);
   }
   return;
@@ -137,8 +137,8 @@ void Room::destroy(void) {
       }
     }
   }
-  // Destroy LoadRules.
-  for (auto iter : loadRules()) iter->destroy();
+  // Destroy Placements.
+  for (auto iter : placements()) iter->destroy();
   // Make sure the Room is empty first.
   if (!clear()) {
     fprintf(stderr, "Couldn't clear() Room #%lu during destruction.\n", vnum());
@@ -170,7 +170,7 @@ bool Room::clear(void) {
 void Room::reset(void) {
   std::list<Item*> new_items;
   std::list<Npc*> new_npcs;
-  for (std::list<LoadRule*>::iterator it = loadRules().begin(); it != loadRules().end(); ++it) {
+  for (std::list<Placement*>::iterator it = placements().begin(); it != placements().end(); ++it) {
     (*it)->execute(new_items, new_npcs);
   }
   return;

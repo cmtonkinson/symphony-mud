@@ -8,9 +8,9 @@
 #include "command.h"
 #include "enumTable.h"
 #include "exit.h"
-#include "loadRule.h"
-#include "loadRuleNpc.h"
-#include "loadRuleItem.h"
+#include "placement.h"
+#include "placementNpc.h"
+#include "placementItem.h"
 #include "npc.h"
 #include "note.h"
 #include "item-container.h"
@@ -68,7 +68,7 @@ void Storage::dump(FILE* fp, Room* room) {
   out(fp, "smell",        room->smell());
   out(fp, "sound",        room->sound());
   out(fp, "terrain",      room->terrain()->name());
-  for (auto iter : room->loadRules()) dump(fp, iter);
+  for (auto iter : room->placements()) dump(fp, iter);
   for (unsigned u = 0; u < 6; ++u) {
     if (room->exit(u)) dump(fp, room->exit(u));
   }
@@ -89,12 +89,12 @@ bool Storage::load(FILE* fp, Room* loading) {
     STORE_DESCEND_NEW("EXIT", Exit,
       loading->exit(instance->direction().number(), instance);
     )
-    STORE_DESCEND_NEW("RULE_ITEM", LoadRuleItem,
-      loading->loadRules().push_back(instance);
+    STORE_DESCEND_NEW("PLACEMENT_ITEM", PlacementItem,
+      loading->placements().push_back(instance);
       instance->room(loading);
     )
-    STORE_DESCEND_NEW("RULE_NPC", LoadRuleNpc,
-      loading->loadRules().push_back(instance);
+    STORE_DESCEND_NEW("PLACEMENT_NPC", PlacementNpc,
+      loading->placements().push_back(instance);
       instance->room(loading);
     )
   });
@@ -127,40 +127,40 @@ bool Storage::load(FILE* fp, Exit* loading) {
 }
 
 /***************************************************************************************************
- * LOAD RULE
+ * PLACEMENT
  **************************************************************************************************/
-void Storage::dump(FILE* fp, LoadRule* rule) {
+void Storage::dump(FILE* fp, Placement* rule) {
   char buffer[32];
-  sprintf(buffer, "RULE_%s", rule->strType());
+  sprintf(buffer, "PLACEMENT_%s", rule->strType());
   BEGIN(buffer)
   out(fp, "target",       rule->target());
   out(fp, "number",       rule->number());
   out(fp, "max",          rule->max());
   out(fp, "probability",  rule->probability());
   switch (rule->type()) {
-    case LoadRule::ITEM:
-      out(fp, "preposition",          ((LoadRuleItem*)rule)->preposition());
-      out(fp, "indirectItem",       ((LoadRuleItem*)rule)->indirectItem());
-      out(fp, "indirectItemIndex",  ((LoadRuleItem*)rule)->indirectItemIndex());
+    case Placement::ITEM:
+      out(fp, "preposition",          ((PlacementItem*)rule)->preposition());
+      out(fp, "indirectItem",       ((PlacementItem*)rule)->indirectItem());
+      out(fp, "indirectItemIndex",  ((PlacementItem*)rule)->indirectItemIndex());
       break;
   }
   END(buffer)
   return;
 }
 
-bool Storage::load(FILE* fp, LoadRule* loading) {
+bool Storage::load(FILE* fp, Placement* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "RULE_", [&fp, &loading, &input]() {
-    STORE_CASE("target",              &LoadRule::target)
-    STORE_CASE("number",              &LoadRuleItem::number)
-    STORE_CASE("max",                 &LoadRuleItem::max)
-    STORE_CASE("probability",         &LoadRuleItem::probability)
+  load_status = load_inner(fp, loading, input, "PLACEMENT_", [&fp, &loading, &input]() {
+    STORE_CASE("target",              &Placement::target)
+    STORE_CASE("number",              &PlacementItem::number)
+    STORE_CASE("max",                 &PlacementItem::max)
+    STORE_CASE("probability",         &PlacementItem::probability)
     switch (loading->type()) {
-      case LoadRule::ITEM:
-        STORE_CASE_WITH_TYPE("preposition",         &LoadRuleItem::preposition,         LoadRuleItem)
-        STORE_CASE_WITH_TYPE("indirectItem",      &LoadRuleItem::indirectItem,      LoadRuleItem)
-        STORE_CASE_WITH_TYPE("indirectItemIndex", &LoadRuleItem::indirectItemIndex, LoadRuleItem)
+      case Placement::ITEM:
+        STORE_CASE_WITH_TYPE("preposition",         &PlacementItem::preposition,         PlacementItem)
+        STORE_CASE_WITH_TYPE("indirectItem",      &PlacementItem::indirectItem,      PlacementItem)
+        STORE_CASE_WITH_TYPE("indirectItemIndex", &PlacementItem::indirectItemIndex, PlacementItem)
         break;
     }
   });

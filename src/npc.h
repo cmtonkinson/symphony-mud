@@ -36,7 +36,7 @@ class Npc: public Being {
     virtual void        whatHappensWhenIDie(void);
 
     // This is the primary entry method to initiate all automated Npc behavior. It is used e.g.
-    // when Npcs are placed from load rules or the `nload` Command to breathe life into the Npc and
+    // when Npcs are placed from placements or the `nload` Command to breathe life into the Npc and
     // cause it to do things like move around the world and other randomized or programatic actions.
     void npcilize(void);
 

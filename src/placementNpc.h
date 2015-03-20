@@ -1,14 +1,14 @@
 
-#ifndef H_SYMPHONY_LOADRULE_NPC
-#define H_SYMPHONY_LOADRULE_NPC
+#ifndef H_SYMPHONY_PLACEMENT_NPC
+#define H_SYMPHONY_PLACEMENT_NPC
 
-#include "loadRule.h"
+#include "placement.h"
 
-class LoadRuleNpc: public LoadRule {
+class PlacementNpc: public Placement {
   public:
     // constructors...
-    LoadRuleNpc(void);
-    ~LoadRuleNpc(void);
+    PlacementNpc(void);
+    ~PlacementNpc(void);
 
     // general methods...
     virtual std::string notes(void) const;
@@ -16,4 +16,4 @@ class LoadRuleNpc: public LoadRule {
     virtual bool        execute(std::list<Item*>& new_items, std::list<Npc*>& new_npcs);
 };
 
-#endif // #ifndef H_SYMPHONY_LOADRULE_NPC
+#endif // #ifndef H_SYMPHONY_PLACEMENT_NPC

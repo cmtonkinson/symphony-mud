@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_LOADRULE
-#define H_SYMPHONY_LOADRULE
+#ifndef H_SYMPHONY_PLACEMENT
+#define H_SYMPHONY_PLACEMENT
 
 #include <list>
 #include <string>
@@ -9,7 +9,7 @@ class Item;
 class Npc;
 class Room;
 
-class LoadRule {
+class Placement {
   public:
 
     static const unsigned ERROR  = 0;
@@ -23,8 +23,8 @@ class LoadRule {
     static const unsigned WEAR   = 4;  // the indirect item is a npc
 
     // constructors...
-    LoadRule(void);
-    virtual ~LoadRule(void);
+    Placement(void);
+    virtual ~Placement(void);
 
     // public accessor methods...
     void            ID(unsigned long ID)                { _ID = ID; }
@@ -50,7 +50,7 @@ class LoadRule {
     virtual void        destroy(void) = 0;
     virtual bool        execute(std::list<Item*>& new_items, std::list<Npc*>& new_npcs) = 0;
 
-    static LoadRule*    create(const char* type);
+    static Placement*    create(const char* type);
 
   private:
 
@@ -64,4 +64,4 @@ class LoadRule {
     unsigned        _probability;     // 1-100 percent probability that the item/npc will load per reset
 };
 
-#endif // #ifndef H_SYMPHONY_LOADRULE
+#endif // #ifndef H_SYMPHONY_PLACEMENT

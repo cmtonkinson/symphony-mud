@@ -1,8 +1,8 @@
 
 #include "zone.h"
 #include "exit.h"
-#include "loadRuleNpc.h"
-#include "loadRuleItem.h"
+#include "placementNpc.h"
+#include "placementItem.h"
 #include "room.h"
 #include "storage.h"
 #include "terrainTable.h"

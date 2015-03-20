@@ -12,7 +12,7 @@
 class Zone;
 class Being;
 class Exit;
-class LoadRule;
+class Placement;
 
 class Room {
   public:
@@ -58,16 +58,16 @@ class Room {
     const std::list<Being*>&   beings(void) const                   { return _beings; }
     InventoryContainer&           inventory(void)                         { return _inventory; }
     const InventoryContainer&     inventory(void) const                   { return _inventory; }
-    std::list<LoadRule*>&         loadRules(void)                         { return _loadRules; }
-    const std::list<LoadRule*>&   loadRules(void) const                   { return _loadRules; }
+    std::list<Placement*>&         placements(void)                         { return _placements; }
+    const std::list<Placement*>&   placements(void) const                   { return _placements; }
 
     // General methods...
     bool                          loadExits(void);
     void                          add(Being* being)                                                       { beings().push_back(being); }
     void                          remove(Being* being)                                                    { beings().remove(being); }
-    void                          add(LoadRule* loadRule)                                                       { loadRules().push_back(loadRule); }
-    void                          removeLoadRule(unsigned index);
-    void                          executeLoadRules(void);
+    void                          add(Placement* placement)                                                       { placements().push_back(placement); }
+    void                          removePlacement(unsigned index);
+    void                          executePlacements(void);
     void                          add(Item* item)                                                           { inventory().add(item); }
     void                          remove(Item* item)                                                        { inventory().remove(item); }
     void                          send(std::string format, Being* being = NULL, void* arg1 = NULL,
@@ -99,7 +99,7 @@ class Room {
     Exit*                   _exits[6];
     std::list<Being*>    _beings;
     InventoryContainer      _inventory;
-    std::list<LoadRule*>    _loadRules;
+    std::list<Placement*>    _placements;
 };
 
 #endif // #ifndef H_SYMPHONY_ROOM

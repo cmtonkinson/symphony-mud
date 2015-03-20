@@ -20,8 +20,8 @@
 #include <functional>
 
 class Exit;
-class LoadRuleNpc;
-class LoadRuleItem;
+class PlacementNpc;
+class PlacementItem;
 class Npc;
 class Room;
 class SocialCommand;
@@ -123,8 +123,8 @@ class Storage {
     static void dump(FILE* fp, Exit* exit);
     static bool load(FILE* fp, Exit* loading);
 
-    static void dump(FILE* fp, LoadRule* rule);
-    static bool load(FILE* fp, LoadRule* loading);
+    static void dump(FILE* fp, Placement* rule);
+    static bool load(FILE* fp, Placement* loading);
 
     static void dump(FILE* fp, Item* item, const char* suffix = nullptr);
     static bool load(FILE* fp, Item* loading);

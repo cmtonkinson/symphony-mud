@@ -1,10 +1,10 @@
 
 #include "commandTable-default.h"
-#include "loadRuleItem.h"
+#include "placementItem.h"
 #include "room.h"
 #include "world.h"
 
-LoadRuleItem::LoadRuleItem(void) {
+PlacementItem::PlacementItem(void) {
   type(ITEM);
   preposition(ERROR);
   indirectItem(ERROR);
@@ -12,11 +12,11 @@ LoadRuleItem::LoadRuleItem(void) {
   return;
 }
 
-LoadRuleItem::~LoadRuleItem(void) {
+PlacementItem::~PlacementItem(void) {
   return;
 }
 
-std::string LoadRuleItem::notes(void) const {
+std::string PlacementItem::notes(void) const {
   std::string foo;
 
   switch (preposition()) {
@@ -40,12 +40,12 @@ std::string LoadRuleItem::notes(void) const {
   return foo;
 }
 
-void LoadRuleItem::destroy(void) {
+void PlacementItem::destroy(void) {
   delete this;
   return;
 }
 
-bool LoadRuleItem::execute(std::list<Item*>& new_items, std::list<Npc*>& new_npcs) {
+bool PlacementItem::execute(std::list<Item*>& new_items, std::list<Npc*>& new_npcs) {
   std::map<unsigned long,Item*>::iterator it;
   Zone* zone = room()->zone();
   Item* item = NULL;

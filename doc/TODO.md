@@ -20,7 +20,7 @@
 
 ## Building
   * absolute map coordinates
-  * loadrule enhancements
+  * placement enhancements
 
 ## Engine
   * Security

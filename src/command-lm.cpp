@@ -5,9 +5,9 @@
 #include "commandTable-default.h"
 #include "exit.h"
 #include "item-container.h"
-#include "loadRule.h"
-#include "loadRuleItem.h"
-#include "loadRuleNpc.h"
+#include "placement.h"
+#include "placementItem.h"
+#include "placementNpc.h"
 #include "world.h"
 #include "zone.h"
 
@@ -63,8 +63,8 @@ bool CmdLearn::execute(Being* being, const std::vector<std::string>& args) {
   return true;
 }
 
-CmdLoadRule::CmdLoadRule(void) {
-  name("loadrule");
+CmdPlacement::CmdPlacement(void) {
+  name("placement");
   level(Being::DEMIGOD);
   addSyntax(1, "list");
   addSyntax(2, "delete <rule>");
@@ -108,22 +108,22 @@ argument.  If, for example, you are loading two identical pouches (say the\n\
 pouch vnum is 934) into a room, and you want a potion to load into the second\n\
 pouch, your \"<target>[.index]\" argument should look like \"934#2\"\n\n\
 --------Examples:\n\
-\"loadrule add npc 654 1 4\" would specify that 1 of npc 654 should be loaded on every reset, until there are 4 total in the zone.\n\
-\"loadrule add item 3967 5 5\" would specify a rule to load up to five instances of item 3967.\n\
-\"loadrule add item 1234 1 1 5\" would create a rule to load item 1234 approximately 5% of the time.\n\
-\"loadrule add item 4354 1 1 654 carry\" loads one instance of item 4354, and puts it in the inventory of npc 654."*/
+\"placement add npc 654 1 4\" would specify that 1 of npc 654 should be loaded on every reset, until there are 4 total in the zone.\n\
+\"placement add item 3967 5 5\" would specify a rule to load up to five instances of item 3967.\n\
+\"placement add item 1234 1 1 5\" would create a rule to load item 1234 approximately 5% of the time.\n\
+\"placement add item 4354 1 1 654 carry\" loads one instance of item 4354, and puts it in the inventory of npc 654."*/
 
-bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
+bool CmdPlacement::execute(Being* being, const std::vector<std::string>& args) {
   std::deque<std::string> pieces;
   std::string foo;
   std::vector<std::string> bar;
   Room* room = being->room();
-  std::list<LoadRule*>* rules = &(room->loadRules());
-  std::list<LoadRule*>::iterator it;
-  LoadRule* rule = NULL;
-  LoadRuleNpc* npcRule = NULL;
-  LoadRuleItem* itemRule = NULL;
-  CmdLoadRule cmdLoadRule;
+  std::list<Placement*>* rules = &(room->placements());
+  std::list<Placement*>::iterator it;
+  Placement* rule = NULL;
+  PlacementNpc* npcRule = NULL;
+  PlacementItem* itemRule = NULL;
+  CmdPlacement cmdPlacement;
   std::vector<std::string> load_rule_args;
   unsigned rule_number = 0;
   unsigned type = 0;
@@ -142,26 +142,26 @@ bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
 
   // Check permissions...
   if (!room->zone()->hasPermission(avatar())) {
-    avatar()->send("You don't have permissions to the LoadRules in this room.");
+    avatar()->send("You don't have permissions to the Placements in this room.");
     return false;
   }
 
   // Provide a listing...
   if (pieces[0] == "list") {
     if (rules->empty()) {
-      avatar()->send("There are no LoadRules defined for this room.");
+      avatar()->send("There are no Placements defined for this room.");
       return true;
     } else {
-      avatar()->send("LoadRules for Room %lu (%s):\n\n", room->vnum(), room->name().c_str());
+      avatar()->send("Placements for Room %lu (%s):\n\n", room->vnum(), room->name().c_str());
       avatar()->send("#  | type |  vnum | number | max | probability | notes\n------------------------------------------------------------------------------\n");
       for (it = rules->begin(), rule_number=1; it != rules->end(); ++it, ++rule_number) {
         switch ((*it)->type()) {
-          case LoadRule::NPC:
-            npcRule = (LoadRuleNpc*)*it;
+          case Placement::NPC:
+            npcRule = (PlacementNpc*)*it;
             avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %3u/100   | %s\n", rule_number, npcRule->strType(), npcRule->target(), npcRule->number(), npcRule->max(), npcRule->probability(), "N/A");
             break;
-          case LoadRule::ITEM:
-            itemRule = (LoadRuleItem*)*it;
+          case Placement::ITEM:
+            itemRule = (PlacementItem*)*it;
             avatar()->send("%02u | %4s | %5u |   %2u   |  %2u |   %3u/100   | %s\n", rule_number, itemRule->strType(), itemRule->target(), itemRule->number(), itemRule->max(), itemRule->probability(), itemRule->notes().c_str());
             break;
           default:
@@ -182,7 +182,7 @@ bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
       avatar()->send("There is no rule #%u.", rule_number);
       return false;
     } else {
-      room->removeLoadRule(rule_number);
+      room->removePlacement(rule_number);
       avatar()->send("Rule #%u has been removed.", rule_number);
       return true;
     }
@@ -198,9 +198,9 @@ bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
 
     // What kind of rule?
     if (pieces[0] == "npc") {
-      type = LoadRule::NPC;
+      type = Placement::NPC;
     } else if (pieces[0] == "item") {
-      type = LoadRule::ITEM;
+      type = Placement::ITEM;
     } else {
       avatar()->send(printSyntax());
       return false;
@@ -223,16 +223,16 @@ bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
 
     // Construct the Rule...
     switch (type) {
-      case LoadRule::NPC:
-        rule = new LoadRuleNpc();
+      case Placement::NPC:
+        rule = new PlacementNpc();
         if (pieces.empty()) {
           probability = 100;
         } else {
           probability = estring(pieces[0]);
         }
         break;
-      case LoadRule::ITEM:
-        rule = new LoadRuleItem();
+      case Placement::ITEM:
+        rule = new PlacementItem();
         if (pieces.empty()) {
           probability = 100;
           break;
@@ -242,16 +242,16 @@ bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
           break;
         } else if (pieces.size() == 2 || pieces.size() == 3) {
           if (pieces[0] == "in") {
-            ((LoadRuleItem*)rule)->preposition(LoadRule::IN);
+            ((PlacementItem*)rule)->preposition(Placement::IN);
             foo = estring(pieces[1]);
           } else if (pieces[0] == "on") {
-            ((LoadRuleItem*)rule)->preposition(LoadRule::ON);
+            ((PlacementItem*)rule)->preposition(Placement::ON);
             foo = estring(pieces[1]);
           } else if (pieces[1] == "carry") {
-            ((LoadRuleItem*)rule)->preposition(LoadRule::CARRY);
+            ((PlacementItem*)rule)->preposition(Placement::CARRY);
             foo = estring(pieces[0]);
           } else if (pieces[1] == "wear") {
-            ((LoadRuleItem*)rule)->preposition(LoadRule::WEAR);
+            ((PlacementItem*)rule)->preposition(Placement::WEAR);
             foo = estring(pieces[0]);
           } else {
             avatar()->send(printSyntax());
@@ -262,12 +262,12 @@ bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
           bar = Regex::explode("#", foo);
           switch (bar.size()) {
             case 1:
-              ((LoadRuleItem*)rule)->indirectItem(estring(bar[0]));
-              ((LoadRuleItem*)rule)->indirectItemIndex(1);
+              ((PlacementItem*)rule)->indirectItem(estring(bar[0]));
+              ((PlacementItem*)rule)->indirectItemIndex(1);
               break;
             case 2:
-              ((LoadRuleItem*)rule)->indirectItem(estring(bar[0]));
-              ((LoadRuleItem*)rule)->indirectItemIndex(estring(bar[1]));
+              ((PlacementItem*)rule)->indirectItem(estring(bar[0]));
+              ((PlacementItem*)rule)->indirectItemIndex(estring(bar[1]));
               break;
             default:
               avatar()->send(printSyntax());
@@ -299,8 +299,8 @@ bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
     rules->push_back(rule);
     avatar()->send("Rule created: ");
     load_rule_args.push_back("list");
-    cmdLoadRule.avatar(avatar());
-    cmdLoadRule.execute(being, load_rule_args);
+    cmdPlacement.avatar(avatar());
+    cmdPlacement.execute(being, load_rule_args);
     return true;
   } else {
     avatar()->send(printSyntax());
