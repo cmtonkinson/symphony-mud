@@ -9,6 +9,7 @@
 #include "io-handler.h"
 #include "item-types.h"
 #include "os.h"
+#include "socket.h"
 #include "storage.h"
 #include "world.h"
 
@@ -66,8 +67,8 @@ bool Avatar::hasInput(void) {
   try {
     return socket()->hasInput();
   } catch (SocketException se) {
-    World::Instance().bigBrother(this, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in Avatar::hasInput() -> %s", identifiers().shortname().c_str(), se.getError().c_str());
     disconnected(true);
+    ERROR_(this, "SocketException: %s", se.getError().c_str())
     return false;
   }
 }
@@ -76,8 +77,8 @@ std::string Avatar::getInput(void) {
   try {
     return socket()->getInput();
   } catch (SocketException se) {
-    World::Instance().bigBrother(this, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in Avatar::getInput() -> %s", identifiers().shortname().c_str(), se.getError().c_str());
     disconnected(true);
+    ERROR_(this, "SocketException: %s", se.getError().c_str())
     return std::string();
   }
 }
@@ -86,8 +87,8 @@ bool Avatar::hasOutput(void) {
   try {
     return (output().length() > 0);
   } catch (SocketException se) {
-    World::Instance().bigBrother(this, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in Avatar::hasOutput() -> %s", identifiers().shortname().c_str(), se.getError().c_str());
     disconnected(true);
+    ERROR_(this, "SocketException: %s", se.getError().c_str())
     return false;
   }
 }
@@ -98,8 +99,8 @@ void Avatar::flushOutput(void) {
     socket()->send(std::string("\n") + output().interpretColor());
     output(std::string());
   } catch (SocketException se) {
-    World::Instance().bigBrother(this, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in Avatar::flushOutput() -> %s", identifiers().shortname().c_str(), se.getError().c_str());
     disconnected(true);
+    ERROR_(this, "SocketException: %s", se.getError().c_str())
   }
   return;
 }
@@ -130,6 +131,10 @@ std::string Avatar::stringLoggedOn(void) {
   return os::realtime(secondsLoggedOn());
 }
 
+std::string Avatar::ip(void) {
+  return socket()->getIP();
+}
+
 /****************************** Persistence ******************************/
 void Avatar::save(void) {
   FILE* fp = nullptr;
@@ -139,7 +144,7 @@ void Avatar::save(void) {
     Storage::write(fp, this);
     fclose(fp);
   } else {
-    fprintf(stderr, "Failed to write avatar file %s.\n", filename);
+    ERROR_(this, "failed to write %s", filename)
   }
 
   return;
@@ -154,7 +159,7 @@ bool Avatar::load(void) {
     fclose(fp);
     return true;
   } else {
-    fprintf(stderr, "Failed to read avatar file %s.\n", filename);
+    ERROR_(this, "failed to read %s", filename)
     return false;
   }
 }

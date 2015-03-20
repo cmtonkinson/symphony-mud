@@ -7,7 +7,7 @@
 #include "storage.h"
 #include "world.h"
 
-const char* World::REBOOT_FILE = "sockets.copy";
+const char* World::REBOOT_FILE = "data/reboot.txt";
 
 World::World(void) {
   // basic setup
@@ -15,7 +15,7 @@ World::World(void) {
   exists(true);
   copyover(false);
   jobsPerTurn(5);
-  schedule()->add(new RecurringJob(this, &World::tick, 50, 70));
+  schedule()->add(new RecurringJob(this, &World::tock, 50, 70));
   schedule()->add(new RecurringJob(this, &World::save, 900));
   return;
 }
@@ -26,14 +26,9 @@ World::~World(void) {
 
 /************************************************************ CONTROL ************************************************************/
 void World::startup(void) {
-
-  if (!load()) {
-    worldLog(World::LOG_LEVEL_FATAL, World::LOG_TYPE_WORLD, "There was a problem loading a world component.");
-  }
-
+  load();
   npcIOHandler()->commandTable(&(Commands::Instance()));
   exist();
-
   return;
 }
 
@@ -45,30 +40,22 @@ void World::exist(const unsigned int& fd) {
       getServer()->startup(6501);
     }
   } catch (SocketException se) {
-    worldLog(World::LOG_LEVEL_FATAL, World::LOG_TYPE_SYSTEM, "Couldn't start Socket server: %s", se.getError().c_str());
+    ERROR_(0, "can't start Socket server: %s", se.getError().c_str())
     exit(EXIT_FAILED_BOOT);
   }
 
-  if (copyover()) {
-    worldLog(LOG_LEVEL_SYSTEM, LOG_TYPE_SYSTEM, "System rebooted successfully.");
-  } else {
-    worldLog(LOG_LEVEL_SYSTEM, LOG_TYPE_SYSTEM, "System up on port %d.", getServer()->getPort());
-  }
+  if (copyover()) INFO_(0, "system reboot on port %u", getServer()->getPort())
+  else            INFO_(0, "system boot on port %u", getServer()->getPort())
 
-  while (exists()) {
-    turn();
-  }
+  while (exists()) tick();
 
-  if (!save()) {
-    worldLog(World::LOG_LEVEL_FATAL, World::LOG_TYPE_WORLD, "There was a problem saving a world component.");
-  }
+  if (!save()) ERROR(0, "failed to save")
 
-  worldLog(LOG_LEVEL_SYSTEM, LOG_TYPE_SYSTEM, "System shutting down.");
-
+  INFO(0, "system shutdown")
   return;
 }
 
-void World::turn(void) {
+void World::tick(void) {
   handleNewConnections();
   handleJobs();
   handleInput();
@@ -86,10 +73,8 @@ bool World::reboot(Being* being) {
   fp = fopen(REBOOT_FILE, "w");
 
   if (!fp) {
-    if (being) {
-      being->send("Copyover file couldn't be opened for writing! Copyover aborted!");
-    }
-    worldLog(World::LOG_LEVEL_ERROR, World::LOG_TYPE_SYSTEM, "Copyover file couldn't be opened for writing! Copyover aborted!");
+    if (being) being->send("Copyover file couldn't be opened for writing! Copyover aborted!");
+    ERROR(being, "failed to write copyover file")
     return false;
   }
 
@@ -109,20 +94,16 @@ bool World::reboot(Being* being) {
   handleOutput();
 
   if (save()) {
-    worldLog(LOG_LEVEL_SYSTEM, LOG_TYPE_SYSTEM, "World saved pre-reboot.");
+    INFO(0, "system saved for reboot")
   } else {
-    worldLog(World::LOG_LEVEL_FATAL, World::LOG_TYPE_WORLD, "There was a problem saving a world component.");
-    broadcast("Copyover aborted.");
+    ERROR(0, "failed to save; copyover aborted")
     return false;
   }
 
-  worldLog(LOG_LEVEL_SYSTEM, LOG_TYPE_SYSTEM, "System going down for reboot.");
+  INFO(0, "executing reboot")
 
   fd = estring("-fd=").append(estring(getServer()->getFd()));
-  if (execl("bin/symphony", "-copyover", fd.c_str(), NULL) < 0) {
-    worldLog(World::LOG_LEVEL_ERROR, World::LOG_TYPE_SYSTEM, "execl(): %s", strerror(errno));
-    broadcast("Copyover failed.");
-  }
+  if (execl("bin/symphony", "-copyover", fd.c_str(), NULL) < 0) ERROR(0, "reboot failed")
 
   return false;
 }
@@ -134,21 +115,17 @@ void World::recover(const unsigned int& fd) {
   char name[Socket::MAX_BUFFER];
   Avatar* avatar = NULL;
 
-  if (!load()) {
-    worldLog(World::LOG_LEVEL_FATAL, World::LOG_TYPE_WORLD, "There was a problem loading a world component.");
-  }
+  if (!load()) ERROR(0, "failed to recover")
 
   fp = fopen(REBOOT_FILE, "r");
 
   if (!fp) {
-    worldLog(World::LOG_LEVEL_FATAL, World::LOG_TYPE_SYSTEM, "Copyover file couldn't be opened for reading. Copyover failed.");
+    ERROR(0, "failed to read copyover file")
     exit(EXIT_FAILED_REBOOT);
   }
 
   while (1) {
-    if (fscanf(fp, "%d %s %s", &client_fd, ip, name) < 3) {
-      break;
-    }
+    if (fscanf(fp, "%d %s %s", &client_fd, ip, name) < 3) break;
     avatar = new Avatar(new Socket(client_fd));
     avatar->socket()->setIP(ip);
     avatar->identifiers().shortname(name);
@@ -163,6 +140,7 @@ void World::recover(const unsigned int& fd) {
   fclose(fp);
   unlink(REBOOT_FILE);
 
+  INFO(0, "system reboot")
   broadcast("\n\nCopyover successful. You may now drop your pants.");
 
   exist(fd);
@@ -175,10 +153,7 @@ bool World::load(void) {
 
   loadZones();
   loadDisabledCommands();
-
-  if (!loadSocials()) {
-    status = false;
-  }
+  loadSocials();
 
   add(new Board(Board::GENERAL));
   add(new Board(Board::CHANGES));
@@ -203,8 +178,7 @@ bool World::save(void) {
 
   saveSocials();
 
-  worldLog(World::LOG_LEVEL_SYSTEM, World::LOG_TYPE_WORLD, "World::save()");
-
+  INFO(0, "system save")
   return status;
 }
 
@@ -258,8 +232,8 @@ void World::saveSocials(void) {
   return;
 }
 
-bool World::tick(RecurringJob* job) {
-  bigBrother(NULL, ADMIN_BIGBRO_EVENTS, "Tick!");
+bool World::tock(RecurringJob* job) {
+  VERBOSE(0, "tock")
   return true;
 }
 
@@ -274,7 +248,7 @@ void World::handleInput(void) {
         a_it->second->handle();
       }
     } catch (SocketException se) {
-      bigBrother(a_it->second, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in World::handleInput() -> %s", a_it->second->identifiers().shortname().c_str(), se.getError().c_str());
+      ERROR_(0, "SocketException: %s", se.getError().c_str())
     }
     a_it = next;
   }
@@ -289,7 +263,7 @@ void World::handleOutput(void) {
         a_it->second->flushOutput();
       }
     } catch (SocketException se) {
-      bigBrother(a_it->second, ADMIN_BIGBRO_ERRORS, "%s threw a SocketException in World::handleOutput() -> %s", a_it->second->identifiers().shortname().c_str(), se.getError().c_str());
+      ERROR_(0, "SocketException: %s", se.getError().c_str())
     }
   }
   return;
@@ -304,8 +278,8 @@ void World::handleNewConnections(void) {
     avatar = new Avatar(*sock_it);
     insert(avatar);
     avatar->pushIOHandler(new LoginBannerIOHandler(avatar));
-    bigBrother(NULL, ADMIN_BIGBRO_SYSTEM, "New connection from %s!", avatar->socket()->getIP().c_str());
     new_connections.erase(sock_it);
+    INFO_(0, "new connection from %s", (*sock_it)->getIP().c_str())
   }
   return;
 }
@@ -314,13 +288,11 @@ void World::handleDisconnects(void) {
   std::map<std::string,Avatar*>::iterator next;
   for (std::map<std::string,Avatar*>::iterator a_it = getAvatars().begin(); a_it != getAvatars().end();) {
     if (a_it->second->disconnected()) {
-      /* We have to go through a bit of a song and dance here, because map::erase() does
-       * not return the next valid iterator in the sequence like vector::erase() does.
-       */
+      // We have to go through a bit of a song and dance here, because map::erase() does
+      // not return the next valid iterator in the sequence like vector::erase() does.
       next = a_it;
       ++next;
-      bigBrother(a_it->second, ADMIN_BIGBRO_LOGINS, "%s has logged out from %s.", a_it->second->identifiers().shortname().c_str(), a_it->second->socket()->getIP().c_str());
-      playerLog(World::LOG_LEVEL_NOTICE, World::LOG_TYPE_PLAYER, "%s (%lu) logged in from %s", a_it->second->identifiers().shortname().c_str(), a_it->second->ID(), a_it->second->socket()->getIP().c_str());
+      INFO(a_it->second, "log out")
       if (a_it->second->room()) {
         a_it->second->room()->send_cond("$p has left the realm.", a_it->second);
         a_it->second->room()->remove(a_it->second);
@@ -342,41 +314,9 @@ void World::handleDisconnects(void) {
 void World::broadcast(const std::string& message) {
   for (std::map<std::string,Avatar*>::iterator it = getAvatars().begin(); it != getAvatars().end(); it++) {
     if (it->second->isConnected()) {
-      it->second->send(message);
-      it->second->send("\n");
+      it->second->send(message + "\n");
     }
   }
-  return;
-}
-
-void World::bigBrother(Being* being, const unsigned long& type, const char* format, ...) {
-  char buffer[Socket::MAX_BUFFER];
-  va_list args;
-
-  va_start(args, format);
-  vsprintf(buffer, format, args);
-  va_end(args);
-
-  if (being && type) {
-    for (std::map<std::string,Avatar*>::iterator it = getAvatars().begin(); it != getAvatars().end(); ++it) {
-      if (it->second->isConnected() && it->second->adminFlags().test(ADMIN_BIGBROTHER) && it->second->adminFlags().test(type) && it->second->level() >= being->level() && it->second != being) {
-        it->second->send("BigBrother: %s\n", buffer);
-      }
-    }
-  } else if (type) {
-    for (std::map<std::string,Avatar*>::iterator it = getAvatars().begin(); it != getAvatars().end(); ++it) {
-      if (it->second->isConnected() && it->second->adminFlags().test(ADMIN_BIGBROTHER) && it->second->adminFlags().test(type)) {
-        it->second->send("BigBrother: %s\n", buffer);
-      }
-    }
-  } else {
-    for (std::map<std::string,Avatar*>::iterator it = getAvatars().begin(); it != getAvatars().end(); ++it) {
-      if (it->second->isConnected() && it->second->adminFlags().test(ADMIN_BIGBROTHER)) {
-        it->second->send("BigBrother: %s\n", buffer);
-      }
-    }
-  }
-
   return;
 }
 
@@ -393,20 +333,16 @@ void World::handleJobs(void) {
 
 /************************************************************ BEINGS ************************************************************/
 void World::insert(Being* being) {
-fprintf(stderr, "World::insert(%s)\n", being->name());
   getBeings().insert(being);
   if (being->isAvatar()) {
-fprintf(stderr, "  -> avatar\n");
     getAvatars().insert(std::make_pair(being->name(), dynamic_cast<Avatar*>(being)));
   }
   return;
 }
 
 void World::remove(Being* being) {
-fprintf(stderr, "World::remove(%s)\n", being->name());
   getBeings().erase(being);
   if (being->isAvatar()) {
-fprintf(stderr, "  -> avatar\n");
     getAvatars().erase(being->name());
   }
   return;
@@ -584,42 +520,6 @@ void World::saveBoards(void) {
 }
 
 /************************************************************ STATIC ************************************************************/
-void World::worldLog(unsigned level, unsigned type, const char* format, ...) {
-  char buffer[Socket::MAX_BUFFER];
-  va_list args;
-
-  // Process our arguments...
-  va_start(args, format);
-  vsprintf(buffer, format, args);
-  va_end(args);
-
-  // Prep and send our query...
-  fprintf(stderr, "LOG: %s\n", buffer);
-
-  // Depending on the level (and the current system log level) we may also print the message...
-  if (level == LOG_LEVEL_SYSTEM || level >= LOG_LEVEL_WARNING) {
-    Instance().bigBrother(NULL, ADMIN_BIGBRO_SYSTEM, buffer);
-    fprintf(stderr, "Log %s: %s\n", os::strnow().c_str(), buffer);
-  }
-
-  return;
-}
-
-void World::playerLog(unsigned level, unsigned type, const char* format, ...) {
-  char buffer[Socket::MAX_BUFFER];
-  va_list args;
-
-  // Process our arguments...
-  va_start(args, format);
-  vsprintf(buffer, format, args);
-  va_end(args);
-
-  // Prep and send our query...
-  fprintf(stderr, "ERROR: %s\n", buffer);
-
-  return;
-}
-
 bool World::search_map(Being* being, Room*** map, const unsigned short& ymax, const unsigned short& xmax, const short& y, const short& x, Room* room, std::string** display) {
   Exit* exit = NULL;
   short new_x = 0;

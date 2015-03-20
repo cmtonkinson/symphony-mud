@@ -192,6 +192,7 @@ bool LoginNameIOHandler::handle(void) {
     if (test->identifiers().shortname() == input) {
       avatar()->send("Sorry - they're already signed in.\n");
       avatar()->disconnected(true);
+      INFO(test, "attempted double login")
       return false;
     }
   }
@@ -234,17 +235,17 @@ bool LoginPasswordIOHandler::handle(void) {
       avatar()->replaceIOHandler(new LoginDeleteIOHandler(avatar()));
       return true;
     }
-    World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_LOGINS, "%s has logged in from %s.", avatar()->identifiers().shortname().c_str(), avatar()->socket()->getIP().c_str());
-    World::Instance().playerLog(World::LOG_LEVEL_NOTICE, World::LOG_TYPE_PLAYER, "%s (%lu) logged in from %s", avatar()->identifiers().shortname().c_str(), avatar()->ID(), avatar()->socket()->getIP().c_str());
     avatar()->status().set(CONNECTED);
     avatar()->replaceIOHandler(new InputIOHandler(avatar()));
     avatar()->send("\nWecome back!\n");
     avatar()->restoreRoom();
+    INFO(avatar(), "logged in")
     return true;
   } else {
     avatar()->send("That password is invalid.\n");
     avatar()->deletionStatus(Avatar::DO_NOT_DELETE);
     avatar()->disconnected(true);
+    INFO(avatar(), "failed log in")
     return false;
   }
 }
@@ -269,14 +270,14 @@ bool LoginDeleteIOHandler::handle(void) {
     avatar()->send("\n{RCharacter deleted.{x\n\nFarewell, traveler. May you find happiness in another realm.\n");
     avatar()->deletionStatus(Avatar::DESTROY_NOW);
     avatar()->disconnected(true);
+    INFO(avatar(), "account deleted")
   } else {
     avatar()->deletionStatus(Avatar::DO_NOT_DELETE);
     avatar()->send("\nCharacter deletion {YCANCELLED{x!!  Whew - that was a close one.");
-    World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_LOGINS, "%s has cancelled deletion and logged in from %s.", avatar()->identifiers().shortname().c_str(), avatar()->socket()->getIP().c_str());
-    World::Instance().playerLog(World::LOG_LEVEL_NOTICE, World::LOG_TYPE_PLAYER, "%s (%lu) has cancelled deletion and logged in from %s", avatar()->identifiers().shortname().c_str(), avatar()->ID(), avatar()->socket()->getIP().c_str());
     avatar()->status().set(CONNECTED);
     avatar()->send("\nWecome back!\n");
     avatar()->restoreRoom();
+    INFO(avatar(), "account deletion aborted")
   }
   avatar()->replaceIOHandler(new InputIOHandler(avatar()));
   return true;
@@ -521,9 +522,11 @@ bool CreationSummaryIOHandler::handle(void) {
       avatar()->send("\n\n{WYou are now the system administrator.{x\n");
     }
     success = true;
+    INFO(avatar(), "new character")
   } else {
     avatar()->send("\n{RCharacter cancelled.{x\n\nFarewell, traveler. May you find happiness in another realm.\n");
     success = false;
+    INFO(avatar(), "character aborted")
   }
   avatar()->replaceIOHandler(new InputIOHandler(avatar()));
   avatar()->disconnected(!success);
@@ -672,7 +675,7 @@ void ZeditIOHandler::activate(void) {
   commandTable(&(ZeditCommands::Instance()));
   avatar()->whoFlags().set(WHO_BUSY);
   avatar()->mode().set(MODE_ZEDIT);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has entered zone editing mode.", avatar()->identifiers().shortname().c_str());
+  VERBOSE(avatar(), "entered zone edit mode")
   return;
 }
 
@@ -680,7 +683,7 @@ void ZeditIOHandler::deactivate(void) {
   avatar()->send("Goodbye!\n");
   avatar()->whoFlags().clear(WHO_BUSY);
   avatar()->mode().set(MODE_NONE);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has left zone editing mode.", avatar()->identifiers().shortname().c_str());
+  VERBOSE(avatar(), "left zone edit mode")
   return;
 }
 
@@ -695,7 +698,7 @@ void NeditIOHandler::activate(void) {
   commandTable(&(NeditCommands::Instance()));
   avatar()->whoFlags().set(WHO_BUSY);
   avatar()->mode().set(MODE_NEDIT);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has entered npc editing mode.", avatar()->identifiers().shortname().c_str());
+  VERBOSE(avatar(), "entered npc edit mode")
   return;
 }
 
@@ -703,7 +706,7 @@ void NeditIOHandler::deactivate(void) {
   avatar()->send("Goodbye!\n");
   avatar()->whoFlags().clear(WHO_BUSY);
   avatar()->mode().set(MODE_NONE);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has left npc editing mode.", avatar()->identifiers().shortname().c_str());
+  VERBOSE(avatar(), "left npc edit mode")
   return;
 }
 
@@ -718,7 +721,7 @@ void IeditIOHandler::activate(void) {
   commandTable(&(IeditCommands::Instance()));
   avatar()->whoFlags().set(WHO_BUSY);
   avatar()->mode().set(MODE_IEDIT);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has entered item editing mode.", avatar()->identifiers().shortname().c_str());
+  VERBOSE(avatar(), "entered item edit mode")
   return;
 }
 
@@ -726,7 +729,7 @@ void IeditIOHandler::deactivate(void) {
   avatar()->send("Goodbye!\n");
   avatar()->whoFlags().clear(WHO_BUSY);
   avatar()->mode().set(MODE_NONE);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has left item editing mode.", avatar()->identifiers().shortname().c_str());
+  VERBOSE(avatar(), "left item edit mode")
   return;
 }
 
@@ -741,7 +744,7 @@ void PeditIOHandler::activate(void) {
   commandTable(&(PeditCommands::Instance()));
   avatar()->whoFlags().set(WHO_BUSY);
   avatar()->mode().set(MODE_PEDIT);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has entered player editing mode.", avatar()->identifiers().shortname().c_str());
+  VERBOSE(avatar(), "entered player edit mode")
   return;
 }
 
@@ -749,7 +752,7 @@ void PeditIOHandler::deactivate(void) {
   avatar()->send("Goodbye!\n");
   avatar()->whoFlags().clear(WHO_BUSY);
   avatar()->mode().set(MODE_NONE);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has left player editing mode.", avatar()->identifiers().shortname().c_str());
+  VERBOSE(avatar(), "left player edit mode")
   return;
 }
 
@@ -764,7 +767,7 @@ void ReditIOHandler::activate(void) {
   commandTable(&(ReditCommands::Instance()));
   avatar()->whoFlags().set(WHO_BUSY);
   avatar()->mode().set(MODE_REDIT);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has entered room editing mode.", avatar()->identifiers().shortname().c_str());
+  VERBOSE(avatar(), "entered room edit mode")
   return;
 }
 
@@ -772,7 +775,7 @@ void ReditIOHandler::deactivate(void) {
   avatar()->send("Goodbye!\n");
   avatar()->whoFlags().clear(WHO_BUSY);
   avatar()->mode().set(MODE_NONE);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has left room editing mode.", avatar()->identifiers().shortname().c_str());
+  VERBOSE(avatar(), "left room edit mode")
   return;
 }
 
@@ -787,7 +790,7 @@ void SeditIOHandler::activate(void) {
   commandTable(&(SeditCommands::Instance()));
   avatar()->whoFlags().set(WHO_BUSY);
   avatar()->mode().set(MODE_SEDIT);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has entered social editing mode.", avatar()->identifiers().shortname().c_str());
+  VERBOSE(avatar(), "entered social edit mode")
   return;
 }
 
@@ -795,7 +798,7 @@ void SeditIOHandler::deactivate(void) {
   avatar()->send("Goodbye!\n");
   avatar()->whoFlags().clear(WHO_BUSY);
   avatar()->mode().set(MODE_NONE);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has left social editing mode.", avatar()->identifiers().shortname().c_str());
+  VERBOSE(avatar(), "left social edit mode")
   return;
 }
 

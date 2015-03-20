@@ -62,6 +62,10 @@ class Avatar: public Being {
     void            restoreRoom(void);
     void            adjustStartingStats(void);
 
+    // Shortcuts...
+    std::string     ip(void);
+    virtual Avatar* toAvatar(void) { return this; }
+
     // public accessors...
     void            socket(Socket* socket)                        { _socket = socket; }
     Socket*         socket(void)                                  { return _socket; }
@@ -90,8 +94,8 @@ class Avatar: public Being {
     Avatar*         pedit(void)                                   { return _pedit; }
     void            zedit(Zone* zedit)                            { _zedit = zedit; }
     Zone*           zedit(void)                                   { return _zedit; }
-    void            iedit(Item* iedit)                          { _iedit = iedit; }
-    Item*         iedit(void)                                   { return _iedit; }
+    void            iedit(Item* iedit)                            { _iedit = iedit; }
+    Item*           iedit(void)                                   { return _iedit; }
     void            nedit(Npc* nedit)                             { _nedit = nedit; }
     Npc*            nedit(void)                                   { return _nedit; }
     void            sedit(SocialCommand* sedit)                   { _sedit = sedit; }

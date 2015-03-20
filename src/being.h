@@ -18,14 +18,15 @@
 #include "modifier.h"
 #include "item.h"
 
-class Zone;
 class Ability;
+class Avatar;
+class Group;
 class IOHandler;
 class ItemFurniture;
-class Room;
 class Npc;
+class Room;
 class SocialCommand;
-class Group;
+class Zone;
 
 class Being {
   public:
@@ -243,26 +244,31 @@ class Being {
     static const char*          attributeToString(const unsigned short& index);
     static std::string          listAttributes(void);
 
+    // Shortcuts...
+    const char*                 name(void) const          { return identifiers().shortname().c_str(); }
+    std::string                 ident(void);
+
     // Public methods...
-    const char*                 name(void) const                                                { return identifiers().shortname().c_str(); }
-    virtual bool                isAvatar(void) const                                            { return false; }
-    virtual bool                isNpc(void) const                                               { return false; }
-    bool                        isLaying(void) const                                            { return position().number() == LAYING; }
-    bool                        isSitting(void) const                                           { return position().number() == SITTING; }
-    bool                        isStanding(void) const                                          { return position().number() == STANDING; }
-    bool                        isMounted(void) const                                           { return position().number() == MOUNTED; }
-    bool                        isDead(void) const                                              { return action().number() == DEAD; }
-    bool                        isSleeping(void) const                                          { return action().number() == SLEEPING; }
-    bool                        isFighting(void) const                                          { return action().number() == FIGHTING; }
-    bool                        isDwarf(void) const                                             { return race().number() == DWARF; }
-    bool                        isElf(void) const                                               { return race().number() == ELF; }
-    bool                        isHuman(void) const                                             { return race().number() == HUMAN; }
-    bool                        isCleric(void) const                                            { return pClass().number() == CLERIC; }
-    bool                        isMage(void) const                                              { return pClass().number() == MAGE; }
-    bool                        isRogue(void) const                                             { return pClass().number() == ROGUE; }
-    bool                        isWarrior(void) const                                           { return pClass().number() == WARRIOR; }
-    unsigned short              hand(void) const                                                { return WEARLOC_HOLD_R; }
-    unsigned short              off_hand(void) const                                            { return WEARLOC_HOLD_L; }
+    virtual bool                isAvatar(void) const      { return false; }
+    virtual bool                isNpc(void) const         { return false; }
+    virtual Avatar*             toAvatar(void)            { return nullptr; }
+    virtual Npc*                toNpc(void)               { return nullptr; }
+    bool                        isLaying(void) const      { return position().number() == LAYING; }
+    bool                        isSitting(void) const     { return position().number() == SITTING; }
+    bool                        isStanding(void) const    { return position().number() == STANDING; }
+    bool                        isMounted(void) const     { return position().number() == MOUNTED; }
+    bool                        isDead(void) const        { return action().number() == DEAD; }
+    bool                        isSleeping(void) const    { return action().number() == SLEEPING; }
+    bool                        isFighting(void) const    { return action().number() == FIGHTING; }
+    bool                        isDwarf(void) const       { return race().number() == DWARF; }
+    bool                        isElf(void) const         { return race().number() == ELF; }
+    bool                        isHuman(void) const       { return race().number() == HUMAN; }
+    bool                        isCleric(void) const      { return pClass().number() == CLERIC; }
+    bool                        isMage(void) const        { return pClass().number() == MAGE; }
+    bool                        isRogue(void) const       { return pClass().number() == ROGUE; }
+    bool                        isWarrior(void) const     { return pClass().number() == WARRIOR; }
+    unsigned short              hand(void) const          { return WEARLOC_HOLD_R; }
+    unsigned short              off_hand(void) const      { return WEARLOC_HOLD_L; }
     bool                        lay(std::string& error, ItemFurniture* furniture = NULL);
     bool                        sit(std::string& error, ItemFurniture* furniture = NULL, bool on = false);
     bool                        stand(std::string& error);

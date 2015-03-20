@@ -1,5 +1,4 @@
 
-#include "zone.h"
 #include "avatar.h"
 #include "commands-zedit.h"
 #include "commandTable-default.h"
@@ -7,9 +6,11 @@
 #include "display.h"
 #include "flagTable.h"
 #include "io-handler.h"
+#include "os.h"
 #include "room.h"
 #include "terrainTable.h"
 #include "world.h"
+#include "zone.h"
 
 ZCmdDelete::ZCmdDelete(void) {
   name("delete");
@@ -31,10 +32,10 @@ bool ZCmdDelete::execute(Being* being, const std::vector<std::string>& args) {
 
   exit.avatar(avatar());
   exit.execute(being, exit_args);
-  avatar()->send("\nYou've deleted Zone %lu.\n", zone->ID());
-  World::Instance().bigBrother(being, ADMIN_BIGBRO_CHANGES, "%s has deleted zone %lu (%s).", avatar()->identifiers().shortname().c_str(), zone->ID(), zone->name().c_str());
   zone->destroy();
+  avatar()->send("\nYou've deleted Zone %lu.\n", zone->ID());
 
+  INFO_(being, "zone '%s' deleted", zone->name().c_str())
   return true;
 }
 

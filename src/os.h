@@ -3,8 +3,10 @@
 #define H_SYMPHONY_OS
 
 #include <string>
+#include <vector>
 
 class Avatar;
+class Being;
 class SocialCommand;
 class Zone;
 
@@ -33,22 +35,42 @@ namespace os {
   // LOGGING
   /////////////////////////////////////////////////////////////////////////////
   const unsigned LOG_SILLY   = 0;
-  const unsigned LOG_VERBOSE = 1;
-  const unsigned LOG_INFO    = 2;
-  const unsigned LOG_WARN    = 3;
-  const unsigned LOG_ERROR   = 4;
-  const unsigned LOG_SILENT  = 5;
+  const unsigned LOG_DEBUG   = 1;
+  const unsigned LOG_VERBOSE = 2;
+  const unsigned LOG_INFO    = 3;
+  const unsigned LOG_WARN    = 4;
+  const unsigned LOG_ERROR   = 5;
+  const unsigned LOG_FATAL   = 6;
+  const unsigned LOG_SILENT  = 7;
 
-  void          log(const char* file, unsigned line, unsigned level, const char* format, ...);
+  void          log(const char* file, unsigned line, unsigned level, Being* being, const char* format);
+  void          log_(const char* file, unsigned line, unsigned level, Being* being, const char* format, ...);
   const char*   stringLevel(unsigned level);
 
   // Remember, #defines within a namespace will still bind to global scope.
-  #define SILLY(format, ...)    os::log(__FILE__, __LINE__, os::LOG_SILLY, format, __VA_ARGS__);
-  #define VERBOSE(format, ...)  os::log(__FILE__, __LINE__, os::LOG_VERBOSE, format, __VA_ARGS__);
-  #define INFO(format, ...)     os::log(__FILE__, __LINE__, os::LOG_INFO, format, __VA_ARGS__);
-  #define WARN(format, ...)     os::log(__FILE__, __LINE__, os::LOG_WARN, format, __VA_ARGS__);
-  #define ERROR(format, ...)    os::log(__FILE__, __LINE__, os::LOG_ERROR, format, __VA_ARGS__);
-  #define SILENT(format, ...)   os::log(__FILE__, __LINE__, os::LOG_SILENT, format, __VA_ARGS__);
+  #define SILLY(being, format)          os::log(__FILE__, __LINE__, os::LOG_SILLY, being, format);
+  #define SILLY_(being, format, ...)    os::log_(__FILE__, __LINE__, os::LOG_SILLY, being, format, __VA_ARGS__);
+
+  #define DEBUG(being, format)           os::log(__FILE__, __LINE__, os::LOG_DEBUG, being, format);
+  #define DEBUG_(being, format, ...)     os::log_(__FILE__, __LINE__, os::LOG_DEBUG, being, format, __VA_ARGS__);
+
+  #define VERBOSE(being, format)        os::log(__FILE__, __LINE__, os::LOG_VERBOSE, being, format);
+  #define VERBOSE_(being, format, ...)  os::log_(__FILE__, __LINE__, os::LOG_VERBOSE, being, format, __VA_ARGS__);
+
+  #define INFO(being, format)           os::log(__FILE__, __LINE__, os::LOG_INFO, being, format);
+  #define INFO_(being, format, ...)     os::log_(__FILE__, __LINE__, os::LOG_INFO, being, format, __VA_ARGS__);
+
+  #define WARN(being, format)           os::log(__FILE__, __LINE__, os::LOG_WARN, being, format);
+  #define WARN_(being, format, ...)     os::log_(__FILE__, __LINE__, os::LOG_WARN, being, format, __VA_ARGS__);
+
+  #define ERROR(being, format)          os::log(__FILE__, __LINE__, os::LOG_ERROR, being, format);
+  #define ERROR_(being, format, ...)    os::log_(__FILE__, __LINE__, os::LOG_ERROR, being, format, __VA_ARGS__);
+
+  #define FATAL(being, format)          os::log(__FILE__, __LINE__, os::LOG_FATAL, being, format);
+  #define FATAL_(being, format, ...)    os::log_(__FILE__, __LINE__, os::LOG_FATAL, being, format, __VA_ARGS__);
+
+  #define SILENT(being, format)         os::log(__FILE__, __LINE__, os::LOG_SILENT, being, format);
+  #define SILENT_(being, format, ...)   os::log_(__FILE__, __LINE__, os::LOG_SILENT, being, format, __VA_ARGS__);
 
   /////////////////////////////////////////////////////////////////////////////
   // FILESYSTEM PATHS

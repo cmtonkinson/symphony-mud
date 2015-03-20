@@ -4,11 +4,12 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <vector>
-#include "githash.h"
-#include "os.h"
-
 #include "avatar.h"
+#include "being.h"
 #include "command.h"
+#include "githash.h"
+#include "npc.h"
+#include "os.h"
 #include "zone.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -137,9 +138,14 @@ std::string os::realtime(const unsigned long& seconds, unsigned granularity) {
 ///////////////////////////////////////////////////////////////////////////////
 // LOGGING
 ///////////////////////////////////////////////////////////////////////////////
-void os::log(const char* file, unsigned line, unsigned level, const char* format, ...) {
+void os::log(const char* file, unsigned line, unsigned level, Being* being, const char* format) {
+  os::log_(file, line, level, being, format);
+  return;
+}
+
+void os::log_(const char* file, unsigned line, unsigned level, Being* being, const char* format, ...) {
   char buffer[BUFFER_SIZE];
-  char message[BUFFER_SIZE * 2];
+  std::string message;
   va_list args;
 
   if (level == LOG_SILENT) return; // don't even bother
@@ -149,22 +155,18 @@ void os::log(const char* file, unsigned line, unsigned level, const char* format
   vsprintf(buffer, format, args);
   va_end(args);
 
-  // Format the final output message.
-  sprintf(message, "%s %s [%s:%u %s] %s\n",
-    stringLevel(level),
-    os::strnow().c_str(),
-    file,
-    line,
-    GIT_HASH,
-    buffer
-  );
+  // Log level
+  message << stringLevel(level) << " ";
+  // Timestamp
+  message << os::strnow() << " ";
+  // File/line
+  message << "[" << file << ":" << line << " " << GIT_HASH << "] ";
+  // Being details (if given)
+  if (being) message << "(" << being->ident() << ") ";
+  // Content
+  message << buffer << "\n";
 
-  // stderr/stdout
-  if (level >= LOG_WARN) {
-    std::cerr << message;
-  } else if (level <= LOG_INFO) {
-    std::cout << message;
-  }
+  std::cout << message; // TODO
 
   return;
 }
@@ -172,12 +174,14 @@ void os::log(const char* file, unsigned line, unsigned level, const char* format
 const char* os::stringLevel(unsigned level) {
   switch (level) {
     case LOG_SILENT:  return "SILENT";
+    case LOG_FATAL:   return "FATAL";
     case LOG_ERROR:   return "ERROR";
     case LOG_WARN:    return "WARN";
     case LOG_INFO:    return "INFO";
     case LOG_VERBOSE: return "VERBOSE";
+    case LOG_DEBUG:   return "DEBUG";
     case LOG_SILLY:   return "SILLY";
-    default:            return "UNKNOWN";
+    default:          return "UNKNOWN";
   }
 }
 
@@ -212,14 +216,13 @@ std::vector<std::string> os::glob(std::string pattern) {
       for (size_t x = 0; x < globbuf.gl_pathc; ++x) paths.push_back(globbuf.gl_pathv[x]);
       break;
     case GLOB_NOSPACE:
-      fprintf(stderr, "glob() on \"%s\" - out of memory\n", pattern.c_str());
+      ERROR_(0, "glob - out of memory on %s", pattern.c_str())
       break;
     case GLOB_NOMATCH:
-      fprintf(stderr, "glob() on \"%s\" - no matches\n", pattern.c_str());
+      DEBUG_(0, "glob - no matches on %s", pattern.c_str())
       break;
     case GLOB_ABORTED:
-      fprintf(stderr, "glob() on \"%s\" - read error:", pattern.c_str());
-      perror(NULL);
+      ERROR_(0, "glob - read error on %s", pattern.c_str())
       break;
   }
 

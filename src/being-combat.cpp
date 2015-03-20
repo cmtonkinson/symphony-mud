@@ -1,9 +1,10 @@
 
 #include "ability.h"
-#include "command.h"
 #include "being.h"
+#include "command.h"
 #include "display.h"
 #include "item-types.h"
+#include "os.h"
 #include "skills.h"
 #include "stats.h"
 #include "world.h"
@@ -160,7 +161,7 @@ void Being::die(Being* killer) {
   send("\n\nYou are {RDEAD{x!!!\n\n");
   room()->send_cond("\n\n$p is {RDEAD{x!!!\n\n", this, NULL, NULL, Room::TO_NOTVICT);
   if (isAvatar() && killer && killer->isAvatar()) {
-    World::Instance().bigBrother(this, ADMIN_BIGBRO_DEATHS, "%s has killed %s.\n", killer->name(), name());
+    INFO_(this, "killed by %s", killer->ident().c_str())
   }
   // Who's responsible?
   if (killer) {

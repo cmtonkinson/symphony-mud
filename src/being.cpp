@@ -1,5 +1,6 @@
 
 #include "ability.h"
+#include "avatar.h"
 #include "being.h"
 #include "commandTable-default.h"
 #include "display.h"
@@ -9,6 +10,7 @@
 #include "io-handler.h"
 #include "item-types.h"
 #include "job.h"
+#include "npc.h"
 #include "room.h"
 #include "stats.h"
 #include "world.h"
@@ -601,6 +603,13 @@ std::string Being::listAttributes(void) {
     output.resize(output.size()-1);
   }
   return output;
+}
+
+std::string Being::ident(void) {
+  std::string dest = identifiers().shortname();
+  if (isAvatar()) return dest << std::string(" @") << toAvatar()->ip();
+  else if (isNpc()) return dest << std::string(" #") << toNpc()->vnum();
+  else return "error";
 }
 
 void Being::setModifications(Item* item) {

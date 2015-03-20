@@ -1,5 +1,6 @@
 
 #include "math.h"
+#include "os.h"
 #include "placementNpc.h"
 #include "room.h"
 #include "world.h"
@@ -33,7 +34,7 @@ bool PlacementNpc::execute(std::list<Item*>& new_items, std::list<Npc*>& new_npc
   if ((it = zone->npcs().find(target())) != zone->npcs().end()) {
     npc = it->second;
   } else {
-    World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset a npc. Npc %lu in zone %lu doesn't exist.", target(), zone->ID());
+    WARN_(0, "placement failed in '%s'; NPC %lu doesn't exist", zone->name().c_str(), target())
     return false;
   }
 
@@ -47,6 +48,7 @@ bool PlacementNpc::execute(std::list<Item*>& new_items, std::list<Npc*>& new_npc
       room()->send_cond("$p has arrived.\n", npc);
       new_npcs.push_back(npc);
       npcs_added++;
+      SILLY_(0, "placement in '%s'; NPC %lu in room %lu", zone->name().c_str(), target(), room()->vnum())
       // Give the Npc some real stats. It's a hack to forcibly level them just to make the numbers
       // come out, but it works for now and it has the added benefit of making existing Npcs' stats
       // update to reflect modifications to the growth algorithms during active development.

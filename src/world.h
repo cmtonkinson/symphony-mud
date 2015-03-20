@@ -28,18 +28,7 @@ class World {
     static const unsigned EXIT_ERROR         = 1;
     static const unsigned EXIT_FAILED_BOOT   = 2;
     static const unsigned EXIT_FAILED_REBOOT = 3;
-    // Log levels...
-    static const unsigned LOG_LEVEL_SYSTEM  = 0;
-    static const unsigned LOG_LEVEL_NOTICE  = 1;
-    static const unsigned LOG_LEVEL_WARNING = 2;
-    static const unsigned LOG_LEVEL_ERROR   = 3;
-    static const unsigned LOG_LEVEL_FATAL   = 4;
-    // Log entry types...
-    static const unsigned LOG_TYPE_SYSTEM = 1;
-    static const unsigned LOG_TYPE_WORLD  = 2;
-    static const unsigned LOG_TYPE_AVATAR = 3;
-    static const unsigned LOG_TYPE_EVENT  = 4;
-    static const unsigned LOG_TYPE_PLAYER = 5;
+
     // Copyover junk
     static const char* REBOOT_FILE;
 
@@ -70,7 +59,7 @@ class World {
     // Control
     void                  startup(void);
     void                  exist(const unsigned int& fd = 0);
-    void                  turn(void);
+    void                  tick(void);
     bool                  reboot(Being* being = NULL);
     void                  recover(const unsigned int& fd);
     bool                  load(void);
@@ -80,7 +69,7 @@ class World {
     bool                  loadSocials(void);
     void                  loadAbilities(void);
     void                  saveSocials(void);
-    bool                  tick(RecurringJob* job);
+    bool                  tock(RecurringJob* job);
 
     // I/O
     void                  handleNewConnections(void);
@@ -134,24 +123,22 @@ class World {
 
     // Static methods...
     static World&         Instance(void);
-    static void           worldLog(unsigned level, unsigned type, const char* format, ...);
-    static void           playerLog(unsigned level, unsigned type, const char* format, ...);
     static bool           search_map(Being* being, Room*** map, const unsigned short& ymax, const unsigned short& xmax, const short& y, const short& x, Room* room, std::string** display);
     static std::string    get_marker(Being* being, Room* room);
 
   private:
-    time_t                                                  _booted;
-    bool                                                    _exists;
-    bool                                                    _copyover;
-    Socket                                                  _server;
-    std::map<std::string,Avatar*>                           _avatars;
-    std::set<Zone*,zone_comp>                               _zones;
-    std::set<Item*>                                       _items;
-    std::set<Being*>                                     _beings;
-    std::map<unsigned,Board*>                               _boards;
-    InputIOHandler                                          _npcIOHandler;
-    Schedule                                                _schedule;
-    unsigned                                                _jobsPerTurn;
+    time_t                          _booted;
+    bool                            _exists;
+    bool                            _copyover;
+    Socket                          _server;
+    std::map<std::string,Avatar*>   _avatars;
+    std::set<Zone*,zone_comp>       _zones;
+    std::set<Item*>                 _items;
+    std::set<Being*>                _beings;
+    std::map<unsigned,Board*>       _boards;
+    InputIOHandler                  _npcIOHandler;
+    Schedule                        _schedule;
+    unsigned                        _jobsPerTurn;
 };
 
 /*

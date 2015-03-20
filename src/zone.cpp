@@ -1,12 +1,13 @@
 
-#include "zone.h"
 #include "exit.h"
-#include "placementNpc.h"
+#include "os.h"
 #include "placementItem.h"
+#include "placementNpc.h"
 #include "room.h"
 #include "storage.h"
 #include "terrainTable.h"
 #include "world.h"
+#include "zone.h"
 
 Zone::Zone(void) {
   return;
@@ -112,7 +113,7 @@ void Zone::reset(void) {
   for (std::map<unsigned long,Room*>::iterator it = rooms().begin(); it != rooms().end(); ++it) {
     it->second->reset();
   }
-  World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Zone Reset: %s (%lu)\n", name().c_str(), ID());
+  VERBOSE_(0, "zone '%s' reset", name().c_str())
   return;
 }
 

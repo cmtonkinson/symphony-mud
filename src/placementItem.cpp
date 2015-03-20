@@ -1,6 +1,7 @@
 
 #include "commandTable-default.h"
 #include "math.h"
+#include "os.h"
 #include "placementItem.h"
 #include "room.h"
 #include "world.h"
@@ -60,24 +61,23 @@ bool PlacementItem::execute(std::list<Item*>& new_items, std::list<Npc*>& new_np
   if ((it = zone->items().find(target())) != zone->items().end()) {
     item = it->second;
   } else {
-    World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset an item. Item %lu in zone %lu doesn't exist.", target(), zone->ID());
+    WARN_(0, "placement failed in '%s'; item %lu doesn't exist", zone->name().c_str(), target())
     return false;
   }
 
   for (unsigned u = 0; u < number(); ++u) {
-    if (already_there + items_added >= max()) {
-      break;
-    }
+    if (already_there + items_added >= max()) break;
     if (Math::rand(1, 100) <= probability()) {
       item = new Item(*item);
       World::Instance().insert(item);
       room()->inventory().add(item);
       new_items.push_back(item);
       items_added++;
+      SILLY_(0, "placement in '%s'; item %lu in room %lu", zone->name().c_str(), target(), room()->vnum())
       if (preposition() == CARRY || preposition() == WEAR) {
         being = room()->being_by_vnum(indirectItem(), indirectItemIndex());
         if (being == NULL) {
-          World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset an item. Item %lu in zone %lu loaded, but can't find npc %lu#%hu ", target(), zone->ID(), indirectItem(), indirectItemIndex());
+          WARN_(0, "placement failed in '%s'; item %lu loaded, but can't find NPC %lu#%hu", zone->name().c_str(), target(), indirectItem(), indirectItemIndex())
           return false;
         }
         args[0] = item->identifiers().longestKeyword();

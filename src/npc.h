@@ -32,7 +32,9 @@ class Npc: public Being {
     unsigned            aggressiveness(void) const              { return _aggressiveness; }
 
     // general methods...
-    virtual bool        isNpc(void) const                 { return true; }
+    virtual bool        isNpc(void) const         { return true; }
+    virtual Npc*        toNpc(void)               { return this; }
+
     virtual void        whatHappensWhenIDie(void);
 
     // This is the primary entry method to initiate all automated Npc behavior. It is used e.g.

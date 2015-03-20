@@ -68,7 +68,7 @@ bool CmdZedit::execute(Being* being, const std::vector<std::string>& args) {
     zone = new Zone(low, high);
     if (!zone->ID()) {
       avatar()->send("Something went wrong while creating the zone.");
-      World::Instance().worldLog(World::LOG_LEVEL_ERROR, World::LOG_TYPE_WORLD, "%lu failed to create zone from %lu through %lu.", avatar()->ID(), zone->low(), zone->high());
+      ERROR_(avatar(), "failed to create a zone from %lu through %lu", zone->low(), zone->high())
       delete zone;
       return false;
     }
