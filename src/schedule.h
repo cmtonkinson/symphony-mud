@@ -4,7 +4,6 @@
 
 #include <map>
 #include <set>
-#include "event-handler-method.h"
 #include "job.h"
 
 class Schedule {

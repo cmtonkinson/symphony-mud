@@ -3,6 +3,9 @@
 #include "job.h"
 #include "schedule.h"
 
+///////////////////////////////////////////////////////////////////////////////
+// Job
+///////////////////////////////////////////////////////////////////////////////
 Job::~Job(void) {
   if (_what) delete _what;
   return;
@@ -35,4 +38,29 @@ bool JobComp::operator()(Job* left, Job* right) const {
 unsigned Job::nextIndex(void) {
   static unsigned _counter_index = 0;
   return ++_counter_index;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// RecurringJob
+///////////////////////////////////////////////////////////////////////////////
+RecurringJob::~RecurringJob(void) {
+  return;
+}
+
+void RecurringJob::recur(Schedule* schedule) {
+  if (--_togo != 0) {
+    calculateNextTime();
+    schedule->add(this);
+  }
+  return;
+}
+
+void RecurringJob::calculateNextTime(void) {
+  time_t now = time(NULL);
+  if (_upper > _lower) {
+    _when = now + (rand() % (_upper-_lower) + _lower);
+  } else {
+    _when = now + _lower;
+  }
+  return;
 }

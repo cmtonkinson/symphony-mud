@@ -6,13 +6,13 @@
 #include <map>
 #include <set>
 #include <string>
-#include "recurring-job.h"
-#include "terrain.h"
 
 class Avatar;
-class Room;
 class Item;
 class Npc;
+class RecurringJob;
+class Room;
+class Terrain;
 
 class Zone {
   private:
