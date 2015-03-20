@@ -13,9 +13,9 @@ mysql.conf
 /data/disabled_commands/*
 !/data/disabled_commands/.keep
 
-/data/areas/*
-!/data/areas/the-tundra.area.txt
-!/data/areas/.keep
+/data/zones/*
+!/data/zones/the-tundra.zone.txt
+!/data/zones/.keep
 
 /data/avatars/*
 !/data/avatars/.keep

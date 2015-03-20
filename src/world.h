@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 #include "ability-table.h"
-#include "area.h"
+#include "zone.h"
 #include "avatar.h"
 #include "board.h"
 #include "exit.h"
@@ -66,8 +66,8 @@ class World {
     Socket*                                                   getServer(void)                 { return &_server; }
     std::map<std::string,Avatar*>&                            getAvatars(void)                { return _avatars; }
     const std::map<std::string,Avatar*>&                      getAvatars(void) const          { return _avatars; }
-    std::set<Area*,area_comp>&                                getAreas(void)                  { return _areas; }
-    const std::set<Area*,area_comp>&                          getAreas(void) const            { return _areas; }
+    std::set<Zone*,zone_comp>&                                getZones(void)                  { return _zones; }
+    const std::set<Zone*,zone_comp>&                          getZones(void) const            { return _zones; }
     std::set<Item*>&                                        getItems(void)                { return _items; }
     const std::set<Item*>&                                  getItems(void) const          { return _items; }
     std::set<Being*>&                                      getBeings(void)              { return _beings; }
@@ -118,12 +118,12 @@ class World {
     Avatar*               findAvatar(const unsigned long& ID);
     bool                  removeAvatar(const std::string& name);
 
-    // Areas
-    void                  loadAreas(void);
-    void                  insert(Area* area);
-    void                  remove(Area* area);
-    Area*                 findArea(const unsigned long& ID);
-    Area*                 lookup(const unsigned long& vnum);
+    // Zones
+    void                  loadZones(void);
+    void                  insert(Zone* zone);
+    void                  remove(Zone* zone);
+    Zone*                 findZone(const unsigned long& ID);
+    Zone*                 lookup(const unsigned long& vnum);
 
     void                  loadDisabledCommands(void);
 
@@ -159,7 +159,7 @@ class World {
     bool                                                    _copyover;
     Socket                                                  _server;
     std::map<std::string,Avatar*>                           _avatars;
-    std::set<Area*,area_comp>                               _areas;
+    std::set<Zone*,zone_comp>                               _zones;
     std::set<Item*>                                       _items;
     std::set<Being*>                                     _beings;
     std::map<unsigned,Board*>                               _boards;

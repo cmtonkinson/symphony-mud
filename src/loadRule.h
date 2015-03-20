@@ -60,7 +60,7 @@ class LoadRule {
     unsigned        _type;            // item or mob
     unsigned long   _target;          // vnum of the item/mob
     unsigned        _number;          // number to load per reset
-    unsigned        _max;             // max in the area for mobs, max in the room for items
+    unsigned        _max;             // max in the zone for mobs, max in the room for items
     unsigned        _probability;     // 1-100 percent probability that the item/mob will load per reset
 };
 

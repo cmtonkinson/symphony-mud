@@ -1,5 +1,5 @@
 
-#include "area.h"
+#include "zone.h"
 #include "avatar.h"
 #include "commands-redit.h"
 #include "commandTable-default.h"
@@ -15,20 +15,20 @@ RCmdCreate::RCmdCreate(void) {
   level(Being::DEMIGOD);
   addSyntax(0, "");
   addSyntax(1, "<vnum>");
-  brief("Creates a new Room in the area.");
+  brief("Creates a new Room in the zone.");
   return;
 }
 
 bool RCmdCreate::execute(Being* being, const std::vector<std::string>& args) {
   unsigned long vnum = 0;
-  Area* area = NULL;
+  Zone* zone = NULL;
   Room* room = NULL;
 
   if (args[0].empty()) {
     // vnum is being implied
-    vnum = avatar()->room()->area()->lowestAvailableRoom();
+    vnum = avatar()->room()->zone()->lowestAvailableRoom();
     if (!vnum) {
-      avatar()->send("There are no empty vnums in the current area.");
+      avatar()->send("There are no empty vnums in the current zone.");
       return false;
     }
   } else {
@@ -36,14 +36,14 @@ bool RCmdCreate::execute(Being* being, const std::vector<std::string>& args) {
     vnum = estring(args[0]);
   }
 
-  // Does the area exist?
-  if ((area = World::Instance().lookup(vnum)) == NULL) {
+  // Does the zone exist?
+  if ((zone = World::Instance().lookup(vnum)) == NULL) {
     avatar()->send("That vnum doesn't exist.");
     return false;
   }
 
   // Do they have permission to the vnum?
-  if (!area->hasPermission((Avatar*)being)) {
+  if (!zone->hasPermission((Avatar*)being)) {
     avatar()->send("You can't access that vnum.");
     return false;
   }
@@ -55,7 +55,7 @@ bool RCmdCreate::execute(Being* being, const std::vector<std::string>& args) {
   }
 
   // Create the room...
-  room = new Room(vnum, area);
+  room = new Room(vnum, zone);
   avatar()->send("You've created room %lu!", room->vnum());
 
   return true;
@@ -70,7 +70,7 @@ RCmdDelete::RCmdDelete(void) {
 }
 
 bool RCmdDelete::execute(Being* being, const std::vector<std::string>& args) {
-  Area* area = NULL;
+  Zone* zone = NULL;
   Room* room = avatar()->room();
   unsigned long vnum = room->vnum();
 
@@ -78,8 +78,8 @@ bool RCmdDelete::execute(Being* being, const std::vector<std::string>& args) {
     avatar()->send(printSyntax());
     return false;
   }
-  if ((area = World::Instance().lookup(vnum)) == NULL) {
-    avatar()->send("Error establishing vnum-area association.");
+  if ((zone = World::Instance().lookup(vnum)) == NULL) {
+    avatar()->send("Error establishing vnum-zone association.");
     return false;
   }
 
@@ -109,7 +109,7 @@ RCmdDig::RCmdDig(void) {
   level(Being::DEMIGOD);
   addSyntax(1, "<direction>");
   addSyntax(2, "<direction> <vnum>");
-  brief("Create a new Room in the Area, and automatically link with the current Room.");
+  brief("Create a new Room in the Zone, and automatically link with the current Room.");
   return;
 }
 
@@ -124,7 +124,7 @@ bool RCmdDig::execute(Being* being, const std::vector<std::string>& args) {
 
   // Get the vnum...
   if (args.size() == 1) { // vnum is being implied
-    target = avatar()->room()->area()->lowestAvailableRoom();
+    target = avatar()->room()->zone()->lowestAvailableRoom();
   } else if (args.size() == 2) { // explicit vnum
     target = estring(args[1]);
   }
@@ -312,7 +312,7 @@ bool RCmdLink::execute(Being* being, const std::vector<std::string>& args) {
   from = avatar()->room();
 
   // Check permissions...
-  if (!to->area()->hasPermission((Avatar*)being)) {
+  if (!to->zone()->hasPermission((Avatar*)being)) {
     avatar()->send("You don't have access to that room.");
     return false;
   }

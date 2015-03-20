@@ -38,4 +38,4 @@ class Board {
     std::map<unsigned,Note*>  _notes;
 };
 
-#endif // #ifndef H_SYMPHONY_AREA
+#endif // #ifndef H_SYMPHONY_ZONE

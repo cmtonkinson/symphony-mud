@@ -1,5 +1,5 @@
 
-#include "area.h"
+#include "zone.h"
 #include "avatar.h"
 #include "commands-iedit.h"
 #include "commandTable-default.h"
@@ -117,7 +117,7 @@ ICmdDelete::ICmdDelete(void) {
 bool ICmdDelete::execute(Being* being, const std::vector<std::string>& args) {
   CmdExit exit;
   std::vector<std::string> exit_args(1);
-  Area* area = NULL;
+  Zone* zone = NULL;
   Item* item = avatar()->iedit();
   unsigned long vnum = item->vnum();
 
@@ -125,12 +125,12 @@ bool ICmdDelete::execute(Being* being, const std::vector<std::string>& args) {
     avatar()->send(printSyntax());
     return false;
   }
-  if ((area = World::Instance().lookup(vnum)) == NULL) {
-    avatar()->send("Error establishing vnum-area association.");
+  if ((zone = World::Instance().lookup(vnum)) == NULL) {
+    avatar()->send("Error establishing vnum-zone association.");
     return false;
   }
 
-  area->items().erase(vnum);
+  zone->items().erase(vnum);
   avatar()->iedit(NULL);
   avatar()->send("Item %lu deleted.\n", vnum);
   exit.avatar(avatar());

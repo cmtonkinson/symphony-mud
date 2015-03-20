@@ -1,5 +1,5 @@
 
-#include "area.h"
+#include "zone.h"
 #include "avatar.h"
 #include "commandTable-default.h"
 #include "commandTable.h"
@@ -258,7 +258,7 @@ CmdWorldSave::CmdWorldSave(void) {
 
 bool CmdWorldSave::execute(Being* being, const std::vector<std::string>& args) {
   World::Instance().save();
-  avatar()->send("World areas and player profiles saved successfully.");
+  avatar()->send("World zones and player profiles saved successfully.");
   return true;
 }
 

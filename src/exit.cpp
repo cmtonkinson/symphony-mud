@@ -33,7 +33,7 @@ void Exit::destroy(void) {
  * Rooms and Exits would be loaded in two passes, and Exits would simply retain pointers to their
  * targets (obviating the need to store derived data - the vnum - separately in memory).
  *
- * But because of how Areas are loaded (specifically, how Exits for a Room are nested within the
+ * But because of how Zones are loaded (specifically, how Exits for a Room are nested within the
  * serialization of the Room itself, this isn't feasible and a single-pass loading paradigm makes
  * more sense from a code maintainability standpoint. So instead we load the vnums from the data
  * files and lazy-load the target pointers.

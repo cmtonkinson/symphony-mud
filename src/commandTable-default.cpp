@@ -4,7 +4,7 @@
 
 /* This is the default constructor for all CommandTables, therefore
  * any commands added here will be available throughout every game
- * mode (such as Aedit, et al.).  If you want a Command available
+ * mode (such as Zedit, et al.).  If you want a Command available
  * ONLY via the default handler, add it to Commands (which is at the
  * bottom of this file).
 */
@@ -56,7 +56,7 @@ CommandTable::CommandTable(void) {
   add(new CmdWorldSave());
   // Normal commands...
   add(new CmdAfk());
-  add(new CmdAreas());
+  add(new CmdZones());
   add(new CmdBoards());
   add(new CmdBored());
   add(new CmdBusy());
@@ -108,7 +108,7 @@ CommandTable::CommandTable(void) {
 Commands::Commands(void) {
   // Administrative commands...
   add(new CmdAt());
-  add(new CmdAedit());
+  add(new CmdZedit());
   add(new CmdDisable());
   add(new CmdEnable());
   add(new CmdMedit());

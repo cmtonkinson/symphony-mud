@@ -1,6 +1,6 @@
 
 #include <algorithm>
-#include "area.h"
+#include "zone.h"
 #include "avatar.h"
 #include "commandTable-default.h"
 #include "commandTable.h"
@@ -25,18 +25,18 @@ bool CmdAdminNote::execute(Being* being, const std::vector<std::string>& args) {
   return true;
 }
 
-CmdAedit::CmdAedit(void) {
-  name("aedit");
+CmdZedit::CmdZedit(void) {
+  name("zedit");
   level(Being::GOD);
-  addSyntax(1, "<areaID>");
-  addSyntax(3, "create <first vnum> <area size>");
-  brief("Launches the Area Editor.");
+  addSyntax(1, "<zoneID>");
+  addSyntax(3, "create <first vnum> <zone size>");
+  brief("Launches the Zone Editor.");
   return;
 }
 
-bool CmdAedit::execute(Being* being, const std::vector<std::string>& args) {
-  std::set<Area*,area_comp>::iterator it;
-  Area* area = NULL;
+bool CmdZedit::execute(Being* being, const std::vector<std::string>& args) {
+  std::set<Zone*,zone_comp>::iterator it;
+  Zone* zone = NULL;
   unsigned short minimum = 25;
   unsigned short multiple = 25;
 
@@ -46,58 +46,58 @@ bool CmdAedit::execute(Being* being, const std::vector<std::string>& args) {
     unsigned long high = low + size - 1;
     // Check permissions...
     if (!(avatar()->adminFlags().test(ADMIN_HEADBUILDER) || avatar()->level() >= Being::CREATOR)) {
-      avatar()->send("Only the Head Builder can create new areas.");
+      avatar()->send("Only the Head Builder can create new zones.");
       return false;
     }
     // Check to make sure vnums are good...
     if (low % minimum) {
-      avatar()->send("The first vnum of an area must be a multiple of %lu.", multiple);
+      avatar()->send("The first vnum of an zone must be a multiple of %lu.", multiple);
       return false;
     }
     if (size < minimum || size % minimum) {
-      avatar()->send("Area sizes must be a multiple of %lu, and at least %lu.", multiple, minimum);
+      avatar()->send("Zone sizes must be a multiple of %lu, and at least %lu.", multiple, minimum);
       return false;
     }
-    for (it = World::Instance().getAreas().begin(); it != World::Instance().getAreas().end(); ++it) {
+    for (it = World::Instance().getZones().begin(); it != World::Instance().getZones().end(); ++it) {
       if (((*it)->low() < low && low < (*it)->high()) || ((*it)->low() < high && high < (*it)->high())) {
-        avatar()->send("That would cause a vnum collision with %s (area %lu).  Please check your numbers.", (*it)->name().c_str(), (*it)->ID());
+        avatar()->send("That would cause a vnum collision with %s (zone %lu).  Please check your numbers.", (*it)->name().c_str(), (*it)->ID());
         return false;
       }
     }
-    area = new Area(low, high);
-    if (!area->ID()) {
-      avatar()->send("Something went wrong while creating the area.");
-      World::Instance().worldLog(World::LOG_LEVEL_ERROR, World::LOG_TYPE_WORLD, "%lu failed to create area from %lu through %lu.", avatar()->ID(), area->low(), area->high());
-      delete area;
+    zone = new Zone(low, high);
+    if (!zone->ID()) {
+      avatar()->send("Something went wrong while creating the zone.");
+      World::Instance().worldLog(World::LOG_LEVEL_ERROR, World::LOG_TYPE_WORLD, "%lu failed to create zone from %lu through %lu.", avatar()->ID(), zone->low(), zone->high());
+      delete zone;
       return false;
     }
-    area->initialize();
-    avatar()->aedit(area);
-    avatar()->pushIOHandler(new AeditIOHandler(avatar()));
-    avatar()->send("You've created a new area (number %lu) with vnums %lu through %lu.", area->ID(), area->low(), area->high());
+    zone->initialize();
+    avatar()->zedit(zone);
+    avatar()->pushIOHandler(new ZeditIOHandler(avatar()));
+    avatar()->send("You've created a new zone (number %lu) with vnums %lu through %lu.", zone->ID(), zone->low(), zone->high());
   } else if (args.size() == 1) {
-    // Check for the area...
-    if ((area = World::Instance().findArea(estring(args[0]))) == NULL) {
-      avatar()->send("That area doesn't exist.");
+    // Check for the zone...
+    if ((zone = World::Instance().findZone(estring(args[0]))) == NULL) {
+      avatar()->send("That zone doesn't exist.");
       return false;
     }
     // Check permissions...
-    if ((area->ID() == 1 && avatar()->level() < Being::CREATOR) || !area->hasPermission(avatar())) {
-      avatar()->send("You can't edit %s.", area->name().c_str());
+    if ((zone->ID() == 1 && avatar()->level() < Being::CREATOR) || !zone->hasPermission(avatar())) {
+      avatar()->send("You can't edit %s.", zone->name().c_str());
       return false;
     }
-    // Make sure no one else is editing the area...
+    // Make sure no one else is editing the zone...
     for (auto iter : World::Instance().getAvatars()) {
-      if (iter.second->mode().number() == MODE_AEDIT && iter.second->aedit() == area) {
-        avatar()->send("Sorry, %s is currently editing %s (area %lu).", avatar()->seeName(((Being*)iter.second)).c_str(), area->name().c_str(), area->ID());
+      if (iter.second->mode().number() == MODE_ZEDIT && iter.second->zedit() == zone) {
+        avatar()->send("Sorry, %s is currently editing %s (zone %lu).", avatar()->seeName(((Being*)iter.second)).c_str(), zone->name().c_str(), zone->ID());
         return false;
       }
     }
     // Send them on to the editor...
-    avatar()->send("You're editing %s (%lu).", area->name().c_str(), area->ID());
-    avatar()->mode().set(MODE_AEDIT);
-    avatar()->aedit(area);
-    avatar()->pushIOHandler(new AeditIOHandler(avatar()));
+    avatar()->send("You're editing %s (%lu).", zone->name().c_str(), zone->ID());
+    avatar()->mode().set(MODE_ZEDIT);
+    avatar()->zedit(zone);
+    avatar()->pushIOHandler(new ZeditIOHandler(avatar()));
   }
 
   return true;
@@ -126,19 +126,19 @@ bool CmdAfk::execute(Being* being, const std::vector<std::string>& args) {
   return true;
 }
 
-CmdAreas::CmdAreas(void) {
-  name("areas");
+CmdZones::CmdZones(void) {
+  name("zones");
   playerOnly(true);
   addSyntax(0, "");
-  brief("List the Areas of the World.");
+  brief("List the Zones of the World.");
   return;
 }
 
-bool CmdAreas::execute(Being* being, const std::vector<std::string>& args) {
-  std::string output("Areas:");
+bool CmdZones::execute(Being* being, const std::vector<std::string>& args) {
+  std::string output("Zones:");
   char buffer[Socket::MAX_BUFFER];
 
-  for (auto iter : World::Instance().getAreas()) {
+  for (auto iter : World::Instance().getZones()) {
     if (avatar()->level() >= Being::DEMIGOD) {
       if (iter->hasPermission(avatar())) {
         sprintf(buffer, "\n ({Y%3lu{x) [ {C%4lu{x - {C%4lu{x ] {M%s{x", iter->ID(), iter->low(), iter->high(), iter->name().c_str());
@@ -225,7 +225,7 @@ bool CmdBigBrother::execute(Being* being, const std::vector<std::string>& args) 
     output.append("\n -System Events   (\"system\")  ").append(avatar()->adminFlags().test(ADMIN_BIGBRO_SYSTEM) ? on : off);
     output.append("\n -World Changes   (\"changes\") ").append(avatar()->adminFlags().test(ADMIN_BIGBRO_CHANGES) ? on : off);
     output.append("\n -Server Errors   (\"errors\")  ").append(avatar()->adminFlags().test(ADMIN_BIGBRO_ERRORS) ? on : off);
-    output.append("\n -Area Resets     (\"resets\")  ").append(avatar()->adminFlags().test(ADMIN_BIGBRO_RESETS) ? on : off);
+    output.append("\n -Zone Resets     (\"resets\")  ").append(avatar()->adminFlags().test(ADMIN_BIGBRO_RESETS) ? on : off);
   } else if (args.size() == 1) {
     output.append("BigBrother is now ");
     if (args[0] == "on") {

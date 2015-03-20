@@ -47,7 +47,7 @@ void LoadRuleItem::destroy(void) {
 
 bool LoadRuleItem::execute(std::list<Item*>& new_items, std::list<Mob*>& new_mobs) {
   std::map<unsigned long,Item*>::iterator it;
-  Area* area = room()->area();
+  Zone* zone = room()->zone();
   Item* item = NULL;
   Being* being = NULL;
   unsigned already_there = room()->inventory().howManyItems(target());
@@ -56,10 +56,10 @@ bool LoadRuleItem::execute(std::list<Item*>& new_items, std::list<Mob*>& new_mob
   CmdWear wear;
   std::vector<std::string> args(1);
 
-  if ((it = area->items().find(target())) != area->items().end()) {
+  if ((it = zone->items().find(target())) != zone->items().end()) {
     item = it->second;
   } else {
-    World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset an item. Item %lu in area %lu doesn't exist.", target(), area->ID());
+    World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset an item. Item %lu in zone %lu doesn't exist.", target(), zone->ID());
     return false;
   }
 
@@ -76,7 +76,7 @@ bool LoadRuleItem::execute(std::list<Item*>& new_items, std::list<Mob*>& new_mob
       if (preposition() == CARRY || preposition() == WEAR) {
         being = room()->being_by_vnum(indirectItem(), indirectItemIndex());
         if (being == NULL) {
-          World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset an item. Item %lu in area %lu loaded, but can't find mob %lu#%hu ", target(), area->ID(), indirectItem(), indirectItemIndex());
+          World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset an item. Item %lu in zone %lu loaded, but can't find mob %lu#%hu ", target(), zone->ID(), indirectItem(), indirectItemIndex());
           return false;
         }
         args[0] = item->identifiers().longestKeyword();

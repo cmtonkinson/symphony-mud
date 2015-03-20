@@ -667,26 +667,26 @@ std::string InputIOHandler::prompt(void) {
   }
 }
 
-/************************************** AEDIT HANDLER **************************************/
-void AeditIOHandler::activate(void) {
-  commandTable(&(AeditCommands::Instance()));
+/************************************** ZEDIT HANDLER **************************************/
+void ZeditIOHandler::activate(void) {
+  commandTable(&(ZeditCommands::Instance()));
   avatar()->whoFlags().set(WHO_BUSY);
-  avatar()->mode().set(MODE_AEDIT);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has entered area editing mode.", avatar()->identifiers().shortname().c_str());
+  avatar()->mode().set(MODE_ZEDIT);
+  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has entered zone editing mode.", avatar()->identifiers().shortname().c_str());
   return;
 }
 
-void AeditIOHandler::deactivate(void) {
+void ZeditIOHandler::deactivate(void) {
   avatar()->send("Goodbye!\n");
   avatar()->whoFlags().clear(WHO_BUSY);
   avatar()->mode().set(MODE_NONE);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has left area editing mode.", avatar()->identifiers().shortname().c_str());
+  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has left zone editing mode.", avatar()->identifiers().shortname().c_str());
   return;
 }
 
-std::string AeditIOHandler::prompt(void) {
+std::string ZeditIOHandler::prompt(void) {
   char buffer[Socket::MAX_BUFFER];
-  sprintf(buffer, "\n\n{W[{cAedit {x- {G%s{W] ", avatar()->aedit()->name().c_str());
+  sprintf(buffer, "\n\n{W[{cZedit {x- {G%s{W] ", avatar()->zedit()->name().c_str());
   return buffer;
 }
 

@@ -1,5 +1,5 @@
 
-#include "area.h"
+#include "zone.h"
 #include "avatar.h"
 #include "commands-redit.h"
 #include "commandTable-default.h"
@@ -76,7 +76,7 @@ bool CmdRedit::execute(Being* being, const std::vector<std::string>& args) {
     }
   } else if (args[0].empty()) {
     // Check permissions...
-    if (!avatar()->room()->area()->hasPermission(avatar())) {
+    if (!avatar()->room()->zone()->hasPermission(avatar())) {
       avatar()->send("You don't have permissions to this room.");
       return false;
     }
@@ -197,7 +197,7 @@ bool CmdRestring::execute(Being* being, const std::vector<std::string>& args) {
 CmdRlist::CmdRlist(void) {
   name("rlist");
   level(Being::DEMIGOD);
-  addSyntax(1, "<areaID>                       (list all Rooms in the area)");
+  addSyntax(1, "<zoneID>                       (list all Rooms in the zone)");
   addSyntax(2, "<first vnum> <last vnum>       (list all Rooms in the vnum range)");
   addSyntax(1, "<keyword>                      (list all Rooms by name)");
   addSyntax(1, "/<regex>                       (list all Rooms matching the PCRE)");
@@ -207,7 +207,7 @@ CmdRlist::CmdRlist(void) {
 bool CmdRlist::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> mutable_args(args);
   std::vector<Room*> rooms;
-  Area* area = NULL;
+  Zone* zone = NULL;
   unsigned long low = 0;
   unsigned long high = 0;
   std::string search;
@@ -216,19 +216,19 @@ bool CmdRlist::execute(Being* being, const std::vector<std::string>& args) {
 
   if (mutable_args.size() == 1) {
     if (Regex::match("^[0-9]+$", mutable_args[0])) {
-      // We got an areaID...
-      if ((area = World::Instance().findArea(estring(mutable_args[0]))) == NULL) {
-        being->send("That area couldn't be found.");
+      // We got an zoneID...
+      if ((zone = World::Instance().findZone(estring(mutable_args[0]))) == NULL) {
+        being->send("That zone couldn't be found.");
         return false;
       }
-      for (std::map<unsigned long,Room*>::iterator r_it = area->rooms().begin(); r_it != area->rooms().end(); ++r_it) {
+      for (std::map<unsigned long,Room*>::iterator r_it = zone->rooms().begin(); r_it != zone->rooms().end(); ++r_it) {
         rooms.push_back(r_it->second);
       }
     } else {
       if (mutable_args[0][0] == '/') {
         mutable_args[0].erase(0, 1);
         // This search is a regex...
-        for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+        for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
           for (std::map<unsigned long,Room*>::iterator r_it = (*a_it)->rooms().begin(); r_it != (*a_it)->rooms().end(); ++r_it) {
             if (Regex::match(mutable_args[0], r_it->second->name())) {
               rooms.push_back(r_it->second);
@@ -238,7 +238,7 @@ bool CmdRlist::execute(Being* being, const std::vector<std::string>& args) {
       } else {
         search = Regex::lower(mutable_args[0]);
         // We got a search string...
-        for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+        for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
           for (std::map<unsigned long,Room*>::iterator r_it = (*a_it)->rooms().begin(); r_it != (*a_it)->rooms().end(); ++r_it) {
             if (Regex::lower(r_it->second->name()).find(search) != std::string::npos) {
               rooms.push_back(r_it->second);
@@ -262,7 +262,7 @@ bool CmdRlist::execute(Being* being, const std::vector<std::string>& args) {
       return false;
     }
     // Grab the rooms...
-    for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+    for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
       for (std::map<unsigned long,Room*>::iterator r_it = (*a_it)->rooms().begin(); r_it != (*a_it)->rooms().end(); ++r_it) {
         if (r_it->second->vnum() >= low && r_it->second->vnum() <= high) {
           rooms.push_back(r_it->second);
@@ -279,9 +279,9 @@ bool CmdRlist::execute(Being* being, const std::vector<std::string>& args) {
     return false;
   }
 
-  output.append(" ({carea{x) [{y room{x] {gname{x\n -------------------\n");
+  output.append(" ({czone{x) [{y room{x] {gname{x\n -------------------\n");
   for (std::vector<Room*>::iterator it = rooms.begin(); it != rooms.end(); ++it) {
-    sprintf(buffer, " ({c%4lu{x) [{y%5lu{x] {g%s{x\n", (*it)->area()->ID(), (*it)->vnum(), (*it)->name().c_str());
+    sprintf(buffer, " ({c%4lu{x) [{y%5lu{x] {g%s{x\n", (*it)->zone()->ID(), (*it)->vnum(), (*it)->name().c_str());
     output.append(buffer);
   }
 

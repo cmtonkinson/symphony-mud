@@ -47,7 +47,7 @@ class NAME: public Enum {                   \
 
 DEF_ENUM(Mode)
 #define MODE_NONE   1
-#define MODE_AEDIT  2
+#define MODE_ZEDIT  2
 #define MODE_MEDIT  3
 #define MODE_IEDIT  4
 #define MODE_PEDIT  5

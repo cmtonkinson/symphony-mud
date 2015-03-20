@@ -173,7 +173,7 @@ void World::recover(const unsigned int& fd) {
 bool World::load(void) {
   bool status = true;
 
-  loadAreas();
+  loadZones();
   loadDisabledCommands();
 
   if (!loadSocials()) {
@@ -193,7 +193,7 @@ bool World::load(void) {
 bool World::save(void) {
   bool status = true;
 
-  for (auto iter : getAreas()) iter->save();
+  for (auto iter : getZones()) iter->save();
 
   for (std::map<std::string,Avatar*>::iterator a_it = getAvatars().begin(); a_it != getAvatars().end(); ++a_it) {
     if (a_it->second->isConnected()) {
@@ -215,7 +215,7 @@ bool World::toggleCommand(char table_prefix, std::string command_name, bool enab
 
   switch (table_prefix) {
     case 'x': table = &(Commands::Instance());      break;
-    case 'A': table = &(AeditCommands::Instance()); break;
+    case 'A': table = &(ZeditCommands::Instance()); break;
     case 'M': table = &(MeditCommands::Instance()); break;
     case 'O': table = &(IeditCommands::Instance()); break;
     case 'P': table = &(PeditCommands::Instance()); break;
@@ -475,24 +475,24 @@ bool World::removeAvatar(const std::string& name) {
   return false;
 }
 
-/************************************************************ AREAS ************************************************************/
-void World::loadAreas(void) {
-  for (auto iter : Storage::glob(Storage::area_glob_pattern())) Area::load(iter);
+/************************************************************ ZONES ************************************************************/
+void World::loadZones(void) {
+  for (auto iter : Storage::glob(Storage::zone_glob_pattern())) Zone::load(iter);
   return;
 }
 
-void World::insert(Area* area) {
-  getAreas().insert(area);
+void World::insert(Zone* zone) {
+  getZones().insert(zone);
   return;
 }
 
-void World::remove(Area* area) {
-  getAreas().erase(area);
+void World::remove(Zone* zone) {
+  getZones().erase(zone);
   return;
 }
 
-Area* World::findArea(const unsigned long& ID) {
-  for (std::set<Area*,area_comp>::iterator it = getAreas().begin(); it != getAreas().end(); ++it) {
+Zone* World::findZone(const unsigned long& ID) {
+  for (std::set<Zone*,zone_comp>::iterator it = getZones().begin(); it != getZones().end(); ++it) {
     if ((*it)->ID() == ID) {
       return *it;
     }
@@ -500,8 +500,8 @@ Area* World::findArea(const unsigned long& ID) {
   return NULL;
 }
 
-Area* World::lookup(const unsigned long& vnum) {
-  for (std::set<Area*,area_comp>::iterator it = getAreas().begin(); it != getAreas().end(); ++it) {
+Zone* World::lookup(const unsigned long& vnum) {
+  for (std::set<Zone*,zone_comp>::iterator it = getZones().begin(); it != getZones().end(); ++it) {
     if ((*it)->low() <= vnum && vnum <= (*it)->high()) {
       return *it;
     }
@@ -520,7 +520,7 @@ void World::loadDisabledCommands(void) {
 Room* World::findRoom(const unsigned long& vnum) {
   std::map<unsigned long,Room*>::iterator r_it;
   std::map<unsigned long,Room*>::iterator r_end;
-  for (std::set<Area*,area_comp>::iterator a_it = getAreas().begin(); a_it != getAreas().end(); ++a_it) {
+  for (std::set<Zone*,zone_comp>::iterator a_it = getZones().begin(); a_it != getZones().end(); ++a_it) {
     r_end = (*a_it)->rooms().end();
     if ((r_it = (*a_it)->rooms().find(vnum)) != r_end) {
       return r_it->second;

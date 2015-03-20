@@ -1,5 +1,5 @@
 
-#include "area.h"
+#include "zone.h"
 #include "avatar.h"
 #include "commandTable-default.h"
 #include "commandTable.h"

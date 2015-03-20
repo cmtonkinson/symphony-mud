@@ -6,7 +6,7 @@
 
 ///////////////////// ADMINISTRATIVE COMMANDS
 DEF_COMMAND(CmdAdminNote)
-DEF_COMMAND(CmdAedit)
+DEF_COMMAND(CmdZedit)
 DEF_COMMAND(CmdAt)
 DEF_COMMAND(CmdBigBrother)
 DEF_COMMAND(CmdClone)
@@ -52,7 +52,7 @@ DEF_COMMAND(CmdWorldSave)
 
 ///////////////////// NORMAL COMMANDS
 DEF_COMMAND(CmdAfk)
-DEF_COMMAND(CmdAreas)
+DEF_COMMAND(CmdZones)
 DEF_COMMAND(CmdBoards)
 DEF_COMMAND(CmdBored)
 DEF_COMMAND(CmdBusy)

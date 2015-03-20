@@ -97,7 +97,7 @@ DEF_TRIVIAL_IOHANDLER(NoteCancelIOHandler);
 // Main IOHandler...
 DEF_FULL_IOHANDLER(InputIOHandler);
 // Editors...
-DEF_FULL_IOHANDLER(AeditIOHandler); // areas
+DEF_FULL_IOHANDLER(ZeditIOHandler); // zones
 DEF_FULL_IOHANDLER(MeditIOHandler); // mobs
 DEF_FULL_IOHANDLER(IeditIOHandler); // items
 DEF_FULL_IOHANDLER(PeditIOHandler); // players

@@ -114,8 +114,8 @@ class Storage {
     static const unsigned LOAD_NULL = 1;
     static const unsigned LOAD_NEW  = 2;
 
-    static void dump(FILE* fp, Area* area);
-    static bool load(FILE* fp, Area* loading);
+    static void dump(FILE* fp, Zone* zone);
+    static bool load(FILE* fp, Zone* loading);
 
     static void dump(FILE* fp, Room* room);
     static bool load(FILE* fp, Room* loading);
@@ -163,8 +163,8 @@ class Storage {
     static std::string avatar_glob_pattern(void);
     static std::string filename(Avatar* avatar);
 
-    static std::string area_glob_pattern(void);
-    static std::string filename(Area* area);
+    static std::string zone_glob_pattern(void);
+    static std::string filename(Zone* zone);
 
     static std::string social_glob_pattern(void);
     static std::string filename(SocialCommand* social = nullptr);

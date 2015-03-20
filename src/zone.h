@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_AREA
-#define H_SYMPHONY_AREA
+#ifndef H_SYMPHONY_ZONE
+#define H_SYMPHONY_ZONE
 
 #include <ctime>
 #include <map>
@@ -14,7 +14,7 @@ class Room;
 class Item;
 class Mob;
 
-class Area {
+class Zone {
   private:
     unsigned long                           _ID;
     unsigned long                           _low;
@@ -29,9 +29,9 @@ class Area {
     void                                    create(void);
 
   public:
-    Area(void);
-    Area(unsigned long low, unsigned long high);
-    ~Area(void);
+    Zone(void);
+    Zone(unsigned long low, unsigned long high);
+    ~Zone(void);
 
     // Public accessor methods...
     void                                    ID(unsigned long ID)            { _ID = ID; }
@@ -67,7 +67,7 @@ class Area {
     // Setup & teardown...
     void          initialize(void);
     void          save(void);
-    static Area*  load(std::string filename);
+    static Zone*  load(std::string filename);
     bool          destroy(void);
 
     // Builder permissions...
@@ -79,11 +79,11 @@ class Area {
 
 };
 
-class area_comp { /* Area vnum comparison functor */
+class zone_comp { /* Zone vnum comparison functor */
   public:
-    bool operator () (Area* left, Area* right) {
+    bool operator () (Zone* left, Zone* right) {
       return left->low() < right->low();
     }
 };
 
-#endif // #ifndef H_SYMPHONY_AREA
+#endif // #ifndef H_SYMPHONY_ZONE

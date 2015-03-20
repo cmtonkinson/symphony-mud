@@ -18,7 +18,7 @@
 #include "modifier.h"
 #include "item.h"
 
-class Area;
+class Zone;
 class Ability;
 class IOHandler;
 class ObjFurniture;

@@ -2,7 +2,7 @@
 #include <cstring>
 #include <sys/stat.h>
 #include <glob.h>
-#include "area.h"
+#include "zone.h"
 #include "avatar.h"
 #include "board.h"
 #include "command.h"
@@ -25,30 +25,30 @@ const unsigned Storage::LOAD_NULL;
 const unsigned Storage::LOAD_NEW;
 
 /***************************************************************************************************
- * AREA
+ * ZONE
  **************************************************************************************************/
-void Storage::dump(FILE* fp, Area* area) {
-  BEGIN("AREA")
-  out(fp, "low",          area->low());
-  out(fp, "high",         area->high());
-  out(fp, "name",         area->name());
-  out(fp, "terrain",      area->terrain()->name());
-  out(fp, "builders",     area->serializeBuilders());
-  for (auto iter : area->rooms())   dump(fp, iter.second);
-  for (auto iter : area->items()) dump(fp, iter.second);
-  for (auto iter : area->mobs())    dump(fp, iter.second);
-  END("AREA")
+void Storage::dump(FILE* fp, Zone* zone) {
+  BEGIN("ZONE")
+  out(fp, "low",          zone->low());
+  out(fp, "high",         zone->high());
+  out(fp, "name",         zone->name());
+  out(fp, "terrain",      zone->terrain()->name());
+  out(fp, "builders",     zone->serializeBuilders());
+  for (auto iter : zone->rooms())   dump(fp, iter.second);
+  for (auto iter : zone->items()) dump(fp, iter.second);
+  for (auto iter : zone->mobs())    dump(fp, iter.second);
+  END("ZONE")
   return;
 }
 
-bool Storage::load(FILE* fp, Area* loading) {
+bool Storage::load(FILE* fp, Zone* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "AREA", [&fp, &loading, &input]() {
-    STORE_CASE("low",       &Area::low)
-    STORE_CASE("high",      &Area::high)
-    STORE_CASE("name",      &Area::name)
-    STORE_CASE("terrain",   &Area::setTerrain)
+  load_status = load_inner(fp, loading, input, "ZONE", [&fp, &loading, &input]() {
+    STORE_CASE("low",       &Zone::low)
+    STORE_CASE("high",      &Zone::high)
+    STORE_CASE("name",      &Zone::name)
+    STORE_CASE("terrain",   &Zone::setTerrain)
     STORE_CASE_STRING("builders",   loading->unserializeBuilders(str);)
     STORE_DESCEND_NEW("ROOM",   Room,   loading->insert(instance);)
     STORE_DESCEND_NEW("ITEM", Item, loading->insert(instance);)
@@ -565,12 +565,12 @@ std::string Storage::filename(Avatar* avatar) {
   return std::string("data/avatars/") + Regex::slugify(avatar->name()) + ".avatar.txt";
 }
 
-std::string Storage::area_glob_pattern(void) {
-  return "data/areas/*.area.txt";
+std::string Storage::zone_glob_pattern(void) {
+  return "data/zones/*.zone.txt";
 }
 
-std::string Storage::filename(Area* area) {
-  return std::string("data/areas/") + Regex::slugify(area->name()) + ".area.txt";
+std::string Storage::filename(Zone* zone) {
+  return std::string("data/zones/") + Regex::slugify(zone->name()) + ".zone.txt";
 }
 
 std::string Storage::social_glob_pattern(void) {

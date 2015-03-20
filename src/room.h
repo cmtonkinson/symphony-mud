@@ -9,7 +9,7 @@
 #include "terrain.h"
 
 
-class Area;
+class Zone;
 class Being;
 class Exit;
 class LoadRule;
@@ -27,14 +27,14 @@ class Room {
     static const unsigned TO_ALL      = 4;
 
     Room(void);
-    Room(unsigned long vnum, Area* area);
+    Room(unsigned long vnum, Zone* zone);
     ~Room(void);
 
     // Public accessor methods...
     void                          ID(unsigned long ID)                    { _ID = ID; }
     unsigned long                 ID(void) const                          { return _ID; }
-    void                          area(Area* area)                        { _area = area; }
-    Area*                         area(void)                              { return _area; }
+    void                          zone(Zone* zone)                        { _zone = zone; }
+    Zone*                         zone(void)                              { return _zone; }
     void                          vnum(unsigned long vnum)                { _vnum = vnum; }
     unsigned long                 vnum(void) const                        { return _vnum; }
     void                          name(std::string name)                  { _name = name; }
@@ -88,7 +88,7 @@ class Room {
 
   private:
     unsigned long           _ID;
-    Area*                   _area;
+    Zone*                   _zone;
     unsigned long           _vnum;
     std::string             _name;
     std::string             _description;

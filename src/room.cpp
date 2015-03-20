@@ -1,5 +1,5 @@
 
-#include "area.h"
+#include "zone.h"
 #include "display.h"
 #include "exit.h"
 #include "loadRule.h"
@@ -11,13 +11,13 @@ Room::Room(void): _inventory(&Identifiers::longname) {
   return;
 }
 
-Room::Room(unsigned long vnum, Area* area): _inventory(&Identifiers::longname) {
-  this->area(area);
-  area->rooms().insert(std::make_pair(vnum, this));
+Room::Room(unsigned long vnum, Zone* zone): _inventory(&Identifiers::longname) {
+  this->zone(zone);
+  zone->rooms().insert(std::make_pair(vnum, this));
   this->vnum(vnum);
   flags().value(0);
   name("Undefined");
-  terrain(area->terrain());
+  terrain(zone->terrain());
   for (unsigned u = 0; u < 6; ++u) {
     _exits[u] = nullptr;
   }
@@ -117,8 +117,8 @@ void Room::send_cond(std::string format, Being* being, void* arg1, void* arg2, u
 }
 
 void Room::destroy(void) {
-  // Remove this Room from the parent Area.
-  area()->rooms().erase(vnum());
+  // Remove this Room from the parent Zone.
+  zone()->rooms().erase(vnum());
   // Destroy outbound Exits.
   for (unsigned u = 0; u < 6; ++u) {
     if (exit(u)) {
@@ -127,7 +127,7 @@ void Room::destroy(void) {
     }
   }
   // Destroy inbound exits (takes a bit more effort).
-  for (std::set<Area*,area_comp>::iterator a = World::Instance().getAreas().begin(); a != World::Instance().getAreas().end(); ++a) {
+  for (std::set<Zone*,zone_comp>::iterator a = World::Instance().getZones().begin(); a != World::Instance().getZones().end(); ++a) {
     for (std::map<unsigned long,Room*>::iterator r = (*a)->rooms().begin(); r != (*a)->rooms().end(); ++r) {
       for (unsigned u = NORTH; u <= DOWN; ++u) {
         if (r->second->exit(u) && r->second->exit(u)->targetRoom() == this) {
@@ -205,7 +205,7 @@ std::string Room::getInformation(Room* room) {
   char exit_buf[Socket::MAX_BUFFER];
 
   output.append(" --== {Yroom data{x ==--\n");
-  sprintf(buffer, "area..... {y%s{x\n\
+  sprintf(buffer, "zone..... {y%s{x\n\
 vnum..... {y%lu{x\n\
 name..... {y%s{x\n\
 flags.... {y%s{x\n\
@@ -213,7 +213,7 @@ terrain.. {y%s{x\n\
 smell.... {y%s{x\n\
 sound.... {y%s{x\n\n\
   --== {Y description{x ==--\n%s\n\
-",  room->area()->name().c_str(), room->vnum(), room->name().c_str(), room->flags().list(FTRoom::Instance()).c_str(),
+",  room->zone()->name().c_str(), room->vnum(), room->name().c_str(), room->flags().list(FTRoom::Instance()).c_str(),
     room->terrain()->name().c_str(), room->smell().c_str(), room->sound().c_str(), room->description().c_str());
   output.append(buffer);
 

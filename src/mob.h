@@ -4,7 +4,7 @@
 
 #include "being.h"
 
-class Area;
+class Zone;
 
 class Mob: public Being {
   public:
@@ -19,7 +19,7 @@ class Mob: public Being {
 
     // constructors...
     Mob(void);
-    Mob(Area* area, unsigned vnum);
+    Mob(Zone* zone, unsigned vnum);
     Mob(const Mob& ref);
     virtual ~Mob(void);
 
@@ -43,7 +43,7 @@ class Mob: public Being {
     bool auto_move(Job* job);
 
     // statics...
-    static Mob*         create(Area* area, unsigned vnum);
+    static Mob*         create(Zone* zone, unsigned vnum);
     static Mob*         create(Mob* mob, Room* room);
     static std::string  getInformation(Mob* mob);
 

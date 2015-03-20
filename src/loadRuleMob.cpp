@@ -25,14 +25,14 @@ bool LoadRuleMob::execute(std::list<Item*>& new_items, std::list<Mob*>& new_mobs
   unsigned mobs_added = 0;
   int level           = 0;
   std::map<unsigned long,Mob*>::iterator it;
-  Area* area = room()->area();
+  Zone* zone = room()->zone();
   Mob* mob = NULL;
-  unsigned already_there = area->howManyMobs(target());
+  unsigned already_there = zone->howManyMobs(target());
 
-  if ((it = area->mobs().find(target())) != area->mobs().end()) {
+  if ((it = zone->mobs().find(target())) != zone->mobs().end()) {
     mob = it->second;
   } else {
-    World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset a mob. Mob %lu in area %lu doesn't exist.", target(), area->ID());
+    World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Failed to reset a mob. Mob %lu in zone %lu doesn't exist.", target(), zone->ID());
     return false;
   }
 

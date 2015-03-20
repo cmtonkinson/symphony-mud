@@ -9,7 +9,7 @@
 #include "flagTable.h"
 #include "socket.h"
 
-class Area;
+class Zone;
 class Item;
 class ObjContainer;
 class IOHandler;
@@ -88,8 +88,8 @@ class Avatar: public Being {
     const Mode&     mode(void) const                              { return _mode; }
     void            pedit(Avatar* pedit)                          { _pedit = pedit; }
     Avatar*         pedit(void)                                   { return _pedit; }
-    void            aedit(Area* aedit)                            { _aedit = aedit; }
-    Area*           aedit(void)                                   { return _aedit; }
+    void            zedit(Zone* zedit)                            { _zedit = zedit; }
+    Zone*           zedit(void)                                   { return _zedit; }
     void            iedit(Item* iedit)                          { _iedit = iedit; }
     Item*         iedit(void)                                   { return _iedit; }
     void            medit(Mob* medit)                             { _medit = medit; }
@@ -136,7 +136,7 @@ class Avatar: public Being {
     std::string             _replyTo;
     Mode                    _mode;
     Avatar*                 _pedit;
-    Area*                   _aedit;
+    Zone*                   _zedit;
     Item*                 _iedit;
     Mob*                    _medit;
     SocialCommand*          _sedit;

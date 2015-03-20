@@ -1,6 +1,6 @@
 
 #include "ability.h"
-#include "area.h"
+#include "zone.h"
 #include "commandTable-default.h"
 #include "being.h"
 #include "display.h"

@@ -1,6 +1,6 @@
 
 #include <math.h>
-#include "area.h"
+#include "zone.h"
 #include "command.h"
 #include "commandTable.h"
 #include "io-handler.h"
@@ -29,8 +29,8 @@ Mob::Mob(const Mob& ref): Being(ref) {
   return;
 }
 
-Mob::Mob(Area* area, unsigned vnum_): Mob() {
-  area->mobs().insert(std::make_pair(vnum_, this));
+Mob::Mob(Zone* zone, unsigned vnum_): Mob() {
+  zone->mobs().insert(std::make_pair(vnum_, this));
   vnum(vnum_);
   level(1);
   return;
@@ -94,8 +94,8 @@ bool Mob::auto_move(Job* job) {
   return move(chosen_direction);
 }
 
-Mob* Mob::create(Area* area, unsigned vnum) {
-  return new Mob(area, vnum);
+Mob* Mob::create(Zone* zone, unsigned vnum) {
+  return new Mob(zone, vnum);
 }
 
 Mob* Mob::create(Mob* mob, Room* room) {

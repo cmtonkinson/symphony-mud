@@ -37,4 +37,4 @@ class Note {
     std::string   _body;
 };
 
-#endif // #ifndef H_SYMPHONY_AREA
+#endif // #ifndef H_SYMPHONY_ZONE

@@ -1,5 +1,5 @@
 
-#include "area.h"
+#include "zone.h"
 #include "exit.h"
 #include "loadRuleMob.h"
 #include "loadRuleItem.h"
@@ -8,70 +8,70 @@
 #include "terrainTable.h"
 #include "world.h"
 
-Area::Area(void) {
+Zone::Zone(void) {
   return;
 }
 
-Area::Area(unsigned long low, unsigned long high) {
+Zone::Zone(unsigned long low, unsigned long high) {
   name("Undefined");
   this->low(low);
   this->high(high);
   terrain(TerrainTable::Instance().find("city"));
 }
 
-Area::~Area(void) {
+Zone::~Zone(void) {
   return;
 }
 
-void Area::name(const char* name) {
+void Zone::name(const char* name) {
   ColorString cs(name);
   _name = cs.stripColor();
   return;
 }
 
-void Area::initialize(void) {
+void Zone::initialize(void) {
   World::Instance().insert(this);
-  World::Instance().schedule()->add(new RecurringJob(this, &Area::reset, 300, 600));
+  World::Instance().schedule()->add(new RecurringJob(this, &Zone::reset, 300, 600));
   return;
 }
 
-void Area::save(void) {
-  std::string filename = "data/areas/" + Regex::slugify(name()) + ".area.txt";
+void Zone::save(void) {
+  std::string filename = "data/zones/" + Regex::slugify(name()) + ".zone.txt";
   FILE* fp = 0;
 
   if ((fp = fopen(filename.c_str(), "w")) != NULL) {
     Storage::dump(fp, this);
     fclose(fp);
   } else {
-    fprintf(stderr, "Failed to write area file %s.\n", filename.c_str());
+    fprintf(stderr, "Failed to write zone file %s.\n", filename.c_str());
   }
 
   return;
 }
 
-Area* Area::load(std::string filename) {
-  Area* area = nullptr;
+Zone* Zone::load(std::string filename) {
+  Zone* zone = nullptr;
   FILE* fp   = nullptr;
 
   if ((fp = fopen(filename.c_str(), "r")) != NULL) {
-    area = new Area();
-    Storage::load(fp, area);
-    area->initialize();
+    zone = new Zone();
+    Storage::load(fp, zone);
+    zone->initialize();
     fclose(fp);
   } else {
-    fprintf(stderr, "Failed to read area file %s.\n", filename.c_str());
+    fprintf(stderr, "Failed to read zone file %s.\n", filename.c_str());
   }
 
-  return area;
+  return zone;
 }
 
-bool Area::destroy(void) {
+bool Zone::destroy(void) {
   // Destroy rooms.
   while (rooms().size()) rooms().begin()->second->destroy();
   // Remove this from the World.
   World::Instance().remove(this);
-  // Delete the area file.
-  std::string filename = "data/areas/" + Regex::slugify(name()) + ".area.txt";
+  // Delete the zone file.
+  std::string filename = "data/zones/" + Regex::slugify(name()) + ".zone.txt";
   remove(filename.c_str());
   // Self-delete.
   delete this;
@@ -79,23 +79,23 @@ bool Area::destroy(void) {
   return true;
 }
 
-void Area::insert(Room* room) {
-  room->area(this);
+void Zone::insert(Room* room) {
+  room->zone(this);
   _rooms.insert(std::make_pair(room->vnum(), room));
   return;
 }
 
-void Area::insert(Item* item) {
+void Zone::insert(Item* item) {
   _items.insert(std::make_pair(item->vnum(), item));
   return;
 }
 
-void Area::insert(Mob* mob) {
+void Zone::insert(Mob* mob) {
   _mobs.insert(std::make_pair(mob->vnum(), mob));
   return;
 }
 
-unsigned long Area::lowestAvailableRoom(void) {
+unsigned long Zone::lowestAvailableRoom(void) {
   unsigned long vnum = 0;
 
   for (unsigned long u = low(); u <= high(); ++u) {
@@ -108,15 +108,15 @@ unsigned long Area::lowestAvailableRoom(void) {
   return vnum;
 }
 
-void Area::reset(void) {
+void Zone::reset(void) {
   for (std::map<unsigned long,Room*>::iterator it = rooms().begin(); it != rooms().end(); ++it) {
     it->second->reset();
   }
-  World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Area Reset: %s (%lu)\n", name().c_str(), ID());
+  World::Instance().bigBrother(NULL, ADMIN_BIGBRO_RESETS, "Zone Reset: %s (%lu)\n", name().c_str(), ID());
   return;
 }
 
-unsigned Area::howManyMobs(unsigned long vnum) {
+unsigned Zone::howManyMobs(unsigned long vnum) {
   unsigned number_of_mobs = 0;
   for (std::map<unsigned long,Room*>::iterator r_it = rooms().begin(); r_it != rooms().end(); ++r_it) {
     for (std::list<Being*>::iterator c_it = r_it->second->beings().begin(); c_it != r_it->second->beings().end(); ++c_it) {
@@ -130,7 +130,7 @@ unsigned Area::howManyMobs(unsigned long vnum) {
   return number_of_mobs;
 }
 
-void Area::setTerrain(const char* terrain_name) {
+void Zone::setTerrain(const char* terrain_name) {
   terrain(TerrainTable::Instance().find(terrain_name));
   if (!terrain()) {
     terrain(TerrainTable::Instance().find("city"));
@@ -138,17 +138,17 @@ void Area::setTerrain(const char* terrain_name) {
   return;
 }
 
-std::string Area::serializeBuilders(void) const {
+std::string Zone::serializeBuilders(void) const {
   return Regex::implode("|", builders());
 }
 
-void Area::unserializeBuilders(const std::string& serialization) {
+void Zone::unserializeBuilders(const std::string& serialization) {
   std::vector<std::string> names = Regex::explode("|", serialization);
   for (auto iter : names) builders().insert(iter);
   return;
 }
 
-bool Area::hasPermission(Avatar* avatar) const {
+bool Zone::hasPermission(Avatar* avatar) const {
   // Only the Administrator can fiddle with Limbo...
   if (ID() == 1 && avatar->level() < Being::CREATOR) {
     return false;
@@ -157,19 +157,19 @@ bool Area::hasPermission(Avatar* avatar) const {
   if (avatar->adminFlags().test(ADMIN_HEADBUILDER) || avatar->level() >= Being::CREATOR) {
     return true;
   }
-  // The average Joe needs explicit permission for a given area...
+  // The average Joe needs explicit permission for a given zone...
   if (builders().find(avatar->name()) != builders().end()) {
     return true;
   }
   return false;
 }
 
-void Area::grantPermission(Avatar* avatar) {
+void Zone::grantPermission(Avatar* avatar) {
   builders().insert(avatar->name());
   return;
 }
 
-void Area::revokePermission(Avatar* avatar) {
+void Zone::revokePermission(Avatar* avatar) {
   builders().erase(avatar->name());
   return;
 }

@@ -1,6 +1,6 @@
 
 #include <deque>
-#include "area.h"
+#include "zone.h"
 #include "avatar.h"
 #include "commandTable-default.h"
 #include "commandTable.h"
@@ -340,24 +340,24 @@ CmdIedit::CmdIedit(void) {
 
 bool CmdIedit::execute(Being* being, const std::vector<std::string>& args) {
   std::map<unsigned long,Item*>::iterator it;
-  Area* area = NULL;
+  Zone* zone = NULL;
   Item* item = NULL;
   unsigned long vnum = 0;
 
   if (args.size() == 1) {
     vnum = estring(args[0]);
-    // Get the area...
-    if ((area = World::Instance().lookup(vnum)) == NULL) {
+    // Get the zone...
+    if ((zone = World::Instance().lookup(vnum)) == NULL) {
       avatar()->send("That vnum doesn't exist.");
       return false;
     }
     // Check permissions...
-    if (!area->hasPermission(avatar())) {
+    if (!zone->hasPermission(avatar())) {
       avatar()->send("You don't have permissions to that item.");
       return false;
     }
     // Make sure the Item exists...
-    if ((it = area->items().find(vnum)) == area->items().end()) {
+    if ((it = zone->items().find(vnum)) == zone->items().end()) {
       avatar()->send("That item doesn't exist.");
       return false;
     }
@@ -377,25 +377,25 @@ bool CmdIedit::execute(Being* being, const std::vector<std::string>& args) {
 
   if (args.size() == 2 && Regex::strPrefix(args[0], "create")) {
     vnum = estring(args[1]);
-    // Get the area...
-    if ((area = World::Instance().lookup(vnum)) == NULL) {
+    // Get the zone...
+    if ((zone = World::Instance().lookup(vnum)) == NULL) {
       avatar()->send("That vnum doesn't exist.");
       return false;
     }
     // Check permissions...
-    if (!area->hasPermission((Avatar*)being)) {
+    if (!zone->hasPermission((Avatar*)being)) {
       avatar()->send("You don't have permissions to that item.");
       return false;
     }
     // Make sure the Item doesn't already exist...
-    if ((it = area->items().find(vnum)) != area->items().end()) {
+    if ((it = zone->items().find(vnum)) != zone->items().end()) {
       avatar()->send("That item already exists.");
       return false;
     }
     // Everything checks out; let's make us a new Item!
     item = new Item();
     item->vnum(vnum);
-    area->items()[item->vnum()] = item;
+    zone->items()[item->vnum()] = item;
     avatar()->send("Item %lu created successfully.", item->vnum());
     avatar()->mode().set(MODE_IEDIT);
     avatar()->iedit(item);
@@ -410,7 +410,7 @@ bool CmdIedit::execute(Being* being, const std::vector<std::string>& args) {
 CmdIlist::CmdIlist(void) {
   name("ilist");
   level(Being::DEMIGOD);
-  addSyntax(1, "<areaID>                       (list all Items in the area)");
+  addSyntax(1, "<zoneID>                       (list all Items in the zone)");
   addSyntax(2, "<first vnum> <last vnum>       (list all Items in the vnum range)");
   addSyntax(1, "<keyword>                      (list all Items by keyword)");
   addSyntax(1, "/<regex>                       (list all Items matching the PCRE)");
@@ -420,7 +420,7 @@ CmdIlist::CmdIlist(void) {
 bool CmdIlist::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> mutable_args = args;
   std::vector<Item*> items;
-  Area* area = NULL;
+  Zone* zone = NULL;
   unsigned long low = 0;
   unsigned long high = 0;
   std::string search;
@@ -429,19 +429,19 @@ bool CmdIlist::execute(Being* being, const std::vector<std::string>& args) {
 
   if (mutable_args.size() == 1) {
     if (Regex::match("^[0-9]+$", mutable_args[0])) {
-      // We got an areaID...
-      if ((area = World::Instance().findArea(estring(mutable_args[0]))) == NULL) {
-        being->send("That area couldn't be found.");
+      // We got an zoneID...
+      if ((zone = World::Instance().findZone(estring(mutable_args[0]))) == NULL) {
+        being->send("That zone couldn't be found.");
         return false;
       }
-      for (std::map<unsigned long,Item*>::iterator o_it = area->items().begin(); o_it != area->items().end(); ++o_it) {
+      for (std::map<unsigned long,Item*>::iterator o_it = zone->items().begin(); o_it != zone->items().end(); ++o_it) {
         items.push_back(o_it->second);
       }
     } else {
       if (mutable_args[0][0] == '/') {
         mutable_args[0].erase(0, 1);
         // This search is a regex...
-        for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+        for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
           for (std::map<unsigned long,Item*>::iterator o_it = (*a_it)->items().begin(); o_it != (*a_it)->items().end(); ++o_it) {
             if (o_it->second->identifiers().matchesKeyword(mutable_args[0])) {
               items.push_back(o_it->second);
@@ -451,7 +451,7 @@ bool CmdIlist::execute(Being* being, const std::vector<std::string>& args) {
       } else {
         search = Regex::lower(mutable_args[0]);
         // We got a search string...
-        for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+        for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
           for (std::map<unsigned long,Item*>::iterator o_it = (*a_it)->items().begin(); o_it != (*a_it)->items().end(); ++o_it) {
             if (o_it->second->identifiers().matchesKeyword(search)) {
               items.push_back(o_it->second);
@@ -475,7 +475,7 @@ bool CmdIlist::execute(Being* being, const std::vector<std::string>& args) {
       return false;
     }
     // Grab the rooms...
-    for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+    for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
       for (std::map<unsigned long,Item*>::iterator o_it = (*a_it)->items().begin(); o_it != (*a_it)->items().end(); ++o_it) {
         if (o_it->second->vnum() >= low && o_it->second->vnum() <= high) {
           items.push_back(o_it->second);
@@ -514,7 +514,7 @@ bool CmdIload::execute(Being* being, const std::vector<std::string>& args) {
   std::map<unsigned long,Item*>::iterator o_it;
   Item* item = NULL;
 
-  for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+  for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
     if ((o_it = (*a_it)->items().find(vnum)) != (*a_it)->items().end()) {
       item = new Item(*o_it->second);
       if (item == NULL) {
@@ -684,12 +684,12 @@ CmdLoadRule::CmdLoadRule(void) {
 8) Like #4, but this item should then be worn by the mob specified by vnum <target>.\n\n\
 --------Notes:\n\
 Load Rules are the rules by which the server automatically loads mobs and\n\
-items into the game when areas are \"reset.\"  Every room has it's own list\n\
-of Rules that get evaluated when the area resets. For all Load Rules, <number>\n\
+items into the game when zones are \"reset.\"  Every room has it's own list\n\
+of Rules that get evaluated when the zone resets. For all Load Rules, <number>\n\
 specifies how many clones (items or mobs) should be generated. No more of\n\
 these clones will be created after there are <max> copies already anywhere in\n\
-the area. By default the engine will create <number> clones on every single\n\
-area reset until the <max> is reached, however by specifying the optional\n\
+the zone. By default the engine will create <number> clones on every single\n\
+zone reset until the <max> is reached, however by specifying the optional\n\
 [probability] argument (a number between 1 and 99), you can control how often\n\
 a clone is made.\n\n\
 Additionally, for statements 5 through 8, you may optionally include an index\n\
@@ -697,7 +697,7 @@ argument.  If, for example, you are loading two identical pouches (say the\n\
 pouch vnum is 934) into a room, and you want a potion to load into the second\n\
 pouch, your \"<target>[.index]\" argument should look like \"934#2\"\n\n\
 --------Examples:\n\
-\"loadrule add mob 654 1 4\" would specify that 1 of mob 654 should be loaded on every reset, until there are 4 total in the area.\n\
+\"loadrule add mob 654 1 4\" would specify that 1 of mob 654 should be loaded on every reset, until there are 4 total in the zone.\n\
 \"loadrule add item 3967 5 5\" would specify a rule to load up to five instances of item 3967.\n\
 \"loadrule add item 1234 1 1 5\" would create a rule to load item 1234 approximately 5% of the time.\n\
 \"loadrule add item 4354 1 1 654 carry\" loads one instance of item 4354, and puts it in the inventory of mob 654."*/
@@ -730,7 +730,7 @@ bool CmdLoadRule::execute(Being* being, const std::vector<std::string>& args) {
   pieces.insert(pieces.begin(), args.begin(), args.end());
 
   // Check permissions...
-  if (!room->area()->hasPermission(avatar())) {
+  if (!room->zone()->hasPermission(avatar())) {
     avatar()->send("You don't have permissions to the LoadRules in this room.");
     return false;
   }
@@ -1125,7 +1125,7 @@ bool CmdMap::execute(Being* being, const std::vector<std::string>& args) {
   output.append("{x").append(xsize*2+2, '-').append(1, '\n');
 
   if (!success) {
-    output.append("There was an error generating this map because the area isn't square.\nThe output may be garbled.\nPlease contact the Head Builder.");
+    output.append("There was an error generating this map because the zone isn't square.\nThe output may be garbled.\nPlease contact the Head Builder.");
   }
 
   being->send(output);
@@ -1143,24 +1143,24 @@ CmdMedit::CmdMedit(void) {
 
 bool CmdMedit::execute(Being* being, const std::vector<std::string>& args) {
   std::map<unsigned long,Mob*>::iterator it;
-  Area* area = NULL;
+  Zone* zone = NULL;
   Mob* mob = NULL;
   unsigned long vnum = 0;
 
   if (args.size() == 1) {
     vnum = estring(args[0]);
-    // Get the area...
-    if ((area = World::Instance().lookup(vnum)) == NULL) {
+    // Get the zone...
+    if ((zone = World::Instance().lookup(vnum)) == NULL) {
       avatar()->send("That vnum doesn't exist.");
       return false;
     }
     // Check permissions...
-    if (!area->hasPermission(avatar())) {
+    if (!zone->hasPermission(avatar())) {
       avatar()->send("You don't have permissions to that item.");
       return false;
     }
     // Make sure the Item exists...
-    if ((it = area->mobs().find(vnum)) == area->mobs().end()) {
+    if ((it = zone->mobs().find(vnum)) == zone->mobs().end()) {
       avatar()->send("That mob doesn't exist.");
       return false;
     }
@@ -1182,23 +1182,23 @@ bool CmdMedit::execute(Being* being, const std::vector<std::string>& args) {
       return false;
     }
     vnum = estring(args[1]);
-    // Get the area...
-    if ((area = World::Instance().lookup(vnum)) == NULL) {
+    // Get the zone...
+    if ((zone = World::Instance().lookup(vnum)) == NULL) {
       avatar()->send("That vnum doesn't exist.");
       return false;
     }
     // Check permissions...
-    if (!area->hasPermission(avatar())) {
+    if (!zone->hasPermission(avatar())) {
       avatar()->send("You don't have permissions to that mob.");
       return false;
     }
     // Make sure the Mob doesn't already exist...
-    if ((it = area->mobs().find(vnum)) != area->mobs().end()) {
+    if ((it = zone->mobs().find(vnum)) != zone->mobs().end()) {
       avatar()->send("That mob already exists.");
       return false;
     }
     // Everything checks out; let's make us a new Mob!
-    if ((mob = Mob::create(area, vnum)) == NULL) {
+    if ((mob = Mob::create(zone, vnum)) == NULL) {
       avatar()->send("There was an error creating the mob.");
       return false;
     }
@@ -1215,7 +1215,7 @@ bool CmdMedit::execute(Being* being, const std::vector<std::string>& args) {
 CmdMlist::CmdMlist(void) {
   name("mlist");
   level(Being::DEMIGOD);
-  addSyntax(1, "<areaID>                       (list all Mobs in the area)");
+  addSyntax(1, "<zoneID>                       (list all Mobs in the zone)");
   addSyntax(2, "<first vnum> <last vnum>       (list all Mobs in the vnum range)");
   addSyntax(1, "<keyword>                      (list all Mobs by keyword)");
   addSyntax(1, "/<regex>                       (list all Mobs matching the PCRE)");
@@ -1225,7 +1225,7 @@ CmdMlist::CmdMlist(void) {
 bool CmdMlist::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> mutable_args(args);
   std::vector<Mob*> mobs;
-  Area* area = NULL;
+  Zone* zone = NULL;
   unsigned long low = 0;
   unsigned long high = 0;
   std::string search;
@@ -1234,19 +1234,19 @@ bool CmdMlist::execute(Being* being, const std::vector<std::string>& args) {
 
   if (mutable_args.size() == 1) {
     if (Regex::match("^[0-9]+$", mutable_args[0])) {
-      // We got an areaID...
-      if ((area = World::Instance().findArea(estring(mutable_args[0]))) == NULL) {
-        being->send("That area couldn't be found.");
+      // We got an zoneID...
+      if ((zone = World::Instance().findZone(estring(mutable_args[0]))) == NULL) {
+        being->send("That zone couldn't be found.");
         return false;
       }
-      for (std::map<unsigned long,Mob*>::iterator m_it = area->mobs().begin(); m_it != area->mobs().end(); ++m_it) {
+      for (std::map<unsigned long,Mob*>::iterator m_it = zone->mobs().begin(); m_it != zone->mobs().end(); ++m_it) {
         mobs.push_back(m_it->second);
       }
     } else {
       if (mutable_args[0][0] == '/') {
         mutable_args[0].erase(0, 1);
         // This search is a regex...
-        for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+        for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
           for (std::map<unsigned long,Mob*>::iterator m_it = (*a_it)->mobs().begin(); m_it != (*a_it)->mobs().end(); ++m_it) {
             if (m_it->second->identifiers().matchesKeyword(mutable_args[0])) {
               mobs.push_back(m_it->second);
@@ -1256,7 +1256,7 @@ bool CmdMlist::execute(Being* being, const std::vector<std::string>& args) {
       } else {
         search = Regex::lower(mutable_args[0]);
         // We got a search string...
-        for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+        for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
           for (std::map<unsigned long,Mob*>::iterator m_it = (*a_it)->mobs().begin(); m_it != (*a_it)->mobs().end(); ++m_it) {
             if (m_it->second->identifiers().matchesKeyword(search)) {
               mobs.push_back(m_it->second);
@@ -1280,7 +1280,7 @@ bool CmdMlist::execute(Being* being, const std::vector<std::string>& args) {
       return false;
     }
     // Grab the mobs...
-    for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+    for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
       for (std::map<unsigned long,Mob*>::iterator m_it = (*a_it)->mobs().begin(); m_it != (*a_it)->mobs().end(); ++m_it) {
         if (m_it->second->vnum() >= low && m_it->second->vnum() <= high) {
           mobs.push_back(m_it->second);
@@ -1316,7 +1316,7 @@ bool CmdMload::execute(Being* being, const std::vector<std::string>& args) {
   std::map<unsigned long,Mob*>::iterator m_it;
   Mob* mob = NULL;
 
-  for (std::set<Area*,area_comp>::iterator a_it = World::Instance().getAreas().begin(); a_it != World::Instance().getAreas().end(); ++a_it) {
+  for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
     if ((m_it = (*a_it)->mobs().find(vnum)) != (*a_it)->mobs().end()) {
       mob = Mob::create(m_it->second, being->room());
       if (mob == NULL) {
