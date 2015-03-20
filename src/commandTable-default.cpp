@@ -41,8 +41,8 @@ CommandTable::CommandTable(void) {
   add(new CmdIncognito());
   add(new CmdInventory());
   add(new CmdLoadRule());
-  add(new CmdMlist());
-  add(new CmdMload());
+  add(new CmdNlist());
+  add(new CmdNload());
   add(new CmdPeace());
   add(new CmdPoofin());
   add(new CmdPoofout());
@@ -111,7 +111,7 @@ Commands::Commands(void) {
   add(new CmdZedit());
   add(new CmdDisable());
   add(new CmdEnable());
-  add(new CmdMedit());
+  add(new CmdNedit());
   add(new CmdIedit());
   add(new CmdPedit());
   add(new CmdReboot());

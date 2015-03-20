@@ -1,14 +1,14 @@
 
 #include "item-armor.h"
 
-ObjArmor::ObjArmor(void) {
+ItemArmor::ItemArmor(void) {
   return;
 }
 
-ObjArmor::ObjArmor(const ObjArmor& ref) {
+ItemArmor::ItemArmor(const ItemArmor& ref) {
   return;
 }
 
-ObjArmor::~ObjArmor(void) {
+ItemArmor::~ItemArmor(void) {
   return;
 }

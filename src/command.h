@@ -75,8 +75,8 @@ class Command {
   private:
     // data...
     bool                      _enabled;           // can this Command be used?
-    bool                      _playerOnly;        // is this command available for mobs? (automatically set when level > HERO)
-    bool                      _special;           // is this a command for a special mode (like Medit)?
+    bool                      _playerOnly;        // is this command available for npcs? (automatically set when level > HERO)
+    bool                      _special;           // is this a command for a special mode (like Nedit)?
     bool                      _social;            // is this a social Command?
     unsigned short            _level;             // what is the minimum level required to access this Command?
     std::set<short>           _arguments;         // number of arguments this Command expects?

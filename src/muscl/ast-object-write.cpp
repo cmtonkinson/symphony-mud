@@ -10,7 +10,7 @@ AstItemWrite::AstItemWrite(void) {
 }
 
 AstItemWrite::AstItemWrite(AstItem* item, Ast* value):
-    Ast(AST_OBJ_WRITE),
+    Ast(AST_ITEM_WRITE),
     _item(item),
     _value(value) {
   return;

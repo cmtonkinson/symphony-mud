@@ -1,14 +1,14 @@
 
 #include "item-food.h"
 
-ObjFood::ObjFood(void) {
+ItemFood::ItemFood(void) {
   return;
 }
 
-ObjFood::ObjFood(const ObjFood& ref) {
+ItemFood::ItemFood(const ItemFood& ref) {
   return;
 }
 
-ObjFood::~ObjFood(void) {
+ItemFood::~ItemFood(void) {
   return;
 }

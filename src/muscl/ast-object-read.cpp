@@ -11,7 +11,7 @@ AstItemRead::AstItemRead(void) {
 }
 
 AstItemRead::AstItemRead(AstItem* item):
-    Ast(AST_OBJ_READ),
+    Ast(AST_ITEM_READ),
     _item(item) {
   return;
 }

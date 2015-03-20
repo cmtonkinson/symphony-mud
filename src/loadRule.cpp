@@ -1,12 +1,12 @@
 
 #include "loadRule.h"
-#include "loadRuleMob.h"
+#include "loadRuleNpc.h"
 #include "loadRuleItem.h"
 #include "world.h"
 
 const unsigned LoadRule::ERROR;
 const unsigned LoadRule::ITEM;
-const unsigned LoadRule::MOB;
+const unsigned LoadRule::NPC;
 const unsigned LoadRule::ON;
 const unsigned LoadRule::IN;
 const unsigned LoadRule::CARRY;
@@ -29,10 +29,10 @@ LoadRule::~LoadRule(void) {
 }
 
 LoadRule* LoadRule::create(const char* type) {
-  if (strcmp(type, "OBJ") == 0) {
+  if (strcmp(type, "ITEM") == 0) {
     return new LoadRuleItem();
-  } else if (strcmp(type, "MOB") == 0) {
-    return new LoadRuleMob();
+  } else if (strcmp(type, "NPC") == 0) {
+    return new LoadRuleNpc();
   } else {
     return nullptr;
   }

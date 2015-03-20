@@ -44,7 +44,7 @@ bool IOHandler::handle(const std::string& text) {
    *   1) That the Being has a high enough level
    *   2) That the Command is enabled
    *   3) Kirby Wuz Here
-   *   4) That a "player only" command can't be executed by a Mob
+   *   4) That a "player only" command can't be executed by a Npc
    */
   if (being()->level() < command->level() || !command->enabled()) {
     being()->send("Huh?");
@@ -690,26 +690,26 @@ std::string ZeditIOHandler::prompt(void) {
   return buffer;
 }
 
-/************************************** MEDIT HANDLER **************************************/
-void MeditIOHandler::activate(void) {
-  commandTable(&(MeditCommands::Instance()));
+/************************************** NEDIT HANDLER **************************************/
+void NeditIOHandler::activate(void) {
+  commandTable(&(NeditCommands::Instance()));
   avatar()->whoFlags().set(WHO_BUSY);
-  avatar()->mode().set(MODE_MEDIT);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has entered mob editing mode.", avatar()->identifiers().shortname().c_str());
+  avatar()->mode().set(MODE_NEDIT);
+  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has entered npc editing mode.", avatar()->identifiers().shortname().c_str());
   return;
 }
 
-void MeditIOHandler::deactivate(void) {
+void NeditIOHandler::deactivate(void) {
   avatar()->send("Goodbye!\n");
   avatar()->whoFlags().clear(WHO_BUSY);
   avatar()->mode().set(MODE_NONE);
-  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has left mob editing mode.", avatar()->identifiers().shortname().c_str());
+  World::Instance().bigBrother(avatar(), ADMIN_BIGBRO_MODES, "%s has left npc editing mode.", avatar()->identifiers().shortname().c_str());
   return;
 }
 
-std::string MeditIOHandler::prompt(void) {
+std::string NeditIOHandler::prompt(void) {
   char buffer[Socket::MAX_BUFFER];
-  sprintf(buffer, "\n\n{W[{cMedit {x- {G%u{W] ", avatar()->medit()->vnum());
+  sprintf(buffer, "\n\n{W[{cNedit {x- {G%u{W] ", avatar()->nedit()->vnum());
   return buffer;
 }
 

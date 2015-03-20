@@ -1,27 +1,27 @@
 
-#ifndef H_SYMPHONY_MOB
-#define H_SYMPHONY_MOB
+#ifndef H_SYMPHONY_NPC
+#define H_SYMPHONY_NPC
 
 #include "being.h"
 
 class Zone;
 
-class Mob: public Being {
+class Npc: public Being {
   public:
 
-    static const unsigned MIN_MOBILITY     = 1;
-    static const unsigned DEFAULT_MOBILITY = 3;
-    static const unsigned MAX_MOBILITY     = 5;
+    static const unsigned MIN_NPCILITY     = 1;
+    static const unsigned DEFAULT_NPCILITY = 3;
+    static const unsigned MAX_NPCILITY     = 5;
 
     static const unsigned MIN_AGGRESSIVENESS     = 1;
     static const unsigned DEFAULT_AGGRESSIVENESS = 3;
     static const unsigned MAX_AGGRESSIVENESS     = 5;
 
     // constructors...
-    Mob(void);
-    Mob(Zone* zone, unsigned vnum);
-    Mob(const Mob& ref);
-    virtual ~Mob(void);
+    Npc(void);
+    Npc(Zone* zone, unsigned vnum);
+    Npc(const Npc& ref);
+    virtual ~Npc(void);
 
     // public accessors...
     void                vnum(unsigned vnum)                     { _vnum = vnum; }
@@ -32,20 +32,20 @@ class Mob: public Being {
     unsigned            aggressiveness(void) const              { return _aggressiveness; }
 
     // general methods...
-    virtual bool        isMob(void) const                 { return true; }
+    virtual bool        isNpc(void) const                 { return true; }
     virtual void        whatHappensWhenIDie(void);
 
-    // This is the primary entry method to initiate all automated Mob behavior. It is used e.g.
-    // when Mobs are placed from load rules or the `mload` Command to breathe life into the Mob and
+    // This is the primary entry method to initiate all automated Npc behavior. It is used e.g.
+    // when Npcs are placed from load rules or the `nload` Command to breathe life into the Npc and
     // cause it to do things like move around the world and other randomized or programatic actions.
-    void mobilize(void);
+    void npcilize(void);
 
     bool auto_move(Job* job);
 
     // statics...
-    static Mob*         create(Zone* zone, unsigned vnum);
-    static Mob*         create(Mob* mob, Room* room);
-    static std::string  getInformation(Mob* mob);
+    static Npc*         create(Zone* zone, unsigned vnum);
+    static Npc*         create(Npc* npc, Room* room);
+    static std::string  getInformation(Npc* npc);
 
   private:
     // data...
@@ -54,4 +54,4 @@ class Mob: public Being {
     unsigned            _aggressiveness;
 };
 
-#endif // !H_SYMPHONY_MOB
+#endif // !H_SYMPHONY_NPC

@@ -1,14 +1,14 @@
 
 #include "item-jewelry.h"
 
-ObjJewelry::ObjJewelry(void) {
+ItemJewelry::ItemJewelry(void) {
   return;
 }
 
-ObjJewelry::ObjJewelry(const ObjJewelry& ref) {
+ItemJewelry::ItemJewelry(const ItemJewelry& ref) {
   return;
 }
 
-ObjJewelry::~ObjJewelry(void) {
+ItemJewelry::~ItemJewelry(void) {
   return;
 }

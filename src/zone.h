@@ -12,7 +12,7 @@
 class Avatar;
 class Room;
 class Item;
-class Mob;
+class Npc;
 
 class Zone {
   private:
@@ -22,7 +22,7 @@ class Zone {
     std::string                             _name;
     std::map<unsigned long,Room*>           _rooms;
     std::map<unsigned long,Item*>         _items;
-    std::map<unsigned long,Mob*>            _mobs;
+    std::map<unsigned long,Npc*>            _npcs;
     Terrain*                                _terrain;
     std::set<std::string>                   _builders;
 
@@ -46,8 +46,8 @@ class Zone {
     const std::map<unsigned long,Room*>&    rooms(void) const               { return _rooms; }
     std::map<unsigned long,Item*>&        items(void)                   { return _items; }
     const std::map<unsigned long,Item*>&  items(void) const             { return _items; }
-    std::map<unsigned long,Mob*>&           mobs(void)                      { return _mobs; }
-    const std::map<unsigned long,Mob*>&     mobs(void) const                { return _mobs; }
+    std::map<unsigned long,Npc*>&           npcs(void)                      { return _npcs; }
+    const std::map<unsigned long,Npc*>&     npcs(void) const                { return _npcs; }
     void                                    terrain(Terrain* terrain)       { _terrain = terrain; }
     Terrain*                                terrain(void)                   { return _terrain; }
     std::set<std::string>&                  builders(void)                  { return _builders; }
@@ -55,13 +55,13 @@ class Zone {
 
     void            insert(Room* room);
     void            insert(Item* item);
-    void            insert(Mob* mob);
+    void            insert(Npc* npc);
 
     // General methods...
     unsigned long   lowestAvailableRoom(void);
     void            reset(void);
     bool            reset(RecurringJob* job)                 { reset(); return true; }
-    unsigned        howManyMobs(unsigned long vnum);
+    unsigned        howManyNpcs(unsigned long vnum);
     void            setTerrain(const char* terrain_name);
 
     // Setup & teardown...

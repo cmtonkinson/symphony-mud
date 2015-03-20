@@ -6,12 +6,12 @@
 
 class Being;
 
-class ObjFurniture {
+class ItemFurniture {
   public:
     // constructors...
-    ObjFurniture(void);
-    ObjFurniture(const ObjFurniture& ref);
-    ~ObjFurniture(void);
+    ItemFurniture(void);
+    ItemFurniture(const ItemFurniture& ref);
+    ~ItemFurniture(void);
 
     // public accessors
     void      capacity(const unsigned& capacity)      { _capacity = capacity; }

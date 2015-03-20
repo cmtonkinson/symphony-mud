@@ -70,9 +70,9 @@ void Room::removeLoadRule(unsigned index) {
 
 void Room::executeLoadRules(void) {
   std::list<Item*> new_items;
-  std::list<Mob*> new_mobs;
+  std::list<Npc*> new_npcs;
   for (std::list<LoadRule*>::iterator it = loadRules().begin(); it != loadRules().end(); ++it) {
-    (*it)->execute(new_items, new_mobs);
+    (*it)->execute(new_items, new_npcs);
   }
   return;
 }
@@ -169,9 +169,9 @@ bool Room::clear(void) {
 
 void Room::reset(void) {
   std::list<Item*> new_items;
-  std::list<Mob*> new_mobs;
+  std::list<Npc*> new_npcs;
   for (std::list<LoadRule*>::iterator it = loadRules().begin(); it != loadRules().end(); ++it) {
-    (*it)->execute(new_items, new_mobs);
+    (*it)->execute(new_items, new_npcs);
   }
   return;
 }
@@ -181,8 +181,8 @@ Being* Room::being_by_vnum(unsigned long vnum, unsigned index) {
   std::list<Being*> matches;
   // Find all vnum matches.
   for (iter = beings().begin(); iter != beings().end(); ++iter) {
-    if (!(*iter)->isMob()) continue;
-    if (((Mob*)(*iter))->vnum() == vnum) matches.push_back(*iter);
+    if (!(*iter)->isNpc()) continue;
+    if (((Npc*)(*iter))->vnum() == vnum) matches.push_back(*iter);
   }
   if (matches.empty()) return NULL;
   if (index > matches.size()) return NULL;

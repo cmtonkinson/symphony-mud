@@ -20,9 +20,9 @@
 #define AST_JUMP_BREAK  10
 
 // item access
-#define AST_OBJ         15
-#define AST_OBJ_READ    16
-#define AST_OBJ_WRITE   17
+#define AST_ITEM         15
+#define AST_ITEM_READ    16
+#define AST_ITEM_WRITE   17
 
 // function stuff
 #define AST_PARAM_LIST  21
@@ -63,7 +63,7 @@
 #define AST_ASS_DIV     84
 #define AST_ASS_MOD     85
 #define AST_ASS_POW     86
-#define AST_ASS_OBJ     87
+#define AST_ASS_ITEM     87
 
 // control structures
 #define AST_CONT_IF       90

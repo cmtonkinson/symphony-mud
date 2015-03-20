@@ -1,14 +1,14 @@
 
 #include "item-trash.h"
 
-ObjTrash::ObjTrash(void) {
+ItemTrash::ItemTrash(void) {
   return;
 }
 
-ObjTrash::ObjTrash(const ObjTrash& ref) {
+ItemTrash::ItemTrash(const ItemTrash& ref) {
   return;
 }
 
-ObjTrash::~ObjTrash(void) {
+ItemTrash::~ItemTrash(void) {
   return;
 }

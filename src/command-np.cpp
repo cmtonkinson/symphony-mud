@@ -9,6 +9,215 @@
 #include "room.h"
 #include "world.h"
 
+CmdNedit::CmdNedit(void) {
+  name("nedit");
+  level(Being::DEMIGOD);
+  addSyntax(1, "<vnum>");
+  addSyntax(2, "create <vnum>");
+  brief("Launches the Npc Editor.");
+  return;
+}
+
+bool CmdNedit::execute(Being* being, const std::vector<std::string>& args) {
+  std::map<unsigned long,Npc*>::iterator it;
+  Zone* zone = NULL;
+  Npc* npc = NULL;
+  unsigned long vnum = 0;
+
+  if (args.size() == 1) {
+    vnum = estring(args[0]);
+    // Get the zone...
+    if ((zone = World::Instance().lookup(vnum)) == NULL) {
+      avatar()->send("That vnum doesn't exist.");
+      return false;
+    }
+    // Check permissions...
+    if (!zone->hasPermission(avatar())) {
+      avatar()->send("You don't have permissions to that item.");
+      return false;
+    }
+    // Make sure the Item exists...
+    if ((it = zone->npcs().find(vnum)) == zone->npcs().end()) {
+      avatar()->send("That npc doesn't exist.");
+      return false;
+    }
+    // Make sure no one else is editing the item...
+    for (std::map<std::string,Avatar*>::iterator a_it = World::Instance().getAvatars().begin(); a_it != World::Instance().getAvatars().end(); ++a_it) {
+      if (a_it->second->mode().number() == MODE_NEDIT && a_it->second->nedit() == it->second) {
+        avatar()->send("Sorry, %s is currently editing %s (npc %lu).", avatar()->seeName(((Being*)a_it->second)).c_str(), it->second->identifiers().shortname().c_str(), it->second->vnum());
+        return false;
+      }
+    }
+    // All looks well; send them to nedit...
+    avatar()->nedit(it->second);
+    avatar()->pushIOHandler(new NeditIOHandler(avatar()));
+    avatar()->send("You're editing npc %lu.", avatar()->nedit()->vnum());
+    return true;
+  } else if (args.size() == 2) {
+    if (!Regex::strPrefix(args[0], "create")) {
+      avatar()->send(printSyntax());
+      return false;
+    }
+    vnum = estring(args[1]);
+    // Get the zone...
+    if ((zone = World::Instance().lookup(vnum)) == NULL) {
+      avatar()->send("That vnum doesn't exist.");
+      return false;
+    }
+    // Check permissions...
+    if (!zone->hasPermission(avatar())) {
+      avatar()->send("You don't have permissions to that npc.");
+      return false;
+    }
+    // Make sure the Npc doesn't already exist...
+    if ((it = zone->npcs().find(vnum)) != zone->npcs().end()) {
+      avatar()->send("That npc already exists.");
+      return false;
+    }
+    // Everything checks out; let's make us a new Npc!
+    if ((npc = Npc::create(zone, vnum)) == NULL) {
+      avatar()->send("There was an error creating the npc.");
+      return false;
+    }
+    avatar()->send("Npc %lu created successfully.", npc->vnum());
+    avatar()->mode().set(MODE_NEDIT);
+    avatar()->nedit(npc);
+    avatar()->pushIOHandler(new NeditIOHandler(avatar()));
+    return true;
+  }
+
+  return false;
+}
+
+CmdNlist::CmdNlist(void) {
+  name("nlist");
+  level(Being::DEMIGOD);
+  addSyntax(1, "<zoneID>                       (list all Npcs in the zone)");
+  addSyntax(2, "<first vnum> <last vnum>       (list all Npcs in the vnum range)");
+  addSyntax(1, "<keyword>                      (list all Npcs by keyword)");
+  addSyntax(1, "/<regex>                       (list all Npcs matching the PCRE)");
+  return;
+}
+
+bool CmdNlist::execute(Being* being, const std::vector<std::string>& args) {
+  std::vector<std::string> mutable_args(args);
+  std::vector<Npc*> npcs;
+  Zone* zone = NULL;
+  unsigned long low = 0;
+  unsigned long high = 0;
+  std::string search;
+  std::string output;
+  char buffer[Socket::MAX_BUFFER];
+
+  if (mutable_args.size() == 1) {
+    if (Regex::match("^[0-9]+$", mutable_args[0])) {
+      // We got an zoneID...
+      if ((zone = World::Instance().findZone(estring(mutable_args[0]))) == NULL) {
+        being->send("That zone couldn't be found.");
+        return false;
+      }
+      for (std::map<unsigned long,Npc*>::iterator m_it = zone->npcs().begin(); m_it != zone->npcs().end(); ++m_it) {
+        npcs.push_back(m_it->second);
+      }
+    } else {
+      if (mutable_args[0][0] == '/') {
+        mutable_args[0].erase(0, 1);
+        // This search is a regex...
+        for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
+          for (std::map<unsigned long,Npc*>::iterator m_it = (*a_it)->npcs().begin(); m_it != (*a_it)->npcs().end(); ++m_it) {
+            if (m_it->second->identifiers().matchesKeyword(mutable_args[0])) {
+              npcs.push_back(m_it->second);
+            }
+          }
+        }
+      } else {
+        search = Regex::lower(mutable_args[0]);
+        // We got a search string...
+        for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
+          for (std::map<unsigned long,Npc*>::iterator m_it = (*a_it)->npcs().begin(); m_it != (*a_it)->npcs().end(); ++m_it) {
+            if (m_it->second->identifiers().matchesKeyword(search)) {
+              npcs.push_back(m_it->second);
+            }
+          }
+        }
+      }
+    }
+  } else if (mutable_args.size() == 2) {
+    /* We're looking for a vnum range here */
+    // Grab our range values...
+    low = estring(mutable_args[0]);
+    high = estring(mutable_args[1]);
+    // Check our range...
+    if (!high || low >= high) {
+      being->send("Invalid vnum range.");
+      return false;
+    }
+    if (low+400 < high) {
+      being->send("The maximum vnum range is 400.");
+      return false;
+    }
+    // Grab the npcs...
+    for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
+      for (std::map<unsigned long,Npc*>::iterator m_it = (*a_it)->npcs().begin(); m_it != (*a_it)->npcs().end(); ++m_it) {
+        if (m_it->second->vnum() >= low && m_it->second->vnum() <= high) {
+          npcs.push_back(m_it->second);
+        }
+      }
+    }
+  }
+
+  if (npcs.empty()) {
+    being->send("No matches for \"%s\"", mutable_args[0].c_str());
+    return false;
+  }
+
+  output.append(" [{y vnum{x] {gname{x\n -------------------\n");
+  for (std::vector<Npc*>::iterator it = npcs.begin(); it != npcs.end(); ++it) {
+    sprintf(buffer, " [{y%5u{x] %s{x\n", (*it)->vnum(), (*it)->identifiers().shortname().c_str());
+    output.append(buffer);
+  }
+
+  being->send(output);
+  return true;
+}
+
+CmdNload::CmdNload(void) {
+  name("nload");
+  level(Being::DEMIGOD);
+  addSyntax(1, "<vnum>");
+  brief("Incarnates a Npc.");
+}
+
+bool CmdNload::execute(Being* being, const std::vector<std::string>& args) {
+  unsigned long vnum = estring(args[0]);
+  std::map<unsigned long,Npc*>::iterator m_it;
+  Npc* npc = NULL;
+
+  for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
+    if ((m_it = (*a_it)->npcs().find(vnum)) != (*a_it)->npcs().end()) {
+      npc = Npc::create(m_it->second, being->room());
+      if (npc == NULL) {
+        being->send("Nload failed. Don't you feel stupid?");
+        return false;
+      }
+      if (npc->identifiers().shortname().empty() || npc->identifiers().longname().empty() || npc->identifiers().getKeywords().empty()) {
+        avatar()->send("Sorry; that npc isn't complete yet.");
+        return false;
+      }
+      World::Instance().insert(npc);
+      being->room()->add(npc);
+      npc->room(being->room());
+      npc->npcilize();
+      being->send("You load %s.", npc->identifiers().shortname().c_str());
+      being->room()->send_cond("$p has created $c.", being, npc);
+      return true;
+    }
+  }
+
+  being->send("There is no npc of that vnum.");
+  return false;
+}
+
 CmdNote::CmdNote(void) {
   name("note");
   playerOnly(true);
@@ -298,7 +507,7 @@ bool CmdPoofout::execute(Being* being, const std::vector<std::string>& args) {
 CmdPromote::CmdPromote(void) {
   name("promote");
   addSyntax(2, "<player> <level>");
-  addSyntax(2, "<mob> <level>");
+  addSyntax(2, "<npc> <level>");
   level(Being::CREATOR);
   brief("Advances the target to the given level.");
   return;
@@ -350,16 +559,16 @@ CmdPurge::CmdPurge(void) {
 
 bool CmdPurge::execute(Being* being, const std::vector<std::string>& args) {
   Room* r = avatar()->room();
-  Mob* mob = NULL;
+  Npc* npc = NULL;
   std::string ignored;
   // destroy beings...
   for (std::list<Being*>::iterator it = r->beings().begin(); it != r->beings().end();) {
-    if ((*it)->isMob()) {
-      mob = (Mob*)*it;
-      // check to make sure the mob isn't on anything...
-      if (!mob->isStanding()) {
-        if (!mob->stand(ignored)) {
-          avatar()->send("You couldn't force %s to stand up.", mob->identifiers().shortname().c_str());
+    if ((*it)->isNpc()) {
+      npc = (Npc*)*it;
+      // check to make sure the npc isn't on anything...
+      if (!npc->isStanding()) {
+        if (!npc->stand(ignored)) {
+          avatar()->send("You couldn't force %s to stand up.", npc->identifiers().shortname().c_str());
           return false;
         }
       }

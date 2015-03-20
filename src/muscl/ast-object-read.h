@@ -1,6 +1,6 @@
 
-#ifndef H_SYMPHONY_MUSCL_AST_OBJ_READ
-#define H_SYMPHONY_MUSCL_AST_OBJ_READ
+#ifndef H_SYMPHONY_MUSCL_AST_ITEM_READ
+#define H_SYMPHONY_MUSCL_AST_ITEM_READ
 
 #include "ast.h"
 
@@ -28,4 +28,4 @@ class AstItemRead: public Ast {
     AstItem*          _item;
 };
 
-#endif // H_SYMPHONY_MUSCL_AST_OBJ_READ
+#endif // H_SYMPHONY_MUSCL_AST_ITEM_READ

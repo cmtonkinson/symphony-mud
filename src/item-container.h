@@ -4,12 +4,12 @@
 
 #include "inventoryContainer.h"
 
-class ObjContainer {
+class ItemContainer {
   public:
     // constructors...
-    ObjContainer(void);
-    ObjContainer(const ObjContainer& ref);
-    ~ObjContainer(void);
+    ItemContainer(void);
+    ItemContainer(const ItemContainer& ref);
+    ~ItemContainer(void);
 
     // accessor methods...
     InventoryContainer&       inventory(void)         { return _inventory; }

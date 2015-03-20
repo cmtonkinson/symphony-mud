@@ -2,7 +2,7 @@
 #include "being.h"
 #include "item-furniture.h"
 
-ObjFurniture::ObjFurniture(void):
+ItemFurniture::ItemFurniture(void):
     _capacity(0),
     _layOn(0),
     _sitAt(0),
@@ -12,7 +12,7 @@ ObjFurniture::ObjFurniture(void):
   return;
 }
 
-ObjFurniture::ObjFurniture(const ObjFurniture& ref):
+ItemFurniture::ItemFurniture(const ItemFurniture& ref):
     _capacity(ref.capacity()),
     _layOn(ref.layOn()),
     _sitAt(ref.sitAt()),
@@ -22,11 +22,11 @@ ObjFurniture::ObjFurniture(const ObjFurniture& ref):
   return;
 }
 
-ObjFurniture::~ObjFurniture(void) {
+ItemFurniture::~ItemFurniture(void) {
   return;
 }
 
-bool ObjFurniture::add(Being* being, const EnumInt& position) {
+bool ItemFurniture::add(Being* being, const EnumInt& position) {
   // check overall capacity...
   if (current() >= capacity()) {
     return false;
@@ -62,7 +62,7 @@ bool ObjFurniture::add(Being* being, const EnumInt& position) {
   return true;
 }
 
-bool ObjFurniture::remove(Being* being) {
+bool ItemFurniture::remove(Being* being) {
   std::map<EnumInt,std::list<Being*> >::iterator map_it;
   std::list<Being*>::iterator list_it;
   if (!beings().empty()) {

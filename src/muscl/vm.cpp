@@ -16,8 +16,8 @@ VirtualMachine::VirtualMachine(void) {
   _functions[OPCODE_VAR]    = &VirtualMachine::op_var;
   _functions[OPCODE_STORE]  = &VirtualMachine::op_store;
   // items
-  _functions[OPCODE_OBJ_READ]   = &VirtualMachine::op_obj_read;
-  _functions[OPCODE_OBJ_WRITE]  = &VirtualMachine::op_obj_write;
+  _functions[OPCODE_ITEM_READ]   = &VirtualMachine::op_obj_read;
+  _functions[OPCODE_ITEM_WRITE]  = &VirtualMachine::op_obj_write;
   // lists
   _functions[OPCODE_ELMT]     = &VirtualMachine::op_elmt;
   _functions[OPCODE_LIST]     = &VirtualMachine::op_list;

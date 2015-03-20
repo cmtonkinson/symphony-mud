@@ -216,7 +216,7 @@ bool World::toggleCommand(char table_prefix, std::string command_name, bool enab
   switch (table_prefix) {
     case 'x': table = &(Commands::Instance());      break;
     case 'A': table = &(ZeditCommands::Instance()); break;
-    case 'M': table = &(MeditCommands::Instance()); break;
+    case 'M': table = &(NeditCommands::Instance()); break;
     case 'O': table = &(IeditCommands::Instance()); break;
     case 'P': table = &(PeditCommands::Instance()); break;
     case 'R': table = &(ReditCommands::Instance()); break;

@@ -2,12 +2,12 @@
 #ifndef H_SYMPHONY_ITEM_CLOTHING
 #define H_SYMPHONY_ITEM_CLOTHING
 
-class ObjClothing {
+class ItemClothing {
   public:
     // Constructors...
-    ObjClothing(void);
-    ObjClothing(const ObjClothing& ref);
-    ~ObjClothing(void);
+    ItemClothing(void);
+    ItemClothing(const ItemClothing& ref);
+    ~ItemClothing(void);
 };
 
 #endif // H_SYMPHONY_ITEM_CLOTHING

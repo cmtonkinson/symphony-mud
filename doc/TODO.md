@@ -46,7 +46,7 @@
 ## General
   * hunger, thirst, drunk
     * food, drink
-  * mob scavenging
+  * npc scavenging
   * weather
     * factor date, time
   * time
@@ -82,6 +82,6 @@ Stat-based attack timing.
 
 Is there anything worthwhile from the character creation sequence that can be used to make the TNL calculations dynamic?
 
-## Mob::auto_move()
+## Npc::auto_move()
 
-Implement implement some concept of "momentum" so that the same Mob doesn't keep flipping in and out of the same two or three Rooms over and over again in a huge Zone.
+Implement implement some concept of "momentum" so that the same Npc doesn't keep flipping in and out of the same two or three Rooms over and over again in a huge Zone.

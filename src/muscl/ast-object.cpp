@@ -13,7 +13,7 @@ AstItem::AstItem(void):
 }
 
 AstItem::AstItem(const std::string& name):
-    Ast(AST_OBJ),
+    Ast(AST_ITEM),
     _parent(NULL),
     _child(NULL),
     _name(new Datum(name)) {

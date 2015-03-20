@@ -677,7 +677,7 @@ CmdSummon::CmdSummon(void) {
   name("summon");
   level(Being::DEMIGOD);
   addSyntax(1, "<player>");
-  addSyntax(1, "<mob>");
+  addSyntax(1, "<npc>");
   brief("Transports the target to the current room.");
   return;
 }

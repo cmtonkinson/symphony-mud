@@ -19,10 +19,10 @@
 #define OPCODE_VAR      102
 #define OPCODE_STORE    105
 // items
-#define OPCODE_OBJ_NAME   200
-#define OPCODE_OBJ_INIT   201
-#define OPCODE_OBJ_READ   202
-#define OPCODE_OBJ_WRITE  203
+#define OPCODE_ITEM_NAME   200
+#define OPCODE_ITEM_INIT   201
+#define OPCODE_ITEM_READ   202
+#define OPCODE_ITEM_WRITE  203
 // lists
 #define OPCODE_ELMT     300
 #define OPCODE_LIST     301

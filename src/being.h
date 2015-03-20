@@ -21,9 +21,9 @@
 class Zone;
 class Ability;
 class IOHandler;
-class ObjFurniture;
+class ItemFurniture;
 class Room;
-class Mob;
+class Npc;
 class SocialCommand;
 class Group;
 
@@ -147,8 +147,8 @@ class Being {
     const EquipmentContainer&   equipment(void) const                                           { return _equipment; }
     std::list<Modifier*>&       modifiers(void)                                                 { return _modifiers; }
     const std::list<Modifier*>& modifiers(void) const                                           { return _modifiers; }
-    void                        furniture(ObjFurniture* furniture)                              { _furniture = furniture; }
-    ObjFurniture*               furniture(void) const                                           { return _furniture; }
+    void                        furniture(ItemFurniture* furniture)                              { _furniture = furniture; }
+    ItemFurniture*               furniture(void) const                                           { return _furniture; }
 
     Position&         position(void)        { return _position; }
     const Position&   position(void) const  { return _position; }
@@ -246,7 +246,7 @@ class Being {
     // Public methods...
     const char*                 name(void) const                                                { return identifiers().shortname().c_str(); }
     virtual bool                isAvatar(void) const                                            { return false; }
-    virtual bool                isMob(void) const                                               { return false; }
+    virtual bool                isNpc(void) const                                               { return false; }
     bool                        isLaying(void) const                                            { return position().number() == LAYING; }
     bool                        isSitting(void) const                                           { return position().number() == SITTING; }
     bool                        isStanding(void) const                                          { return position().number() == STANDING; }
@@ -263,8 +263,8 @@ class Being {
     bool                        isWarrior(void) const                                           { return pClass().number() == WARRIOR; }
     unsigned short              hand(void) const                                                { return WEARLOC_HOLD_R; }
     unsigned short              off_hand(void) const                                            { return WEARLOC_HOLD_L; }
-    bool                        lay(std::string& error, ObjFurniture* furniture = NULL);
-    bool                        sit(std::string& error, ObjFurniture* furniture = NULL, bool on = false);
+    bool                        lay(std::string& error, ItemFurniture* furniture = NULL);
+    bool                        sit(std::string& error, ItemFurniture* furniture = NULL, bool on = false);
     bool                        stand(std::string& error);
     void                        setModifications(Item* item);
     void                        unsetModifications(Item* item);
@@ -350,7 +350,7 @@ class Being {
     InventoryContainer          _inventory;
     EquipmentContainer          _equipment;
     std::list<Modifier*>        _modifiers;
-    ObjFurniture*               _furniture;
+    ItemFurniture*               _furniture;
     Position                    _position;
     Action                      _action;
     Group*                      _group;

@@ -50,7 +50,7 @@ std::string EnumTable::list(void) const {
 ETMode::ETMode(void) {
   add(MODE_NONE,   "none");
   add(MODE_ZEDIT,  "zedit");
-  add(MODE_MEDIT,  "medit");
+  add(MODE_NEDIT,  "nedit");
   add(MODE_IEDIT,  "iedit");
   add(MODE_PEDIT,  "pedit");
   add(MODE_REDIT,  "redit");

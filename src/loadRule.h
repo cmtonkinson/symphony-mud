@@ -5,8 +5,8 @@
 #include <list>
 #include <string>
 
-class Mob;
 class Item;
+class Npc;
 class Room;
 
 class LoadRule {
@@ -15,12 +15,12 @@ class LoadRule {
     static const unsigned ERROR  = 0;
     // rule types...
     static const unsigned ITEM = 1;
-    static const unsigned MOB    = 2;
+    static const unsigned NPC    = 2;
     // rule prepositions...
     static const unsigned ON     = 1;  // the indirect item is an item
     static const unsigned IN     = 2;  // the indirect item is an item
-    static const unsigned CARRY  = 3;  // the indirect item is a mob
-    static const unsigned WEAR   = 4;  // the indirect item is a mob
+    static const unsigned CARRY  = 3;  // the indirect item is a npc
+    static const unsigned WEAR   = 4;  // the indirect item is a npc
 
     // constructors...
     LoadRule(void);
@@ -45,10 +45,10 @@ class LoadRule {
     unsigned        probability(void) const             { return _probability; }
 
     // general methods...
-    const char*         strType(void) const             { return (type() == ITEM ? "OBJ" : "MOB"); }
+    const char*         strType(void) const             { return (type() == ITEM ? "ITEM" : "NPC"); }
     virtual std::string notes(void) const = 0;
     virtual void        destroy(void) = 0;
-    virtual bool        execute(std::list<Item*>& new_items, std::list<Mob*>& new_mobs) = 0;
+    virtual bool        execute(std::list<Item*>& new_items, std::list<Npc*>& new_npcs) = 0;
 
     static LoadRule*    create(const char* type);
 
@@ -57,11 +57,11 @@ class LoadRule {
     unsigned long   _ID;
     unsigned long   _vnum;
     Room*           _room;
-    unsigned        _type;            // item or mob
-    unsigned long   _target;          // vnum of the item/mob
+    unsigned        _type;            // item or npc
+    unsigned long   _target;          // vnum of the item/npc
     unsigned        _number;          // number to load per reset
-    unsigned        _max;             // max in the zone for mobs, max in the room for items
-    unsigned        _probability;     // 1-100 percent probability that the item/mob will load per reset
+    unsigned        _max;             // max in the zone for npcs, max in the room for items
+    unsigned        _probability;     // 1-100 percent probability that the item/npc will load per reset
 };
 
 #endif // #ifndef H_SYMPHONY_LOADRULE

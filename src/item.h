@@ -10,15 +10,15 @@
 #include "identifiers.h"
 #include "modifier.h"
 
-class ObjArmor;
-class ObjClothing;
-class ObjContainer;
-class ObjFood;
-class ObjFurniture;
-class ObjJewelry;
-class ObjKey;
-class ObjTrash;
-class ObjWeapon;
+class ItemArmor;
+class ItemClothing;
+class ItemContainer;
+class ItemFood;
+class ItemFurniture;
+class ItemJewelry;
+class ItemKey;
+class ItemTrash;
+class ItemWeapon;
 
 class Item {
   public:
@@ -42,15 +42,15 @@ class Item {
     bool          isTrash(void) const     { return _type == Type_Trash; }
     bool          isWeapon(void) const    { return _type == Type_Weapon; }
 
-    ObjArmor*     armor(void) const       { return (ObjArmor*)_extra; }
-    ObjClothing*  clothing(void) const    { return (ObjClothing*)_extra; }
-    ObjContainer* container(void) const   { return (ObjContainer*)_extra; }
-    ObjFood*      food(void) const        { return (ObjFood*)_extra; }
-    ObjFurniture* furniture(void) const   { return (ObjFurniture*)_extra; }
-    ObjJewelry*   jewelry(void) const     { return (ObjJewelry*)_extra; }
-    ObjKey*       key(void) const         { return (ObjKey*)_extra; }
-    ObjTrash*     trash(void) const       { return (ObjTrash*)_extra; }
-    ObjWeapon*    weapon(void) const      { return (ObjWeapon*)_extra; }
+    ItemArmor*     armor(void) const       { return (ItemArmor*)_extra; }
+    ItemClothing*  clothing(void) const    { return (ItemClothing*)_extra; }
+    ItemContainer* container(void) const   { return (ItemContainer*)_extra; }
+    ItemFood*      food(void) const        { return (ItemFood*)_extra; }
+    ItemFurniture* furniture(void) const   { return (ItemFurniture*)_extra; }
+    ItemJewelry*   jewelry(void) const     { return (ItemJewelry*)_extra; }
+    ItemKey*       key(void) const         { return (ItemKey*)_extra; }
+    ItemTrash*     trash(void) const       { return (ItemTrash*)_extra; }
+    ItemWeapon*    weapon(void) const      { return (ItemWeapon*)_extra; }
 
     const char*   typeToString(void) const;
     void          stringToType(const std::string& src);

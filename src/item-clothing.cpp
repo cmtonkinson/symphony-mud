@@ -1,14 +1,14 @@
 
 #include "item-clothing.h"
 
-ObjClothing::ObjClothing(void) {
+ItemClothing::ItemClothing(void) {
   return;
 }
 
-ObjClothing::ObjClothing(const ObjClothing& ref) {
+ItemClothing::ItemClothing(const ItemClothing& ref) {
   return;
 }
 
-ObjClothing::~ObjClothing(void) {
+ItemClothing::~ItemClothing(void) {
   return;
 }

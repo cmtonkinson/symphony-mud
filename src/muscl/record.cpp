@@ -40,10 +40,10 @@ const char* Record::opcodeToString(void) const {
     case OPCODE_VAR:      return "VAR";
     case OPCODE_STORE:    return "STORE";
     // objecs
-    case OPCODE_OBJ_NAME:   return "OBJ_NAME";
-    case OPCODE_OBJ_INIT:   return "OBJ_INIT";
-    case OPCODE_OBJ_READ:   return "OBJ_READ";
-    case OPCODE_OBJ_WRITE:  return "OBJ_WRITE";
+    case OPCODE_ITEM_NAME:   return "ITEM_NAME";
+    case OPCODE_ITEM_INIT:   return "ITEM_INIT";
+    case OPCODE_ITEM_READ:   return "ITEM_READ";
+    case OPCODE_ITEM_WRITE:  return "ITEM_WRITE";
     // lists
     case OPCODE_ELMT:     return "ELMT";
     case OPCODE_LIST:     return "LIST";

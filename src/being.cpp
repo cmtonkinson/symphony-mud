@@ -464,7 +464,7 @@ Item* Being::secondary(void) {
   return equipment().at(off_hand());
 }
 
-bool Being::lay(std::string& error, ObjFurniture* furniture) {
+bool Being::lay(std::string& error, ItemFurniture* furniture) {
   if (isLaying()) {
     error.assign("You're already laying down.");
     return false;
@@ -487,7 +487,7 @@ bool Being::lay(std::string& error, ObjFurniture* furniture) {
   return true;
 }
 
-bool Being::sit(std::string& error, ObjFurniture* furniture, bool on) {
+bool Being::sit(std::string& error, ItemFurniture* furniture, bool on) {
   EnumInt pos = on? FURN_SIT_ON : FURN_SIT_AT;
   if (isSitting()) {
     error.assign("You're already sitting.");

@@ -160,7 +160,7 @@ CmdAt::CmdAt(void) {
   playerOnly(true);
   level(Being::DEMIGOD);
   addSyntax(-2, "<player> <command>");
-  addSyntax(-2, "<mob> <command>");
+  addSyntax(-2, "<npc> <command>");
   addSyntax(-2, "<vnum> <command>");
   brief("Executes the given command as if you were in the same room as the target.");
   return;
@@ -674,7 +674,7 @@ bool CmdDelete::execute(Being* being, const std::vector<std::string>& args) {
 CmdDemote::CmdDemote(void) {
   name("demote");
   addSyntax(2, "<player> <level>");
-  addSyntax(2, "<mob> <level>");
+  addSyntax(2, "<npc> <level>");
   level(Being::CREATOR);
   brief("Reduces the target to the given level.");
   return;
@@ -940,7 +940,7 @@ CmdForce::CmdForce(void) {
   name("force");
   level(Being::DEMIGOD);
   addSyntax(-2, "<player> <command>");
-  addSyntax(-2, "<mob> <command>");
+  addSyntax(-2, "<npc> <command>");
   brief("Cause the victim to perform the given command.");
   return;
 }

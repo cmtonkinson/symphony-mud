@@ -1,14 +1,14 @@
 
 #include "item-key.h"
 
-ObjKey::ObjKey(void) {
+ItemKey::ItemKey(void) {
   return;
 }
 
-ObjKey::ObjKey(const ObjKey& ref) {
+ItemKey::ItemKey(const ItemKey& ref) {
   return;
 }
 
-ObjKey::~ObjKey(void) {
+ItemKey::~ItemKey(void) {
   return;
 }

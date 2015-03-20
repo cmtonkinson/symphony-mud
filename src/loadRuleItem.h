@@ -21,7 +21,7 @@ class LoadRuleItem: public LoadRule {
     // general methods...
     virtual std::string notes(void) const;
     virtual void        destroy(void);
-    virtual bool        execute(std::list<Item*>& new_items, std::list<Mob*>& new_mobs);
+    virtual bool        execute(std::list<Item*>& new_items, std::list<Npc*>& new_npcs);
 
   private:
     short           _preposition;         // in, on, carry, wear

@@ -4,7 +4,7 @@
 
 Symbol::Symbol(void):
     _type(SYMBOL_NEW),
-    _symlist(NULL),
+    _synlist(NULL),
     _code(NULL),
     _offset(-1),
     _line(-1) {
@@ -14,7 +14,7 @@ Symbol::Symbol(void):
 Symbol::Symbol(const std::string& name, unsigned type, int line):
     _type(type),
     _name(name),
-    _symlist(NULL),
+    _synlist(NULL),
     _code(NULL),
     _offset(-1),
     _line(line) {

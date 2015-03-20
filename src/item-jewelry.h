@@ -2,12 +2,12 @@
 #ifndef H_SYMPHONY_ITEM_JEWELRY
 #define H_SYMPHONY_ITEM_JEWELRY
 
-class ObjJewelry {
+class ItemJewelry {
   public:
     // Constructors...
-    ObjJewelry(void);
-    ObjJewelry(const ObjJewelry& ref);
-    ~ObjJewelry(void);
+    ItemJewelry(void);
+    ItemJewelry(const ItemJewelry& ref);
+    ~ItemJewelry(void);
 };
 
 #endif // H_SYMPHONY_ITEM_JEWELRY

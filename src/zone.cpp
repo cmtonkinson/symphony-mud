@@ -1,7 +1,7 @@
 
 #include "zone.h"
 #include "exit.h"
-#include "loadRuleMob.h"
+#include "loadRuleNpc.h"
 #include "loadRuleItem.h"
 #include "room.h"
 #include "storage.h"
@@ -90,8 +90,8 @@ void Zone::insert(Item* item) {
   return;
 }
 
-void Zone::insert(Mob* mob) {
-  _mobs.insert(std::make_pair(mob->vnum(), mob));
+void Zone::insert(Npc* npc) {
+  _npcs.insert(std::make_pair(npc->vnum(), npc));
   return;
 }
 
@@ -116,18 +116,18 @@ void Zone::reset(void) {
   return;
 }
 
-unsigned Zone::howManyMobs(unsigned long vnum) {
-  unsigned number_of_mobs = 0;
+unsigned Zone::howManyNpcs(unsigned long vnum) {
+  unsigned number_of_npcs = 0;
   for (std::map<unsigned long,Room*>::iterator r_it = rooms().begin(); r_it != rooms().end(); ++r_it) {
     for (std::list<Being*>::iterator c_it = r_it->second->beings().begin(); c_it != r_it->second->beings().end(); ++c_it) {
-      if (*c_it && (*c_it)->isMob()) {
-        if (((Mob*)(*c_it))->vnum() == vnum) {
-          number_of_mobs++;
+      if (*c_it && (*c_it)->isNpc()) {
+        if (((Npc*)(*c_it))->vnum() == vnum) {
+          number_of_npcs++;
         }
       }
     }
   }
-  return number_of_mobs;
+  return number_of_npcs;
 }
 
 void Zone::setTerrain(const char* terrain_name) {

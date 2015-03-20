@@ -5,12 +5,12 @@
 #include "dice.h"
 #include "enumTable.h"
 
-class ObjWeapon {
+class ItemWeapon {
   public:
     // constructors
-    ObjWeapon(void);
-    ObjWeapon(const ObjWeapon& ref);
-    ~ObjWeapon(void);
+    ItemWeapon(void);
+    ItemWeapon(const ItemWeapon& ref);
+    ~ItemWeapon(void);
 
     // public accessors
     WeaponType&       type(void)                  { return _type; }

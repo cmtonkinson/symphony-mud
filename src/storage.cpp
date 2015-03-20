@@ -9,9 +9,9 @@
 #include "enumTable.h"
 #include "exit.h"
 #include "loadRule.h"
-#include "loadRuleMob.h"
+#include "loadRuleNpc.h"
 #include "loadRuleItem.h"
-#include "mob.h"
+#include "npc.h"
 #include "note.h"
 #include "item-container.h"
 #include "item-furniture.h"
@@ -36,7 +36,7 @@ void Storage::dump(FILE* fp, Zone* zone) {
   out(fp, "builders",     zone->serializeBuilders());
   for (auto iter : zone->rooms())   dump(fp, iter.second);
   for (auto iter : zone->items()) dump(fp, iter.second);
-  for (auto iter : zone->mobs())    dump(fp, iter.second);
+  for (auto iter : zone->npcs())    dump(fp, iter.second);
   END("ZONE")
   return;
 }
@@ -52,7 +52,7 @@ bool Storage::load(FILE* fp, Zone* loading) {
     STORE_CASE_STRING("builders",   loading->unserializeBuilders(str);)
     STORE_DESCEND_NEW("ROOM",   Room,   loading->insert(instance);)
     STORE_DESCEND_NEW("ITEM", Item, loading->insert(instance);)
-    STORE_DESCEND_NEW("MOB",    Mob,    loading->insert(instance);)
+    STORE_DESCEND_NEW("NPC",    Npc,    loading->insert(instance);)
   });
   return load_status == LOAD_DONE;
 }
@@ -89,11 +89,11 @@ bool Storage::load(FILE* fp, Room* loading) {
     STORE_DESCEND_NEW("EXIT", Exit,
       loading->exit(instance->direction().number(), instance);
     )
-    STORE_DESCEND_NEW("RULE_OBJ", LoadRuleItem,
+    STORE_DESCEND_NEW("RULE_ITEM", LoadRuleItem,
       loading->loadRules().push_back(instance);
       instance->room(loading);
     )
-    STORE_DESCEND_NEW("RULE_MOB", LoadRuleMob,
+    STORE_DESCEND_NEW("RULE_NPC", LoadRuleNpc,
       loading->loadRules().push_back(instance);
       instance->room(loading);
     )
@@ -253,25 +253,25 @@ bool Storage::load(FILE* fp, Item* loading) {
 }
 
 /***************************************************************************************************
- * MOB
+ * NPC
  **************************************************************************************************/
-void Storage::dump(FILE* fp, Mob* mob) {
-  BEGIN("MOB")
-  out(fp, "vnum",           mob->vnum());
-  out(fp, "mobility",       mob->mobility());
-  out(fp, "aggressiveness", mob->aggressiveness());
-  dump_base(fp, mob);
-  END("MOB")
+void Storage::dump(FILE* fp, Npc* npc) {
+  BEGIN("NPC")
+  out(fp, "vnum",           npc->vnum());
+  out(fp, "mobility",       npc->mobility());
+  out(fp, "aggressiveness", npc->aggressiveness());
+  dump_base(fp, npc);
+  END("NPC")
   return;
 }
 
-bool Storage::load(FILE* fp, Mob* loading) {
+bool Storage::load(FILE* fp, Npc* loading) {
   char input[32];
   unsigned load_status = 0;
-  load_status = load_inner(fp, loading, input, "MOB", [&fp, &loading, &input]() {
-    STORE_CASE("vnum",           &Mob::vnum)
-    STORE_CASE("mobility",       &Mob::mobility)
-    STORE_CASE("aggressiveness", &Mob::aggressiveness)
+  load_status = load_inner(fp, loading, input, "NPC", [&fp, &loading, &input]() {
+    STORE_CASE("vnum",           &Npc::vnum)
+    STORE_CASE("mobility",       &Npc::mobility)
+    STORE_CASE("aggressiveness", &Npc::aggressiveness)
     STORE_DESCEND("BEING")
   });
   return load_status == LOAD_DONE;

@@ -81,15 +81,15 @@ void Item::type(Type type) {
   deleteExtra();
   _type = type;
   switch (this->type()) {
-    case Type_Armor:      extra(new ObjArmor());      break;
-    case Type_Clothing:   extra(new ObjClothing());   break;
-    case Type_Container:  extra(new ObjContainer());  break;
-    case Type_Food:       extra(new ObjFood());       break;
-    case Type_Furniture:  extra(new ObjFurniture());  break;
-    case Type_Jewelry:    extra(new ObjJewelry());    break;
-    case Type_Key:        extra(new ObjKey());        break;
-    case Type_Trash:      extra(new ObjTrash());      break;
-    case Type_Weapon:     extra(new ObjWeapon());     break;
+    case Type_Armor:      extra(new ItemArmor());      break;
+    case Type_Clothing:   extra(new ItemClothing());   break;
+    case Type_Container:  extra(new ItemContainer());  break;
+    case Type_Food:       extra(new ItemFood());       break;
+    case Type_Furniture:  extra(new ItemFurniture());  break;
+    case Type_Jewelry:    extra(new ItemJewelry());    break;
+    case Type_Key:        extra(new ItemKey());        break;
+    case Type_Trash:      extra(new ItemTrash());      break;
+    case Type_Weapon:     extra(new ItemWeapon());     break;
     default:                                          break;
   }
   return;
@@ -102,15 +102,15 @@ void Item::type(Type type, void* extra_ptr) {
   deleteExtra();
   _type = type;
   switch (this->type()) {
-    case Type_Armor:      extra(new ObjArmor(*((ObjArmor*)extra_ptr)));         break;
-    case Type_Clothing:   extra(new ObjClothing(*((ObjClothing*)extra_ptr)));   break;
-    case Type_Container:  extra(new ObjContainer(*((ObjContainer*)extra_ptr))); break;
-    case Type_Food:       extra(new ObjFood(*((ObjFood*)extra_ptr)));           break;
-    case Type_Furniture:  extra(new ObjFurniture(*((ObjFurniture*)extra_ptr))); break;
-    case Type_Jewelry:    extra(new ObjJewelry(*((ObjJewelry*)extra_ptr)));     break;
-    case Type_Key:        extra(new ObjKey(*((ObjKey*)extra_ptr)));             break;
-    case Type_Trash:      extra(new ObjTrash(*((ObjTrash*)extra_ptr)));         break;
-    case Type_Weapon:     extra(new ObjWeapon(*((ObjWeapon*)extra_ptr)));       break;
+    case Type_Armor:      extra(new ItemArmor(*((ItemArmor*)extra_ptr)));         break;
+    case Type_Clothing:   extra(new ItemClothing(*((ItemClothing*)extra_ptr)));   break;
+    case Type_Container:  extra(new ItemContainer(*((ItemContainer*)extra_ptr))); break;
+    case Type_Food:       extra(new ItemFood(*((ItemFood*)extra_ptr)));           break;
+    case Type_Furniture:  extra(new ItemFurniture(*((ItemFurniture*)extra_ptr))); break;
+    case Type_Jewelry:    extra(new ItemJewelry(*((ItemJewelry*)extra_ptr)));     break;
+    case Type_Key:        extra(new ItemKey(*((ItemKey*)extra_ptr)));             break;
+    case Type_Trash:      extra(new ItemTrash(*((ItemTrash*)extra_ptr)));         break;
+    case Type_Weapon:     extra(new ItemWeapon(*((ItemWeapon*)extra_ptr)));       break;
     default:                                                                    break;
   }
   return;

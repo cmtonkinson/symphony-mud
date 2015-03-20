@@ -11,7 +11,7 @@
 
 class Zone;
 class Item;
-class ObjContainer;
+class ItemContainer;
 class IOHandler;
 class Note;
 
@@ -92,8 +92,8 @@ class Avatar: public Being {
     Zone*           zedit(void)                                   { return _zedit; }
     void            iedit(Item* iedit)                          { _iedit = iedit; }
     Item*         iedit(void)                                   { return _iedit; }
-    void            medit(Mob* medit)                             { _medit = medit; }
-    Mob*            medit(void)                                   { return _medit; }
+    void            nedit(Npc* nedit)                             { _nedit = nedit; }
+    Npc*            nedit(void)                                   { return _nedit; }
     void            sedit(SocialCommand* sedit)                   { _sedit = sedit; }
     SocialCommand*  sedit(void)                                   { return _sedit; }
     void            note(Note* note)                              { _note = note; }
@@ -138,7 +138,7 @@ class Avatar: public Being {
     Avatar*                 _pedit;
     Zone*                   _zedit;
     Item*                 _iedit;
-    Mob*                    _medit;
+    Npc*                    _nedit;
     SocialCommand*          _sedit;
     Note*                   _note;
     std::string             _title;

@@ -27,8 +27,8 @@ class Symbol {
     unsigned            type(void) const                    { return _type; }
     void                name(const std::string& name)       { _name = name; }
     std::string         name(void) const                    { return _name; }
-    void                symlist(AstIdentifierList* symlist) { _symlist = symlist; }
-    AstIdentifierList*  symlist(void) const                 { return _symlist; }
+    void                synlist(AstIdentifierList* synlist) { _synlist = synlist; }
+    AstIdentifierList*  synlist(void) const                 { return _synlist; }
     void                code(Ast* code)                     { _code = code; }
     Ast*                code(void) const                    { return _code; }
     void                offset(const int& offset)           { _offset = offset; }
@@ -48,7 +48,7 @@ class Symbol {
     // data...
     unsigned            _type;
     std::string         _name;
-    AstIdentifierList*  _symlist; // arg list (for functions)
+    AstIdentifierList*  _synlist; // arg list (for functions)
     Ast*                _code;    // code (for functions)
     int                 _offset;  // address (used during code generation)
     int                 _line;    // line on which the symbol was declared

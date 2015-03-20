@@ -12,7 +12,7 @@
 #include "board.h"
 #include "exit.h"
 #include "io-handler.h"
-#include "mob.h"
+#include "npc.h"
 #include "item.h"
 #include "regex.h"
 #include "room.h"

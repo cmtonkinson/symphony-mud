@@ -48,7 +48,7 @@ class NAME: public Enum {                   \
 DEF_ENUM(Mode)
 #define MODE_NONE   1
 #define MODE_ZEDIT  2
-#define MODE_MEDIT  3
+#define MODE_NEDIT  3
 #define MODE_IEDIT  4
 #define MODE_PEDIT  5
 #define MODE_REDIT  6
@@ -78,15 +78,15 @@ DEF_ENUM(FurniturePosition)
 #define FURN_STAND_ON 4
 
 /*DEF_ENUM(ItemType)
-#define OBJ_ARMOR     1
-#define OBJ_CLOTHING  2
-#define OBJ_CONTAINER 3
-#define OBJ_FOOD      4
-#define OBJ_FURNITURE 5
-#define OBJ_JEWELRY   6
-#define OBJ_KEY       7
-#define OBJ_TRASH     8
-#define OBJ_WEAPON    9*/
+#define ITEM_ARMOR     1
+#define ITEM_CLOTHING  2
+#define ITEM_CONTAINER 3
+#define ITEM_FOOD      4
+#define ITEM_FURNITURE 5
+#define ITEM_JEWELRY   6
+#define ITEM_KEY       7
+#define ITEM_TRASH     8
+#define ITEM_WEAPON    9*/
 
 DEF_ENUM(WeaponType)
 #define WEAP_AXE         1
