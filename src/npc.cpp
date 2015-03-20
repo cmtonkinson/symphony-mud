@@ -1,11 +1,12 @@
 
 #include <math.h>
-#include "zone.h"
 #include "command.h"
 #include "commandTable.h"
 #include "io-handler.h"
+#include "math.h"
 #include "npc.h"
 #include "world.h"
+#include "zone.h"
 
 // Static constants need external linkage.
 const unsigned Npc::MIN_NPCILITY;
@@ -90,7 +91,7 @@ bool Npc::auto_move(Job* job) {
   if (valid_exits.empty()) return false;
 
   // Pick a direction and go!
-  chosen_direction = valid_exits[World::rand(0, valid_exits.size() - 1)];
+  chosen_direction = valid_exits[Math::rand(0, valid_exits.size() - 1)];
   return move(chosen_direction);
 }
 

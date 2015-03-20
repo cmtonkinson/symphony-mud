@@ -1,5 +1,6 @@
 
 #include "commandTable-default.h"
+#include "math.h"
 #include "placementItem.h"
 #include "room.h"
 #include "world.h"
@@ -67,7 +68,7 @@ bool PlacementItem::execute(std::list<Item*>& new_items, std::list<Npc*>& new_np
     if (already_there + items_added >= max()) {
       break;
     }
-    if (World::rand(1, 100) <= probability()) {
+    if (Math::rand(1, 100) <= probability()) {
       item = new Item(*item);
       World::Instance().insert(item);
       room()->inventory().add(item);

@@ -1,4 +1,5 @@
 
+#include "math.h"
 #include "placementNpc.h"
 #include "room.h"
 #include "world.h"
@@ -38,7 +39,7 @@ bool PlacementNpc::execute(std::list<Item*>& new_items, std::list<Npc*>& new_npc
 
   for (unsigned u = 0; u < number(); ++u) {
     if (already_there + npcs_added >= max()) break;
-    if (World::rand(1, 100) <= probability()) {
+    if (Math::rand(1, 100) <= probability()) {
       npc = new Npc(*npc);
       World::Instance().insert(npc);
       npc->room(room());

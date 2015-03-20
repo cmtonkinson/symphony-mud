@@ -5,6 +5,12 @@
 class Math {
 
   public:
+
+    /*
+     * Basic min/max random int function.
+     */
+    static unsigned rand(unsigned min, unsigned max);
+
     /*
      * Standard logistic function of the form y = L / (1 + Ae^-kx) where
      *

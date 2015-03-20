@@ -7,6 +7,10 @@
 bool Math::has_extra_random = false;
 double Math::extra_random   = 0.0;
 
+unsigned Math::rand(unsigned min, unsigned max) {
+  return (::rand() % (max-min+1) + min);
+}
+
 // https://en.wikipedia.org/wiki/Logistic_function
 double Math::logistic(double x, double limit, double min, double half_max_x) {
   double a = (limit - min) / min;
@@ -29,8 +33,8 @@ double Math::random_normal(double mean, double stddev) {
   }
   // Generate uniformly distributed random numbers on [0, 1).
   else {
-    u1 = (double)rand() / (double)RAND_MAX;
-    u2 = (double)rand() / (double)RAND_MAX;
+    u1 = (double)::rand() / (double)RAND_MAX;
+    u2 = (double)::rand() / (double)RAND_MAX;
     // Derive two normally distributed numbers from u1 and u2.
     z0 = sqrt(-2 * log(u1)) * cos(2 * M_PI * u2);
     z1 = sqrt(-2 * log(u1)) * sin(2 * M_PI * u2);

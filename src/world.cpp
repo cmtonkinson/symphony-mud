@@ -584,10 +584,6 @@ void World::saveBoards(void) {
 }
 
 /************************************************************ STATIC ************************************************************/
-unsigned World::rand(const unsigned& min, const unsigned& max) {
-  return (::rand() % (max-min+1) + min);
-}
-
 void World::worldLog(unsigned level, unsigned type, const char* format, ...) {
   char buffer[Socket::MAX_BUFFER];
   va_list args;

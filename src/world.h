@@ -133,7 +133,6 @@ class World {
     void                  saveBoards(void);
 
     // Static methods...
-    static unsigned       rand(const unsigned& min, const unsigned& max);
     static World&         Instance(void);
     static void           worldLog(unsigned level, unsigned type, const char* format, ...);
     static void           playerLog(unsigned level, unsigned type, const char* format, ...);
