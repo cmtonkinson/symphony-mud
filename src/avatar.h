@@ -79,6 +79,8 @@ class Avatar: public Being {
     std::string     password(void)                                { return _password; }
     void            roomNumber(unsigned long roomNumber)          { _roomNumber = roomNumber; }
     unsigned long   roomNumber(void) const                        { return _roomNumber; }
+    void            bigBrother(unsigned bigBrother)               { _bigBrother = bigBrother; }
+    unsigned        bigBrother(void) const                        { return _bigBrother; }
     FlagBank&       adminFlags(void)                              { return _adminFlags; }
     FlagBank&       channelFlags(void)                            { return _channelFlags; }
     FlagBank&       whoFlags(void)                                { return _whoFlags; }
@@ -133,6 +135,7 @@ class Avatar: public Being {
     unsigned long           _roomNumber;  // only used during login & reboot
 
     // Game-related members...
+    unsigned                _bigBrother;
     FlagBank                _adminFlags;
     FlagBank                _channelFlags;
     FlagBank                _whoFlags;

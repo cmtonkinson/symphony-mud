@@ -34,18 +34,23 @@ namespace os {
   /////////////////////////////////////////////////////////////////////////////
   // LOGGING
   /////////////////////////////////////////////////////////////////////////////
-  const unsigned LOG_SILLY   = 0;
-  const unsigned LOG_DEBUG   = 1;
-  const unsigned LOG_VERBOSE = 2;
-  const unsigned LOG_INFO    = 3;
-  const unsigned LOG_WARN    = 4;
-  const unsigned LOG_ERROR   = 5;
-  const unsigned LOG_FATAL   = 6;
-  const unsigned LOG_SILENT  = 7;
+  const unsigned LOG_SILLY   = 1;
+  const unsigned LOG_DEBUG   = 2;
+  const unsigned LOG_VERBOSE = 3;
+  const unsigned LOG_INFO    = 4;
+  const unsigned LOG_WARN    = 5;
+  const unsigned LOG_ERROR   = 6;
+  const unsigned LOG_FATAL   = 7;
+  const unsigned LOG_SILENT  = 8;
+
+  extern unsigned console_log_level;
 
   void          log(const char* file, unsigned line, unsigned level, Being* being, const char* format);
   void          log_(const char* file, unsigned line, unsigned level, Being* being, const char* format, ...);
   const char*   stringLevel(unsigned level);
+  unsigned      numericLevel(std::string level);
+  std::string   allLevels(void);
+  char          color(unsigned level);
 
   // Remember, #defines within a namespace will still bind to global scope.
   #define SILLY(being, format)          os::log(__FILE__, __LINE__, os::LOG_SILLY, being, format);
@@ -87,6 +92,17 @@ namespace os {
 
   std::vector<std::string> glob(std::string pattern);
   bool                     file_exists(std::string path);
+
+  /////////////////////////////////////////////////////////////////////////////
+  // PROGRAM EXIT CODES, etc
+  /////////////////////////////////////////////////////////////////////////////
+  const unsigned EXIT_NORMAL        = 0;
+  const unsigned EXIT_FAILED_BOOT   = 1;
+  const unsigned EXIT_FAILED_REBOOT = 2;
+  const unsigned EXIT_BAD_OPTION    = 3;
+  const unsigned EXIT_ERROR         = 4;
+
+  static const char* REBOOT_FILE = "data/reboot.txt";
 
 };
 

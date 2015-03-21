@@ -286,6 +286,7 @@ void Storage::write(FILE* fp, Avatar* avatar) {
   out(fp, "age",              avatar->age());
   out(fp, "bankGold",         avatar->bankGold());
   out(fp, "bankSilver",       avatar->bankSilver());
+  out(fp, "bigBrother",       avatar->bigBrother());
   out(fp, "adminFlags",       avatar->adminFlags().value());
   out(fp, "channelFlags",     avatar->channelFlags().value());
   out(fp, "whoFlags",         avatar->whoFlags().value());
@@ -308,6 +309,7 @@ bool Storage::read(FILE* fp, Avatar* loading) {
     STORE_CASE("age",             &Avatar::age)
     STORE_CASE("bankGold",        &Avatar::bankGold)
     STORE_CASE("bankSilver",      &Avatar::bankSilver)
+    STORE_CASE("bigBrother",      &Avatar::bigBrother)
     STORE_CASE("roomNumber",      &Avatar::roomNumber)
     STORE_CASE("deletionStatus",  &Avatar::deletionStatus)
     STORE_CASE_WITH_CODE("adminFlags",    unsigned, "%u", loading->adminFlags().value(val);)

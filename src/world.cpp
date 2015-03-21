@@ -7,13 +7,11 @@
 #include "storage.h"
 #include "world.h"
 
-const char* World::REBOOT_FILE = "data/reboot.txt";
-
 World::World(void) {
   // basic setup
   booted(time(NULL));
   exists(true);
-  copyover(false);
+  rebooting(false);
   jobsPerTurn(5);
   schedule()->add(new RecurringJob(this, &World::tock, 50, 70));
   schedule()->add(new RecurringJob(this, &World::save, 900));
@@ -34,18 +32,18 @@ void World::startup(void) {
 
 void World::exist(const unsigned int& fd) {
   try {
-    if (copyover()) {
+    if (rebooting()) {
       getServer()->setFd(fd);
     } else {
       getServer()->startup(6501);
     }
   } catch (SocketException se) {
     ERROR_(0, "can't start Socket server: %s", se.getError().c_str())
-    exit(EXIT_FAILED_BOOT);
+    exit(os::EXIT_FAILED_BOOT);
   }
 
-  if (copyover()) INFO_(0, "system reboot on port %u", getServer()->getPort())
-  else            INFO_(0, "system boot on port %u", getServer()->getPort())
+  if (rebooting())  INFO_(0, "system reboot on port %u", getServer()->getPort())
+  else              INFO_(0, "system boot on port %u", getServer()->getPort())
 
   while (exists()) tick();
 
@@ -67,10 +65,11 @@ void World::tick(void) {
 
 bool World::reboot(Being* being) {
   std::map<std::string,Avatar*>::iterator it;
-  estring fd;
+  estring socket;
+  estring verbosity;
   FILE* fp = NULL;
 
-  fp = fopen(REBOOT_FILE, "w");
+  fp = fopen(os::REBOOT_FILE, "w");
 
   if (!fp) {
     if (being) being->send("Copyover file couldn't be opened for writing! Copyover aborted!");
@@ -100,10 +99,13 @@ bool World::reboot(Being* being) {
     return false;
   }
 
-  INFO(0, "executing reboot")
-
-  fd = estring("-fd=").append(estring(getServer()->getFd()));
-  if (execl("bin/symphony", "-copyover", fd.c_str(), NULL) < 0) ERROR(0, "reboot failed")
+  // Pass the current server socket fd to the child.
+  socket = estring("-s ").append(estring(getServer()->getFd()));
+  // Preserve the current verbosity settings.
+  verbosity = estring("-").append(estring(os::console_log_level));
+  // Make the system call.
+  DEBUG_(0, "executing reboot with '%s %s'", socket.c_str(), verbosity.c_str())
+  if (execl("bin/symphony", "symphony", socket.c_str(), verbosity.c_str(), NULL) < 0) ERROR(0, "reboot failed")
 
   return false;
 }
@@ -117,14 +119,14 @@ void World::recover(const unsigned int& fd) {
 
   if (!load()) ERROR(0, "failed to recover")
 
-  fp = fopen(REBOOT_FILE, "r");
+  fp = fopen(os::REBOOT_FILE, "r");
 
   if (!fp) {
     ERROR(0, "failed to read copyover file")
-    exit(EXIT_FAILED_REBOOT);
+    exit(os::EXIT_FAILED_REBOOT);
   }
 
-  while (1) {
+  while (true) {
     if (fscanf(fp, "%d %s %s", &client_fd, ip, name) < 3) break;
     avatar = new Avatar(new Socket(client_fd));
     avatar->socket()->setIP(ip);
@@ -138,7 +140,7 @@ void World::recover(const unsigned int& fd) {
   }
 
   fclose(fp);
-  unlink(REBOOT_FILE);
+  unlink(os::REBOOT_FILE);
 
   INFO(0, "system reboot")
   broadcast("\n\nCopyover successful. You may now drop your pants.");
@@ -316,6 +318,26 @@ void World::broadcast(const std::string& message) {
     if (it->second->isConnected()) {
       it->second->send(message + "\n");
     }
+  }
+  return;
+}
+
+void World::bigBrother(Being* being, unsigned level, std::string message) {
+  Avatar* avatar = nullptr;
+  std::string munged = message;
+  std::string line_break;
+
+  // Prettify
+  line_break << "\n{" << os::color(level);
+  Regex::replace("(?<=\\]) ", line_break, munged);
+
+  for (auto iter : getAvatars()) {
+    avatar = iter.second;
+    if (!avatar->isConnected()) continue;
+    if (!avatar->immortal()) continue;
+    if (avatar == being) continue;
+    if (avatar->bigBrother() > level) continue;
+    avatar->send("BigBrother: %s{x", munged.c_str());
   }
   return;
 }

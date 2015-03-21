@@ -22,17 +22,6 @@ class Socket;
 
 class World {
   public:
-
-    // Exit status...
-    static const unsigned EXIT_NORMAL        = 0;
-    static const unsigned EXIT_ERROR         = 1;
-    static const unsigned EXIT_FAILED_BOOT   = 2;
-    static const unsigned EXIT_FAILED_REBOOT = 3;
-
-    // Copyover junk
-    static const char* REBOOT_FILE;
-
-    // Constructors...
     World(void);
     ~World(void);
 
@@ -41,8 +30,8 @@ class World {
     time_t                                                    booted(void) const              { return _booted; }
     void                                                      exists(const bool& exists)      { _exists = exists; }
     bool                                                      exists(void) const              { return _exists; }
-    void                                                      copyover(const bool& copyover)  { _copyover = copyover; }
-    bool                                                      copyover(void) const            { return _copyover; }
+    void                                                      rebooting(bool rebooting)       { _rebooting = rebooting; }
+    bool                                                      rebooting(void) const           { return _rebooting; }
     Socket*                                                   getServer(void)                 { return &_server; }
     std::map<std::string,Avatar*>&                            getAvatars(void)                { return _avatars; }
     const std::map<std::string,Avatar*>&                      getAvatars(void) const          { return _avatars; }
@@ -77,7 +66,7 @@ class World {
     void                  handleOutput(void);
     void                  handleDisconnects(void);
     void                  broadcast(const std::string& message);
-    void                  bigBrother(Being* being, const unsigned long& type, const char* format, ...);
+    void                  bigBrother(Being* being, unsigned level, std::string message);
 
     // Events
     Schedule*             schedule(void) { return &_schedule; }
@@ -129,7 +118,7 @@ class World {
   private:
     time_t                          _booted;
     bool                            _exists;
-    bool                            _copyover;
+    bool                            _rebooting;
     Socket                          _server;
     std::map<std::string,Avatar*>   _avatars;
     std::set<Zone*,zone_comp>       _zones;

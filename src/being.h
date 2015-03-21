@@ -247,6 +247,7 @@ class Being {
     // Shortcuts...
     const char*                 name(void) const          { return identifiers().shortname().c_str(); }
     std::string                 ident(void);
+    bool                        immortal(void) const      { return level() >= DEMIGOD; }
 
     // Public methods...
     virtual bool                isAvatar(void) const      { return false; }

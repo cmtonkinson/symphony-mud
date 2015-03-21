@@ -201,81 +201,23 @@ CmdBigBrother::CmdBigBrother(void) {
   name("bigbrother");
   level(Being::DEMIGOD);
   addSyntax(0, "");
-  addSyntax(1, "on");
-  addSyntax(1, "off");
-  addSyntax(2, "<subchannel> on");
-  addSyntax(2, "<subchannel> off");
+  addSyntax(1, "<level>");
   brief("Toggles what you see on the BigBrother administrative information channel.");
+  addOptions("level", os::allLevels());
   return;
 }
 
 bool CmdBigBrother::execute(Being* being, const std::vector<std::string>& args) {
-  std::string output;
-  std::string on = "[{GON{x]";
-  std::string off = "[{rOFF{x]";
-  bool toggle = false;
-  bool status = true;
-
-  // No arguments...
+  unsigned level;
   if (args[0] == "") {
-    output.append("\nBigBrother:                   ").append(avatar()->adminFlags().test(ADMIN_BIGBROTHER) ? on : off).append("\n");
-    output.append("\n -Logins/Logouts  (\"logins\")  ").append(avatar()->adminFlags().test(ADMIN_BIGBRO_LOGINS) ? on : off);
-    output.append("\n -Edit modes      (\"modes\")   ").append(avatar()->adminFlags().test(ADMIN_BIGBRO_MODES) ? on : off);
-    output.append("\n -Player deaths   (\"deaths\")  ").append(avatar()->adminFlags().test(ADMIN_BIGBRO_DEATHS) ? on : off);
-    output.append("\n -World Schedule  (\"events\")  ").append(avatar()->adminFlags().test(ADMIN_BIGBRO_EVENTS) ? on : off);
-    output.append("\n -System Events   (\"system\")  ").append(avatar()->adminFlags().test(ADMIN_BIGBRO_SYSTEM) ? on : off);
-    output.append("\n -World Changes   (\"changes\") ").append(avatar()->adminFlags().test(ADMIN_BIGBRO_CHANGES) ? on : off);
-    output.append("\n -Server Errors   (\"errors\")  ").append(avatar()->adminFlags().test(ADMIN_BIGBRO_ERRORS) ? on : off);
-    output.append("\n -Zone Resets     (\"resets\")  ").append(avatar()->adminFlags().test(ADMIN_BIGBRO_RESETS) ? on : off);
-  } else if (args.size() == 1) {
-    output.append("BigBrother is now ");
-    if (args[0] == "on") {
-      avatar()->adminFlags().set(ADMIN_BIGBROTHER);
-      output.append(on);
-    } else {
-      avatar()->adminFlags().clear(ADMIN_BIGBROTHER);
-      output.append(off);
-    }
-  } else if (args.size() == 2) {
-    toggle = args[1] == "on" ? true : false;
-    if (toggle) {
-      avatar()->adminFlags().set(ADMIN_BIGBROTHER);
-    }
-    if (args[0] == "logins") {
-      avatar()->adminFlags().set(ADMIN_BIGBRO_LOGINS, toggle);
-      output.append("BigBrother login module is now ").append(toggle ? on : off);
-    } else if (args[0] == "modes") {
-      avatar()->adminFlags().set(ADMIN_BIGBRO_MODES, toggle);
-      output.append("BigBrother modes module is now ").append(toggle ? on : off);
-    } else if (args[0] == "deaths") {
-      avatar()->adminFlags().set(ADMIN_BIGBRO_DEATHS, toggle);
-      output.append("BigBrother deaths module is now ").append(toggle ? on : off);
-    } else if (args[0] == "events") {
-      avatar()->adminFlags().set(ADMIN_BIGBRO_EVENTS, toggle);
-      output.append("BigBrother events module is now ").append(toggle ? on : off);
-    } else if (args[0] == "system") {
-      avatar()->adminFlags().set(ADMIN_BIGBRO_SYSTEM, toggle);
-      output.append("BigBrother system module is now ").append(toggle ? on : off);
-    } else if (args[0] == "changes") {
-      avatar()->adminFlags().set(ADMIN_BIGBRO_CHANGES, toggle);
-      output.append("BigBrother changes module is now ").append(toggle ? on : off);
-    } else if (args[0] == "errors") {
-      avatar()->adminFlags().set(ADMIN_BIGBRO_ERRORS, toggle);
-      output.append("BigBrother errors module is now ").append(toggle ? on : off);
-    } else if (args[0] == "resets") {
-      avatar()->adminFlags().set(ADMIN_BIGBRO_RESETS, toggle);
-      output.append("BigBrother resets module is now ").append(toggle ? on : off);
-    }/* else if (args[0] == "all") {
-      avatar()->adminFlags().set(SET_ALL, toggle);
-      output.append("All BigBrother subsystems are now ").append(toggle ? on : off);
-    }*/ else {
-      output.append("Module name not recognized");
-      status = false;
-    }
+    avatar()->send("Your BigBrother channel verbosity is: ");
+  } else {
+    level = os::numericLevel(args[0]);
+    avatar()->bigBrother(level);
+    avatar()->send("Your BigBrother channel verbosity is now: ");
   }
-
-  avatar()->send(output);
-  return status;
+  avatar()->send(os::stringLevel(avatar()->bigBrother()));
+  return true;
 }
 
 CmdBored::CmdBored(void) {

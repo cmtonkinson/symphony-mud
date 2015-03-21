@@ -26,6 +26,7 @@ Avatar::Avatar(Socket* socket_) {
   if (socket() != nullptr) identifiers().shortname(estring(socket()->getFd()));
   board(0);
   note(NULL);
+  bigBrother(os::LOG_INFO);
   gechoColor('x');
   roomNumber(0);
   room(NULL);
