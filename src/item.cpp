@@ -1,6 +1,6 @@
 
 #include "being.h"
-#include "compoundTable.h"
+#include "compound-table.h"
 #include "item-types.h"
 #include "item.h"
 #include "socket.h"

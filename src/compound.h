@@ -3,7 +3,7 @@
 #define H_SYMPHONY_COMPOUND
 
 #include <set>
-#include "flagTable.h"
+#include "flag-table.h"
 #include "identifiers.h"
 
 /* Unless noted otherwise, each attribute is expected to be a unitless real number

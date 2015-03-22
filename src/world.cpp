@@ -1,8 +1,7 @@
 
 #include <cstdarg>
 #include <dirent.h>
-#include "commandTable-default.h"
-#include "commandTable.h"
+#include "command-def.h"
 #include "os.h"
 #include "storage.h"
 #include "world.h"

@@ -1,7 +1,7 @@
 
 #include "placement.h"
-#include "placementNpc.h"
-#include "placementItem.h"
+#include "placement-npc.h"
+#include "placement-item.h"
 #include "world.h"
 
 const unsigned Placement::ERROR;

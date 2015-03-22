@@ -1,5 +1,5 @@
 
-#include "enumTable.h"
+#include "enum-table.h"
 #include "regex.h"
 
 EnumTable::EnumTable(void) {

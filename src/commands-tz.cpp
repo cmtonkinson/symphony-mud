@@ -1,8 +1,7 @@
 
 #include "zone.h"
 #include "avatar.h"
-#include "commandTable-default.h"
-#include "commandTable.h"
+#include "command-def.h"
 #include "container.h"
 #include "display.h"
 #include "group.h"

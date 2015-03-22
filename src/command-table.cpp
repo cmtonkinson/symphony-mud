@@ -1,6 +1,6 @@
 
 #include "command.h"
-#include "commandTable.h"
+#include "command-table.h"
 #include "being.h"
 #include "regex.h"
 

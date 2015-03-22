@@ -1,6 +1,6 @@
 ﻿
 #include "being.h"
-#include "equipmentContainer.h"
+#include "equipment-container.h"
 #include "item.h"
 
 EquipmentContainer::EquipmentContainer(void) {

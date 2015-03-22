@@ -6,13 +6,13 @@
 #include <map>
 #include <set>
 #include <vector>
-#include "enumTable.h"
-#include "equipmentContainer.h"
+#include "enum-table.h"
+#include "equipment-container.h"
 #include "estring.h"
-#include "flagTable.h"
+#include "flag-table.h"
 #include "group.h"
 #include "identifiers.h"
-#include "inventoryContainer.h"
+#include "inventory-container.h"
 #include "job.h"
 #include "klass.h"
 #include "modifier.h"

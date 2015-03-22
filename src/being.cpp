@@ -2,7 +2,7 @@
 #include "ability.h"
 #include "avatar.h"
 #include "being.h"
-#include "commandTable-default.h"
+#include "command-def.h"
 #include "display.h"
 #include "exit.h"
 #include "group.h"

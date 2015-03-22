@@ -1,7 +1,7 @@
 
 #include "math.h"
 #include "os.h"
-#include "placementNpc.h"
+#include "placement-npc.h"
 #include "room.h"
 #include "world.h"
 

@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 #include "enum.h"
-#include "flagBank.h"
+#include "flag-bank.h"
 
 class EnumTable {
   public:

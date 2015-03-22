@@ -1,11 +1,11 @@
 
 #include "exit.h"
 #include "os.h"
-#include "placementItem.h"
-#include "placementNpc.h"
+#include "placement-item.h"
+#include "placement-npc.h"
 #include "room.h"
 #include "storage.h"
-#include "terrainTable.h"
+#include "terrain-table.h"
 #include "world.h"
 #include "zone.h"
 

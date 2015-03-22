@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include "avatar.h"
-#include "flagBank.h"
+#include "flag-bank.h"
 
 typedef std::map<std::string,std::string> OptionMap;
 

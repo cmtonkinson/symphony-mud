@@ -5,8 +5,8 @@
 #include <list>
 #include <set>
 #include "compound.h"
-#include "flagBank.h"
-#include "flagTable.h"
+#include "flag-bank.h"
+#include "flag-table.h"
 #include "identifiers.h"
 #include "modifier.h"
 

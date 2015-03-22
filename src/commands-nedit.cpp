@@ -1,5 +1,5 @@
 
-#include "commands-nedit.h"
+#include "command-def.h"
 #include "being.h"
 #include "display.h"
 #include "io-handler.h"

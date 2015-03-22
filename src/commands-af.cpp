@@ -2,10 +2,9 @@
 #include <algorithm>
 #include "zone.h"
 #include "avatar.h"
-#include "commandTable-default.h"
-#include "commandTable.h"
+#include "command-def.h"
 #include "display.h"
-#include "flagTable.h"
+#include "flag-table.h"
 #include "io-handler.h"
 #include "os.h"
 #include "room.h"

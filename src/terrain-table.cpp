@@ -1,7 +1,7 @@
 
 #include "display.h"
 #include "regex.h"
-#include "terrainTable.h"
+#include "terrain-table.h"
 
 TerrainTable::TerrainTable(void) {
   add(new TerrainBeach());

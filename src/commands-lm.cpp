@@ -1,13 +1,12 @@
 
 #include <deque>
 #include "being.h"
-#include "command.h"
-#include "commandTable-default.h"
+#include "command-def.h"
 #include "exit.h"
 #include "item-types.h"
 #include "placement.h"
-#include "placementItem.h"
-#include "placementNpc.h"
+#include "placement-item.h"
+#include "placement-npc.h"
 #include "world.h"
 #include "zone.h"
 

@@ -4,7 +4,7 @@
 
 #include <list>
 #include <string>
-#include "inventoryContainer.h"
+#include "inventory-container.h"
 #include "item.h"
 #include "terrain.h"
 

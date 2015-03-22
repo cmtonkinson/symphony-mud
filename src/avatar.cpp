@@ -4,7 +4,7 @@
 #include <time.h>
 #include "avatar.h"
 #include "being.h"
-#include "commandTable-default.h"
+#include "command-def.h"
 #include "estring.h"
 #include "io-handler.h"
 #include "item-types.h"

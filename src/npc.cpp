@@ -1,7 +1,7 @@
 
 #include <math.h>
 #include "command.h"
-#include "commandTable.h"
+#include "command-table.h"
 #include "io-handler.h"
 #include "math.h"
 #include "npc.h"

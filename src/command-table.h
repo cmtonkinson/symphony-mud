@@ -42,15 +42,4 @@ class NAME: public CommandTable {       \
     }                                   \
 };
 
-DEF_COMMANDTABLE(Commands)        // Main Commands
-DEF_COMMANDTABLE(IeditCommands)   // Item edit Commands
-DEF_COMMANDTABLE(NeditCommands)   // Npc edit Commands
-DEF_COMMANDTABLE(PeditCommands)   // Player edit Commands
-DEF_COMMANDTABLE(ReditCommands)   // Room edit Commands
-DEF_COMMANDTABLE(SeditCommands)   // Social command edit Commands
-DEF_COMMANDTABLE(TeditCommands)   // Text edit Commands
-DEF_COMMANDTABLE(ZeditCommands)   // Zone edit Commands
-
-// Ability commands are not as trivial
-
 #endif // #ifndef H_SYMPHONY_COMMANDTABLE

@@ -3,8 +3,8 @@
 #define H_SYMPHONY_ITEM_TYPES
 
 #include "dice.h"
-#include "enumTable.h"
-#include "inventoryContainer.h"
+#include "enum-table.h"
+#include "inventory-container.h"
 
 class Being;
 

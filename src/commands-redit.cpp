@@ -1,13 +1,11 @@
 
 #include "zone.h"
 #include "avatar.h"
-#include "commands-redit.h"
-#include "commandTable-default.h"
-#include "commandTable.h"
+#include "command-def.h"
 #include "display.h"
 #include "io-handler.h"
 #include "room.h"
-#include "terrainTable.h"
+#include "terrain-table.h"
 #include "world.h"
 
 RCmdCreate::RCmdCreate(void) {

@@ -1,6 +1,6 @@
 ﻿
 #include "estring.h"
-#include "inventoryContainer.h"
+#include "inventory-container.h"
 #include "item-types.h"
 #include "item.h"
 

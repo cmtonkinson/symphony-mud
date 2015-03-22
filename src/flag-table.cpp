@@ -1,5 +1,5 @@
 
-#include "flagTable.h"
+#include "flag-table.h"
 #include "regex.h"
 
 FlagTable::FlagTable(void) {

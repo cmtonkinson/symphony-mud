@@ -2,8 +2,8 @@
 #ifndef H_SYMPHONY_EXIT
 #define H_SYMPHONY_EXIT
 
-#include "enumTable.h"
-#include "flagTable.h"
+#include "enum-table.h"
+#include "flag-table.h"
 
 class Room;
 

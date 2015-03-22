@@ -2,8 +2,7 @@
 #include <vector>
 #include "avatar.h"
 #include "color-string.h"
-#include "commandTable-default.h"
-#include "commandTable.h"
+#include "command-def.h"
 #include "display.h"
 #include "io-handler.h"
 #include "os.h"

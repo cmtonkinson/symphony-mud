@@ -1,14 +1,12 @@
 
 #include "avatar.h"
-#include "commands-zedit.h"
-#include "commandTable-default.h"
-#include "commandTable.h"
+#include "command-def.h"
 #include "display.h"
-#include "flagTable.h"
+#include "flag-table.h"
 #include "io-handler.h"
 #include "os.h"
 #include "room.h"
-#include "terrainTable.h"
+#include "terrain-table.h"
 #include "world.h"
 #include "zone.h"
 

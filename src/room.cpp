@@ -3,7 +3,7 @@
 #include "display.h"
 #include "exit.h"
 #include "placement.h"
-#include "terrainTable.h"
+#include "terrain-table.h"
 #include "world.h"
 
 Room::Room(void): _inventory(&Identifiers::longname) {

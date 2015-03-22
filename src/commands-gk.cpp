@@ -1,9 +1,6 @@
 
 #include "being.h"
-#include "command.h"
-#include "commands-iedit.h"
-#include "commandTable-default.h"
-#include "commandTable.h"
+#include "command-def.h"
 #include "item-types.h"
 #include "world.h"
 #include "zone.h"

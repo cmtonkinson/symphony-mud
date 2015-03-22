@@ -1,5 +1,5 @@
 ﻿
-#include "compoundTable.h"
+#include "compound-table.h"
 #include "display.h"
 
 CompoundTable::CompoundTable(void) {

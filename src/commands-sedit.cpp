@@ -1,7 +1,5 @@
 
-#include "commands-sedit.h"
-#include "commandTable-default.h"
-#include "commandTable.h"
+#include "command-def.h"
 #include "world.h"
 
 SCmdAudible::SCmdAudible(void) {

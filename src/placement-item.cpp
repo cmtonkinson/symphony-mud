@@ -1,8 +1,8 @@
 
-#include "commandTable-default.h"
+#include "command-def.h"
 #include "math.h"
 #include "os.h"
-#include "placementItem.h"
+#include "placement-item.h"
 #include "room.h"
 #include "world.h"
 

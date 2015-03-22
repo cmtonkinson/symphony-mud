@@ -5,8 +5,8 @@
 #include <string>
 #include "color-string.h"
 #include "being.h"
-#include "enumTable.h"
-#include "flagTable.h"
+#include "enum-table.h"
+#include "flag-table.h"
 #include "socket.h"
 
 class Zone;
