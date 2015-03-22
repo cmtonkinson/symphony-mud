@@ -142,8 +142,6 @@ namespace os {
   // LOGGING
   /////////////////////////////////////////////////////////////////////////////
   unsigned console_log_level = 0;
-  FILE* info_log             = fopen("log/info.log", "a");
-  FILE* error_log            = fopen("log/error.log", "a");
 
   void log(const char* file, unsigned line, unsigned level, Being* being, const char* format) {
     log_(file, line, level, being, format);
