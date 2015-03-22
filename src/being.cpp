@@ -64,8 +64,7 @@ Being::Being(void):
   exotic(0);
   // Misc
   trains(BASE_TRAINS);
-  gold(0);
-  silver(0);
+  money(0);
   // combat
   _next_attack = NULL;
   _target      = NULL;
@@ -121,8 +120,7 @@ Being::Being(const Being& ref):
   pierce(ref.pierce());
   exotic(ref.exotic());
   trains(ref.trains());
-  gold(ref.gold());
-  silver(ref.silver());
+  money(ref.money());
   // combat...
   _next_attack = NULL;
   _target      = NULL;

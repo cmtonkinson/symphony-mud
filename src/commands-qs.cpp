@@ -651,8 +651,8 @@ bool CmdSummary::execute(Being* being, const std::vector<std::string>& args) {
   avatar()->send("{w||{xtotem:  {C%-9s{w ||{xluck:  {B%2u{x/{b%2u{w ||              ||                  ||\n", "-", avatar()->luck(), avatar()->maxLuck());
   avatar()->send("{w||__________________||_____________||______________||__________________||\n");
   avatar()->send("{w||_____________________________________________________________________||\n");
-  avatar()->send("{w||{xitems: {G%3u{x/{g%-3u{w ||{xcoins: {W%3u{x/{y%-4u{w    ||                               {w||\n", avatar()->inventory().itemList().size(), avatar()->inventory().itemList().size(), avatar()->silver(), avatar()->gold());
-  avatar()->send("{w||{xweight: {g%-5u{w  || {xbank: {W%3u{x/{y%-7u{w ||                               {w||\n", 0, avatar()->bankSilver(), avatar()->bankGold());
+  avatar()->send("{w||{xitems: {G%3u{x/{g%-3u{w ||{xcoins: {W%3u{x/{y%-4u{w    ||                               {w||\n", avatar()->inventory().itemList().size(), avatar()->inventory().itemList().size(), avatar()->money().silver(), avatar()->money().gold());
+  avatar()->send("{w||{xweight: {g%-5u{w  || {xbank: {W%3u{x/{y%-7u{w ||                               {w||\n", 0, avatar()->bankMoney().silver(), avatar()->bankMoney().gold());
   avatar()->send("{w||_______________||___________________||_______________________________||\n");
   avatar()->send("{w|/_____________________________________________________________________\\|{x\n");
   avatar()->send("  You've been logged on for %s.\n", avatar()->stringLoggedOn().c_str());

@@ -17,6 +17,7 @@
     * autoexit
     * autoloot
     * autogold
+  * quote buffer
 
 ## Building
   * absolute map coordinates
@@ -49,6 +50,10 @@
     * moon phases
   * recall
   * spell items (wands, scrolls)
+  * currency
+  * color toggle
+  * md-based help docs
+  * rb test harness
 
 ---
 

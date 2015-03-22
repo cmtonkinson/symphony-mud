@@ -3,8 +3,9 @@
 #define H_SYMPHONY_AVATAR
 
 #include <string>
-#include "color-string.h"
 #include "being.h"
+#include "color-string.h"
+#include "currency.h"
 #include "enum-table.h"
 #include "flag-table.h"
 #include "socket.h"
@@ -114,10 +115,9 @@ class Avatar: public Being {
     unsigned short  board(void) const                             { return _board; }
     void            age(unsigned short age)                       { _age = age; }
     unsigned short  age(void) const                               { return _age; }
-    void            bankGold(unsigned long bankGold)              { _bankGold = bankGold; }
-    unsigned long   bankGold(void) const                          { return _bankGold; }
-    void            bankSilver(unsigned long bankSilver)          { _bankSilver = bankSilver; }
-    unsigned long   bankSilver(void) const                        { return _bankSilver; }
+    void            bankMoney(unsigned value)                     { _bankMoney.value(value); }
+    Currency&       bankMoney(void)                               { return _bankMoney; }
+    const Currency& bankMoney(void) const                         { return _bankMoney; }
 
     // Combat...
     virtual void    whatHappensWhenIDie(void);
@@ -152,8 +152,7 @@ class Avatar: public Being {
     std::string             _poofin;
     std::string             _poofout;
     unsigned short          _age;
-    unsigned long           _bankGold;
-    unsigned long           _bankSilver;
+    Currency                _bankMoney;
     unsigned short          _board;
 
     // Avatar-specific private methods...

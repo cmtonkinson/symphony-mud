@@ -33,8 +33,7 @@ Avatar::Avatar(Socket* socket_) {
   mode().set(MODE_NONE);
   title(", adventurer.");
   age(17);
-  bankSilver(0);
-  bankGold(0);
+  bankMoney(0);
   return;
 }
 

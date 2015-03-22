@@ -284,8 +284,7 @@ void Storage::write(FILE* fp, Avatar* avatar) {
   out(fp, "poofin",           avatar->poofin());
   out(fp, "poofout",          avatar->poofout());
   out(fp, "age",              avatar->age());
-  out(fp, "bankGold",         avatar->bankGold());
-  out(fp, "bankSilver",       avatar->bankSilver());
+  out(fp, "bankMoney",        avatar->bankMoney().value());
   out(fp, "bigBrother",       avatar->bigBrother());
   out(fp, "adminFlags",       avatar->adminFlags().value());
   out(fp, "channelFlags",     avatar->channelFlags().value());
@@ -307,8 +306,7 @@ bool Storage::read(FILE* fp, Avatar* loading) {
     STORE_CASE("poofin",          &Avatar::poofin)
     STORE_CASE("poofout",         &Avatar::poofout)
     STORE_CASE("age",             &Avatar::age)
-    STORE_CASE("bankGold",        &Avatar::bankGold)
-    STORE_CASE("bankSilver",      &Avatar::bankSilver)
+    STORE_CASE("bankMoney",       &Avatar::bankMoney)
     STORE_CASE("bigBrother",      &Avatar::bigBrother)
     STORE_CASE("roomNumber",      &Avatar::roomNumber)
     STORE_CASE("deletionStatus",  &Avatar::deletionStatus)
@@ -372,8 +370,7 @@ void Storage::write_base(FILE* fp, Being* being) {
     being->exotic()
   );
   out(fp, "trains",     being->trains());
-  out(fp, "gold",       being->gold());
-  out(fp, "silver",     being->silver());
+  out(fp, "money",      being->money().value());
   out(fp, "abilities",  being->serializeAbilities());
   for (auto iter : being->inventory().itemList()) write(fp, iter, "INV");
   for (auto iter : being->equipment().itemMap()) write(fp, iter.second, "EQ");
@@ -445,8 +442,7 @@ bool Storage::read_base(FILE* fp, Being* loading) {
       loading->exotic(exotic);
     }
     STORE_CASE("trains",  &Being::trains)
-    STORE_CASE("gold",    &Being::gold)
-    STORE_CASE("silver",  &Being::silver)
+    STORE_CASE("money",   &Being::money)
     STORE_CASE_STRING("abilities",    loading->unserializeAbilities(str);)
     STORE_DESCEND_NEW("ITEM_INV", Item, loading->inventory().add(instance);)
     STORE_DESCEND_NEW("ITEM_EQ", Item,

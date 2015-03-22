@@ -6,6 +6,7 @@
 #include <map>
 #include <set>
 #include <vector>
+#include "currency.h"
 #include "enum-table.h"
 #include "equipment-container.h"
 #include "estring.h"
@@ -232,10 +233,10 @@ class Being {
     // Misc
     void                trains(unsigned trains)                         { _trains = trains; }
     unsigned            trains(void) const                              { return _trains; }
-    void                gold(unsigned gold)                             { _gold = gold; }
-    unsigned            gold(void) const                                { return _gold; }
-    void                silver(unsigned silver)                         { _silver = silver; }
-    unsigned            silver(void) const                              { return _silver; }
+    void                money(unsigned value)                           { _money.value(value); }
+    Currency&           money(void)                                     { return _money; }
+    const Currency&     money(void) const                               { return _money; }
+
     // combat
     std::set<Being*>&  opponents(void)                               { return _opponents; }
 
@@ -400,11 +401,10 @@ class Being {
     int                         _exotic;
     // Misc
     unsigned                    _trains;
-    unsigned                    _gold;
-    unsigned                    _silver;
+    Currency                    _money;
     // Combat
-    std::set<Being*>         _opponents;
-    Being*                   _target;
+    std::set<Being*>            _opponents;
+    Being*                      _target;
     Job*                        _next_attack;
     AbilityTable                _learned;
     std::map<Ability*,unsigned> _ability_mastery;
