@@ -517,6 +517,7 @@ bool CreationSummaryIOHandler::handle(void) {
     // If this is the first account, promote it to CREATOR.
     if (os::glob(os::avatar_glob_pattern()).size() == 1) {
       while (avatar()->level() < Being::CREATOR) avatar()->gainLevel();
+      avatar()->masterAllTheThings();
       avatar()->save();
       avatar()->send("\n\n{WYou are now the system administrator.{x\n");
     }
