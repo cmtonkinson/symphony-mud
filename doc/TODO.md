@@ -79,6 +79,10 @@ Leave a corpse with loot.
 
 Stat-based attack timing.
 
+## Being::strike()
+
+Refactor damage calculation so it can be re-used elsewhere e.g. in RiposteSkill::execute()
+
 ## Being::targetTNL()
 
 Is there anything worthwhile from the character creation sequence that can be used to make the TNL calculations dynamic?

@@ -55,3 +55,7 @@ Num Math::bound(const Num value, const Num min, const Num max) {
   else if (value < max) return value;
   else return max;
 }
+
+bool Math::percent_chance(unsigned percent) {
+  return rand(1, 100) <= percent;
+}

@@ -7,6 +7,7 @@
 #include "enum-table.h"
 
 class Being;
+class Item;
 
 //////////////////////////////////////////// BASE CLASS ////////////////////////////////////////////
 class Ability {
@@ -61,6 +62,7 @@ class Ability {
 
     bool                  invoke(Being* being);
     virtual bool          execute(Being* being) const = 0;
+    bool                  execute(Being* being, Being* target, Item* item);
     unsigned              trainingFactor(void) const;
 
     static std::string    masteryToString(unsigned mastery);
@@ -76,6 +78,11 @@ class Ability {
     unsigned              _mana;          // amount of mana required for the Ability
     std::set<Ability*>    _dependencies;
     std::set<Ability*>    _dependents;
+
+  protected:
+    // These will transiently hold references to some target object during execute()
+    Being*                _target_being;
+    Item*                 _target_item;
 
 };
 
@@ -100,7 +107,7 @@ class CLASS: public Ability {                         \
       return;                                         \
     }                                                 \
     virtual ~CLASS(void) { return; }                  \
-    virtual bool execute(Being* being) const;   \
+    virtual bool execute(Being* being) const;         \
 };                                                    \
 
 //////////////////////////////////////////// SPELL /////////////////////////////////////////////////
@@ -124,7 +131,7 @@ class CLASS: public Ability {                         \
       return;                                         \
     }                                                 \
     virtual ~CLASS(void) { return; }                  \
-    virtual bool execute(Being* being) const;   \
+    virtual bool execute(Being* being) const;         \
 };                                                    \
 
 #endif // #ifndef H_SYMPHONY_ABILITY

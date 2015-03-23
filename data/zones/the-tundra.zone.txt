@@ -13,4 +13,55 @@ sound 0:
 terrain 4:snow
 /ROOM
 
+ITEM
+vnum 1
+level 101
+value 1
+type 9
+wearable 11
+flags 0
+shortname 22:a rusty iron longsword
+longname 22:A rusty iron longsword
+description 0:
+keywords 31:iron|long|longsword|rusty|sword
+modifiers 0:
+composition 4:iron
+weapon_type 9:longsword
+weapon_verb 5:slash
+weapon_damage 5:20d20
+/ITEM
+ITEM
+vnum 2
+level 101
+value 1
+type 9
+wearable 11
+flags 0
+shortname 17:a rusty warhammer
+longname 23:A rusty great warhammer
+description 0:
+keywords 32:great|hammep|rusty|war|warhammer
+modifiers 0:
+composition 4:iron
+weapon_type 4:mace
+weapon_verb 5:smash
+weapon_damage 5:20d20
+/ITEM
+ITEM
+vnum 3
+level 101
+value 1
+type 9
+wearable 11
+flags 0
+shortname 11:a bone dirk
+longname 23:A dirk made of old bone
+description 0:
+keywords 13:bone|dirk|old
+modifiers 0:
+composition 4:bone
+weapon_type 6:dagger
+weapon_verb 4:stab
+weapon_damage 5:10d10
+/ITEM
 /ZONE

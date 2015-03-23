@@ -924,6 +924,7 @@ void Being::masterAllTheThings(void) {
   std::set<Ability*> abilities;
   // Master all learned abilities
   for (auto iter : learned().abilities()) {
+    if (mastery(iter) == 100) continue;
     learn(iter, 100);
     send("You have mastered '{m%s{x.\n", iter->name().c_str());
   }

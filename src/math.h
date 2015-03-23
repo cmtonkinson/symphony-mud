@@ -45,6 +45,11 @@ class Math {
     template <typename Num>
     static Num bound(const Num value, const Num min, const Num max);
 
+
+    /*
+     */
+    static bool percent_chance(unsigned percent);
+
   private:
 
     // State variables for the Box-Muller algorithm in Math::random_normal().

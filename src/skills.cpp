@@ -1,30 +1,118 @@
 
 #include "being.h"
+#include "display.h"
+#include "item.h"
+#include "item-types.h"
+#include "os.h"
+#include "room.h"
 #include "skills.h"
 
 bool SecondStrikeSkill::execute(Being* being) const {
-  being->strike();
-  return true;
+  return Math::percent_chance(90) && being->strike();
 }
 
 bool ThirdStrikeSkill::execute(Being* being) const {
-  being->strike();
-  return true;
+  return Math::percent_chance(80) && being->strike();
 }
 
 bool FourthStrikeSkill::execute(Being* being) const {
-  being->strike();
-  return true;
+  return Math::percent_chance(70) && being->strike();
+}
+
+bool DualWieldSkill::execute(Being* being) const {
+  Item* weapon = being->secondary();
+
+  // Need an off-hand weapon to dual strike.
+  if (weapon == nullptr || !weapon->isWeapon()) return false;
+  // Make the hit.
+  if (Math::percent_chance(30)) {
+    return being->strike(weapon);
+  }
+
+  return false;
 }
 
 bool BlockSkill::execute(Being* being) const {
-  return true;
+  if (_target_being == nullptr) {
+    ERROR(being, "block without target")
+    return false;
+  }
+
+  if (Math::percent_chance(20)) {
+    being->send("You block %s's attack!\n", _target_being->name());
+    _target_being->send("%s blocks your attack!\n", being->name());
+    being->room()->send_cond("$p blocks $c's attack!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
+    return true;
+  }
+
+  return false;
 }
 
 bool ParrySkill::execute(Being* being) const {
-  return true;
+  Item* primary   = being->primary();
+  Item* secondary = being->secondary();
+  Item* weapon    = nullptr;
+  Ability* skill  = nullptr;
+
+  if (_target_being == nullptr) {
+    ERROR(being, "parry without target")
+    return false;
+  }
+
+  if (primary == nullptr && secondary == nullptr) {
+    ERROR(being, "parry without weapon")
+    return false;
+  }
+
+  if (primary != nullptr && secondary != nullptr) {
+    weapon = Math::percent_chance(50) ? primary : secondary;
+  } else {
+    weapon = primary != nullptr ? primary : secondary;
+  }
+
+  if (!weapon->isWeapon()) return false;
+
+  if (Math::percent_chance(20)) {
+    being->send("You parry %s's attack with %s!\n", _target_being->name(), weapon->name());
+    _target_being->send("%s parries your attack with %s!\n", being->name(), weapon->name());
+    being->room()->send_cond("$p parries $c's attack with $O!\n", being, _target_being, weapon, Room::TO_NOTVICT, true);
+    // Should we riposte?
+    if ((skill = being->learned().find_skill(RIPOSTE)) != nullptr) skill->execute(being, _target_being, weapon);
+    return true;
+  }
+
+  return false;
 }
 
 bool RiposteSkill::execute(Being* being) const {
+  int damage = 0;
+  std::string weapon_damage;
+
+  if (_target_being == nullptr) {
+    ERROR(being, "riposte without target being")
+    return false;
+  }
+  if (_target_item == nullptr || !_target_item->isWeapon()) {
+    ERROR(being, "riposte without target weapon")
+    return false;
+  }
+
+  if (Math::percent_chance(40)) {
+    // Initial damage calculation (based on the attacker).
+    damage = being->level() * being->strength();
+    // Adjust damage (based on the defender).
+    damage -= _target_being->level() * _target_being->constitution() / 2 - _target_being->armor();
+    // Ensure that SOME damage gets dealt.
+    if (damage < 1) damage = 1;
+    // Tell the world.
+    weapon_damage = _target_item->weapon()->verb().string();
+    weapon_damage.append(" ").append(Display::formatDamage(damage));
+    being->send("Your riposte %s %s!\n", weapon_damage.c_str(), _target_being->name());
+    _target_being->send("%s's riposte %s you!\n", being->name(), weapon_damage.c_str());
+    being->room()->send_cond("$p's $s $C!", being, (void*)weapon_damage.c_str(), _target_being, Room::TO_NOTVICT, true);
+    // Deal the pain.
+    _target_being->takeDamage(damage, being);
+  }
+
   return true;
 }

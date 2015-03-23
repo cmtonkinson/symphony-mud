@@ -62,7 +62,7 @@ std::list<Item*> EquipmentContainer::searchItems(const std::string& q) {
 Item* EquipmentContainer::searchSingleItem(const std::string& q) {
   std::list<Item*> l = searchItems(q);
   if (l.empty()) {
-    return NULL;
+    return nullptr;
   } else {
     return l.front();
   }
@@ -82,5 +82,5 @@ std::string EquipmentContainer::listItems(void) const {
 Item* EquipmentContainer::at(int location) {
   std::map<int,Item*>::iterator iter = itemMap().find(location);
   if (iter != itemMap().end()) return iter->second;
-  return NULL;
+  return nullptr;
 }

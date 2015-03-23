@@ -54,32 +54,32 @@ class Room {
     void                          exit(unsigned direction, Exit* exit);
     Exit*                         exit(unsigned direction);
     Exit*                         exit(std::string direction);
-    std::list<Being*>&         beings(void)                         { return _beings; }
-    const std::list<Being*>&   beings(void) const                   { return _beings; }
+    std::list<Being*>&            beings(void)                            { return _beings; }
+    const std::list<Being*>&      beings(void) const                      { return _beings; }
     InventoryContainer&           inventory(void)                         { return _inventory; }
     const InventoryContainer&     inventory(void) const                   { return _inventory; }
-    std::list<Placement*>&         placements(void)                         { return _placements; }
-    const std::list<Placement*>&   placements(void) const                   { return _placements; }
+    std::list<Placement*>&        placements(void)                        { return _placements; }
+    const std::list<Placement*>&  placements(void) const                  { return _placements; }
 
     // General methods...
-    bool                          loadExits(void);
-    void                          add(Being* being)                                                       { beings().push_back(being); }
-    void                          remove(Being* being)                                                    { beings().remove(being); }
-    void                          add(Placement* placement)                                                       { placements().push_back(placement); }
-    void                          removePlacement(unsigned index);
-    void                          executePlacements(void);
-    void                          add(Item* item)                                                           { inventory().add(item); }
-    void                          remove(Item* item)                                                        { inventory().remove(item); }
-    void                          send(std::string format, Being* being = NULL, void* arg1 = NULL,
-                                        void* arg2 = NULL, unsigned long target = TO_ROOM);
-    void                          send_cond(std::string format, Being* being = NULL, void* arg1 = NULL,
-                                        void* arg2 = NULL, unsigned long target = TO_ROOM, bool audible = false);
-    void                          destroy(void);
-    bool                          clear(void);
-    std::string                   listFlags(void);
-    void                          reset(void);
-    Being*                     being_by_vnum(unsigned long vnum, unsigned index = INDEX_DEFAULT);
-    void                          setTerrain(const char* terrain_name);
+    bool          loadExits(void);
+    void          add(Being* being)                 { beings().push_back(being); }
+    void          remove(Being* being)              { beings().remove(being); }
+    void          add(Placement* placement)         { placements().push_back(placement); }
+    void          removePlacement(unsigned index);
+    void          executePlacements(void);
+    void          add(Item* item)                   { inventory().add(item); }
+    void          remove(Item* item)                { inventory().remove(item); }
+    void          send(std::string format, Being* being = NULL, void* arg1 = NULL,
+                    void* arg2 = NULL, unsigned long target = TO_ROOM);
+    void          send_cond(std::string format, Being* being = NULL, void* arg1 = NULL,
+                    void* arg2 = NULL, unsigned long target = TO_ROOM, bool audible = false);
+    void          destroy(void);
+    bool          clear(void);
+    std::string   listFlags(void);
+    void          reset(void);
+    Being*        being_by_vnum(unsigned long vnum, unsigned index = INDEX_DEFAULT);
+    void          setTerrain(const char* terrain_name);
 
     // Statics...
     static const char*    getFlagName(unsigned long flag);
@@ -97,9 +97,9 @@ class Room {
     Terrain*                _terrain;
     FlagBank                _flags;
     Exit*                   _exits[6];
-    std::list<Being*>    _beings;
+    std::list<Being*>       _beings;
     InventoryContainer      _inventory;
-    std::list<Placement*>    _placements;
+    std::list<Placement*>   _placements;
 };
 
 #endif // #ifndef H_SYMPHONY_ROOM

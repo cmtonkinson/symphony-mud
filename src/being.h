@@ -294,12 +294,12 @@ class Being {
     void                        popIOHandler(void);
     void                        replaceIOHandler(IOHandler* handler);
     void                        handle(void);
-    Being*                   findBeing(const std::string& name);
-    Item*                     findItem(const std::string& query);
+    Being*                      findBeing(const std::string& name);
+    Item*                       findItem(const std::string& query);
     unsigned short              getWearloc(const Item::Wearable& wearable) const;
     static const char*          wearLocName(const unsigned short& wearloc);
-    Item*                     primary(void);
-    Item*                     secondary(void);
+    Item*                       primary(void);
+    Item*                       secondary(void);
     void                        naturalStatAdjustment(void);
     std::string                 serializeAbilities(void);
     void                        unserializeAbilities(std::string ser);
@@ -312,7 +312,8 @@ class Being {
     void          scheduleAttack(void);
     bool          attack(Job* job);
     void          acquireTarget(void);
-    void          strike(void);
+    bool          strike(Item* secondary = nullptr);
+    bool          evade(Being* striker);
     void          takeDamage(int damage, Being* damager = NULL);
     void          die(Being* killer = NULL);
     void          peace(void);

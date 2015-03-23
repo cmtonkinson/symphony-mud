@@ -1,5 +1,7 @@
 
 #include "ability.h"
+#include "being.h"
+#include "item.h"
 #include "os.h"
 #include "world.h"
 
@@ -65,10 +67,10 @@ bool Ability::invoke(Being* being) {
   if (mana() > 0) being->deplete_mana(mana());
 
   // There is a random chance any non-mastered ability will be a dud.
-  if (rand() % 100 + 1 > being->mastery(this)) {
+  if (Math::percent_chance(100 - being->mastery(this))) {
     being->send("You get confused and your '{m%s{x' fails.\n", name().c_str());
     // Randomly improve upon the ability. The more advanced you are, the more instructive failure is.
-    if (rand() % 100 + 1 < being->mastery(this)) {
+    if (Math::percent_chance(being->mastery(this))) {
       // The higher the difficulty, the less your chances of improving.
       if (rand() % difficulty() == 0) {
         being->improve(this, false);
@@ -81,7 +83,7 @@ bool Ability::invoke(Being* being) {
   status = execute(being);
 
   // Randomly improve upon the ability. The more novice you are, the more instructive success is.
-  if (status && rand() % 100 + 1 > being->mastery(this)) {
+  if (Math::percent_chance(100 - being->mastery(this))) {
     // The higher the difficulty, the less your chances of improving.
     if (rand() % difficulty() == 0) {
       being->improve(this, true);
@@ -89,6 +91,20 @@ bool Ability::invoke(Being* being) {
   }
 
   // Return the execution status of the Ability.
+  return status;
+}
+
+bool Ability::execute(Being* being, Being* target, Item* item) {
+  bool status = false;
+  // Set the "parameters"
+  _target_being = target;
+  _target_item  = item;
+  // execute the concrete Ability
+  status = execute(being);
+  // Clear the "parameters"
+  _target_being = nullptr;
+  _target_item  = nullptr;
+  // Return execution status
   return status;
 }
 

@@ -37,10 +37,10 @@ class World {
     const std::map<std::string,Avatar*>&                      getAvatars(void) const          { return _avatars; }
     std::set<Zone*,zone_comp>&                                getZones(void)                  { return _zones; }
     const std::set<Zone*,zone_comp>&                          getZones(void) const            { return _zones; }
-    std::set<Item*>&                                        getItems(void)                { return _items; }
-    const std::set<Item*>&                                  getItems(void) const          { return _items; }
-    std::set<Being*>&                                      getBeings(void)              { return _beings; }
-    const std::set<Being*>&                                getBeings(void) const        { return _beings; }
+    std::set<Item*>&                                          getItems(void)                  { return _items; }
+    const std::set<Item*>&                                    getItems(void) const            { return _items; }
+    std::set<Being*>&                                         getBeings(void)                 { return _beings; }
+    const std::set<Being*>&                                   getBeings(void) const           { return _beings; }
     std::map<unsigned,Board*>&                                boards(void)                    { return _boards; }
     const std::map<unsigned,Board*>&                          boards(void) const              { return _boards; }
     InputIOHandler*                                           npcIOHandler(void)              { return &_npcIOHandler; }

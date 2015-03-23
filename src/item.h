@@ -66,6 +66,9 @@ class Item {
     std::string   listDecorativeFlags(void) const;
     std::string   printStatus(void) const;
 
+    // shortcuts
+    const char*   name(void) const  { return identifiers().shortname().c_str(); }
+
     // public accessors
     void                        ID(unsigned long ID)                { _ID = ID; }
     unsigned long               ID(void) const                      { return _ID; }
