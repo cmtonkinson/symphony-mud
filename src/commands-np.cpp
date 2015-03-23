@@ -534,13 +534,16 @@ bool CmdPromote::execute(Being* being, const std::vector<std::string>& args) {
     avatar()->send("That wouldn't really help %s much, now would it?", target->identifiers().shortname().c_str());
     return false;
   }
-  if (level >= (unsigned)avatar()->level() - Being::ALTERABILITY_LEVEL_DIFFERENCE) {
+  if (level >= (avatar()->level() + Being::ALTERABILITY_LEVEL_DIFFERENCE)) {
     avatar()->send("You can't promote anyone higher than level %d.", avatar()->level() - (Being::ALTERABILITY_LEVEL_DIFFERENCE-1));
     return false;
   }
 
   // Give 'em the juice!
   while (target->level() < level) target->gainLevel();
+
+  // Should they know it all?
+  if (target->level() >= Being::GOD) target->masterAllTheThings();
 
   target->send("%s has {Gpromoted{x you to level {G%d{x!", target->seeName(avatar(), true).c_str(), target->level());
   avatar()->send("%s has been {Gpromoted{x to level {G%d{x!", target->identifiers().shortname().c_str(), target->level());

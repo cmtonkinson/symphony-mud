@@ -1,5 +1,4 @@
 
-#include "zone.h"
 #include "avatar.h"
 #include "command-def.h"
 #include "container.h"
@@ -8,6 +7,7 @@
 #include "io-handler.h"
 #include "room.h"
 #include "world.h"
+#include "zone.h"
 
 CmdTell::CmdTell(void) {
   name("tell");
@@ -108,6 +108,73 @@ bool CmdTitle::execute(Being* being, const std::vector<std::string>& args) {
 
   avatar->title(title);
   avatar->send("Your new title is: %s{x", avatar->title());
+  return true;
+}
+
+CmdTrain::CmdTrain(void) {
+  name("train");
+  addSyntax(-1, "<ability>");
+  brief("Spend 1 training point to increase your proficiency in an ability.");
+  return;
+}
+
+bool CmdTrain::execute(Being* being, const std::vector<std::string>& args) {
+  Ability* ability = nullptr;
+  std::string name = args[0];
+  double improvement = 0.0;
+  int rounded = 0;
+
+  if (being->trains() < 1) {
+    being->send("You don't have any training points.");
+    return false;
+  }
+
+  if ((ability = being->learned().find(name)) == nullptr) {
+    being->send("Which ability did you want to train?");
+    return false;
+  }
+
+  if (being->mastery(ability) == 100) {
+    being->send("You've already mastered '{m%s{x.'", ability->name().c_str());
+    return false;
+  }
+
+  // Increase mastery by X% of the remaining distance to mastery.
+  // X is determined by the difficulty of the Ability.
+  improvement = fmax(1.0, (100.0 - being->abilityMastery()[ability]) / ability->trainingFactor());
+  rounded = ROUND_2_INT(improvement);
+
+  being->abilityMastery()[ability] += rounded;
+  being->trains(being->trains() - 1);
+  being->send("You train your {m%s{x ability.\n", ability->name().c_str());
+  being->send("You have {B%u{x training points remaining.", being->trains());
+  return true;
+}
+
+CmdTutor::CmdTutor(void) {
+  name("tutor");
+  level(Being::GOD);
+  addSyntax(1, "<player>");
+  brief("Grant a player mastery of all abilities available to them.");
+  return;
+}
+
+bool CmdTutor::execute(Being* being, const std::vector<std::string>& args) {
+  Being* target = nullptr;
+
+  if ((target = being->findBeing(args[0])) == NULL) {
+    being->send("They're not around at the moment.");
+    return false;
+  }
+  if (!being->canAlter(target)) {
+    being->send("You can't tutor %s.", target->name());
+    target->send("%s just tried to tutor you.", being->name());
+    return false;
+  }
+
+  target->masterAllTheThings();
+  target->send("%s has tutored you. You are overwhelmed with mastery.\n", being->name());
+  being->send("You have tutored %s. They even LOOK smarter!\n", target->name());
   return true;
 }
 

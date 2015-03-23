@@ -11,6 +11,7 @@
 #include "item-types.h"
 #include "job.h"
 #include "npc.h"
+#include "os.h"
 #include "room.h"
 #include "stats.h"
 #include "world.h"
@@ -874,6 +875,14 @@ Ability* Being::find_spell(std::string name) const {
   return NULL;
 }
 
+bool Being::invokeIfLearned(std::string skill_name) {
+  Ability* skill = nullptr;
+  if ((skill = learned().find_skill(skill_name))) {
+    return skill->invoke(this);
+  }
+  return false;
+}
+
 bool Being::deplete_mana(unsigned mana_, bool message) {
   if (!check_mana(mana_, message)) return false;
   mana(mana() - mana_);
@@ -908,4 +917,26 @@ bool Being::check_stamina(unsigned stamina_, bool message) {
     return false;
   }
   return true;
+}
+
+void Being::masterAllTheThings(void) {
+  int loop_guard = 0;
+  std::set<Ability*> abilities;
+  // Master all learned abilities
+  for (auto iter : learned().abilities()) {
+    learn(iter, 100);
+    send("You have mastered '{m%s{x.\n", iter->name().c_str());
+  }
+  do {
+    if ((abilities = available_abilities()).empty()) break;
+    for (auto iter : abilities) {
+      learn(iter, 100);
+      send("You have learned '{m%s{x.\n", iter->name().c_str());
+    }
+    if (++loop_guard > 10) {
+      ERROR(this, "loop guard hit")
+      break;
+    }
+  } while (!abilities.empty());
+  return;
 }

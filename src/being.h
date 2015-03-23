@@ -248,7 +248,7 @@ class Being {
     // Shortcuts...
     const char*                 name(void) const          { return identifiers().shortname().c_str(); }
     std::string                 ident(void);
-    bool                        immortal(void) const      { return level() >= DEMIGOD; }
+    bool                        immortal(void) const      { return level() > DEMIGOD; }
 
     // Public methods...
     virtual bool                isAvatar(void) const      { return false; }
@@ -339,11 +339,13 @@ class Being {
     bool                          can_learn(Ability* ability) const;
     Ability*                      find_spell(std::string name) const;
     bool                          intone(Ability* spell);
+    bool                          invokeIfLearned(std::string skill_name);
     bool                          deplete_mana(unsigned mana_, bool message = true);
     bool                          check_mana(unsigned mana_, bool message = true);
     bool                          exhausted(void) const;
     bool                          deplete_stamina(unsigned stamina_, bool message = true);
     bool                          check_stamina(unsigned stamina_, bool message = true);
+    void                          masterAllTheThings(void); // useful for dev, test, & debug
 
     virtual void                send(std::string message)       { return; }
     virtual void                send(const char* format, ...)   { return; }

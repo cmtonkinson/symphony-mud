@@ -52,6 +52,7 @@ CommandTable::CommandTable(void) {
   add(new CmdSummon());
   add(new CmdTest());
   add(new CmdTimers());
+  add(new CmdTutor());
   add(new CmdWorldSave());
   // Normal commands...
   add(new CmdAfk());
@@ -91,6 +92,7 @@ CommandTable::CommandTable(void) {
   add(new CmdTell());
   add(new CmdTime());
   add(new CmdTitle());
+  add(new CmdTrain());
   add(new CmdUngroup());
   add(new CmdUnlock());
   add(new CmdWear());

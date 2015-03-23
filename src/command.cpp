@@ -28,9 +28,7 @@ Command::~Command(void) {
 
 void Command::level(const unsigned short& level) {
   _level = level;
-  if (_level > Being::HERO) {
-    playerOnly(true);
-  }
+  if (_level > Being::HERO) playerOnly(true);
   return;
 }
 

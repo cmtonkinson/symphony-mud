@@ -44,7 +44,7 @@ class Ability {
     void                  type(AbilityType type)          { _type = type; }
     AbilityType           type(void) const                { return _type; }
     void                  name(std::string name)          { _name = name; }
-    std::string           name(void)                      { return _name; }
+    std::string           name(void) const                { return _name; }
     void                  level(unsigned level)           { _level = level; }
     unsigned              level(void) const               { return _level; }
     void                  trains(unsigned trains)         { _trains = trains; }
@@ -61,6 +61,9 @@ class Ability {
 
     bool                  invoke(Being* being);
     virtual bool          execute(Being* being) const = 0;
+    unsigned              trainingFactor(void) const;
+
+    static std::string    masteryToString(unsigned mastery);
 
   private:
 

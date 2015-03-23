@@ -547,7 +547,7 @@ bool CmdSkills::execute(Being* being, const std::vector<std::string>& args) {
   if (!learned.empty()) {
     being->send("Learned skills:\n");
     for (iter = learned.begin(); iter != learned.end(); ++iter) {
-      being->send("  %-20s (%u%% learned)\n", (*iter)->name().c_str(), being->abilityMastery()[*iter]);
+      being->send("  %-20s (%s)\n", (*iter)->name().c_str(), Ability::masteryToString(being->abilityMastery()[*iter]).c_str());
     }
   }
   if (!available.empty()) {

@@ -1,5 +1,6 @@
 
 #include "ability.h"
+#include "os.h"
 #include "world.h"
 
 void Ability::add_dependency(Ability* ability) {
@@ -89,4 +90,31 @@ bool Ability::invoke(Being* being) {
 
   // Return the execution status of the Ability.
   return status;
+}
+
+// This method is used in the "train" command to determine how much closer to mastery 1 training
+// point will get your Ability.
+unsigned Ability::trainingFactor(void) const {
+  switch (difficulty()) {
+    case 1: return 20;
+    case 2: return 10;
+    case 3: return 5;
+    case 4: return 3;
+    case 5: return 2;
+    default:
+      ERROR_(0, "invalid difficulty for %s", name().c_str())
+      return 20;
+  }
+}
+
+std::string Ability::masteryToString(unsigned mastery) {
+  if (mastery == 100) return "{Wmasterful{x";
+  else if (mastery > 95) return "{Gsuperb{x";
+  else if (mastery > 85) return "{Cexcellent{x";
+  else if (mastery > 75) return "{Mvery good{x";
+  else if (mastery > 60) return "{ggood{x";
+  else if (mastery > 41) return "{cokay{x";
+  else if (mastery > 31) return "{minferior{x";
+  else if (mastery > 15) return "{rpoor{x";
+  else return "{wbad{x";
 }

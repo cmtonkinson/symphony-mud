@@ -63,7 +63,6 @@ void Being::scheduleAttack(void) {
 }
 
 bool Being::attack(Job* job) {
-  Ability* skill = NULL;
   // Clear the Job pointer so a new attack can be scheduled. (The Schedule will automatically
   // delete the Job when it fires, so the pointer will be invalid once this method returns anyway).
   _next_attack = NULL;
@@ -77,9 +76,15 @@ bool Being::attack(Job* job) {
   }
   // Make the strike.
   strike();
-  if (!_target->isDead() && (skill = learned().find_skill(SECOND_STRIKE))) skill->invoke(this);
-  if (!_target->isDead() && (skill = learned().find_skill(THIRD_STRIKE))) skill->invoke(this);
-  if (!_target->isDead() && (skill = learned().find_skill(FOURTH_STRIKE))) skill->invoke(this);
+  // Second, third, and fourth strike cascade - e.g. if second strike doesn't succeed, then don't
+  // even attempt third strike.
+  if (!_target->isDead() && invokeIfLearned(SECOND_STRIKE)) {
+    if (!_target->isDead() && invokeIfLearned(THIRD_STRIKE)) {
+      if (!_target->isDead()) {
+        invokeIfLearned(FOURTH_STRIKE);
+      }
+    }
+  }
   // Go another round. Even if the current target is dead, there may be remaining Group members.
   scheduleAttack();
   // Is it over?
@@ -160,8 +165,12 @@ void Being::die(Being* killer) {
   // Announce the death.
   send("\n\nYou are {RDEAD{x!!!\n\n");
   room()->send_cond("\n\n$p is {RDEAD{x!!!\n\n", this, NULL, NULL, Room::TO_NOTVICT);
-  if (isAvatar() && killer && killer->isAvatar()) {
-    INFO_(this, "killed by %s", killer->ident().c_str())
+  if (isAvatar()) {
+    if (killer) {
+      INFO_(this, "killed by %s", killer->ident().c_str())
+    } else {
+      INFO(this, "died")
+    }
   }
   // Who's responsible?
   if (killer) {
@@ -229,9 +238,10 @@ void Being::gainLevel(void) {
   send("You gain {G%u{x health points.\n", health_boost);
   send("You gain {C%u{x mana points.\n", mana_boost);
   send("You gain {B%u{x training point.\n", trains_boost);
+  VERBOSE_(this, "achieved level %u", level());
   if (level() < HERO) {
     send("You have {Y%u{x experience to your next level.\n\n", tnl());
-  }
+  } else
   if (isAvatar()) group()->send("$p has grown a level!\n", this, NULL, NULL);
   return;
 }
