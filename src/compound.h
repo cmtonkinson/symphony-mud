@@ -5,6 +5,7 @@
 #include <set>
 #include "flag-table.h"
 #include "identifiers.h"
+#include "math.h"
 
 /* Unless noted otherwise, each attribute is expected to be a unitless real number
  * between 0 and 1 inclusive which is set relative to the other compounds being
@@ -84,37 +85,37 @@ class Compound {
     // Public accessor methods...
     Identifiers&        identifiers(void)                             { return _identifiers; }
     const Identifiers&  identifiers(void) const                       { return _identifiers; }
-    void       darkness(double darkness)                              { _darkness = darkness < DARKNESS_MAX ? (darkness > DARKNESS_MIN ? darkness : DARKNESS_MIN) : DARKNESS_MAX; }
+    void       darkness(double darkness)                              { _darkness = Math::bound(darkness, DARKNESS_MIN, DARKNESS_MAX); }
     double     darkness(void) const                                   { return _darkness; }
-    void       density(double density)                                { _density = density < DENSITY_MAX ? (density > DENSITY_MIN ? density : DENSITY_MIN) : DENSITY_MAX; }
+    void       density(double density)                                { _density = Math::bound(density, DENSITY_MIN, DENSITY_MAX); }
     double     density(void) const                                    { return _density; }
-    void       ductility(double ductility)                            { _ductility = ductility < DUCTILITY_MAX ? (ductility > DUCTILITY_MIN ? ductility : DUCTILITY_MIN) : DUCTILITY_MAX; }
+    void       ductility(double ductility)                            { _ductility = Math::bound(ductility, DUCTILITY_MIN, DUCTILITY_MAX); }
     double     ductility(void) const                                  { return _ductility; }
-    void       durability(double durability)                          { _durability = durability < DURABILITY_MAX ? (durability > DURABILITY_MIN ? durability : DURABILITY_MIN) : DURABILITY_MAX; }
+    void       durability(double durability)                          { _durability = Math::bound(durability, DURABILITY_MIN, DURABILITY_MAX); }
     double     durability(void) const                                 { return _durability; }
-    void       electricalConductivity(double electricalConductivity)  { _electricalConductivity = electricalConductivity < ELECTRICAL_CONDUCTIVITY_MAX ? (electricalConductivity > ELECTRICAL_CONDUCTIVITY_MIN ? electricalConductivity : ELECTRICAL_CONDUCTIVITY_MIN) : ELECTRICAL_CONDUCTIVITY_MAX; }
+    void       electricalConductivity(double electricalConductivity)  { _electricalConductivity = Math::bound(electricalConductivity, ELECTRICAL_CONDUCTIVITY_MIN, ELECTRICAL_CONDUCTIVITY_MAX); }
     double     electricalConductivity(void) const                     { return _electricalConductivity; }
-    void       flammability(double flammability)                      { _flammability = flammability < FLAMMABILITY_MAX ? (flammability > FLAMMABILITY_MIN ? flammability : FLAMMABILITY_MIN) : FLAMMABILITY_MAX; }
+    void       flammability(double flammability)                      { _flammability = Math::bound(flammability, FLAMMABILITY_MIN, FLAMMABILITY_MAX); }
     double     flammability(void) const                               { return _flammability; }
-    void       flexibility(double flexibility)                        { _flexibility = flexibility < FLEXIBILITY_MAX ? (flexibility > FLEXIBILITY_MIN ? flexibility : FLEXIBILITY_MIN) : FLEXIBILITY_MAX; }
+    void       flexibility(double flexibility)                        { _flexibility = Math::bound(flexibility, FLEXIBILITY_MIN, FLEXIBILITY_MAX); }
     double     flexibility(void) const                                { return _flexibility; }
-    void       fragrance(double fragrance)                            { _fragrance = fragrance < FRAGRANCE_MAX ? (fragrance > FRAGRANCE_MIN ? fragrance : FRAGRANCE_MIN) : FRAGRANCE_MAX; }
+    void       fragrance(double fragrance)                            { _fragrance = Math::bound(fragrance, FRAGRANCE_MIN, FRAGRANCE_MAX); }
     double     fragrance(void) const                                  { return _fragrance; }
-    void       hardness(double hardness)                              { _hardness = hardness < HARDNESS_MAX ? (hardness > HARDNESS_MIN ? hardness : HARDNESS_MIN) : HARDNESS_MAX; }
+    void       hardness(double hardness)                              { _hardness = Math::bound(hardness, HARDNESS_MIN, HARDNESS_MAX); }
     double     hardness(void) const                                   { return _hardness; }
-    void       luster(double luster)                                  { _luster = luster < LUSTER_MAX ? (luster > LUSTER_MIN ? luster : LUSTER_MIN) : LUSTER_MAX; }
+    void       luster(double luster)                                  { _luster = Math::bound(luster, LUSTER_MIN, LUSTER_MAX); }
     double     luster(void) const                                     { return _luster; }
-    void       magicalness(double magicalness)                        { _magicalness = magicalness < MAGICALNESS_MAX ? (magicalness > MAGICALNESS_MIN ? magicalness : MAGICALNESS_MIN) : MAGICALNESS_MAX; }
+    void       magicalness(double magicalness)                        { _magicalness = Math::bound(magicalness, MAGICALNESS_MIN, MAGICALNESS_MAX); }
     double     magicalness(void) const                                { return _magicalness; }
-    void       maleability(double maleability)                        { _maleability = maleability < MALEABILITY_MAX ? (maleability > MALEABILITY_MIN ? maleability : MALEABILITY_MIN) : MALEABILITY_MAX; }
+    void       maleability(double maleability)                        { _maleability = Math::bound(maleability, MALEABILITY_MIN, MALEABILITY_MAX); }
     double     maleability(void) const                                { return _maleability; }
-    void       meltingPoint(double meltingPoint)                      { _meltingPoint = meltingPoint < MELTING_POINT_MAX ? (meltingPoint > MELTING_POINT_MIN ? meltingPoint : MELTING_POINT_MIN) : MELTING_POINT_MAX; }
+    void       meltingPoint(double meltingPoint)                      { _meltingPoint = Math::bound(meltingPoint, MELTING_POINT_MIN, MELTING_POINT_MAX); }
     double     meltingPoint(void) const                               { return _meltingPoint; }
-    void       reactivity(double reactivity)                          { _reactivity = reactivity < REACTIVITY_MAX ? (reactivity > REACTIVITY_MIN ? reactivity : REACTIVITY_MIN) : REACTIVITY_MAX; }
+    void       reactivity(double reactivity)                          { _reactivity = Math::bound(reactivity, REACTIVITY_MIN, REACTIVITY_MAX); }
     double     reactivity(void) const                                 { return _reactivity; }
-    void       smoothness(double smoothness)                          { _smoothness = smoothness < SMOOTHNESS_MAX ? (smoothness > SMOOTHNESS_MIN ? smoothness : SMOOTHNESS_MIN) : SMOOTHNESS_MAX; }
+    void       smoothness(double smoothness)                          { _smoothness = Math::bound(smoothness, SMOOTHNESS_MIN, SMOOTHNESS_MAX); }
     double     smoothness(void) const                                 { return _smoothness; }
-    void       thermalConductivity(double thermalConductivity)        { _thermalConductivity = thermalConductivity < THERMAL_CONDUCTIVITY_MAX ? (thermalConductivity > THERMAL_CONDUCTIVITY_MIN ? thermalConductivity : THERMAL_CONDUCTIVITY_MIN) : THERMAL_CONDUCTIVITY_MAX; }
+    void       thermalConductivity(double thermalConductivity)        { _thermalConductivity = Math::bound(thermalConductivity, THERMAL_CONDUCTIVITY_MIN, THERMAL_CONDUCTIVITY_MAX); }
     double     thermalConductivity(void) const                        { return _thermalConductivity; }
     FlagBank&       tags(void)                                        { return _tags; }
     const FlagBank& tags(void) const                                  { return _tags; }

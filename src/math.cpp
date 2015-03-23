@@ -48,3 +48,10 @@ double Math::random_normal(double mean, double stddev) {
   // general normal deviate adherent to the given mean and standand deviation.
   return result * stddev + mean;
 }
+
+template <typename Num>
+Num Math::bound(const Num value, const Num min, const Num max) {
+  if (value < min) return min;
+  else if (value < max) return value;
+  else return max;
+}

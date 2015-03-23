@@ -34,6 +34,15 @@ class Math {
      */
     static double random_normal(double mean = 0.0, double stddev = 1.0);
 
+    /* Return the given value bounded by min and max.
+     *
+     * If value < min, min will be returned.
+     * If value > max, max will be returned.
+     * If value is between min and max, value will be returned.
+     */
+    template <typename Num>
+    static Num bound(const Num value, const Num min, const Num max);
+
   private:
 
     // State variables for the Box-Muller algorithm in Math::random_normal().
