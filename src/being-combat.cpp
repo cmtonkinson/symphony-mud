@@ -87,6 +87,7 @@ bool Being::attack(Job* job) {
   scheduleAttack();
   // Is it over?
   if (_target->isDead()) _target->whatHappensWhenIDie();
+  else _target->announceStatus();
   // Clear the target pointer, just in case.
   _target = NULL;
   // Must return bool per the Job interface.
@@ -267,8 +268,9 @@ void Being::gainLevel(void) {
   VERBOSE_(this, "achieved level %u", level());
   if (level() < HERO) {
     send("You have {Y%u{x experience to your next level.\n\n", tnl());
-  } else
-  if (isAvatar()) group()->send("$p has grown a level!\n", this, NULL, NULL);
+  } else if (isAvatar()) {
+    group()->send("$p has grown a level!\n", this, NULL, NULL);
+  }
   return;
 }
 
@@ -281,6 +283,38 @@ void Being::heal(void) {
   mana(maxMana());
   stamina(MAX_STAMINA);
   return;
+}
+
+void Being::announceStatus(void) {
+  double health_percent = healthPercent();
+  std::string message;
+
+  if (health_percent > 98.0) {
+    message = "$p looks {Gfantastic{x.";
+  } else if (health_percent > 90.0) {
+    message = "$p is in {Bexcellent{x condition.";
+  } else if (health_percent > 70.0) {
+    message = "$p is in {Mgreat{x condition.";
+  } else if (health_percent > 50.0) {
+    message = "$p is in {Cgood{x condition.";
+  } else if (health_percent > 35.0) {
+    message = "$p looks a little {cworn{x.";
+  } else if (health_percent > 20.0) {
+    message = "$p looks pretty {mworn{x.";
+  } else if (health_percent > 10.0) {
+    message = "$p looks very {ybattered{x.";
+  } else if (health_percent > 5.0) {
+    message = "$p is pretty {rbeat up{x.";
+  } else {
+    message = "$p looks {wterrible{x.";
+  }
+
+  room()->send_cond(message.c_str(), this, nullptr, nullptr, Room::TO_NOTVICT);
+  return;
+}
+
+double Being::healthPercent(void) const {
+  return 100.0 * health() / maxHealth();
 }
 
 unsigned Being::targetHealth(void) const {

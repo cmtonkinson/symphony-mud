@@ -131,7 +131,7 @@ std::string Avatar::stringLoggedOn(void) {
   return os::realtime(secondsLoggedOn());
 }
 
-std::string Avatar::ip(void) {
+std::string Avatar::ip(void) const {
   return socket()->getIP();
 }
 

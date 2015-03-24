@@ -34,6 +34,7 @@ class Npc: public Being {
     // general methods...
     virtual bool        isNpc(void) const         { return true; }
     virtual Npc*        toNpc(void)               { return this; }
+    virtual const Npc*  toNpc(void) const         { return this; }
 
     virtual void        whatHappensWhenIDie(void);
 

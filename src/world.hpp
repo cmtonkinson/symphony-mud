@@ -66,7 +66,7 @@ class World {
     void                  handleOutput(void);
     void                  handleDisconnects(void);
     void                  broadcast(const std::string& message);
-    void                  bigBrother(Being* being, unsigned level, std::string message);
+    void                  bigBrother(const Being* being, unsigned level, std::string message);
 
     // Events
     Schedule*             schedule(void) { return &_schedule; }

@@ -45,8 +45,8 @@ namespace os {
 
   extern unsigned console_log_level;
 
-  void          log(const char* file, unsigned line, unsigned level, Being* being, const char* format);
-  void          log_(const char* file, unsigned line, unsigned level, Being* being, const char* format, ...);
+  void          log(const char* file, unsigned line, unsigned level, const Being* being, const char* format);
+  void          log_(const char* file, unsigned line, unsigned level, const Being* being, const char* format, ...);
   const char*   stringLevel(unsigned level);
   unsigned      numericLevel(std::string level);
   std::string   allLevels(void);

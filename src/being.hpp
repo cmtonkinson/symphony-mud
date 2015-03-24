@@ -247,14 +247,16 @@ class Being {
 
     // Shortcuts...
     const char*                 name(void) const          { return identifiers().shortname().c_str(); }
-    std::string                 ident(void);
+    std::string                 ident(void) const;
     bool                        immortal(void) const      { return level() > DEMIGOD; }
 
     // Public methods...
     virtual bool                isAvatar(void) const      { return false; }
     virtual bool                isNpc(void) const         { return false; }
     virtual Avatar*             toAvatar(void)            { return nullptr; }
+    virtual const Avatar*       toAvatar(void) const      { return nullptr; }
     virtual Npc*                toNpc(void)               { return nullptr; }
+    virtual const Npc*          toNpc(void) const         { return nullptr; }
     bool                        isLaying(void) const      { return position().number() == LAYING; }
     bool                        isSitting(void) const     { return position().number() == SITTING; }
     bool                        isStanding(void) const    { return position().number() == STANDING; }
@@ -322,6 +324,8 @@ class Being {
     bool          autoassist(void) const;
     void          heal(void);
     virtual void  whatHappensWhenIDie(void) = 0;
+    void          announceStatus(void);
+    double        healthPercent(void) const;
 
     // Leveling, Gains, Abilities...
     void          resetStats(void);

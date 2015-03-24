@@ -64,12 +64,14 @@ class Avatar: public Being {
     void            adjustStartingStats(void);
 
     // Shortcuts...
-    std::string     ip(void);
-    virtual Avatar* toAvatar(void) { return this; }
+    std::string           ip(void) const;
+    virtual Avatar*       toAvatar(void)          { return this; }
+    virtual const Avatar* toAvatar(void) const    { return this; }
 
     // public accessors...
     void            socket(Socket* socket)                        { _socket = socket; }
     Socket*         socket(void)                                  { return _socket; }
+    const Socket*   socket(void) const                            { return _socket; }
     void            output(std::string output)                    { _output = output; }
     ColorString     output(void) const                            { return _output; }
     virtual void    disconnected(const bool& disconnected)        { _disconnected = disconnected; }

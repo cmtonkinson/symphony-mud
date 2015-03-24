@@ -322,7 +322,7 @@ void World::broadcast(const std::string& message) {
   return;
 }
 
-void World::bigBrother(Being* being, unsigned level, std::string message) {
+void World::bigBrother(const Being* being, unsigned level, std::string message) {
   Avatar* avatar = nullptr;
   std::string munged = message;
   std::string line_break;

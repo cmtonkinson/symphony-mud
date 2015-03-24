@@ -143,12 +143,12 @@ namespace os {
   /////////////////////////////////////////////////////////////////////////////
   unsigned console_log_level = 0;
 
-  void log(const char* file, unsigned line, unsigned level, Being* being, const char* format) {
+  void log(const char* file, unsigned line, unsigned level, const Being* being, const char* format) {
     log_(file, line, level, being, format);
     return;
   }
 
-  void log_(const char* file, unsigned line, unsigned level, Being* being, const char* format, ...) {
+  void log_(const char* file, unsigned line, unsigned level, const Being* being, const char* format, ...) {
     char buffer[BUFFER_SIZE];
     std::string message;
     va_list args;

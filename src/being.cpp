@@ -604,7 +604,7 @@ std::string Being::listAttributes(void) {
   return output;
 }
 
-std::string Being::ident(void) {
+std::string Being::ident(void) const {
   std::string dest = identifiers().shortname();
   if (isAvatar()) return dest << std::string(" @") << toAvatar()->ip();
   else if (isNpc()) return dest << std::string(" #") << toNpc()->vnum();
