@@ -1,6 +1,7 @@
 ﻿
 #include <cstdlib>
 #include "job.hpp"
+#include "math.hpp"
 #include "schedule.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,7 +49,8 @@ RecurringJob::~RecurringJob(void) {
 }
 
 void RecurringJob::recur(Schedule* schedule) {
-  if (--_togo != 0) {
+  if (_togo > 0) {
+    --_togo;
     calculateNextTime();
     schedule->add(this);
   }
@@ -58,7 +60,7 @@ void RecurringJob::recur(Schedule* schedule) {
 void RecurringJob::calculateNextTime(void) {
   time_t now = time(NULL);
   if (_upper > _lower) {
-    _when = now + (rand() % (_upper-_lower) + _lower);
+    _when = now + Math::rand(_lower, _upper);
   } else {
     _when = now + _lower;
   }

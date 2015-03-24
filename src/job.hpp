@@ -21,11 +21,11 @@ class Job: public Event {
     Job(time_t when, bool (*function)(EventType*), std::string name): _when(when), _what(new EventHandlerFunction<EventType>(function)), _name(name) { setup(); }
 
     // WARNING: Whenever this constructor is used, the _who pointer will be set. That triggers
-    // accounting logic in the Schedule class, and requires that your ItemType destructor clean up
+    // accounting logic in the Schedule class, and requires that your ObjectType destructor clean up
     // after itself so that Jobs for destroyed items are cleared from the Schedule.
-    // Your ItemType destructor must call `Schedule::cleanup()` and pass itself as the argument.
-    template <class ItemType,class EventType>
-    Job(time_t when, ItemType* item, bool (ItemType::*method)(EventType*), std::string name): _when(when), _what(new EventHandlerMethod<ItemType,EventType>(item, method)), _name(name) { setup(item); }
+    // Your ObjectType destructor must call `Schedule::cleanup()` and pass itself as the argument.
+    template <class ObjectType,class EventType>
+    Job(time_t when, ObjectType* item, bool (ObjectType::*method)(EventType*), std::string name): _when(when), _what(new EventHandlerMethod<ObjectType,EventType>(item, method)), _name(name) { setup(item); }
 
     virtual ~Job(void);
 
@@ -52,7 +52,7 @@ class Job: public Event {
   protected:
     time_t            _when;
     EventHandlerBase* _what;
-    // Even though the pointer is called "who" it represents any ItemType as specified in the
+    // Even though the pointer is called "who" it represents any ObjectType as specified in the
     // constructors above (be they Zones, Beings, Items, whatever).
     void*             _who;
 
@@ -85,11 +85,11 @@ class JobComp {
 
 class RecurringJob: public Job {
   public:
-    RecurringJob(EventHandlerBase* what, std::string name, time_t lower, time_t upper = 0, long togo = -1): Job(0, what, name), _lower(lower), _upper(upper), _togo(togo) { calculateNextTime(); }
+    RecurringJob(EventHandlerBase* what, std::string name, time_t lower, time_t upper = 0, unsigned togo = 0): Job(0, what, name), _lower(lower), _upper(upper), _togo(togo) { calculateNextTime(); }
     template <class EventType>
-    RecurringJob(bool (*function)(EventType*), std::string name, time_t lower, time_t upper = 0, long togo = -1): Job(0, function, name), _lower(lower), _upper(upper), _togo(togo) { calculateNextTime(); }
-    template <class ItemType,class EventType>
-    RecurringJob(ItemType* item, bool (ItemType::*method)(EventType*), std::string name, time_t lower, time_t upper = 0, long togo = -1): Job(0, item, method, name), _lower(lower), _upper(upper), _togo(togo) { calculateNextTime(); }
+    RecurringJob(bool (*function)(EventType*), std::string name, time_t lower, time_t upper = 0, unsigned togo = 0): Job(0, function, name), _lower(lower), _upper(upper), _togo(togo) { calculateNextTime(); }
+    template <class ObjectType,class EventType>
+    RecurringJob(ObjectType* item, bool (ObjectType::*method)(EventType*), std::string name, time_t lower, time_t upper = 0, unsigned togo = 0): Job(0, item, method, name), _lower(lower), _upper(upper), _togo(togo) { calculateNextTime(); }
     virtual ~RecurringJob(void);
 
     virtual bool  isRecurring(void) const     { return true; }
@@ -97,9 +97,9 @@ class RecurringJob: public Job {
     void          calculateNextTime(void);
 
   private:
-    time_t  _lower;
-    time_t  _upper;
-    long    _togo;
+    time_t    _lower;
+    time_t    _upper;
+    unsigned  _togo;
 };
 
 #endif // #ifndef H_SYMPHONY_JOB
