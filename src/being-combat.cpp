@@ -132,12 +132,8 @@ bool Being::strike(Item* secondary) {
   if (_target->evade(this)) return true;
   // Which weapon are we using?
   weapon = secondary != nullptr ? secondary : primary();
-  // Initial damage calculation (based on the attacker).
-  damage = level() * strength();
-  // Adjust damage (based on the defender).
-  damage -= _target->level() * _target->constitution() / 2 - _target->armor();
-  // Ensure that SOME damage gets dealt.
-  if (damage < 1) damage = 1;
+  // Calculate the damage.
+  damage = calculateDamage(_target, weapon);
   // Tell the world.
   weapon_damage = (weapon && weapon->isWeapon()) ? weapon->weapon()->verb().string() : "punch";
   weapon_damage.append(" ").append(Display::formatDamage(damage));
@@ -168,6 +164,20 @@ bool Being::evade(Being* striker) {
   // Select an evasion Skill.
   skill = evasion_skills[Math::rand(0, evasion_skills.size() - 1)];
   return skill->execute(this, striker, nullptr);
+}
+
+int Being::calculateDamage(Being* victim, Item* weapon, double modifier) {
+  int damage = 0;
+
+  // Initial damage based on weapon
+  damage = weapon->weapon()->damage().roll();
+  // Adjust if in off-hand
+  if (weapon == secondary()) damage *= 0.8;
+  // Adjust for strength
+  damage *= strengthPercent();
+
+  // Ensure that SOME damage gets dealt.
+  return damage > 1 ? damage : 1;
 }
 
 void Being::takeDamage(int damage, Being* damager) {
@@ -289,33 +299,30 @@ void Being::announceStatus(void) {
   double health_percent = healthPercent();
   std::string message;
 
-  if (health_percent > 98.0) {
-    message = "$p looks {Gfantastic{x.";
-  } else if (health_percent > 90.0) {
-    message = "$p is in {Bexcellent{x condition.";
-  } else if (health_percent > 70.0) {
-    message = "$p is in {Mgreat{x condition.";
-  } else if (health_percent > 50.0) {
-    message = "$p is in {Cgood{x condition.";
-  } else if (health_percent > 35.0) {
-    message = "$p looks a little {cworn{x.";
-  } else if (health_percent > 20.0) {
-    message = "$p looks pretty {mworn{x.";
-  } else if (health_percent > 10.0) {
-    message = "$p looks very {ybattered{x.";
-  } else if (health_percent > 5.0) {
-    message = "$p is pretty {rbeat up{x.";
-  } else {
-    message = "$p looks {wterrible{x.";
-  }
+  if      (health_percent > 0.98) message = "$p looks {Gfantastic{x.";
+  else if (health_percent > 0.90) message = "$p is in {Bexcellent{x condition.";
+  else if (health_percent > 0.70) message = "$p is in {Mgreat{x condition.";
+  else if (health_percent > 0.50) message = "$p is in {Cgood{x condition.";
+  else if (health_percent > 0.35) message = "$p looks a little {cworn{x.";
+  else if (health_percent > 0.20) message = "$p looks pretty {mworn{x.";
+  else if (health_percent > 0.10) message = "$p looks very {ybattered{x.";
+  else if (health_percent > 0.5)  message = "$p is pretty {rbeat up{x.";
+  else                            message = "$p looks {wterrible{x.";
 
   room()->send_cond(message.c_str(), this, nullptr, nullptr, Room::TO_NOTVICT);
   return;
 }
 
-double Being::healthPercent(void) const {
-  return 100.0 * health() / maxHealth();
-}
+double Being::healthPercent(void) const       { return 1.0 * health() / maxHealth(); }
+
+double Being::strengthPercent(void) const     { return 1.0 * strength()     / INITIAL_MAX_STAT; }
+double Being::dexterityPercent(void) const    { return 1.0 * dexterity()    / INITIAL_MAX_STAT; }
+double Being::constitutionPercent(void) const { return 1.0 * constitution() / INITIAL_MAX_STAT; }
+double Being::intelligencePercent(void) const { return 1.0 * intelligence() / INITIAL_MAX_STAT; }
+double Being::focusPercent(void) const        { return 1.0 * focus()        / INITIAL_MAX_STAT; }
+double Being::creativityPercent(void) const   { return 1.0 * creativity()   / INITIAL_MAX_STAT; }
+double Being::charismaPercent(void) const     { return 1.0 * charisma()     / INITIAL_MAX_STAT; }
+double Being::luckPercent(void) const         { return 1.0 * luck()         / INITIAL_MAX_STAT; }
 
 unsigned Being::targetHealth(void) const {
   switch (pClass().number()) {

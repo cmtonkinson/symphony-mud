@@ -574,7 +574,7 @@ CmdJobs::CmdJobs(void) {
 }
 
 bool CmdJobs::execute(Being* being, const std::vector<std::string>& args) {
-  int x     = 1;
+  int x     = 0;
   int limit = 0;
   time_t now = time(NULL);
 
@@ -586,8 +586,8 @@ bool CmdJobs::execute(Being* being, const std::vector<std::string>& args) {
   }
 
   for (auto iter : World::Instance().schedule()->queue()) {
+    if (++x >= limit) break;
     being->send(" %3u {y%s{x in %s\n", x, iter->name().c_str(), os::realtime(iter->when() - now).c_str());
-    if (++x > limit) break;
   }
 
   return true;

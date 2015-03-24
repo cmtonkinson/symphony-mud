@@ -98,20 +98,15 @@ bool RiposteSkill::execute(Being* being) const {
   }
 
   if (Math::percent_chance(40)) {
-    // Initial damage calculation (based on the attacker).
-    damage = being->level() * being->strength();
-    // Adjust damage (based on the defender).
-    damage -= _target_being->level() * _target_being->constitution() / 2 - _target_being->armor();
-    // Ensure that SOME damage gets dealt.
-    if (damage < 1) damage = 1;
-    // Tell the world.
+    // Damage
+    damage = being->calculateDamage(_target_being, _target_item, 0.5);
+    _target_being->takeDamage(damage, being);
+    // Output
     weapon_damage = _target_item->weapon()->verb().string();
     weapon_damage.append(" ").append(Display::formatDamage(damage));
     being->send("Your riposte %s %s!\n", weapon_damage.c_str(), _target_being->name());
     _target_being->send("%s's riposte %s you!\n", being->name(), weapon_damage.c_str());
     being->room()->send_cond("$p's $s $C!", being, (void*)weapon_damage.c_str(), _target_being, Room::TO_NOTVICT, true);
-    // Deal the pain.
-    _target_being->takeDamage(damage, being);
   }
 
   return true;

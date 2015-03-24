@@ -41,22 +41,22 @@ Being::Being(void):
   mana(BASE_MANA);
   stamina(MAX_STAMINA);
   // Stats
-  maxStrength(20);
-  strength(15);
-  maxDexterity(20);
-  dexterity(15);
-  maxConstitution(20);
-  constitution(15);
-  maxIntelligence(20);
-  intelligence(15);
-  maxFocus(20);
-  focus(15);
-  maxCreativity(20);
-  creativity(15);
-  maxCharisma(20);
-  charisma(15);
-  maxLuck(20);
-  luck(15);
+  maxStrength(INITIAL_MAX_STAT);
+  strength(INITIAL_STAT);
+  maxDexterity(INITIAL_MAX_STAT);
+  dexterity(INITIAL_STAT);
+  maxConstitution(INITIAL_MAX_STAT);
+  constitution(INITIAL_STAT);
+  maxIntelligence(INITIAL_MAX_STAT);
+  intelligence(INITIAL_STAT);
+  maxFocus(INITIAL_MAX_STAT);
+  focus(INITIAL_STAT);
+  maxCreativity(INITIAL_MAX_STAT);
+  creativity(INITIAL_STAT);
+  maxCharisma(INITIAL_MAX_STAT);
+  charisma(INITIAL_STAT);
+  maxLuck(INITIAL_MAX_STAT);
+  luck(INITIAL_STAT);
   // Armor
   armor(100);
   bash(0);

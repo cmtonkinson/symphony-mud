@@ -117,6 +117,9 @@ class Being {
     static const unsigned MIN_HEALTH_GAIN = 3;
     static const unsigned MIN_MANA_GAIN   = 3;
 
+    static const unsigned INITIAL_STAT     = 15;
+    static const unsigned INITIAL_MAX_STAT = 20;
+
     static const unsigned ALTERABILITY_LEVEL_DIFFERENCE = 5;
 
     // constructors...
@@ -139,7 +142,7 @@ class Being {
     bool                        wear(Item* article, std::string& message, Item*& removed);
     // `remove(Item*)` is already implemented via `Container`, so we call equipment removal `unwear()`
     bool                        unwear(Item* article, std::string& message, bool force = false);
-    Item*                     worn(const int& location) const;
+    Item*                       worn(const int& location) const;
     static bool                 isSingleWearLoc(const unsigned short& item_weartype);
     Identifiers&                identifiers(void)                                               { return _identifiers; }
     const Identifiers&          identifiers(void) const                                         { return _identifiers; }
@@ -149,8 +152,8 @@ class Being {
     const EquipmentContainer&   equipment(void) const                                           { return _equipment; }
     std::list<Modifier*>&       modifiers(void)                                                 { return _modifiers; }
     const std::list<Modifier*>& modifiers(void) const                                           { return _modifiers; }
-    void                        furniture(ItemFurniture* furniture)                              { _furniture = furniture; }
-    ItemFurniture*               furniture(void) const                                           { return _furniture; }
+    void                        furniture(ItemFurniture* furniture)                             { _furniture = furniture; }
+    ItemFurniture*              furniture(void) const                                           { return _furniture; }
 
     Position&         position(void)        { return _position; }
     const Position&   position(void) const  { return _position; }
@@ -316,6 +319,7 @@ class Being {
     void          acquireTarget(void);
     bool          strike(Item* secondary = nullptr);
     bool          evade(Being* striker);
+    int           calculateDamage(Being* victim, Item* weapon = nullptr, double modifier = 1.0);
     void          takeDamage(int damage, Being* damager = NULL);
     void          die(Being* killer = NULL);
     void          peace(void);
@@ -325,7 +329,16 @@ class Being {
     void          heal(void);
     virtual void  whatHappensWhenIDie(void) = 0;
     void          announceStatus(void);
+
     double        healthPercent(void) const;
+    double        strengthPercent(void) const;
+    double        dexterityPercent(void) const;
+    double        constitutionPercent(void) const;
+    double        intelligencePercent(void) const;
+    double        focusPercent(void) const;
+    double        creativityPercent(void) const;
+    double        charismaPercent(void) const;
+    double        luckPercent(void) const;
 
     // Leveling, Gains, Abilities...
     void          resetStats(void);
@@ -365,7 +378,7 @@ class Being {
     InventoryContainer          _inventory;
     EquipmentContainer          _equipment;
     std::list<Modifier*>        _modifiers;
-    ItemFurniture*               _furniture;
+    ItemFurniture*              _furniture;
     Position                    _position;
     Action                      _action;
     Group*                      _group;

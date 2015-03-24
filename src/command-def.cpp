@@ -17,6 +17,7 @@ CommandTable::CommandTable(void) {
   add(new CmdMoveWest());
   add(new CmdMoveUp());
   add(new CmdMoveDown());
+  add(new CmdSummary());
   // Administrative commands...
   add(new CmdAdminNote());
   add(new CmdBigBrother());
@@ -88,7 +89,6 @@ CommandTable::CommandTable(void) {
   add(new CmdSocials());
   add(new CmdSpells());
   add(new CmdStand());
-  add(new CmdSummary());
   add(new CmdTell());
   add(new CmdTime());
   add(new CmdTitle());

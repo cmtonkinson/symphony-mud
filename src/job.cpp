@@ -49,8 +49,9 @@ RecurringJob::~RecurringJob(void) {
 }
 
 void RecurringJob::recur(Schedule* schedule) {
-  if (_togo > 0) {
-    --_togo;
+  // If _togo is negative, recur the Job infinitely.
+  // Otherwise, decrement _togo and recur if the result is positive.
+  if (_togo < 0 || --_togo > 0) {
     calculateNextTime();
     schedule->add(this);
   }
