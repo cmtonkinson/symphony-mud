@@ -11,7 +11,8 @@ World::World(void) {
   booted(time(NULL));
   exists(true);
   rebooting(false);
-  jobsPerTurn(5);
+  jobsPerTurn(10);
+  tickSleep(500);
   schedule()->add(new RecurringJob(this, &World::tock, 50, 70));
   schedule()->add(new RecurringJob(this, &World::save, 900));
   return;
@@ -58,7 +59,7 @@ void World::tick(void) {
   handleInput();
   handleOutput();
   handleDisconnects();
-  usleep(1000); // to throttle the CPU usage
+  usleep(tickSleep()); // CPU throttle
   return;
 }
 
@@ -345,9 +346,7 @@ void World::bigBrother(Being* being, unsigned level, std::string message) {
 void World::handleJobs(void) {
   unsigned count = 0;
   while (schedule()->fire()) {
-    if (++count >= jobsPerTurn()) {
-      break;
-    }
+    if (++count >= jobsPerTurn()) break;
   }
   return;
 }

@@ -1,8 +1,12 @@
 ﻿
+#include <string.h>
 #include "event-handler.h"
 #include "schedule.h"
 
 Schedule::Schedule(void) {
+  memset(_job_history, 0, sizeof(double) * JOB_TIME_HISTORY);
+  _job_history_index = 0;
+  _job_history_filled = false;
   return;
 }
 
@@ -38,17 +42,15 @@ void Schedule::remove(Job* job) {
 }
 
 bool Schedule::fire(void) {
-  Job* j = NULL;
+  Job* job = NULL;
+
   if (!_queue.empty()) {
-    j = *_queue.begin();
-    if (j->ready()) {
+    job = *_queue.begin();
+    if (job->ready()) {
       _queue.erase(_queue.begin());
-      j->fire();
-      if (j->isRecurring()) {
-        j->recur(this);
-      } else {
-        delete j;
-      }
+      profileJob(job);
+      if (job->isRecurring()) job->recur(this);
+      else delete job;
       return true;
     }
   }
@@ -70,4 +72,56 @@ void Schedule::cleanup(void* item) {
     }
   }
   return;
+}
+
+void Schedule::profileJob(Job* job) {
+  clock_t clock_ticks = 0;
+  double milliseconds = 0.0;
+
+  // Time Job::fire() in clock ticks.
+  clock_ticks = clock();
+  job->fire();
+  clock_ticks = clock() - clock_ticks;
+
+  // How much wall-time was that?
+  milliseconds = ((double)clock_ticks) / CLOCKS_PER_MICROSEC;
+
+  // Record the time in the circular array.
+  _job_history[_job_history_index] = milliseconds;
+  if (++_job_history_index >= JOB_TIME_HISTORY) {
+    _job_history_index  = 0;
+    _job_history_filled = true;
+  }
+
+  return;
+}
+
+double Schedule::meanJobTime(void) const {
+  unsigned end = _job_history_filled ? _job_history_index : JOB_TIME_HISTORY;
+  double mean  = _job_history[0];
+  for (unsigned x = 1; x < end; ++x) mean += _job_history[x];
+  mean /= end;
+  return mean;
+}
+
+double Schedule::minJobTime(void) const {
+  unsigned end = _job_history_filled ? _job_history_index : JOB_TIME_HISTORY;
+  unsigned min = _job_history[0];
+  for (unsigned x = 1; x < end; ++x) {
+    if (_job_history[x] < min) {
+      min = _job_history[x];
+    }
+  }
+  return min;
+}
+
+double Schedule::maxJobTime(void) const {
+  unsigned end = _job_history_filled ? _job_history_index : JOB_TIME_HISTORY;
+  unsigned max = _job_history[0];
+  for (unsigned x = 1; x < end; ++x) {
+    if (_job_history[x] > max) {
+      max = _job_history[x];
+    }
+  }
+  return max;
 }

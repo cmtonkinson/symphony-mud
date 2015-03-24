@@ -29,12 +29,8 @@
     * banning
     * password storage (will libsodium support PBKDF2?)
   * Performance
-    * jobs per turn
-    * turn sleep
     * stat tracking on
       * turn processing time
-      * job processing time
-      * job execution delay
   * Account emails
     * Integrate with POP/SMTP for email validation?
     * Integrate board system with email?

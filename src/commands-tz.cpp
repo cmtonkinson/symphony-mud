@@ -5,6 +5,7 @@
 #include "display.h"
 #include "group.h"
 #include "io-handler.h"
+#include "os.h"
 #include "room.h"
 #include "world.h"
 #include "zone.h"
@@ -325,6 +326,84 @@ CmdWorldSave::CmdWorldSave(void) {
 bool CmdWorldSave::execute(Being* being, const std::vector<std::string>& args) {
   World::Instance().save();
   avatar()->send("World zones and player profiles saved successfully.");
+  return true;
+}
+
+CmdZedit::CmdZedit(void) {
+  name("zedit");
+  level(Being::GOD);
+  addSyntax(1, "<zoneID>");
+  addSyntax(3, "create <first vnum> <zone size>");
+  brief("Launches the Zone Editor.");
+  return;
+}
+
+bool CmdZedit::execute(Being* being, const std::vector<std::string>& args) {
+  std::set<Zone*,zone_comp>::iterator it;
+  Zone* zone = NULL;
+  unsigned short minimum = 25;
+  unsigned short multiple = 25;
+
+  if (args.size() == 3 && args[0] == "create") {
+    unsigned long low = estring(args[1]);
+    unsigned long size = estring(args[2]);
+    unsigned long high = low + size - 1;
+    // Check permissions...
+    if (!(avatar()->adminFlags().test(ADMIN_HEADBUILDER) || avatar()->level() >= Being::CREATOR)) {
+      avatar()->send("Only the Head Builder can create new zones.");
+      return false;
+    }
+    // Check to make sure vnums are good...
+    if (low % minimum) {
+      avatar()->send("The first vnum of an zone must be a multiple of %lu.", multiple);
+      return false;
+    }
+    if (size < minimum || size % minimum) {
+      avatar()->send("Zone sizes must be a multiple of %lu, and at least %lu.", multiple, minimum);
+      return false;
+    }
+    for (it = World::Instance().getZones().begin(); it != World::Instance().getZones().end(); ++it) {
+      if (((*it)->low() < low && low < (*it)->high()) || ((*it)->low() < high && high < (*it)->high())) {
+        avatar()->send("That would cause a vnum collision with %s (zone %lu).  Please check your numbers.", (*it)->name().c_str(), (*it)->ID());
+        return false;
+      }
+    }
+    zone = new Zone(low, high);
+    if (!zone->ID()) {
+      avatar()->send("Something went wrong while creating the zone.");
+      ERROR_(avatar(), "failed to create a zone from %lu through %lu", zone->low(), zone->high())
+      delete zone;
+      return false;
+    }
+    zone->initialize();
+    avatar()->zedit(zone);
+    avatar()->pushIOHandler(new ZeditIOHandler(avatar()));
+    avatar()->send("You've created a new zone (number %lu) with vnums %lu through %lu.", zone->ID(), zone->low(), zone->high());
+  } else if (args.size() == 1) {
+    // Check for the zone...
+    if ((zone = World::Instance().findZone(estring(args[0]))) == NULL) {
+      avatar()->send("That zone doesn't exist.");
+      return false;
+    }
+    // Check permissions...
+    if ((zone->ID() == 1 && avatar()->level() < Being::CREATOR) || !zone->hasPermission(avatar())) {
+      avatar()->send("You can't edit %s.", zone->name().c_str());
+      return false;
+    }
+    // Make sure no one else is editing the zone...
+    for (auto iter : World::Instance().getAvatars()) {
+      if (iter.second->mode().number() == MODE_ZEDIT && iter.second->zedit() == zone) {
+        avatar()->send("Sorry, %s is currently editing %s (zone %lu).", avatar()->seeName(((Being*)iter.second)).c_str(), zone->name().c_str(), zone->ID());
+        return false;
+      }
+    }
+    // Send them on to the editor...
+    avatar()->send("You're editing %s (%lu).", zone->name().c_str(), zone->ID());
+    avatar()->mode().set(MODE_ZEDIT);
+    avatar()->zedit(zone);
+    avatar()->pushIOHandler(new ZeditIOHandler(avatar()));
+  }
+
   return true;
 }
 

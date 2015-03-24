@@ -71,8 +71,10 @@ class World {
     // Events
     Schedule*             schedule(void) { return &_schedule; }
     void                  handleJobs(void);
-    void                  jobsPerTurn(const unsigned& limit)  { _jobsPerTurn = limit; }
+    void                  jobsPerTurn(unsigned limit)         { _jobsPerTurn = limit; }
     unsigned              jobsPerTurn(void) const             { return _jobsPerTurn; }
+    void                  tickSleep(unsigned sleep)           { _tickSleep = sleep; }
+    unsigned              tickSleep(void) const               { return _tickSleep; }
     unsigned              jobsInQueue(void) const             { return _schedule.size(); }
 
     // Beings
@@ -128,6 +130,7 @@ class World {
     InputIOHandler                  _npcIOHandler;
     Schedule                        _schedule;
     unsigned                        _jobsPerTurn;
+    unsigned                        _tickSleep;
 };
 
 /*

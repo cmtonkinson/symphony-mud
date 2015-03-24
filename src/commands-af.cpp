@@ -1,6 +1,5 @@
 
 #include <algorithm>
-#include "zone.h"
 #include "avatar.h"
 #include "command-def.h"
 #include "display.h"
@@ -22,84 +21,6 @@ bool CmdAdminNote::execute(Being* being, const std::vector<std::string>& args) {
   std::string message;
   message.assign("{YAdministrative Note{x: {y").append(args[0]).append("{x\n");
   World::Instance().broadcast(message);
-  return true;
-}
-
-CmdZedit::CmdZedit(void) {
-  name("zedit");
-  level(Being::GOD);
-  addSyntax(1, "<zoneID>");
-  addSyntax(3, "create <first vnum> <zone size>");
-  brief("Launches the Zone Editor.");
-  return;
-}
-
-bool CmdZedit::execute(Being* being, const std::vector<std::string>& args) {
-  std::set<Zone*,zone_comp>::iterator it;
-  Zone* zone = NULL;
-  unsigned short minimum = 25;
-  unsigned short multiple = 25;
-
-  if (args.size() == 3 && args[0] == "create") {
-    unsigned long low = estring(args[1]);
-    unsigned long size = estring(args[2]);
-    unsigned long high = low + size - 1;
-    // Check permissions...
-    if (!(avatar()->adminFlags().test(ADMIN_HEADBUILDER) || avatar()->level() >= Being::CREATOR)) {
-      avatar()->send("Only the Head Builder can create new zones.");
-      return false;
-    }
-    // Check to make sure vnums are good...
-    if (low % minimum) {
-      avatar()->send("The first vnum of an zone must be a multiple of %lu.", multiple);
-      return false;
-    }
-    if (size < minimum || size % minimum) {
-      avatar()->send("Zone sizes must be a multiple of %lu, and at least %lu.", multiple, minimum);
-      return false;
-    }
-    for (it = World::Instance().getZones().begin(); it != World::Instance().getZones().end(); ++it) {
-      if (((*it)->low() < low && low < (*it)->high()) || ((*it)->low() < high && high < (*it)->high())) {
-        avatar()->send("That would cause a vnum collision with %s (zone %lu).  Please check your numbers.", (*it)->name().c_str(), (*it)->ID());
-        return false;
-      }
-    }
-    zone = new Zone(low, high);
-    if (!zone->ID()) {
-      avatar()->send("Something went wrong while creating the zone.");
-      ERROR_(avatar(), "failed to create a zone from %lu through %lu", zone->low(), zone->high())
-      delete zone;
-      return false;
-    }
-    zone->initialize();
-    avatar()->zedit(zone);
-    avatar()->pushIOHandler(new ZeditIOHandler(avatar()));
-    avatar()->send("You've created a new zone (number %lu) with vnums %lu through %lu.", zone->ID(), zone->low(), zone->high());
-  } else if (args.size() == 1) {
-    // Check for the zone...
-    if ((zone = World::Instance().findZone(estring(args[0]))) == NULL) {
-      avatar()->send("That zone doesn't exist.");
-      return false;
-    }
-    // Check permissions...
-    if ((zone->ID() == 1 && avatar()->level() < Being::CREATOR) || !zone->hasPermission(avatar())) {
-      avatar()->send("You can't edit %s.", zone->name().c_str());
-      return false;
-    }
-    // Make sure no one else is editing the zone...
-    for (auto iter : World::Instance().getAvatars()) {
-      if (iter.second->mode().number() == MODE_ZEDIT && iter.second->zedit() == zone) {
-        avatar()->send("Sorry, %s is currently editing %s (zone %lu).", avatar()->seeName(((Being*)iter.second)).c_str(), zone->name().c_str(), zone->ID());
-        return false;
-      }
-    }
-    // Send them on to the editor...
-    avatar()->send("You're editing %s (%lu).", zone->name().c_str(), zone->ID());
-    avatar()->mode().set(MODE_ZEDIT);
-    avatar()->zedit(zone);
-    avatar()->pushIOHandler(new ZeditIOHandler(avatar()));
-  }
-
   return true;
 }
 
@@ -580,12 +501,37 @@ CmdDashboard::CmdDashboard(void) {
 }
 
 bool CmdDashboard::execute(Being* being, const std::vector<std::string>& args) {
-  avatar()->send("  System time:   {y%s{x\n", os::strtime().c_str());
-  avatar()->send("  Engine booted: {y%s{x\n", os::strtime(World::Instance().booted()).c_str());
-  avatar()->send("  Engine online: {y%s{x\n", os::realtime(os::now() - World::Instance().booted()).c_str());
-  avatar()->send("  Connections:   {y%u{x\n", World::Instance().getAvatars().size());
-  avatar()->send("  Jobs in queue: {y%u{x\n", World::Instance().jobsInQueue());
-  avatar()->send("  Jobs per turn: {y%u{x\n", World::Instance().jobsPerTurn());
+  std::string buffer = "\
+Time:\n\
+  System time:    {y%s{x\n\
+  Engine booted:  {y%s{x\n\
+  Engine online:  {y%s{x\n\
+\n\
+Scheduling:\n\
+  Tick interval:  {y%uμs{x\n\
+  Jobs in queue:  {y%u{x\n\
+  Jobs per turn:  {y%u{x\n\
+\n\
+  Mean job time: {y%3.0fμs{x\n\
+  Min job time:  {y%3.0fμs{x\n\
+  Max job time:  {y%3.0fμs{x\n\
+\n\
+Players:\n\
+  Connections:   {y%u{x\n\
+";
+
+  being->send(buffer.c_str(),
+    os::strtime().c_str(),
+    os::strtime(World::Instance().booted()).c_str(),
+    os::realtime(os::now() - World::Instance().booted()).c_str(),
+    World::Instance().tickSleep(),
+    World::Instance().jobsInQueue(),
+    World::Instance().jobsPerTurn(),
+    World::Instance().schedule()->meanJobTime(),
+    World::Instance().schedule()->minJobTime(),
+    World::Instance().schedule()->maxJobTime(),
+    World::Instance().getAvatars().size()
+  );
   return true;
 }
 
