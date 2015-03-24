@@ -11,14 +11,12 @@ CommandTable::CommandTable(void) {
   // I put these commands in front so that very common one letter shortucts work...
   add(new CmdKill());
   add(new CmdLook());
-  add(new CmdMap());
   add(new CmdMoveNorth());
   add(new CmdMoveEast());
   add(new CmdMoveSouth());
   add(new CmdMoveWest());
   add(new CmdMoveUp());
   add(new CmdMoveDown());
-  add(new CmdSummary());
   // Administrative commands...
   add(new CmdAdminNote());
   add(new CmdBigBrother());
@@ -39,10 +37,11 @@ CommandTable::CommandTable(void) {
   add(new CmdIload());
   add(new CmdIncognito());
   add(new CmdInventory());
-  add(new CmdPlacement());
+  add(new CmdJobs());
   add(new CmdNlist());
   add(new CmdNload());
   add(new CmdPeace());
+  add(new CmdPlacement());
   add(new CmdPoofin());
   add(new CmdPoofout());
   add(new CmdPromote());
@@ -56,7 +55,6 @@ CommandTable::CommandTable(void) {
   add(new CmdWorldSave());
   // Normal commands...
   add(new CmdAfk());
-  add(new CmdZones());
   add(new CmdBoards());
   add(new CmdBored());
   add(new CmdBusy());
@@ -75,6 +73,7 @@ CommandTable::CommandTable(void) {
   add(new CmdLay());
   add(new CmdLearn());
   add(new CmdLock());
+  add(new CmdMap());
   add(new CmdNote());
   add(new CmdOoc());
   add(new CmdOpen());
@@ -84,11 +83,12 @@ CommandTable::CommandTable(void) {
   add(new CmdSave());
   add(new CmdSay());
   add(new CmdSit());
-  //add(new CmdSleep());
-  add(new CmdSocials());
-  add(new CmdStand());
   add(new CmdSkills());
+  // add(new CmdSleep());
+  add(new CmdSocials());
   add(new CmdSpells());
+  add(new CmdStand());
+  add(new CmdSummary());
   add(new CmdTell());
   add(new CmdTime());
   add(new CmdTitle());
@@ -98,6 +98,7 @@ CommandTable::CommandTable(void) {
   add(new CmdWear());
   add(new CmdWho());
   add(new CmdWhoAmI());
+  add(new CmdZones());
   return;
 }
 

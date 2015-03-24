@@ -27,6 +27,8 @@ class Schedule {
     double  minJobTime(void) const;
     double  maxJobTime(void) const;
 
+    const std::multiset<Job*,JobComp>&  queue() { return _queue; }
+
   private:
     // The Schedule is composed of a multiset of Jobs, sorted primarily by the timestamp Job::_when
     // and secondarily by an incrementing counter (to avoid ambiguity with timers set for the same

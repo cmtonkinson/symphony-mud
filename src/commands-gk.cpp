@@ -2,6 +2,7 @@
 #include "being.hpp"
 #include "command-def.hpp"
 #include "item-types.hpp"
+#include "os.hpp"
 #include "world.hpp"
 #include "zone.hpp"
 
@@ -560,6 +561,35 @@ bool CmdInventory::execute(Being* being, const std::vector<std::string>& args) {
   }
   being->send("You are carrying:\n");
   being->send(being->inventory().listItems().c_str());
+  return true;
+}
+
+CmdJobs::CmdJobs(void) {
+  name("jobs");
+  level(Being::CREATOR);
+  addSyntax(0, "");
+  addSyntax(1, "<limit> (default is 15)");
+  brief("Display the top <limit> jobs in the global schedule.");
+  return;
+}
+
+bool CmdJobs::execute(Being* being, const std::vector<std::string>& args) {
+  int x     = 1;
+  int limit = 0;
+  time_t now = time(NULL);
+
+  if (args[0].empty()) {
+    limit = 20;
+  } else {
+    limit = estring(args[0]);
+    limit = Math::bound(limit, 1, 100);
+  }
+
+  for (auto iter : World::Instance().schedule()->queue()) {
+    being->send(" %3u {y%s{x in %s\n", x, iter->name().c_str(), os::realtime(iter->when() - now).c_str());
+    if (++x > limit) break;
+  }
+
   return true;
 }
 

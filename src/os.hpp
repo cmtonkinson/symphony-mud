@@ -31,12 +31,6 @@ namespace os {
   std::string     strtime(time_t t = 0);
   std::string     realtime(const unsigned long& seconds, unsigned granularity = GRAN_DAY);
 
-  #define DEBUG_TIME(ID, CODE)                   \
-    clock_t clock_ticks = clock();               \
-    CODE                                         \
-    clock_ticks = clock() - clock_ticks;         \
-    DEBUG_(0, "time in %s: %d", ID, clock_ticks) \
-
   /////////////////////////////////////////////////////////////////////////////
   // LOGGING
   /////////////////////////////////////////////////////////////////////////////

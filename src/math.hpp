@@ -42,9 +42,7 @@ class Math {
      * If value > max, max will be returned.
      * If value is between min and max, value will be returned.
      */
-    template <typename Num>
-    static Num bound(const Num value, const Num min, const Num max);
-
+    static int bound(int value, int min, int max);
 
     /*
      */

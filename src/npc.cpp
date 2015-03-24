@@ -70,7 +70,7 @@ void Npc::npcilize(void) {
   smudge      = 0.25;
   lower_bound = base * (1 - smudge);
   upper_bound = base * (1 + smudge);
-  World::Instance().schedule()->add(new RecurringJob(this, &Npc::auto_move, lower_bound, upper_bound));
+  World::Instance().schedule()->add(new RecurringJob(this, &Npc::auto_move, "Npc::auto_move", lower_bound, upper_bound));
   return;
 }
 

@@ -18,7 +18,6 @@ DEF_COMMANDTABLE(ZeditCommands) // Zone edit Commands
 // ADMINISTRATIVE COMMANDS
 ///////////////////////////////////////////////////////////////////////////////
 DEF_COMMAND(CmdAdminNote)
-DEF_COMMAND(CmdZedit)
 DEF_COMMAND(CmdAt)
 DEF_COMMAND(CmdBigBrother)
 DEF_COMMAND(CmdClone)
@@ -40,12 +39,13 @@ DEF_COMMAND(CmdIedit)
 DEF_COMMAND(CmdIlist)
 DEF_COMMAND(CmdIload)
 DEF_COMMAND(CmdIncognito)
-DEF_COMMAND(CmdPlacement)
+DEF_COMMAND(CmdJobs)
 DEF_COMMAND(CmdNedit)
 DEF_COMMAND(CmdNlist)
 DEF_COMMAND(CmdNload)
 DEF_COMMAND(CmdPeace)
 DEF_COMMAND(CmdPedit)
+DEF_COMMAND(CmdPlacement)
 DEF_COMMAND(CmdPoofin)
 DEF_COMMAND(CmdPoofout)
 DEF_COMMAND(CmdPromote)
@@ -62,6 +62,7 @@ DEF_COMMAND(CmdTest)
 DEF_COMMAND(CmdTimers)
 DEF_COMMAND(CmdTutor)
 DEF_COMMAND(CmdWorldSave)
+DEF_COMMAND(CmdZedit)
 
 ///////////////////////////////////////////////////////////////////////////////
 // "STANDARD" COMMANDS

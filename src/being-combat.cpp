@@ -56,7 +56,7 @@ void Being::scheduleAttack(void) {
   // If there's already a Job scheduled, don't add another.
   if (_next_attack) return;
   // Create the Job, and keep a pointer for future reference.
-  _next_attack = new Job(time(NULL) + 2, this, &Being::attack);
+  _next_attack = new Job(time(NULL) + 2, this, &Being::attack, "Being::attack");
   // Add it to the master schedule.
   World::Instance().schedule()->add(_next_attack);
   return;

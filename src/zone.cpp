@@ -32,7 +32,7 @@ void Zone::name(const char* name) {
 
 void Zone::initialize(void) {
   World::Instance().insert(this);
-  World::Instance().schedule()->add(new RecurringJob(this, &Zone::reset, 300, 600));
+  World::Instance().schedule()->add(new RecurringJob(this, &Zone::reset, "Zone::reset", 300, 600));
   return;
 }
 

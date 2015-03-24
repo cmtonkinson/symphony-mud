@@ -13,8 +13,8 @@ World::World(void) {
   rebooting(false);
   jobsPerTurn(10);
   tickSleep(500);
-  schedule()->add(new RecurringJob(this, &World::tock, 50, 70));
-  schedule()->add(new RecurringJob(this, &World::save, 900));
+  schedule()->add(new RecurringJob(this, &World::tock, "World::tock", 50, 70));
+  schedule()->add(new RecurringJob(this, &World::save, "World::save", 900));
   return;
 }
 
