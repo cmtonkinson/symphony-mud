@@ -1,0 +1,15 @@
+SOCIAL
+name 4:slap
+creator 9:Xantiloth
+targetNone F
+targetSelf T
+targetVictim T
+noneActor 17:You do something.
+noneRoom 18:$c does something.
+selfActor 30:You slap yourself in the face.
+selfRoom 24:$c slaps $f in the face.
+victimActor 28:You slap $C across the face.
+victimVictim 29:$c slaps you across the face.
+victimRoom 28:$c slaps $C across the face.
+flags 96
+/SOCIAL

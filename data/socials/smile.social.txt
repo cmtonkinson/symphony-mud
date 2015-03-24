@@ -1,0 +1,15 @@
+SOCIAL
+name 5:smile
+creator 9:Xantiloth
+targetNone T
+targetSelf F
+targetVictim T
+noneActor 10:You smile.
+noneRoom 10:$c smiles.
+selfActor 29:You do something to yourself.
+selfRoom 24:$c does something to $f.
+victimActor 16:You smile at $C.
+victimVictim 17:$c smiles at you.
+victimRoom 16:$c smiles at $C.
+flags 0
+/SOCIAL
