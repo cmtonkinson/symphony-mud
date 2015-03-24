@@ -151,15 +151,15 @@ bool Being::evade(Being* striker) {
   Ability* skill = nullptr;
   std::vector<Ability*> evasion_skills;
 
+  // Small(ish) chance we don't even try to evade.
+  if (Math::percent_chance(80)) return false;
+
   // What evasion methods are available?
   if ((skill = learned().find_skill(BLOCK)) != nullptr) evasion_skills.push_back(skill);
   if (primary() || secondary()) {
     if ((skill = learned().find_skill(PARRY)) != nullptr) evasion_skills.push_back(skill);
   }
   if (evasion_skills.empty()) return false;
-
-  // 75% chance evasion will be attempted
-  // if (Math::rand(1, 4) <= 3) return false;
 
   // Select an evasion Skill.
   skill = evasion_skills[Math::rand(0, evasion_skills.size() - 1)];

@@ -2,9 +2,9 @@
 
 ## Combat, Abilities
   * offense/defense calculations
-  * Log kills, deaths
   * crafts
   * languages
+  * regeneration
 
 ## UI
   * say

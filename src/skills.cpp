@@ -25,7 +25,7 @@ bool DualWieldSkill::execute(Being* being) const {
   // Need an off-hand weapon to dual strike.
   if (weapon == nullptr || !weapon->isWeapon()) return false;
   // Make the hit.
-  if (Math::percent_chance(30)) {
+  if (Math::percent_chance(50)) {
     return being->strike(weapon);
   }
 
@@ -38,7 +38,7 @@ bool BlockSkill::execute(Being* being) const {
     return false;
   }
 
-  if (Math::percent_chance(20)) {
+  if (Math::percent_chance(40)) {
     being->send("You block %s's attack!\n", _target_being->name());
     _target_being->send("%s blocks your attack!\n", being->name());
     being->room()->send_cond("$p blocks $c's attack!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
@@ -72,7 +72,7 @@ bool ParrySkill::execute(Being* being) const {
 
   if (!weapon->isWeapon()) return false;
 
-  if (Math::percent_chance(20)) {
+  if (Math::percent_chance(40)) {
     being->send("You parry %s's attack with %s!\n", _target_being->name(), weapon->name());
     _target_being->send("%s parries your attack with %s!\n", being->name(), weapon->name());
     being->room()->send_cond("$p parries $c's attack with $O!\n", being, _target_being, weapon, Room::TO_NOTVICT, true);
