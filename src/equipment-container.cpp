@@ -1,7 +1,7 @@
 ﻿
-#include "being.h"
-#include "equipment-container.h"
-#include "item.h"
+#include "being.hpp"
+#include "equipment-container.hpp"
+#include "item.hpp"
 
 EquipmentContainer::EquipmentContainer(void) {
   return;

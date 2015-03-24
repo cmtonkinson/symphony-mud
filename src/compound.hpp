@@ -3,9 +3,9 @@
 #define H_SYMPHONY_COMPOUND
 
 #include <set>
-#include "flag-table.h"
-#include "identifiers.h"
-#include "math.h"
+#include "flag-table.hpp"
+#include "identifiers.hpp"
+#include "math.hpp"
 
 /* Unless noted otherwise, each attribute is expected to be a unitless real number
  * between 0 and 1 inclusive which is set relative to the other compounds being

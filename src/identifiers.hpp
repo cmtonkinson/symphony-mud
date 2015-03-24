@@ -4,8 +4,8 @@
 
 #include <set>
 #include <string>
-#include "color-string.h"
-#include "regex.h"
+#include "color-string.hpp"
+#include "regex.hpp"
 
 /*
  * This class is designed to "kind of" emulate an interface to

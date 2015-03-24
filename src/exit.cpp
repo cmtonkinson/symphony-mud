@@ -1,8 +1,8 @@
 
-#include "exit.h"
-#include "regex.h"
-#include "room.h"
-#include "world.h"
+#include "exit.hpp"
+#include "regex.hpp"
+#include "room.hpp"
+#include "world.hpp"
 
 Exit::Exit(void) {
   _targetVnum = 0;

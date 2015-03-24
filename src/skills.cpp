@@ -1,11 +1,11 @@
 
-#include "being.h"
-#include "display.h"
-#include "item.h"
-#include "item-types.h"
-#include "os.h"
-#include "room.h"
-#include "skills.h"
+#include "being.hpp"
+#include "display.hpp"
+#include "item.hpp"
+#include "item-types.hpp"
+#include "os.hpp"
+#include "room.hpp"
+#include "skills.hpp"
 
 bool SecondStrikeSkill::execute(Being* being) const {
   return Math::percent_chance(90) && being->strike();

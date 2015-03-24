@@ -1,7 +1,7 @@
 
-#include "skills.h"
-#include "spells.h"
-#include "klass.h"
+#include "skills.hpp"
+#include "spells.hpp"
+#include "klass.hpp"
 
 Cleric::Cleric(void) {
   _name = "cleric";

@@ -2,7 +2,7 @@
 #ifndef H_SYMPHONY_PLACEMENT_NPC
 #define H_SYMPHONY_PLACEMENT_NPC
 
-#include "placement.h"
+#include "placement.hpp"
 
 class PlacementNpc: public Placement {
   public:

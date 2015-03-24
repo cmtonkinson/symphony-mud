@@ -1,8 +1,8 @@
 
-#include "command.h"
-#include "command-table.h"
-#include "being.h"
-#include "regex.h"
+#include "command.hpp"
+#include "command-table.hpp"
+#include "being.hpp"
+#include "regex.hpp"
 
 CommandTable::~CommandTable(void) {
   return;

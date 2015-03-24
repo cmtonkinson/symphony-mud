@@ -1,8 +1,8 @@
 
 #include <cmath>
-#include "being.h"
-#include "math.h"
-#include "stats.h"
+#include "being.hpp"
+#include "math.hpp"
+#include "stats.hpp"
 
 unsigned Stats::logistic(unsigned level, unsigned min, unsigned target) {
   double limit      = floor(target/50);

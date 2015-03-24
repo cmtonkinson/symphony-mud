@@ -1,14 +1,14 @@
 
 #include <deque>
-#include "being.h"
-#include "command-def.h"
-#include "exit.h"
-#include "item-types.h"
-#include "placement.h"
-#include "placement-item.h"
-#include "placement-npc.h"
-#include "world.h"
-#include "zone.h"
+#include "being.hpp"
+#include "command-def.hpp"
+#include "exit.hpp"
+#include "item-types.hpp"
+#include "placement.hpp"
+#include "placement-item.hpp"
+#include "placement-npc.hpp"
+#include "world.hpp"
+#include "zone.hpp"
 
 CmdLay::CmdLay(void) {
   name("lay");

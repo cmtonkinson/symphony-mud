@@ -1,7 +1,7 @@
 
 #include <cmath>
 #include <cstdlib>
-#include "math.h"
+#include "math.hpp"
 
 // Default state for Box-Muller variables.
 bool Math::has_extra_random = false;

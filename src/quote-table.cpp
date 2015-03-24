@@ -1,5 +1,5 @@
 ﻿
-#include "quote-table.h"
+#include "quote-table.hpp"
 
 QuoteTable::QuoteTable(void) {
   quotes().push_back(Quote("Albert Einstein", "The significant problems we face cannot be solved by the same level of thinking that created them."));

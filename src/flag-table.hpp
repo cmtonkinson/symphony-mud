@@ -4,7 +4,7 @@
 
 #include <map>
 #include <string>
-#include "flag-bank.h"
+#include "flag-bank.hpp"
 
 typedef std::map<std::string,FlagInt> NameToVal;
 typedef std::map<FlagInt,std::string> ValToName;

@@ -5,8 +5,8 @@
 #include <set>
 #include <string>
 #include <vector>
-#include "avatar.h"
-#include "flag-bank.h"
+#include "avatar.hpp"
+#include "flag-bank.hpp"
 
 typedef std::map<std::string,std::string> OptionMap;
 

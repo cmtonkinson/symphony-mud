@@ -1,10 +1,10 @@
 
-#include "command-def.h"
-#include "math.h"
-#include "os.h"
-#include "placement-item.h"
-#include "room.h"
-#include "world.h"
+#include "command-def.hpp"
+#include "math.hpp"
+#include "os.hpp"
+#include "placement-item.hpp"
+#include "room.hpp"
+#include "world.hpp"
 
 PlacementItem::PlacementItem(void) {
   type(ITEM);

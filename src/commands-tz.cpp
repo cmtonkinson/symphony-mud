@@ -1,14 +1,14 @@
 
-#include "avatar.h"
-#include "command-def.h"
-#include "container.h"
-#include "display.h"
-#include "group.h"
-#include "io-handler.h"
-#include "os.h"
-#include "room.h"
-#include "world.h"
-#include "zone.h"
+#include "avatar.hpp"
+#include "command-def.hpp"
+#include "container.hpp"
+#include "display.hpp"
+#include "group.hpp"
+#include "io-handler.hpp"
+#include "os.hpp"
+#include "room.hpp"
+#include "world.hpp"
+#include "zone.hpp"
 
 CmdTell::CmdTell(void) {
   name("tell");

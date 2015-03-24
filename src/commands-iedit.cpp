@@ -1,14 +1,14 @@
 
-#include "avatar.h"
-#include "command-def.h"
-#include "compound-table.h"
-#include "display.h"
-#include "flag-table.h"
-#include "io-handler.h"
-#include "item-types.h"
-#include "room.h"
-#include "world.h"
-#include "zone.h"
+#include "avatar.hpp"
+#include "command-def.hpp"
+#include "compound-table.hpp"
+#include "display.hpp"
+#include "flag-table.hpp"
+#include "io-handler.hpp"
+#include "item-types.hpp"
+#include "room.hpp"
+#include "world.hpp"
+#include "zone.hpp"
 
 ICmdAttribute::ICmdAttribute(void) {
   name("attribute");

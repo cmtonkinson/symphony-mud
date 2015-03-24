@@ -2,7 +2,7 @@
 #ifndef H_SYMPHONY_SPELLS
 #define H_SYMPHONY_SPELLS
 
-#include "ability.h"
+#include "ability.hpp"
 
 #define INVISIBILITY        "invisibility"
 #define DETECT_INVISIBILITY "detect invisibility"

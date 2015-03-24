@@ -1,8 +1,8 @@
 
-#include "being.h"
-#include "display.h"
-#include "group.h"
-#include "room.h"
+#include "being.hpp"
+#include "display.hpp"
+#include "group.hpp"
+#include "room.hpp"
 
 Group::Group(void) {
   return;

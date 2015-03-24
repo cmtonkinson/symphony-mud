@@ -3,8 +3,8 @@
 #define H_SYMPHONY_KLASS
 
 #include <string>
-#include "ability.h"
-#include "ability-table.h"
+#include "ability.hpp"
+#include "ability-table.hpp"
 
 /*
  * Klass base class - not pure virtual, but shouldn't be instantiated directly.

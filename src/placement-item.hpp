@@ -2,7 +2,7 @@
 #ifndef H_SYMPHONY_PLACEMENT_ITEM
 #define H_SYMPHONY_PLACEMENT_ITEM
 
-#include "placement.h"
+#include "placement.hpp"
 
 class PlacementItem: public Placement {
   public:

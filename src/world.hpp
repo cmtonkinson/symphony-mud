@@ -6,17 +6,17 @@
 #include <set>
 #include <string>
 #include <vector>
-#include "ability-table.h"
-#include "zone.h"
-#include "avatar.h"
-#include "board.h"
-#include "exit.h"
-#include "io-handler.h"
-#include "npc.h"
-#include "item.h"
-#include "regex.h"
-#include "room.h"
-#include "schedule.h"
+#include "ability-table.hpp"
+#include "zone.hpp"
+#include "avatar.hpp"
+#include "board.hpp"
+#include "exit.hpp"
+#include "io-handler.hpp"
+#include "npc.hpp"
+#include "item.hpp"
+#include "regex.hpp"
+#include "room.hpp"
+#include "schedule.hpp"
 
 class Socket;
 

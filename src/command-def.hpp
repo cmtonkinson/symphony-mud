@@ -2,8 +2,8 @@
 #ifndef H_SYMPHONY_COMMAND_LIST
 #define H_SYMPHONY_COMMAND_LIST
 
-#include "command-table.h"
-#include "command.h"
+#include "command-table.hpp"
+#include "command.hpp"
 
 DEF_COMMANDTABLE(Commands)      // Standard (and admin)0 Commands
 DEF_COMMANDTABLE(IeditCommands) // Item edit Commands

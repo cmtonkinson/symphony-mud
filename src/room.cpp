@@ -1,10 +1,10 @@
 
-#include "zone.h"
-#include "display.h"
-#include "exit.h"
-#include "placement.h"
-#include "terrain-table.h"
-#include "world.h"
+#include "zone.hpp"
+#include "display.hpp"
+#include "exit.hpp"
+#include "placement.hpp"
+#include "terrain-table.hpp"
+#include "world.hpp"
 
 Room::Room(void): _inventory(&Identifiers::longname) {
   for (unsigned u = 0; u < 6; ++u) _exits[u] = nullptr;

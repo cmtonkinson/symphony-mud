@@ -4,7 +4,7 @@
 
 #include <map>
 #include <string>
-#include "compound.h"
+#include "compound.hpp"
 
 class CompoundTable {
   private:

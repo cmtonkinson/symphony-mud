@@ -1,5 +1,5 @@
 ﻿
-#include "modifier.h"
+#include "modifier.hpp"
 
 Modifier::Modifier(void):
     _attribute(0),

@@ -1,5 +1,5 @@
 
-#include "dice.h"
+#include "dice.hpp"
 
 Dice::Dice(void): _number(0), _faces(0) {
   return;

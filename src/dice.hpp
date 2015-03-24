@@ -4,7 +4,7 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include "estring.h"
+#include "estring.hpp"
 
 class Dice {
   public:

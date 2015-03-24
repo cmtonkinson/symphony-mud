@@ -1,6 +1,6 @@
 
-#include "being.h"
-#include "spells.h"
+#include "being.hpp"
+#include "spells.hpp"
 
 bool Being::intone(Ability* spell) {
   bool status = false;

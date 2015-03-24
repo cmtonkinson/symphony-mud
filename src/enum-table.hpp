@@ -4,8 +4,8 @@
 
 #include <map>
 #include <string>
-#include "enum.h"
-#include "flag-bank.h"
+#include "enum.hpp"
+#include "flag-bank.hpp"
 
 class EnumTable {
   public:

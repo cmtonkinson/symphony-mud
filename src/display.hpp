@@ -8,8 +8,8 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
-#include "being.h"
-#include "regex.h"
+#include "being.hpp"
+#include "regex.hpp"
 
 class Display {
   private:

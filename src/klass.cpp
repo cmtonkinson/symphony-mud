@@ -1,5 +1,5 @@
 
-#include "klass.h"
+#include "klass.hpp"
 
 Klass::Klass(void) {
   return;

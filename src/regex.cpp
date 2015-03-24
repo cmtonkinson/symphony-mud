@@ -1,5 +1,5 @@
 
-#include "regex.h"
+#include "regex.hpp"
 
 std::map<std::pair<std::string,int>,RegexInfo*> Regex::_cache;
 std::list<std::map<std::pair<std::string,int>,RegexInfo*>::iterator> Regex::_cache_meta;

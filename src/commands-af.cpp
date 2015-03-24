@@ -1,13 +1,13 @@
 
 #include <algorithm>
-#include "avatar.h"
-#include "command-def.h"
-#include "display.h"
-#include "flag-table.h"
-#include "io-handler.h"
-#include "os.h"
-#include "room.h"
-#include "world.h"
+#include "avatar.hpp"
+#include "command-def.hpp"
+#include "display.hpp"
+#include "flag-table.hpp"
+#include "io-handler.hpp"
+#include "os.hpp"
+#include "room.hpp"
+#include "world.hpp"
 
 CmdAdminNote::CmdAdminNote(void) {
   name("adminnote");

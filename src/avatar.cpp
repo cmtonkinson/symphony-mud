@@ -2,16 +2,16 @@
 #include <cstdarg>
 #include <sodium/crypto_hash.h>
 #include <time.h>
-#include "avatar.h"
-#include "being.h"
-#include "command-def.h"
-#include "estring.h"
-#include "io-handler.h"
-#include "item-types.h"
-#include "os.h"
-#include "socket.h"
-#include "storage.h"
-#include "world.h"
+#include "avatar.hpp"
+#include "being.hpp"
+#include "command-def.hpp"
+#include "estring.hpp"
+#include "io-handler.hpp"
+#include "item-types.hpp"
+#include "os.hpp"
+#include "socket.hpp"
+#include "storage.hpp"
+#include "world.hpp"
 
 const unsigned Avatar::DO_NOT_DELETE;
 const unsigned Avatar::DELETE_ON_LOGIN;

@@ -1,9 +1,9 @@
 
-#include "being.h"
-#include "command-def.h"
-#include "item-types.h"
-#include "world.h"
-#include "zone.h"
+#include "being.hpp"
+#include "command-def.hpp"
+#include "item-types.hpp"
+#include "world.hpp"
+#include "zone.hpp"
 
 CmdGecho::CmdGecho(void) {
   name("gecho");

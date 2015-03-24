@@ -4,11 +4,11 @@
 
 #include <list>
 #include <set>
-#include "compound.h"
-#include "flag-bank.h"
-#include "flag-table.h"
-#include "identifiers.h"
-#include "modifier.h"
+#include "compound.hpp"
+#include "flag-bank.hpp"
+#include "flag-table.hpp"
+#include "identifiers.hpp"
+#include "modifier.hpp"
 
 class ItemArmor;
 class ItemClothing;

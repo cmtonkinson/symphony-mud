@@ -1,13 +1,13 @@
 
-#include "ability.h"
-#include "being.h"
-#include "command.h"
-#include "display.h"
-#include "item-types.h"
-#include "os.h"
-#include "skills.h"
-#include "stats.h"
-#include "world.h"
+#include "ability.hpp"
+#include "being.hpp"
+#include "command.hpp"
+#include "display.hpp"
+#include "item-types.hpp"
+#include "os.hpp"
+#include "skills.hpp"
+#include "stats.hpp"
+#include "world.hpp"
 
 void Being::formGroup(void) {
   group(new Group());

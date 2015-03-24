@@ -1,6 +1,6 @@
 
-#include "note.h"
-#include "world.h"
+#include "note.hpp"
+#include "world.hpp"
 
 Note::Note(void) {
   return;

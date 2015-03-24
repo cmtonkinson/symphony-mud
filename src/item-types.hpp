@@ -2,9 +2,9 @@
 #ifndef H_SYMPHONY_ITEM_TYPES
 #define H_SYMPHONY_ITEM_TYPES
 
-#include "dice.h"
-#include "enum-table.h"
-#include "inventory-container.h"
+#include "dice.hpp"
+#include "enum-table.hpp"
+#include "inventory-container.hpp"
 
 class Being;
 

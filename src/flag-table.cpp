@@ -1,6 +1,6 @@
 
-#include "flag-table.h"
-#include "regex.h"
+#include "flag-table.hpp"
+#include "regex.hpp"
 
 FlagTable::FlagTable(void) {
   return;

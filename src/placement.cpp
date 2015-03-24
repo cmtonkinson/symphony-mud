@@ -1,8 +1,8 @@
 
-#include "placement.h"
-#include "placement-npc.h"
-#include "placement-item.h"
-#include "world.h"
+#include "placement.hpp"
+#include "placement-npc.hpp"
+#include "placement-item.hpp"
+#include "world.hpp"
 
 const unsigned Placement::ERROR;
 const unsigned Placement::ITEM;

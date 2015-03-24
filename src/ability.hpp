@@ -4,7 +4,7 @@
 
 #include <set>
 #include <string>
-#include "enum-table.h"
+#include "enum-table.hpp"
 
 class Being;
 class Item;

@@ -1,5 +1,5 @@
 
-#include "command-def.h"
+#include "command-def.hpp"
 
 /* This is the default constructor for all CommandTables, therefore
  * any commands added here will be available throughout every game

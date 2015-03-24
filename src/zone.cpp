@@ -1,13 +1,13 @@
 
-#include "exit.h"
-#include "os.h"
-#include "placement-item.h"
-#include "placement-npc.h"
-#include "room.h"
-#include "storage.h"
-#include "terrain-table.h"
-#include "world.h"
-#include "zone.h"
+#include "exit.hpp"
+#include "os.hpp"
+#include "placement-item.hpp"
+#include "placement-npc.hpp"
+#include "room.hpp"
+#include "storage.hpp"
+#include "terrain-table.hpp"
+#include "world.hpp"
+#include "zone.hpp"
 
 Zone::Zone(void) {
   return;

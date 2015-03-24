@@ -1,6 +1,6 @@
 
-#include "enum-table.h"
-#include "regex.h"
+#include "enum-table.hpp"
+#include "regex.hpp"
 
 EnumTable::EnumTable(void) {
   return;

@@ -2,7 +2,7 @@
 #ifndef H_SYMPHONY_SKILLS
 #define H_SYMPHONY_SKILLS
 
-#include "ability.h"
+#include "ability.hpp"
 
 #define SECOND_STRIKE "second strike"
 #define THIRD_STRIKE  "third strike"

@@ -3,7 +3,7 @@
 #define H_SYMPHONY_BOARD
 
 #include <map>
-#include "note.h"
+#include "note.hpp"
 
 
 class Board {

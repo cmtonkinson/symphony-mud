@@ -1,5 +1,5 @@
 
-#include "ability-table.h"
+#include "ability-table.hpp"
 
 void AbilityTable::insert(Ability* ability) {
   abilities().insert(ability);

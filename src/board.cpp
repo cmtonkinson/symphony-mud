@@ -1,6 +1,6 @@
 
-#include "board.h"
-#include "world.h"
+#include "board.hpp"
+#include "world.hpp"
 
 Board::Board(void): _number(0) {
   return;

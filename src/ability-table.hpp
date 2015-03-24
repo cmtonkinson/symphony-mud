@@ -5,7 +5,7 @@
 #include <map>
 #include <set>
 #include <string>
-#include "ability.h"
+#include "ability.hpp"
 
 typedef std::map<std::string,Ability*> AbilityMap;
 

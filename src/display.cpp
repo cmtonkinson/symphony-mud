@@ -1,9 +1,9 @@
 
 #include <math.h>
-#include "being.h"
-#include "display.h"
-#include "exit.h"
-#include "item.h"
+#include "being.hpp"
+#include "display.hpp"
+#include "exit.hpp"
+#include "item.hpp"
 
 Display::Display(void) {
   return;

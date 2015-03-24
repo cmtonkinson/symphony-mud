@@ -1,7 +1,7 @@
 ﻿
 #include <string.h>
-#include "event-handler.h"
-#include "schedule.h"
+#include "event-handler.hpp"
+#include "schedule.hpp"
 
 Schedule::Schedule(void) {
   memset(_job_history, 0, sizeof(double) * JOB_TIME_HISTORY);

@@ -2,7 +2,7 @@
 #ifndef H_SYMPHONY_EVENT_HANDLER
 #define H_SYMPHONY_EVENT_HANDLER
 
-#include "event.h"
+#include "event.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 // ADT BASE

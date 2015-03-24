@@ -1,6 +1,6 @@
 
-#include "flag-bank.h"
-#include "flag-table.h"
+#include "flag-bank.hpp"
+#include "flag-table.hpp"
 
 FlagBank::FlagBank(FlagInt bank):
     _bank(bank) {

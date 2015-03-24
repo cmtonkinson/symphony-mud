@@ -1,10 +1,10 @@
 
 #include <cstdarg>
 #include <dirent.h>
-#include "command-def.h"
-#include "os.h"
-#include "storage.h"
-#include "world.h"
+#include "command-def.hpp"
+#include "os.hpp"
+#include "storage.hpp"
+#include "world.hpp"
 
 World::World(void) {
   // basic setup

@@ -1,13 +1,13 @@
 
-#include "avatar.h"
-#include "command-def.h"
-#include "display.h"
-#include "io-handler.h"
-#include "item-types.h"
-#include "quote-table.h"
-#include "room.h"
-#include "world.h"
-#include "zone.h"
+#include "avatar.hpp"
+#include "command-def.hpp"
+#include "display.hpp"
+#include "io-handler.hpp"
+#include "item-types.hpp"
+#include "quote-table.hpp"
+#include "room.hpp"
+#include "world.hpp"
+#include "zone.hpp"
 
 CmdQuit::CmdQuit(void) {
   name("quit");

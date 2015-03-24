@@ -1,5 +1,5 @@
 
-#include "socket.h"
+#include "socket.hpp"
 
 /********************************************************* EXCEPTION *********************************************************/
 SocketException::SocketException(const std::string& method, const int& n, bool gai_error) {

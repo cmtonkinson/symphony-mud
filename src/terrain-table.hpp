@@ -3,7 +3,7 @@
 #define H_SYMPHONY_TERRAIN_TABLE
 
 #include <map>
-#include "terrain.h"
+#include "terrain.hpp"
 
 class TerrainTable {
   public:

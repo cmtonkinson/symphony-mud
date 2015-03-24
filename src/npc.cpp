@@ -1,12 +1,12 @@
 
 #include <math.h>
-#include "command.h"
-#include "command-table.h"
-#include "io-handler.h"
-#include "math.h"
-#include "npc.h"
-#include "world.h"
-#include "zone.h"
+#include "command.hpp"
+#include "command-table.hpp"
+#include "io-handler.hpp"
+#include "math.hpp"
+#include "npc.hpp"
+#include "world.hpp"
+#include "zone.hpp"
 
 // Static constants need external linkage.
 const unsigned Npc::MIN_NPCILITY;

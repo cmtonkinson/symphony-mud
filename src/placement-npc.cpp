@@ -1,9 +1,9 @@
 
-#include "math.h"
-#include "os.h"
-#include "placement-npc.h"
-#include "room.h"
-#include "world.h"
+#include "math.hpp"
+#include "os.hpp"
+#include "placement-npc.hpp"
+#include "room.hpp"
+#include "world.hpp"
 
 PlacementNpc::PlacementNpc(void) {
   type(NPC);

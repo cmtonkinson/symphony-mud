@@ -1,7 +1,7 @@
 
 #include <stdio.h>
-#include "os.h"
-#include "world.h"
+#include "os.hpp"
+#include "world.hpp"
 
 int main(int argc, char* argv[], char* envp[]) {
 

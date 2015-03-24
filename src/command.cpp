@@ -1,13 +1,13 @@
 
-#include "command.h"
-#include "command-def.h"
-#include "display.h"
-#include "os.h"
-#include "regex.h"
-#include "room.h"
-#include "socket.h"
-#include "storage.h"
-#include "world.h"
+#include "command.hpp"
+#include "command-def.hpp"
+#include "display.hpp"
+#include "os.hpp"
+#include "regex.hpp"
+#include "room.hpp"
+#include "socket.hpp"
+#include "storage.hpp"
+#include "world.hpp"
 
 ///////////////////////////////////////////// BASE CLASS /////////////////////////////////////////////
 Command::Command(void) {

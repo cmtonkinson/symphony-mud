@@ -1,8 +1,8 @@
 ﻿
-#include "estring.h"
-#include "inventory-container.h"
-#include "item-types.h"
-#include "item.h"
+#include "estring.hpp"
+#include "inventory-container.hpp"
+#include "item-types.hpp"
+#include "item.hpp"
 
 InventoryContainer::InventoryContainer(std::string (Identifiers::*getName)(void) const):
     _getName(getName) {

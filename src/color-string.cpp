@@ -1,5 +1,5 @@
 
-#include "color-string.h"
+#include "color-string.hpp"
 
 ColorString::ColorString(void) {
   return;

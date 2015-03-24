@@ -1,7 +1,7 @@
 ﻿
 #include <cstdlib>
-#include "job.h"
-#include "schedule.h"
+#include "job.hpp"
+#include "schedule.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Job

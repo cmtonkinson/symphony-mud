@@ -1,6 +1,6 @@
 
-#include "enum.h"
-#include "enum-table.h"
+#include "enum.hpp"
+#include "enum-table.hpp"
 
 Enum::Enum(EnumInt value):
     _value(value) {

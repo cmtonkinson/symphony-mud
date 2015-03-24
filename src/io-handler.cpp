@@ -1,12 +1,12 @@
 
 #include <vector>
-#include "avatar.h"
-#include "color-string.h"
-#include "command-def.h"
-#include "display.h"
-#include "io-handler.h"
-#include "os.h"
-#include "world.h"
+#include "avatar.hpp"
+#include "color-string.hpp"
+#include "command-def.hpp"
+#include "display.hpp"
+#include "io-handler.hpp"
+#include "os.hpp"
+#include "world.hpp"
 
 /************************************** BASE CLASS HANDLE METHOD **************************************/
 IOHandler::IOHandler(Being* being) {

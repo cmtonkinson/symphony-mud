@@ -4,9 +4,9 @@
 
 #include <list>
 #include <string>
-#include "inventory-container.h"
-#include "item.h"
-#include "terrain.h"
+#include "inventory-container.hpp"
+#include "item.hpp"
+#include "terrain.hpp"
 
 
 class Zone;

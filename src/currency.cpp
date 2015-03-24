@@ -1,6 +1,6 @@
 
-#include "currency.h"
-#include "estring.h"
+#include "currency.hpp"
+#include "estring.hpp"
 
 const unsigned Currency::SILVER_PER_GOLD;
 

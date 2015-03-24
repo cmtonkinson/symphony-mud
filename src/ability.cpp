@@ -1,9 +1,9 @@
 
-#include "ability.h"
-#include "being.h"
-#include "item.h"
-#include "os.h"
-#include "world.h"
+#include "ability.hpp"
+#include "being.hpp"
+#include "item.hpp"
+#include "os.hpp"
+#include "world.hpp"
 
 void Ability::add_dependency(Ability* ability) {
   _dependencies.insert(ability);

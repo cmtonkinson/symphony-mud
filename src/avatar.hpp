@@ -3,12 +3,12 @@
 #define H_SYMPHONY_AVATAR
 
 #include <string>
-#include "being.h"
-#include "color-string.h"
-#include "currency.h"
-#include "enum-table.h"
-#include "flag-table.h"
-#include "socket.h"
+#include "being.hpp"
+#include "color-string.hpp"
+#include "currency.hpp"
+#include "enum-table.hpp"
+#include "flag-table.hpp"
+#include "socket.hpp"
 
 class Zone;
 class Item;

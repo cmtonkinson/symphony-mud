@@ -1,6 +1,6 @@
 
-#include "being.h"
-#include "spells.h"
+#include "being.hpp"
+#include "spells.hpp"
 
 bool InvisibilitySpell::execute(Being* being) const {
   return true;

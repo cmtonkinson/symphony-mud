@@ -3,8 +3,8 @@
 #define H_SYMPHONY_JOB
 
 #include <ctime>
-#include "event-handler.h"
-#include "event.h"
+#include "event-handler.hpp"
+#include "event.hpp"
 
 class Schedule;
 

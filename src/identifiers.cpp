@@ -1,6 +1,6 @@
 
-#include "identifiers.h"
-#include "regex.h"
+#include "identifiers.hpp"
+#include "regex.hpp"
 
 Identifiers::Identifiers(void) {
   return;

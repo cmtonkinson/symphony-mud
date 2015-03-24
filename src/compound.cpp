@@ -1,5 +1,5 @@
 ﻿
-#include "compound.h"
+#include "compound.hpp"
 
 Compound::Compound(void) {
   return;

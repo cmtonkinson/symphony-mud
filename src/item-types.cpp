@@ -1,7 +1,7 @@
 
-#include "item-types.h"
-#include "regex.h"
-#include "being.h"
+#include "item-types.hpp"
+#include "regex.hpp"
+#include "being.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 // ARMOR

@@ -4,14 +4,14 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <vector>
-#include "avatar.h"
-#include "being.h"
-#include "command.h"
-#include "npc.h"
-#include "os.h"
-#include "regex.h"
-#include "world.h"
-#include "zone.h"
+#include "avatar.hpp"
+#include "being.hpp"
+#include "command.hpp"
+#include "npc.hpp"
+#include "os.hpp"
+#include "regex.hpp"
+#include "world.hpp"
+#include "zone.hpp"
 
 namespace os {
 

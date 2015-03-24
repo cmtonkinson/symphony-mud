@@ -3,7 +3,7 @@
 #define H_SYMPHONY_GROUP
 
 #include <set>
-#include "room.h"
+#include "room.hpp"
 
 class Being;
 

@@ -1,14 +1,14 @@
 
-#include "avatar.h"
-#include "command-def.h"
-#include "display.h"
-#include "flag-table.h"
-#include "io-handler.h"
-#include "os.h"
-#include "room.h"
-#include "terrain-table.h"
-#include "world.h"
-#include "zone.h"
+#include "avatar.hpp"
+#include "command-def.hpp"
+#include "display.hpp"
+#include "flag-table.hpp"
+#include "io-handler.hpp"
+#include "os.hpp"
+#include "room.hpp"
+#include "terrain-table.hpp"
+#include "world.hpp"
+#include "zone.hpp"
 
 ZCmdDelete::ZCmdDelete(void) {
   name("delete");

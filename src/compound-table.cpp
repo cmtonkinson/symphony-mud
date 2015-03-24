@@ -1,6 +1,6 @@
 ﻿
-#include "compound-table.h"
-#include "display.h"
+#include "compound-table.hpp"
+#include "display.hpp"
 
 CompoundTable::CompoundTable(void) {
   /* Attributes NOT of the "arbitrarily relative 0-1 scale" nature are marked with an "X" for ease of reference.

@@ -1,9 +1,9 @@
 
-#include "being.h"
-#include "compound-table.h"
-#include "item-types.h"
-#include "item.h"
-#include "socket.h"
+#include "being.hpp"
+#include "compound-table.hpp"
+#include "item-types.hpp"
+#include "item.hpp"
+#include "socket.hpp"
 
 Item::Item(void) {
   extra(NULL);

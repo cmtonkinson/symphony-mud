@@ -1,6 +1,6 @@
 
-#include "skills.h"
-#include "klass.h"
+#include "skills.hpp"
+#include "klass.hpp"
 
 Warrior::Warrior(void) {
   _name = "warrior";

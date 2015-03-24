@@ -1,10 +1,10 @@
 
-#include "command-def.h"
-#include "being.h"
-#include "display.h"
-#include "io-handler.h"
-#include "npc.h"
-#include "room.h"
+#include "command-def.hpp"
+#include "being.hpp"
+#include "display.hpp"
+#include "io-handler.hpp"
+#include "npc.hpp"
+#include "room.hpp"
 
 NCmdAggressiveness::NCmdAggressiveness(void) {
   name("aggressivenes");

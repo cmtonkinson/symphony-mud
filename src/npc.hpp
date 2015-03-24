@@ -2,7 +2,7 @@
 #ifndef H_SYMPHONY_NPC
 #define H_SYMPHONY_NPC
 
-#include "being.h"
+#include "being.hpp"
 
 class Zone;
 

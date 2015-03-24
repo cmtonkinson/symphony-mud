@@ -1,6 +1,6 @@
 
-#include "command-def.h"
-#include "world.h"
+#include "command-def.hpp"
+#include "world.hpp"
 
 SCmdAudible::SCmdAudible(void) {
   name("audible");
