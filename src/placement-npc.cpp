@@ -56,7 +56,7 @@ bool PlacementNpc::execute(std::list<Item*>& new_items, std::list<Npc*>& new_npc
       npc->resetStats();
       for (int i = 1; i < level; ++i) npc->gainLevel();
       // Imbibe the npc with some life, as appropriate.
-      npc->npcilize();
+      npc->mobilize();
     }
   }
 

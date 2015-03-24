@@ -206,7 +206,7 @@ bool CmdNload::execute(Being* being, const std::vector<std::string>& args) {
       World::Instance().insert(npc);
       being->room()->add(npc);
       npc->room(being->room());
-      npc->npcilize();
+      npc->mobilize();
       being->send("You load %s.", npc->identifiers().shortname().c_str());
       being->room()->send_cond("$p has created $c.", being, npc);
       return true;

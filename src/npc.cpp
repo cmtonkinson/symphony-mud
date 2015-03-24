@@ -59,7 +59,7 @@ void Npc::whatHappensWhenIDie(void) {
   return;
 }
 
-void Npc::npcilize(void) {
+void Npc::mobilize(void) {
   double base        = 0.0;
   double smudge      = 0.0;
   double lower_bound = 0.0;
