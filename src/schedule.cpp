@@ -63,14 +63,25 @@ long Schedule::size(void) const {
 
 // Though _index is routinely manipulated in add() and remove(), cleanup() is the primary logic for
 // which the _index exists. cleanup() is meant as a callback to be made in the destructor of classes
-// which are passed as the ItemType pointers in Job constructors.
-void Schedule::cleanup(void* item) {
-  if (_index.count(item) > 0) {
-    for (auto iter : _index[item]) {
-      remove(iter);
-      delete iter;
-    }
+// which are passed as the ObjectType pointers in Job constructors.
+//
+// In other words, if you write something like this anywhere in the code:
+//
+//     World::Instance().schedule()->add(new RecurringJob(this, &MyClass::meth, "MyClass::meth", n));
+//
+// (where `this` is a MyClass instance) then `MyClass::~MyClass()` must call the following to
+// ensure that any scheduled jobs pointing to the MyClass instance are disposed of:
+//
+//     World::Instance().schedule()->cleanup(this);
+//
+void Schedule::cleanup(void* object) {
+  Job* job = nullptr;
+  while (_index.count(object) > 0) {
+    job = *_index[object].begin();
+    remove(job);
+    delete job;
   }
+
   return;
 }
 

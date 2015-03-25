@@ -27,7 +27,7 @@ class Schedule {
     double  minJobTime(void) const;
     double  maxJobTime(void) const;
 
-    const std::multiset<Job*,JobComp>&  queue() { return _queue; }
+    const std::multiset<Job*,JobComp>&  queue() const { return _queue; }
 
   private:
     // The Schedule is composed of a multiset of Jobs, sorted primarily by the timestamp Job::_when

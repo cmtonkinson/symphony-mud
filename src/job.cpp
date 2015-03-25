@@ -12,9 +12,9 @@ Job::~Job(void) {
   return;
 }
 
-void Job::setup(void* who_) {
+void Job::setup(void* who) {
   _counter = nextIndex();
-  _who = who_;
+  _who = who;
   return;
 }
 
@@ -29,15 +29,15 @@ bool Job::fire(void) {
 }
 
 /*
- * Job::< simply compares _when, but JobComp must also take the address of the Job under
- * consideration so that for example erasing a Job from a std::set won't remove all other Jobs that
- * happen to have the same _when value.
+ * Job::< simply compares _when, but JobComp::() must also take the _counter of the Job under
+ * consideration so that for example erasing a Job from a std::set or std::multiset won't remove
+ * all other Jobs that happen to have the same _when value.
  */
 bool JobComp::operator()(Job* left, Job* right) const {
-  if (*left < *right) {
-    return true;
-  } else {
+  if (left->when() == right->when()) {
     return left->counter() < right->counter();
+  } else {
+    return left->when() < right->when();
   }
 }
 
@@ -60,6 +60,9 @@ void RecurringJob::recur(Schedule* schedule) {
     calculateNextTime();
     updateCounter();
     schedule->add(this);
+  // If we're not actually going to repeat the job, it must be deleted.
+  } else {
+    delete this;
   }
   return;
 }

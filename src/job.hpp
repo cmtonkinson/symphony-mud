@@ -25,7 +25,7 @@ class Job: public Event {
     // after itself so that Jobs for destroyed items are cleared from the Schedule.
     // Your ObjectType destructor must call `Schedule::cleanup()` and pass itself as the argument.
     template <class ObjectType,class EventType>
-    Job(time_t when, ObjectType* item, bool (ObjectType::*method)(EventType*), std::string name): _when(when), _what(new EventHandlerMethod<ObjectType,EventType>(item, method)), _name(name) { setup(item); }
+    Job(time_t when, ObjectType* object, bool (ObjectType::*method)(EventType*), std::string name): _when(when), _what(new EventHandlerMethod<ObjectType,EventType>(object, method)), _name(name) { setup(object); }
 
     virtual ~Job(void);
 
@@ -38,7 +38,7 @@ class Job: public Event {
 
     bool              operator < (const Job& ref) const { return _when < ref.when(); }
 
-    void              setup(void* who_ = nullptr);
+    void              setup(void* who = nullptr);
     void              updateCounter(void);
     bool              ready(void) const                 { return _when <= time(NULL); }
     bool              fire(void);
@@ -90,7 +90,7 @@ class RecurringJob: public Job {
     template <class EventType>
     RecurringJob(bool (*function)(EventType*), std::string name, time_t lower, time_t upper = 0, int togo = -1): Job(0, function, name), _lower(lower), _upper(upper), _togo(togo) { calculateNextTime(); }
     template <class ObjectType,class EventType>
-    RecurringJob(ObjectType* item, bool (ObjectType::*method)(EventType*), std::string name, time_t lower, time_t upper = 0, int togo = -1): Job(0, item, method, name), _lower(lower), _upper(upper), _togo(togo) { calculateNextTime(); }
+    RecurringJob(ObjectType* object, bool (ObjectType::*method)(EventType*), std::string name, time_t lower, time_t upper = 0, int togo = -1): Job(0, object, method, name), _lower(lower), _upper(upper), _togo(togo) { calculateNextTime(); }
     virtual ~RecurringJob(void);
 
     virtual bool  isRecurring(void) const     { return true; }
