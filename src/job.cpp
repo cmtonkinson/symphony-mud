@@ -18,6 +18,11 @@ void Job::setup(void* who_) {
   return;
 }
 
+void Job::updateCounter(void) {
+  _counter = nextIndex();
+  return;
+}
+
 bool Job::fire(void) {
   // we don't want to fire with a null pointer...
   return _what ? _what->call(this) : false;
@@ -53,6 +58,7 @@ void RecurringJob::recur(Schedule* schedule) {
   // Otherwise, decrement _togo and recur if the result is positive.
   if (_togo < 0 || --_togo > 0) {
     calculateNextTime();
+    updateCounter();
     schedule->add(this);
   }
   return;
@@ -60,10 +66,6 @@ void RecurringJob::recur(Schedule* schedule) {
 
 void RecurringJob::calculateNextTime(void) {
   time_t now = time(NULL);
-  if (_upper > _lower) {
-    _when = now + Math::rand(_lower, _upper);
-  } else {
-    _when = now + _lower;
-  }
+  _when = now + (_upper > _lower ? Math::rand(_lower, _upper) : _lower);
   return;
 }

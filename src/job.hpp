@@ -39,6 +39,7 @@ class Job: public Event {
     bool              operator < (const Job& ref) const { return _when < ref.when(); }
 
     void              setup(void* who_ = nullptr);
+    void              updateCounter(void);
     bool              ready(void) const                 { return _when <= time(NULL); }
     bool              fire(void);
     void              kill(void)                        { delete _what; _what = NULL; } // renders the job useless
