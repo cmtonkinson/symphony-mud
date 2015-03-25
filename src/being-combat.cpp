@@ -364,8 +364,25 @@ void Being::resetStats(void) {
   return;
 }
 
+// TODO - improve to include stat adjustments, etc.
 bool Being::auto_heal(Job* job) {
-  // +20% total stamina
-  stamina(stamina() + MAX_STAMINA / 5);
+  int add = 0;
+  int max = 0;
+
+  // health: 1% of max but not more than the current health value
+  add = maxHealth() / 100;
+  max = health();
+  health(health() + Math::bound(add, 1, max));
+
+  // mana: 1% of max
+  add = maxMana() / 100;
+  max = level();
+  mana(mana() + Math::bound(add, 1, max));
+
+  // stamina: 1 for n00bs, 20 for heroes, linear interpolation (for now)
+  add = level() / 5;
+  max = MAX_STAMINA / 2.5;
+  stamina(stamina() + Math::bound(add, 1, max));
+
   return true;
 }

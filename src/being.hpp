@@ -14,10 +14,11 @@
 #include "group.hpp"
 #include "identifiers.hpp"
 #include "inventory-container.hpp"
+#include "item.hpp"
 #include "job.hpp"
 #include "klass.hpp"
+#include "math.hpp"
 #include "modifier.hpp"
-#include "item.hpp"
 
 class Ability;
 class Avatar;

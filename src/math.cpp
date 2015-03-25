@@ -55,6 +55,12 @@ int Math::bound(int value, int min, int max) {
   else return max;
 }
 
+double Math::bound(double value, double min, double max) {
+  if (value < min) return min;
+  else if (value < max) return value;
+  else return max;
+}
+
 bool Math::percent_chance(unsigned percent) {
   return rand(1, 100) <= percent;
 }

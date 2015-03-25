@@ -42,7 +42,8 @@ class Math {
      * If value > max, max will be returned.
      * If value is between min and max, value will be returned.
      */
-    static int bound(int value, int min, int max);
+    static int      bound(int value, int min, int max);
+    static double   bound(double value, double min, double max);
 
     /*
      */

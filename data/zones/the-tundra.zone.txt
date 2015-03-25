@@ -11,6 +11,135 @@ description 0:
 smell 0:
 sound 0:
 terrain 4:snow
+EXIT
+targetVnum 5
+direction 1
+key 0
+flags 0
+/EXIT
+EXIT
+targetVnum 1
+direction 2
+key 0
+flags 0
+/EXIT
+/ROOM
+
+ROOM
+vnum 1
+name 9:Undefined
+description 0:
+smell 0:
+sound 0:
+terrain 4:snow
+EXIT
+targetVnum 4
+direction 1
+key 0
+flags 0
+/EXIT
+EXIT
+targetVnum 2
+direction 2
+key 0
+flags 0
+/EXIT
+EXIT
+targetVnum 0
+direction 4
+key 0
+flags 0
+/EXIT
+/ROOM
+
+ROOM
+vnum 2
+name 9:Undefined
+description 0:
+smell 0:
+sound 0:
+terrain 4:snow
+EXIT
+targetVnum 3
+direction 1
+key 0
+flags 0
+/EXIT
+EXIT
+targetVnum 1
+direction 4
+key 0
+flags 0
+/EXIT
+/ROOM
+
+ROOM
+vnum 3
+name 9:Undefined
+description 0:
+smell 0:
+sound 0:
+terrain 4:snow
+EXIT
+targetVnum 2
+direction 3
+key 0
+flags 0
+/EXIT
+EXIT
+targetVnum 4
+direction 4
+key 0
+flags 0
+/EXIT
+/ROOM
+
+ROOM
+vnum 4
+name 9:Undefined
+description 0:
+smell 0:
+sound 0:
+terrain 4:snow
+EXIT
+targetVnum 3
+direction 2
+key 0
+flags 0
+/EXIT
+EXIT
+targetVnum 1
+direction 3
+key 0
+flags 0
+/EXIT
+EXIT
+targetVnum 5
+direction 4
+key 0
+flags 0
+/EXIT
+/ROOM
+
+ROOM
+vnum 5
+name 9:Undefined
+description 0:
+smell 0:
+sound 0:
+terrain 4:snow
+EXIT
+targetVnum 4
+direction 2
+key 0
+flags 0
+/EXIT
+EXIT
+targetVnum 0
+direction 3
+key 0
+flags 0
+/EXIT
 /ROOM
 
 ITEM
