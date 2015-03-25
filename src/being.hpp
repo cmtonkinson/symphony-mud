@@ -351,7 +351,9 @@ class Being {
     unsigned      targetMana(void) const;
     unsigned      targetMovement(void) const;
     unsigned      targetTNL(void) const;
-    bool          auto_heal(Job* job);
+    bool          auto_health(Job* job);
+    bool          auto_mana(Job* job);
+    bool          auto_stamina(Job* job);
 
     AbilityTable&                 learned(void)                 { return _learned; }
     const AbilityTable&           learned(void) const           { return _learned; }

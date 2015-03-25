@@ -169,15 +169,29 @@ bool Being::evade(Being* striker) {
 int Being::calculateDamage(Being* victim, Item* weapon, double modifier) {
   int damage = 0;
 
-  // Initial damage based on weapon
-  damage = weapon->weapon()->damage().roll();
-  // Adjust if in off-hand
-  if (weapon == secondary()) damage *= 0.8;
-  // Adjust for strength
-  damage *= strengthPercent();
+  // With a weapon
+  if (weapon != nullptr) {
+    // Initial damage based on weapon
+    damage = weapon->weapon()->damage().roll();
+    // Adjust if in off-hand
+    if (weapon == secondary()) damage *= 0.8;
+    // Adjust for strength
+    damage *= strengthPercent();
+  // Hand-to-hand
+  } else {
+    // Boring!
+    damage = 4;
+    // Factor in level and stregth
+    damage += level() / 10 * strengthPercent();
+  }
 
-  // Ensure that SOME damage gets dealt.
-  return damage > 1 ? damage : 1;
+  // Randomize the result a bit
+  damage = Stats::cone_randomization(damage, 10);
+
+  // Ensure that SOME damage will be dealt.
+  if (damage < 1) damage = 1;
+
+  return damage;
 }
 
 void Being::takeDamage(int damage, Being* damager) {
@@ -364,25 +378,29 @@ void Being::resetStats(void) {
   return;
 }
 
+// 1% of max but not more than the current health value
 // TODO - improve to include stat adjustments, etc.
-bool Being::auto_heal(Job* job) {
-  int add = 0;
-  int max = 0;
-
-  // health: 1% of max but not more than the current health value
-  add = maxHealth() / 100;
-  max = health();
+bool Being::auto_health(Job* job) {
+  int add = maxHealth() / 100;
+  int max = health();
   health(health() + Math::bound(add, 1, max));
+  return true;
+}
 
-  // mana: 1% of max
-  add = maxMana() / 100;
-  max = level();
+// 1% of max
+// TODO - improve to include stat adjustments, etc.
+bool Being::auto_mana(Job* job) {
+  int add = maxMana() / 100;
+  int max = level();
   mana(mana() + Math::bound(add, 1, max));
+  return true;
+}
 
-  // stamina: 1 for n00bs, 20 for heroes, linear interpolation (for now)
-  add = level() / 5;
-  max = MAX_STAMINA / 2.5;
+// 1 for noobs, 20 for heroes, linear interpolation (for now)
+// TODO - improve to include stat adjustments, etc.
+bool Being::auto_stamina(Job* job) {
+  int add = level() / 5;
+  int max = MAX_STAMINA / 2.5;
   stamina(stamina() + Math::bound(add, 1, max));
-
   return true;
 }

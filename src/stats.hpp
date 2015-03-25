@@ -42,7 +42,7 @@ class Stats {
      * by the magnitude of the input value (the larger the input, the more variability in the
      * output).
      */
-    static int cone_randomization(int value);
+    static int cone_randomization(int value, int cone_factor = CONE_FACTOR);
 
     /*
      * CONE_FACTOR is used to control the standard deviation of outputs from the cone randomization

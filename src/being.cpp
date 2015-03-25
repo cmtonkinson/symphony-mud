@@ -169,7 +169,9 @@ void Being::handle(void) {
 
 void Being::animate(void) {
   // TODO - vary auto_heal period based on... something
-  World::Instance().schedule()->add(new RecurringJob(this, &Being::auto_heal, "Being::auto_heal", 3));
+  World::Instance().schedule()->add(new RecurringJob(this, &Being::auto_health,   "Being::auto_health", 50, 70));
+  World::Instance().schedule()->add(new RecurringJob(this, &Being::auto_mana,     "Being::auto_mana", 50, 70));
+  World::Instance().schedule()->add(new RecurringJob(this, &Being::auto_stamina,  "Being::auto_stamina", 2, 4));
   _animate();
   return;
 }

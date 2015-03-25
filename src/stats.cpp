@@ -16,7 +16,7 @@ int Stats::polynomial(int level, int base, int target) {
   return 0.5 + base + pow(level - 1, rate);
 }
 
-int Stats::cone_randomization(int value) {
-  double rand = Math::random_normal(value, value / Stats::CONE_FACTOR);
+int Stats::cone_randomization(int value, int cone_factor) {
+  double rand = Math::random_normal(value, value / cone_factor);
   return 0.5 + rand;
 }
