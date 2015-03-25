@@ -36,12 +36,8 @@ class Npc: public Being {
     virtual Npc*        toNpc(void)               { return this; }
     virtual const Npc*  toNpc(void) const         { return this; }
 
+    virtual void        _animate(void);
     virtual void        whatHappensWhenIDie(void);
-
-    // This is the primary entry method to initiate all automated Npc behavior. It is used e.g.
-    // when Npcs are placed from placements or the `nload` Command to breathe life into the Npc and
-    // cause it to do things like move around the world and other randomized or programatic actions.
-    void mobilize(void);
 
     bool auto_move(Job* job);
 

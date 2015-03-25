@@ -124,6 +124,8 @@ void Avatar::restoreRoom(void) {
   // show them around...
   look.avatar(this);
   look.execute(this, look_args);
+
+  animate();
   return;
 }
 
@@ -133,6 +135,10 @@ std::string Avatar::stringLoggedOn(void) {
 
 std::string Avatar::ip(void) const {
   return socket()->getIP();
+}
+
+void Avatar::_animate(void) {
+  return;
 }
 
 /****************************** Persistence ******************************/

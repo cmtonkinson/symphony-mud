@@ -29,6 +29,7 @@ class Avatar: public Being {
     virtual ~Avatar(void);
 
     // general methods...
+    virtual void      _animate(void);
     virtual bool      isAvatar(void) const        { return true; }
 
     Status&           status(void)                { return _status; }

@@ -167,6 +167,12 @@ void Being::handle(void) {
   return;
 }
 
+void Being::animate(void) {
+  World::Instance().schedule()->add(new RecurringJob(this, &Being::auto_heal, "Being::auto_heal", 3));
+  _animate();
+  return;
+}
+
 Klass* Being::klass(void) const {
   switch (pClass().number()) {
     case CLERIC:  return &Cleric::Instance();
@@ -275,9 +281,8 @@ void Being::unserializeAbilities(std::string ser) {
 }
 
 Being* Being::findBeing(const std::string& name) {
-  if (name == "self") {
-    return this;
-  }
+  if (name == "self") return this;
+
   for (std::list<Being*>::iterator it = room()->beings().begin(); it != room()->beings().end(); ++it) {
     if ((*it)->identifiers().matchesKeyword(name) && canSee(*it) == Being::SEE_NAME) {
       return *it;

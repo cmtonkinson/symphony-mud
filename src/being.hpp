@@ -253,7 +253,11 @@ class Being {
     std::string                 ident(void) const;
     bool                        immortal(void) const      { return level() > DEMIGOD; }
 
-    // Public methods...
+    // This is the primary "initialization" method for all Beings. It is used primarily to schedule
+    // Jobs relevant to the Being (e.g. for stamina regain or movement).
+    void                        animate(void);
+    virtual void                _animate(void) = 0;
+
     virtual bool                isAvatar(void) const      { return false; }
     virtual bool                isNpc(void) const         { return false; }
     virtual Avatar*             toAvatar(void)            { return nullptr; }
@@ -346,6 +350,7 @@ class Being {
     unsigned      targetMana(void) const;
     unsigned      targetMovement(void) const;
     unsigned      targetTNL(void) const;
+    bool          auto_heal(Job* job);
 
     AbilityTable&                 learned(void)                 { return _learned; }
     const AbilityTable&           learned(void) const           { return _learned; }

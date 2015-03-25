@@ -363,3 +363,9 @@ void Being::resetStats(void) {
   stamina(MAX_STAMINA);
   return;
 }
+
+bool Being::auto_heal(Job* job) {
+  // +20% total stamina
+  stamina(stamina() + MAX_STAMINA / 5);
+  return true;
+}
