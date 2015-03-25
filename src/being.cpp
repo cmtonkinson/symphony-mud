@@ -240,22 +240,22 @@ void Being::naturalStatAdjustment(void) {
       Foc -= 2;
       break;
   }
-  strength(strength() + Str);
   maxStrength(maxStrength() + Str);
-  dexterity(dexterity() + Dex);
+  strength(strength() + Str);
   maxDexterity(maxDexterity() + Dex);
-  constitution(constitution() + Con);
+  dexterity(dexterity() + Dex);
   maxConstitution(maxConstitution() + Con);
-  intelligence(intelligence() + Int);
+  constitution(constitution() + Con);
   maxIntelligence(maxIntelligence() + Int);
-  focus(focus() + Foc);
+  intelligence(intelligence() + Int);
   maxFocus(maxFocus() + Foc);
-  creativity(creativity() + Cre);
+  focus(focus() + Foc);
   maxCreativity(maxCreativity() + Cre);
-  charisma(charisma() + Cha);
+  creativity(creativity() + Cre);
   maxCharisma(maxCharisma() + Cha);
-  luck(luck() + Luc);
+  charisma(charisma() + Cha);
   maxLuck(maxLuck() + Luc);
+  luck(luck() + Luc);
   return;
 }
 

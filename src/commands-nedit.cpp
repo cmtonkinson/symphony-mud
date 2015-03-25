@@ -127,7 +127,10 @@ NCmdLevel::NCmdLevel(void) {
 bool NCmdLevel::execute(Being* being, const std::vector<std::string>& args) {
   int level = estring(args[0]);
   if (level > 0 && level < 101) {
-    avatar()->nedit()->level(level);
+    // Example stats.
+    avatar()->nedit()->resetStats();
+    for (int i = 1; i < level; ++i) avatar()->nedit()->gainLevel();
+
     avatar()->send("You've set the npc level to %u.", avatar()->nedit()->level());
     return true;
   } else {

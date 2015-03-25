@@ -188,9 +188,9 @@ CmdNload::CmdNload(void) {
 }
 
 bool CmdNload::execute(Being* being, const std::vector<std::string>& args) {
-  unsigned long vnum = estring(args[0]);
   std::map<unsigned long,Npc*>::iterator m_it;
-  Npc* npc = NULL;
+  unsigned long vnum = estring(args[0]);
+  Npc* npc           = nullptr;
 
   for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
     if ((m_it = (*a_it)->npcs().find(vnum)) != (*a_it)->npcs().end()) {

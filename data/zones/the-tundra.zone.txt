@@ -11,6 +11,12 @@ description 0:
 smell 0:
 sound 0:
 terrain 4:snow
+PLACEMENT_NPC
+target 1
+number 1
+max 1
+probability 100
+/PLACEMENT_NPC
 EXIT
 targetVnum 5
 direction 1
@@ -193,4 +199,23 @@ weapon_type 6:dagger
 weapon_verb 4:stab
 weapon_damage 5:10d10
 /ITEM
+NPC
+vnum 1
+mobility 3
+aggressiveness 3
+BEING
+shortname 20:a large Bengal tiger
+longname 25:A very large Bengal tiger
+description 0:
+keywords 18:bengal|large|tiger
+identity neutral error error
+level 100 0 0
+health 10194/10194 5144/5144 100
+stats 15/20 15/20 15/20 15/20 15/20 15/20 15/20 15/20
+armor 100 0 0 0 0
+trains 163
+money 0
+abilities 0:
+/BEING
+/NPC
 /ZONE

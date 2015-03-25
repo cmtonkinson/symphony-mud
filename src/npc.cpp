@@ -23,10 +23,19 @@ Npc::Npc(void): Being() {
 }
 
 Npc::Npc(const Npc& ref): Being(ref) {
+  int level = ref.level();
+
   vnum(ref.vnum());
   mobility(ref.mobility());
   aggressiveness(ref.aggressiveness());
   formGroup();
+
+  // Give the Npc some real stats. It's a hack to forcibly level them just to make the numbers
+  // come out, but it works for now and it has the added benefit of making existing Npcs' stats
+  // update to reflect modifications to the growth algorithms during active development.
+  resetStats();
+  for (int i = 1; i < level; ++i) gainLevel();
+
   return;
 }
 
@@ -100,9 +109,9 @@ Npc* Npc::create(Zone* zone, unsigned vnum) {
 }
 
 Npc* Npc::create(Npc* npc, Room* room) {
-  Npc* m = new Npc(*npc);
-  m->room(room);
-  return m;
+  Npc* clone = new Npc(*npc);
+  clone->room(room);
+  return clone;
 }
 
 std::string Npc::getInformation(Npc* npc) {
@@ -126,7 +135,7 @@ longname..... %s\n\n\
  );
   output.append(buffer);
   output.append("  --== {Ystats{x ==--\n");
-  sprintf(buffer, "health......... {G%d{x/{g%d{x\n\
+  sprintf(buffer, "health.......... {G%d{x/{g%d{x\n\
 mana............ {C%d{x/{c%d{x\n\
 stamina......... {M%d{x\n\
 mobility........ {B%u{x\n\

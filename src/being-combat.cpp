@@ -62,6 +62,8 @@ void Being::scheduleAttack(void) {
   return;
 }
 
+// FIXME - any type of counterattack of effect could kill `this` during offensive moves
+// such as attack() - need to account for this. Maybe self-deletion is a bad strategy
 bool Being::attack(Job* job) {
   // Clear the Job pointer so a new attack can be scheduled. (The Schedule will automatically
   // delete the Job when it fires, so the pointer will be invalid once this method returns anyway).
@@ -285,14 +287,13 @@ void Being::gainLevel(void) {
   // Heal.
   heal();
   // Notify.
-  send("\n\nCONGRATULATIONS! You grow to level {G%u{x!\n", level());
-  send("You gain {G%u{x health points.\n", health_boost);
-  send("You gain {C%u{x mana points.\n", mana_boost);
-  send("You gain {B%u{x training point.\n", trains_boost);
-  VERBOSE_(this, "achieved level %u", level());
-  if (level() < HERO) {
-    send("You have {Y%u{x experience to your next level.\n\n", tnl());
-  } else if (isAvatar()) {
+  if (isAvatar()) {
+    VERBOSE_(this, "achieved level %u", level());
+    send("\n\nCONGRATULATIONS! You grow to level {G%u{x!\n", level());
+    send("You gain {G%u{x health points.\n", health_boost);
+    send("You gain {C%u{x mana points.\n", mana_boost);
+    send("You gain {B%u{x training point.\n", trains_boost);
+    if (level() < HERO) send("You have {Y%u{x experience to your next level.\n\n", tnl());
     group()->send("$p has grown a level!\n", this, NULL, NULL);
   }
   return;
@@ -345,7 +346,7 @@ unsigned Being::targetHealth(void) const {
     case ROGUE:   return 3500;
     case WARRIOR: return 4000;
   }
-  return 1;
+  return 10000;
 }
 
 unsigned Being::targetMana(void) const {
@@ -355,11 +356,7 @@ unsigned Being::targetMana(void) const {
     case ROGUE:   return 500;
     case WARRIOR: return 300;
   }
-  return 1;
-}
-
-unsigned Being::targetMovement(void) const {
-  return 1000;
+  return 5000;
 }
 
 unsigned Being::targetTNL(void) const {
