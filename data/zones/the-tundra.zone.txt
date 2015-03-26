@@ -199,6 +199,23 @@ weapon_type 6:dagger
 weapon_verb 4:stab
 weapon_damage 5:10d10
 /ITEM
+ITEM
+vnum 4
+level 50
+value 1
+type 9
+wearable 11
+flags 96
+shortname 12:a small dirk
+longname 12:A small dirk
+description 0:
+keywords 10:dirk|small
+modifiers 0:
+composition 4:iron
+weapon_type 6:dagger
+weapon_verb 4:stab
+weapon_damage 5:20d20
+/ITEM
 NPC
 vnum 1
 mobility 3
@@ -213,7 +230,7 @@ level 100 0 0
 health 10194/10194 5144/5144 100
 stats 15/20 15/20 15/20 15/20 15/20 15/20 15/20 15/20
 armor 100 0 0 0 0
-trains 163
+trains 271
 money 0
 abilities 0:
 /BEING
