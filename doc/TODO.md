@@ -75,10 +75,6 @@ Leave a corpse with loot.
 
 Stat-based attack timing.
 
-## Being::strike()
-
-Refactor damage calculation so it can be re-used elsewhere e.g. in RiposteSkill::execute()
-
 ## Being::targetTNL()
 
 Is there anything worthwhile from the character creation sequence that can be used to make the TNL calculations dynamic?
@@ -86,6 +82,3 @@ Is there anything worthwhile from the character creation sequence that can be us
 ## Npc::auto_move()
 
 Implement implement some concept of "momentum" so that the same Npc doesn't keep flipping in and out of the same two or three Rooms over and over again in a huge Zone.
-
-## OS::log()
-Replace the `std::cout` with graduated outputs to stdout, stderr, files.
