@@ -1,9 +1,29 @@
 
+#include <signal.h>
 #include <stdio.h>
 #include "os.hpp"
 #include "world.hpp"
 
+static void handle_shutdown(int signal) {
+  World::Instance().exists(false);
+  return;
+}
+
+static void handle_reboot(int signal) {
+  World::Instance().reboot();
+  return;
+}
+
 int main(int argc, char* argv[], char* envp[]) {
+
+  /////////////////////////////////////////////////////////////////////////////
+  // Signal handling.
+  /////////////////////////////////////////////////////////////////////////////
+  // Ensure graceful shutdown on interrupt.
+  signal(SIGINT, &handle_shutdown);
+
+  // Soft-bounce from command line (or elsewhere).
+  signal(SIGUSR1, &handle_reboot);
 
   /////////////////////////////////////////////////////////////////////////////
   // Option defaults

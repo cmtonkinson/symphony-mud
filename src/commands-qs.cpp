@@ -34,7 +34,6 @@ CmdReboot::CmdReboot(void) {
 
 bool CmdReboot::execute(Being* being, const std::vector<std::string>& args) {
   if (args[0] == "reboot") {
-    World::Instance().save();
     return World::Instance().reboot(being);
   } else {
     being->send(printSyntax());

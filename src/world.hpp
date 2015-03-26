@@ -49,7 +49,7 @@ class World {
     void                  startup(void);
     void                  exist(const unsigned int& fd = 0);
     void                  tick(void);
-    bool                  reboot(Being* being = NULL);
+    bool                  reboot(Being* being = nullptr);
     void                  recover(const unsigned int& fd);
     bool                  load(void);
     bool                  save(void);

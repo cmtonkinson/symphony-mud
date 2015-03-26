@@ -69,8 +69,9 @@ bool World::reboot(Being* being) {
   estring verbosity;
   FILE* fp = NULL;
 
-  fp = fopen(os::REBOOT_FILE, "w");
+  save();
 
+  fp = fopen(os::REBOOT_FILE, "w");
   if (!fp) {
     if (being) being->send("Copyover file couldn't be opened for writing! Copyover aborted!");
     ERROR(being, "failed to write copyover file")
