@@ -1,5 +1,6 @@
 
 #include <algorithm>
+#include <signal.h>
 #include "avatar.hpp"
 #include "command-def.hpp"
 #include "display.hpp"
@@ -478,13 +479,13 @@ CmdCrash::CmdCrash(void) {
   name("crash");
   level(Being::CREATOR);
   addSyntax(1, "crash");
-  brief("Crashes the mud with a SIGSEG_V.  Why?  Well, you just never know...");
+  brief("Crashes the MUD by raising SIGABRT.  Why?  Well, you just never know...");
   return;
 }
 
 bool CmdCrash::execute(Being* being, const std::vector<std::string>& args) {
   if (args[0] == "crash") {
-    ((Avatar*)NULL)->send("DIE!!");
+    raise(SIGABRT);
   } else {
     avatar()->send(printSyntax());
     return false;

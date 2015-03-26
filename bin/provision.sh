@@ -25,6 +25,12 @@ sudo ldconfig
 ###############################################################################
 # Development Environment
 ###############################################################################
+
+# Customize the core dump file names (so that a second crash doesn't overwrite
+# a previous core file that you had wanted to keep).
+echo "core-%e-%p-%t" > /proc/sys/kernel/core_pattern
+
+# Tailor Bash to inject ENV vars and preferences.
 BASHRC=/home/vagrant/.bashrc
 echo 'ulimit -c unlimited'              >> $BASHRC
 echo 'alias list="ls -alsvh"'           >> $BASHRC
