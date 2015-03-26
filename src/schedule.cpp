@@ -20,7 +20,6 @@ Schedule::~Schedule(void) {
 
 void Schedule::add(Job* job) {
   _queue.insert(job);
-
   // If a "who" is set for the Job, insert it into the index set, keyed by the "who" pointer.
   if (job->who()) {
     _index[job->who()].insert(job);
@@ -30,7 +29,6 @@ void Schedule::add(Job* job) {
 
 void Schedule::remove(Job* job) {
   _queue.erase(job);
-
   // If a "who" is set for the Job, remove the Job from that who's set in the index.
   if (job->who()) {
     // Remove this Job from the index set.
@@ -47,7 +45,7 @@ bool Schedule::fire(void) {
   if (!_queue.empty()) {
     job = *_queue.begin();
     if (job->ready()) {
-      _queue.erase(_queue.begin());
+      remove(job);
       profileJob(job);
       if (job->isRecurring()) job->recur(this);
       else delete job;

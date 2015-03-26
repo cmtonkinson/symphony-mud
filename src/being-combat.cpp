@@ -161,6 +161,8 @@ bool Being::evade(Being* striker) {
   if (primary() || secondary()) {
     if ((skill = learned().find_skill(PARRY)) != nullptr) evasion_skills.push_back(skill);
   }
+  if ((skill = learned().find_skill(DODGE)) != nullptr) evasion_skills.push_back(skill);
+  if ((skill = learned().find_skill(DUCK)) != nullptr) evasion_skills.push_back(skill);
   if (evasion_skills.empty()) return false;
 
   // Select an evasion Skill.

@@ -4,20 +4,32 @@
 
 #include "ability.hpp"
 
+///////////////////////////////////////////////////////////////////////////////
+// ATTACKS
+///////////////////////////////////////////////////////////////////////////////
 #define SECOND_STRIKE "second strike"
 #define THIRD_STRIKE  "third strike"
 #define FOURTH_STRIKE "fourth strike"
 #define DUAL_WIELD    "dual wield"
-#define BLOCK         "block"
-#define PARRY         "parry"
-#define RIPOSTE       "riposte"
 
 DEF_SKILL(SECOND_STRIKE,  SecondStrikeSkill)
 DEF_SKILL(THIRD_STRIKE,   ThirdStrikeSkill)
 DEF_SKILL(FOURTH_STRIKE,  FourthStrikeSkill)
 DEF_SKILL(DUAL_WIELD,     DualWieldSkill)
+
+///////////////////////////////////////////////////////////////////////////////
+// EVASION
+///////////////////////////////////////////////////////////////////////////////
+#define BLOCK         "block"
+#define PARRY         "parry"
+#define RIPOSTE       "riposte"
+#define DODGE         "dodge"
+#define DUCK          "duck"
+
 DEF_SKILL(BLOCK,          BlockSkill)
 DEF_SKILL(PARRY,          ParrySkill)
 DEF_SKILL(RIPOSTE,        RiposteSkill)
+DEF_SKILL(DODGE,          DodgeSkill)
+DEF_SKILL(DUCK,           DuckSkill)
 
 #endif // #ifndef H_SYMPHONY_SKILLS

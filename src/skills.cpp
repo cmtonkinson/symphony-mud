@@ -7,6 +7,9 @@
 #include "room.hpp"
 #include "skills.hpp"
 
+///////////////////////////////////////////////////////////////////////////////
+// ATTACKS
+///////////////////////////////////////////////////////////////////////////////
 bool SecondStrikeSkill::execute(Being* being) const {
   return Math::percent_chance(90) && being->strike();
 }
@@ -32,6 +35,9 @@ bool DualWieldSkill::execute(Being* being) const {
   return false;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// EVASION
+///////////////////////////////////////////////////////////////////////////////
 bool BlockSkill::execute(Being* being) const {
   if (_target_being == nullptr) {
     ERROR(being, "block without target")
@@ -110,4 +116,36 @@ bool RiposteSkill::execute(Being* being) const {
   }
 
   return true;
+}
+
+bool DodgeSkill::execute(Being* being) const {
+  if (_target_being == nullptr) {
+    ERROR(being, "dodge without target")
+    return false;
+  }
+
+  if (Math::percent_chance(40)) {
+    being->send("You dodge %s's attack!\n", _target_being->name());
+    _target_being->send("%s dodges your attack!\n", being->name());
+    being->room()->send_cond("$p dodges $c's attack!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
+    return true;
+  }
+
+  return false;
+}
+
+bool DuckSkill::execute(Being* being) const {
+  if (_target_being == nullptr) {
+    ERROR(being, "duck without target")
+    return false;
+  }
+
+  if (Math::percent_chance(40)) {
+    being->send("You duck %s's attack!\n", _target_being->name());
+    _target_being->send("%s ducks your attack!\n", being->name());
+    being->room()->send_cond("$p ducks $c's attack!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
+    return true;
+  }
+
+  return false;
 }
