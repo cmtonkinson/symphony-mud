@@ -26,6 +26,7 @@ sudo ldconfig
 # Development Environment
 ###############################################################################
 BASHRC=/home/vagrant/.bashrc
+echo 'ulimit -c unlimited'              >> $BASHRC
 echo 'alias list="ls -alsvh"'           >> $BASHRC
 echo 'alias c="telnet localhost 6501"'  >> $BASHRC
 echo 'export MAKEFLAGS="-j4"'           >> $BASHRC
