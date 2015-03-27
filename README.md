@@ -91,4 +91,4 @@ Copyright © Chris Tonkinson 2004-2015. Symphony MUD is published under the [MIT
 [bugs]: https://github.com/cmtonkinson/symphonymud/issues
 [fork]: https://github.com/cmtonkinson/symphonymud/fork
 [chris]: http://chris.tonkinson.com/
-[announcement]: http://chris.tonkinson.com/
+[announcement]: http://chris.tonkinson.com/2015/symphony-mud.html
