@@ -1,5 +1,5 @@
 # Symphony MUD
-Symphony MUD is a modern, extensible, open source MUD server codebase intended as a replacement for the Diku/Merc/ROM line of games.
+Symphony MUD is a modern, extensible, open source MUD server codebase intended as a replacement for the Diku/Merc/ROM line of games. See the [announcement][announcement] for details.
 
 ---
 ## Features
@@ -9,18 +9,23 @@ Symphony MUD is a modern, extensible, open source MUD server codebase intended a
   * Flexible character creation sequence
   * Modular and extensible API for defining new commands
   * Persistent world (with persistent items & equipment)
-  * In-game editor suite for world building ("OLC" in Rom-speak)
-  * In-game social command editor
+  * In-game editor suite for world building ("OLC" in ROM-speak)
+    * Zones
+    * NPCs
+    * Items
+    * Social commands
+    * ... and more
   * In-game message board system
   * Level based permission system
   * Tree-based ability system
   * Semi-managed auto-combat system
   * Dynamic enabling/disabling of commands
   * A customizable character creation sequence
+  * A generic framework for scheduled & recurring events (called Jobs)
 
 ---
 ## Getting Started
-Symphony MUD is built, tested, and hacked in a [Vagrant](https://www.vagrantup.com/) virtual machine. If you're familiar with Vagrant, the instructions couldn't be easier:
+Symphony MUD is built, tested, and hacked in a [Vagrant][vagrant] virtual machine. If you're familiar with Vagrant, the instructions couldn't be easier:
 
 ```bash
 # Clone the repository.
@@ -38,7 +43,7 @@ make
 bin/symphony
 ```
 
-If you're not familiar with Vagrant, you should be. Worst case, if you have a Linux system you should be able to get Symphony MUD to compile and run as long as you meet the dependencies (check out [provision.sh](provision.sh) and the [makefile](makefile) for more details).
+If you're not familiar with Vagrant, you should be (because it's a great tool). Worst case, if you have a Linux system you should be able to get Symphony MUD to compile and run as long as you meet the dependencies (check out [provision.sh](provision.sh) and the [makefile](makefile) for more details).
 
 ---
 ## Detailed Setup
@@ -82,6 +87,8 @@ Copyright © Chris Tonkinson 2004-2015. Symphony MUD is published under the [MIT
 
 
 
+[vagrant]: https://www.vagrantup.com/
 [bugs]: https://github.com/cmtonkinson/symphonymud/issues
 [fork]: https://github.com/cmtonkinson/symphonymud/fork
 [chris]: http://chris.tonkinson.com/
+[announcement]: http://chris.tonkinson.com/
