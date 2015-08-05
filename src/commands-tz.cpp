@@ -369,6 +369,7 @@ bool CmdZedit::execute(Being* being, const std::vector<std::string>& args) {
       }
     }
     zone = new Zone(low, high);
+    zone->ID(World::Instance().nextZoneID());
     if (!zone->ID()) {
       avatar()->send("Something went wrong while creating the zone.");
       ERROR_(avatar(), "failed to create a zone from %lu through %lu", zone->low(), zone->high())
@@ -404,6 +405,35 @@ bool CmdZedit::execute(Being* being, const std::vector<std::string>& args) {
     avatar()->pushIOHandler(new ZeditIOHandler(avatar()));
   }
 
+  return true;
+}
+
+CmdZones::CmdZones(void) {
+  name("zones");
+  playerOnly(true);
+  addSyntax(0, "");
+  brief("List the Zones of the World.");
+  return;
+}
+
+bool CmdZones::execute(Being* being, const std::vector<std::string>& args) {
+  std::string output("Zones:");
+  char buffer[Socket::MAX_BUFFER];
+
+  for (auto iter : World::Instance().getZones()) {
+    if (avatar()->level() >= Being::DEMIGOD) {
+      if (iter->hasPermission(avatar())) {
+        sprintf(buffer, "\n ({Y%3lu{x) [ {C%4lu{x - {C%4lu{x ] {M%s{x", iter->ID(), iter->low(), iter->high(), iter->name().c_str());
+      } else {
+        sprintf(buffer, "\n ({y%3lu{x) [ {c%4lu{x - {c%4lu{x ] {m%s{x", iter->ID(), iter->low(), iter->high(), iter->name().c_str());
+      }
+    } else {
+      sprintf(buffer, "\n %s", iter->name().c_str());
+    }
+    output.append(buffer);
+  }
+
+  avatar()->send(output);
   return true;
 }
 

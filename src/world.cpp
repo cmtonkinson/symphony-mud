@@ -466,6 +466,16 @@ Zone* World::lookup(const unsigned long& vnum) {
   return NULL;
 }
 
+unsigned long World::nextZoneID(void) const {
+  unsigned long nextID = 0;
+  for (auto iter : getZones()) {
+    if (iter->ID() > nextID) {
+      nextID = iter->ID();
+    }
+  }
+  return nextID + 1;
+}
+
 void World::loadDisabledCommands(void) {
   for (auto iter : os::glob(os::disabled_command_glob_pattern())) {
     toggleCommand(iter[0], iter.substr(2), false);

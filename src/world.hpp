@@ -95,6 +95,7 @@ class World {
     void                  remove(Zone* zone);
     Zone*                 findZone(const unsigned long& ID);
     Zone*                 lookup(const unsigned long& vnum);
+    unsigned long         nextZoneID(void) const;
 
     void                  loadDisabledCommands(void);
 

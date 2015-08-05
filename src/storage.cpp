@@ -25,6 +25,7 @@ const unsigned Storage::LOAD_NEW;
  **************************************************************************************************/
 void Storage::write(FILE* fp, Zone* zone) {
   BEGIN("ZONE")
+  out(fp, "id",           zone->ID());
   out(fp, "low",          zone->low());
   out(fp, "high",         zone->high());
   out(fp, "name",         zone->name());
@@ -41,6 +42,7 @@ bool Storage::read(FILE* fp, Zone* loading) {
   char input[32];
   unsigned load_status = 0;
   load_status = read_inner(fp, loading, input, "ZONE", [&fp, &loading, &input]() {
+    STORE_CASE("id",        &Zone::ID)
     STORE_CASE("low",       &Zone::low)
     STORE_CASE("high",      &Zone::high)
     STORE_CASE("name",      &Zone::name)

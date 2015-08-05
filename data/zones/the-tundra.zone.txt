@@ -1,4 +1,5 @@
 ZONE
+id 0
 low 0
 high 999
 name 10:The Tundra

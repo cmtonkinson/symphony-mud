@@ -21,7 +21,7 @@ class Zone {
     unsigned long                           _high;
     std::string                             _name;
     std::map<unsigned long,Room*>           _rooms;
-    std::map<unsigned long,Item*>         _items;
+    std::map<unsigned long,Item*>           _items;
     std::map<unsigned long,Npc*>            _npcs;
     Terrain*                                _terrain;
     std::set<std::string>                   _builders;
@@ -44,8 +44,8 @@ class Zone {
     std::string                             name(void) const                { return _name; }
     std::map<unsigned long,Room*>&          rooms(void)                     { return _rooms; }
     const std::map<unsigned long,Room*>&    rooms(void) const               { return _rooms; }
-    std::map<unsigned long,Item*>&        items(void)                   { return _items; }
-    const std::map<unsigned long,Item*>&  items(void) const             { return _items; }
+    std::map<unsigned long,Item*>&          items(void)                     { return _items; }
+    const std::map<unsigned long,Item*>&    items(void) const               { return _items; }
     std::map<unsigned long,Npc*>&           npcs(void)                      { return _npcs; }
     const std::map<unsigned long,Npc*>&     npcs(void) const                { return _npcs; }
     void                                    terrain(Terrain* terrain)       { _terrain = terrain; }
@@ -65,17 +65,17 @@ class Zone {
     void            setTerrain(const char* terrain_name);
 
     // Setup & teardown...
-    void          initialize(void);
-    void          save(void);
-    static Zone*  load(std::string filename);
-    bool          destroy(void);
+    void            initialize(void);
+    void            save(void);
+    static Zone*    load(std::string filename);
+    bool            destroy(void);
 
     // Builder permissions...
-    bool        hasPermission(Avatar* avatar) const;
-    void        grantPermission(Avatar* avatar);
-    void        revokePermission(Avatar* avatar);
-    std::string serializeBuilders(void) const;
-    void        unserializeBuilders(const std::string& serialization);
+    bool            hasPermission(Avatar* avatar) const;
+    void            grantPermission(Avatar* avatar);
+    void            revokePermission(Avatar* avatar);
+    std::string     serializeBuilders(void) const;
+    void            unserializeBuilders(const std::string& serialization);
 
 };
 
