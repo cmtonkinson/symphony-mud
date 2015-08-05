@@ -67,10 +67,9 @@ void Being::scheduleAttack(void) {
 bool Being::attack(Job* job) {
   // Clear the Job pointer so a new attack can be scheduled. (The Schedule will automatically
   // delete the Job when it fires, so the pointer will be invalid once this method returns anyway).
-  _next_attack = NULL;
+  _next_attack = nullptr;
   // Aquire a target.
-  acquireTarget();
-  if (_target == NULL) {
+  if ((_target = acquireTarget()) == nullptr) {
     // If no valid target was found, the opponents set should be empty, but we want to be explicit
     // about what happens (and also to ensure that the attack pointer gets cleared).
     peace();
@@ -91,15 +90,14 @@ bool Being::attack(Job* job) {
   if (_target->isDead()) _target->whatHappensWhenIDie();
   else _target->announceStatus();
   // Clear the target pointer, just in case.
-  _target = NULL;
+  _target = nullptr;
   // Must return bool per the Job interface.
   return true;
 }
 
-void Being::acquireTarget(void) {
-  Being* target     = NULL;
+Being* Being::acquireTarget(void) {
+  Being* target     = nullptr;
   bool valid_target = false;
-  _target           = NULL;
   while (!opponents().empty()) {
     target       = *opponents().begin();
     valid_target = true;
@@ -109,15 +107,14 @@ void Being::acquireTarget(void) {
     if (canSee(target) != Being::SEE_NAME) valid_target = false;
     // Either return the target, or remove it from the opponent list.
     if (valid_target) {
-      _target = target;
-      return;
+      return target;
     } else {
       // Unlink these two as targets.
       remove_opponent(target);
       continue;
     }
   }
-  return;
+  return nullptr;
 }
 
 // secondary should only be set while dual wielding, during the off-hand strike
@@ -137,7 +134,7 @@ bool Being::strike(Item* secondary) {
   // Calculate the damage.
   damage = calculateDamage(_target, weapon);
   // Tell the world.
-  weapon_damage = (weapon && weapon->isWeapon()) ? weapon->weapon()->verb().string() : "punch";
+  weapon_damage = (weapon && weapon->isWeapon()) ? weapon->weapon()->verb().string() : "strike";
   weapon_damage.append(" ").append(Display::formatDamage(damage));
   send("Your %s %s!\n", weapon_damage.c_str(), _target->name());
   _target->send("%s's %s you!\n", name(), weapon_damage.c_str());
@@ -247,7 +244,7 @@ void Being::peace(void) {
   // Don't attack anymore.
   if (_next_attack) {
     World::Instance().schedule()->remove(_next_attack);
-    _next_attack = NULL;
+    _next_attack = nullptr;
   }
   return;
 }

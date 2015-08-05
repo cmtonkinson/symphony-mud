@@ -321,7 +321,7 @@ class Being {
     void          remove_opponent(Being* opponent, bool reciprocal = true);
     void          scheduleAttack(void);
     bool          attack(Job* job);
-    void          acquireTarget(void);
+    Being*        acquireTarget(void);
     bool          strike(Item* secondary = nullptr);
     bool          evade(Being* striker);
     int           calculateDamage(Being* victim, Item* weapon = nullptr, double modifier = 1.0);
@@ -364,7 +364,7 @@ class Being {
     std::set<Ability*>            available_abilities(void) const;
     bool                          can_learn(Ability* ability) const;
     Ability*                      find_spell(std::string name) const;
-    bool                          intone(Ability* spell);
+    bool                          intone(Ability* spell, Being* being_target, Item* item_target);
     bool                          invokeIfLearned(std::string skill_name);
     bool                          deplete_mana(unsigned mana_, bool message = true);
     bool                          check_mana(unsigned mana_, bool message = true);

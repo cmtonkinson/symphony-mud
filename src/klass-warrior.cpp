@@ -13,7 +13,7 @@ Warrior::Warrior(void) {
 
   Ability* block         = new BlockSkill(           15,     1,        3,          1);
   Ability* parry         = new ParrySkill(           45,     1,        3,          1);
-  Ability* riposte       = new RiposteSkill(         65,     2,        3,          1);
+  Ability* riposte       = new RiposteSkill(         65,     2,        3,          2);
 
   // Setup dependency graph.
   third_strike->add_dependency(second_strike);

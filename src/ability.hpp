@@ -9,15 +9,39 @@
 class Being;
 class Item;
 
-//////////////////////////////////////////// BASE CLASS ////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+// BASE CLASS
+///////////////////////////////////////////////////////////////////////////////
 class Ability {
   public:
 
+    // Internal defaults.
     static const unsigned DEFAULT_LEVEL      = 1;
     static const unsigned DEFAULT_TRAINS     = 1;
     static const unsigned DEFAULT_DIFFICULTY = 3;
-    static const unsigned DEFAULT_STAMINA    = 0;
+    static const unsigned DEFAULT_STAMINA    = 1;
     static const unsigned DEFAULT_MANA       = 0;
+
+    // Spell categories.
+    static const unsigned CHARM           = 1;
+    static const unsigned ENCHANTMENT     = 2;
+    static const unsigned HEX             = 3;
+    static const unsigned CURSE           = 4;
+    static const unsigned CURE            = 5;
+    static const unsigned HARM            = 6;
+    static const unsigned CONJURING       = 7;
+    static const unsigned TRANSFIGURATION = 8;
+
+    // Spell targets.
+    static const unsigned TARGET_NONE  = 0;
+    static const unsigned TARGET_ANY   = 1;
+    static const unsigned TARGET_BEING = 2;
+    static const unsigned TARGET_ITEM  = 3;
+
+    // Used for setting default targets.
+    static const unsigned NO_DEFAULT       = 0;
+    static const unsigned DEFAULT_SELF     = 1;
+    static const unsigned DEFAULT_OPPONENT = 2;
 
     enum AbilityType {
       SKILL,
@@ -56,15 +80,44 @@ class Ability {
     unsigned              stamina(void) const             { return _stamina; }
     void                  mana(unsigned mana)             { _mana = mana; }
     unsigned              mana(void) const                { return _mana; }
+    void                  category(unsigned category)     { _category = category; }
+    unsigned              category(void) const            { return _category; }
+    void                  targeting(unsigned targeting)   { _targeting = targeting; }
+    unsigned              targeting(void) const           { return _targeting; }
 
     bool                  is_skill(void) const;
     bool                  is_spell(void) const;
 
-    bool                  invoke(Being* being);
-    virtual bool          execute(Being* being) const = 0;
-    bool                  execute(Being* being, Being* target, Item* item);
-    unsigned              trainingFactor(void) const;
+    bool                  is_charm(void) const            { return _category == CHARM; }
+    bool                  is_enchantment(void) const      { return _category == ENCHANTMENT; }
+    bool                  is_hex(void) const              { return _category == HEX; }
+    bool                  is_curse(void) const            { return _category == CURSE; }
+    bool                  is_cure(void) const             { return _category == CURE; }
+    bool                  is_harm(void) const             { return _category == HARM; }
+    bool                  is_conjuring(void) const        { return _category == CONJURING; }
+    bool                  is_transfiguration(void) const  { return _category == TRANSFIGURATION; }
 
+    bool                  target_none(void) const         { return _targeting == TARGET_NONE; }
+    bool                  target_any(void) const          { return _targeting == TARGET_ANY; }
+    bool                  target_being(void) const        { return _targeting == TARGET_BEING; }
+    bool                  target_item(void) const         { return _targeting == TARGET_ITEM; }
+    unsigned              default_target(void) const;
+
+
+    // invoke() is a high-level wrapper around execute() which automatically
+    // performs resource verification/deduction as well as improvement logic.
+    bool                  invoke(Being* being, Being* target = nullptr, Item* item = nullptr);
+    // execute() with target/item is a low-level wrapper around execute()
+    // which exists to set the _target_being and _target_item members when
+    // references to "external" objects is required for an Ability (such as
+    // enchanting a weapon or backstabbing an NPC).
+    bool                  execute(Being* being, Being* target, Item* item);
+    // execute() is to be implemented by each concrete Ability and should
+    // contain the unique business logic for same.
+    virtual bool          execute(Being* being) const = 0;
+
+
+    unsigned              trainingFactor(void) const;
     static std::string    masteryToString(unsigned mastery);
 
   private:
@@ -76,6 +129,8 @@ class Ability {
     unsigned              _difficulty;    // relative difficulty for increasing mastery (1-5)
     unsigned              _stamina;       // amount of stamina required for the Ability
     unsigned              _mana;          // amount of mana required for the Ability
+    unsigned              _category;      // broadly speaking, the type of Ability
+    unsigned              _targeting;     // what can be targeted with this Ability?
     std::set<Ability*>    _dependencies;
     std::set<Ability*>    _dependents;
 
@@ -86,7 +141,9 @@ class Ability {
 
 };
 
-//////////////////////////////////////////// SKILL /////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+// SKILL
+///////////////////////////////////////////////////////////////////////////////
 #define DEF_SKILL(NAME,CLASS)                         \
 class CLASS: public Ability {                         \
   public:                                             \
@@ -104,14 +161,17 @@ class CLASS: public Ability {                         \
       difficulty(difficulty_);                        \
       stamina(stamina_);                              \
       mana(mana_);                                    \
+      category(0);                                    \
       return;                                         \
     }                                                 \
     virtual ~CLASS(void) { return; }                  \
     virtual bool execute(Being* being) const;         \
 };                                                    \
 
-//////////////////////////////////////////// SPELL /////////////////////////////////////////////////
-#define DEF_SPELL(NAME,CLASS)                         \
+///////////////////////////////////////////////////////////////////////////////
+// SPELL
+///////////////////////////////////////////////////////////////////////////////
+#define DEF_SPELL(NAME,CLASS,CATEGORY,TARGETING)      \
 class CLASS: public Ability {                         \
   public:                                             \
   CLASS(                                              \
@@ -128,6 +188,8 @@ class CLASS: public Ability {                         \
       difficulty(difficulty_);                        \
       stamina(stamina_);                              \
       mana(mana_);                                    \
+      category(CATEGORY);                             \
+      targeting(TARGETING);                           \
       return;                                         \
     }                                                 \
     virtual ~CLASS(void) { return; }                  \

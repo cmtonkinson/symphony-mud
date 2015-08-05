@@ -2,24 +2,13 @@
 #include "being.hpp"
 #include "spells.hpp"
 
-bool Being::intone(Ability* spell) {
+bool Being::intone(Ability* spell, Being* being_target, Item* item_target) {
   bool status = false;
-
-  if (mana() < spell->mana()) {
-    send("You don't have enough mana for that spell.\n");
-    return false;
-  }
 
   send("You intone the '{c%s{x' spell.\n", spell->name().c_str());
   room()->send_cond("$p mutters something strange.\n", this, this);
 
-  status = spell->invoke(this);
-
-  if (status) {
-    send("You cast %s!\n", spell->name().c_str());
-  } else {
-    send("Spell failed.\n");
-  }
+  status = spell->invoke(this, being_target, item_target);
 
   return true;
 }

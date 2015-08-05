@@ -247,20 +247,65 @@ CmdCast::CmdCast(void) {
   shortcut("c");
   allowedWhile(STANDING);
   addSyntax(1, "<spell>");
+  addSyntax(2, "<spell> <target>");
   seeAlso("spells");
   brief("Use mana to invoke a magical spell.");
   return;
 }
 
 bool CmdCast::execute(Being* being, const std::vector<std::string>& args) {
-  Ability* spell = NULL;
+  Ability* spell      = nullptr;
+  Being* target_being = nullptr;
+  Item* target_item   = nullptr;
 
-  if ((spell = being->find_spell(args[0])) == NULL) {
-    being->send("What spell was that again?\n");
+  if ((spell = being->find_spell(args[0])) == nullptr) {
+    being->send("What spell was that again?");
     return false;
   }
 
-  return being->intone(spell);
+  if (args.size() == 1 && !spell->target_none()) {
+    being->send("a Where are you pointing that thing?");
+    return false;
+  }
+
+  if (args.size() == 2) {
+    switch (spell->targeting()) {
+      case Ability::TARGET_ANY:
+        if ((target_being = being->findBeing(args[1])) == nullptr) {
+          if ((target_item = being->findItem(args[1])) == nullptr) {
+            being->send("b Where are you pointing that thing?");
+            return false;
+          }
+        }
+        break;
+      case Ability::TARGET_BEING:
+        if ((target_being = being->findBeing(args[1])) == nullptr) {
+          unsigned default_target = spell->default_target();
+          if (default_target == Ability::DEFAULT_SELF) {
+            target_being = being;
+          } else if (default_target == Ability::DEFAULT_OPPONENT) {
+            target_being = being->acquireTarget();
+          }
+          if (target_being == nullptr) {
+            being->send("On who?");
+            return false;
+          }
+        }
+        break;
+      case Ability::TARGET_ITEM:
+        if ((target_item = being->findItem(args[1])) == nullptr) {
+          being->send("On what?");
+          return false;
+        }
+        break;
+      default:
+        being->send("You can't target that spell.");
+        return false;
+        break;
+    }
+  }
+
+  return being->intone(spell, target_being, target_item);
 }
 
 CmdChannels::CmdChannels(void) {

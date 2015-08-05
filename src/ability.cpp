@@ -50,7 +50,22 @@ bool Ability::is_spell(void) const {
   return _type == SPELL;
 }
 
-bool Ability::invoke(Being* being) {
+unsigned Ability::default_target(void) const {
+  switch (category()) {
+    case CHARM:
+    case ENCHANTMENT:
+    case CURE:
+      return DEFAULT_SELF;
+    case HEX:
+    case CURSE:
+    case HARM:
+      return DEFAULT_OPPONENT;
+    default:
+      return NO_DEFAULT;
+  }
+}
+
+bool Ability::invoke(Being* being, Being* target, Item* item) {
   bool status = false;
   // A positive value for mana or stamina indicates that the Ability requires a static amount and
   // that it can/should be deducted from the Beings resources automatically. A non-positive value
@@ -80,7 +95,7 @@ bool Ability::invoke(Being* being) {
   }
 
   // Capture the return value of the Ability.
-  status = execute(being);
+  status = execute(being, target, item);
 
   // Randomly improve upon the ability. The more novice you are, the more instructive success is.
   if (Math::percent_chance(100 - being->mastery(this))) {
