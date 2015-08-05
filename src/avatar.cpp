@@ -290,6 +290,7 @@ void Avatar::room(Room* room) {
   exit.avatar(this);
 
   Being::room(room);
+  if (room) roomNumber(room->vnum());
 
   if (mode().number() == MODE_REDIT) {
     if (!this->room()->zone()->hasPermission(this)) {
