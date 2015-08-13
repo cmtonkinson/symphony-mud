@@ -346,23 +346,15 @@ void Storage::write_base(FILE* fp, Being* being) {
     being->maxMana(),
     being->stamina()
   );
-  fprintf(fp, "stats %hu/%hu %hu/%hu %hu/%hu %hu/%hu %hu/%hu %hu/%hu %hu/%hu %hu/%hu\n",
+  fprintf(fp, "stats %hu %hu %hu %hu %hu %hu %hu %hu\n",
     being->strength(),
-    being->maxStrength(),
     being->dexterity(),
-    being->maxDexterity(),
     being->constitution(),
-    being->maxConstitution(),
     being->intelligence(),
-    being->maxIntelligence(),
     being->focus(),
-    being->maxFocus(),
     being->creativity(),
-    being->maxCreativity(),
     being->charisma(),
-    being->maxCharisma(),
-    being->luck(),
-    being->maxLuck()
+    being->luck()
   );
   fprintf(fp, "armor %d %d %d %d %d\n",
     being->armor(),
@@ -413,25 +405,17 @@ bool Storage::read_base(FILE* fp, Being* loading) {
       loading->stamina(stamina);
     }
     if (strcmp("stats", input) == 0) {
-      int strength, maxStrength, dexterity, maxDexterity, constitution, maxConstitution, intelligence, maxIntelligence, focus, maxFocus, creativity, maxCreativity, charisma, maxCharisma, luck, maxLuck;
-      fscanf(fp, " %d/%d %d/%d %d/%d %d/%d %d/%d %d/%d %d/%d %d/%d",
-        &strength, &maxStrength, &dexterity, &maxDexterity, &constitution, &maxConstitution, &intelligence, &maxIntelligence, &focus, &maxFocus, &creativity, &maxCreativity, &charisma, &maxCharisma, &luck, &maxLuck
+      int strength, dexterity, constitution, intelligence, focus, creativity, charisma, luck;
+      fscanf(fp, " %d %d %d %d %d %d %d %d",
+        &strength,  &dexterity,  &constitution,  &intelligence,  &focus,  &creativity,  &charisma,  &luck
       );
-      loading->maxStrength(maxStrength);
       loading->strength(strength);
-      loading->maxDexterity(maxDexterity);
       loading->dexterity(dexterity);
-      loading->maxConstitution(maxConstitution);
       loading->constitution(constitution);
-      loading->maxIntelligence(maxIntelligence);
       loading->intelligence(intelligence);
-      loading->maxFocus(maxFocus);
       loading->focus(focus);
-      loading->maxCreativity(maxCreativity);
       loading->creativity(creativity);
-      loading->maxCharisma(maxCharisma);
       loading->charisma(charisma);
-      loading->maxLuck(maxLuck);
       loading->luck(luck);
     }
     if (strcmp("armor", input) == 0) {

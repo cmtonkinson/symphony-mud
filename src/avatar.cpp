@@ -239,7 +239,7 @@ bool Avatar::checkPassword(std::string attempt) {
 
 void Avatar::destroy(void) {
   std::string original_path = os::filename(this);
-  std::string original_base = basename(original_path.c_str());
+  std::string original_base = os::basename(original_path);
   std::string deadpool_path = os::deadpool_directory();
   std::string deadpool_base = original_base;
 

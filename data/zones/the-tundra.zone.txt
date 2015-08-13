@@ -229,7 +229,7 @@ keywords 18:bengal|large|tiger
 identity neutral error error
 level 100 0 0
 health 10194/10194 5144/5144 100
-stats 15/20 15/20 15/20 15/20 15/20 15/20 15/20 15/20
+stats 15 15 15 15 15 15 15 15
 armor 100 0 0 0 0
 trains 271
 money 0

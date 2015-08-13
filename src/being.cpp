@@ -41,22 +41,14 @@ Being::Being(void):
   mana(BASE_MANA);
   stamina(MAX_STAMINA);
   // Stats
-  maxStrength(INITIAL_MAX_STAT);
-  strength(INITIAL_STAT);
-  maxDexterity(INITIAL_MAX_STAT);
-  dexterity(INITIAL_STAT);
-  maxConstitution(INITIAL_MAX_STAT);
-  constitution(INITIAL_STAT);
-  maxIntelligence(INITIAL_MAX_STAT);
-  intelligence(INITIAL_STAT);
-  maxFocus(INITIAL_MAX_STAT);
-  focus(INITIAL_STAT);
-  maxCreativity(INITIAL_MAX_STAT);
-  creativity(INITIAL_STAT);
-  maxCharisma(INITIAL_MAX_STAT);
-  charisma(INITIAL_STAT);
-  maxLuck(INITIAL_MAX_STAT);
-  luck(INITIAL_STAT);
+  strength(STAT_BASE);
+  dexterity(STAT_BASE);
+  constitution(STAT_BASE);
+  intelligence(STAT_BASE);
+  focus(STAT_BASE);
+  creativity(STAT_BASE);
+  charisma(STAT_BASE);
+  luck(STAT_BASE);
   // Armor
   armor(100);
   bash(0);
@@ -99,21 +91,13 @@ Being::Being(const Being& ref):
   maxMana(ref.maxMana());
   mana(ref.mana());
   stamina(ref.stamina());
-  maxStrength(ref.maxStrength());
   strength(ref.strength());
-  maxDexterity(ref.maxDexterity());
   dexterity(ref.dexterity());
-  maxConstitution(ref.maxConstitution());
   constitution(ref.constitution());
-  maxIntelligence(ref.maxIntelligence());
   intelligence(ref.intelligence());
-  maxFocus(ref.maxFocus());
   focus(ref.focus());
-  maxCreativity(ref.maxCreativity());
   creativity(ref.creativity());
-  maxCharisma(ref.maxCharisma());
   charisma(ref.charisma());
-  maxLuck(ref.maxLuck());
   luck(ref.luck());
   armor(ref.armor());
   bash(ref.bash());
@@ -240,21 +224,13 @@ void Being::naturalStatAdjustment(void) {
       Foc -= 2;
       break;
   }
-  maxStrength(maxStrength() + Str);
   strength(strength() + Str);
-  maxDexterity(maxDexterity() + Dex);
   dexterity(dexterity() + Dex);
-  maxConstitution(maxConstitution() + Con);
   constitution(constitution() + Con);
-  maxIntelligence(maxIntelligence() + Int);
   intelligence(intelligence() + Int);
-  maxFocus(maxFocus() + Foc);
   focus(focus() + Foc);
-  maxCreativity(maxCreativity() + Cre);
   creativity(creativity() + Cre);
-  maxCharisma(maxCharisma() + Cha);
   charisma(charisma() + Cha);
-  maxLuck(maxLuck() + Luc);
   luck(luck() + Luc);
   return;
 }

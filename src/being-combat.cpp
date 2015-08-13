@@ -329,14 +329,14 @@ void Being::announceStatus(void) {
 
 double Being::healthPercent(void) const       { return 1.0 * health() / maxHealth(); }
 
-double Being::strengthPercent(void) const     { return 1.0 * strength()     / INITIAL_MAX_STAT; }
-double Being::dexterityPercent(void) const    { return 1.0 * dexterity()    / INITIAL_MAX_STAT; }
-double Being::constitutionPercent(void) const { return 1.0 * constitution() / INITIAL_MAX_STAT; }
-double Being::intelligencePercent(void) const { return 1.0 * intelligence() / INITIAL_MAX_STAT; }
-double Being::focusPercent(void) const        { return 1.0 * focus()        / INITIAL_MAX_STAT; }
-double Being::creativityPercent(void) const   { return 1.0 * creativity()   / INITIAL_MAX_STAT; }
-double Being::charismaPercent(void) const     { return 1.0 * charisma()     / INITIAL_MAX_STAT; }
-double Being::luckPercent(void) const         { return 1.0 * luck()         / INITIAL_MAX_STAT; }
+double Being::strengthPercent(void) const     { return 1.0 * strength()     / STAT_THRESHOLD; }
+double Being::dexterityPercent(void) const    { return 1.0 * dexterity()    / STAT_THRESHOLD; }
+double Being::constitutionPercent(void) const { return 1.0 * constitution() / STAT_THRESHOLD; }
+double Being::intelligencePercent(void) const { return 1.0 * intelligence() / STAT_THRESHOLD; }
+double Being::focusPercent(void) const        { return 1.0 * focus()        / STAT_THRESHOLD; }
+double Being::creativityPercent(void) const   { return 1.0 * creativity()   / STAT_THRESHOLD; }
+double Being::charismaPercent(void) const     { return 1.0 * charisma()     / STAT_THRESHOLD; }
+double Being::luckPercent(void) const         { return 1.0 * luck()         / STAT_THRESHOLD; }
 
 unsigned Being::targetHealth(void) const {
   switch (pClass().number()) {

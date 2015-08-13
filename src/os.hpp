@@ -89,6 +89,7 @@ namespace os {
   std::string   filename(Zone* zone);
   std::string   filename(SocialCommand* social);
   std::string   deadpool_directory(void);
+  std::string   basename(const std::string path);
 
   std::vector<std::string> glob(std::string pattern);
   bool                     file_exists(std::string path);

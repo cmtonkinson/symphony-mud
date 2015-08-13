@@ -118,8 +118,8 @@ class Being {
     static const unsigned MIN_HEALTH_GAIN = 3;
     static const unsigned MIN_MANA_GAIN   = 3;
 
-    static const unsigned INITIAL_STAT     = 15;
-    static const unsigned INITIAL_MAX_STAT = 20;
+    static const unsigned STAT_BASE       = 15;
+    static const unsigned STAT_THRESHOLD  = 20;
 
     static const unsigned ALTERABILITY_LEVEL_DIFFERENCE = 5;
 
@@ -191,38 +191,22 @@ class Being {
     void                stamina(unsigned stamina)                       { _stamina = (stamina <= MAX_STAMINA ? stamina : MAX_STAMINA); }
     unsigned            stamina(void) const                             { return _stamina; }
     // Stats
-    void                strength(unsigned short strength)               { _strength = ((strength <= maxStrength()) ? strength : maxStrength()); }
+    void                strength(unsigned short strength)               { _strength = strength; }
     unsigned short      strength(void) const                            { return _strength; }
-    void                maxStrength(unsigned short maxStrength)         { _maxStrength = maxStrength; }
-    unsigned short      maxStrength(void) const                         { return _maxStrength; }
-    void                dexterity(unsigned short dexterity)             { _dexterity = ((dexterity <= maxDexterity()) ? dexterity : maxDexterity()); }
+    void                dexterity(unsigned short dexterity)             { _dexterity = dexterity; }
     unsigned short      dexterity(void) const                           { return _dexterity; }
-    void                maxDexterity(unsigned short maxDexterity)       { _maxDexterity = maxDexterity; }
-    unsigned short      maxDexterity(void) const                        { return _maxDexterity; }
-    void                constitution(unsigned short constitution)       { _constitution = ((constitution <= maxConstitution()) ? constitution : maxConstitution()); }
+    void                constitution(unsigned short constitution)       { _constitution = constitution; }
     unsigned short      constitution(void) const                        { return _constitution; }
-    void                maxConstitution(unsigned short maxConstitution) { _maxConstitution = maxConstitution; }
-    unsigned short      maxConstitution(void) const                     { return _maxConstitution; }
-    void                intelligence(unsigned short intelligence)       { _intelligence = ((intelligence <= maxIntelligence()) ? intelligence : maxIntelligence()); }
+    void                intelligence(unsigned short intelligence)       { _intelligence = intelligence; }
     unsigned short      intelligence(void) const                        { return _intelligence;}
-    void                maxIntelligence(unsigned short maxIntelligence) { _maxIntelligence = maxIntelligence; }
-    unsigned short      maxIntelligence(void) const                     { return _maxIntelligence;}
-    void                focus(unsigned short focus)                     { _focus = ((focus <= maxFocus()) ? focus : maxFocus()); }
+    void                focus(unsigned short focus)                     { _focus = focus; }
     unsigned short      focus(void) const                               { return _focus;}
-    void                maxFocus(unsigned short maxFocus)               { _maxFocus = maxFocus; }
-    unsigned short      maxFocus(void) const                            { return _maxFocus;}
-    void                creativity(unsigned short creativity)           { _creativity = ((creativity <= maxCreativity()) ? creativity : maxCreativity()); }
+    void                creativity(unsigned short creativity)           { _creativity = creativity; }
     unsigned short      creativity(void) const                          { return _creativity;}
-    void                maxCreativity(unsigned short maxCreativity)     { _maxCreativity = maxCreativity; }
-    unsigned short      maxCreativity(void) const                       { return _maxCreativity;}
-    void                charisma(unsigned short charisma)               { _charisma = ((charisma <= maxCharisma()) ? charisma : maxCharisma()); }
+    void                charisma(unsigned short charisma)               { _charisma = charisma; }
     unsigned short      charisma(void) const                            { return _charisma;}
-    void                maxCharisma(unsigned short maxCharisma)         { _maxCharisma = maxCharisma; }
-    unsigned short      maxCharisma(void) const                         { return _maxCharisma;}
-    void                luck(unsigned short luck)                       { _luck = ((luck <= maxLuck()) ? luck : maxLuck()); }
+    void                luck(unsigned short luck)                       { _luck = luck; }
     unsigned short      luck(void) const                                { return _luck;}
-    void                maxLuck(unsigned short maxLuck)                 { _maxLuck = maxLuck; }
-    unsigned short      maxLuck(void) const                             { return _maxLuck;}
     // Armor
     void                armor(int armor)                                { _armor = armor; }
     int                 armor(void) const                               { return _armor; }
@@ -406,21 +390,13 @@ class Being {
     int                         _stamina;
     // Stats
     unsigned short              _strength;
-    unsigned short              _maxStrength;
     unsigned short              _dexterity;
-    unsigned short              _maxDexterity;
     unsigned short              _constitution;
-    unsigned short              _maxConstitution;
     unsigned short              _intelligence;
-    unsigned short              _maxIntelligence;
     unsigned short              _focus;
-    unsigned short              _maxFocus;
     unsigned short              _creativity;
-    unsigned short              _maxCreativity;
     unsigned short              _charisma;
-    unsigned short              _maxCharisma;
     unsigned short              _luck;
-    unsigned short              _maxLuck;
     // Armor
     int                         _armor;
     int                         _bash;

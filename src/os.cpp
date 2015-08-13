@@ -13,6 +13,10 @@
 #include "world.hpp"
 #include "zone.hpp"
 
+#ifdef __APPLE__
+#include <libgen.h>
+#endif
+
 namespace os {
 
   /////////////////////////////////////////////////////////////////////////////
@@ -287,6 +291,16 @@ namespace os {
 
   std::string deadpool_directory(void) {
     return "data/deadpool/";
+  }
+
+  std::string basename(const std::string path) {
+    #ifdef __APPLE__
+    char* p = nullptr;
+    strcpy(p, path.c_str());
+    return ::basename(p);
+    #else
+    return ::basename(path.c_str);
+    #endif
   }
 
   bool file_exists(std::string path) {
