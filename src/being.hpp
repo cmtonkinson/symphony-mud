@@ -93,7 +93,9 @@ class Being {
     static const unsigned ATTR_SLASH      = 14;
     static const unsigned ATTR_PIERCE     = 15;
     static const unsigned ATTR_EXOTIC     = 16;
-    static const unsigned ATTR_END        = 17;
+    static const unsigned ATTR_HIT        = 17;
+    static const unsigned ATTR_DAM        = 18;
+    static const unsigned ATTR_END        = 19;
 
     // Visibility...
     static const unsigned SEE_NOTHING   = 0;
@@ -190,7 +192,7 @@ class Being {
     int                 maxMana(void) const                             { return _maxMana; }
     void                stamina(unsigned stamina)                       { _stamina = (stamina <= MAX_STAMINA ? stamina : MAX_STAMINA); }
     unsigned            stamina(void) const                             { return _stamina; }
-    // Stats
+    // Core Stats
     void                strength(unsigned short strength)               { _strength = strength; }
     unsigned short      strength(void) const                            { return _strength; }
     void                dexterity(unsigned short dexterity)             { _dexterity = dexterity; }
@@ -198,15 +200,20 @@ class Being {
     void                constitution(unsigned short constitution)       { _constitution = constitution; }
     unsigned short      constitution(void) const                        { return _constitution; }
     void                intelligence(unsigned short intelligence)       { _intelligence = intelligence; }
-    unsigned short      intelligence(void) const                        { return _intelligence;}
+    unsigned short      intelligence(void) const                        { return _intelligence; }
     void                focus(unsigned short focus)                     { _focus = focus; }
-    unsigned short      focus(void) const                               { return _focus;}
+    unsigned short      focus(void) const                               { return _focus; }
     void                creativity(unsigned short creativity)           { _creativity = creativity; }
-    unsigned short      creativity(void) const                          { return _creativity;}
+    unsigned short      creativity(void) const                          { return _creativity; }
     void                charisma(unsigned short charisma)               { _charisma = charisma; }
-    unsigned short      charisma(void) const                            { return _charisma;}
+    unsigned short      charisma(void) const                            { return _charisma; }
     void                luck(unsigned short luck)                       { _luck = luck; }
-    unsigned short      luck(void) const                                { return _luck;}
+    unsigned short      luck(void) const                                { return _luck; }
+    // Extended Stats
+    void                hitBonus(unsigned short hit_bonus)              { _hit_bonus = hit_bonus; }
+    unsigned short      hitBonus(void) const                            { return _hit_bonus; }
+    void                damBonus(unsigned short dam_bonus)              { _dam_bonus = dam_bonus; }
+    unsigned short      damBonus(void) const                            { return _dam_bonus; }
     // Armor
     void                armor(int armor)                                { _armor = armor; }
     int                 armor(void) const                               { return _armor; }
@@ -388,7 +395,7 @@ class Being {
     int                         _mana;
     int                         _maxMana;
     int                         _stamina;
-    // Stats
+    // Core stats
     unsigned short              _strength;
     unsigned short              _dexterity;
     unsigned short              _constitution;
@@ -397,6 +404,9 @@ class Being {
     unsigned short              _creativity;
     unsigned short              _charisma;
     unsigned short              _luck;
+    // Extended stats
+    unsigned short              _hit_bonus;
+    unsigned short              _dam_bonus;
     // Armor
     int                         _armor;
     int                         _bash;

@@ -40,7 +40,7 @@ Being::Being(void):
   maxMana(BASE_MANA);
   mana(BASE_MANA);
   stamina(MAX_STAMINA);
-  // Stats
+  // Core Stats
   strength(STAT_BASE);
   dexterity(STAT_BASE);
   constitution(STAT_BASE);
@@ -49,6 +49,9 @@ Being::Being(void):
   creativity(STAT_BASE);
   charisma(STAT_BASE);
   luck(STAT_BASE);
+  // Extended Stats
+  hitBonus(0);
+  damBonus(0);
   // Armor
   armor(100);
   bash(0);
@@ -99,6 +102,8 @@ Being::Being(const Being& ref):
   creativity(ref.creativity());
   charisma(ref.charisma());
   luck(ref.luck());
+  hitBonus(ref.hitBonus());
+  damBonus(ref.damBonus());
   armor(ref.armor());
   bash(ref.bash());
   slash(ref.slash());
@@ -550,6 +555,10 @@ unsigned short Being::stringToAttribute(const std::string& name) {
     return ATTR_PIERCE;
   } else if (Regex::strPrefix(name, "exotic")) {
     return ATTR_EXOTIC;
+  } else if (Regex::strPrefix(name, "hit")) {
+    return ATTR_HIT;
+  } else if (Regex::strPrefix(name, "dam")) {
+    return ATTR_DAM;
   } else {
     return ATTR_END;
   }
@@ -573,6 +582,8 @@ const char* Being::attributeToString(const unsigned short& index) {
     case ATTR_SLASH:      return "slash";
     case ATTR_PIERCE:     return "pierce";
     case ATTR_EXOTIC:     return "exotic";
+    case ATTR_HIT:        return "hit";
+    case ATTR_DAM:        return "dam";
     default:              return "[error]";
   }
 }
@@ -638,6 +649,8 @@ void Being::doModification(const unsigned short& attribute, const int& magnitude
     case ATTR_SLASH:      _slash        += magnitude; break;
     case ATTR_PIERCE:     _pierce       += magnitude; break;
     case ATTR_EXOTIC:     _exotic       += magnitude; break;
+    case ATTR_HIT:        _hit_bonus    += magnitude; break;
+    case ATTR_DAM:        _dam_bonus    += magnitude; break;
     default: break;
   }
   return;
