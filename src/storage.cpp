@@ -187,6 +187,7 @@ void Storage::write(FILE* fp, Item* item, const char* suffix) {
   out(fp, "description",  item->identifiers().description());
   out(fp, "keywords",     item->identifiers().serializeKeywords());
   out(fp, "modifiers",    item->serializeModifiers());
+  out(fp, "compound",     item->serializeCompound());
   out(fp, "composition",  item->serializeComposition());
   switch (item->type()) {
     case Item::Type_Furniture:
@@ -226,6 +227,7 @@ bool Storage::read(FILE* fp, Item* loading) {
     STORE_CASE_STRING("description",  loading->identifiers().description(str);)
     STORE_CASE_STRING("keywords",     loading->identifiers().unserializeKeywords(str);)
     STORE_CASE_STRING("modifiers",    loading->unserializeModifiers(str);)
+    STORE_CASE_STRING("compound",     loading->unserializeCompound(str);)
     STORE_CASE_STRING("composition",  loading->unserializeComposition(str);)
     switch (loading->type()) {
       case Item::Type_Furniture:

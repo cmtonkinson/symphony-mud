@@ -161,7 +161,8 @@ longname 22:A rusty iron longsword
 description 0:
 keywords 31:iron|long|longsword|rusty|sword
 modifiers 0:
-composition 4:iron
+compound 4:iron
+composition 0:
 weapon_type 9:longsword
 weapon_verb 5:slash
 weapon_damage 5:20d20
@@ -178,7 +179,8 @@ longname 23:A rusty great warhammer
 description 0:
 keywords 32:great|hammep|rusty|war|warhammer
 modifiers 0:
-composition 4:iron
+compound 4:iron
+composition 0:
 weapon_type 4:mace
 weapon_verb 5:smash
 weapon_damage 5:20d20
@@ -195,7 +197,8 @@ longname 23:A dirk made of old bone
 description 0:
 keywords 13:bone|dirk|old
 modifiers 0:
-composition 4:bone
+compound 4:bone
+composition 0:
 weapon_type 6:dagger
 weapon_verb 4:stab
 weapon_damage 5:10d10
@@ -212,7 +215,8 @@ longname 12:A small dirk
 description 0:
 keywords 10:dirk|small
 modifiers 0:
-composition 4:iron
+compound 4:iron
+composition 0:
 weapon_type 6:dagger
 weapon_verb 4:stab
 weapon_damage 5:20d20

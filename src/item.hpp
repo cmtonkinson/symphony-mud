@@ -59,6 +59,8 @@ class Item {
 
     std::string   serializeModifiers(void) const;
     void          unserializeModifiers(std::string ser);
+    std::string   serializeCompound(void) const;
+    void          unserializeCompound(std::string ser);
     std::string   serializeComposition(std::string sep = "~") const;
     void          unserializeComposition(std::string ser);
     std::string   decorativeShortname(void) const;
@@ -81,8 +83,10 @@ class Item {
     const FlagBank&             flags(void) const                   { return _flags; }
     Identifiers&                identifiers(void)                   { return _identifiers; }
     const Identifiers&          identifiers(void) const             { return _identifiers; }
-    std::set<Compound*>&        composition(void)                   { return _composition; }
-    const std::set<Compound*>&  composition(void) const             { return _composition; }
+    void                        compound(const Compound* compound)  { _primary_compound = compound; }
+    const Compound*             compound(void) const                { return _primary_compound; }
+    std::set<const Compound*>&        composition(void)                   { return _other_compounds; }
+    const std::set<const Compound*>&  composition(void) const             { return _other_compounds; }
     void                        level(unsigned level)               { _level = level; }
     unsigned                    level(void) const                   { return _level; }
     void                        value(unsigned value)               { _value = value; }
@@ -110,7 +114,8 @@ class Item {
     unsigned long         _vnum;
     FlagBank              _flags;
     Identifiers           _identifiers;
-    std::set<Compound*>   _composition;
+    const Compound*             _primary_compound;
+    std::set<const Compound*>   _other_compounds;
     unsigned              _level;
     unsigned              _value;
     Wearable              _wearable;

@@ -69,7 +69,7 @@ ICmdComposition::ICmdComposition(void) {
   level(Being::DEMIGOD);
   addSyntax(-2, "add <type1 type2 type3 ...>");
   addSyntax(-2, "remove <type1 type2 type3 ...>");
-  brief("Updates the composition of the Item.");
+  brief("Updates the composition of the Item. The first compound you add will be primary.");
   addOptions("type", std::string("\n").append(CompoundTable::Instance().list()));
   return;
 }
@@ -92,14 +92,25 @@ bool ICmdComposition::execute(Being* being, const std::vector<std::string>& args
   for (std::vector<std::string>::iterator it = comps.begin(); it != comps.end(); ++it) {
     if ((compound = CompoundTable::Instance().find(*it)) != NULL) {
       if (add) {
-        avatar()->iedit()->composition().insert(compound);
+        if (avatar()->iedit()->compound() == nullptr) {
+          avatar()->iedit()->compound(compound);
+        } else if (avatar()->iedit()->compound() != compound) {
+          avatar()->iedit()->composition().insert(compound);
+        }
       } else {
+        if (avatar()->iedit()->compound() == compound) avatar()->iedit()->compound(nullptr);
         avatar()->iedit()->composition().erase(compound);
       }
     }
   }
 
-  avatar()->send("Item composition is now: %s", avatar()->iedit()->serializeComposition(" ").c_str());
+  avatar()->send("Item composition is now: ");
+  if (avatar()->iedit()->compound() != nullptr) {
+    avatar()->send("{y%s{x (primary) ", avatar()->iedit()->compound()->identifiers().shortname().c_str());
+  }
+  if (!avatar()->iedit()->composition().empty()) {
+    avatar()->send("{y%s{x (other) ", avatar()->iedit()->serializeComposition(" ").c_str());
+  }
   return true;
 }
 

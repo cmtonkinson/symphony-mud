@@ -12,6 +12,7 @@ Item::Item(void) {
   vnum(0);
   level(1);
   value(1);
+  compound(nullptr);
   wearable(Wearable_Undefined);
   identifiers().shortname("undefined");
   identifiers().longname("undefined");
@@ -21,7 +22,8 @@ Item::Item(void) {
 Item::Item(const Item& ref):
     _flags(ref.flags()),
     _identifiers(ref.identifiers()),
-    _composition(ref.composition()) {
+    _primary_compound(ref.compound()),
+    _other_compounds(ref.composition()) {
   extra(NULL);
   ID(ref.ID());
   type(ref.type(), ref.extra());
@@ -239,6 +241,15 @@ void Item::unserializeModifiers(std::string ser) {
   return;
 }
 
+std::string Item::serializeCompound(void) const {
+  return compound() == nullptr ? "" : compound()->identifiers().shortname();
+}
+
+void Item::unserializeCompound(std::string ser) {
+  compound(CompoundTable::Instance().find(ser));
+  return;
+}
+
 std::string Item::serializeComposition(std::string sep) const {
   std::set<std::string> foo;
   for (auto iter : composition()) foo.insert(iter->identifiers().shortname());
@@ -279,24 +290,27 @@ std::string Item::printStatus(void) const {
   sprintf(buffer, "vnum......... {y%lu{x\n\
 type......... {y%s{x\n\
 flags........ {y%s{x\n\
-composition.. {y%s{x\n\
 level........ {y%u{x\n\
 value........ {y%u{x\n\
 wearable..... {y%s{x\n\
 keywords..... {y%s{x\n\
 shortname.... %s\n\
-longname..... %s\n\n\
+longname..... %s\n\
+Composition:\n\
+  primary.... {y%s{x\n\
+  other...... {y%s{x\n\n\
   --== {Ydescription{x ==--\n%s\n\
 ",  vnum(),
     typeToString(),
     flags().list(FTItem::Instance()).c_str(),
-    serializeComposition().c_str(),
     level(),
     value(),
     wearableToString(),
     identifiers().getKeywordList().c_str(),
     identifiers().shortname().c_str(),
     identifiers().longname().c_str(),
+    (compound() == nullptr ? "" : compound()->identifiers().shortname().c_str()),
+    serializeComposition().c_str(),
     identifiers().description().c_str()
  );
   output.append(buffer);
