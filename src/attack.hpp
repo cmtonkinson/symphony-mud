@@ -8,6 +8,9 @@ class ItemWeapon;
 
 class Attack {
   public:
+
+    static constexpr double CRIT_MULTIPLIER = 0.4;
+
     Attack(Being* attacker, Being* defender);
     ~Attack(void);
 

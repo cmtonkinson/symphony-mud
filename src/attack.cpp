@@ -1,4 +1,5 @@
 
+#include <algorithm>
 #include "attack.hpp"
 #include "being.hpp"
 #include "item-types.hpp"
@@ -20,8 +21,7 @@ Attack::~Attack(void) {
 
 bool Attack::hit(void) {
   // You miss less as your hit bonus increases.
-  // TODO - change 50 to a Being hit bonus stat
-  if (Math::rand(1, 50) == 1) {
+  if (Math::rand(1, MAX(20, _attacker->hitBonus())) == 1) {
     return false;
   }
 
@@ -41,19 +41,16 @@ unsigned Attack::getDamage(void) {
 
 void Attack::calculateBase(void) {
   if (_unarmed) {
-    // TODO - calculate base for openhanded strike, probably based on STR
-    _base = 1;
+    _base = _attacker->damBonus() + Math::rand(1, _attacker->strength());
   } else {
-    _base = _weapon->damage().roll();
+    _base = _attacker->damBonus() + _weapon->damage().roll();
   }
 }
 
 void Attack::calculateAdjustments(void) {
-  // Is this a critical strike? Chances increase with a higher damage bonus.
-  // TODO - change 20 to Being damage bonus stat
-  // TODO - change 0.4 to some CRIT_FACTOR const
-  if (Math::rand(1, 500) < 20) {
-    _adjustment += _base * 0.4;
+  // Is this a critical strike? Chances increase with a higher hit bonus.
+  if (Math::rand(1, 500) < _attacker->hitBonus()) {
+    _adjustment += _base * CRIT_MULTIPLIER;
   }
 
   // Weapon key stat bonus.
@@ -76,10 +73,9 @@ unsigned Attack::timeUntilNext(void) {
 
   // You strike more frequently as your strength increases relative to the
   // size/weight of your weapon.
-  // TODO - replace 0 with strength factor
   // TODO - replace 1 with weapon factor (size vs compound(s) density)
   if (!_unarmed) {
-    modify += 0 * 1;
+    modify += _attacker->strengthPercent() * 1;
   }
 
   return ROUND_2_UINT(defalt + modify);
