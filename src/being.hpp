@@ -184,15 +184,15 @@ class Being {
     void                tnl(unsigned tnl)                               { _tnl = tnl; }
     unsigned            tnl(void) const                                 { return _tnl; }
     // Health
-    void                health(int health)                              { _health = MAX(health, maxHealth()); }
+    void                health(int health)                              { _health = MIN(health, maxHealth()); }
     int                 health(void) const                              { return _health; }
     void                maxHealth(int maxHealth)                        { _maxHealth = maxHealth; }
     int                 maxHealth(void) const                           { return _maxHealth; }
-    void                mana(int mana)                                  { _mana = MAX(mana, maxMana()); }
+    void                mana(int mana)                                  { _mana = MIN(mana, maxMana()); }
     int                 mana(void) const                                { return _mana; }
     void                maxMana(int maxMana)                            { _maxMana = maxMana; }
     int                 maxMana(void) const                             { return _maxMana; }
-    void                stamina(unsigned stamina)                       { _stamina = MAX(stamina, MAX_STAMINA); }
+    void                stamina(unsigned stamina)                       { _stamina = MIN(stamina, MAX_STAMINA); }
     unsigned            stamina(void) const                             { return _stamina; }
     // Core Stats
     void                strength(int strength)               { _strength = strength; }
