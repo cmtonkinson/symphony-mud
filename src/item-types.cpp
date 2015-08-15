@@ -2,6 +2,7 @@
 #include "item-types.hpp"
 #include "regex.hpp"
 #include "being.hpp"
+#include "os.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 // ARMOR
@@ -114,19 +115,51 @@ bool ItemFurniture::remove(Being* being) {
 ///////////////////////////////////////////////////////////////////////////////
 // WEAPON
 ///////////////////////////////////////////////////////////////////////////////
-ItemWeapon::ItemWeapon(void) {
+ItemWeapon::ItemWeapon(const Item* base_) {
   type().set(0);
   verb().set(0);
+  base(base_);
   return;
 }
 
-ItemWeapon::ItemWeapon(const ItemWeapon& ref):
+ItemWeapon::ItemWeapon(const Item* base_, const ItemWeapon& ref):
     _type(ref.type()),
     _verb(ref.verb()),
-    _damage(ref.damage()) {
+    _damage(ref.damage()),
+    _base(base_) {
   return;
 }
 
 ItemWeapon::~ItemWeapon(void) {
   return;
+}
+
+double ItemWeapon::weightFactor(void) const {
+  double density = 1.0;
+  double size    = 3.0;
+
+  if (base()->compound() != nullptr) density = base()->compound()->density();
+
+  size = relativeSize(this);
+
+  return density * size;
+}
+
+double ItemWeapon::relativeSize(const ItemWeapon* weapon) {
+  switch (weapon->type().number()) {
+    case WEAP_AXE:          return 3.0;
+    case WEAP_CLUB:         return 3.0;
+    case WEAP_DAGGER:       return 1.0;
+    case WEAP_FLAIL:        return 3.0;
+    case WEAP_GAUNTLET:     return 1.0;
+    case WEAP_LONGSWORD:    return 5.0;
+    case WEAP_MACE:         return 4.0;
+    case WEAP_POLEARM:      return 5.0;
+    case WEAP_SHORTSWORD:   return 3.0;
+    case WEAP_STAFF:        return 4.0;
+    case WEAP_WHIP:         return 2.0;
+    default:
+      ERROR_(nullptr, "invalid weapon type (%d) for vnum %lu '%s'", weapon->type().number(), weapon->base()->vnum(), weapon->base()->name());
+      return 3.0;
+  }
 }

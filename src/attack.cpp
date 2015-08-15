@@ -73,9 +73,8 @@ unsigned Attack::timeUntilNext(void) {
 
   // You strike more frequently as your strength increases relative to the
   // size/weight of your weapon.
-  // TODO - replace 1 with weapon factor (size vs compound(s) density)
   if (!_unarmed) {
-    modify += _attacker->strengthPercent() * 1;
+    modify += _attacker->strengthPercent() * _weapon->weightFactor();
   }
 
   return ROUND_2_UINT(defalt + modify);

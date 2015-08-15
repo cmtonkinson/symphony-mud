@@ -129,8 +129,8 @@ class ItemTrash {
 ///////////////////////////////////////////////////////////////////////////////
 class ItemWeapon {
   public:
-    ItemWeapon(void);
-    ItemWeapon(const ItemWeapon& ref);
+    ItemWeapon(const Item* base);
+    ItemWeapon(const Item* base, const ItemWeapon& ref);
     ~ItemWeapon(void);
 
     // public accessors
@@ -141,10 +141,22 @@ class ItemWeapon {
     Dice&             damage(void)                { return _damage; }
     const Dice&       damage(void) const          { return _damage; }
 
+    void              base(const Item* base)      { _base = base; }
+    const Item*       base(void) const            { return _base; }
+
+    // random methods
+    double weightFactor(void) const;
+
+    // Return a double corresponding to the relative size/weight of the given
+    // ItemWeapon. Returns between 1.0 and 5.0, with 1.0 being "small" and
+    // 5.0 being "large."
+    static double relativeSize(const ItemWeapon* weapon);
+
   private:
     WeaponType  _type;
     DamageVerb  _verb;
     Dice        _damage;
+    const Item* _base;
 };
 
 #endif // #ifndef H_SYMPHONY_ITEM_TYPES

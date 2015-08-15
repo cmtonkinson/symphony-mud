@@ -4,7 +4,7 @@
 
 #include <string>
 
-typedef unsigned EnumInt;
+typedef unsigned int EnumInt;
 
 class EnumTable;
 

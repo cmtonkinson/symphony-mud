@@ -65,7 +65,7 @@ void Item::deleteExtra(void) {
 }
 
 /* Changing Item::_type is a non-trivial operation, since Item::_extra
- * holds a pointer to an Obj____ item, and that pointer is interpreted
+ * holds a pointer to an Item____ item, and that pointer is interpreted
  * based on the value of Item::_type.
  */
 void Item::type(Type type) {
@@ -83,8 +83,8 @@ void Item::type(Type type) {
     case Type_Jewelry:    extra(new ItemJewelry());    break;
     case Type_Key:        extra(new ItemKey());        break;
     case Type_Trash:      extra(new ItemTrash());      break;
-    case Type_Weapon:     extra(new ItemWeapon());     break;
-    default:                                          break;
+    case Type_Weapon:     extra(new ItemWeapon(this)); break;
+    default:                                           break;
   }
   return;
 }
@@ -104,8 +104,8 @@ void Item::type(Type type, void* extra_ptr) {
     case Type_Jewelry:    extra(new ItemJewelry(*((ItemJewelry*)extra_ptr)));     break;
     case Type_Key:        extra(new ItemKey(*((ItemKey*)extra_ptr)));             break;
     case Type_Trash:      extra(new ItemTrash(*((ItemTrash*)extra_ptr)));         break;
-    case Type_Weapon:     extra(new ItemWeapon(*((ItemWeapon*)extra_ptr)));       break;
-    default:                                                                    break;
+    case Type_Weapon:     extra(new ItemWeapon(this, *((ItemWeapon*)extra_ptr))); break;
+    default:                                                                      break;
   }
   return;
 }

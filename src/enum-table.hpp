@@ -77,17 +77,6 @@ DEF_ENUM(FurniturePosition)
 #define FURN_SIT_ON   3
 #define FURN_STAND_ON 4
 
-/*DEF_ENUM(ItemType)
-#define ITEM_ARMOR     1
-#define ITEM_CLOTHING  2
-#define ITEM_CONTAINER 3
-#define ITEM_FOOD      4
-#define ITEM_FURNITURE 5
-#define ITEM_JEWELRY   6
-#define ITEM_KEY       7
-#define ITEM_TRASH     8
-#define ITEM_WEAPON    9*/
-
 DEF_ENUM(WeaponType)
 #define WEAP_AXE         1
 #define WEAP_CLUB        2
