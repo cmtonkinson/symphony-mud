@@ -77,25 +77,27 @@ class Being {
      * (indexing must be contiguous, starting from 1)
      */
     static const unsigned ATTR_BEGIN      =  1;
-    static const unsigned ATTR_MAX_HEALTH =  1;
-    static const unsigned ATTR_MAX_MANA   =  2;
-    static const unsigned ATTR_MAX_MOVE   =  3;
-    static const unsigned ATTR_STR        =  4;
-    static const unsigned ATTR_DEX        =  5;
-    static const unsigned ATTR_CON        =  6;
-    static const unsigned ATTR_INT        =  7;
-    static const unsigned ATTR_FOC        =  8;
-    static const unsigned ATTR_CRE        =  9;
-    static const unsigned ATTR_CHA        = 10;
-    static const unsigned ATTR_LUC        = 11;
-    static const unsigned ATTR_ARMOR      = 12;
-    static const unsigned ATTR_BASH       = 13;
-    static const unsigned ATTR_SLASH      = 14;
-    static const unsigned ATTR_PIERCE     = 15;
-    static const unsigned ATTR_EXOTIC     = 16;
-    static const unsigned ATTR_HIT        = 17;
-    static const unsigned ATTR_DAM        = 18;
-    static const unsigned ATTR_END        = 19;
+    static const unsigned ATTR_HEALTH     =  2;
+    static const unsigned ATTR_MAX_HEALTH =  3;
+    static const unsigned ATTR_MANA       =  4;
+    static const unsigned ATTR_MAX_MANA   =  5;
+    static const unsigned ATTR_STAMINA    =  6;
+    static const unsigned ATTR_STR        =  7;
+    static const unsigned ATTR_DEX        =  8;
+    static const unsigned ATTR_CON        =  9;
+    static const unsigned ATTR_INT        = 10;
+    static const unsigned ATTR_FOC        = 11;
+    static const unsigned ATTR_CRE        = 12;
+    static const unsigned ATTR_CHA        = 13;
+    static const unsigned ATTR_LUC        = 14;
+    static const unsigned ATTR_ARMOR      = 15;
+    static const unsigned ATTR_BASH       = 16;
+    static const unsigned ATTR_SLASH      = 17;
+    static const unsigned ATTR_PIERCE     = 18;
+    static const unsigned ATTR_EXOTIC     = 19;
+    static const unsigned ATTR_HIT        = 20;
+    static const unsigned ATTR_DAM        = 21;
+    static const unsigned ATTR_END        = 22;
 
     // Visibility...
     static const unsigned SEE_NOTHING   = 0;
@@ -182,38 +184,38 @@ class Being {
     void                tnl(unsigned tnl)                               { _tnl = tnl; }
     unsigned            tnl(void) const                                 { return _tnl; }
     // Health
-    void                health(int health)                              { _health = ((health <= maxHealth()) ? health : maxHealth()); }
+    void                health(int health)                              { _health = MAX(health, maxHealth()); }
     int                 health(void) const                              { return _health; }
     void                maxHealth(int maxHealth)                        { _maxHealth = maxHealth; }
     int                 maxHealth(void) const                           { return _maxHealth; }
-    void                mana(int mana)                                  { _mana = ((mana <= maxMana()) ? mana : maxMana()); }
+    void                mana(int mana)                                  { _mana = MAX(mana, maxMana()); }
     int                 mana(void) const                                { return _mana; }
     void                maxMana(int maxMana)                            { _maxMana = maxMana; }
     int                 maxMana(void) const                             { return _maxMana; }
-    void                stamina(unsigned stamina)                       { _stamina = (stamina <= MAX_STAMINA ? stamina : MAX_STAMINA); }
+    void                stamina(unsigned stamina)                       { _stamina = MAX(stamina, MAX_STAMINA); }
     unsigned            stamina(void) const                             { return _stamina; }
     // Core Stats
-    void                strength(unsigned short strength)               { _strength = strength; }
-    unsigned short      strength(void) const                            { return _strength; }
-    void                dexterity(unsigned short dexterity)             { _dexterity = dexterity; }
-    unsigned short      dexterity(void) const                           { return _dexterity; }
-    void                constitution(unsigned short constitution)       { _constitution = constitution; }
-    unsigned short      constitution(void) const                        { return _constitution; }
-    void                intelligence(unsigned short intelligence)       { _intelligence = intelligence; }
-    unsigned short      intelligence(void) const                        { return _intelligence; }
-    void                focus(unsigned short focus)                     { _focus = focus; }
-    unsigned short      focus(void) const                               { return _focus; }
-    void                creativity(unsigned short creativity)           { _creativity = creativity; }
-    unsigned short      creativity(void) const                          { return _creativity; }
-    void                charisma(unsigned short charisma)               { _charisma = charisma; }
-    unsigned short      charisma(void) const                            { return _charisma; }
-    void                luck(unsigned short luck)                       { _luck = luck; }
-    unsigned short      luck(void) const                                { return _luck; }
+    void                strength(int strength)               { _strength = strength; }
+    int      strength(void) const                            { return _strength; }
+    void                dexterity(int dexterity)             { _dexterity = dexterity; }
+    int      dexterity(void) const                           { return _dexterity; }
+    void                constitution(int constitution)       { _constitution = constitution; }
+    int      constitution(void) const                        { return _constitution; }
+    void                intelligence(int intelligence)       { _intelligence = intelligence; }
+    int      intelligence(void) const                        { return _intelligence; }
+    void                focus(int focus)                     { _focus = focus; }
+    int      focus(void) const                               { return _focus; }
+    void                creativity(int creativity)           { _creativity = creativity; }
+    int      creativity(void) const                          { return _creativity; }
+    void                charisma(int charisma)               { _charisma = charisma; }
+    int      charisma(void) const                            { return _charisma; }
+    void                luck(int luck)                       { _luck = luck; }
+    int      luck(void) const                                { return _luck; }
     // Extended Stats
-    void                hitBonus(unsigned short hit_bonus)              { _hit_bonus = hit_bonus; }
-    unsigned short      hitBonus(void) const                            { return _hit_bonus; }
-    void                damBonus(unsigned short dam_bonus)              { _dam_bonus = dam_bonus; }
-    unsigned short      damBonus(void) const                            { return _dam_bonus; }
+    void                hitBonus(int hit_bonus)              { _hit_bonus = hit_bonus; }
+    int      hitBonus(void) const                            { return _hit_bonus; }
+    void                damBonus(int dam_bonus)              { _dam_bonus = dam_bonus; }
+    int      damBonus(void) const                            { return _dam_bonus; }
     // Armor
     void                armor(int armor)                                { _armor = armor; }
     int                 armor(void) const                               { return _armor; }
@@ -280,6 +282,7 @@ class Being {
     void                        modify(Modifier* modifier);
     void                        unmodify(Modifier* modifier);
     void                        doModification(const unsigned short& attribute, const int& magnitude);
+    int                         getAttribute(unsigned attribute);
     unsigned short              canSee(Being* target);
     std::string                 seeName(Being* target, bool capitalize = false);
     const char*                 seeReflexivePronoun(Being* target, bool capitalize = false); // e.g. "himself"
@@ -396,17 +399,17 @@ class Being {
     int                         _maxMana;
     int                         _stamina;
     // Core stats
-    unsigned short              _strength;
-    unsigned short              _dexterity;
-    unsigned short              _constitution;
-    unsigned short              _intelligence;
-    unsigned short              _focus;
-    unsigned short              _creativity;
-    unsigned short              _charisma;
-    unsigned short              _luck;
+    int                         _strength;
+    int                         _dexterity;
+    int                         _constitution;
+    int                         _intelligence;
+    int                         _focus;
+    int                         _creativity;
+    int                         _charisma;
+    int                         _luck;
     // Extended stats
-    unsigned short              _hit_bonus;
-    unsigned short              _dam_bonus;
+    int                         _hit_bonus;
+    int                         _dam_bonus;
     // Armor
     int                         _armor;
     int                         _bash;

@@ -143,6 +143,8 @@ class ItemWeapon {
 
     void              base(const Item* base)      { _base = base; }
     const Item*       base(void) const            { return _base; }
+    void              keyStat(unsigned stat)      { _key_stat = stat; }
+    unsigned          keyStat(void) const         { return _key_stat; }
 
     // random methods
     double weightFactor(void) const;
@@ -157,6 +159,7 @@ class ItemWeapon {
     DamageVerb  _verb;
     Dice        _damage;
     const Item* _base;
+    unsigned    _key_stat;
 };
 
 #endif // #ifndef H_SYMPHONY_ITEM_TYPES

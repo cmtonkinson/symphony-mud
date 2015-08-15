@@ -119,6 +119,7 @@ ItemWeapon::ItemWeapon(const Item* base_) {
   type().set(0);
   verb().set(0);
   base(base_);
+  keyStat(Being::ATTR_BEGIN);
   return;
 }
 
@@ -126,7 +127,8 @@ ItemWeapon::ItemWeapon(const Item* base_, const ItemWeapon& ref):
     _type(ref.type()),
     _verb(ref.verb()),
     _damage(ref.damage()),
-    _base(base_) {
+    _base(base_),
+    _key_stat(ref.keyStat()) {
   return;
 }
 

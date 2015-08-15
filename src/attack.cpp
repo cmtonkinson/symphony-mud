@@ -3,6 +3,7 @@
 #include "attack.hpp"
 #include "being.hpp"
 #include "item-types.hpp"
+#include "os.hpp"
 
 Attack::Attack(Being* attacker, Being* defender) {
   _attacker = attacker;
@@ -48,14 +49,36 @@ void Attack::calculateBase(void) {
 }
 
 void Attack::calculateAdjustments(void) {
+  unsigned stat_idx = Being::ATTR_BEGIN;
+  double stat_adjustment = 0.0;
+
   // Is this a critical strike? Chances increase with a higher hit bonus.
   if (Math::rand(1, 500) < _attacker->hitBonus()) {
     _adjustment += _base * CRIT_MULTIPLIER;
   }
 
   // Weapon key stat bonus.
-  // TODO - configurable "primary/key stat" for weapons
-  _adjustment += _base * _attacker->strengthPercent();
+  if ((stat_idx = _weapon->keyStat()) != Being::ATTR_BEGIN) {
+    switch (stat_idx) {
+      case Being::ATTR_HEALTH:  stat_adjustment = 1.0 * _attacker->health() / _attacker->maxHealth();   break;
+      case Being::ATTR_MANA:    stat_adjustment = 1.0 * _attacker->mana() / _attacker->maxMana();       break;
+      case Being::ATTR_STAMINA: stat_adjustment = 1.0 * _attacker->stamina() / Being::MAX_STAMINA;             break;
+      case Being::ATTR_STR:
+      case Being::ATTR_DEX:
+      case Being::ATTR_CON:
+      case Being::ATTR_INT:
+      case Being::ATTR_FOC:
+      case Being::ATTR_CRE:
+      case Being::ATTR_CHA:
+      case Being::ATTR_LUC:
+        stat_adjustment = 1.0 * _attacker->getAttribute(stat_idx) / Being::STAT_THRESHOLD;
+        break;
+      default:
+        ERROR_(_attacker, "Attack::calculateAdjustments() bad stat_idx %u", stat_idx);
+        break;
+    }
+  }
+  _adjustment += _base * stat_adjustment / 10;
 
   // Weapon affinity.
   // TODO - dynamic weapon affinity

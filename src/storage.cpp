@@ -348,7 +348,7 @@ void Storage::write_base(FILE* fp, Being* being) {
     being->maxMana(),
     being->stamina()
   );
-  fprintf(fp, "stats %hu %hu %hu %hu %hu %hu %hu %hu\n",
+  fprintf(fp, "stats %d %d %d %d %d %d %d %d\n",
     being->strength(),
     being->dexterity(),
     being->constitution(),
@@ -357,6 +357,10 @@ void Storage::write_base(FILE* fp, Being* being) {
     being->creativity(),
     being->charisma(),
     being->luck()
+  );
+  fprintf(fp, "bonus %d %d\n",
+    being->hitBonus(),
+    being->damBonus()
   );
   fprintf(fp, "armor %d %d %d %d %d\n",
     being->armor(),
@@ -408,7 +412,7 @@ bool Storage::read_base(FILE* fp, Being* loading) {
     }
     if (strcmp("stats", input) == 0) {
       int strength, dexterity, constitution, intelligence, focus, creativity, charisma, luck;
-      fscanf(fp, " %d %d %d %d %d %d %d %d",
+      fscanf(fp, "%d %d %d %d %d %d %d %d",
         &strength,  &dexterity,  &constitution,  &intelligence,  &focus,  &creativity,  &charisma,  &luck
       );
       loading->strength(strength);
@@ -419,6 +423,14 @@ bool Storage::read_base(FILE* fp, Being* loading) {
       loading->creativity(creativity);
       loading->charisma(charisma);
       loading->luck(luck);
+    }
+    if (strcmp("bonus", input) == 0) {
+      int hit, dam;
+      fscanf(fp, "%d %d",
+        &hit, &dam
+      );
+      loading->hitBonus(hit);
+      loading->damBonus(dam);
     }
     if (strcmp("armor", input) == 0) {
       int armor, bash, slash, pierce, exotic;

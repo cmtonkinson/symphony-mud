@@ -89,6 +89,9 @@ bool Npc::auto_move(Job* job) {
   std::string foo;
   std::vector<unsigned> valid_exits;
 
+  // Don't peace out while fighting.
+  if (!opponents().empty()) return false;
+
   // Enumerate the possible exits.
   for (auto iter : directions) {
     if (canMove(iter, foo)) {

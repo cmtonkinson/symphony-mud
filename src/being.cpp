@@ -524,11 +524,15 @@ bool Being::stand(std::string& error) {
 
 unsigned short Being::stringToAttribute(const std::string& name) {
   if (Regex::strPrefix(name, "health")) {
+    return ATTR_HEALTH;
+  } else if (Regex::strPrefix(name, "max health")) {
     return ATTR_MAX_HEALTH;
   } else if (Regex::strPrefix(name, "mana")) {
+    return ATTR_MANA;
+  } else if (Regex::strPrefix(name, "max mana")) {
     return ATTR_MAX_MANA;
-  } else if (Regex::strPrefix(name, "move")) {
-    return ATTR_MAX_MOVE;
+  } else if (Regex::strPrefix(name, "stamina")) {
+    return ATTR_STAMINA;
   } else if (Regex::strPrefix(name, "str")) {
     return ATTR_STR;
   } else if (Regex::strPrefix(name, "dex")) {
@@ -566,9 +570,11 @@ unsigned short Being::stringToAttribute(const std::string& name) {
 
 const char* Being::attributeToString(const unsigned short& index) {
   switch (index) {
-    case ATTR_MAX_HEALTH: return "health";
-    case ATTR_MAX_MANA:   return "mana";
-    case ATTR_MAX_MOVE:   return "move";
+    case ATTR_HEALTH:     return "health";
+    case ATTR_MAX_HEALTH: return "max health";
+    case ATTR_MANA:       return "mana";
+    case ATTR_MAX_MANA:   return "max mana";
+    case ATTR_STAMINA:    return "stamina";
     case ATTR_STR:        return "str";
     case ATTR_DEX:        return "dex";
     case ATTR_CON:        return "con";
@@ -634,8 +640,11 @@ void Being::unmodify(Modifier* modifier) {
 
 void Being::doModification(const unsigned short& attribute, const int& magnitude) {
   switch (attribute) {
+    case ATTR_HEALTH:     _health       += magnitude; break;
     case ATTR_MAX_HEALTH: _maxHealth    += magnitude; break;
+    case ATTR_MANA:       _mana         += magnitude; break;
     case ATTR_MAX_MANA:   _maxMana      += magnitude; break;
+    case ATTR_STAMINA:    _stamina      += magnitude; break;
     case ATTR_STR:        _strength     += magnitude; break;
     case ATTR_DEX:        _dexterity    += magnitude; break;
     case ATTR_CON:        _constitution += magnitude; break;
@@ -654,6 +663,34 @@ void Being::doModification(const unsigned short& attribute, const int& magnitude
     default: break;
   }
   return;
+}
+
+int Being::getAttribute(unsigned attribute) {
+  switch (attribute) {
+    case ATTR_MAX_HEALTH:   return maxHealth();
+    case ATTR_HEALTH:       return health();
+    case ATTR_MAX_MANA:     return maxMana();
+    case ATTR_MANA:         return mana();
+    case ATTR_STAMINA:      return stamina();
+    case ATTR_STR:          return strength();
+    case ATTR_DEX:          return dexterity();
+    case ATTR_CON:          return constitution();
+    case ATTR_INT:          return intelligence();
+    case ATTR_FOC:          return focus();
+    case ATTR_CRE:          return creativity();
+    case ATTR_CHA:          return charisma();
+    case ATTR_LUC:          return luck();
+    case ATTR_ARMOR:        return armor();
+    case ATTR_BASH:         return bash();
+    case ATTR_SLASH:        return slash();
+    case ATTR_PIERCE:       return pierce();
+    case ATTR_EXOTIC:       return exotic();
+    case ATTR_HIT:          return hitBonus();
+    case ATTR_DAM:          return damBonus();
+    default:
+      ERROR_(this, "getAttribute() passed bad index: %u", attribute);
+      return 0;
+  }
 }
 
 unsigned short Being::canSee(Being* target) {

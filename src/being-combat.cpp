@@ -62,7 +62,7 @@ void Being::scheduleAttack(void) {
   return;
 }
 
-// FIXME - any type of counterattack of effect could kill `this` during offensive moves
+// TODO - any type of counterattack of effect could kill `this` during offensive moves
 // such as attack() - need to account for this. Maybe self-deletion is a bad strategy
 bool Being::attack(Job* job) {
   // Clear the Job pointer so a new attack can be scheduled. (The Schedule will automatically
