@@ -25,6 +25,21 @@ bool CmdAdminNote::execute(Being* being, const std::vector<std::string>& args) {
   return true;
 }
 
+CmdAffinity::CmdAffinity(void) {
+  name("affinity");
+  playerOnly(true);
+  addSyntax(0, "");
+  brief("Display your weapon type affinity.");
+  seeAlso("summary");
+  return;
+}
+
+bool CmdAffinity::execute(Being* being, const std::vector<std::string>& args) {
+  avatar()->send("Your size affinity is %lf.\n", avatar()->sizeAffinity());
+  avatar()->send("Your range affinity is %lf.\n", avatar()->rangeAffinity());
+  return true;
+}
+
 CmdAfk::CmdAfk(void) {
   name("afk");
   playerOnly(true);

@@ -1,4 +1,5 @@
 
+#include <vector>
 #include "ability.hpp"
 #include "avatar.hpp"
 #include "being.hpp"
@@ -52,6 +53,8 @@ Being::Being(void):
   // Extended Stats
   hitBonus(0);
   damBonus(0);
+  sizeAffinity(AFFINITY_DEFAULT);
+  rangeAffinity(AFFINITY_DEFAULT);
   // Armor
   armor(100);
   bash(0);
@@ -104,6 +107,8 @@ Being::Being(const Being& ref):
   luck(ref.luck());
   hitBonus(ref.hitBonus());
   damBonus(ref.damBonus());
+  sizeAffinity(ref.sizeAffinity());
+  rangeAffinity(ref.rangeAffinity());
   armor(ref.armor());
   bash(ref.bash());
   slash(ref.slash());
@@ -974,4 +979,42 @@ void Being::masterAllTheThings(void) {
     }
   } while (!abilities.empty());
   return;
+}
+
+double Being::affinity(bool primary_hand) {
+  double affinity = 0.0;
+  double affinity_resistance = 1000;
+  Item* item = nullptr;
+  ItemWeapon* weapon = nullptr;
+  std::vector<double> being_affinity;
+  std::vector<double> weapon_values;
+
+  // Primary or secondary?
+  if ((item = (primary_hand ? primary() : secondary())) == nullptr) {
+    ERROR(this, "Being::affinity() - affinity request for null weapon");
+    return affinity;
+  }
+  weapon = item->weapon();
+
+  // Get the current affinity. Affinity is calculated as a distance between two
+  // points on a Cartesian system in multiple dimensions. The dimensions are
+  // the different affinity metrics. One point is defined by the affinity
+  // values of the Being, and the other point is defined by affinity values of
+  // the ItemWeapon.
+  affinity = Math::distance(
+    std::vector<double>(
+      sizeAffinity(),
+      rangeAffinity()
+    ),
+    std::vector<double>(
+      ItemWeapon::relativeSize(weapon),
+      ItemWeapon::relativeRange(weapon)
+    )
+  );
+
+  // Adjust the affinity for the current weapon.
+  sizeAffinity((sizeAffinity() * affinity_resistance + ItemWeapon::relativeSize(weapon)) / (affinity_resistance + 1));
+  rangeAffinity((rangeAffinity() * affinity_resistance + ItemWeapon::relativeRange(weapon)) / (affinity_resistance + 1));
+
+  return affinity;
 }

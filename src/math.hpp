@@ -2,6 +2,8 @@
 #ifndef H_SYMPHONY_MATH
 #define H_SYMPHONY_MATH
 
+#include <vector>
+
 #define ROUND_2_INT(f) ((int)(f >= 0.0 ? (f + 0.5) : (f - 0.5)))
 #define ROUND_2_UINT(f) ((unsigned)(f >= 0.0 ? (f + 0.5) : (f - 0.5)))
 
@@ -51,7 +53,9 @@ class Math {
 
     /*
      */
-    static bool percent_chance(unsigned percent);
+    static bool     percent_chance(unsigned percent);
+
+    static double   distance(std::vector<double> x, std::vector<double> y);
 
   private:
 

@@ -154,6 +154,11 @@ class ItemWeapon {
     // 5.0 being "large."
     static double relativeSize(const ItemWeapon* weapon);
 
+    // Return a double corresponding to the relative range of the given
+    // ItemWeapon. Returns between 1.0 and 5.0 with 1.0 being "short" range
+    // and 5.0 being "long range."
+    static double relativeRange(const ItemWeapon* weapon);
+
   private:
     WeaponType  _type;
     DamageVerb  _verb;

@@ -161,7 +161,26 @@ double ItemWeapon::relativeSize(const ItemWeapon* weapon) {
     case WEAP_STAFF:        return 4.0;
     case WEAP_WHIP:         return 2.0;
     default:
-      ERROR_(nullptr, "invalid weapon type (%d) for vnum %lu '%s'", weapon->type().number(), weapon->base()->vnum(), weapon->base()->name());
+      ERROR_(nullptr, "ItemWeapon::relativeSize() - invalid weapon type (%d) for vnum %lu '%s'", weapon->type().number(), weapon->base()->vnum(), weapon->base()->name());
+      return 3.0;
+  }
+}
+
+double ItemWeapon::relativeRange(const ItemWeapon* weapon) {
+  switch (weapon->type().number()) {
+    case WEAP_AXE:          return 2.0;
+    case WEAP_CLUB:         return 2.0;
+    case WEAP_DAGGER:       return 1.0;
+    case WEAP_FLAIL:        return 3.0;
+    case WEAP_GAUNTLET:     return 1.0;
+    case WEAP_LONGSWORD:    return 4.0;
+    case WEAP_MACE:         return 2.0;
+    case WEAP_POLEARM:      return 5.0;
+    case WEAP_SHORTSWORD:   return 2.0;
+    case WEAP_STAFF:        return 4.0;
+    case WEAP_WHIP:         return 4.0;
+    default:
+      ERROR_(nullptr, "ItemWeapon::relativeRange() - invalid weapon type (%d) for vnum %lu '%s'", weapon->type().number(), weapon->base()->vnum(), weapon->base()->name());
       return 3.0;
   }
 }

@@ -1,6 +1,7 @@
 
 #include <cmath>
 #include <cstdlib>
+#include <vector>
 #include "math.hpp"
 
 // Default state for Box-Muller variables.
@@ -63,4 +64,11 @@ double Math::bound(double value, double min, double max) {
 
 bool Math::percent_chance(unsigned percent) {
   return rand(1, 100) <= percent;
+}
+
+double Math::distance(std::vector<double> x, std::vector<double> y) {
+  double sum = 0.0;
+  if (x.empty() || x.size() != y.size()) return 0.0;
+  for (unsigned i = 0; i < x.size(); ++i) sum += pow(x[i] - y[i] , 2);
+  return sqrt(sum);
 }

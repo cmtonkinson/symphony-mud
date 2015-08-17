@@ -362,6 +362,10 @@ void Storage::write_base(FILE* fp, Being* being) {
     being->hitBonus(),
     being->damBonus()
   );
+  fprintf(fp, "affinity %lf %lf\n",
+    being->sizeAffinity(),
+    being->rangeAffinity()
+  );
   fprintf(fp, "armor %d %d %d %d %d\n",
     being->armor(),
     being->bash(),
@@ -431,6 +435,14 @@ bool Storage::read_base(FILE* fp, Being* loading) {
       );
       loading->hitBonus(hit);
       loading->damBonus(dam);
+    }
+    if (strcmp("affinity", input) == 0) {
+      double size, range;
+      fscanf(fp, "%lf %lf",
+        &size, &range
+      );
+      loading->sizeAffinity(size);
+      loading->rangeAffinity(range);
     }
     if (strcmp("armor", input) == 0) {
       int armor, bash, slash, pierce, exotic;

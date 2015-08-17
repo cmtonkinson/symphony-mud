@@ -55,6 +55,7 @@ CommandTable::CommandTable(void) {
   add(new CmdTutor());
   add(new CmdWorldSave());
   // Normal commands...
+  add(new CmdAffinity());
   add(new CmdAfk());
   add(new CmdBoards());
   add(new CmdBored());

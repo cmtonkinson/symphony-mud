@@ -125,6 +125,10 @@ class Being {
     static const unsigned STAT_BASE       = 15;
     static const unsigned STAT_THRESHOLD  = 20;
 
+    static constexpr double AFFINITY_MIN     = 1.0;
+    static constexpr double AFFINITY_MAX     = 5.0;
+    static constexpr double AFFINITY_DEFAULT = 3.0;
+
     static const unsigned ALTERABILITY_LEVEL_DIFFERENCE = 5;
 
     // constructors...
@@ -212,10 +216,14 @@ class Being {
     void                luck(int luck)                       { _luck = luck; }
     int      luck(void) const                                { return _luck; }
     // Extended Stats
-    void                hitBonus(int hit_bonus)              { _hit_bonus = hit_bonus; }
-    int      hitBonus(void) const                            { return _hit_bonus; }
-    void                damBonus(int dam_bonus)              { _dam_bonus = dam_bonus; }
-    int      damBonus(void) const                            { return _dam_bonus; }
+    void        hitBonus(int hit_bonus)     { _hit_bonus = hit_bonus; }
+    int         hitBonus(void) const        { return _hit_bonus; }
+    void        damBonus(int dam_bonus)     { _dam_bonus = dam_bonus; }
+    int         damBonus(void) const        { return _dam_bonus; }
+    void        sizeAffinity(double aff)    { _size_affinity = aff; }
+    double      sizeAffinity(void) const    { return _size_affinity; }
+    void        rangeAffinity(double aff)   { _range_affinity = aff; }
+    double      rangeAffinity(void) const   { return _range_affinity; }
     // Armor
     void                armor(int armor)                                { _armor = armor; }
     int                 armor(void) const                               { return _armor; }
@@ -367,6 +375,10 @@ class Being {
     bool                          check_stamina(unsigned stamina_, bool message = true);
     void                          masterAllTheThings(void); // useful for dev, test, & debug
 
+    // Returns the affinity score (double between AFFINITY_MIN and AFFINITY_MAX
+    // and adjusts affinity scores for the currently equipped weapon.
+    double                        affinity(bool primary_hand = true);
+
     virtual void                send(std::string message)       { return; }
     virtual void                send(const char* format, ...)   { return; }
 
@@ -410,6 +422,8 @@ class Being {
     // Extended stats
     int                         _hit_bonus;
     int                         _dam_bonus;
+    double                      _size_affinity;
+    double                      _range_affinity;
     // Armor
     int                         _armor;
     int                         _bash;
