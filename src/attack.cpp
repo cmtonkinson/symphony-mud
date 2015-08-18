@@ -20,6 +20,7 @@ Attack::~Attack(void) {
   return;
 }
 
+// Determine whether or not the attacker will land a hit.
 bool Attack::hit(void) {
   // You miss less as your hit bonus increases.
   if (Math::rand(1, MAX(20, _attacker->hitBonus())) == 1) {
@@ -34,12 +35,14 @@ bool Attack::hit(void) {
   return true;
 }
 
+// Meta-method to calculate the amount of damage to be dealt.
 unsigned Attack::getDamage(void) {
   calculateBase();
   calculateAdjustments();
   return _base + _adjustment;
 }
 
+// Calulate the baseline damage to be dealt.
 void Attack::calculateBase(void) {
   if (_unarmed) {
     _base = _attacker->damBonus() + Math::rand(1, _attacker->strength());
@@ -48,6 +51,7 @@ void Attack::calculateBase(void) {
   }
 }
 
+// Calculate an adjustment (as a percentage) to the baseline damage.
 void Attack::calculateAdjustments(void) {
   unsigned stat_idx = Being::ATTR_BEGIN;
   double stat_adjustment = 0.0;
@@ -60,9 +64,9 @@ void Attack::calculateAdjustments(void) {
   // Weapon key stat bonus.
   if ((stat_idx = _weapon->keyStat()) != Being::ATTR_BEGIN) {
     switch (stat_idx) {
-      case Being::ATTR_HEALTH:  stat_adjustment = 1.0 * _attacker->health() / _attacker->maxHealth();   break;
-      case Being::ATTR_MANA:    stat_adjustment = 1.0 * _attacker->mana() / _attacker->maxMana();       break;
-      case Being::ATTR_STAMINA: stat_adjustment = 1.0 * _attacker->stamina() / Being::MAX_STAMINA;             break;
+      case Being::ATTR_HEALTH:  stat_adjustment = 1.0 * _attacker->health() / _attacker->maxHealth(); break;
+      case Being::ATTR_MANA:    stat_adjustment = 1.0 * _attacker->mana() / _attacker->maxMana();     break;
+      case Being::ATTR_STAMINA: stat_adjustment = 1.0 * _attacker->stamina() / Being::MAX_STAMINA;    break;
       case Being::ATTR_STR:
       case Being::ATTR_DEX:
       case Being::ATTR_CON:
@@ -87,6 +91,7 @@ void Attack::calculateAdjustments(void) {
   return;
 }
 
+// Calculate the time (from now in seconds) when to schedule the next attack.
 unsigned Attack::timeUntilNext(void) {
   double defalt = 2.0;
   double modify = 0.0;
@@ -103,6 +108,7 @@ unsigned Attack::timeUntilNext(void) {
   return ROUND_2_UINT(defalt + modify);
 }
 
+// Internal setup code.
 void Attack::_init(void) {
   Item* item = nullptr;
 
