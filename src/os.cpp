@@ -299,7 +299,7 @@ namespace os {
     strcpy(p, path.c_str());
     return ::basename(p);
     #else
-    return ::basename(path.c_str);
+    return ::basename(path.c_str());
     #endif
   }
 
