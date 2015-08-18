@@ -181,67 +181,51 @@ Klass* Being::klass(void) const {
 }
 
 void Being::naturalStatAdjustment(void) {
-  unsigned short Str = 0;
-  unsigned short Dex = 0;
-  unsigned short Con = 0;
-  unsigned short Int = 0;
-  unsigned short Foc = 0;
-  unsigned short Cre = 0;
-  unsigned short Cha = 0;
-  unsigned short Luc = 0;
   switch (race().number()) {
     case ELF:
-      Dex += 2;
-      Int += 1;
-      Cha += 2;
-      Con -= 1;
+      _dexterity    += 2;
+      _intelligence += 1;
+      _charisma     += 2;
+      _constitution -= 1;
       break;
     case DWARF:
-      Str += 2;
-      Con += 2;
-      Luc += 3;
-      Dex -= 1;
-      Cha -= 1;
+      _strength     += 2;
+      _constitution += 2;
+      _luck         += 3;
+      _dexterity    -= 1;
+      _charisma     -= 1;
       break;
     case HUMAN:
       break;
   }
   switch (pClass().number()) {
     case CLERIC:
-      Foc += 2;
-      Cre -= 1;
-      Str -= 1;
+      _focus        += 2;
+      _creativity   -= 1;
+      _strength     -= 1;
       break;
     case MAGE:
-      Int += 2;
-      Foc += 2;
-      Cre += 2;
-      Str -= 2;
-      Con -= 2;
+      _intelligence += 2;
+      _focus        += 2;
+      _creativity   += 2;
+      _strength     -= 2;
+      _constitution -= 2;
       break;
     case ROGUE:
-      Dex += 2;
-      Int += 1;
-      Cre += 1;
-      Con -= 1;
-      Cha -= 2;
+      _dexterity    += 2;
+      _intelligence += 1;
+      _creativity   += 1;
+      _constitution -= 1;
+      _charisma     -= 2;
       break;
     case WARRIOR:
-      Str += 2;
-      Dex += 1;
-      Con += 2;
-      Int -= 2;
-      Foc -= 2;
+      _strength     += 2;
+      _dexterity    += 1;
+      _constitution += 2;
+      _intelligence -= 2;
+      _focus        -= 2;
       break;
   }
-  strength(strength() + Str);
-  dexterity(dexterity() + Dex);
-  constitution(constitution() + Con);
-  intelligence(intelligence() + Int);
-  focus(focus() + Foc);
-  creativity(creativity() + Cre);
-  charisma(charisma() + Cha);
-  luck(luck() + Luc);
   return;
 }
 
