@@ -196,6 +196,7 @@ int Being::calculateDamage(Being* victim, Item* weapon, double modifier) {
 }
 
 void Being::takeDamage(int damage, Being* damager) {
+  SILLY_(this, "took %d damage from %s", damage, damager->ident().c_str());
   if (damager) add_opponent(damager);
   health(health() - damage);
   deplete_stamina(1);
