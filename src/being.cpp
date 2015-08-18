@@ -965,9 +965,9 @@ void Being::masterAllTheThings(void) {
   return;
 }
 
+// Returns the current affinity for the given weapon, then adjusts it.
 double Being::affinity(bool primary_hand) {
   double affinity = 0.0;
-  double affinity_resistance = 1000;
   Item* item = nullptr;
   ItemWeapon* weapon = nullptr;
   std::vector<double> being_affinity;
@@ -997,8 +997,8 @@ double Being::affinity(bool primary_hand) {
   );
 
   // Adjust the affinity for the current weapon.
-  sizeAffinity((sizeAffinity() * affinity_resistance + ItemWeapon::relativeSize(weapon)) / (affinity_resistance + 1));
-  rangeAffinity((rangeAffinity() * affinity_resistance + ItemWeapon::relativeRange(weapon)) / (affinity_resistance + 1));
+  sizeAffinity((sizeAffinity() * AFFINITY_RESISTANCE + ItemWeapon::relativeSize(weapon)) / (AFFINITY_RESISTANCE + 1));
+  rangeAffinity((rangeAffinity() * AFFINITY_RESISTANCE + ItemWeapon::relativeRange(weapon)) / (AFFINITY_RESISTANCE + 1));
 
   return affinity;
 }

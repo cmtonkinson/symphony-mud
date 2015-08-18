@@ -9,7 +9,8 @@ class ItemWeapon;
 class Attack {
   public:
 
-    static constexpr double CRIT_MULTIPLIER = 0.4;
+    static constexpr double FIRST_ATTACK_DELAY = 2.0;
+    static constexpr double CRIT_MULTIPLIER    = 0.4;
 
     Attack(Being* attacker, Being* defender);
     ~Attack(void);
@@ -36,16 +37,14 @@ class Attack {
     unsigned    timeUntilNext(void);
 
   private:
-    void    _init(void);
+    void        _init(void);
 
-    Being* _attacker;
-    Being* _defender;
-
-    unsigned _base;
-    unsigned _adjustment;
-
-    bool _offhand;
-    bool _unarmed;
+    Being*      _attacker;
+    Being*      _defender;
+    unsigned    _base;
+    unsigned    _adjustment;
+    bool        _offhand;
+    bool        _unarmed;
     ItemWeapon* _weapon;
 };
 
