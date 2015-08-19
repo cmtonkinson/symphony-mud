@@ -93,7 +93,7 @@ NCmdInformation::NCmdInformation(void) {
 }
 
 bool NCmdInformation::execute(Being* being, const std::vector<std::string>& args) {
-  avatar()->send(Npc::getInformation(avatar()->nedit()));
+  avatar()->send(avatar()->nedit()->printInformation());
   return true;
 }
 

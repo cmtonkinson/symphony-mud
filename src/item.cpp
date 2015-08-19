@@ -281,75 +281,66 @@ std::string Item::listDecorativeFlags(void) const {
   return output;
 }
 
-std::string Item::printStatus(void) const {
-  std::string output;
+std::string Item::printInformation(void) const {
+  std::string dest;
   char buffer[Socket::MAX_BUFFER];
 
-  output.append("  --== {Ybasic item data{x ==--\n");
-  // Basic item information...
-  sprintf(buffer, "vnum......... {y%lu{x\n\
-type......... {y%s{x\n\
-flags........ {y%s{x\n\
-level........ {y%u{x\n\
-value........ {y%u{x\n\
-wearable..... {y%s{x\n\
-keywords..... {y%s{x\n\
-shortname.... %s\n\
-longname..... %s\n\
-Composition:\n\
-  primary.... {y%s{x\n\
-  other...... {y%s{x\n\n\
-  --== {Ydescription{x ==--\n%s\n\
-",  vnum(),
-    typeToString(),
-    flags().list(FTItem::Instance()).c_str(),
-    level(),
-    value(),
+  sprintf(buffer, "\
++----------------------+----------------------------------------------------+\n\
+| vnum      {y%-10ld{x | keywords     {y%-35s{x   |\n\
+| type      {y%-10s{x | shortname    {y%-35s{x   |\n\
+| level     {y%-10d{x | longname     {y%-35s{x   |\n\
+| flags     {y%-10s{x | primary comp {y%-35s{x   |\n\
+| value     {y%-10d{x | other comp   {y%-35s{x   |\n\
+| wearable  {y%-10s{x |                                                    |\n\
++----------------------+----------------------------------------------------+\n\
+| description {y%s{x\n\
++---------------------------------------------------------------------------+\n",
+    vnum(), identifiers().getKeywordList().c_str(),
+    typeToString(), identifiers().shortname().c_str(),
+    level(), identifiers().longname().c_str(),
+    flags().list(FTItem::Instance()).c_str(), (compound() == nullptr ? "" : compound()->identifiers().shortname().c_str()),
+    value(), serializeComposition().c_str(),
     wearableToString(),
-    identifiers().getKeywordList().c_str(),
-    identifiers().shortname().c_str(),
-    identifiers().longname().c_str(),
-    (compound() == nullptr ? "" : compound()->identifiers().shortname().c_str()),
-    serializeComposition().c_str(),
     identifiers().description().c_str()
- );
-  output.append(buffer);
+  );
+  dest.append(buffer);
 
   // Attribute modifiers...
   if (!modifiers().empty()) {
-    output.append("\n  --== {Yattribute modifiers ==--\n");
     for (std::list<Modifier*>::const_iterator it = modifiers().begin(); it != modifiers().end(); ++it) {
-      sprintf(buffer, "{x%s: {%c%+d{x\n", Being::attributeToString((*it)->attribute()), (*it)->magnitude() > 0 ? 'G' : 'R', (*it)->magnitude());
-      output.append(buffer);
+      sprintf(buffer, "| {x%s {%c%+d{x\n", Being::attributeToString((*it)->attribute()), (*it)->magnitude() > 0 ? 'G' : 'R', (*it)->magnitude());
+      dest.append(buffer);
     }
+    dest.append("+---------------------------------------------------------------------------+\n");
   }
 
   if (extra()) {
     // Type-specific data...
-    sprintf(buffer, "\n  --== {Y%s configuration{x ==--\n", typeToString());
-    output.append(buffer);
+    sprintf(buffer, "| {Y%s information{x\n", typeToString());
+    dest.append(buffer);
     switch (type()) {
       case Type_Armor:
         break;
       case Type_Clothing:
         break;
       case Type_Container:
-        sprintf(buffer, "Contains {y%zd{x items.\n", container()->inventory().itemList().size());
-        output.append(buffer);
+        sprintf(buffer, "| Contains {y%zd{x items.\n", container()->inventory().itemList().size());
+        dest.append(buffer);
         break;
       case Type_Food:
         break;
       case Type_Furniture:
-        sprintf(buffer, "Total overall capacity: {y%u{x\n", furniture()->capacity());
-        output.append(buffer);
-        sprintf(buffer, "Laying capacity: {y%u{x\n", furniture()->layOn());
-        output.append(buffer);
-        sprintf(buffer, "Sitting (at) capacity: {y%u{x\n", furniture()->sitAt());
-        output.append(buffer);
-        sprintf(buffer, "Sitting (on) capacity: {y%u{x\n", furniture()->sitOn());
-        output.append(buffer);
-        sprintf(buffer, "Standing capacity: {y%u{x\n", furniture()->standOn());
-        output.append(buffer);
+        sprintf(buffer, "| Overall capacity: {y%u{x\n", furniture()->capacity());
+        dest.append(buffer);
+        sprintf(buffer, "| Laying capacity: {y%u{x\n", furniture()->layOn());
+        dest.append(buffer);
+        sprintf(buffer, "| Sitting (at) capacity: {y%u{x\n", furniture()->sitAt());
+        dest.append(buffer);
+        sprintf(buffer, "| Sitting (on) capacity: {y%u{x\n", furniture()->sitOn());
+        dest.append(buffer);
+        sprintf(buffer, "| Standing capacity: {y%u{x\n", furniture()->standOn());
+        dest.append(buffer);
         break;
       case Type_Jewelry:
         break;
@@ -358,17 +349,18 @@ Composition:\n\
       case Type_Trash:
         break;
       case Type_Weapon:
-        sprintf(buffer, "Weapon type: {y%s{x\n", weapon()->type().string().c_str());
-        output.append(buffer);
-        sprintf(buffer, "Weapon verb: {y%s{x\n", weapon()->verb().string().c_str());
-        output.append(buffer);
-        sprintf(buffer, "Weapon damage: {y%s{x (average {y%u{x)\n", weapon()->damage().toString(), weapon()->damage().average());
-        output.append(buffer);
+        sprintf(buffer, "| type: {y%s{x\n", weapon()->type().string().c_str());
+        dest.append(buffer);
+        sprintf(buffer, "| verb: {y%s{x\n", weapon()->verb().string().c_str());
+        dest.append(buffer);
+        sprintf(buffer, "| damage: {y%s{x (average {y%u{x)\n", weapon()->damage().toString(), weapon()->damage().average());
+        dest.append(buffer);
         break;
       default:
         break;
     }
+    dest.append("+---------------------------------------------------------------------------+\n");
   }
 
-  return output;
+  return dest;
 }

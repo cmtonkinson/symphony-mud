@@ -122,19 +122,30 @@ Being* Being::acquireTarget(void) {
 bool Being::strike(Item* secondary) {
   int damage = 0;
   std::string weapon_damage;
-  Item* weapon = nullptr;
+  const Item* weapon = nullptr;
+  Attack attack(this, _target);
+
   // Is the target still alive?
   if (_target->isDead()) return false;
   // Can we even move?
   if (!deplete_stamina(1)) return false;
-  // Will we even land the hit?
+  // Is this an offhand strike?
+  if (secondary != nullptr) attack.offhand(true);
+  attack.init();
+  // Is it a good hit?
+  if (!attack.hit()) {
+    send("Your attack {Wmisses{x %s!\n", _target->name());
+    _target->send("%s's attack {Wmisses{x you!\n", name());
+    room()->send_cond("$p's attack {Wmisses{x $c!", this, _target, nullptr, Room::TO_NOTVICT);
+    return false;
+  }
+  // Will we land it?
   // Note: return true because e.g. a block doesn't preclude a second strike
   if (_target->evade(this)) return true;
-  // Which weapon are we using?
-  weapon = secondary != nullptr ? secondary : primary();
   // Calculate the damage.
-  damage = calculateDamage(_target, weapon);
+  damage = attack.getDamage();
   // Tell the world.
+  if (!attack.unarmed()) weapon = attack.weapon()->base();
   weapon_damage = (weapon && weapon->isWeapon()) ? weapon->weapon()->verb().string() : "strike";
   weapon_damage.append(" ").append(Display::formatDamage(damage));
   send("Your %s %s!\n", weapon_damage.c_str(), _target->name());
@@ -401,4 +412,42 @@ bool Being::auto_stamina(Job* job) {
   int max = MAX_STAMINA / 2.5;
   stamina(stamina() + Math::bound(add, 1, max));
   return true;
+}
+
+// Returns the current affinity for the given weapon, then adjusts it.
+double Being::affinity(bool primary_hand) {
+  double affinity    = 0.0;
+  Item* item         = nullptr;
+  ItemWeapon* weapon = nullptr;
+  std::vector<double> being_affinity;
+  std::vector<double> weapon_values;
+
+  // Primary or secondary?
+  if ((item = (primary_hand ? primary() : secondary())) == nullptr) {
+    ERROR(this, "Being::affinity() - affinity request for null weapon");
+    return affinity;
+  }
+  weapon = item->weapon();
+
+  // Get the current affinity. Affinity is calculated as a distance between two
+  // points on a Cartesian system in multiple dimensions. The dimensions are
+  // the different affinity metrics. One point is defined by the affinity
+  // values of the Being, and the other point is defined by affinity values of
+  // the ItemWeapon.
+  affinity = Math::distance(
+    std::vector<double>(
+      sizeAffinity(),
+      rangeAffinity()
+    ),
+    std::vector<double>(
+      ItemWeapon::relativeSize(weapon),
+      ItemWeapon::relativeRange(weapon)
+    )
+  );
+
+  // Adjust the affinity for the current weapon.
+  sizeAffinity((sizeAffinity() * AFFINITY_RESISTANCE + ItemWeapon::relativeSize(weapon)) / (AFFINITY_RESISTANCE + 1.0));
+  rangeAffinity((rangeAffinity() * AFFINITY_RESISTANCE + ItemWeapon::relativeRange(weapon)) / (AFFINITY_RESISTANCE + 1.0));
+
+  return affinity;
 }

@@ -105,7 +105,7 @@ void Avatar::flushOutput(void) {
   return;
 }
 
-std::string Avatar::listWhoFlags(void) {
+std::string Avatar::listWhoFlags(void) const {
   return whoFlags().list(FTAvatarWho::Instance(), true);
 }
 
@@ -129,7 +129,7 @@ void Avatar::restoreRoom(void) {
   return;
 }
 
-std::string Avatar::stringLoggedOn(void) {
+std::string Avatar::stringLoggedOn(void) const {
   return os::realtime(secondsLoggedOn());
 }
 
@@ -354,4 +354,53 @@ void Avatar::whatHappensWhenIDie(void) {
   look.avatar(this);
   look.execute(this, look_args);
   return;
+}
+
+std::string Avatar::printInformation(void) const {
+  std::string dest;
+  char buffer[Socket::MAX_BUFFER];
+
+  sprintf(buffer, "\
+        %s %s%s\n\
+{w ____________________________________________________________________\n\
+{w|\\__________________________________________________________________/|\n\
+{w||{xrace:   {W%-9s{w ||{xstren: {C%2d{w ||{xhit: {R%-8d{w ||{xlevel: {Y%-10u{w ||\n\
+{w||{xclass:  {W%-9s{w ||{xdexte: {C%2d{w ||{xdam: {R%-8d{w ||{xhealth: {G%4d{x/{g%-4d{w ||\n\
+{w||{xgender: {W%-9s{w ||{xconst: {C%2d{w ||              ||{xmana: {C%4d{x/{c%-4d{w   ||\n\
+{w||{xage:    {W%-9u{w ||{xintel: {C%2d{w ||{xarmor:  {B%-5d{w ||{xstamina: {M%-8d{w ||\n\
+{w||{xhand:   {W%-9s{w ||{xfocus: {C%2d{w ||{xbash:   {b%-5d{w ||{xexp: {Y%-12u{w ||\n\
+{w||{xheight: {W%-9s{w ||{xcreat: {C%2d{w ||{xslash:  {b%-5d{w ||{xtnl: {Y%-12u{w ||\n\
+{w||{xweight: {W%-9s{w ||{xchari: {C%2d{w ||{xpierce: {b%-5d{w ||{xtrains: {B%-9u{w ||\n\
+{w||{xtotem:  {W%-9s{w ||{xluck:  {C%2d{w ||{xexotic: {b%-5d{w ||                  ||\n\
+{w||__________________||__________||______________||__________________||\n\
+{w||__________________________________________________________________||\n\
+{w||{xitems: {G%3zu{x/{g%-3zu{w ||{xcoins: {W%3u{x/{y%-4u{w    ||                            {w||\n\
+{w||{xweight: {g%-5u{w  || {xbank: {W%3u{x/{y%-7u{w ||                            {w||\n\
+{w||_______________||___________________||____________________________||\n\
+{w|/__________________________________________________________________\\|{x\n\n",
+    listWhoFlags().c_str(), name(), title(),
+    race().string().c_str(), strength(), hitBonus(), level(),
+    pClass().string().c_str(), dexterity(), damBonus(), health(), maxHealth(),
+    gender().string().c_str(), constitution(), mana(), maxMana(),
+    age(), intelligence(), armor(), stamina(),
+    ((hand() == Being::WEARLOC_HOLD_R) ? "right" : "left"), focus(), bash(), exp(),
+    "-", creativity(), slash(), tnl(),
+    "-", charisma(), pierce(), trains(),
+    "-", luck(), exotic(),
+    inventory().itemList().size(), inventory().itemList().size(), money().silver(), money().gold(),
+    0, bankMoney().silver(), bankMoney().gold()
+  );
+  dest.append(buffer);
+
+  dest.append("  Logged on for ").append(stringLoggedOn()).append(".\n");
+  dest.append("  Currently ").append(position().string());
+  if (action().number()) {
+    dest.append("and %s", action().string().c_str());
+  }
+  dest.append(".\n");
+  if (composing().number()) {
+    dest.append("  Composing a ").append(composing().string()).append(".\n");
+  }
+
+  return dest;
 }

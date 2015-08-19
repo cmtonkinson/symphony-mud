@@ -27,6 +27,9 @@ class Attack {
     bool        offhand(void) const                 { return _offhand; }
     void        unarmed(bool unarmed_)              { _unarmed = unarmed_; }
     bool        unarmed(void) const                 { return _unarmed; }
+    ItemWeapon* weapon(void)                        { return _weapon; }
+
+    void        init(void);
 
     bool        hit(void);
 
@@ -37,7 +40,6 @@ class Attack {
     unsigned    timeUntilNext(void);
 
   private:
-    void        _init(void);
 
     Being*      _attacker;
     Being*      _defender;

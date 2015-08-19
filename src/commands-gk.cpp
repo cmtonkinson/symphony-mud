@@ -291,30 +291,27 @@ CmdIdentify::CmdIdentify(void) {
   name("identify");
   level(Being::DEMIGOD);
   addSyntax(1, "<item>");
+  addSyntax(1, "<player>");
   addSyntax(1, "<npc>");
   brief("Displays diagnostic information on the target.");
   return;
 }
 
 bool CmdIdentify::execute(Being* being, const std::vector<std::string>& args) {
-  Item* i = NULL;
-  Being* b = NULL;
+  Item* i  = nullptr;
+  Being* b = nullptr;
   std::string output;
-  if ((b = avatar()->findBeing(args[0])) == NULL) {
+  if ((b = avatar()->findBeing(args[0])) == nullptr) {
     // check for items matching the arg
-    if ((i = avatar()->findItem(args[0])) == NULL) {
+    if ((i = avatar()->findItem(args[0])) == nullptr) {
       avatar()->send("You don't see that here.");
       return false;
     } else {
-      avatar()->send(i->printStatus());
+      avatar()->send(i->printInformation());
     }
   } else {
-    if (b->isNpc()) {
-      avatar()->send(Npc::getInformation((Npc*)b));
-    } else {
-      avatar()->send("Sorry - 'identify' doesn't work on players yet");
-      return false;
-    }
+    avatar()->send(b->printInformation());
+    return true;
   }
   return true;
 }

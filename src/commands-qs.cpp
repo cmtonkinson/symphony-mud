@@ -637,36 +637,7 @@ CmdSummary::CmdSummary(void) {
 }
 
 bool CmdSummary::execute(Being* being, const std::vector<std::string>& args) {
-  avatar()->send("\n %s{x\n", avatar()->identifiers().shortname().c_str());
-  avatar()->send("{w ____________________________________________________________________\n");
-  avatar()->send("{w|\\__________________________________________________________________/|\n");
-  avatar()->send("{w||{xrace:   {W%-9s{w ||{xstren: {C%2d{w ||{xhit: {R%-3d{w      ||{xlevel: {Y%3u{w        ||\n", avatar()->race().string().c_str(), avatar()->strength(), avatar()->hitBonus(), avatar()->level());
-  avatar()->send("{w||{xclass:  {W%-9s{w ||{xdexte: {C%2d{w ||{xdam: {R%-3d{w      ||{xhealth: {G%4d{x/{g%-4d{w ||\n", avatar()->pClass().string().c_str(), avatar()->dexterity(), avatar()->damBonus(), avatar()->health(), avatar()->maxHealth());
-  avatar()->send("{w||{xgender: {W%-7s{w   ||{xconst: {C%2d{w ||              ||{xmana: {C%4d{x/{c%-4d{w   ||\n", avatar()->gender().string().c_str(), avatar()->constitution(), avatar()->mana(), avatar()->maxMana());
-  avatar()->send("{w||{xage:    {W%-3u{w       ||{xintel: {C%2d{w ||{xarmor:  {B%-4d{w  ||{xstamina: {M%3d{w      ||\n", avatar()->age(), avatar()->intelligence(), avatar()->armor(), avatar()->stamina());
-  avatar()->send("{w||{xhand:   {W%-5s{w     ||{xfocus: {C%2d{w ||{xbash:   {b%-4d{w  ||{xexp: {Y%-7u{w      ||\n", ((avatar()->hand() == Being::WEARLOC_HOLD_R) ? "right" : "left"), avatar()->focus(), avatar()->bash(), avatar()->exp());
-  avatar()->send("{w||{xheight: {W%-9s{w ||{xcreat: {C%2d{w ||{xslash:  {b%-4d{w  ||{xtnl: {Y%-5u{w        ||\n", "-", avatar()->creativity(), avatar()->slash(), avatar()->tnl());
-  avatar()->send("{w||{xweight: {W%-9s{w ||{xchari: {C%2d{w ||{xpierce: {b%-4d{w  ||{xtrains: {B%-3u{w       ||\n", "-", avatar()->charisma(), avatar()->pierce(), avatar()->trains());
-  avatar()->send("{w||{xtotem:  {W%-9s{w ||{xluck:  {C%2d{w ||{xexotic: {b%-4d{w  ||                  ||\n", "-", avatar()->luck(), avatar()->exotic());
-  avatar()->send("{w||__________________||__________||______________||__________________||\n");
-  avatar()->send("{w||__________________________________________________________________||\n");
-  avatar()->send("{w||{xitems: {G%3u{x/{g%-3u{w ||{xcoins: {W%3u{x/{y%-4u{w    ||                            {w||\n", avatar()->inventory().itemList().size(), avatar()->inventory().itemList().size(), avatar()->money().silver(), avatar()->money().gold());
-  avatar()->send("{w||{xweight: {g%-5u{w  || {xbank: {W%3u{x/{y%-7u{w ||                            {w||\n", 0, avatar()->bankMoney().silver(), avatar()->bankMoney().gold());
-  avatar()->send("{w||_______________||___________________||____________________________||\n");
-  avatar()->send("{w|/__________________________________________________________________\\|{x\n");
-  avatar()->send("  You've been logged on for %s.\n", avatar()->stringLoggedOn().c_str());
-  if (avatar()->composing().number()) {
-    avatar()->send("  You are currently composing a %s.\n", avatar()->composing().string().c_str());
-  }
-  avatar()->send("  You are %s", avatar()->position().string().c_str());
-  if (avatar()->action().number()) {
-    avatar()->send("and %s", avatar()->action().string().c_str());
-  }
-  avatar()->send(".\n");
-  avatar()->send("  Your title is: %s{x\n", avatar()->title());
-  if (avatar()->whoFlags().any()) {
-    avatar()->send("  You're marked as: %s\n", avatar()->listWhoFlags().c_str());
-  }
+  avatar()->send(avatar()->printInformation());
   return true;
 }
 

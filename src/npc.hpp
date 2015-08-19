@@ -38,13 +38,13 @@ class Npc: public Being {
 
     virtual void        _animate(void);
     virtual void        whatHappensWhenIDie(void);
+    virtual std::string printInformation(void) const;
 
     bool auto_move(Job* job);
 
     // statics...
     static Npc*         create(Zone* zone, unsigned vnum);
     static Npc*         create(Npc* npc, Room* room);
-    static std::string  getInformation(Npc* npc);
 
   private:
     // data...

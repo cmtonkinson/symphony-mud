@@ -6,13 +6,13 @@
 #include "os.hpp"
 
 Attack::Attack(Being* attacker, Being* defender) {
-  _attacker = attacker;
-  _defender = defender;
-  _base = 0;
+  _attacker   = attacker;
+  _defender   = defender;
+  _base       = 0;
   _adjustment = 0;
-  _offhand = false;
-  _unarmed = true;
-  _weapon = nullptr;
+  _offhand    = false;
+  _unarmed    = false;
+  _weapon     = nullptr;
   return;
 }
 
@@ -20,15 +20,32 @@ Attack::~Attack(void) {
   return;
 }
 
+// Internal setup code.
+void Attack::init(void) {
+  Item* item = nullptr;
+
+  item = offhand() ? _attacker->secondary() : _attacker->primary();
+  if (item != nullptr && item->isWeapon()) {
+    _weapon = item->weapon();
+  } else {
+    _unarmed = true;
+  }
+
+  return;
+}
+
 // Determine whether or not the attacker will land a hit.
 bool Attack::hit(void) {
+  int dex_diff = 0;
+
   // You miss less as your hit bonus increases.
   if (Math::rand(1, MAX(20, _attacker->hitBonus())) == 1) {
     return false;
   }
 
   // You miss less as your dexterity increases relative to your opponent.
-  if (Math::rand(1, 50) < _attacker->dexterity() - _defender->dexterity()) {
+  dex_diff = _attacker->dexterity() - _defender->dexterity();
+  if (Math::rand(1, 50) < MAX(1, dex_diff)) {
     return false;
   }
 
@@ -53,7 +70,7 @@ void Attack::calculateBase(void) {
 
 // Calculate an adjustment (as a percentage) to the baseline damage.
 void Attack::calculateAdjustments(void) {
-  unsigned stat_idx = Being::ATTR_BEGIN;
+  unsigned stat_idx      = Being::ATTR_BEGIN;
   double stat_adjustment = 0.0;
 
   // Is this a critical strike? Chances increase with a higher hit bonus.
@@ -61,32 +78,33 @@ void Attack::calculateAdjustments(void) {
     _adjustment += _base * CRIT_MULTIPLIER;
   }
 
-  // Weapon key stat bonus.
-  if ((stat_idx = _weapon->keyStat()) != Being::ATTR_BEGIN) {
-    switch (stat_idx) {
-      case Being::ATTR_HEALTH:  stat_adjustment = 1.0 * _attacker->health() / _attacker->maxHealth(); break;
-      case Being::ATTR_MANA:    stat_adjustment = 1.0 * _attacker->mana() / _attacker->maxMana();     break;
-      case Being::ATTR_STAMINA: stat_adjustment = 1.0 * _attacker->stamina() / Being::MAX_STAMINA;    break;
-      case Being::ATTR_STR:
-      case Being::ATTR_DEX:
-      case Being::ATTR_CON:
-      case Being::ATTR_INT:
-      case Being::ATTR_FOC:
-      case Being::ATTR_CRE:
-      case Being::ATTR_CHA:
-      case Being::ATTR_LUC:
-        stat_adjustment = 1.0 * _attacker->getAttribute(stat_idx) / Being::STAT_THRESHOLD;
-        break;
-      default:
-        ERROR_(_attacker, "Attack::calculateAdjustments() bad stat_idx %u", stat_idx);
-        break;
+  if (!_unarmed) {
+    // Weapon key stat bonus.
+    if ((stat_idx = _weapon->keyStat()) != Being::ATTR_BEGIN) {
+      switch (stat_idx) {
+        case Being::ATTR_HEALTH:  stat_adjustment = 1.0 * _attacker->health() / _attacker->maxHealth(); break;
+        case Being::ATTR_MANA:    stat_adjustment = 1.0 * _attacker->mana() / _attacker->maxMana();     break;
+        case Being::ATTR_STAMINA: stat_adjustment = 1.0 * _attacker->stamina() / Being::MAX_STAMINA;    break;
+        case Being::ATTR_STR:
+        case Being::ATTR_DEX:
+        case Being::ATTR_CON:
+        case Being::ATTR_INT:
+        case Being::ATTR_FOC:
+        case Being::ATTR_CRE:
+        case Being::ATTR_CHA:
+        case Being::ATTR_LUC:
+          stat_adjustment = 1.0 * _attacker->getAttribute(stat_idx) / Being::STAT_THRESHOLD;
+          break;
+        default:
+          ERROR_(_attacker, "Attack::calculateAdjustments() bad stat_idx %u", stat_idx);
+          break;
+      }
+      _adjustment += _base * stat_adjustment / 10;
     }
-  }
-  _adjustment += _base * stat_adjustment / 10;
 
-  // Weapon affinity.
-  // TODO - dynamic weapon affinity
-  _adjustment += 0;
+    // Weapon affinity.
+    _adjustment += _base * (_attacker->affinity(!offhand()) / Being::AFFINITY_DEFAULT);
+  }
 
   return;
 }
@@ -106,18 +124,4 @@ unsigned Attack::timeUntilNext(void) {
   }
 
   return ROUND_2_UINT(defalt + modify);
-}
-
-// Internal setup code.
-void Attack::_init(void) {
-  Item* item = nullptr;
-
-  item = offhand() ? _attacker->secondary() : _attacker->primary();
-  if (item != nullptr && item->isWeapon()) {
-    _weapon = item->weapon();
-  } else {
-    _unarmed = true;
-  }
-
-  return;
 }

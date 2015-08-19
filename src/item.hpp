@@ -66,7 +66,7 @@ class Item {
     std::string   decorativeShortname(void) const;
     std::string   decorativeLongname(void) const;
     std::string   listDecorativeFlags(void) const;
-    std::string   printStatus(void) const;
+    std::string   printInformation(void) const;
 
     // shortcuts
     const char*   name(void) const  { return identifiers().shortname().c_str(); }

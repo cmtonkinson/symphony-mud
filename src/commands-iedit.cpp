@@ -345,7 +345,7 @@ ICmdInformation::ICmdInformation(void) {
 }
 
 bool ICmdInformation::execute(Being* being, const std::vector<std::string>& args) {
-  avatar()->send(avatar()->iedit()->printStatus());
+  avatar()->send(avatar()->iedit()->printInformation());
   return true;
 }
 

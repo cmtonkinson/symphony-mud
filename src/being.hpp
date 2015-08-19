@@ -182,66 +182,69 @@ class Being {
     Klass*            klass(void) const;
 
     // Level
-    void                level(unsigned level)                           { _level = level; }
-    unsigned            level(void) const                               { return _level; }
-    void                exp(unsigned exp)                               { _exp = exp; }
-    unsigned            exp(void) const                                 { return _exp; }
-    void                tnl(unsigned tnl)                               { _tnl = tnl; }
-    unsigned            tnl(void) const                                 { return _tnl; }
+    void        level(unsigned level)             { _level = level; }
+    unsigned    level(void) const                 { return _level; }
+    void        exp(unsigned exp)                 { _exp = exp; }
+    unsigned    exp(void) const                   { return _exp; }
+    void        tnl(unsigned tnl)                 { _tnl = tnl; }
+    unsigned    tnl(void) const                   { return _tnl; }
+
     // Health
-    void                health(int health)                              { _health = MIN(health, maxHealth()); }
-    int                 health(void) const                              { return _health; }
-    void                maxHealth(int maxHealth)                        { _maxHealth = maxHealth; }
-    int                 maxHealth(void) const                           { return _maxHealth; }
-    void                mana(int mana)                                  { _mana = MIN(mana, maxMana()); }
-    int                 mana(void) const                                { return _mana; }
-    void                maxMana(int maxMana)                            { _maxMana = maxMana; }
-    int                 maxMana(void) const                             { return _maxMana; }
-    void                stamina(unsigned stamina)                       { _stamina = MIN(stamina, MAX_STAMINA); }
-    unsigned            stamina(void) const                             { return _stamina; }
+    void        health(int health);
+    void        maxHealth(int maxHealth);
+    void        mana(int mana);
+    void        maxMana(int maxMana);
+    void        stamina(unsigned stamina);
+
+    int         health(void) const                { return _health; }
+    int         maxHealth(void) const             { return _maxHealth; }
+    int         mana(void) const                  { return _mana; }
+    int         maxMana(void) const               { return _maxMana; }
+    unsigned    stamina(void) const               { return _stamina; }
+
     // Core Stats
-    void                strength(int strength)               { _strength = strength; }
-    int      strength(void) const                            { return _strength; }
-    void                dexterity(int dexterity)             { _dexterity = dexterity; }
-    int      dexterity(void) const                           { return _dexterity; }
-    void                constitution(int constitution)       { _constitution = constitution; }
-    int      constitution(void) const                        { return _constitution; }
-    void                intelligence(int intelligence)       { _intelligence = intelligence; }
-    int      intelligence(void) const                        { return _intelligence; }
-    void                focus(int focus)                     { _focus = focus; }
-    int      focus(void) const                               { return _focus; }
-    void                creativity(int creativity)           { _creativity = creativity; }
-    int      creativity(void) const                          { return _creativity; }
-    void                charisma(int charisma)               { _charisma = charisma; }
-    int      charisma(void) const                            { return _charisma; }
-    void                luck(int luck)                       { _luck = luck; }
-    int      luck(void) const                                { return _luck; }
+    void        strength(int strength)            { _strength = strength; }
+    int         strength(void) const              { return _strength; }
+    void        dexterity(int dexterity)          { _dexterity = dexterity; }
+    int         dexterity(void) const             { return _dexterity; }
+    void        constitution(int constitution)    { _constitution = constitution; }
+    int         constitution(void) const          { return _constitution; }
+    void        intelligence(int intelligence)    { _intelligence = intelligence; }
+    int         intelligence(void) const          { return _intelligence; }
+    void        focus(int focus)                  { _focus = focus; }
+    int         focus(void) const                 { return _focus; }
+    void        creativity(int creativity)        { _creativity = creativity; }
+    int         creativity(void) const            { return _creativity; }
+    void        charisma(int charisma)            { _charisma = charisma; }
+    int         charisma(void) const              { return _charisma; }
+    void        luck(int luck)                    { _luck = luck; }
+    int         luck(void) const                  { return _luck; }
     // Extended Stats
-    void        hitBonus(int hit_bonus)     { _hit_bonus = hit_bonus; }
-    int         hitBonus(void) const        { return _hit_bonus; }
-    void        damBonus(int dam_bonus)     { _dam_bonus = dam_bonus; }
-    int         damBonus(void) const        { return _dam_bonus; }
-    void        sizeAffinity(double aff)    { _size_affinity = aff; }
-    double      sizeAffinity(void) const    { return _size_affinity; }
-    void        rangeAffinity(double aff)   { _range_affinity = aff; }
-    double      rangeAffinity(void) const   { return _range_affinity; }
+    void        hitBonus(int hit_bonus)           { _hit_bonus = hit_bonus; }
+    int         hitBonus(void) const              { return _hit_bonus; }
+    void        damBonus(int dam_bonus)           { _dam_bonus = dam_bonus; }
+    int         damBonus(void) const              { return _dam_bonus; }
+    void        sizeAffinity(double aff)          { _size_affinity = aff; }
+    double      sizeAffinity(void) const          { return _size_affinity; }
+    void        rangeAffinity(double aff)         { _range_affinity = aff; }
+    double      rangeAffinity(void) const         { return _range_affinity; }
     // Armor
-    void                armor(int armor)                                { _armor = armor; }
-    int                 armor(void) const                               { return _armor; }
-    void                bash(int bash)                                  { _bash = bash; }
-    int                 bash(void) const                                { return _bash; }
-    void                slash(int slash)                                { _slash = slash; }
-    int                 slash(void) const                               { return _slash; }
-    void                pierce(int pierce)                              { _pierce = pierce; }
-    int                 pierce(void) const                              { return _pierce; }
-    void                exotic(int exotic)                              { _exotic = exotic; }
-    int                 exotic(void) const                              { return _exotic; }
+    void        armor(int armor)                  { _armor = armor; }
+    int         armor(void) const                 { return _armor; }
+    void        bash(int bash)                    { _bash = bash; }
+    int         bash(void) const                  { return _bash; }
+    void        slash(int slash)                  { _slash = slash; }
+    int         slash(void) const                 { return _slash; }
+    void        pierce(int pierce)                { _pierce = pierce; }
+    int         pierce(void) const                { return _pierce; }
+    void        exotic(int exotic)                { _exotic = exotic; }
+    int         exotic(void) const                { return _exotic; }
     // Misc
-    void                trains(unsigned trains)                         { _trains = trains; }
-    unsigned            trains(void) const                              { return _trains; }
-    void                money(unsigned value)                           { _money.value(value); }
-    Currency&           money(void)                                     { return _money; }
-    const Currency&     money(void) const                               { return _money; }
+    void        trains(unsigned trains)           { _trains = trains; }
+    unsigned    trains(void) const                { return _trains; }
+    void        money(unsigned value)             { _money.value(value); }
+    Currency&       money(void)                   { return _money; }
+    const Currency& money(void) const             { return _money; }
 
     // combat
     std::set<Being*>&  opponents(void)                               { return _opponents; }
@@ -379,6 +382,8 @@ class Being {
     // Returns the affinity score (double between AFFINITY_MIN and AFFINITY_MAX
     // and adjusts affinity scores for the currently equipped weapon.
     double                        affinity(bool primary_hand = true);
+
+    virtual std::string           printInformation(void) const = 0;
 
     virtual void                send(std::string message)       { return; }
     virtual void                send(const char* format, ...)   { return; }

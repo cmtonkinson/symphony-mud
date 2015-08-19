@@ -229,6 +229,38 @@ void Being::naturalStatAdjustment(void) {
   return;
 }
 
+// Never set health above the max.
+void Being::health(int health) {
+  _health = MIN(health, maxHealth());
+  return;
+}
+
+// When altering maxHealth, health should translate appropriately.
+void Being::maxHealth(int maxHealth) {
+  if (maxHealth > _maxHealth) {
+    int diff = maxHealth - _maxHealth;
+    _maxHealth = maxHealth;
+    _health += diff;
+  } else if (maxHealth < _maxHealth) {
+    _maxHealth = maxHealth;
+    _health = MIN(_health, maxHealth);
+  }
+  return;
+}
+
+void Being::mana(int mana) {
+  _mana = MIN(mana, maxMana());
+}
+
+void Being::maxMana(int maxMana) {
+  _maxMana = maxMana;
+}
+
+void Being::stamina(unsigned stamina) {
+  _stamina = MIN(stamina, MAX_STAMINA);
+  return;
+}
+
 std::string Being::serializeAbilities(void) {
   std::vector<std::string> foo;
   char buf[128];
@@ -629,26 +661,26 @@ void Being::unmodify(Modifier* modifier) {
 
 void Being::doModification(const unsigned short& attribute, const int& magnitude) {
   switch (attribute) {
-    case ATTR_HEALTH:     _health       += magnitude; break;
-    case ATTR_MAX_HEALTH: _maxHealth    += magnitude; break;
-    case ATTR_MANA:       _mana         += magnitude; break;
-    case ATTR_MAX_MANA:   _maxMana      += magnitude; break;
-    case ATTR_STAMINA:    _stamina      += magnitude; break;
-    case ATTR_STR:        _strength     += magnitude; break;
-    case ATTR_DEX:        _dexterity    += magnitude; break;
-    case ATTR_CON:        _constitution += magnitude; break;
-    case ATTR_INT:        _intelligence += magnitude; break;
-    case ATTR_FOC:        _focus        += magnitude; break;
-    case ATTR_CRE:        _creativity   += magnitude; break;
-    case ATTR_CHA:        _charisma     += magnitude; break;
-    case ATTR_LUC:        _luck         += magnitude; break;
-    case ATTR_ARMOR:      _armor        += magnitude; break;
-    case ATTR_BASH:       _bash         += magnitude; break;
-    case ATTR_SLASH:      _slash        += magnitude; break;
-    case ATTR_PIERCE:     _pierce       += magnitude; break;
-    case ATTR_EXOTIC:     _exotic       += magnitude; break;
-    case ATTR_HIT:        _hit_bonus    += magnitude; break;
-    case ATTR_DAM:        _dam_bonus    += magnitude; break;
+    case ATTR_HEALTH:     health(      health()       + magnitude); break;
+    case ATTR_MAX_HEALTH: maxHealth(   maxHealth()    + magnitude); break;
+    case ATTR_MANA:       mana(        mana()         + magnitude); break;
+    case ATTR_MAX_MANA:   maxMana(     maxMana()      + magnitude); break;
+    case ATTR_STAMINA:    stamina(     stamina()      + magnitude); break;
+    case ATTR_STR:        strength(    strength()     + magnitude); break;
+    case ATTR_DEX:        dexterity(   dexterity()    + magnitude); break;
+    case ATTR_CON:        constitution(constitution() + magnitude); break;
+    case ATTR_INT:        intelligence(intelligence() + magnitude); break;
+    case ATTR_FOC:        focus(       focus()        + magnitude); break;
+    case ATTR_CRE:        creativity(  creativity()   + magnitude); break;
+    case ATTR_CHA:        charisma(    charisma()     + magnitude); break;
+    case ATTR_LUC:        luck(        luck()         + magnitude); break;
+    case ATTR_ARMOR:      armor(       armor()        + magnitude); break;
+    case ATTR_BASH:       bash(        bash()         + magnitude); break;
+    case ATTR_SLASH:      slash(       slash()        + magnitude); break;
+    case ATTR_PIERCE:     pierce(      pierce()       + magnitude); break;
+    case ATTR_EXOTIC:     exotic(      exotic()       + magnitude); break;
+    case ATTR_HIT:        hitBonus(    hitBonus( )    + magnitude); break;
+    case ATTR_DAM:        damBonus(    damBonus( )    + magnitude); break;
     default: break;
   }
   return;
@@ -963,42 +995,4 @@ void Being::masterAllTheThings(void) {
     }
   } while (!abilities.empty());
   return;
-}
-
-// Returns the current affinity for the given weapon, then adjusts it.
-double Being::affinity(bool primary_hand) {
-  double affinity = 0.0;
-  Item* item = nullptr;
-  ItemWeapon* weapon = nullptr;
-  std::vector<double> being_affinity;
-  std::vector<double> weapon_values;
-
-  // Primary or secondary?
-  if ((item = (primary_hand ? primary() : secondary())) == nullptr) {
-    ERROR(this, "Being::affinity() - affinity request for null weapon");
-    return affinity;
-  }
-  weapon = item->weapon();
-
-  // Get the current affinity. Affinity is calculated as a distance between two
-  // points on a Cartesian system in multiple dimensions. The dimensions are
-  // the different affinity metrics. One point is defined by the affinity
-  // values of the Being, and the other point is defined by affinity values of
-  // the ItemWeapon.
-  affinity = Math::distance(
-    std::vector<double>(
-      sizeAffinity(),
-      rangeAffinity()
-    ),
-    std::vector<double>(
-      ItemWeapon::relativeSize(weapon),
-      ItemWeapon::relativeRange(weapon)
-    )
-  );
-
-  // Adjust the affinity for the current weapon.
-  sizeAffinity((sizeAffinity() * AFFINITY_RESISTANCE + ItemWeapon::relativeSize(weapon)) / (AFFINITY_RESISTANCE + 1));
-  rangeAffinity((rangeAffinity() * AFFINITY_RESISTANCE + ItemWeapon::relativeRange(weapon)) / (AFFINITY_RESISTANCE + 1));
-
-  return affinity;
 }

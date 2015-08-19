@@ -341,6 +341,10 @@ void Storage::write_base(FILE* fp, Being* being) {
     being->exp(),
     being->tnl()
   );
+
+  // Remove equipment modifiers or saved stats won't be accurate.
+  for (auto iter : being->equipment().itemMap()) being->unsetModifications(iter.second);
+
   fprintf(fp, "health %d/%d %d/%d %d\n",
     being->health(),
     being->maxHealth(),
@@ -373,6 +377,10 @@ void Storage::write_base(FILE* fp, Being* being) {
     being->pierce(),
     being->exotic()
   );
+
+  // Reset equipment modifiers.
+  for (auto iter : being->equipment().itemMap()) being->setModifications(iter.second);
+
   out(fp, "trains",     being->trains());
   out(fp, "money",      being->money().value());
   out(fp, "abilities",  being->serializeAbilities());

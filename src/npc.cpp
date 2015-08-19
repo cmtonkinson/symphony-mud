@@ -117,39 +117,53 @@ Npc* Npc::create(Npc* npc, Room* room) {
   return clone;
 }
 
-std::string Npc::getInformation(Npc* npc) {
-  std::string output;
+std::string Npc::printInformation(void) const {
+  std::string dest;
   char buffer[Socket::MAX_BUFFER];
 
-  output.append("  --== {Ybasic npc data{x ==--\n");
-  // Basic npc information...
-  sprintf(buffer, "vnum......... {y%u{x\n\
-level........ {y%u{x\n\
-race......... {y%s{x\n\
-class........ {y%s{x\n\
-gender....... {y%s{x\n\
-keywords..... {y%s{x\n\
-shortname.... %s\n\
-longname..... %s\n\n\
-  --== {Y description{x ==--\n%s\n\
-",  npc->vnum(), npc->level(), npc->race().string().c_str(), npc->pClass().string().c_str(), npc->gender().string().c_str(),
-    npc->identifiers().getKeywordList().c_str(), npc->identifiers().shortname().c_str(), npc->identifiers().longname().c_str(),
-    npc->identifiers().description().c_str()
- );
-  output.append(buffer);
-  output.append("  --== {Ystats{x ==--\n");
-  sprintf(buffer, "health.......... {G%d{x/{g%d{x\n\
-mana............ {C%d{x/{c%d{x\n\
-stamina......... {M%d{x\n\
-mobility........ {B%u{x\n\
-aggressiveness.. {R%u{x\n",
-    npc->health(), npc->maxHealth(),
-    npc->mana(), npc->maxMana(),
-    npc->stamina(),
-    npc->mobility(),
-    npc->aggressiveness()
- );
-  output.append(buffer);
+  sprintf(buffer, "\
+        %s\n\
+{w ____________________________________________________________________\n\
+{w|\\__________________________________________________________________/|\n\
+{w||{xrace:   {W%-9s{w ||{xstren: {C%2d{w ||{xhit: {R%-8d{w ||{xlevel: {Y%-10u{w ||\n\
+{w||{xclass:  {W%-9s{w ||{xdexte: {C%2d{w ||{xdam: {R%-8d{w ||{xhealth: {G%4d{x/{g%-4d{w ||\n\
+{w||{xgender: {W%-9s{w ||{xconst: {C%2d{w ||              ||{xmana: {C%4d{x/{c%-4d{w   ||\n\
+{w||{xage:    {W%-9s{w ||{xintel: {C%2d{w ||{xarmor:  {B%-5d{w ||{xstamina: {M%-8d{w ||\n\
+{w||{xhand:   {W%-9s{w ||{xfocus: {C%2d{w ||{xbash:   {b%-5d{w ||{xexp: {Y%-12u{w ||\n\
+{w||{xheight: {W%-9s{w ||{xcreat: {C%2d{w ||{xslash:  {b%-5d{w ||{xtnl: {Y%-12u{w ||\n\
+{w||{xweight: {W%-9s{w ||{xchari: {C%2d{w ||{xpierce: {b%-5d{w ||{xtrains: {B%-9u{w ||\n\
+{w||{xtotem:  {W%-9s{w ||{xluck:  {C%2d{w ||{xexotic: {b%-5d{w ||                  ||\n\
+{w||__________________||__________||______________||__________________||\n\
+{w||__________________________________________________________________||\n\
+{w||{xitems: {G%3zu{x/{g%-3zu{w ||{xcoins: {W%3u{x/{y%-4u{w    ||                            {w||\n\
+{w||{xweight: {g%-5u{w  || {xbank: {W%-11s{w ||                            {w||\n\
+{w||_______________||___________________||____________________________||\n\
+{w|/__________________________________________________________________\\|{x\n\n",
+    name(),
+    race().string().c_str(), strength(), hitBonus(), level(),
+    pClass().string().c_str(), dexterity(), damBonus(), health(), maxHealth(),
+    gender().string().c_str(), constitution(), mana(), maxMana(),
+    "N/A", intelligence(), armor(), stamina(),
+    ((hand() == Being::WEARLOC_HOLD_R) ? "right" : "left"), focus(), bash(), exp(),
+    "-", creativity(), slash(), tnl(),
+    "-", charisma(), pierce(), trains(),
+    "-", luck(), exotic(),
+    inventory().itemList().size(), inventory().itemList().size(), money().silver(), money().gold(),
+    0, "N/A"
+  );
+  dest.append(buffer);
 
-  return output;
+  sprintf(buffer, "\
+{w+----------------------+-------------------------------------+\n\
+| {xvnum           {y%-5d{w | {xkeywords  {y%-25s{w |\n\
+| {xmobility       {y%-5d{w | {xshortname {y%-25s{w |\n\
+| {xaggressiveness {y%-5d{w | {xlongname  {y%-25s{w |\n\
++----------------------+-------------------------------------+{x",
+    vnum(), identifiers().getKeywordList().c_str(),
+    mobility(), identifiers().shortname().c_str(),
+    aggressiveness(), identifiers().longname().c_str()
+  );
+  dest.append(buffer);
+
+  return dest;
 }

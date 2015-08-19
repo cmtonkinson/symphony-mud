@@ -40,6 +40,9 @@ class Avatar: public Being {
     Composing&        composing(void)             { return _composing; }
     const Composing&  composing(void) const       { return _composing; }
 
+    virtual std::string   printInformation(void) const;
+
+
     // Persistence...
     void            save(void);
     bool            load(void);
@@ -54,13 +57,13 @@ class Avatar: public Being {
 
     virtual void    send(std::string message);
     virtual void    send(const char* format, ...);
-    time_t          secondsLoggedOn(void)         { return time(NULL) - _loggedOn; }
-    std::string     stringLoggedOn(void);
+    time_t          secondsLoggedOn(void) const         { return time(NULL) - _loggedOn; }
+    std::string     stringLoggedOn(void) const;
     bool            hasInput(void);
     std::string     getInput(void);
     bool            hasOutput(void);
     void            flushOutput(void);
-    std::string     listWhoFlags(void);
+    std::string     listWhoFlags(void) const;
     void            restoreRoom(void);
     void            adjustStartingStats(void);
 
@@ -88,6 +91,7 @@ class Avatar: public Being {
     FlagBank&       adminFlags(void)                              { return _adminFlags; }
     FlagBank&       channelFlags(void)                            { return _channelFlags; }
     FlagBank&       whoFlags(void)                                { return _whoFlags; }
+    const FlagBank& whoFlags(void) const                          { return _whoFlags; }
     void            gechoColor(char gechoColor)                   { _gechoColor = gechoColor; }
     char            gechoColor(void) const                        { return _gechoColor; }
     void            replyTo(std::string replyTo)                  { _replyTo = replyTo; }
@@ -147,7 +151,7 @@ class Avatar: public Being {
     Mode                    _mode;
     Avatar*                 _pedit;
     Zone*                   _zedit;
-    Item*                 _iedit;
+    Item*                   _iedit;
     Npc*                    _nedit;
     SocialCommand*          _sedit;
     Note*                   _note;
