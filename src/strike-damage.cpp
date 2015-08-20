@@ -10,6 +10,7 @@ StrikeDamage::StrikeDamage(Being* attacker, Being* defender) {
   _defender   = defender;
   _base       = 0;
   _adjustment = 0;
+  _defense    = 0;
   _offhand    = false;
   _unarmed    = false;
   _weapon     = nullptr;
@@ -54,9 +55,15 @@ bool StrikeDamage::hit(void) {
 
 // Meta-method to calculate the amount of damage to be dealt.
 unsigned StrikeDamage::getDamage(void) {
+  int dam = 0;
+
   calculateBase();
   calculateAdjustments();
-  return MAX(1, _base + _adjustment);
+  calculateDefense();
+
+  dam = _base + _adjustment - _defense;
+
+  return MAX(1, dam);
 }
 
 // Calulate the baseline damage to be dealt.
@@ -106,6 +113,14 @@ void StrikeDamage::calculateAdjustments(void) {
     // Weapon affinity.
     _adjustment += _base * (_attacker->affinity(!offhand()) / Being::AFFINITY_DEFAULT);
   }
+
+  return;
+}
+
+// Calculate how much damage the defender can waive.
+void StrikeDamage::calculateDefense(void) {
+
+  _defense = 0; // ??
 
   return;
 }

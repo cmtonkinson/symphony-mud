@@ -23,6 +23,8 @@ class StrikeDamage {
     unsigned    base(void) const                    { return _base; }
     void        adjustment(unsigned adjustment_)    { _adjustment = adjustment_; }
     unsigned    adjustment(void) const              { return _adjustment; }
+    void        defense(unsigned defense_)          { _defense = defense_; }
+    unsigned    defense(void) const                 { return _defense; }
     void        offhand(bool offhand_)              { _offhand = offhand_; }
     bool        offhand(void) const                 { return _offhand; }
     void        unarmed(bool unarmed_)              { _unarmed = unarmed_; }
@@ -36,6 +38,7 @@ class StrikeDamage {
     unsigned    getDamage(void);
     void        calculateBase(void);
     void        calculateAdjustments(void);
+    void        calculateDefense(void);
 
     unsigned    timeUntilNext(void);
 
@@ -45,6 +48,7 @@ class StrikeDamage {
     Being*      _defender;
     unsigned    _base;
     unsigned    _adjustment;
+    unsigned    _defense;
     bool        _offhand;
     bool        _unarmed;
     ItemWeapon* _weapon;
