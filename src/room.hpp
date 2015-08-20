@@ -70,10 +70,10 @@ class Room {
     void          executePlacements(void);
     void          add(Item* item)                   { inventory().add(item); }
     void          remove(Item* item)                { inventory().remove(item); }
-    void          send(std::string format, Being* being = NULL, void* arg1 = NULL,
-                    void* arg2 = NULL, unsigned long target = TO_ROOM);
-    void          send_cond(std::string format, Being* being = NULL, void* arg1 = NULL,
-                    void* arg2 = NULL, unsigned long target = TO_ROOM, bool audible = false);
+    void          send(std::string format, Being* being = NULL, const void* arg1 = NULL,
+                    const void* arg2 = NULL, unsigned long target = TO_ROOM);
+    void          send_cond(std::string format, Being* being = NULL, const void* arg1 = NULL,
+                    const void* arg2 = NULL, unsigned long target = TO_ROOM, bool audible = false);
     void          destroy(void);
     bool          clear(void);
     std::string   listFlags(void);

@@ -77,7 +77,7 @@ void Room::executePlacements(void) {
   return;
 }
 
-void Room::send(std::string format, Being* being, void* arg1, void* arg2, unsigned long target) {
+void Room::send(std::string format, Being* being, const void* arg1, const void* arg2, unsigned long target) {
   std::string message;
 
   format = Regex::trim(format).append(1, '\n');
@@ -95,7 +95,7 @@ void Room::send(std::string format, Being* being, void* arg1, void* arg2, unsign
   return;
 }
 
-void Room::send_cond(std::string format, Being* being, void* arg1, void* arg2, unsigned long target, bool audible) {
+void Room::send_cond(std::string format, Being* being, const void* arg1, const void* arg2, unsigned long target, bool audible) {
   std::string message;
 
   format = Regex::trim(format).append(1, '\n');

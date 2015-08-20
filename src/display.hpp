@@ -19,7 +19,7 @@ class Display {
     ~Display(void);
 
     static std::string  formatColumns(const std::vector<std::string>& items);
-    static std::string  formatAction(const char* format, Being* being, void* arg1, void* arg2, Being* withRespectTo);
+    static std::string  formatAction(const char* format, Being* being, const void* arg1, const void* arg2, Being* withRespectTo);
     static std::string  formatDamage(unsigned int damage);
 };
 

@@ -49,7 +49,7 @@ std::string Display::formatColumns(const std::vector<std::string>& items) {
   return dest;
 }
 
-std::string Display::formatAction(const char* format, Being* being, void* arg1, void* arg2, Being* withRespectTo) {
+std::string Display::formatAction(const char* format, Being* being, const void* arg1, const void* arg2, Being* withRespectTo) {
   std::string input(format);
   std::string message;
 

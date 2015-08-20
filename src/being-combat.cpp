@@ -132,11 +132,14 @@ bool Being::strike(Item* secondary) {
   // Is this an offhand strike?
   if (secondary != nullptr) attack.offhand(true);
   attack.init();
+  // Get the correct verb.
+  if (!attack.unarmed()) weapon = attack.weapon()->base();
+  weapon_damage = (weapon && weapon->isWeapon()) ? weapon->weapon()->verb().string() : "strike";
   // Is it a good hit?
   if (!attack.hit()) {
-    send("Your attack misses %s!\n", _target->name());
-    _target->send("%s's attack misses you!\n", name());
-    room()->send_cond("$p's attack misses $c!", this, _target, nullptr, Room::TO_NOTVICT);
+    send("Your %s misses %s!\n", weapon_damage.c_str(), _target->name());
+    _target->send("%s's %s misses you!\n", name(), weapon_damage.c_str());
+    room()->send_cond("$p's $s misses $C!", this, weapon_damage.c_str(), _target, Room::TO_NOTVICT);
     return false;
   }
   // Will we land it?
@@ -145,8 +148,6 @@ bool Being::strike(Item* secondary) {
   // Calculate the damage.
   damage = attack.getDamage();
   // Tell the world.
-  if (!attack.unarmed()) weapon = attack.weapon()->base();
-  weapon_damage = (weapon && weapon->isWeapon()) ? weapon->weapon()->verb().string() : "strike";
   weapon_damage.append(" ").append(Display::formatDamage(damage));
   send("Your %s %s!\n", weapon_damage.c_str(), _target->name());
   _target->send("%s's %s you!\n", name(), weapon_damage.c_str());
