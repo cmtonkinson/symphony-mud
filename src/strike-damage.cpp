@@ -69,7 +69,7 @@ unsigned StrikeDamage::getDamage(void) {
 // Calulate the baseline damage to be dealt.
 void StrikeDamage::calculateBase(void) {
   if (_unarmed) {
-    _base = _attacker->damBonus() + Math::rand(1, _attacker->strength());
+    _base = (_attacker->level() / 2) + Math::rand(1, _attacker->strength()) + _attacker->damBonus();
   } else {
     _base = _weapon->damage().roll() + _attacker->damBonus();
     if (offhand()) _base *= 0.75;
@@ -80,6 +80,9 @@ void StrikeDamage::calculateBase(void) {
 void StrikeDamage::calculateAdjustments(void) {
   unsigned stat_idx      = Being::ATTR_BEGIN;
   double stat_adjustment = 0.0;
+
+  // TODO - lose some effectiveness with low health
+  // TODO - increased crit chance with very low health
 
   // Is this a critical strike? Chances increase with a higher hit bonus.
   if (Math::rand(1, 500) < _attacker->hitBonus()) {
@@ -119,8 +122,13 @@ void StrikeDamage::calculateAdjustments(void) {
 
 // Calculate how much damage the defender can waive.
 void StrikeDamage::calculateDefense(void) {
-
   _defense = 0; // ??
+
+  // constitution
+  // armor
+  // armor vs weapon (type, composition)
+  // armor of specific item hit
+  // TODO - item durability
 
   return;
 }

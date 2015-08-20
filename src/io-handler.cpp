@@ -544,7 +544,7 @@ std::string CreationSummaryIOHandler::prompt(void) {
   return output;
 }
 
-/************************************** NOTE (SUBJECT) HANDLER **************************************/
+/************************************** NOTE-SUBJECT HANDLER **************************************/
 void NoteGetSubjectIOHandler::activate(void) {
   avatar()->send("\n");
   return;
@@ -571,7 +571,7 @@ std::string NoteGetSubjectIOHandler::prompt(void) {
   return "Subject: ";
 }
 
-/************************************** NOTE (EXIT) HANDLER **************************************/
+/************************************** NOTE-EXIT HANDLER **************************************/
 void NoteExitIOHandler::activate(void) {
   avatar()->send("\n");
   return;
@@ -598,7 +598,7 @@ std::string NoteExitIOHandler::prompt(void) {
   return "Would you like to send this note? (yes/no) ";
 }
 
-/************************************** NOTE (SEND) HANDLER **************************************/
+/************************************** NOTE-SEND HANDLER **************************************/
 void NoteSendIOHandler::activate(void) {
   avatar()->popIOHandler();
   return;
@@ -621,7 +621,7 @@ std::string NoteSendIOHandler::prompt(void) {
   return "";
 }
 
-/************************************** NOTE (CANCEL) HANDLER **************************************/
+/************************************** NOTE-CANCEL HANDLER **************************************/
 void NoteCancelIOHandler::activate(void) {
   avatar()->popIOHandler();
   return;

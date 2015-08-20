@@ -1,7 +1,7 @@
 # Generic features, concepts, and pipe dreams
 
 ## Combat, Abilities
-  * offense/defense calculations
+  * defense calculations
   * crafts
   * languages
   * regeneration
@@ -50,16 +50,13 @@
   * color toggle
   * md-based help docs
   * rb test harness
+  * item set bonuses
 
 ---
 
 # Specific pending actionables from existing logic - alphabetical order
 
-## Ability::invoke()
-
-Factor difficulty into learning probabilities.
-
-## Being::aquireTarget()
+## TODO - Being::aquireTarget()
 
 Aggro/threat analysis instead of just returning the first attackable opponent.
 
@@ -70,10 +67,6 @@ Make autoassist a togglable setting.
 ## Being::die()
 
 Leave a corpse with loot.
-
-## Being::scheduleAttack()
-
-Stat-based attack timing.
 
 ## Being::targetTNL()
 
