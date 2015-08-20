@@ -129,7 +129,7 @@ class Being {
     static constexpr double AFFINITY_MIN        = 1.0;
     static constexpr double AFFINITY_MAX        = 5.0;
     static constexpr double AFFINITY_DEFAULT    = 3.0;
-    static constexpr double AFFINITY_RESISTANCE = 10;
+    static constexpr double AFFINITY_RESISTANCE = 1000;
 
     static const unsigned ALTERABILITY_LEVEL_DIFFERENCE = 5;
 
