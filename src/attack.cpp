@@ -56,7 +56,7 @@ bool Attack::hit(void) {
 unsigned Attack::getDamage(void) {
   calculateBase();
   calculateAdjustments();
-  return _base + _adjustment;
+  return MAX(1, _base + _adjustment);
 }
 
 // Calulate the baseline damage to be dealt.
@@ -64,7 +64,8 @@ void Attack::calculateBase(void) {
   if (_unarmed) {
     _base = _attacker->damBonus() + Math::rand(1, _attacker->strength());
   } else {
-    _base = _attacker->damBonus() + _weapon->damage().roll();
+    _base = _weapon->damage().roll() + _attacker->damBonus();
+    if (offhand()) _base *= 0.75;
   }
 }
 
@@ -80,11 +81,11 @@ void Attack::calculateAdjustments(void) {
 
   if (!_unarmed) {
     // Weapon key stat bonus.
-    if ((stat_idx = _weapon->keyStat()) != Being::ATTR_BEGIN) {
+    if ((stat_idx = _weapon->keyStat()) != Being::ATTR_UNDEFINED) {
       switch (stat_idx) {
-        case Being::ATTR_HEALTH:  stat_adjustment = 1.0 * _attacker->health() / _attacker->maxHealth(); break;
-        case Being::ATTR_MANA:    stat_adjustment = 1.0 * _attacker->mana() / _attacker->maxMana();     break;
-        case Being::ATTR_STAMINA: stat_adjustment = 1.0 * _attacker->stamina() / Being::MAX_STAMINA;    break;
+        case Being::ATTR_HEALTH:  stat_adjustment = 1.0 * _attacker->health()   / _attacker->maxHealth(); break;
+        case Being::ATTR_MANA:    stat_adjustment = 1.0 * _attacker->mana()     / _attacker->maxMana();   break;
+        case Being::ATTR_STAMINA: stat_adjustment = 1.0 * _attacker->stamina()  / Being::MAX_STAMINA;     break;
         case Being::ATTR_STR:
         case Being::ATTR_DEX:
         case Being::ATTR_CON:

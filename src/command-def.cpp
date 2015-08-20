@@ -154,6 +154,7 @@ IeditCommands::IeditCommands(void) {
   add(new ICmdType(), true);
   add(new ICmdValue(), true);
   add(new ICmdWeaponDamage(), true);
+  add(new ICmdWeaponStat(), true);
   add(new ICmdWeaponType(), true);
   add(new ICmdWeaponVerb(), true);
   add(new ICmdWearable(), true);

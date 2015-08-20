@@ -355,6 +355,8 @@ std::string Item::printInformation(void) const {
         dest.append(buffer);
         sprintf(buffer, "| damage: {y%s{x (average {y%u{x)\n", weapon()->damage().toString(), weapon()->damage().average());
         dest.append(buffer);
+        sprintf(buffer, "| key stat: {y%s{x\n", (weapon()->keyStat() == Being::ATTR_UNDEFINED ? "N/A" : Being::attributeToString(weapon()->keyStat())));
+        dest.append(buffer);
         break;
       default:
         break;

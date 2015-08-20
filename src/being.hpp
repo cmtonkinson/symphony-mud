@@ -76,28 +76,29 @@ class Being {
     /* Map integers in a range to attributes
      * (indexing must be contiguous, starting from 1)
      */
+    static const unsigned ATTR_UNDEFINED  =  0;
     static const unsigned ATTR_BEGIN      =  1;
-    static const unsigned ATTR_HEALTH     =  2;
-    static const unsigned ATTR_MAX_HEALTH =  3;
-    static const unsigned ATTR_MANA       =  4;
-    static const unsigned ATTR_MAX_MANA   =  5;
-    static const unsigned ATTR_STAMINA    =  6;
-    static const unsigned ATTR_STR        =  7;
-    static const unsigned ATTR_DEX        =  8;
-    static const unsigned ATTR_CON        =  9;
-    static const unsigned ATTR_INT        = 10;
-    static const unsigned ATTR_FOC        = 11;
-    static const unsigned ATTR_CRE        = 12;
-    static const unsigned ATTR_CHA        = 13;
-    static const unsigned ATTR_LUC        = 14;
-    static const unsigned ATTR_ARMOR      = 15;
-    static const unsigned ATTR_BASH       = 16;
-    static const unsigned ATTR_SLASH      = 17;
-    static const unsigned ATTR_PIERCE     = 18;
-    static const unsigned ATTR_EXOTIC     = 19;
-    static const unsigned ATTR_HIT        = 20;
-    static const unsigned ATTR_DAM        = 21;
-    static const unsigned ATTR_END        = 22;
+    static const unsigned ATTR_HEALTH     =  1;
+    static const unsigned ATTR_MAX_HEALTH =  2;
+    static const unsigned ATTR_MANA       =  3;
+    static const unsigned ATTR_MAX_MANA   =  4;
+    static const unsigned ATTR_STAMINA    =  5;
+    static const unsigned ATTR_STR        =  6;
+    static const unsigned ATTR_DEX        =  7;
+    static const unsigned ATTR_CON        =  8;
+    static const unsigned ATTR_INT        =  9;
+    static const unsigned ATTR_FOC        = 10;
+    static const unsigned ATTR_CRE        = 11;
+    static const unsigned ATTR_CHA        = 12;
+    static const unsigned ATTR_LUC        = 13;
+    static const unsigned ATTR_ARMOR      = 14;
+    static const unsigned ATTR_BASH       = 15;
+    static const unsigned ATTR_SLASH      = 16;
+    static const unsigned ATTR_PIERCE     = 17;
+    static const unsigned ATTR_EXOTIC     = 18;
+    static const unsigned ATTR_HIT        = 19;
+    static const unsigned ATTR_DAM        = 20;
+    static const unsigned ATTR_END        = 21;
 
     // Visibility...
     static const unsigned SEE_NOTHING   = 0;
@@ -128,7 +129,7 @@ class Being {
     static constexpr double AFFINITY_MIN        = 1.0;
     static constexpr double AFFINITY_MAX        = 5.0;
     static constexpr double AFFINITY_DEFAULT    = 3.0;
-    static constexpr double AFFINITY_RESISTANCE = 1000;
+    static constexpr double AFFINITY_RESISTANCE = 10;
 
     static const unsigned ALTERABILITY_LEVEL_DIFFERENCE = 5;
 
@@ -330,7 +331,6 @@ class Being {
     Being*        acquireTarget(void);
     bool          strike(Item* secondary = nullptr);
     bool          evade(Being* striker);
-    int           calculateDamage(Being* victim, Item* weapon = nullptr, double modifier = 1.0);
     void          takeDamage(int damage, Being* damager = NULL);
     void          die(Being* killer = NULL);
     void          peace(void);

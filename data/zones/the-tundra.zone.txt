@@ -166,6 +166,7 @@ composition 0:
 weapon_type 9:longsword
 weapon_verb 5:slash
 weapon_damage 5:20d20
+weapon_key_stat 3:str
 /ITEM
 ITEM
 vnum 2
@@ -184,6 +185,7 @@ composition 0:
 weapon_type 4:mace
 weapon_verb 5:smash
 weapon_damage 5:20d20
+weapon_key_stat 3:str
 /ITEM
 ITEM
 vnum 3
@@ -202,6 +204,7 @@ composition 0:
 weapon_type 6:dagger
 weapon_verb 4:stab
 weapon_damage 5:10d10
+weapon_key_stat 3:dex
 /ITEM
 ITEM
 vnum 4
@@ -220,6 +223,26 @@ composition 0:
 weapon_type 6:dagger
 weapon_verb 4:stab
 weapon_damage 5:20d20
+weapon_key_stat 3:dex
+/ITEM
+ITEM
+vnum 5
+level 125
+value 100000
+type 9
+wearable 11
+flags 0
+shortname 20:a rusty iron polearm
+longname 20:A rusty iron polearm
+description 0:
+keywords 18:iron|polearm|rusty
+modifiers 0:
+compound 4:iron
+composition 0:
+weapon_type 7:polearm
+weapon_verb 4:stab
+weapon_damage 5:20d20
+weapon_key_stat 3:str
 /ITEM
 NPC
 vnum 1

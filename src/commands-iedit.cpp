@@ -479,6 +479,31 @@ bool ICmdWeaponDamage::execute(Being* being, const std::vector<std::string>& arg
   return true;
 }
 
+ICmdWeaponStat::ICmdWeaponStat(void) {
+  name("weap_stat");
+  level(Being::DEMIGOD);
+  addSyntax(-1, "<stat>");
+  brief("Sets/changes the key stat of the weapon.");
+  addOptions("stat", Being::listAttributes());
+  return;
+}
+
+bool ICmdWeaponStat::execute(Being* being, const std::vector<std::string>& args) {
+  std::string attr_name;
+  unsigned attr_idx;
+
+  if (!avatar()->iedit()->isWeapon()) {
+    avatar()->send("Item %ld isn't a weapon.", avatar()->iedit()->vnum());
+    return false;
+  }
+
+  attr_name = args[0];
+  attr_idx = Being::stringToAttribute(attr_name);
+  avatar()->iedit()->weapon()->keyStat(attr_idx);
+  avatar()->send("Weapon key stat set to %s.\n", Being::attributeToString(avatar()->iedit()->weapon()->keyStat()));
+  return true;
+}
+
 ICmdWeaponType::ICmdWeaponType(void) {
   name("weap_type");
   level(Being::DEMIGOD);

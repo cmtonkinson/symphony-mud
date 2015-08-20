@@ -201,6 +201,7 @@ void Storage::write(FILE* fp, Item* item, const char* suffix) {
       out(fp, "weapon_type",     item->weapon()->type().string());
       out(fp, "weapon_verb",     item->weapon()->verb().string());
       out(fp, "weapon_damage",   item->weapon()->damage().serialize());
+      out(fp, "weapon_key_stat", Being::attributeToString(item->weapon()->keyStat()));
       break;
     case Item::Type_Container:
       for (auto iter : item->container()->inventory().itemList()) write(fp, iter, "BAG");
@@ -238,9 +239,10 @@ bool Storage::read(FILE* fp, Item* loading) {
         STORE_CASE_WITH_CODE("furniture_standOn",   unsigned, "%u", loading->furniture()->standOn(val);)
         break;
       case Item::Type_Weapon:
-        STORE_CASE_STRING("weapon_type",    loading->weapon()->type().set(ETWeaponType::Instance().get(str));)
-        STORE_CASE_STRING("weapon_verb",    loading->weapon()->verb().set(ETDamageVerb::Instance().get(str));)
-        STORE_CASE_STRING("weapon_damage",  loading->weapon()->damage().unserialize(str);)
+        STORE_CASE_STRING("weapon_type",      loading->weapon()->type().set(ETWeaponType::Instance().get(str));)
+        STORE_CASE_STRING("weapon_verb",      loading->weapon()->verb().set(ETDamageVerb::Instance().get(str));)
+        STORE_CASE_STRING("weapon_damage",    loading->weapon()->damage().unserialize(str);)
+        STORE_CASE_STRING("weapon_key_stat",  loading->weapon()->keyStat(Being::stringToAttribute(str));)
         break;
       case Item::Type_Container:
         STORE_DESCEND_NEW("ITEM_BAG", Item, loading->container()->inventory().add(instance);)

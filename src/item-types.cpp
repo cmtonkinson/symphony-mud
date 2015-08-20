@@ -119,7 +119,7 @@ ItemWeapon::ItemWeapon(const Item* base_) {
   type().set(0);
   verb().set(0);
   base(base_);
-  keyStat(Being::ATTR_BEGIN);
+  keyStat(Being::ATTR_UNDEFINED);
   return;
 }
 
@@ -141,7 +141,6 @@ double ItemWeapon::weightFactor(void) const {
   double size    = 3.0;
 
   if (base()->compound() != nullptr) density = base()->compound()->density();
-
   size = relativeSize(this);
 
   return density * size;

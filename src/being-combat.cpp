@@ -134,9 +134,9 @@ bool Being::strike(Item* secondary) {
   attack.init();
   // Is it a good hit?
   if (!attack.hit()) {
-    send("Your attack {Wmisses{x %s!\n", _target->name());
-    _target->send("%s's attack {Wmisses{x you!\n", name());
-    room()->send_cond("$p's attack {Wmisses{x $c!", this, _target, nullptr, Room::TO_NOTVICT);
+    send("Your attack misses %s!\n", _target->name());
+    _target->send("%s's attack misses you!\n", name());
+    room()->send_cond("$p's attack misses $c!", this, _target, nullptr, Room::TO_NOTVICT);
     return false;
   }
   // Will we land it?
@@ -162,8 +162,8 @@ bool Being::evade(Being* striker) {
   Ability* skill = nullptr;
   std::vector<Ability*> evasion_skills;
 
-  // Small(ish) chance we don't even try to evade.
-  if (Math::percent_chance(80)) return false;
+  // Small chance we even attempt evasion.
+  if (Math::percent_chance(70)) return false;
 
   // What evasion methods are available?
   if ((skill = learned().find_skill(BLOCK)) != nullptr) evasion_skills.push_back(skill);
@@ -177,34 +177,6 @@ bool Being::evade(Being* striker) {
   // Select an evasion Skill.
   skill = evasion_skills[Math::rand(0, evasion_skills.size() - 1)];
   return skill->execute(this, striker, nullptr);
-}
-
-int Being::calculateDamage(Being* victim, Item* weapon, double modifier) {
-  int damage = 0;
-
-  // With a weapon
-  if (weapon != nullptr) {
-    // Initial damage based on weapon
-    damage = weapon->weapon()->damage().roll();
-    // Adjust if in off-hand
-    if (weapon == secondary()) damage *= 0.8;
-    // Adjust for strength
-    damage *= strengthPercent();
-  // Hand-to-hand
-  } else {
-    // Boring!
-    damage = 4;
-    // Factor in level and stregth
-    damage += level() / 10 * strengthPercent();
-  }
-
-  // Randomize the result a bit
-  damage = Stats::cone_randomization(damage, 10);
-
-  // Ensure that SOME damage will be dealt.
-  if (damage < 1) damage = 1;
-
-  return damage;
 }
 
 void Being::takeDamage(int damage, Being* damager) {

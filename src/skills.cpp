@@ -1,4 +1,5 @@
 
+#include "attack.hpp"
 #include "being.hpp"
 #include "display.hpp"
 #include "item.hpp"
@@ -11,7 +12,7 @@
 // ATTACKS
 ///////////////////////////////////////////////////////////////////////////////
 bool SecondStrikeSkill::execute(Being* being) const {
-  return Math::percent_chance(90) && being->strike();
+  return Math::percent_chance(80) && being->strike();
 }
 
 bool ThirdStrikeSkill::execute(Being* being) const {
@@ -19,7 +20,7 @@ bool ThirdStrikeSkill::execute(Being* being) const {
 }
 
 bool FourthStrikeSkill::execute(Being* being) const {
-  return Math::percent_chance(70) && being->strike();
+  return Math::percent_chance(80) && being->strike();
 }
 
 bool DualWieldSkill::execute(Being* being) const {
@@ -28,7 +29,7 @@ bool DualWieldSkill::execute(Being* being) const {
   // Need an off-hand weapon to dual strike.
   if (weapon == nullptr || !weapon->isWeapon()) return false;
   // Make the hit.
-  if (Math::percent_chance(50)) {
+  if (Math::percent_chance(75)) {
     return being->strike(weapon);
   }
 
@@ -105,7 +106,10 @@ bool RiposteSkill::execute(Being* being) const {
 
   if (Math::percent_chance(40)) {
     // Damage
-    damage = being->calculateDamage(_target_being, _target_item, 0.5);
+    Attack attack(being, _target_being);
+    if (_target_item == being->secondary()) attack.offhand(true);
+    attack.init();
+    damage = attack.getDamage() * 0.5;
     _target_being->takeDamage(damage, being);
     // Output
     weapon_damage = _target_item->weapon()->verb().string();
@@ -117,6 +121,9 @@ bool RiposteSkill::execute(Being* being) const {
 
   return true;
 }
+
+// TODO - whereas riposte is a counter-strike with the same weapon as the parry, there should be a counterattack
+// skill which uses the "other" hand (either bare, or with weapon) to strike.
 
 bool DodgeSkill::execute(Being* being) const {
   if (_target_being == nullptr) {
