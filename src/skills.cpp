@@ -1,9 +1,9 @@
 
-#include "attack.hpp"
+#include "strike-damage.hpp"
 #include "being.hpp"
 #include "display.hpp"
-#include "item.hpp"
 #include "item-types.hpp"
+#include "item.hpp"
 #include "os.hpp"
 #include "room.hpp"
 #include "skills.hpp"
@@ -106,10 +106,10 @@ bool RiposteSkill::execute(Being* being) const {
 
   if (Math::percent_chance(40)) {
     // Damage
-    Attack attack(being, _target_being);
-    if (_target_item == being->secondary()) attack.offhand(true);
-    attack.init();
-    damage = attack.getDamage() * 0.5;
+    StrikeDamage strike_damage(being, _target_being);
+    if (_target_item == being->secondary()) strike_damage.offhand(true);
+    strike_damage.init();
+    damage = strike_damage.getDamage() * 0.5;
     _target_being->takeDamage(damage, being);
     // Output
     weapon_damage = _target_item->weapon()->verb().string();

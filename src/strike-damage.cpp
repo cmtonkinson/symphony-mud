@@ -1,11 +1,11 @@
 
 #include <algorithm>
-#include "attack.hpp"
+#include "strike-damage.hpp"
 #include "being.hpp"
 #include "item-types.hpp"
 #include "os.hpp"
 
-Attack::Attack(Being* attacker, Being* defender) {
+StrikeDamage::StrikeDamage(Being* attacker, Being* defender) {
   _attacker   = attacker;
   _defender   = defender;
   _base       = 0;
@@ -16,12 +16,12 @@ Attack::Attack(Being* attacker, Being* defender) {
   return;
 }
 
-Attack::~Attack(void) {
+StrikeDamage::~StrikeDamage(void) {
   return;
 }
 
 // Internal setup code.
-void Attack::init(void) {
+void StrikeDamage::init(void) {
   Item* item = nullptr;
 
   item = offhand() ? _attacker->secondary() : _attacker->primary();
@@ -35,7 +35,7 @@ void Attack::init(void) {
 }
 
 // Determine whether or not the attacker will land a hit.
-bool Attack::hit(void) {
+bool StrikeDamage::hit(void) {
   int dex_diff = 0;
 
   // You miss less as your hit bonus increases.
@@ -53,14 +53,14 @@ bool Attack::hit(void) {
 }
 
 // Meta-method to calculate the amount of damage to be dealt.
-unsigned Attack::getDamage(void) {
+unsigned StrikeDamage::getDamage(void) {
   calculateBase();
   calculateAdjustments();
   return MAX(1, _base + _adjustment);
 }
 
 // Calulate the baseline damage to be dealt.
-void Attack::calculateBase(void) {
+void StrikeDamage::calculateBase(void) {
   if (_unarmed) {
     _base = _attacker->damBonus() + Math::rand(1, _attacker->strength());
   } else {
@@ -70,7 +70,7 @@ void Attack::calculateBase(void) {
 }
 
 // Calculate an adjustment (as a percentage) to the baseline damage.
-void Attack::calculateAdjustments(void) {
+void StrikeDamage::calculateAdjustments(void) {
   unsigned stat_idx      = Being::ATTR_BEGIN;
   double stat_adjustment = 0.0;
 
@@ -97,7 +97,7 @@ void Attack::calculateAdjustments(void) {
           stat_adjustment = 1.0 * _attacker->getAttribute(stat_idx) / Being::STAT_THRESHOLD;
           break;
         default:
-          ERROR_(_attacker, "Attack::calculateAdjustments() bad stat_idx %u", stat_idx);
+          ERROR_(_attacker, "StrikeDamage::calculateAdjustments() bad stat_idx %u", stat_idx);
           break;
       }
       _adjustment += _base * stat_adjustment / 10;
@@ -111,7 +111,7 @@ void Attack::calculateAdjustments(void) {
 }
 
 // Calculate the time (from now in seconds) when to schedule the next attack.
-unsigned Attack::timeUntilNext(void) {
+unsigned StrikeDamage::timeUntilNext(void) {
   double defalt = 2.0;
   double modify = 0.0;
 

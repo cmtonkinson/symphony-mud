@@ -1,19 +1,19 @@
 
-#ifndef H_SYMPHONY_ATTACK
-#define H_SYMPHONY_ATTACK
+#ifndef H_SYMPHONY_ATTACK_DAMAGE
+#define H_SYMPHONY_ATTACK_DAMAGE
 
 class Being;
 class ItemWeapon;
 
 
-class Attack {
+class StrikeDamage {
   public:
 
     static constexpr double FIRST_ATTACK_DELAY = 2.0;
     static constexpr double CRIT_MULTIPLIER    = 0.4;
 
-    Attack(Being* attacker, Being* defender);
-    ~Attack(void);
+    StrikeDamage(Being* attacker, Being* defender);
+    ~StrikeDamage(void);
 
     void        attacker(Being* attacker_)          { _attacker = attacker_; }
     Being*      attacker(void) const                { return _attacker; }
@@ -50,4 +50,4 @@ class Attack {
     ItemWeapon* _weapon;
 };
 
-#endif // !H_SYMPHONY_ATTACK
+#endif // !H_SYMPHONY_ATTACK_DAMAGE

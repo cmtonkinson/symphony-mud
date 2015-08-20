@@ -1,6 +1,6 @@
 
 #include "ability.hpp"
-#include "attack.hpp"
+#include "strike-damage.hpp"
 #include "being.hpp"
 #include "command.hpp"
 #include "display.hpp"
@@ -57,7 +57,7 @@ void Being::scheduleAttack(void) {
   // If there's already a Job scheduled, don't add another.
   if (_next_attack) return;
   // Create the Job, and keep a pointer for future reference.
-  _next_attack = new Job(time(NULL) + Attack::FIRST_ATTACK_DELAY, this, &Being::attack, "Being::attack");
+  _next_attack = new Job(time(NULL) + StrikeDamage::FIRST_ATTACK_DELAY, this, &Being::attack, "Being::attack");
   // Add it to the master schedule.
   World::Instance().schedule()->add(_next_attack);
   return;
@@ -123,20 +123,20 @@ bool Being::strike(Item* secondary) {
   int damage = 0;
   std::string weapon_damage;
   const Item* weapon = nullptr;
-  Attack attack(this, _target);
+  StrikeDamage strike_damage(this, _target);
 
   // Is the target still alive?
   if (_target->isDead()) return false;
   // Can we even move?
   if (!deplete_stamina(1)) return false;
   // Is this an offhand strike?
-  if (secondary != nullptr) attack.offhand(true);
-  attack.init();
+  if (secondary != nullptr) strike_damage.offhand(true);
+  strike_damage.init();
   // Get the correct verb.
-  if (!attack.unarmed()) weapon = attack.weapon()->base();
+  if (!strike_damage.unarmed()) weapon = strike_damage.weapon()->base();
   weapon_damage = (weapon && weapon->isWeapon()) ? weapon->weapon()->verb().string() : "strike";
   // Is it a good hit?
-  if (!attack.hit()) {
+  if (!strike_damage.hit()) {
     send("Your %s misses %s!\n", weapon_damage.c_str(), _target->name());
     _target->send("%s's %s misses you!\n", name(), weapon_damage.c_str());
     room()->send_cond("$p's $s misses $C!", this, weapon_damage.c_str(), _target, Room::TO_NOTVICT);
@@ -146,7 +146,7 @@ bool Being::strike(Item* secondary) {
   // Note: return true because e.g. a block doesn't preclude a second strike
   if (_target->evade(this)) return true;
   // Calculate the damage.
-  damage = attack.getDamage();
+  damage = strike_damage.getDamage();
   // Tell the world.
   weapon_damage.append(" ").append(Display::formatDamage(damage));
   send("Your %s %s!\n", weapon_damage.c_str(), _target->name());
