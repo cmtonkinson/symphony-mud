@@ -13,9 +13,19 @@ class Being;
 ///////////////////////////////////////////////////////////////////////////////
 class ItemArmor {
   public:
-    ItemArmor(void)                   { return; }
-    ItemArmor(const ItemArmor& ref)   { return; }
-    ~ItemArmor(void)                  { return; }
+    ItemArmor(const Item* base);
+    ItemArmor(const Item* base, const ItemArmor& ref);
+    ~ItemArmor(void);
+
+    void              base(const Item* base)  { _base = base; }
+    const Item*       base(void)              { return _base; }
+    ArmorType&        type(void)              { return _type; }
+    const ArmorType&  type(void) const        { return _type; }
+
+  private:
+    const Item* _base;
+    ArmorType   _type;
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

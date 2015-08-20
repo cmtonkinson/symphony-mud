@@ -89,6 +89,15 @@ ETFurniturePosition::ETFurniturePosition(void) {
   return;
 }
 
+ETArmorType::ETArmorType(void) {
+  add(ARMOR_LEATHER,    "leather");
+  add(ARMOR_BRIGANDINE, "brigandine");
+  add(ARMOR_SPLINTED,   "splinted");
+  add(ARMOR_MAIL,       "mail");
+  add(ARMOR_PLATE,      "plate");
+  return;
+}
+
 ETWeaponType::ETWeaponType(void) {
   add(WEAP_AXE,        "axe");
   add(WEAP_CLUB,       "club");

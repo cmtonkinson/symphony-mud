@@ -136,6 +136,7 @@ Commands::Commands(void) {
 IeditCommands::IeditCommands(void) {
   name("Iedit");
   add(new CmdExit(), true);
+  add(new ICmdArmorType(), true);
   add(new ICmdAttribute(), true);
   add(new ICmdComposition(), true);
   add(new ICmdDelete(), true);

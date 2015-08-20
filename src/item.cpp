@@ -75,7 +75,7 @@ void Item::type(Type type) {
   deleteExtra();
   _type = type;
   switch (this->type()) {
-    case Type_Armor:      extra(new ItemArmor());      break;
+    case Type_Armor:      extra(new ItemArmor(this));  break;
     case Type_Clothing:   extra(new ItemClothing());   break;
     case Type_Container:  extra(new ItemContainer());  break;
     case Type_Food:       extra(new ItemFood());       break;
@@ -96,7 +96,7 @@ void Item::type(Type type, void* extra_ptr) {
   deleteExtra();
   _type = type;
   switch (this->type()) {
-    case Type_Armor:      extra(new ItemArmor(*((ItemArmor*)extra_ptr)));         break;
+    case Type_Armor:      extra(new ItemArmor(this, *((ItemArmor*)extra_ptr)));   break;
     case Type_Clothing:   extra(new ItemClothing(*((ItemClothing*)extra_ptr)));   break;
     case Type_Container:  extra(new ItemContainer(*((ItemContainer*)extra_ptr))); break;
     case Type_Food:       extra(new ItemFood(*((ItemFood*)extra_ptr)));           break;
@@ -321,6 +321,8 @@ std::string Item::printInformation(void) const {
     dest.append(buffer);
     switch (type()) {
       case Type_Armor:
+        sprintf(buffer, "| type: {y%s{x\n", armor()->type().string().c_str());
+        dest.append(buffer);
         break;
       case Type_Clothing:
         break;

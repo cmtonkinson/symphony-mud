@@ -244,6 +244,21 @@ weapon_verb 4:stab
 weapon_damage 5:20d20
 weapon_key_stat 3:str
 /ITEM
+ITEM
+vnum 6
+level 100
+value 10000
+type 1
+wearable 7
+flags 0
+shortname 19:a rusty breastplate
+longname 19:a rusty breastplate
+description 0:
+keywords 30:breast|breastplate|plate|rusty
+modifiers 0:
+compound 4:iron
+composition 0:
+/ITEM
 NPC
 vnum 1
 mobility 3

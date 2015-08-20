@@ -77,6 +77,13 @@ DEF_ENUM(FurniturePosition)
 #define FURN_SIT_ON   3
 #define FURN_STAND_ON 4
 
+DEF_ENUM(ArmorType)
+#define ARMOR_LEATHER     1
+#define ARMOR_BRIGANDINE  2
+#define ARMOR_SPLINTED    3
+#define ARMOR_MAIL        4
+#define ARMOR_PLATE       5
+
 DEF_ENUM(WeaponType)
 #define WEAP_AXE         1
 #define WEAP_CLUB        2

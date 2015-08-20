@@ -10,6 +10,25 @@
 #include "world.hpp"
 #include "zone.hpp"
 
+ICmdArmorType::ICmdArmorType(void) {
+  name("armor_type");
+  level(Being::DEMIGOD);
+  addSyntax(1, "<type>");
+  brief("Changes the kind of armor the Weapon is.");
+  addOptions("type", ETArmorType::Instance().list());
+  return;
+}
+
+bool ICmdArmorType::execute(Being* being, const std::vector<std::string>& args) {
+  if (!avatar()->iedit()->isArmor()) {
+    avatar()->send("Item %ld isn't armor.", avatar()->iedit()->vnum());
+    return false;
+  }
+  avatar()->iedit()->armor()->type().set(args[0]);
+  avatar()->send("Armor type set to %s.\n", avatar()->iedit()->armor()->type().string().c_str());
+  return true;
+}
+
 ICmdAttribute::ICmdAttribute(void) {
   name("attribute");
   level(Being::DEMIGOD);
