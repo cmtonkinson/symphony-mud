@@ -49,7 +49,7 @@ std::string Display::formatColumns(const std::vector<std::string>& items) {
   return dest;
 }
 
-std::string Display::formatAction(const char* format, Being* being, const void* arg1, const void* arg2, Being* withRespectTo) {
+std::string Display::formatAction(const char* format, Being* actor, const void* arg1, const void* arg2, Being* withRespectTo) {
   std::string input(format);
   std::string message;
 
@@ -57,31 +57,31 @@ std::string Display::formatAction(const char* format, Being* being, const void* 
     if (*it == '$') {
       switch (*(it+1)) {
         // arbitrary strings
-        case 's': message.append(arg1 ? (const char*)arg1 : "[s]");                                             break;
-        case 'S': message.append(arg2 ? (const char*)arg2 : "[S]");                                             break;
+        case 's': message.append(arg1 ? (const char*)arg1 : "[s]");                                         break;
+        case 'S': message.append(arg2 ? (const char*)arg2 : "[S]");                                         break;
         // the 'actor'
-        case 'p': message.append(withRespectTo ? withRespectTo->seeName(being) : "[p]");                     break;
-        // arbitrary beings
-        case 'c': message.append(withRespectTo ? withRespectTo->seeName((Being*)arg1) : "[c]");              break;
-        case 'C': message.append(withRespectTo ? withRespectTo->seeName((Being*)arg2) : "[C]");              break;
+        case 'a': message.append(withRespectTo ? withRespectTo->seeName(actor) : "[a]");                    break;
+        // arbitrary actors
+        case 'c': message.append(withRespectTo ? withRespectTo->seeName((Being*)arg1) : "[c]");             break;
+        case 'C': message.append(withRespectTo ? withRespectTo->seeName((Being*)arg2) : "[C]");             break;
         // reflexive pronouns
-        case 'f': message.append(withRespectTo ? withRespectTo->seeReflexivePronoun((Being*)arg1) : "[f]");  break;
-        case 'F': message.append(withRespectTo ? withRespectTo->seeReflexivePronoun((Being*)arg2) : "[F]");  break;
+        case 'f': message.append(withRespectTo ? withRespectTo->seeReflexivePronoun((Being*)arg1) : "[f]"); break;
+        case 'F': message.append(withRespectTo ? withRespectTo->seeReflexivePronoun((Being*)arg2) : "[F]"); break;
         // item pronouns
-        case 'b': message.append(withRespectTo ? withRespectTo->seeItemPronoun((Being*)arg1) : "[b]");     break;
-        case 'B': message.append(withRespectTo ? withRespectTo->seeItemPronoun((Being*)arg2) : "[B]");     break;
+        case 'b': message.append(withRespectTo ? withRespectTo->seeItemPronoun((Being*)arg1) : "[b]");      break;
+        case 'B': message.append(withRespectTo ? withRespectTo->seeItemPronoun((Being*)arg2) : "[B]");      break;
         // possessive pronouns
-        case 'r': message.append(withRespectTo ? withRespectTo->seePosessivePronoun((Being*)arg1) : "[r]");  break;
-        case 'R': message.append(withRespectTo ? withRespectTo->seePosessivePronoun((Being*)arg2) : "[R]");  break;
+        case 'r': message.append(withRespectTo ? withRespectTo->seePosessivePronoun((Being*)arg1) : "[r]"); break;
+        case 'R': message.append(withRespectTo ? withRespectTo->seePosessivePronoun((Being*)arg2) : "[R]"); break;
         // items
-        case 'o': message.append(arg1 ? ((Item*)arg1)->identifiers().shortname() : "[o]");                    break;
-        case 'O': message.append(arg2 ? ((Item*)arg2)->identifiers().shortname() : "[O]");                    break;
+        case 'o': message.append(arg1 ? ((Item*)arg1)->identifiers().shortname() : "[o]");                  break;
+        case 'O': message.append(arg2 ? ((Item*)arg2)->identifiers().shortname() : "[O]");                  break;
         // exits
-        case 'e': message.append(arg1 ? Exit::name(((Exit*)arg1)->direction().number()) : "[e]");             break;
-        case 'E': message.append(arg2 ? Exit::name(((Exit*)arg2)->direction().number()) : "[E]");             break;
+        case 'e': message.append(arg1 ? Exit::name(((Exit*)arg1)->direction().number()) : "[e]");           break;
+        case 'E': message.append(arg2 ? Exit::name(((Exit*)arg2)->direction().number()) : "[E]");           break;
         // exit inverses
-        case 'n': message.append(arg1 ? Exit::inverseName(((Exit*)arg1)->direction().number()) : "[n]");        break;
-        case 'N': message.append(arg2 ? Exit::inverseName(((Exit*)arg2)->direction().number()) : "[N]");        break;
+        case 'n': message.append(arg1 ? Exit::inverseName(((Exit*)arg1)->direction().number()) : "[n]");    break;
+        case 'N': message.append(arg2 ? Exit::inverseName(((Exit*)arg2)->direction().number()) : "[N]");    break;
         // huh?
         default:  message.append("[$]"); break;
       }

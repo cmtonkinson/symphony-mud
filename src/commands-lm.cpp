@@ -24,7 +24,7 @@ bool CmdLay::execute(Being* being, const std::vector<std::string>& args) {
     return false;
   }
   being->send("You lay down.");
-  being->room()->send_cond("$p lays down.", being);
+  being->room()->send_cond("$a lays down.", being);
   return true;
 }
 
@@ -348,7 +348,7 @@ bool CmdLock::execute(Being* being, const std::vector<std::string>& args) {
 
   exit->flag(EXIT_LOCKED, true);
   being->send("You lock the door.");
-  being->room()->send_cond("$p locked the way $e.", being, exit);
+  being->room()->send_cond("$a locked the way $e.", being, exit);
   return true;
 }
 
@@ -447,12 +447,12 @@ bool CmdLook::execute(Being* being, const std::vector<std::string>& args) {
       if (btarget->canSee(being) > Being::SEE_NOTHING) {
         btarget->send("%s looks at you.\n", btarget->seeName(being).c_str());
       }
-      being->room()->send_cond("$p looks at $c.\n", being, btarget, NULL, Room::TO_NOTVICT);
+      being->room()->send_cond("$a looks at $c.\n", being, btarget, NULL, Room::TO_NOTVICT);
       return true;
     } else if ((otarget = being->room()->inventory().searchSingleItem(args[0])) != NULL) {
       // looking at an item
       being->send("You look at %s:\n%s{x\n", otarget->identifiers().shortname().c_str(), otarget->identifiers().description().c_str());
-      being->room()->send_cond("$p looks at $o.\n", being, otarget);
+      being->room()->send_cond("$a looks at $o.\n", being, otarget);
       return true;
     } else {
       being->send("You don't see that here.");

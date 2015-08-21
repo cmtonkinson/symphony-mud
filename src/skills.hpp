@@ -7,15 +7,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 // ATTACKS
 ///////////////////////////////////////////////////////////////////////////////
-#define SECOND_STRIKE "second strike"
-#define THIRD_STRIKE  "third strike"
-#define FOURTH_STRIKE "fourth strike"
-#define DUAL_WIELD    "dual wield"
+#define SECOND_STRIKE   "second strike"
+#define THIRD_STRIKE    "third strike"
+#define FOURTH_STRIKE   "fourth strike"
+#define DUAL_WIELD      "dual wield"
+#define COUNTERATTACK   "counterattack"
 
 DEF_SKILL(SECOND_STRIKE,  SecondStrikeSkill)
 DEF_SKILL(THIRD_STRIKE,   ThirdStrikeSkill)
 DEF_SKILL(FOURTH_STRIKE,  FourthStrikeSkill)
 DEF_SKILL(DUAL_WIELD,     DualWieldSkill)
+DEF_SKILL(COUNTERATTACK,  CounterattackSkill)
 
 ///////////////////////////////////////////////////////////////////////////////
 // EVASION

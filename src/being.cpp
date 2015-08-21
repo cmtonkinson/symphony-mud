@@ -828,16 +828,16 @@ bool Being::move(const unsigned short& direction) {
     case EAST:
     case SOUTH:
     case WEST:
-      from->send_cond("$p leaves to the $e.", this, exit);
-      to->send_cond("$p has arrived from the $n.", this, exit);
+      from->send_cond("$a leaves to the $e.", this, exit);
+      to->send_cond("$a has arrived from the $n.", this, exit);
       break;
     case UP:
-      from->send_cond("$p leaves up.", this, exit);
-      to->send_cond("$p has arrived from below.", this, exit);
+      from->send_cond("$a leaves up.", this, exit);
+      to->send_cond("$a has arrived from below.", this, exit);
       break;
     case DOWN:
-      from->send_cond("$p leaves down.", this, exit);
-      to->send_cond("$p has arrived from above.", this, exit);
+      from->send_cond("$a leaves down.", this, exit);
+      to->send_cond("$a has arrived from above.", this, exit);
       break;
     default:
       break;
@@ -930,10 +930,10 @@ Ability* Being::find_spell(std::string name) const {
   return NULL;
 }
 
-bool Being::invokeIfLearned(std::string skill_name) {
+bool Being::invokeIfLearned(std::string skill_name, Being* target, Item* item) {
   Ability* skill = nullptr;
   if ((skill = learned().find_skill(skill_name))) {
-    return skill->invoke(this);
+    return skill->invoke(this, target, item);
   }
   return false;
 }

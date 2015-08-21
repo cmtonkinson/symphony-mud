@@ -120,7 +120,7 @@ void Avatar::restoreRoom(void) {
   }
   room()->add(this);
   // let everyone know...
-  room()->send_cond("$p has entered the realm.\n", this);
+  room()->send_cond("$a has entered the realm.\n", this);
   // show them around...
   look.avatar(this);
   look.execute(this, look_args);
@@ -349,7 +349,7 @@ void Avatar::whatHappensWhenIDie(void) {
   // It's alive! It's allllliiiiiiiiiiiiive!
   action().set(0);
   // let everyone know...
-  room()->send_cond("$p appears, looking weary.\n", this);
+  room()->send_cond("$a appears, looking weary.\n", this);
   // show them around...
   look.avatar(this);
   look.execute(this, look_args);

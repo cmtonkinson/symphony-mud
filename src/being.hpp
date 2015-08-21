@@ -371,7 +371,7 @@ class Being {
     bool                          can_learn(Ability* ability) const;
     Ability*                      find_spell(std::string name) const;
     bool                          intone(Ability* spell, Being* being_target, Item* item_target);
-    bool                          invokeIfLearned(std::string skill_name);
+    bool                          invokeIfLearned(std::string skill_name, Being* target = nullptr, Item* item = nullptr);
     bool                          deplete_mana(unsigned mana_, bool message = true);
     bool                          check_mana(unsigned mana_, bool message = true);
     bool                          exhausted(void) const;

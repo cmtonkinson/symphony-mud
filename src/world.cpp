@@ -297,7 +297,7 @@ void World::handleDisconnects(void) {
       ++next;
       INFO(a_it->second, "log out")
       if (a_it->second->room()) {
-        a_it->second->room()->send_cond("$p has left the realm.", a_it->second);
+        a_it->second->room()->send_cond("$a has left the realm.", a_it->second);
         a_it->second->room()->remove(a_it->second);
       }
       remove(a_it->second);

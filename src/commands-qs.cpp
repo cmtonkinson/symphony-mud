@@ -114,7 +114,7 @@ bool CmdRemove::execute(Being* being, const std::vector<std::string>& args) {
   for (std::list<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
     if (being->unwear(*it, error)) {
       being->send("You remove %s{x.\n", (*it)->identifiers().shortname().c_str());
-      being->room()->send_cond("$p removes $o.\n", being, *it);
+      being->room()->send_cond("$a removes $o.\n", being, *it);
     } else {
       being->send(error);
     }
@@ -311,15 +311,15 @@ bool CmdSay::execute(Being* being, const std::vector<std::string>& args) {
   std::string verb;
   switch (args[0][args[0].size()-1]) {
     case '?':
-      being->room()->send("$p asks '{G$s{x'", being, (void*)args[0].c_str());
+      being->room()->send("$a asks '{G$s{x'", being, (void*)args[0].c_str());
       being->send("You ask '{G%s{x'", args[0].c_str());
       break;
     case '!':
-      being->room()->send("$p exclaims '{G$s{x'", being, (void*)args[0].c_str());
+      being->room()->send("$a exclaims '{G$s{x'", being, (void*)args[0].c_str());
       being->send("You exclaim '{G%s{x'", args[0].c_str());
       break;
     default:
-      being->room()->send("$p says '{G$s{x'", being, (void*)args[0].c_str());
+      being->room()->send("$a says '{G$s{x'", being, (void*)args[0].c_str());
       being->send("You say '{G%s{x'", args[0].c_str());
       break;
   }
@@ -435,7 +435,7 @@ bool CmdSit::execute(Being* being, const std::vector<std::string>& args) {
     if (Regex::strPrefix(args[0], "at")) {
       if (being->sit(error, furniture->furniture(), false)) {
         being->send("You sit down at %s.", furniture->identifiers().shortname().c_str());
-        being->room()->send_cond("$p sits down at $o.", being, furniture);
+        being->room()->send_cond("$a sits down at $o.", being, furniture);
       } else {
         being->send(error);
         return false;
@@ -444,7 +444,7 @@ bool CmdSit::execute(Being* being, const std::vector<std::string>& args) {
     } else if (Regex::strPrefix(args[0], "on")) {
       if (being->sit(error, furniture->furniture(), true)) {
         being->send("You sit down on %s.", furniture->identifiers().shortname().c_str());
-        being->room()->send_cond("$p sits down on $o.", being, furniture);
+        being->room()->send_cond("$a sits down on $o.", being, furniture);
       } else {
         being->send(error);
         return false;
@@ -458,7 +458,7 @@ bool CmdSit::execute(Being* being, const std::vector<std::string>& args) {
       being->send(error);
     } else {
       being->send("You sit down.");
-      being->room()->send_cond("$p sits down.", being);
+      being->room()->send_cond("$a sits down.", being);
       return true;
     }
   }
@@ -502,7 +502,7 @@ bool CmdStand::execute(Being* being, const std::vector<std::string>& args) {
     being->furniture()->remove(being);
   }
   being->send("You stand up.");
-  being->room()->send_cond("$p stands up.", being);
+  being->room()->send_cond("$a stands up.", being);
   return true;
 }
 
@@ -679,11 +679,11 @@ bool CmdSummon::execute(Being* being, const std::vector<std::string>& args) {
   // Summon...
   from = target->room();
   target->send("You've been summoned by %s.\n", target->seeName(avatar()).c_str());
-  from->send_cond("$p disappears in small puff of smoke.", target);
+  from->send_cond("$a disappears in small puff of smoke.", target);
   from->remove(target);
   to->add(target);
   target->room(to);
-  to->send_cond("$p appears with a small \"pop!\"", target);
+  to->send_cond("$a appears with a small \"pop!\"", target);
   look.avatar(avatar());
   look.execute(target, look_args);
   return true;

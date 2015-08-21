@@ -103,7 +103,6 @@ class Ability {
     bool                  target_item(void) const         { return _targeting == TARGET_ITEM; }
     unsigned              default_target(void) const;
 
-
     // invoke() is a high-level wrapper around execute() which automatically
     // performs resource verification/deduction as well as improvement logic.
     bool                  invoke(Being* being, Being* target = nullptr, Item* item = nullptr);
@@ -115,7 +114,6 @@ class Ability {
     // execute() is to be implemented by each concrete Ability and should
     // contain the unique business logic for same.
     virtual bool          execute(Being* being) const = 0;
-
 
     unsigned              trainingFactor(void) const;
     static std::string    masteryToString(unsigned mastery);

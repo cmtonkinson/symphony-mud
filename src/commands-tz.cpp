@@ -231,7 +231,7 @@ bool CmdUnlock::execute(Being* being, const std::vector<std::string>& args) {
 
   exit->flag(EXIT_LOCKED, false);
   being->send("You unlock the door.");
-  being->room()->send_cond("$p unlocked the way $e.", being, exit);
+  being->room()->send_cond("$a unlocked the way $e.", being, exit);
   return true;
 }
 
@@ -254,10 +254,10 @@ bool CmdWear::execute(Being* being, const std::vector<std::string>& args) {
         being->inventory().remove(*it);
         if (removed) {
           being->send("You remove %s{x.\n", removed->identifiers().shortname().c_str());
-          being->room()->send_cond("$p removes $o.\n", being, removed);
+          being->room()->send_cond("$a removes $o.\n", being, removed);
         }
         being->send("You wear %s{x.\n", (*it)->identifiers().shortname().c_str());
-        being->room()->send_cond("$p wears $o.\n", being, *it);
+        being->room()->send_cond("$a wears $o.\n", being, *it);
       } else {
         being->send(error);
       }

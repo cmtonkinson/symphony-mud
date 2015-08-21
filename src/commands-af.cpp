@@ -350,10 +350,10 @@ bool CmdClone::execute(Being* being, const std::vector<std::string>& args) {
 
   if (times == 1) {
     avatar()->send("You've created a clone of %s.\n", clone->identifiers().shortname().c_str());
-    avatar()->room()->send_cond("$p has created a clone of $o.\n", avatar(), item);
+    avatar()->room()->send_cond("$a has created a clone of $o.\n", avatar(), item);
   } else {
     avatar()->send("You've created %d clones of %s.\n", times, clone->identifiers().shortname().c_str());
-    avatar()->room()->send_cond("$p has created $s clones of $O.\n", avatar(), buf, item);
+    avatar()->room()->send_cond("$a has created $s clones of $O.\n", avatar(), buf, item);
   }
 
   return true;
@@ -385,7 +385,7 @@ bool CmdClose::execute(Being* being, const std::vector<std::string>& args) {
 
   exit->flag(EXIT_CLOSED, true);
   being->send("You close the door.");
-  being->room()->send("$p closed the way $e.", being, exit);
+  being->room()->send("$a closed the way $e.", being, exit);
   if ((inv = exit->targetRoom()->exit(Exit::inverse(exit->direction().number()))) != NULL) {
     exit->targetRoom()->send("The way $e has been closed.", NULL, inv);
   }
@@ -710,7 +710,7 @@ bool CmdDrop::execute(Being* being, const std::vector<std::string>& args) {
       being->send("You can't drop %s.\n", (*it)->identifiers().shortname().c_str());
     } else {
       being->send("You drop %s.\n", (*it)->identifiers().shortname().c_str());
-      being->room()->send_cond("$p drops $o.\n", being, *it);
+      being->room()->send_cond("$a drops $o.\n", being, *it);
       being->inventory().remove(*it);
       being->room()->inventory().add(*it);
     }
@@ -775,7 +775,7 @@ bool CmdEat::execute(Being* being, const std::vector<std::string>& args) {
   for (std::list<Item*>::iterator it = dead.begin(); it != dead.end(); ++it) {
     avatar()->inventory().remove(*it);
     avatar()->send("You eat %s.\n", (*it)->identifiers().shortname().c_str());
-    avatar()->room()->send_cond("$p eats $o.\n", avatar(), *it);
+    avatar()->room()->send_cond("$a eats $o.\n", avatar(), *it);
     delete *it;
   }
   return true;
@@ -792,10 +792,10 @@ bool CmdEmote::execute(Being* being, const std::vector<std::string>& args) {
   switch (args[0][0]) {
     case ',':
     case '\'':
-      being->room()->send("$p$s", being, (void*)args[0].c_str(), NULL, Room::TO_ALL);
+      being->room()->send("$a$s", being, (void*)args[0].c_str(), NULL, Room::TO_ALL);
       break;
     default:
-      being->room()->send("$p $s", being, (void*)args[0].c_str(), NULL, Room::TO_ALL);
+      being->room()->send("$a $s", being, (void*)args[0].c_str(), NULL, Room::TO_ALL);
   }
   return true;
 }

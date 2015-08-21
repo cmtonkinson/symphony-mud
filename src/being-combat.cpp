@@ -7,7 +7,7 @@
 #include "os.hpp"
 #include "skills.hpp"
 #include "stats.hpp"
-#include "strike-damage.hpp"
+#include "strike.hpp"
 #include "world.hpp"
 
 void Being::formGroup(void) {
@@ -20,13 +20,13 @@ void Being::formGroup(void) {
 void Being::ungroup(void) {
   if (group()->size() == 1) return;
   if (this == group()->leader()) {
-    group()->send("$p has disbanded the company.\n", this);
+    group()->send("$a has disbanded the company.\n", this);
     std::set<Being*> temp(group()->members());
     for (std::set<Being*>::iterator iter = temp.begin(); iter != temp.end(); ++iter) {
       if (*iter != this) (*iter)->ungroup();
     }
   }
-  group()->send("$p leaves the group.\n", this);
+  group()->send("$a leaves the group.\n", this);
   group()->remove_member(this);
   formGroup();
   send("You leave the group. Good luck on your own!\n");
@@ -57,7 +57,7 @@ void Being::scheduleAttack(void) {
   // If there's already a Job scheduled, don't add another.
   if (_next_attack) return;
   // Create the Job, and keep a pointer for future reference.
-  _next_attack = new Job(time(NULL) + StrikeDamage::FIRST_ATTACK_DELAY, this, &Being::attack, "Being::attack");
+  _next_attack = new Job(time(NULL) + Strike::FIRST_STRIKE_DELAY, this, &Being::attack, "Being::attack");
   // Add it to the master schedule.
   World::Instance().schedule()->add(_next_attack);
   return;
@@ -66,6 +66,7 @@ void Being::scheduleAttack(void) {
 // TODO - any type of counterattack of effect could kill `this` during offensive moves
 // such as attack() - need to account for this. Maybe self-deletion is a bad strategy
 bool Being::attack(Job* job) {
+  bool strike_status = true;
   // Clear the Job pointer so a new attack can be scheduled. (The Schedule will automatically
   // delete the Job when it fires, so the pointer will be invalid once this method returns anyway).
   _next_attack = nullptr;
@@ -78,13 +79,11 @@ bool Being::attack(Job* job) {
   }
   // Make the strike. Second, third, and fourth strike cascade - e.g. if the first strike didn't
   // succeed, then don't even attempt a second.
-  if (strike()) {
-    if (invokeIfLearned(SECOND_STRIKE)) {
-      if (invokeIfLearned(THIRD_STRIKE)) {
-        invokeIfLearned(FOURTH_STRIKE);
-      }
-    }
-  }
+  Strike primary(this, _target, true);
+  strike_status = primary.strike();
+  if (strike_status) strike_status = invokeIfLearned(SECOND_STRIKE, _target);
+  if (strike_status) strike_status = invokeIfLearned(THIRD_STRIKE, _target);
+  if (strike_status) strike_status = invokeIfLearned(FOURTH_STRIKE, _target);
   // Go another round. Even if the current target is dead, there may be remaining Group members.
   scheduleAttack();
   // Is it over?
@@ -119,45 +118,45 @@ Being* Being::acquireTarget(void) {
 }
 
 // secondary should only be set while dual wielding, during the off-hand strike
-bool Being::strike(Item* secondary) {
-  int damage = 0;
-  std::string weapon_damage;
-  const Item* weapon = nullptr;
-  StrikeDamage strike_damage(this, _target);
-
-  // Is the target still alive?
-  if (_target->isDead()) return false;
-  // Can we even move?
-  if (!deplete_stamina(1)) return false;
-  // Is this an offhand strike?
-  if (secondary != nullptr) strike_damage.offhand(true);
-  strike_damage.init();
-  // Get the correct verb.
-  if (!strike_damage.unarmed()) weapon = strike_damage.weapon()->base();
-  weapon_damage = (weapon && weapon->isWeapon()) ? weapon->weapon()->verb().string() : "strike";
-  // Is it a good hit?
-  if (!strike_damage.hit()) {
-    send("Your %s misses %s!\n", weapon_damage.c_str(), _target->name());
-    _target->send("%s's %s misses you!\n", name(), weapon_damage.c_str());
-    room()->send_cond("$p's $s misses $C!", this, weapon_damage.c_str(), _target, Room::TO_NOTVICT);
-    return false;
-  }
-  // Will we land it?
-  // Note: return true because e.g. a block doesn't preclude a second strike
-  if (_target->evade(this)) return true;
-  // Calculate the damage.
-  damage = strike_damage.getDamage();
-  // Tell the world.
-  weapon_damage.append(" ").append(Display::formatDamage(damage));
-  send("Your %s %s!\n", weapon_damage.c_str(), _target->name());
-  _target->send("%s's %s you!\n", name(), weapon_damage.c_str());
-  room()->send_cond("$p's $s $C!", this, (void*)weapon_damage.c_str(), _target, Room::TO_NOTVICT, true);
-  // Deal the pain.
-  _target->takeDamage(damage, this);
-  // Can we hit them again?
-  if (secondary == nullptr) invokeIfLearned(DUAL_WIELD);
-  return true;
-}
+// bool Being::strike(Item* secondary) {
+//   int damage = 0;
+//   std::string weapon_damage;
+//   const Item* weapon = nullptr;
+//   StrikeDamage strike_damage(this, _target);
+//
+//   // Is the target still alive?
+//   if (_target->isDead()) return false;
+//   // Can we even move?
+//   if (!deplete_stamina(1)) return false;
+//   // Is this an offhand strike?
+//   if (secondary != nullptr) strike_damage.offhand(true);
+//   strike_damage.init();
+//   // Get the correct verb.
+//   if (!strike_damage.unarmed()) weapon = strike_damage.weapon()->base();
+//   weapon_damage = (weapon && weapon->isWeapon()) ? weapon->weapon()->verb().string() : "strike";
+//   // Is it a good hit?
+//   if (!strike_damage.hit()) {
+//     send("Your %s misses %s!\n", weapon_damage.c_str(), _target->name());
+//     _target->send("%s's %s misses you!\n", name(), weapon_damage.c_str());
+//     room()->send_cond("$a's $s misses $C!", this, weapon_damage.c_str(), _target, Room::TO_NOTVICT);
+//     return false;
+//   }
+//   // Will we land it?
+//   // Note: return true because e.g. a block doesn't preclude a second strike
+//   if (_target->evade(this)) return true;
+//   // Calculate the damage.
+//   damage = strike_damage.getDamage();
+//   // Tell the world.
+//   weapon_damage.append(" ").append(Display::formatDamage(damage));
+//   send("Your %s %s!\n", weapon_damage.c_str(), _target->name());
+//   _target->send("%s's %s you!\n", name(), weapon_damage.c_str());
+//   room()->send_cond("$a's $s $C!", this, (void*)weapon_damage.c_str(), _target, Room::TO_NOTVICT, true);
+//   // Deal the pain.
+//   _target->takeDamage(damage, this);
+//   // Can we hit them again?
+//   if (secondary == nullptr) invokeIfLearned(DUAL_WIELD);
+//   return true;
+// }
 
 bool Being::evade(Being* striker) {
   Ability* skill = nullptr;
@@ -202,7 +201,7 @@ void Being::die(Being* killer) {
   stamina(0);
   // Announce the death.
   send("\n\nYou are {RDEAD{x!!!\n\n");
-  room()->send_cond("\n\n$p is {RDEAD{x!!!\n\n", this, NULL, NULL, Room::TO_NOTVICT);
+  room()->send_cond("\n\n$a is {RDEAD{x!!!\n\n", this, NULL, NULL, Room::TO_NOTVICT);
   if (isAvatar()) {
     if (killer) {
       INFO_(this, "killed by %s", killer->ident().c_str())
@@ -279,7 +278,7 @@ void Being::gainLevel(void) {
     send("You gain {C%u{x mana points.\n", mana_boost);
     send("You gain {B%u{x training point.\n", trains_boost);
     if (level() < HERO) send("You have {Y%u{x experience to your next level.\n\n", tnl());
-    group()->send("$p has grown a level!\n", this, NULL, NULL);
+    group()->send("$a has grown a level!\n", this, NULL, NULL);
   }
   return;
 }
@@ -299,15 +298,15 @@ void Being::announceStatus(void) {
   double health_percent = healthPercent();
   std::string message;
 
-  if      (health_percent > 0.98) message = "$p looks {Gfantastic{x.";
-  else if (health_percent > 0.90) message = "$p is in {Bexcellent{x condition.";
-  else if (health_percent > 0.70) message = "$p is in {Mgreat{x condition.";
-  else if (health_percent > 0.50) message = "$p is in {Cgood{x condition.";
-  else if (health_percent > 0.35) message = "$p looks a little {cworn{x.";
-  else if (health_percent > 0.20) message = "$p looks pretty {mworn{x.";
-  else if (health_percent > 0.10) message = "$p looks very {ybattered{x.";
-  else if (health_percent > 0.5)  message = "$p is pretty {rbeat up{x.";
-  else                            message = "$p looks {wterrible{x.";
+  if      (health_percent > 0.98) message = "$a looks {Gfantastic{x.";
+  else if (health_percent > 0.90) message = "$a is in {Bexcellent{x condition.";
+  else if (health_percent > 0.70) message = "$a is in {Mgreat{x condition.";
+  else if (health_percent > 0.50) message = "$a is in {Cgood{x condition.";
+  else if (health_percent > 0.35) message = "$a looks a little {cworn{x.";
+  else if (health_percent > 0.20) message = "$a looks pretty {mworn{x.";
+  else if (health_percent > 0.10) message = "$a looks very {ybattered{x.";
+  else if (health_percent > 0.5)  message = "$a is pretty {rbeat up{x.";
+  else                            message = "$a looks {wterrible{x.";
 
   room()->send_cond(message.c_str(), this, nullptr, nullptr, Room::TO_NOTVICT);
   return;

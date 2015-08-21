@@ -1,5 +1,4 @@
 
-#include "strike-damage.hpp"
 #include "being.hpp"
 #include "display.hpp"
 #include "item-types.hpp"
@@ -7,33 +6,42 @@
 #include "os.hpp"
 #include "room.hpp"
 #include "skills.hpp"
+#include "strike.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 // ATTACKS
+// FIXME - what to make of these following the Strike class update?
+// NOTE - Maybe need to store last Attack in Being for proper nesting?
 ///////////////////////////////////////////////////////////////////////////////
 bool SecondStrikeSkill::execute(Being* being) const {
-  return Math::percent_chance(80) && being->strike();
+  if (Math::percent_chance(20)) return false;
+  Strike strike(being, _target_being, true);
+  strike.nesting(1);
+  return strike.strike();
 }
 
 bool ThirdStrikeSkill::execute(Being* being) const {
-  return Math::percent_chance(80) && being->strike();
+  if (Math::percent_chance(20)) return false;
+  Strike strike(being, _target_being, true);
+  strike.nesting(2);
+  return strike.strike();
 }
 
 bool FourthStrikeSkill::execute(Being* being) const {
-  return Math::percent_chance(80) && being->strike();
+  if (Math::percent_chance(20)) return false;
+  Strike strike(being, _target_being, true);
+  strike.nesting(3);
+  return strike.strike();
 }
 
 bool DualWieldSkill::execute(Being* being) const {
-  Item* weapon = being->secondary();
-
+  Strike dual(being, _target_being, false);
   // Need an off-hand weapon to dual strike.
-  if (weapon == nullptr || !weapon->isWeapon()) return false;
-  // Make the hit.
-  if (Math::percent_chance(75)) {
-    return being->strike(weapon);
-  }
-
-  return false;
+  if (dual.unarmed()) return false;
+  // Moderate chance of success.
+  if (Math::percent_chance(25)) return false;
+  // Go for it.
+  return dual.strike();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,9 +54,9 @@ bool BlockSkill::execute(Being* being) const {
   }
 
   if (Math::percent_chance(40)) {
-    being->send("You block %s's attack!\n", _target_being->name());
-    _target_being->send("%s blocks your attack!\n", being->name());
-    being->room()->send_cond("$p blocks $c's attack!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
+    being->send("You block %s's strike!\n", _target_being->name());
+    _target_being->send("%s blocks your strike!\n", being->name());
+    being->room()->send_cond("$a blocks $c's strike!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
     return true;
   }
 
@@ -59,7 +67,6 @@ bool ParrySkill::execute(Being* being) const {
   Item* primary   = being->primary();
   Item* secondary = being->secondary();
   Item* weapon    = nullptr;
-  Ability* skill  = nullptr;
 
   if (_target_being == nullptr) {
     ERROR(being, "parry without target")
@@ -82,9 +89,9 @@ bool ParrySkill::execute(Being* being) const {
   if (Math::percent_chance(40)) {
     being->send("You parry %s's attack with %s!\n", _target_being->name(), weapon->name());
     _target_being->send("%s parries your attack with %s!\n", being->name(), weapon->name());
-    being->room()->send_cond("$p parries $c's attack with $O!\n", being, _target_being, weapon, Room::TO_NOTVICT, true);
+    being->room()->send_cond("$a parries $c's attack with $O!\n", being, _target_being, weapon, Room::TO_NOTVICT, true);
     // Should we riposte?
-    if ((skill = being->learned().find_skill(RIPOSTE)) != nullptr) skill->execute(being, _target_being, weapon);
+    being->invokeIfLearned(RIPOSTE, _target_being, weapon);
     return true;
   }
 
@@ -92,7 +99,6 @@ bool ParrySkill::execute(Being* being) const {
 }
 
 bool RiposteSkill::execute(Being* being) const {
-  int damage = 0;
   std::string weapon_damage;
 
   if (_target_being == nullptr) {
@@ -104,26 +110,18 @@ bool RiposteSkill::execute(Being* being) const {
     return false;
   }
 
-  if (Math::percent_chance(40)) {
-    // Damage
-    StrikeDamage strike_damage(being, _target_being);
-    if (_target_item == being->secondary()) strike_damage.offhand(true);
-    strike_damage.init();
-    damage = strike_damage.getDamage() * 0.5;
-    _target_being->takeDamage(damage, being);
-    // Output
-    weapon_damage = _target_item->weapon()->verb().string();
-    weapon_damage.append(" ").append(Display::formatDamage(damage));
-    being->send("Your riposte %s %s!\n", weapon_damage.c_str(), _target_being->name());
-    _target_being->send("%s's riposte %s you!\n", being->name(), weapon_damage.c_str());
-    being->room()->send_cond("$p's $s $C!", being, (void*)weapon_damage.c_str(), _target_being, Room::TO_NOTVICT, true);
-  }
+  // 40% chance of riposte after parry
+  if (Math::percent_chance(60)) return false;
+
+  being->send("You quickly strike back at %s!\n", _target_being->name());
+  _target_being->send("%s quickly strikes back at you!\n", being->name());
+  being->room()->send_cond("$a quickly strikes back at $c!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
+  Strike strike(being, _target_being, _target_item == being->primary());
+  strike.nesting(1);
+  strike.strike();
 
   return true;
 }
-
-// TODO - whereas riposte is a counter-strike with the same weapon as the parry, there should be a counterattack
-// skill which uses the "other" hand (either bare, or with weapon) to strike.
 
 bool DodgeSkill::execute(Being* being) const {
   if (_target_being == nullptr) {
@@ -132,9 +130,9 @@ bool DodgeSkill::execute(Being* being) const {
   }
 
   if (Math::percent_chance(40)) {
-    being->send("You dodge %s's attack!\n", _target_being->name());
-    _target_being->send("%s dodges your attack!\n", being->name());
-    being->room()->send_cond("$p dodges $c's attack!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
+    being->send("You dodge %s's strike!\n", _target_being->name());
+    _target_being->send("%s dodges your strike!\n", being->name());
+    being->room()->send_cond("$a dodges $c's strike!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
     return true;
   }
 
@@ -148,11 +146,29 @@ bool DuckSkill::execute(Being* being) const {
   }
 
   if (Math::percent_chance(40)) {
-    being->send("You duck %s's attack!\n", _target_being->name());
-    _target_being->send("%s ducks your attack!\n", being->name());
-    being->room()->send_cond("$p ducks $c's attack!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
+    being->send("You duck %s's strike!\n", _target_being->name());
+    _target_being->send("%s ducks your strike!\n", being->name());
+    being->room()->send_cond("$a ducks $c's strike!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
     return true;
   }
 
   return false;
+}
+
+bool CounterattackSkill::execute(Being* being) const {
+  if (_target_being == nullptr) {
+    ERROR(being, "counterattack without target");
+    return false;
+  }
+
+  if (Math::percent_chance(90)) return false;
+
+  being->send("You counterattack %s!\n", _target_being->name());
+  _target_being->send("%s counterattacks you!\n", being->name());
+  being->room()->send_cond("$a counterattacks $c!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
+  Strike strike(being, _target_being, true);
+  strike.nesting(1);
+  strike.strike();
+
+  return true;
 }

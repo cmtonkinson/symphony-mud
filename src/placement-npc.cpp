@@ -44,7 +44,7 @@ bool PlacementNpc::execute(std::list<Item*>& new_items, std::list<Npc*>& new_npc
       World::Instance().insert(npc);
       npc->room(room());
       room()->add(npc);
-      room()->send_cond("$p has arrived.\n", npc);
+      room()->send_cond("$a has arrived.\n", npc);
       new_npcs.push_back(npc);
       npcs_added++;
       SILLY_(0, "placement in '%s'; NPC %lu in room %lu", zone->name().c_str(), target(), room()->vnum())

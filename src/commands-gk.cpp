@@ -47,7 +47,7 @@ bool CmdGet::execute(Being* being, const std::vector<std::string>& args) {
         being->send("You can't get %s{x.\n", (*it)->identifiers().shortname().c_str());
       } else {
         being->send("You get %s.\n", (*it)->identifiers().shortname().c_str());
-        being->room()->send_cond("$p gets $o.\n", being, *it);
+        being->room()->send_cond("$a gets $o.\n", being, *it);
         being->room()->inventory().remove(*it);
         being->inventory().add(*it);
       }
@@ -72,7 +72,7 @@ bool CmdGet::execute(Being* being, const std::vector<std::string>& args) {
       container->container()->inventory().remove(*it);
       being->inventory().add(*it);
       being->send("You get %s{x from %s{x.\n", (*it)->identifiers().shortname().c_str(), container->identifiers().shortname().c_str());
-      being->room()->send_cond("$p gets $o{x from $O{x.\n", being, *it, container);
+      being->room()->send_cond("$a gets $o{x from $O{x.\n", being, *it, container);
     }
   }
 
@@ -113,7 +113,7 @@ bool CmdGive::execute(Being* being, const std::vector<std::string>& args) {
       target->inventory().add(item);
       being->send("You give %s to %s.\n", item->identifiers().shortname().c_str(), target->identifiers().shortname().c_str());
       target->send("%s gives you %s.\n", target->seeName(being, true).c_str(), item->identifiers().shortname().c_str());
-      being->room()->send_cond("$p gives $c $O.\n", being, target, item, Room::TO_NOTVICT);
+      being->room()->send_cond("$a gives $c $O.\n", being, target, item, Room::TO_NOTVICT);
     }
   }
 
@@ -226,7 +226,7 @@ bool CmdGroup::execute(Being* being, const std::vector<std::string>& args) {
       (*iter)->group(new_group);
       (*iter)->send("You are now grouped with %s.\n", leader->identifiers().shortname().c_str());
       leader->send("%s has joined your group.\n", (*iter)->identifiers().shortname().c_str());
-      (*iter)->room()->send_cond("$p is now grouped with $c.\n", *iter, leader, NULL, Room::TO_NOTVICT);
+      (*iter)->room()->send_cond("$a is now grouped with $c.\n", *iter, leader, NULL, Room::TO_NOTVICT);
     }
   }
   return true;
@@ -515,7 +515,7 @@ bool CmdIload::execute(Being* being, const std::vector<std::string>& args) {
       World::Instance().insert(item);
       being->inventory().add(item);
       being->send("You load %s.", item->identifiers().shortname().c_str());
-      being->room()->send_cond("$p has created $o.", being, item);
+      being->room()->send_cond("$a has created $o.", being, item);
       return true;
     }
   }
@@ -538,7 +538,7 @@ bool CmdIncognito::execute(Being* being, const std::vector<std::string>& args) {
     avatar()->send("You disappear.");
   } else {
     avatar()->send("You fade into existence.");
-    avatar()->room()->send_cond("$p fades into existence.", avatar());
+    avatar()->room()->send_cond("$a fades into existence.", avatar());
   }
   return true;
 }
@@ -610,7 +610,7 @@ bool CmdKill::execute(Being* being, const std::vector<std::string>& args) {
   } else {
     being->send("You attack %s!\n", target->name());
     target->send("%s attacks you!\n", being->name());
-    being->room()->send_cond("$p attacks $c!\n", being, target, NULL, Room::TO_NOTVICT);
+    being->room()->send_cond("$a attacks $c!\n", being, target, NULL, Room::TO_NOTVICT);
     being->add_opponent(target);
   }
   return true;

@@ -208,7 +208,7 @@ bool CmdNload::execute(Being* being, const std::vector<std::string>& args) {
       npc->room(being->room());
       npc->animate();
       being->send("You load %s.", npc->identifiers().shortname().c_str());
-      being->room()->send_cond("$p has created $c.", being, npc);
+      being->room()->send_cond("$a has created $c.", being, npc);
       return true;
     }
   }
@@ -336,7 +336,7 @@ bool CmdOpen::execute(Being* being, const std::vector<std::string>& args) {
 
   exit->flag(EXIT_CLOSED, false);
   being->send("You open the door.");
-  being->room()->send("$p opened the way $e.", being, exit);
+  being->room()->send("$a opened the way $e.", being, exit);
   if ((inv = exit->targetRoom()->exit(Exit::inverse(exit->direction().number()))) != NULL) {
     exit->targetRoom()->send("The way $e has been opened.", NULL, inv);
   }
@@ -380,7 +380,7 @@ bool CmdPeace::execute(Being* being, const std::vector<std::string>& args) {
     for (std::list<Being*>::iterator iter = avatar()->room()->beings().begin(); iter != avatar()->room()->beings().end(); ++iter) {
       (*iter)->peace();
     }
-    avatar()->room()->send_cond("$p has imposed peace here.\n", being);
+    avatar()->room()->send_cond("$a has imposed peace here.\n", being);
     avatar()->send("You have imposed peace here.\n");
   } else {
     for (std::set<Being*>::iterator iter = World::Instance().getBeings().begin(); iter != World::Instance().getBeings().end(); ++iter) {
@@ -584,7 +584,7 @@ bool CmdPurge::execute(Being* being, const std::vector<std::string>& args) {
   r->inventory().purgeItems();
   // some flair...
   being->send("You've purged the room.");
-  being->room()->send_cond("$p has purged the room.", being);
+  being->room()->send_cond("$a has purged the room.", being);
   return true;
 }
 
@@ -625,7 +625,7 @@ bool CmdPut::execute(Being* being, const std::vector<std::string>& args) {
       being->inventory().remove(*it);
       container->container()->inventory().add(*it);
       being->send("You put %s{x in %s{x.\n", (*it)->identifiers().shortname().c_str(), container->identifiers().shortname().c_str());
-      being->room()->send_cond("$p puts $o{x in $O{x.\n", being, *it, container);
+      being->room()->send_cond("$a puts $o{x in $O{x.\n", being, *it, container);
       return true;
     }
   }
