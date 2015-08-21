@@ -72,6 +72,10 @@ Leave a corpse with loot.
 
 Is there anything worthwhile from the character creation sequence that can be used to make the TNL calculations dynamic?
 
+## Item::extra()
+
+Abstract `base` and `type` into a common base class for Item subtype objects.
+
 ## Npc::auto_move()
 
 Implement implement some concept of "momentum" so that the same Npc doesn't keep flipping in and out of the same two or three Rooms over and over again in a huge Zone.

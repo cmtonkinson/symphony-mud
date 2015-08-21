@@ -139,6 +139,11 @@ class ItemTrash {
 ///////////////////////////////////////////////////////////////////////////////
 class ItemWeapon {
   public:
+    static const unsigned DAMAGE_BASH   = 1;
+    static const unsigned DAMAGE_SLASH  = 2;
+    static const unsigned DAMAGE_PIERCE = 3;
+    static const unsigned DAMAGE_EXOTIC = 4;
+
     ItemWeapon(const Item* base);
     ItemWeapon(const Item* base, const ItemWeapon& ref);
     ~ItemWeapon(void);
@@ -168,6 +173,9 @@ class ItemWeapon {
     // ItemWeapon. Returns between 1.0 and 5.0 with 1.0 being "short" range
     // and 5.0 being "long range."
     static double relativeRange(const ItemWeapon* weapon);
+
+    // What kind of damage is being done? (inferred from the verb)
+    static unsigned damageType(const ItemWeapon* weapon);
 
   private:
     WeaponType  _type;

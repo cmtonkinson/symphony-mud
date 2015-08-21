@@ -37,7 +37,7 @@ void StrikeDamage::init(void) {
 
 // Determine whether or not the attacker will land a hit.
 bool StrikeDamage::hit(void) {
-  int dex_diff = 0;
+  double dex_diff = 0.0;
 
   // You miss less as your hit bonus increases.
   if (Math::rand(1, MAX(20, _attacker->hitBonus())) == 1) {
@@ -45,8 +45,8 @@ bool StrikeDamage::hit(void) {
   }
 
   // You miss less as your dexterity increases relative to your opponent.
-  dex_diff = _attacker->dexterity() - _defender->dexterity();
-  if (Math::rand(1, 50) < MAX(1, dex_diff)) {
+  dex_diff = _attacker->dexterity() / _defender->dexterity();
+  if (Math::percent_chance(pow(2.0, dex_diff))) {
     return false;
   }
 
@@ -122,11 +122,29 @@ void StrikeDamage::calculateAdjustments(void) {
 
 // Calculate how much damage the defender can waive.
 void StrikeDamage::calculateDefense(void) {
-  _defense = 0; // ??
+  int type_defense = 0;
 
-  // constitution
-  // armor
-  // armor vs weapon (type, composition)
+  // Start from scratch.
+  _defense = 0;
+
+  // Higher constitution will significantly lower damage taken.
+  _defense += _base * _defender->constitutionPercent() / 5;
+
+  // Dexterity helps you to absorb the blow - so it comes with a bonus.
+  _defense += _base * _defender->dexterityPercent() / 10;
+
+  // Armor has a direct correlation to damage avoided.
+  _defense += _defender->armor() / 8;
+
+  // Specific armor classes have a greater correlation to damage avoided.
+  switch (ItemWeapon::damageType(_weapon)) {
+    case ItemWeapon::DAMAGE_BASH:   type_defense += _defender->bash();    break;
+    case ItemWeapon::DAMAGE_SLASH:  type_defense += _defender->slash();   break;
+    case ItemWeapon::DAMAGE_PIERCE: type_defense += _defender->pierce();  break;
+    case ItemWeapon::DAMAGE_EXOTIC: type_defense += _defender->exotic();  break;
+  }
+  _defense += type_defense / 4;
+
   // armor of specific item hit
   // TODO - item durability
 

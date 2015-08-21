@@ -176,7 +176,7 @@ double ItemWeapon::relativeSize(const ItemWeapon* weapon) {
     case WEAP_WHIP:         return 2.0;
     default:
       ERROR_(nullptr, "ItemWeapon::relativeSize() - invalid weapon type (%d) for vnum %lu '%s'", weapon->type().number(), weapon->base()->vnum(), weapon->base()->name());
-      return 3.0;
+      return Being::AFFINITY_DEFAULT;
   }
 }
 
@@ -195,6 +195,41 @@ double ItemWeapon::relativeRange(const ItemWeapon* weapon) {
     case WEAP_WHIP:         return 4.0;
     default:
       ERROR_(nullptr, "ItemWeapon::relativeRange() - invalid weapon type (%d) for vnum %lu '%s'", weapon->type().number(), weapon->base()->vnum(), weapon->base()->name());
-      return 3.0;
+      return Being::AFFINITY_DEFAULT;
+  }
+}
+
+unsigned ItemWeapon::damageType(const ItemWeapon* weapon) {
+  switch (weapon->verb().number()) {
+    case DAM_BASH:
+    case DAM_BEATING:
+    case DAM_CRUSH:
+    case DAM_POUND:
+    case DAM_PUNCH:
+    case DAM_SLAM:
+    case DAM_SMASH:
+    case DAM_STRIKE:
+    case DAM_THWACK:
+      return DAMAGE_BASH;
+    case DAM_CHOP:
+    case DAM_CLEAVE:
+    case DAM_CUT:
+    case DAM_HACK:
+    case DAM_SLASH:
+    case DAM_SLICE:
+      return DAMAGE_SLASH;
+    case DAM_BITE:
+    case DAM_PIERCE:
+    case DAM_PRICK:
+    case DAM_PUNCTURE:
+    case DAM_STAB:
+    case DAM_STING:
+    case DAM_THRUST:
+      return DAMAGE_PIERCE;
+    case DAM_WRATH:
+      return DAMAGE_EXOTIC;
+    default:
+      ERROR_(nullptr, "ItemWeapon::damageType() - invalid weapon verb (%d) for vnum %lu '%s'", weapon->verb().number(), weapon->base()->vnum(), weapon->base()->name());
+      return DAMAGE_EXOTIC;
   }
 }
