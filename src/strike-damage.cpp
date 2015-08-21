@@ -1,9 +1,9 @@
 
 #include <algorithm>
-#include "strike-damage.hpp"
 #include "being.hpp"
 #include "item-types.hpp"
 #include "os.hpp"
+#include "strike-damage.hpp"
 
 StrikeDamage::StrikeDamage(Being* attacker, Being* defender) {
   _attacker   = attacker;

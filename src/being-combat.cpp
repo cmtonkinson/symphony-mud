@@ -1,6 +1,5 @@
 
 #include "ability.hpp"
-#include "strike-damage.hpp"
 #include "being.hpp"
 #include "command.hpp"
 #include "display.hpp"
@@ -8,6 +7,7 @@
 #include "os.hpp"
 #include "skills.hpp"
 #include "stats.hpp"
+#include "strike-damage.hpp"
 #include "world.hpp"
 
 void Being::formGroup(void) {
