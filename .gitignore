@@ -1,5 +1,3 @@
-.imdoneignore
-.imdone/
 .vagrant/
 bin/symphony
 /obj/*
