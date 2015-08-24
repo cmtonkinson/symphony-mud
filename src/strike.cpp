@@ -227,8 +227,7 @@ bool Strike::avoid(void) {
   Ability* skill = nullptr;
   std::vector<Ability*> evasion_skills;
 
-  // Small chance we even attempt evasion.
-  if (Math::percent_chance(70)) return false;
+  if (Math::percent_chance(60)) return false;
 
   // What evasion methods are available?
   if ((skill = _defender->learned().find_skill(DODGE)) != nullptr) evasion_skills.push_back(skill);
