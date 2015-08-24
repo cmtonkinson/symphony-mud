@@ -1,10 +1,11 @@
 
-#include "zone.hpp"
 #include "display.hpp"
 #include "exit.hpp"
+#include "os.hpp"
 #include "placement.hpp"
 #include "terrain-table.hpp"
 #include "world.hpp"
+#include "zone.hpp"
 
 Room::Room(void): _inventory(&Identifiers::longname) {
   for (unsigned u = 0; u < 6; ++u) _exits[u] = nullptr;
@@ -80,7 +81,7 @@ void Room::executePlacements(void) {
 void Room::send(std::string format, Being* being, const void* arg1, const void* arg2, unsigned long target) {
   std::string message;
 
-  format = Regex::trim(format).append(1, '\n');
+  format = Regex::rtrim(format).append(1, '\n');
   for (std::list<Being*>::iterator c_it = beings().begin(); c_it != beings().end(); ++c_it) {
     // Skip if the target is wrong...
     if  (   (target == TO_BEING  && *c_it != being)
@@ -98,7 +99,7 @@ void Room::send(std::string format, Being* being, const void* arg1, const void* 
 void Room::send_cond(std::string format, Being* being, const void* arg1, const void* arg2, unsigned long target, bool audible) {
   std::string message;
 
-  format = Regex::trim(format).append(1, '\n');
+  format = Regex::rtrim(format).append(1, '\n');
   for (std::list<Being*>::iterator c_it = beings().begin(); c_it != beings().end(); ++c_it) {
     // Skip if the target is wrong...
     if  (   (target == TO_BEING  && *c_it != being)
@@ -113,6 +114,20 @@ void Room::send_cond(std::string format, Being* being, const void* arg1, const v
       (*c_it)->send(Display::formatAction(format.c_str(), being, arg1, arg2, *c_it));
     }
   }
+  return;
+}
+
+void Room::indented_send(unsigned spaces, std::string format, Being* being, const void* arg1, const void* arg2, unsigned long target) {
+  std::string padding;
+  for (unsigned u = 0; u < spaces; ++u) padding.append(" ");
+  send(padding + format, being, arg1, arg2, target);
+  return;
+}
+
+void Room::indented_send_cond(unsigned spaces, std::string format, Being* being, const void* arg1, const void* arg2, unsigned long target, bool audible) {
+  std::string padding;
+  for (unsigned u = 0; u < spaces; ++u) padding.append(" ");
+  send_cond(padding + format, being, arg1, arg2, target, audible);
   return;
 }
 
@@ -141,7 +156,7 @@ void Room::destroy(void) {
   for (auto iter : placements()) iter->destroy();
   // Make sure the Room is empty first.
   if (!clear()) {
-    fprintf(stderr, "Couldn't clear() Room #%lu during destruction.\n", vnum());
+    ERROR_(nullptr, "Couldn't clear() Room #%lu during destruction.\n", vnum());
     return; // shouldn't delete if it couldn't be clear()ed
   }
   // Self-delete

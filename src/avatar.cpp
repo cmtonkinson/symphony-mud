@@ -284,6 +284,29 @@ void Avatar::send(const char* format, ...) {
   return;
 }
 
+// easy wrapper - just prepend the spaces and proxy
+void Avatar::indentedSend(unsigned spaces, std::string message) {
+  std::string padding;
+  for (unsigned u = 0; u < spaces; ++u) padding.append(" ");
+  send(padding + message);
+  return;
+}
+
+// more difficult wrapper - can't proxy variable arguments directly
+void Avatar::indentedSend(unsigned spaces, const char* format, ...) {
+  std::string padding;
+  for (unsigned u = 0; u < spaces; ++u) padding.append(" ");
+
+  char buffer[Socket::MAX_BUFFER];
+  va_list args;
+  va_start(args, format);
+  vsprintf(buffer, format, args);
+  va_end(args);
+
+  processOutput(padding + buffer);
+  return;
+}
+
 void Avatar::room(Room* room) {
   CmdExit exit;
   std::vector<std::string> exit_args(1);

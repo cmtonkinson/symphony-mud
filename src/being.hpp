@@ -19,6 +19,7 @@
 #include "klass.hpp"
 #include "math.hpp"
 #include "modifier.hpp"
+#include "strike.hpp"
 
 class Ability;
 class Avatar;
@@ -248,7 +249,11 @@ class Being {
     const Currency& money(void) const             { return _money; }
 
     // combat
-    std::set<Being*>&  opponents(void)                               { return _opponents; }
+    std::set<Being*>&   opponents(void)                   { return _opponents; }
+    void                currentStrike(Strike* ptr)        { _current_strike = ptr; }
+    Strike*             currentStrike(void)               { return _current_strike; }
+    void                lastStrike(const Strike& ref)     { _last_strike = ref; }
+    Strike              lastStrike(void)                  { return _last_strike; }
 
     // Public static methods...
     static unsigned short       stringToAttribute(const std::string& name);
@@ -385,8 +390,10 @@ class Being {
 
     virtual std::string           printInformation(void) const = 0;
 
-    virtual void                send(std::string message)       { return; }
-    virtual void                send(const char* format, ...)   { return; }
+    virtual void                send(std::string message)                               { return; }
+    virtual void                send(const char* format, ...)                           { return; }
+    virtual void                indentedSend(unsigned spaces, std::string message)      { return; }
+    virtual void                indentedSend(unsigned spaces, const char* format, ...)  { return; }
 
   private:
     // basics...
@@ -442,6 +449,8 @@ class Being {
     // Combat
     std::set<Being*>            _opponents;
     Being*                      _target;
+    Strike*                     _current_strike;  // Pointer because it needs to be mutable
+    Strike                      _last_strike;     // Object because it's only here for reference
     Job*                        _next_attack;
     AbilityTable                _learned;
     std::map<Ability*,unsigned> _ability_mastery;

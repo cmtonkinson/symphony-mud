@@ -79,8 +79,8 @@ bool Being::attack(Job* job) {
   }
   // Make the strike. Second, third, and fourth strike cascade - e.g. if the first strike didn't
   // succeed, then don't even attempt a second.
-  Strike primary(this, _target, true);
-  strike_status = primary.strike();
+  Strike first_strike(this, _target, true);
+  strike_status = first_strike.strike();
   if (strike_status) strike_status = invokeIfLearned(SECOND_STRIKE, _target);
   if (strike_status) strike_status = invokeIfLearned(THIRD_STRIKE, _target);
   if (strike_status) strike_status = invokeIfLearned(FOURTH_STRIKE, _target);
@@ -117,47 +117,6 @@ Being* Being::acquireTarget(void) {
   return nullptr;
 }
 
-// secondary should only be set while dual wielding, during the off-hand strike
-// bool Being::strike(Item* secondary) {
-//   int damage = 0;
-//   std::string weapon_damage;
-//   const Item* weapon = nullptr;
-//   StrikeDamage strike_damage(this, _target);
-//
-//   // Is the target still alive?
-//   if (_target->isDead()) return false;
-//   // Can we even move?
-//   if (!deplete_stamina(1)) return false;
-//   // Is this an offhand strike?
-//   if (secondary != nullptr) strike_damage.offhand(true);
-//   strike_damage.init();
-//   // Get the correct verb.
-//   if (!strike_damage.unarmed()) weapon = strike_damage.weapon()->base();
-//   weapon_damage = (weapon && weapon->isWeapon()) ? weapon->weapon()->verb().string() : "strike";
-//   // Is it a good hit?
-//   if (!strike_damage.hit()) {
-//     send("Your %s misses %s!\n", weapon_damage.c_str(), _target->name());
-//     _target->send("%s's %s misses you!\n", name(), weapon_damage.c_str());
-//     room()->send_cond("$a's $s misses $C!", this, weapon_damage.c_str(), _target, Room::TO_NOTVICT);
-//     return false;
-//   }
-//   // Will we land it?
-//   // Note: return true because e.g. a block doesn't preclude a second strike
-//   if (_target->evade(this)) return true;
-//   // Calculate the damage.
-//   damage = strike_damage.getDamage();
-//   // Tell the world.
-//   weapon_damage.append(" ").append(Display::formatDamage(damage));
-//   send("Your %s %s!\n", weapon_damage.c_str(), _target->name());
-//   _target->send("%s's %s you!\n", name(), weapon_damage.c_str());
-//   room()->send_cond("$a's $s $C!", this, (void*)weapon_damage.c_str(), _target, Room::TO_NOTVICT, true);
-//   // Deal the pain.
-//   _target->takeDamage(damage, this);
-//   // Can we hit them again?
-//   if (secondary == nullptr) invokeIfLearned(DUAL_WIELD);
-//   return true;
-// }
-
 bool Being::evade(Being* striker) {
   Ability* skill = nullptr;
   std::vector<Ability*> evasion_skills;
@@ -183,7 +142,6 @@ void Being::takeDamage(int damage, Being* damager) {
   SILLY_(this, "took %d damage from %s", damage, damager->ident().c_str());
   if (damager) add_opponent(damager);
   health(health() - damage);
-  deplete_stamina(1);
   if (level() > DEMIGOD && health() < 1) health(1);
   if (health() < 1) die(damager);
   return;

@@ -12,37 +12,25 @@ Strike::Strike(void):
     _defender(nullptr),
     _weapon(nullptr),
     _primary(true),
-    _unarmed(false),
+    _unarmed(true),
+    _status(0),
+    _sequence_number(0),
     _base(0),
     _adjustment(0),
-    _defense(0),
-    _nesting(0) {
+    _defense(0) {
+  _init();
   return;
 }
 
-Strike::Strike(Being* attacker, Being* defender, bool primary):
-    _attacker(attacker),
-    _defender(defender),
-    _primary(primary),
-    _base(0),
-    _adjustment(0),
-    _defense(0),
-    _nesting(0) {
-  weapon(primary ? _attacker->primary() : _attacker->secondary());
-  unarmed(weapon() == nullptr);
+Strike::Strike(Being* attacker_, Being* defender_, bool primary): Strike() {
+  attacker(attacker_);
+  defender(defender_);
+  _init();
   return;
 }
 
-Strike::Strike(const Strike& ref):
-    _attacker(ref.attacker()),
-    _defender(ref.defender()),
-    _weapon(ref.weapon()),
-    _primary(ref.primary()),
-    _unarmed(ref.unarmed()),
-    _base(ref.base()),
-    _adjustment(ref.adjustment()),
-    _defense(ref.defense()),
-    _nesting(ref.nesting() + 1) {
+Strike::Strike(const Strike& ref) {
+  *this = ref;
   return;
 }
 
@@ -50,11 +38,24 @@ Strike::~Strike(void) {
   return;
 }
 
+Strike& Strike::operator = (const Strike& ref) {
+  _attacker        = ref.attacker();
+  _defender        = ref.defender();
+  _weapon          = ref.weapon();
+  _primary         = ref.primary();
+  _unarmed         = ref.unarmed();
+  _status          = ref.status();
+  _sequence_number = ref.sequenceNumber();
+  _base            = ref.base();
+  _adjustment      = ref.adjustment();
+  _defense         = ref.defense();
+  return *this;
+}
+
 void Strike::weapon(Item* weapon) {
   if (weapon != nullptr && weapon->isWeapon()) _weapon = weapon->weapon();
   return;
 }
-
 
 // Determine whether or not the attacker will land a hit.
 bool Strike::willMiss(void) {
@@ -158,13 +159,15 @@ void Strike::calculateDefense(void) {
   _defense += _defender->armor() / 8;
 
   // Specific armor classes have a greater correlation to damage avoided.
-  switch (ItemWeapon::damageType(_weapon)) {
-    case ItemWeapon::DAMAGE_BASH:   type_defense += _defender->bash();    break;
-    case ItemWeapon::DAMAGE_SLASH:  type_defense += _defender->slash();   break;
-    case ItemWeapon::DAMAGE_PIERCE: type_defense += _defender->pierce();  break;
-    case ItemWeapon::DAMAGE_EXOTIC: type_defense += _defender->exotic();  break;
+  if (!_unarmed) {
+    switch (ItemWeapon::damageType(_weapon)) {
+      case ItemWeapon::DAMAGE_BASH:   type_defense += _defender->bash();    break;
+      case ItemWeapon::DAMAGE_SLASH:  type_defense += _defender->slash();   break;
+      case ItemWeapon::DAMAGE_PIERCE: type_defense += _defender->pierce();  break;
+      case ItemWeapon::DAMAGE_EXOTIC: type_defense += _defender->exotic();  break;
+    }
+    _defense += type_defense / 4;
   }
-  _defense += type_defense / 4;
 
   // armor of specific item hit
   // TODO - item durability
@@ -174,51 +177,53 @@ void Strike::calculateDefense(void) {
 
 bool Strike::strike(void) {
   int damage = 0;
+  unsigned spaces = sequenceNumber() * 2;
   std::string weapon_string;
   std::string damage_string;
-  std::string indent;
-  Ability* skill = nullptr;
 
-  // Prevent infinite combat sequences (by bug or by chance).
-  if (_nesting > SEQUENCE_LIMIT) return false;
+  // Zombie warfare? No thanks, guy.
+  if (_attacker->isDead() || _defender->isDead()) return false;
 
   // What is the correct verb for the strike?
   weapon_string = _unarmed ? "strike" : _weapon->verb().string();
-  // How far indented should the display be?
-  for (int i = 0; i < _nesting; ++i) indent.append("  ");
 
+  // Prevent infinite combat sequences (by bug or by chance).
+  if (_sequence_number > SEQUENCE_LIMIT) return false;
   // Check for stamina.
   if (!_attacker->deplete_stamina(1)) return false;
 
+  _attacker->currentStrike(this);
+
   // Will we miss?
   if (willMiss()) {
-    _attacker->send("%sYour %s misses %s!\n", indent.c_str(), weapon_string.c_str(), _defender->name());
-    _defender->send("%s%s's %s misses you!\n", indent.c_str(), _attacker->name(), weapon_string.c_str());
-    _defender->room()->send_cond("$a's $s misses $C!", _attacker, weapon_string.c_str(), _defender, Room::TO_NOTVICT);
     _attacker->deplete_stamina(1);
-    return true;
-  }
-
+    _status &= MISSED;
+    _attacker->indentedSend(spaces, "Your %s misses %s!\n", weapon_string.c_str(), _defender->name());
+    _defender->indentedSend(spaces, "%s's %s misses you!\n", _attacker->name(), weapon_string.c_str());
+    _defender->room()->indented_send_cond(spaces, "$a's $s misses $C!", _attacker, weapon_string.c_str(), _defender, Room::TO_NOTVICT);
   // Will they avoid the strike somehow?
-  if (evade()) return false;
-
+  } else if (avoid()) {
+    _status &= AVOIDED;
   // What's the damage?
-  damage = getDamage();
-  damage_string = weapon_string.append(" ").append(Display::formatDamage(damage));
-  _attacker->send("%sYour %s %s!\n", indent.c_str(), damage_string.c_str(), _defender->name());
-  _defender->send("%s%s's %s you!\n", indent.c_str(), _attacker->name(), damage_string.c_str());
-  _defender->room()->send_cond("$a's $s $C!", _attacker, (void*)damage_string.c_str(), _defender, Room::TO_NOTVICT, true);
-  _defender->takeDamage(damage, _attacker);
+  } else {
+    damage = getDamage();
+    damage_string = weapon_string.append(" ").append(Display::formatDamage(damage));
+    _status &= HIT;
+    _attacker->indentedSend(spaces, "Your %s %s!\n", damage_string.c_str(), _defender->name());
+    _defender->indentedSend(spaces, "%s's %s you!\n", _attacker->name(), damage_string.c_str());
+    _defender->room()->indented_send_cond(spaces, "$a's $s $C!", _attacker, (void*)damage_string.c_str(), _defender, Room::TO_NOTVICT, true);
+    _defender->takeDamage(damage, _attacker);
 
-  // Is there a counter-offensive?
-  if ((skill = _defender->learned().find_skill(COUNTERATTACK)) != nullptr) {
-    skill->invoke(_defender, _attacker);
+    // Is there a counter-offensive?
+    _defender->invokeIfLearned(COUNTERATTACK, _attacker);
   }
 
+  _attacker->currentStrike(nullptr);
+  _attacker->lastStrike(*this);
   return true;
 }
 
-bool Strike::evade(void) {
+bool Strike::avoid(void) {
   Ability* skill = nullptr;
   std::vector<Ability*> evasion_skills;
 
@@ -239,6 +244,11 @@ bool Strike::evade(void) {
   return skill->invoke(_defender, _attacker);
 }
 
+bool Strike::reactTo(const Strike* antecedent) {
+  _sequence_number = antecedent->sequenceNumber() + 1;
+  return strike();
+}
+
 // Calculate the time (from now in seconds) when to schedule the next attack.
 unsigned Strike::timeUntilNext(void) {
   double defalt = 2.0;
@@ -254,4 +264,12 @@ unsigned Strike::timeUntilNext(void) {
   }
 
   return ROUND_2_UINT(defalt + modify);
+}
+
+// private
+void Strike::_init(void) {
+  if (_attacker == nullptr) return;
+  weapon(primary() ? _attacker->primary() : _attacker->secondary());
+  unarmed(weapon() == nullptr);
+  return;
 }

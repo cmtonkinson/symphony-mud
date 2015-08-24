@@ -57,6 +57,9 @@ class Avatar: public Being {
 
     virtual void    send(std::string message);
     virtual void    send(const char* format, ...);
+    virtual void    indentedSend(unsigned spaces, std::string message);
+    virtual void    indentedSend(unsigned spaces, const char* format, ...);
+
     time_t          secondsLoggedOn(void) const         { return time(NULL) - _loggedOn; }
     std::string     stringLoggedOn(void) const;
     bool            hasInput(void);

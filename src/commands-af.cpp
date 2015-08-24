@@ -250,7 +250,7 @@ bool CmdCast::execute(Being* being, const std::vector<std::string>& args) {
   }
 
   if (args.size() == 1 && !spell->target_none()) {
-    being->send("a Where are you pointing that thing?");
+    being->send("Where are you pointing that thing?");
     return false;
   }
 
@@ -259,7 +259,7 @@ bool CmdCast::execute(Being* being, const std::vector<std::string>& args) {
       case Ability::TARGET_ANY:
         if ((target_being = being->findBeing(args[1])) == nullptr) {
           if ((target_item = being->findItem(args[1])) == nullptr) {
-            being->send("b Where are you pointing that thing?");
+            being->send("Where are you pointing that thing?");
             return false;
           }
         }
