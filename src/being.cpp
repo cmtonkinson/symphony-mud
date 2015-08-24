@@ -20,7 +20,6 @@
 
 Being::Being(void):
     _inventory(&Identifiers::shortname) {
-  ID(0);
   room(NULL);
   position().set(STANDING);
   action().set(0);
@@ -80,7 +79,6 @@ Being::Being(const Being& ref):
     _gender(ref.gender()),
     _race(ref.race()),
     _pClass(ref.pClass()) {
-  ID(ref.ID());
   level(ref.level());
   room(NULL);
   for (std::list<Modifier*>::const_iterator it = ref.modifiers().begin(); it != ref.modifiers().end(); ++it) {

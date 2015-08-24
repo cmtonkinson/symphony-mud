@@ -86,16 +86,14 @@ class World {
 
     // Avatars (these should be deprecated soon)
     void                  updateByName(Avatar* avatar);
-    Avatar*               findAvatar(const unsigned long& ID);
     bool                  removeAvatar(const std::string& name);
 
     // Zones
     void                  loadZones(void);
     void                  insert(Zone* zone);
     void                  remove(Zone* zone);
-    Zone*                 findZone(const unsigned long& ID);
+    Zone*                 findZone(std::string name);
     Zone*                 lookup(const unsigned long& vnum);
-    unsigned long         nextZoneID(void) const;
 
     void                  loadDisabledCommands(void);
 

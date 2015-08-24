@@ -1,7 +1,6 @@
 # Generic features, concepts, and pipe dreams
 
 ## Combat, Abilities
-  * defense calculations
   * crafts
   * languages
   * regeneration

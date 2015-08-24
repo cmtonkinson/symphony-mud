@@ -412,15 +412,6 @@ bool World::transport(Being* being, const unsigned long& vnum) {
 }
 
 /************************************************************ AVATARS ************************************************************/
-Avatar* World::findAvatar(const unsigned long& ID) {
-  for (std::map<std::string,Avatar*>::iterator it = getAvatars().begin(); it != getAvatars().end(); ++it) {
-    if (it->second->isConnected() && it->second->ID() == ID) {
-      return it->second;
-    }
-  }
-  return NULL;
-}
-
 bool World::removeAvatar(const std::string& name) {
   for (std::map<std::string,Avatar*>::iterator it = getAvatars().begin(); it != getAvatars().end(); ++it) {
     if (it->first == name) {
@@ -448,10 +439,11 @@ void World::remove(Zone* zone) {
   return;
 }
 
-Zone* World::findZone(const unsigned long& ID) {
-  for (std::set<Zone*,zone_comp>::iterator it = getZones().begin(); it != getZones().end(); ++it) {
-    if ((*it)->ID() == ID) {
-      return *it;
+Zone* World::findZone(std::string name) {
+  name = Regex::lower(name);
+  for (auto iter : getZones()) {
+    if (Regex::strPrefix(name, Regex::lower(iter->name()))) {
+      return iter;
     }
   }
   return NULL;
@@ -464,16 +456,6 @@ Zone* World::lookup(const unsigned long& vnum) {
     }
   }
   return NULL;
-}
-
-unsigned long World::nextZoneID(void) const {
-  unsigned long nextID = 0;
-  for (auto iter : getZones()) {
-    if (iter->ID() > nextID) {
-      nextID = iter->ID();
-    }
-  }
-  return nextID + 1;
 }
 
 void World::loadDisabledCommands(void) {

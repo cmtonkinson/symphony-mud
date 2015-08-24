@@ -31,9 +31,9 @@ bool ZCmdDelete::execute(Being* being, const std::vector<std::string>& args) {
   exit.avatar(avatar());
   exit.execute(being, exit_args);
   zone->destroy();
-  avatar()->send("\nYou've deleted Zone %lu.\n", zone->ID());
+  avatar()->send("\nYou've deleted '%s.'\n", zone->ident());
 
-  INFO_(being, "zone '%s' deleted", zone->name().c_str())
+  INFO_(being, "zone '%s' deleted", zone->ident());
   return true;
 }
 
@@ -59,7 +59,7 @@ bool ZCmdInformation::execute(Being* being, const std::vector<std::string>& args
     }
   }
 
-  sprintf(buffer, "ZoneID: {y%lu{x\nFirst vnum: {y%lu{x\nLast vnum: {y%lu{x\nDefault terrain: {y%s{x\nPermission: %s", zone->ID(), zone->low(), zone->high(), zone->terrain()->name().c_str(), names.c_str());
+  sprintf(buffer, "First vnum: {y%lu{x\nLast vnum: {y%lu{x\nDefault terrain: {y%s{x\nPermission: %s", zone->low(), zone->high(), zone->terrain()->name().c_str(), names.c_str());
   output.append(buffer);
 
   avatar()->send(output);
@@ -78,8 +78,13 @@ bool ZCmdName::execute(Being* being, const std::vector<std::string>& args) {
   Avatar* avatar = (Avatar*)being;
   Zone* zone = avatar->zedit();
 
+  if (World::Instance().findZone(args[0])) {
+    avatar->send("Name already taken.");
+    return false;
+  }
+
   zone->name(args[0].c_str());
-  avatar->send("You've reset zone %d's name to \"{W%s{x\"!", zone->ID(), zone->name().c_str());
+  avatar->send("You've reset the zone name to \"{W%s{x\"!", zone->name().c_str());
 
   return true;
 }

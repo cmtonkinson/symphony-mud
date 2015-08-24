@@ -31,8 +31,6 @@ class Room {
     ~Room(void);
 
     // Public accessor methods...
-    void                          ID(unsigned long ID)                    { _ID = ID; }
-    unsigned long                 ID(void) const                          { return _ID; }
     void                          zone(Zone* zone)                        { _zone = zone; }
     Zone*                         zone(void)                              { return _zone; }
     void                          vnum(unsigned long vnum)                { _vnum = vnum; }
@@ -91,7 +89,6 @@ class Room {
     static std::string    getInformation(Room* room);
 
   private:
-    unsigned long           _ID;
     Zone*                   _zone;
     unsigned long           _vnum;
     std::string             _name;

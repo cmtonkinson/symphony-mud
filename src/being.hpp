@@ -141,8 +141,6 @@ class Being {
 
     // public accessors...
     std::vector<IOHandler*>&    IOhandlers(void)                                                { return _IOhandlers; }
-    void                        ID(const unsigned long& ID)                                     { _ID = ID; }
-    unsigned long               ID(void) const                                                  { return _ID; }
     virtual void                room(Room* room)                                                { _room = room; }
     virtual Room*               room(void) const                                                { return _room; }
     emap&                       values(void)                                                    { return _values; }
@@ -399,7 +397,6 @@ class Being {
   private:
     // basics...
     std::vector<IOHandler*>     _IOhandlers;
-    unsigned long               _ID;
     Room*                       _room;
     emap                        _values;
     Identifiers                 _identifiers;

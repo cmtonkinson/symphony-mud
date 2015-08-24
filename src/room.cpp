@@ -165,7 +165,7 @@ void Room::destroy(void) {
 }
 
 // Uses a wormhole to clear all Beings and Items from the Room,
-// moving them to the Tundra.
+// moving them to Zone::SYSTEM_ZONE.
 bool Room::clear(void) {
   // Clear Beings...
   while (beings().size()) {

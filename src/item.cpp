@@ -7,7 +7,6 @@
 
 Item::Item(void) {
   extra(NULL);
-  ID(0);
   type(Type_Undefined);
   vnum(0);
   level(1);
@@ -25,7 +24,6 @@ Item::Item(const Item& ref):
     _primary_compound(ref.compound()),
     _other_compounds(ref.composition()) {
   extra(NULL);
-  ID(ref.ID());
   type(ref.type(), ref.extra());
   vnum(ref.vnum());
   level(ref.level());

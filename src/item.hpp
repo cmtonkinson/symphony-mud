@@ -72,8 +72,6 @@ class Item {
     const char*   name(void) const  { return identifiers().shortname().c_str(); }
 
     // public accessors
-    void                        ID(unsigned long ID)                { _ID = ID; }
-    unsigned long               ID(void) const                      { return _ID; }
     void                        type(Type type);
     void                        type(Type type, void* extra_ptr);
     Type                        type(void) const                    { return _type; }
@@ -109,7 +107,6 @@ class Item {
 
   private:
     // data
-    unsigned long         _ID;
     Type                  _type;
     unsigned long         _vnum;
     FlagBank              _flags;

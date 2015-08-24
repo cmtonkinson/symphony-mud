@@ -14,8 +14,6 @@ class Exit {
     ~Exit(void);
 
     // Public accessor methods...
-    void                  ID(long ID)                     { _ID = ID; }
-    long                  ID(void) const                  { return _ID; }
     void                  targetVnum(unsigned targetVnum) { _targetVnum = targetVnum; }
     unsigned              targetVnum(void) const          { return _targetVnum; }
     void                  targetRoom(Room* targetRoom)    { _targetRoom = targetRoom; }
@@ -43,7 +41,6 @@ class Exit {
     static long           getFlagType(const std::string& flag);
 
   private:
-    long      _ID;
     unsigned  _targetVnum;
     Room*     _targetRoom;
     Direction _direction;

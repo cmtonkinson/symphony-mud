@@ -278,7 +278,7 @@ bool CmdRlist::execute(Being* being, const std::vector<std::string>& args) {
 
   output.append(" ({czone{x) [{y room{x] {gname{x\n -------------------\n");
   for (std::vector<Room*>::iterator it = rooms.begin(); it != rooms.end(); ++it) {
-    sprintf(buffer, " ({c%4lu{x) [{y%5lu{x] {g%s{x\n", (*it)->zone()->ID(), (*it)->vnum(), (*it)->name().c_str());
+    sprintf(buffer, " (%20s) [{y%5lu{x] {g%s{x\n", (*it)->zone()->ident(), (*it)->vnum(), (*it)->name().c_str());
     output.append(buffer);
   }
 

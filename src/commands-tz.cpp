@@ -332,7 +332,7 @@ bool CmdWorldSave::execute(Being* being, const std::vector<std::string>& args) {
 CmdZedit::CmdZedit(void) {
   name("zedit");
   level(Being::GOD);
-  addSyntax(1, "<zoneID>");
+  addSyntax(1, "<name>");
   addSyntax(3, "create <first vnum> <zone size>");
   brief("Launches the Zone Editor.");
   return;
@@ -364,42 +364,35 @@ bool CmdZedit::execute(Being* being, const std::vector<std::string>& args) {
     }
     for (it = World::Instance().getZones().begin(); it != World::Instance().getZones().end(); ++it) {
       if (((*it)->low() < low && low < (*it)->high()) || ((*it)->low() < high && high < (*it)->high())) {
-        avatar()->send("That would cause a vnum collision with %s (zone %lu).  Please check your numbers.", (*it)->name().c_str(), (*it)->ID());
+        avatar()->send("That would cause a vnum collision with zone %s. Please check your numbers.", (*it)->ident());
         return false;
       }
     }
     zone = new Zone(low, high);
-    zone->ID(World::Instance().nextZoneID());
-    if (!zone->ID()) {
-      avatar()->send("Something went wrong while creating the zone.");
-      ERROR_(avatar(), "failed to create a zone from %lu through %lu", zone->low(), zone->high())
-      delete zone;
-      return false;
-    }
     zone->initialize();
     avatar()->zedit(zone);
     avatar()->pushIOHandler(new ZeditIOHandler(avatar()));
-    avatar()->send("You've created a new zone (number %lu) with vnums %lu through %lu.", zone->ID(), zone->low(), zone->high());
+    avatar()->send("You've created a new zone %s.", zone->ident());
   } else if (args.size() == 1) {
     // Check for the zone...
-    if ((zone = World::Instance().findZone(estring(args[0]))) == NULL) {
+    if ((zone = World::Instance().findZone(args[0])) == nullptr) {
       avatar()->send("That zone doesn't exist.");
       return false;
     }
     // Check permissions...
-    if ((zone->ID() == 1 && avatar()->level() < Being::CREATOR) || !zone->hasPermission(avatar())) {
+    if ((zone->name() == Zone::SYSTEM_ZONE && avatar()->level() < Being::CREATOR) || !zone->hasPermission(avatar())) {
       avatar()->send("You can't edit %s.", zone->name().c_str());
       return false;
     }
     // Make sure no one else is editing the zone...
     for (auto iter : World::Instance().getAvatars()) {
       if (iter.second->mode().number() == MODE_ZEDIT && iter.second->zedit() == zone) {
-        avatar()->send("Sorry, %s is currently editing %s (zone %lu).", avatar()->seeName(((Being*)iter.second)).c_str(), zone->name().c_str(), zone->ID());
+        avatar()->send("Sorry, %s is currently editing %s.", avatar()->seeName(((Being*)iter.second)).c_str(), zone->ident());
         return false;
       }
     }
     // Send them on to the editor...
-    avatar()->send("You're editing %s (%lu).", zone->name().c_str(), zone->ID());
+    avatar()->send("You're editing %s.", zone->ident());
     avatar()->mode().set(MODE_ZEDIT);
     avatar()->zedit(zone);
     avatar()->pushIOHandler(new ZeditIOHandler(avatar()));
@@ -422,11 +415,7 @@ bool CmdZones::execute(Being* being, const std::vector<std::string>& args) {
 
   for (auto iter : World::Instance().getZones()) {
     if (avatar()->level() >= Being::DEMIGOD) {
-      if (iter->hasPermission(avatar())) {
-        sprintf(buffer, "\n ({Y%3lu{x) [ {C%4lu{x - {C%4lu{x ] {M%s{x", iter->ID(), iter->low(), iter->high(), iter->name().c_str());
-      } else {
-        sprintf(buffer, "\n ({y%3lu{x) [ {c%4lu{x - {c%4lu{x ] {m%s{x", iter->ID(), iter->low(), iter->high(), iter->name().c_str());
-      }
+      sprintf(buffer, "\n [ {C%4lu{x - {C%4lu{x ] {M%s{x", iter->low(), iter->high(), iter->name().c_str());
     } else {
       sprintf(buffer, "\n %s", iter->name().c_str());
     }

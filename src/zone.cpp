@@ -9,6 +9,8 @@
 #include "world.hpp"
 #include "zone.hpp"
 
+const char* Zone::SYSTEM_ZONE = "The Tundra";
+
 Zone::Zone(void) {
   return;
 }
@@ -96,6 +98,12 @@ void Zone::insert(Npc* npc) {
   return;
 }
 
+const char* Zone::ident(void) const {
+  std::string dest;
+  dest.append("{M").append(name()).append("{x [{C").append(estring(low())).append("{x-{C").append(estring(high())).append("{x]");
+  return dest.c_str();
+}
+
 unsigned long Zone::lowestAvailableRoom(void) {
   unsigned long vnum = 0;
 
@@ -113,7 +121,7 @@ void Zone::reset(void) {
   for (std::map<unsigned long,Room*>::iterator it = rooms().begin(); it != rooms().end(); ++it) {
     it->second->reset();
   }
-  VERBOSE_(0, "zone '%s' reset", name().c_str())
+  VERBOSE_(0, "zone reset on '%s'", ident())
   return;
 }
 
@@ -150,8 +158,8 @@ void Zone::unserializeBuilders(const std::string& serialization) {
 }
 
 bool Zone::hasPermission(Avatar* avatar) const {
-  // Only the Administrator can fiddle with Limbo...
-  if (ID() == 1 && avatar->level() < Being::CREATOR) {
+  // Only the Administrator can fiddle with the SYSTEM_ZONE...
+  if (name() == Zone::SYSTEM_ZONE && avatar->level() < Being::CREATOR) {
     return false;
   }
   // The Administrator and the Head Builder can edit anything else...

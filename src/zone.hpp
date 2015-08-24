@@ -15,27 +15,15 @@ class Room;
 class Terrain;
 
 class Zone {
-  private:
-    unsigned long                           _ID;
-    unsigned long                           _low;
-    unsigned long                           _high;
-    std::string                             _name;
-    std::map<unsigned long,Room*>           _rooms;
-    std::map<unsigned long,Item*>           _items;
-    std::map<unsigned long,Npc*>            _npcs;
-    Terrain*                                _terrain;
-    std::set<std::string>                   _builders;
-
-    void                                    create(void);
-
   public:
+
+    static const char* SYSTEM_ZONE;
+
     Zone(void);
     Zone(unsigned long low, unsigned long high);
     ~Zone(void);
 
     // Public accessor methods...
-    void                                    ID(unsigned long ID)            { _ID = ID; }
-    unsigned long                           ID(void) const                  { return _ID; }
     void                                    low(unsigned long low)          { _low = low; }
     unsigned long                           low(void) const                 { return _low; }
     void                                    high(unsigned long high)        { _high = high; }
@@ -58,6 +46,7 @@ class Zone {
     void            insert(Npc* npc);
 
     // General methods...
+    const char*     ident(void) const;
     unsigned long   lowestAvailableRoom(void);
     void            reset(void);
     bool            reset(RecurringJob* job)                 { reset(); return true; }
@@ -77,6 +66,17 @@ class Zone {
     std::string     serializeBuilders(void) const;
     void            unserializeBuilders(const std::string& serialization);
 
+  private:
+    void                                    create(void);
+
+    unsigned long                           _low;
+    unsigned long                           _high;
+    std::string                             _name;
+    std::map<unsigned long,Room*>           _rooms;
+    std::map<unsigned long,Item*>           _items;
+    std::map<unsigned long,Npc*>            _npcs;
+    Terrain*                                _terrain;
+    std::set<std::string>                   _builders;
 };
 
 class zone_comp { /* Zone vnum comparison functor */
