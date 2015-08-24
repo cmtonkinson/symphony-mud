@@ -42,7 +42,7 @@ bool DualWieldSkill::execute(Being* being) const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// EVASION
+// AVOIDANCE
 ///////////////////////////////////////////////////////////////////////////////
 bool BlockSkill::execute(Being* being) const {
   unsigned spaces = 0;
@@ -60,6 +60,46 @@ bool BlockSkill::execute(Being* being) const {
   being->indentedSend(spaces, "You block %s's strike!\n", _target_being->name());
   _target_being->indentedSend(spaces, "%s blocks your strike!\n", being->name());
   being->room()->indented_send_cond(spaces, "$a blocks $c's strike!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
+
+  return true;
+}
+
+bool DodgeSkill::execute(Being* being) const {
+  unsigned spaces = 0;
+
+  if (_target_being == nullptr) {
+    ERROR(being, "dodge without target")
+    return false;
+  }
+
+  if (Math::percent_chance(60)) return false;
+
+  _target_being->currentStrike()->setStatus(Strike::EVADED);
+
+  spaces = _target_being->currentStrike()->sequenceNumber() * 2;
+  being->indentedSend(spaces, "You dodge %s's strike!\n", _target_being->name());
+  _target_being->indentedSend(spaces, "%s dodges your strike!\n", being->name());
+  being->room()->indented_send_cond(spaces, "$a dodges $c's strike!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
+
+  return true;
+}
+
+bool DuckSkill::execute(Being* being) const {
+  unsigned spaces = 0;
+
+  if (_target_being == nullptr) {
+    ERROR(being, "duck without target")
+    return false;
+  }
+
+  if (Math::percent_chance(60)) return false;
+
+  _target_being->currentStrike()->setStatus(Strike::EVADED);
+
+  spaces = _target_being->currentStrike()->sequenceNumber() * 2;
+  being->indentedSend(spaces, "You duck %s's strike!\n", _target_being->name());
+  _target_being->indentedSend(spaces, "%s ducks your strike!\n", being->name());
+  being->room()->indented_send_cond(spaces, "$a ducks $c's strike!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
 
   return true;
 }
@@ -128,46 +168,6 @@ bool RiposteSkill::execute(Being* being) const {
   return true;
 }
 
-bool DodgeSkill::execute(Being* being) const {
-  unsigned spaces = 0;
-
-  if (_target_being == nullptr) {
-    ERROR(being, "dodge without target")
-    return false;
-  }
-
-  if (Math::percent_chance(60)) return false;
-
-  _target_being->currentStrike()->setStatus(Strike::EVADED);
-
-  spaces = _target_being->currentStrike()->sequenceNumber() * 2;
-  being->indentedSend(spaces, "You dodge %s's strike!\n", _target_being->name());
-  _target_being->indentedSend(spaces, "%s dodges your strike!\n", being->name());
-  being->room()->indented_send_cond(spaces, "$a dodges $c's strike!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
-
-  return true;
-}
-
-bool DuckSkill::execute(Being* being) const {
-  unsigned spaces = 0;
-
-  if (_target_being == nullptr) {
-    ERROR(being, "duck without target")
-    return false;
-  }
-
-  if (Math::percent_chance(60)) return false;
-
-  _target_being->currentStrike()->setStatus(Strike::EVADED);
-
-  spaces = _target_being->currentStrike()->sequenceNumber() * 2;
-  being->indentedSend(spaces, "You duck %s's strike!\n", _target_being->name());
-  _target_being->indentedSend(spaces, "%s ducks your strike!\n", being->name());
-  being->room()->indented_send_cond(spaces, "$a ducks $c's strike!\n", being, _target_being, nullptr, Room::TO_NOTVICT, true);
-
-  return true;
-}
-
 bool CounterattackSkill::execute(Being* being) const {
   unsigned spaces = 0;
 
@@ -187,6 +187,32 @@ bool CounterattackSkill::execute(Being* being) const {
 
   Strike strike(being, _target_being, true);
   strike.reactTo(_target_being->currentStrike());
+
+  return true;
+}
+
+bool ShieldBlockSkill::execute(Being* being) const {
+  Item* shield = being->shield();
+  unsigned spaces = 0;
+
+  if (_target_being == nullptr) {
+    ERROR(being, "shield block without target")
+    return false;
+  }
+
+  if (shield == nullptr || !shield->isArmor()) {
+    ERROR(being, "shield block without shield")
+    return false;
+  }
+
+  if (Math::percent_chance(40)) return false;
+
+  _target_being->currentStrike()->setStatus(Strike::BLOCKED);
+
+  spaces = _target_being->currentStrike()->sequenceNumber() * 2;
+  being->indentedSend(spaces, "You block %s's strike with %s!\n", _target_being->name(), shield->name());
+  _target_being->indentedSend(spaces, "%s blocks your strike with %s!\n", being->name(), shield->name());
+  being->room()->indented_send_cond(spaces, "$a blocks $c's strike with $O!\n", being, _target_being, shield, Room::TO_NOTVICT, true);
 
   return true;
 }

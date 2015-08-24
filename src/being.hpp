@@ -322,6 +322,7 @@ class Being {
     static const char*          wearLocName(const unsigned short& wearloc);
     Item*                       primary(void);
     Item*                       secondary(void);
+    Item*                       shield(void);
     void                        naturalStatAdjustment(void);
     std::string                 serializeAbilities(void);
     void                        unserializeAbilities(std::string ser);

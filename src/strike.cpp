@@ -223,6 +223,9 @@ bool Strike::strike(void) {
   return true;
 }
 
+// TODO - refactor such that the probability of invoking an avoidance skill increases proportionately
+// to the number of avoidance skills. Current algorithm provides zero incentive to learn more than one
+// such skill.
 bool Strike::avoid(void) {
   Ability* skill = nullptr;
   std::vector<Ability*> evasion_skills;
@@ -230,9 +233,12 @@ bool Strike::avoid(void) {
   if (Math::percent_chance(60)) return false;
 
   // What evasion methods are available?
+  if ((skill = _defender->learned().find_skill(BLOCK)) != nullptr) evasion_skills.push_back(skill);
   if ((skill = _defender->learned().find_skill(DODGE)) != nullptr) evasion_skills.push_back(skill);
   if ((skill = _defender->learned().find_skill(DUCK)) != nullptr) evasion_skills.push_back(skill);
-  if ((skill = _defender->learned().find_skill(BLOCK)) != nullptr) evasion_skills.push_back(skill);
+  if (_defender->shield()) {
+    if ((skill = _defender->learned().find_skill(SHIELD_BLOCK)) != nullptr) evasion_skills.push_back(skill);
+  }
   if (_defender->primary() || _defender->secondary()) {
     if ((skill = _defender->learned().find_skill(PARRY)) != nullptr) evasion_skills.push_back(skill);
   }

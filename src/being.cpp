@@ -475,6 +475,13 @@ Item* Being::secondary(void) {
   return equipment().at(off_hand());
 }
 
+Item* Being::shield(void) {
+  Item* item = nullptr;
+  if ((item = equipment().at(off_hand())) != nullptr && item->isArmor()) return item;
+  if ((item = equipment().at(hand())) != nullptr && item->isArmor()) return item;
+  return nullptr;
+}
+
 bool Being::lay(std::string& error, ItemFurniture* furniture) {
   if (isLaying()) {
     error.assign("You're already laying down.");

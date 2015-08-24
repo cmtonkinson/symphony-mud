@@ -12,6 +12,7 @@ Warrior::Warrior(void) {
   Ability* dual_wield    = new DualWieldSkill(       45,     2,        3,          2);
 
   Ability* block         = new BlockSkill(           15,     1,        3,          2);
+  Ability* shield_block  = new ShieldBlockSkill(     40,     2,        4,          1);
   Ability* parry         = new ParrySkill(           45,     1,        3,          2);
   Ability* riposte       = new RiposteSkill(         65,     2,        3,          2);
   Ability* counterattack = new CounterattackSkill(   85,     3,        4,          3);
@@ -20,6 +21,7 @@ Warrior::Warrior(void) {
   third_strike->add_dependency(second_strike);
   fourth_strike->add_dependency(third_strike);
   dual_wield->add_dependency(second_strike);
+  shield_block->add_dependency(block);
   parry->add_dependency(block);
   riposte->add_dependency(parry);
   riposte->add_dependency(second_strike);
@@ -30,6 +32,7 @@ Warrior::Warrior(void) {
   _abilities.insert(fourth_strike);
   _abilities.insert(dual_wield);
   _abilities.insert(block);
+  _abilities.insert(shield_block);
   _abilities.insert(parry);
   _abilities.insert(riposte);
   _abilities.insert(counterattack);

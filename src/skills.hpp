@@ -20,18 +20,20 @@ DEF_SKILL(DUAL_WIELD,     DualWieldSkill)
 DEF_SKILL(COUNTERATTACK,  CounterattackSkill)
 
 ///////////////////////////////////////////////////////////////////////////////
-// EVASION
+// AVOIDANCE
 ///////////////////////////////////////////////////////////////////////////////
 #define BLOCK         "block"
-#define PARRY         "parry"
-#define RIPOSTE       "riposte"
 #define DODGE         "dodge"
 #define DUCK          "duck"
+#define PARRY         "parry"
+#define RIPOSTE       "riposte"
+#define SHIELD_BLOCK  "shield block"
 
 DEF_SKILL(BLOCK,          BlockSkill)
-DEF_SKILL(PARRY,          ParrySkill)
-DEF_SKILL(RIPOSTE,        RiposteSkill)
 DEF_SKILL(DODGE,          DodgeSkill)
 DEF_SKILL(DUCK,           DuckSkill)
+DEF_SKILL(PARRY,          ParrySkill)
+DEF_SKILL(RIPOSTE,        RiposteSkill)
+DEF_SKILL(SHIELD_BLOCK,   ShieldBlockSkill)
 
 #endif // #ifndef H_SYMPHONY_SKILLS
