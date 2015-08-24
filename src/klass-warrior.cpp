@@ -5,17 +5,17 @@
 Warrior::Warrior(void) {
   _name = "warrior";
 
-  // Construct skills for the klass.                level   trains  difficulty   stamina
-  Ability* second_strike = new SecondStrikeSkill(    25,     2,        3,          1);
-  Ability* third_strike  = new ThirdStrikeSkill(     50,     3,        3,          2);
-  Ability* fourth_strike = new FourthStrikeSkill(    75,     4,        3,          3);
-  Ability* dual_wield    = new DualWieldSkill(       45,     2,        3,          2);
+  // Construct skills for the klass.                level   trains  difficulty   stamina  successRate
+  Ability* second_strike = new SecondStrikeSkill(    25,     2,        3,          1,         80);
+  Ability* third_strike  = new ThirdStrikeSkill(     50,     3,        3,          2,         80);
+  Ability* fourth_strike = new FourthStrikeSkill(    75,     4,        3,          3,         80);
+  Ability* dual_wield    = new DualWieldSkill(       45,     2,        3,          2,         55);
 
-  Ability* block         = new BlockSkill(           15,     1,        3,          2);
-  Ability* shield_block  = new ShieldBlockSkill(     40,     2,        4,          1);
-  Ability* parry         = new ParrySkill(           45,     1,        3,          2);
-  Ability* riposte       = new RiposteSkill(         65,     2,        3,          2);
-  Ability* counterattack = new CounterattackSkill(   85,     3,        4,          3);
+  Ability* block         = new BlockSkill(           15,     1,        3,          2,         25);
+  Ability* shield_block  = new ShieldBlockSkill(     40,     2,        4,          1,         40);
+  Ability* parry         = new ParrySkill(           45,     1,        3,          2,         40);
+  Ability* riposte       = new RiposteSkill(         65,     2,        3,          2,         50);
+  Ability* counterattack = new CounterattackSkill(   85,     3,        4,          3,         20);
 
   // Setup dependency graph.
   third_strike->add_dependency(second_strike);

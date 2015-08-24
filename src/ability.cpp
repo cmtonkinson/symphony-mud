@@ -67,11 +67,12 @@ unsigned Ability::default_target(void) const {
 
 bool Ability::invoke(Being* being, Being* target, Item* item) {
   bool status = false;
+
   // A positive value for mana or stamina indicates that the Ability requires a static amount and
   // that it can/should be deducted from the Beings resources automatically. A non-positive value
   // indicates that either no resource is required for the Ability, or that execute() is going to
-  // perform its own checks and deductions dynamically - in either case, invoke() should not perform
-  // any automatic checks or deductions.
+  // perform its own checks and deductions dynamically - in either case, a non-positive value
+  // indicates that invoke() should not perform any automatic checks or deductions.
 
   // Because some Abilities require both stamina and mana, we need to verify that both are in
   // sufficient quantity before we begin deductions.
@@ -94,8 +95,8 @@ bool Ability::invoke(Being* being, Being* target, Item* item) {
     return false;
   }
 
-  // Capture the return value of the Ability.
-  status = execute(being, target, item);
+  // Capture the return value of the Ability, if it executes.
+  if (Math::percent_chance(successRate())) status = execute(being, target, item);
 
   // Randomly improve upon the ability. The more novice you are, the more instructive success is.
   if (Math::percent_chance(100 - being->mastery(this))) {
@@ -111,14 +112,32 @@ bool Ability::invoke(Being* being, Being* target, Item* item) {
 
 bool Ability::execute(Being* being, Being* target, Item* item) {
   bool status = false;
+
+  // Check and enforce argument requirements, as appropriate.
+  if (target_being() && target == nullptr) {
+    ERROR_(being, "%s without target Being", name().c_str());
+    return false;
+  }
+  if (target_item() && item == nullptr) {
+    ERROR_(being, "%s without target Item", name().c_str());
+    return false;
+  }
+  if (target_any() && target == nullptr && item == nullptr) {
+    ERROR_(being, "%s without target", name().c_str());
+    return false;
+  }
+
   // Set the "parameters"
   _target_being = target;
   _target_item  = item;
+
   // execute the concrete Ability
   status = execute(being);
+
   // Clear the "parameters"
   _target_being = nullptr;
   _target_item  = nullptr;
+
   // Return execution status
   return status;
 }

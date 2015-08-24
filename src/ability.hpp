@@ -16,11 +16,12 @@ class Ability {
   public:
 
     // Internal defaults.
-    static const unsigned DEFAULT_LEVEL      = 1;
-    static const unsigned DEFAULT_TRAINS     = 1;
-    static const unsigned DEFAULT_DIFFICULTY = 3;
-    static const unsigned DEFAULT_STAMINA    = 1;
-    static const unsigned DEFAULT_MANA       = 0;
+    static const unsigned DEFAULT_LEVEL        = 1;
+    static const unsigned DEFAULT_TRAINS       = 1;
+    static const unsigned DEFAULT_DIFFICULTY   = 3;
+    static const unsigned DEFAULT_STAMINA      = 1;
+    static const unsigned DEFAULT_MANA         = 0;
+    static const unsigned DEFAULT_SUCCESS_RATE = 100;
 
     // Spell categories.
     static const unsigned CHARM           = 1;
@@ -32,11 +33,13 @@ class Ability {
     static const unsigned CONJURING       = 7;
     static const unsigned TRANSFIGURATION = 8;
 
-    // Spell targets.
-    static const unsigned TARGET_NONE  = 0;
-    static const unsigned TARGET_ANY   = 1;
-    static const unsigned TARGET_BEING = 2;
-    static const unsigned TARGET_ITEM  = 3;
+    // Targets.
+    // For spells, these are enforced in the `cast` command.
+    // For skills, these are enforced in Ability::execute().
+    static const unsigned TARGET_NONE  = 1 << 0;
+    static const unsigned TARGET_ANY   = 1 << 1;
+    static const unsigned TARGET_BEING = 1 << 2;
+    static const unsigned TARGET_ITEM  = 1 << 3;
 
     // Used for setting default targets.
     static const unsigned NO_DEFAULT       = 0;
@@ -66,24 +69,26 @@ class Ability {
     bool                  is_root(void) const;
     bool                  is_leaf(void) const;
 
-    void                  type(AbilityType type)          { _type = type; }
-    AbilityType           type(void) const                { return _type; }
-    void                  name(std::string name)          { _name = name; }
-    std::string           name(void) const                { return _name; }
-    void                  level(unsigned level)           { _level = level; }
-    unsigned              level(void) const               { return _level; }
-    void                  trains(unsigned trains)         { _trains = trains; }
-    unsigned              trains(void) const              { return _trains; }
-    void                  difficulty(unsigned difficulty) { _difficulty = difficulty; }
-    unsigned              difficulty(void) const          { return _difficulty; }
-    void                  stamina(unsigned stamina)       { _stamina = stamina; }
-    unsigned              stamina(void) const             { return _stamina; }
-    void                  mana(unsigned mana)             { _mana = mana; }
-    unsigned              mana(void) const                { return _mana; }
-    void                  category(unsigned category)     { _category = category; }
-    unsigned              category(void) const            { return _category; }
-    void                  targeting(unsigned targeting)   { _targeting = targeting; }
-    unsigned              targeting(void) const           { return _targeting; }
+    void                  type(AbilityType type)              { _type = type; }
+    AbilityType           type(void) const                    { return _type; }
+    void                  name(std::string name)              { _name = name; }
+    std::string           name(void) const                    { return _name; }
+    void                  level(unsigned level)               { _level = level; }
+    unsigned              level(void) const                   { return _level; }
+    void                  trains(unsigned trains)             { _trains = trains; }
+    unsigned              trains(void) const                  { return _trains; }
+    void                  difficulty(unsigned difficulty)     { _difficulty = difficulty; }
+    unsigned              difficulty(void) const              { return _difficulty; }
+    void                  stamina(unsigned stamina)           { _stamina = stamina; }
+    unsigned              stamina(void) const                 { return _stamina; }
+    void                  mana(unsigned mana)                 { _mana = mana; }
+    unsigned              mana(void) const                    { return _mana; }
+    void                  successRate(unsigned success_rate)  { _success_rate = success_rate; }
+    unsigned              successRate(void) const             { return _success_rate; }
+    void                  category(unsigned category)         { _category = category; }
+    unsigned              category(void) const                { return _category; }
+    void                  targeting(unsigned targeting)       { _targeting = targeting; }
+    unsigned              targeting(void) const               { return _targeting; }
 
     bool                  is_skill(void) const;
     bool                  is_spell(void) const;
@@ -97,10 +102,10 @@ class Ability {
     bool                  is_conjuring(void) const        { return _category == CONJURING; }
     bool                  is_transfiguration(void) const  { return _category == TRANSFIGURATION; }
 
-    bool                  target_none(void) const         { return _targeting == TARGET_NONE; }
-    bool                  target_any(void) const          { return _targeting == TARGET_ANY; }
-    bool                  target_being(void) const        { return _targeting == TARGET_BEING; }
-    bool                  target_item(void) const         { return _targeting == TARGET_ITEM; }
+    bool                  target_none(void) const         { return (_targeting & TARGET_NONE) == TARGET_NONE; }
+    bool                  target_any(void) const          { return (_targeting & TARGET_ANY) == TARGET_ANY; }
+    bool                  target_being(void) const        { return (_targeting & TARGET_BEING) == TARGET_BEING; }
+    bool                  target_item(void) const         { return (_targeting & TARGET_ITEM) == TARGET_ITEM; }
     unsigned              default_target(void) const;
 
     // invoke() is a high-level wrapper around execute() which automatically
@@ -127,6 +132,7 @@ class Ability {
     unsigned              _difficulty;    // relative difficulty for increasing mastery (1-5)
     unsigned              _stamina;       // amount of stamina required for the Ability
     unsigned              _mana;          // amount of mana required for the Ability
+    unsigned              _success_rate;  // how likely the Ability is to execute when invoked
     unsigned              _category;      // broadly speaking, the type of Ability
     unsigned              _targeting;     // what can be targeted with this Ability?
     std::set<Ability*>    _dependencies;
@@ -142,23 +148,26 @@ class Ability {
 ///////////////////////////////////////////////////////////////////////////////
 // SKILL
 ///////////////////////////////////////////////////////////////////////////////
-#define DEF_SKILL(NAME,CLASS)                         \
+#define DEF_SKILL(NAME,CLASS,TARGETING)               \
 class CLASS: public Ability {                         \
   public:                                             \
   CLASS(                                              \
-    unsigned level_      = DEFAULT_LEVEL,             \
-    unsigned trains_     = DEFAULT_TRAINS,            \
-    unsigned difficulty_ = DEFAULT_DIFFICULTY,        \
-    unsigned stamina_    = DEFAULT_STAMINA,           \
-    unsigned mana_       = DEFAULT_MANA)              \
+    unsigned level_        = DEFAULT_LEVEL,           \
+    unsigned trains_       = DEFAULT_TRAINS,          \
+    unsigned difficulty_   = DEFAULT_DIFFICULTY,      \
+    unsigned stamina_      = DEFAULT_STAMINA,         \
+    unsigned success_rate_ = DEFAULT_SUCCESS_RATE,    \
+    unsigned mana_         = DEFAULT_MANA)            \
     {                                                 \
       type(SKILL);                                    \
       name(NAME);                                     \
+      targeting(TARGETING);                           \
       level(level_);                                  \
       trains(trains_);                                \
       difficulty(difficulty_);                        \
       stamina(stamina_);                              \
       mana(mana_);                                    \
+      successRate(success_rate_);                     \
       category(0);                                    \
       return;                                         \
     }                                                 \

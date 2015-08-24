@@ -55,6 +55,7 @@ bool CmdLearn::execute(Being* being, const std::vector<std::string>& args) {
     being->send("You can't learn that ability just yet.");
     return false;
   }
+
   being->learn(iter->second, 1);
   being->trains(being->trains() - iter->second->trains());
   being->send("You spend {B%u{x training points learning the {M%s{x ability!\n", iter->second->trains(), iter->second->name().c_str());

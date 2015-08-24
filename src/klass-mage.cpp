@@ -6,8 +6,8 @@
 Mage::Mage(void) {
   _name = "mage";
 
-  // Construct skills for the klass.                        level   trains  difficulty   stamina
-  Ability* second_strike = new SecondStrikeSkill(            70,     4,        3,        3);
+  // Construct skills for the klass.                        level   trains  difficulty   stamina    successRate
+  Ability* second_strike = new SecondStrikeSkill(            70,     4,        3,        3,             70);
 
   // Construct spells for the klass.                        level   trains  difficulty   mana
   Ability* invisibility        = new InvisibilitySpell(      25,     1,        3,        25);

@@ -888,9 +888,9 @@ void Being::learn(Ability* ability, unsigned mastery) {
 
 void Being::improve(Ability* ability, bool success) {
   if (success) {
-    send("You improve upon your '{m%s{x' ability!\n", ability->name().c_str());
+    send("  You improve upon your '{m%s{x' ability!\n", ability->name().c_str());
   } else {
-    send("You learn from your mistakes and your '{m%s{x' improves!\n", ability->name().c_str());
+    send("  You learn from your mistakes and your '{m%s{x' improves!\n", ability->name().c_str());
   }
   abilityMastery()[ability] += 1;
   awardExperience(Stats::cone_randomization(level()));
