@@ -45,37 +45,37 @@ namespace os {
 
   extern unsigned console_log_level;
 
-  void          log(const char* file, unsigned line, unsigned level, const Being* being, const char* format);
-  void          log_(const char* file, unsigned line, unsigned level, const Being* being, const char* format, ...);
+  void          log(const char* func, const char* file, unsigned line, unsigned level, const Being* being, const char* format);
+  void          log_(const char* func, const char* file, unsigned line, unsigned level, const Being* being, const char* format, ...);
   const char*   stringLevel(unsigned level);
   unsigned      numericLevel(std::string level);
   std::string   allLevels(void);
   char          color(unsigned level);
 
   // Remember, #defines within a namespace will still bind to global scope.
-  #define SILLY(being, format)          os::log(__FILE__, __LINE__, os::LOG_SILLY, being, format);
-  #define SILLY_(being, format, ...)    os::log_(__FILE__, __LINE__, os::LOG_SILLY, being, format, __VA_ARGS__);
+  #define SILLY(being, format)          os::log(__func__, __FILE__, __LINE__, os::LOG_SILLY, being, format);
+  #define SILLY_(being, format, ...)    os::log_(__func__, __FILE__, __LINE__, os::LOG_SILLY, being, format, __VA_ARGS__);
 
-  #define DEBUG(being, format)           os::log(__FILE__, __LINE__, os::LOG_DEBUG, being, format);
-  #define DEBUG_(being, format, ...)     os::log_(__FILE__, __LINE__, os::LOG_DEBUG, being, format, __VA_ARGS__);
+  #define DEBUG(being, format)           os::log(__func__, __FILE__, __LINE__, os::LOG_DEBUG, being, format);
+  #define DEBUG_(being, format, ...)     os::log_(__func__, __FILE__, __LINE__, os::LOG_DEBUG, being, format, __VA_ARGS__);
 
-  #define VERBOSE(being, format)        os::log(__FILE__, __LINE__, os::LOG_VERBOSE, being, format);
-  #define VERBOSE_(being, format, ...)  os::log_(__FILE__, __LINE__, os::LOG_VERBOSE, being, format, __VA_ARGS__);
+  #define VERBOSE(being, format)        os::log(__func__, __FILE__, __LINE__, os::LOG_VERBOSE, being, format);
+  #define VERBOSE_(being, format, ...)  os::log_(__func__, __FILE__, __LINE__, os::LOG_VERBOSE, being, format, __VA_ARGS__);
 
-  #define INFO(being, format)           os::log(__FILE__, __LINE__, os::LOG_INFO, being, format);
-  #define INFO_(being, format, ...)     os::log_(__FILE__, __LINE__, os::LOG_INFO, being, format, __VA_ARGS__);
+  #define INFO(being, format)           os::log(__func__, __FILE__, __LINE__, os::LOG_INFO, being, format);
+  #define INFO_(being, format, ...)     os::log_(__func__, __FILE__, __LINE__, os::LOG_INFO, being, format, __VA_ARGS__);
 
-  #define WARN(being, format)           os::log(__FILE__, __LINE__, os::LOG_WARN, being, format);
-  #define WARN_(being, format, ...)     os::log_(__FILE__, __LINE__, os::LOG_WARN, being, format, __VA_ARGS__);
+  #define WARN(being, format)           os::log(__func__, __FILE__, __LINE__, os::LOG_WARN, being, format);
+  #define WARN_(being, format, ...)     os::log_(__func__, __FILE__, __LINE__, os::LOG_WARN, being, format, __VA_ARGS__);
 
-  #define ERROR(being, format)          os::log(__FILE__, __LINE__, os::LOG_ERROR, being, format);
-  #define ERROR_(being, format, ...)    os::log_(__FILE__, __LINE__, os::LOG_ERROR, being, format, __VA_ARGS__);
+  #define ERROR(being, format)          os::log(__func__, __FILE__, __LINE__, os::LOG_ERROR, being, format);
+  #define ERROR_(being, format, ...)    os::log_(__func__, __FILE__, __LINE__, os::LOG_ERROR, being, format, __VA_ARGS__);
 
-  #define FATAL(being, format)          os::log(__FILE__, __LINE__, os::LOG_FATAL, being, format);
-  #define FATAL_(being, format, ...)    os::log_(__FILE__, __LINE__, os::LOG_FATAL, being, format, __VA_ARGS__);
+  #define FATAL(being, format)          os::log(__func__, __FILE__, __LINE__, os::LOG_FATAL, being, format);
+  #define FATAL_(being, format, ...)    os::log_(__func__, __FILE__, __LINE__, os::LOG_FATAL, being, format, __VA_ARGS__);
 
-  #define SILENT(being, format)         os::log(__FILE__, __LINE__, os::LOG_SILENT, being, format);
-  #define SILENT_(being, format, ...)   os::log_(__FILE__, __LINE__, os::LOG_SILENT, being, format, __VA_ARGS__);
+  #define SILENT(being, format)         os::log(__func__, __FILE__, __LINE__, os::LOG_SILENT, being, format);
+  #define SILENT_(being, format, ...)   os::log_(__func__, __FILE__, __LINE__, os::LOG_SILENT, being, format, __VA_ARGS__);
 
   /////////////////////////////////////////////////////////////////////////////
   // FILESYSTEM PATHS

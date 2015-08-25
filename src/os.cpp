@@ -147,12 +147,12 @@ namespace os {
   /////////////////////////////////////////////////////////////////////////////
   unsigned console_log_level = 0;
 
-  void log(const char* file, unsigned line, unsigned level, const Being* being, const char* format) {
-    log_(file, line, level, being, format);
+  void log(const char* func, const char* file, unsigned line, unsigned level, const Being* being, const char* format) {
+    log_(func, file, line, level, being, format);
     return;
   }
 
-  void log_(const char* file, unsigned line, unsigned level, const Being* being, const char* format, ...) {
+  void log_(const char* func, const char* file, unsigned line, unsigned level, const Being* being, const char* format, ...) {
     char buffer[BUFFER_SIZE];
     std::string message;
     va_list args;
@@ -168,8 +168,8 @@ namespace os {
     message << stringLevel(level) << " ";
     // Timestamp
     message << strnow() << " ";
-    // File/line
-    message << "[" << file << ":" << line << "] ";
+    // Function/file/line
+    message << "[" << func << "() " << file << ":" << line << "] ";
     // Being details (if given)
     if (being) message << "(" << being->ident() << ") ";
     // Content
@@ -263,13 +263,13 @@ namespace os {
         for (size_t x = 0; x < globbuf.gl_pathc; ++x) paths.push_back(globbuf.gl_pathv[x]);
         break;
       case GLOB_NOSPACE:
-        ERROR_(0, "glob - out of memory on %s", pattern.c_str())
+        ERROR_(0, "out of memory on %s", pattern.c_str())
         break;
       case GLOB_NOMATCH:
-        DEBUG_(0, "glob - no matches on %s", pattern.c_str())
+        DEBUG_(0, "no matches on %s", pattern.c_str())
         break;
       case GLOB_ABORTED:
-        ERROR_(0, "glob - read error on %s", pattern.c_str())
+        ERROR_(0, "read error on %s", pattern.c_str())
         break;
     }
 
