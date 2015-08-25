@@ -84,3 +84,10 @@ Item* EquipmentContainer::at(int location) {
   if (iter != itemMap().end()) return iter->second;
   return nullptr;
 }
+
+bool EquipmentContainer::contains(unsigned long vnum) const {
+  for (auto iter : itemMap()) {
+    if (iter.second->vnum() == vnum) return true;
+  }
+  return false;
+}

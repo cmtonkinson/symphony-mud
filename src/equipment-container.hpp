@@ -22,12 +22,13 @@ class EquipmentContainer: public Container {
     virtual void                remove(Item* item);
     virtual void                remove(const std::list<Item*>& items);
     virtual void                purgeItems(void);
-    virtual std::list<Item*>  searchItems(const std::string& q);
-    virtual Item*             searchSingleItem(const std::string& q);
+    virtual std::list<Item*>    searchItems(const std::string& q);
+    virtual Item*               searchSingleItem(const std::string& q);
 
     // general methods...
     std::string                 listItems(void) const;
-    Item*                     at(int location);
+    Item*                       at(int location);
+    bool                        contains(unsigned long vnum) const;
 
     // public accessor methods...
     std::map<int,Item*>&                                  itemMap(void)       { return _itemMap; }

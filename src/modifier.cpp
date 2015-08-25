@@ -22,3 +22,7 @@ Modifier::Modifier(const unsigned short& attribute, const int& magnitude):
 Modifier::~Modifier(void) {
   return;
 }
+
+bool Modifier::operator== (const Modifier& ref) const {
+  return ((_attribute == ref.attribute()) && (_magnitude == ref.magnitude()));
+}

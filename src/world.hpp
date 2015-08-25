@@ -19,6 +19,7 @@
 #include "schedule.hpp"
 
 class Socket;
+class ItemSet;
 
 class World {
   public:
@@ -106,6 +107,14 @@ class World {
     Item*                 findItem(const std::string& name);
     bool                  transport(Item* item, Room* from, const unsigned long& vnum);
 
+    Item*                 lookupItemByVnum(unsigned long vnum) const;
+
+    ItemSet*              createItemSet(void);
+    void                  destroyItemSet(ItemSet* set);
+    bool                  addItemToSet(Item* item, ItemSet* set);
+    bool                  removeItemFromSet(Item* item, ItemSet* set);
+    ItemSet*              getSetByItem(Item* item) const;
+
     // Boards
     void                  add(Board* board);
     void                  add(const unsigned short& board, Note* note);
@@ -117,19 +126,21 @@ class World {
     static std::string    get_marker(Being* being, Room* room);
 
   private:
-    time_t                          _booted;
-    bool                            _exists;
-    bool                            _rebooting;
-    Socket                          _server;
-    std::map<std::string,Avatar*>   _avatars;
-    std::set<Zone*,zone_comp>       _zones;
-    std::set<Item*>                 _items;
-    std::set<Being*>                _beings;
-    std::map<unsigned,Board*>       _boards;
-    InputIOHandler                  _npcIOHandler;
-    Schedule                        _schedule;
-    unsigned                        _jobsPerTurn;
-    unsigned                        _tickSleep;
+    time_t                            _booted;
+    bool                              _exists;
+    bool                              _rebooting;
+    Socket                            _server;
+    std::map<std::string,Avatar*>     _avatars;
+    std::set<Zone*,zone_comp>         _zones;
+    std::set<Item*>                   _items;
+    std::set<ItemSet*>                _item_sets_set;
+    std::map<unsigned long,ItemSet*>  _item_sets_map;
+    std::set<Being*>                  _beings;
+    std::map<unsigned,Board*>         _boards;
+    InputIOHandler                    _npcIOHandler;
+    Schedule                          _schedule;
+    unsigned                          _jobsPerTurn;
+    unsigned                          _tickSleep;
 };
 
 /*

@@ -10,6 +10,8 @@ class Modifier {
     Modifier(const unsigned short& attribute, const int& magnitude);
     ~Modifier(void);
 
+    bool operator== (const Modifier& ref) const;
+
     // Public accessor methods...
     void            attribute(const unsigned short& attribute)  { _attribute = attribute; }
     unsigned short  attribute(void) const                       { return _attribute; }

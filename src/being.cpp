@@ -9,6 +9,7 @@
 #include "group.hpp"
 #include "identifiers.hpp"
 #include "io-handler.hpp"
+#include "item-set.hpp"
 #include "item-types.hpp"
 #include "job.hpp"
 #include "npc.hpp"
@@ -81,9 +82,7 @@ Being::Being(const Being& ref):
     _pClass(ref.pClass()) {
   level(ref.level());
   room(NULL);
-  for (std::list<Modifier*>::const_iterator it = ref.modifiers().begin(); it != ref.modifiers().end(); ++it) {
-    modifiers().push_back(new Modifier(**it));
-  }
+  for (auto iter : ref.modifiers()) modifiers().push_back(iter);
   furniture(ref.furniture());
   formGroup();
   // stats...
@@ -364,7 +363,9 @@ const char* Being::wearLocName(const unsigned short& wearloc) {
 }
 
 bool Being::wear(Item* article, std::string& message, Item*& removed) {
-  int location = getWearloc(article->wearable());
+  int location       = getWearloc(article->wearable());
+  bool completes_set = false;
+  ItemSet* set       = nullptr;
 
   // make sure we can wear it...
   if (location == WEARLOC_ERROR) {
@@ -414,14 +415,20 @@ bool Being::wear(Item* article, std::string& message, Item*& removed) {
     }
   }
 
+  // Check for set completion...
+  if ((set = World::Instance().getSetByItem(article)) != nullptr) completes_set = set->willCompleteSet(this, article);
+
   // don the article...
   inventory().remove(article);
   equipment().add(article, location);
   setModifications(article);
+  if (completes_set) setModifications(set);
   return true;
 }
 
 bool Being::unwear(Item* article, std::string& message, bool force) {
+  ItemSet* set    = nullptr;
+  bool breaks_set = false;
   if (!force) {
     if (article->flags().test(ITEM_NOREMOVE)) {
       message.assign("You can't remove ").append(article->identifiers().shortname().c_str()).append("{x.");
@@ -430,9 +437,11 @@ bool Being::unwear(Item* article, std::string& message, bool force) {
   }
   for (std::map<int,Item*>::iterator it = equipment().itemMap().begin(); it != equipment().itemMap().end(); ++it) {
     if (it->second == article) {
+      if ((set = World::Instance().getSetByItem(article)) != nullptr) breaks_set = set->willBreakSet(this, article);
       equipment().remove(article);
       inventory().add(article);
       unsetModifications(article);
+      if (breaks_set) unsetModifications(article);
       return true;
     }
   }
@@ -639,27 +648,33 @@ std::string Being::ident(void) const {
 }
 
 void Being::setModifications(Item* item) {
-  for (std::list<Modifier*>::const_iterator it = item->modifiers().begin(); it != item->modifiers().end(); ++it) {
-    modify(*it);
-  }
+  for (auto iter :item->modifiers()) modify(*iter);
   return;
 }
 
 void Being::unsetModifications(Item* item) {
-  for (std::list<Modifier*>::const_iterator it = item->modifiers().begin(); it != item->modifiers().end(); ++it) {
-    unmodify(*it);
-  }
+  for (auto iter :item->modifiers()) unmodify(*iter);
   return;
 }
 
-void Being::modify(Modifier* modifier) {
-  doModification(modifier->attribute(), modifier->magnitude());
+void Being::setModifications(ItemSet* set) {
+  for (auto iter : set->modifiers()) modify(iter);
+  return;
+}
+
+void Being::unsetModifications(ItemSet* set) {
+  for (auto iter : set->modifiers()) unmodify(iter);
+  return;
+}
+
+void Being::modify(Modifier modifier) {
+  doModification(modifier.attribute(), modifier.magnitude());
   modifiers().push_back(modifier);
   return;
 }
 
-void Being::unmodify(Modifier* modifier) {
-  doModification(modifier->attribute(), -(modifier->magnitude()));
+void Being::unmodify(Modifier modifier) {
+  doModification(modifier.attribute(), -(modifier.magnitude()));
   modifiers().remove(modifier);
   return;
 }

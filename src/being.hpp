@@ -26,6 +26,7 @@ class Avatar;
 class Group;
 class IOHandler;
 class ItemFurniture;
+class ItemSet;
 class Npc;
 class Room;
 class SocialCommand;
@@ -160,8 +161,8 @@ class Being {
     const InventoryContainer&   inventory(void) const                                           { return _inventory; }
     EquipmentContainer&         equipment(void)                                                 { return _equipment; }
     const EquipmentContainer&   equipment(void) const                                           { return _equipment; }
-    std::list<Modifier*>&       modifiers(void)                                                 { return _modifiers; }
-    const std::list<Modifier*>& modifiers(void) const                                           { return _modifiers; }
+    std::list<Modifier>&        modifiers(void)                                                 { return _modifiers; }
+    const std::list<Modifier>&  modifiers(void) const                                           { return _modifiers; }
     void                        furniture(ItemFurniture* furniture)                             { _furniture = furniture; }
     ItemFurniture*              furniture(void) const                                           { return _furniture; }
 
@@ -295,8 +296,10 @@ class Being {
     bool                        stand(std::string& error);
     void                        setModifications(Item* item);
     void                        unsetModifications(Item* item);
-    void                        modify(Modifier* modifier);
-    void                        unmodify(Modifier* modifier);
+    void                        setModifications(ItemSet* set);
+    void                        unsetModifications(ItemSet* set);
+    void                        modify(Modifier modifier);
+    void                        unmodify(Modifier modifier);
     void                        doModification(const unsigned short& attribute, const int& magnitude);
     int                         getAttribute(unsigned attribute);
     unsigned short              canSee(Being* target);
@@ -402,7 +405,7 @@ class Being {
     Identifiers                 _identifiers;
     InventoryContainer          _inventory;
     EquipmentContainer          _equipment;
-    std::list<Modifier*>        _modifiers;
+    std::list<Modifier>         _modifiers;
     ItemFurniture*              _furniture;
     Position                    _position;
     Action                      _action;

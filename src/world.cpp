@@ -2,6 +2,7 @@
 #include <cstdarg>
 #include <dirent.h>
 #include "command-def.hpp"
+#include "item-set.hpp"
 #include "os.hpp"
 #include "storage.hpp"
 #include "world.hpp"
@@ -512,6 +513,76 @@ bool World::transport(Item* item, Room* from, const unsigned long& vnum) {
   to->add(item);
   to->send("$o appears with a small \"pop!\"\n", NULL, item);
   return true;
+}
+
+Item* World::lookupItemByVnum(unsigned long vnum) const {
+  std::map<unsigned long,Item*>::const_iterator cit;
+  Zone* zone = nullptr;
+
+  if ((zone = World::Instance().lookup(vnum)) == nullptr) {
+    VERBOSE_(nullptr, "Zone lookup failed for vnum %d", vnum);
+    return nullptr;
+  }
+  if ((cit = zone->items().find(vnum)) == zone->items().end()) {
+    VERBOSE_(nullptr, "Item (vnum %d) lookup failed in Zone %s", vnum, zone->ident());
+    return nullptr;
+  }
+
+  return cit->second;
+}
+
+ItemSet* World::createItemSet(void) {
+  ItemSet* set = new ItemSet();
+  _item_sets_set.insert(set);
+  return set;
+}
+
+void World::destroyItemSet(ItemSet* set) {
+  for (auto iter : set->items()) _item_sets_map.erase(iter->vnum());
+  _item_sets_set.erase(set);
+  delete set;
+  return;
+}
+
+bool World::addItemToSet(Item* item, ItemSet* set) {
+  std::map<unsigned long,ItemSet*>::const_iterator cit;
+  unsigned long vnum = item->vnum();
+
+  // Make sure the Item isn't already in an ItemSet.
+  if ((cit = _item_sets_map.find(vnum)) != _item_sets_map.end()) {
+    WARN_(nullptr, "vnum '%' already in set '%s'", vnum, set->serializeItems().c_str());
+    return false;
+  }
+
+  set->items().push_back(item);
+  _item_sets_map.insert(std::make_pair(vnum, set));
+  return true;
+}
+
+bool World::removeItemFromSet(Item* item, ItemSet* set) {
+  std::map<unsigned long,ItemSet*>::const_iterator cit;
+  unsigned long vnum = item->vnum();
+
+  // Make sure the Item is in the vnum:set map.
+  if ((cit = _item_sets_map.find(vnum)) == _item_sets_map.end()) {
+    WARN_(nullptr, "vnum '%d' not found in _item_sets_map", vnum);
+    return false;
+  }
+  // Make sure the Item belongs to the given ItemSet.
+  if (cit->second != set) {
+    WARN_(nullptr, "vnum '%d' not a member of set '%s'", vnum, set->serializeItems().c_str());
+    return false;
+  }
+
+  set->items().remove(item);
+  _item_sets_map.erase(vnum);
+  return true;
+}
+
+ItemSet* World::getSetByItem(Item* item) const {
+  std::map<unsigned long,ItemSet*>::const_iterator cit;
+  if ((cit = _item_sets_map.find(item->vnum())) == _item_sets_map.end()) return nullptr;
+  return cit->second;
 }
 
 /************************************************************ BOARDS ************************************************************/

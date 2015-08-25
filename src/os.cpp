@@ -154,7 +154,7 @@ namespace os {
 
   void log_(const char* func, const char* file, unsigned line, unsigned level, const Being* being, const char* format, ...) {
     char buffer[BUFFER_SIZE];
-    std::string message;
+    ColorString message;
     va_list args;
 
     if (level == LOG_SILENT) return; // don't even bother
@@ -177,8 +177,8 @@ namespace os {
 
     // Conditionally output to console
     if (level >= console_log_level) {
-      if (level <= LOG_INFO) std::cout << message;
-      else std::cerr << message;
+      if (level <= LOG_INFO) std::cout << message.stripColor();
+      else std::cerr << message.stripColor();
     }
 
     // Broadcast to admins
