@@ -113,7 +113,7 @@ bool CmdRemove::execute(Being* being, const std::vector<std::string>& args) {
 
   for (std::list<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
     if (being->unwear(*it, error)) {
-      being->send("You remove %s{x.\n", (*it)->identifiers().shortname().c_str());
+      being->send("You remove %s{x.\n", (*it)->shortname().c_str());
       being->room()->send_cond("$a removes $o.\n", being, *it);
     } else {
       being->send(error);
@@ -144,7 +144,7 @@ bool CmdReply::execute(Being* being, const std::vector<std::string>& args) {
     return false;
   }
 
-  target->replyTo(avatar()->identifiers().shortname());
+  target->replyTo(avatar()->shortname());
   target->send("%s replies to you, \"{Y%s{x\"", target->seeName(avatar()).c_str(), args[0].c_str());
   avatar()->send("You reply to %s, \"{Y%s{x\"", avatar()->seeName(target).c_str(), args[0].c_str());
 
@@ -171,18 +171,18 @@ bool CmdRestring::execute(Being* being, const std::vector<std::string>& args) {
   }
 
   if (Regex::strPrefix(args[1], "shortname")) {
-    item->identifiers().shortname(args[2]);
-    being->send("Item shortname reset to \"%s\".", item->identifiers().shortname().c_str());
+    item->shortname(args[2]);
+    being->send("Item shortname reset to \"%s\".", item->shortname().c_str());
   } else if (Regex::strPrefix(args[1], "longname")) {
-    item->identifiers().longname(args[2]);
-    being->send("Item longname reset to \"%s\".", item->identifiers().longname().c_str());
+    item->longname(args[2]);
+    being->send("Item longname reset to \"%s\".", item->longname().c_str());
   } else if (Regex::strPrefix(args[1], "keywords")) {
-    item->identifiers().getKeywords().clear();
+    item->getKeywords().clear();
     keywords = Regex::explode(" ", args[2]);
     for (std::vector<std::string>::const_iterator it = keywords.begin(); it != keywords.end(); ++it) {
-      item->identifiers().addKeyword(*it);
+      item->addKeyword(*it);
     }
-    being->send("Item keywords reset to \"%s\".", item->identifiers().getKeywordList().c_str());
+    being->send("Item keywords reset to \"%s\".", item->getKeywordList().c_str());
   } else {
     being->send(printSyntax());
     return false;
@@ -434,7 +434,7 @@ bool CmdSit::execute(Being* being, const std::vector<std::string>& args) {
     // sit at it...
     if (Regex::strPrefix(args[0], "at")) {
       if (being->sit(error, furniture->furniture(), false)) {
-        being->send("You sit down at %s.", furniture->identifiers().shortname().c_str());
+        being->send("You sit down at %s.", furniture->shortname().c_str());
         being->room()->send_cond("$a sits down at $o.", being, furniture);
       } else {
         being->send(error);
@@ -443,7 +443,7 @@ bool CmdSit::execute(Being* being, const std::vector<std::string>& args) {
     // sit on it...
     } else if (Regex::strPrefix(args[0], "on")) {
       if (being->sit(error, furniture->furniture(), true)) {
-        being->send("You sit down on %s.", furniture->identifiers().shortname().c_str());
+        being->send("You sit down on %s.", furniture->shortname().c_str());
         being->room()->send_cond("$a sits down on $o.", being, furniture);
       } else {
         being->send(error);
@@ -665,14 +665,14 @@ bool CmdSummon::execute(Being* being, const std::vector<std::string>& args) {
 
   // Check permissions...
   if (!avatar()->canAlter(target)) {
-    avatar()->send("You can't summon %s.\n", target->identifiers().shortname().c_str());
-    target->send("%s has attempted to summon you.", avatar()->identifiers().shortname().c_str());
+    avatar()->send("You can't summon %s.\n", target->shortname().c_str());
+    target->send("%s has attempted to summon you.", avatar()->shortname().c_str());
     return false;
   }
 
   // Are they already here?
   if (target->room() == avatar()->room()) {
-    avatar()->send("%s is already here.\n", target->identifiers().shortname().c_str());
+    avatar()->send("%s is already here.\n", target->shortname().c_str());
     return false;
   }
 

@@ -2,6 +2,7 @@
 #include "container.hpp"
 #include "estring.hpp"
 #include "item.hpp"
+#include "regex.hpp"
 
 Container::Container(void) {
   return;
@@ -123,7 +124,7 @@ std::list<Item*> Container::search(const std::map<int,Item*>& items, const std::
 
 bool Container::commonSearch(Item* item, const std::vector<std::string>& keywords) {
   for (std::vector<std::string>::const_iterator it = keywords.begin(); it != keywords.end(); ++it) {
-    if (!item->identifiers().matchesKeyword(*it)) {
+    if (!item->matchesKeyword(*it)) {
       return false;
     }
   }

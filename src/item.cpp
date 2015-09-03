@@ -3,9 +3,11 @@
 #include "compound-table.hpp"
 #include "item-types.hpp"
 #include "item.hpp"
+#include "regex.hpp"
 #include "socket.hpp"
 
-Item::Item(void) {
+Item::Item(void):
+    HasIdentifiers() {
   extra(NULL);
   type(Type_Undefined);
   vnum(0);
@@ -13,14 +15,14 @@ Item::Item(void) {
   value(1);
   compound(nullptr);
   wearable(Wearable_Undefined);
-  identifiers().shortname("undefined");
-  identifiers().longname("undefined");
+  shortname("undefined");
+  longname("undefined");
   return;
 }
 
 Item::Item(const Item& ref):
+    HasIdentifiers(ref),
     _flags(ref.flags()),
-    _identifiers(ref.identifiers()),
     _primary_compound(ref.compound()),
     _other_compounds(ref.composition()) {
   extra(NULL);
@@ -240,7 +242,7 @@ void Item::unserializeModifiers(std::string ser) {
 }
 
 std::string Item::serializeCompound(void) const {
-  return compound() == nullptr ? "" : compound()->identifiers().shortname();
+  return compound() == nullptr ? "" : compound()->shortname();
 }
 
 void Item::unserializeCompound(std::string ser) {
@@ -250,7 +252,7 @@ void Item::unserializeCompound(std::string ser) {
 
 std::string Item::serializeComposition(std::string sep) const {
   std::set<std::string> foo;
-  for (auto iter : composition()) foo.insert(iter->identifiers().shortname());
+  for (auto iter : composition()) foo.insert(iter->shortname());
   return Regex::implode(sep, foo);
 }
 
@@ -261,11 +263,11 @@ void Item::unserializeComposition(std::string ser) {
 }
 
 std::string Item::decorativeShortname(void) const {
-  return listDecorativeFlags().append(identifiers().shortname());
+  return listDecorativeFlags().append(shortname());
 }
 
 std::string Item::decorativeLongname(void) const {
-  return listDecorativeFlags().append(identifiers().longname());
+  return listDecorativeFlags().append(longname());
 }
 
 std::string Item::listDecorativeFlags(void) const {
@@ -294,13 +296,13 @@ std::string Item::printInformation(void) const {
 +----------------------+----------------------------------------------------+\n\
 | description {y%s{x\n\
 +---------------------------------------------------------------------------+\n",
-    vnum(), identifiers().getKeywordList().c_str(),
-    typeToString(), identifiers().shortname().c_str(),
-    level(), identifiers().longname().c_str(),
-    flags().list(FTItem::Instance()).c_str(), (compound() == nullptr ? "" : compound()->identifiers().shortname().c_str()),
+    vnum(), getKeywordList().c_str(),
+    typeToString(), shortname().c_str(),
+    level(), longname().c_str(),
+    flags().list(FTItem::Instance()).c_str(), (compound() == nullptr ? "" : compound()->shortname().c_str()),
     value(), serializeComposition().c_str(),
     wearableToString(),
-    identifiers().description().c_str()
+    description().c_str()
   );
   dest.append(buffer);
 

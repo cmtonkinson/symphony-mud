@@ -3,8 +3,9 @@
 #include "inventory-container.hpp"
 #include "item-types.hpp"
 #include "item.hpp"
+#include "regex.hpp"
 
-InventoryContainer::InventoryContainer(std::string (Identifiers::*getName)(void) const):
+InventoryContainer::InventoryContainer(std::string (HasIdentifiers::*getName)(void) const):
     _getName(getName) {
   return;
 }
@@ -106,10 +107,10 @@ std::string InventoryContainer::listItems(bool compact) const {
 
   if (compact) {
     for (std::list<Item*>::const_iterator it = itemList().begin(); it != itemList().end(); ++it) {
-      if (map.find(((*it)->identifiers().*_getName)()) == map.end()) {
-        map[((*it)->identifiers().*_getName)()] = 1;
+      if (map.find(((*it)->*_getName)()) == map.end()) {
+        map[((*it)->*_getName)()] = 1;
       } else {
-        map[((*it)->identifiers().*_getName)()] += 1;
+        map[((*it)->*_getName)()] += 1;
       }
     }
     for (std::map<std::string,unsigned>::iterator it = map.begin(); it != map.end(); ++it) {
@@ -121,7 +122,7 @@ std::string InventoryContainer::listItems(bool compact) const {
     }
   } else {
     for (std::list<Item*>::const_iterator it = itemList().begin(); it != itemList().end(); ++it) {
-      dest.append(((*it)->identifiers().*_getName)()).append(1, '\n');
+      dest.append(((*it)->*_getName)()).append(1, '\n');
     }
   }
   return Regex::trim(dest);

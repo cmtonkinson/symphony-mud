@@ -349,10 +349,10 @@ bool CmdClone::execute(Being* being, const std::vector<std::string>& args) {
   }
 
   if (times == 1) {
-    avatar()->send("You've created a clone of %s.\n", clone->identifiers().shortname().c_str());
+    avatar()->send("You've created a clone of %s.\n", clone->shortname().c_str());
     avatar()->room()->send_cond("$a has created a clone of $o.\n", avatar(), item);
   } else {
-    avatar()->send("You've created %d clones of %s.\n", times, clone->identifiers().shortname().c_str());
+    avatar()->send("You've created %d clones of %s.\n", times, clone->shortname().c_str());
     avatar()->room()->send_cond("$a has created $s clones of $O.\n", avatar(), buf, item);
   }
 
@@ -469,7 +469,7 @@ bool CmdConnections::execute(Being* being, const std::vector<std::string>& args)
   for (std::map<std::string,Avatar*>::const_iterator it = World::Instance().getAvatars().begin(); it != World::Instance().getAvatars().end(); ++it) {
     if (being->canSee(it->second) == Being::SEE_NAME) {
       sprintf(buffer, "  {x%-15s{g%-15s{W%-20s{C%-10d\n",
-        it->second->identifiers().shortname().c_str(),
+        it->second->shortname().c_str(),
         it->second->status().string().c_str(),
         it->second->socket()->getIP().c_str(),
         it->second->socket()->getFd()
@@ -610,8 +610,8 @@ bool CmdDemote::execute(Being* being, const std::vector<std::string>& args) {
     return false;
   }
   if (!avatar()->canAlter(target)) {
-    avatar()->send("You can't demote %s.", target->identifiers().shortname().c_str());
-    target->send("%s just tried to demote you to level %d.", avatar()->identifiers().shortname().c_str(), level);
+    avatar()->send("You can't demote %s.", target->shortname().c_str());
+    target->send("%s just tried to demote you to level %d.", avatar()->shortname().c_str(), level);
     return false;
   }
   if (target->level() < level) {
@@ -619,14 +619,14 @@ bool CmdDemote::execute(Being* being, const std::vector<std::string>& args) {
     return false;
   }
   if (level == target->level()) {
-    avatar()->send("%s is already level %d.", target->identifiers().shortname().c_str(), target->level());
+    avatar()->send("%s is already level %d.", target->shortname().c_str(), target->level());
     return false;
   }
 
   // Give 'em the juice!
   target->level(level);
   target->send("%s has {Rdemoted{x you to level %d!", target->seeName(avatar(), true).c_str(), target->level());
-  avatar()->send("%s has been {Rdemoted{x to level %d!", target->identifiers().shortname().c_str(), target->level());
+  avatar()->send("%s has been {Rdemoted{x to level %d!", target->shortname().c_str(), target->level());
 
   return true;
 }
@@ -641,9 +641,9 @@ CmdDescription::CmdDescription(void) {
 
 bool CmdDescription::execute(Being* being, const std::vector<std::string>& args) {
   IOHandler* h = new TeditIOHandler(avatar());
-  h->getState()["vector"] = (void*)(new std::vector<std::string>(Regex::explode("\n",avatar()->identifiers().description())));
+  h->getState()["vector"] = (void*)(new std::vector<std::string>(Regex::explode("\n",avatar()->description())));
   h->getState()["name"] = (void*)(new std::string("Avatar Description"));
-  h->getState()["pointer"] = (void*)avatar()->identifiers().descriptionp();
+  h->getState()["pointer"] = (void*)avatar()->descriptionp();
   avatar()->pushIOHandler(h);
   return true;
 }
@@ -707,9 +707,9 @@ bool CmdDrop::execute(Being* being, const std::vector<std::string>& args) {
   }
   for (std::list<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
     if ((*it)->flags().test(ITEM_NODROP)) {
-      being->send("You can't drop %s.\n", (*it)->identifiers().shortname().c_str());
+      being->send("You can't drop %s.\n", (*it)->shortname().c_str());
     } else {
-      being->send("You drop %s.\n", (*it)->identifiers().shortname().c_str());
+      being->send("You drop %s.\n", (*it)->shortname().c_str());
       being->room()->send_cond("$a drops $o.\n", being, *it);
       being->inventory().remove(*it);
       being->room()->inventory().add(*it);
@@ -739,7 +739,7 @@ bool CmdDunce::execute(Being* being, const std::vector<std::string>& args) {
     return false;
   }
   if (!avatar()->canAlter(target)) {
-    avatar()->send("You can't do that to %s you %s!", target->identifiers().shortname().c_str(), dunce);
+    avatar()->send("You can't do that to %s you %s!", target->shortname().c_str(), dunce);
     avatar()->whoFlags().set(WHO_DUNCE);
     target->send("%s tried to call you out for being a %s.  They've been delt their own medicine.", dunce, target->seeName(avatar(), true).c_str());
     return false;
@@ -748,11 +748,11 @@ bool CmdDunce::execute(Being* being, const std::vector<std::string>& args) {
   if (target->whoFlags().test(WHO_DUNCE)) {
     target->whoFlags().clear(WHO_DUNCE);
     target->send("%s has forgiven you for being a %s.", target->seeName(avatar(), true).c_str(), dunce);
-    avatar()->send("You've forgiven %s for being a %s.", target->identifiers().shortname().c_str(), dunce);
+    avatar()->send("You've forgiven %s for being a %s.", target->shortname().c_str(), dunce);
   } else {
     target->whoFlags().set(WHO_DUNCE);
     target->send("%s called you a %s!", target->seeName(avatar(), true).c_str(), dunce);
-    avatar()->send("You just called %s a %s!", target->identifiers().shortname().c_str(), dunce);
+    avatar()->send("You just called %s a %s!", target->shortname().c_str(), dunce);
   }
 
   return true;
@@ -774,7 +774,7 @@ bool CmdEat::execute(Being* being, const std::vector<std::string>& args) {
   }
   for (std::list<Item*>::iterator it = dead.begin(); it != dead.end(); ++it) {
     avatar()->inventory().remove(*it);
-    avatar()->send("You eat %s.\n", (*it)->identifiers().shortname().c_str());
+    avatar()->send("You eat %s.\n", (*it)->shortname().c_str());
     avatar()->room()->send_cond("$a eats $o.\n", avatar(), *it);
     delete *it;
   }
@@ -877,14 +877,14 @@ bool CmdForce::execute(Being* being, const std::vector<std::string>& args) {
 
   // Check permissions...
   if (!avatar()->canAlter(target)) {
-    avatar()->send("You can't tell %s what to do!", target->identifiers().shortname().c_str());
-    target->send("%s tried to make you \"%s\"", avatar()->identifiers().shortname().c_str(), args[1].c_str());
+    avatar()->send("You can't tell %s what to do!", target->shortname().c_str());
+    target->send("%s tried to make you \"%s\"", avatar()->shortname().c_str(), args[1].c_str());
     return false;
   }
 
   // Force the command...
   target->send("%s forces you into action.\n", target->seeName(avatar(), true).c_str());
-  avatar()->send("%s does as you command.\n", target->identifiers().shortname().c_str());
+  avatar()->send("%s does as you command.\n", target->shortname().c_str());
   if (target->isAvatar()) {
     success = target->IOhandler()->handle(args[1]);
   } else {

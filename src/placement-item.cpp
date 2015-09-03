@@ -80,7 +80,7 @@ bool PlacementItem::execute(std::list<Item*>& new_items, std::list<Npc*>& new_np
           WARN_(0, "placement failed in '%s'; item %lu loaded, but can't find NPC %lu#%hu", zone->name().c_str(), target(), indirectItem(), indirectItemIndex())
           return false;
         }
-        args[0] = item->identifiers().longestKeyword();
+        args[0] = item->longestKeyword();
         // Pick up the item.
         get.execute(being, args);
         // Wear it, if applicable.

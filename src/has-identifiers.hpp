@@ -1,23 +1,17 @@
 
-#ifndef H_SYMPHONY_IDENTIFIERS
-#define H_SYMPHONY_IDENTIFIERS
+#ifndef H_SYMPHONY_HAS_IDENTIFIERS
+#define H_SYMPHONY_HAS_IDENTIFIERS
 
 #include <set>
 #include <string>
 #include "color-string.hpp"
-#include "regex.hpp"
 
-/*
- * This class is designed to "kind of" emulate an interface to
- * be implemented by classes which will have short and long names,
- * be accessible via keywords, and contain long descriptionns.
- */
-class Identifiers {
+class HasIdentifiers {
   public:
     // Constructors...
-    Identifiers(void);
-    Identifiers(const Identifiers& ref);
-    ~Identifiers(void);
+    HasIdentifiers(void);
+    HasIdentifiers(const HasIdentifiers& ref);
+    ~HasIdentifiers(void);
 
     // Public accessor methods...
     void                          shortname(const std::string& shortname)             { _shortname.assign(shortname); }
@@ -40,6 +34,9 @@ class Identifiers {
     void                          unserializeKeywords(const std::string& serialization);
     std::string                   longestKeyword(void) const;
 
+    // Shortcuts...
+    const char*   name(void) const  { return shortname().c_str(); }
+
   private:
     std::string                   _shortname;
     std::string                   _longname;
@@ -47,4 +44,4 @@ class Identifiers {
     std::set<std::string>         _keywords;
 };
 
-#endif // #ifndef H_SYMPHONY_IDENTIFIERS
+#endif // #ifndef H_SYMPHONY_HAS_IDENTIFIERS

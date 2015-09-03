@@ -57,9 +57,9 @@ NCmdDescription::NCmdDescription(void) {
 
 bool NCmdDescription::execute(Being* being, const std::vector<std::string>& args) {
   IOHandler* h = new TeditIOHandler(being);
-  h->getState()["vector"] = (void*)(new std::vector<std::string>(Regex::explode("\n",avatar()->nedit()->identifiers().description())));
+  h->getState()["vector"] = (void*)(new std::vector<std::string>(Regex::explode("\n",avatar()->nedit()->description())));
   h->getState()["name"] = (void*)(new std::string("Npc Description"));
-  h->getState()["pointer"] = (void*)avatar()->nedit()->identifiers().descriptionp();
+  h->getState()["pointer"] = (void*)avatar()->nedit()->descriptionp();
   avatar()->pushIOHandler(h);
   return true;
 }
@@ -107,11 +107,11 @@ NCmdKeywords::NCmdKeywords(void) {
 
 bool NCmdKeywords::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> keywords = Regex::explode(" ", args[0]);
-  avatar()->nedit()->identifiers().getKeywords().clear();
+  avatar()->nedit()->getKeywords().clear();
   for (std::vector<std::string>::iterator it = keywords.begin(); it != keywords.end(); ++it) {
-    avatar()->nedit()->identifiers().addKeyword(*it);
+    avatar()->nedit()->addKeyword(*it);
   }
-  avatar()->send("You've set the npc keywords to \"%s\".", avatar()->nedit()->identifiers().getKeywordList().c_str());
+  avatar()->send("You've set the npc keywords to \"%s\".", avatar()->nedit()->getKeywordList().c_str());
   return true;
 }
 
@@ -148,8 +148,8 @@ NCmdLongname::NCmdLongname(void) {
 }
 
 bool NCmdLongname::execute(Being* being, const std::vector<std::string>& args) {
-  avatar()->nedit()->identifiers().longname(args[0]);
-  avatar()->send("You've set the npc longname to \"%s\".", avatar()->nedit()->identifiers().longname().c_str());
+  avatar()->nedit()->longname(args[0]);
+  avatar()->send("You've set the npc longname to \"%s\".", avatar()->nedit()->longname().c_str());
   return true;
 }
 
@@ -203,7 +203,7 @@ NCmdShortname::NCmdShortname(void) {
 }
 
 bool NCmdShortname::execute(Being* being, const std::vector<std::string>& args) {
-  avatar()->nedit()->identifiers().shortname(args[0]);
-  avatar()->send("You've set the npc shortname to \"%s\".", avatar()->nedit()->identifiers().shortname().c_str());
+  avatar()->nedit()->shortname(args[0]);
+  avatar()->send("You've set the npc shortname to \"%s\".", avatar()->nedit()->shortname().c_str());
   return true;
 }

@@ -427,7 +427,7 @@ bool CmdLook::execute(Being* being, const std::vector<std::string>& args) {
             output.append("[{YAFK{x] ");
           }
         }
-        output.append(iter->identifiers().shortname()).append("{x");
+        output.append(iter->shortname()).append("{x");
         if (iter->isAvatar()) {
           output.append(", a ").append(iter->gender().string()).append(" ").append(iter->race().string()).append(",");
         }
@@ -439,7 +439,7 @@ bool CmdLook::execute(Being* being, const std::vector<std::string>& args) {
   } else if (args.size() == 1) {
     if ((btarget = being->findBeing(args[0])) != NULL) {
       // looking at a being
-      being->send("You look at %s:\n%s{x\n\n", btarget->identifiers().shortname().c_str(), btarget->identifiers().description().c_str());
+      being->send("You look at %s:\n%s{x\n\n", btarget->shortname().c_str(), btarget->description().c_str());
       for (unsigned u = 1; u < Being::WEARLOC_END; ++u) {
         if (btarget->worn(u)) {
           being->send("%s%s{x\n", Being::wearLocName(u), btarget->worn(u)->decorativeShortname().c_str());
@@ -452,7 +452,7 @@ bool CmdLook::execute(Being* being, const std::vector<std::string>& args) {
       return true;
     } else if ((otarget = being->room()->inventory().searchSingleItem(args[0])) != NULL) {
       // looking at an item
-      being->send("You look at %s:\n%s{x\n", otarget->identifiers().shortname().c_str(), otarget->identifiers().description().c_str());
+      being->send("You look at %s:\n%s{x\n", otarget->shortname().c_str(), otarget->description().c_str());
       being->room()->send_cond("$a looks at $o.\n", being, otarget);
       return true;
     } else {
@@ -471,10 +471,10 @@ bool CmdLook::execute(Being* being, const std::vector<std::string>& args) {
         return false;
       }
       if (container->container()->inventory().itemList().empty()) {
-        being->send("%s{x is empty.", container->identifiers().shortname().c_str());
+        being->send("%s{x is empty.", container->shortname().c_str());
         return true;
       }
-      being->send("You look in %s:\n", container->identifiers().shortname().c_str());
+      being->send("You look in %s:\n", container->shortname().c_str());
       being->send(container->container()->inventory().listItems());
       return true;
     } else {

@@ -5,8 +5,8 @@ Compound::Compound(void) {
   return;
 }
 
-Compound::Compound( std::string shortname,
-                    std::string longname,
+Compound::Compound( std::string shortname_,
+                    std::string longname_,
                     double darkness,
                     double density,
                     double ductility,
@@ -41,8 +41,8 @@ Compound::Compound( std::string shortname,
                       _smoothness(smoothness),
                       _thermalConductivity(thermalConductivity),
                       _tags(tags) {
-  identifiers().shortname(shortname);
-  identifiers().longname(longname);
+  shortname(shortname_);
+  longname(longname_);
   return;
 }
 

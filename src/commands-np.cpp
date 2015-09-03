@@ -43,7 +43,7 @@ bool CmdNedit::execute(Being* being, const std::vector<std::string>& args) {
     // Make sure no one else is editing the item...
     for (std::map<std::string,Avatar*>::iterator a_it = World::Instance().getAvatars().begin(); a_it != World::Instance().getAvatars().end(); ++a_it) {
       if (a_it->second->mode().number() == MODE_NEDIT && a_it->second->nedit() == it->second) {
-        avatar()->send("Sorry, %s is currently editing %s (npc %lu).", avatar()->seeName(((Being*)a_it->second)).c_str(), it->second->identifiers().shortname().c_str(), it->second->vnum());
+        avatar()->send("Sorry, %s is currently editing %s (npc %lu).", avatar()->seeName(((Being*)a_it->second)).c_str(), it->second->shortname().c_str(), it->second->vnum());
         return false;
       }
     }
@@ -124,7 +124,7 @@ bool CmdNlist::execute(Being* being, const std::vector<std::string>& args) {
         // This search is a regex...
         for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
           for (std::map<unsigned long,Npc*>::iterator m_it = (*a_it)->npcs().begin(); m_it != (*a_it)->npcs().end(); ++m_it) {
-            if (m_it->second->identifiers().matchesKeyword(mutable_args[0])) {
+            if (m_it->second->matchesKeyword(mutable_args[0])) {
               npcs.push_back(m_it->second);
             }
           }
@@ -134,7 +134,7 @@ bool CmdNlist::execute(Being* being, const std::vector<std::string>& args) {
         // We got a search string...
         for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
           for (std::map<unsigned long,Npc*>::iterator m_it = (*a_it)->npcs().begin(); m_it != (*a_it)->npcs().end(); ++m_it) {
-            if (m_it->second->identifiers().matchesKeyword(search)) {
+            if (m_it->second->matchesKeyword(search)) {
               npcs.push_back(m_it->second);
             }
           }
@@ -172,7 +172,7 @@ bool CmdNlist::execute(Being* being, const std::vector<std::string>& args) {
 
   output.append(" [{y vnum{x] {gname{x\n -------------------\n");
   for (std::vector<Npc*>::iterator it = npcs.begin(); it != npcs.end(); ++it) {
-    sprintf(buffer, " [{y%5u{x] %s{x\n", (*it)->vnum(), (*it)->identifiers().shortname().c_str());
+    sprintf(buffer, " [{y%5u{x] %s{x\n", (*it)->vnum(), (*it)->shortname().c_str());
     output.append(buffer);
   }
 
@@ -199,7 +199,7 @@ bool CmdNload::execute(Being* being, const std::vector<std::string>& args) {
         being->send("Nload failed. Don't you feel stupid?");
         return false;
       }
-      if (npc->identifiers().shortname().empty() || npc->identifiers().longname().empty() || npc->identifiers().getKeywords().empty()) {
+      if (npc->shortname().empty() || npc->longname().empty() || npc->getKeywords().empty()) {
         avatar()->send("Sorry; that npc isn't complete yet.");
         return false;
       }
@@ -207,7 +207,7 @@ bool CmdNload::execute(Being* being, const std::vector<std::string>& args) {
       being->room()->add(npc);
       npc->room(being->room());
       npc->animate();
-      being->send("You load %s.", npc->identifiers().shortname().c_str());
+      being->send("You load %s.", npc->shortname().c_str());
       being->room()->send_cond("$a has created $c.", being, npc);
       return true;
     }
@@ -415,18 +415,18 @@ bool CmdPedit::execute(Being* being, const std::vector<std::string>& args) {
   // Make sure no one else is editing the item...
   for (std::map<std::string,Avatar*>::iterator a_it = World::Instance().getAvatars().begin(); a_it != World::Instance().getAvatars().end(); ++a_it) {
     if (a_it->second->mode().number() == MODE_PEDIT && a_it->second->pedit() == target) {
-      avatar()->send("Sorry, %s is currently editing %s.", avatar()->seeName(((Being*)a_it->second)).c_str(), target->identifiers().shortname().c_str());
+      avatar()->send("Sorry, %s is currently editing %s.", avatar()->seeName(((Being*)a_it->second)).c_str(), target->shortname().c_str());
       return false;
     }
   }
 
   if (avatar()->canAlter(target) || avatar()->level() >= Being::CREATOR) {
-    avatar()->send("You're editing %s.", target->identifiers().shortname().c_str());
+    avatar()->send("You're editing %s.", target->shortname().c_str());
     avatar()->pedit(target);
     avatar()->pushIOHandler(new PeditIOHandler(avatar()));
     return true;
   } else {
-    avatar()->send("You can't edit %s.", target->identifiers().shortname().c_str());
+    avatar()->send("You can't edit %s.", target->shortname().c_str());
     return false;
   }
 
@@ -457,7 +457,7 @@ bool CmdPoofin::execute(Being* being, const std::vector<std::string>& args) {
     return true;
   }
 
-  if (Regex::lower(args[0]).find(Regex::lower(avatar->identifiers().shortname())) == std::string::npos) {
+  if (Regex::lower(args[0]).find(Regex::lower(avatar->shortname())) == std::string::npos) {
     avatar->send("Your poofin must contain your name.");
     return false;
   }
@@ -492,7 +492,7 @@ bool CmdPoofout::execute(Being* being, const std::vector<std::string>& args) {
     return true;
   }
 
-  if (Regex::lower(args[0]).find(Regex::lower(avatar->identifiers().shortname())) == std::string::npos) {
+  if (Regex::lower(args[0]).find(Regex::lower(avatar->shortname())) == std::string::npos) {
     avatar->send("Your poofout must contain your name.");
     return false;
   }
@@ -522,8 +522,8 @@ bool CmdPromote::execute(Being* being, const std::vector<std::string>& args) {
     return false;
   }
   if (!avatar()->canAlter(target)) {
-    avatar()->send("You can't promote %s.", target->identifiers().shortname().c_str());
-    target->send("%s just tried to promote you to level %d.", avatar()->identifiers().shortname().c_str(), level);
+    avatar()->send("You can't promote %s.", target->shortname().c_str());
+    target->send("%s just tried to promote you to level %d.", avatar()->shortname().c_str(), level);
     return false;
   }
   if (level < target->level()) {
@@ -531,7 +531,7 @@ bool CmdPromote::execute(Being* being, const std::vector<std::string>& args) {
     return false;
   }
   if (level == target->level()) {
-    avatar()->send("That wouldn't really help %s much, now would it?", target->identifiers().shortname().c_str());
+    avatar()->send("That wouldn't really help %s much, now would it?", target->shortname().c_str());
     return false;
   }
   if (level >= (avatar()->level() + Being::ALTERABILITY_LEVEL_DIFFERENCE)) {
@@ -546,7 +546,7 @@ bool CmdPromote::execute(Being* being, const std::vector<std::string>& args) {
   if (target->level() >= Being::GOD) target->masterAllTheThings();
 
   target->send("%s has {Gpromoted{x you to level {G%d{x!", target->seeName(avatar(), true).c_str(), target->level());
-  avatar()->send("%s has been {Gpromoted{x to level {G%d{x!", target->identifiers().shortname().c_str(), target->level());
+  avatar()->send("%s has been {Gpromoted{x to level {G%d{x!", target->shortname().c_str(), target->level());
 
   return true;
 }
@@ -570,7 +570,7 @@ bool CmdPurge::execute(Being* being, const std::vector<std::string>& args) {
       // check to make sure the npc isn't on anything...
       if (!npc->isStanding()) {
         if (!npc->stand(ignored)) {
-          avatar()->send("You couldn't force %s to stand up.", npc->identifiers().shortname().c_str());
+          avatar()->send("You couldn't force %s to stand up.", npc->shortname().c_str());
           return false;
         }
       }
@@ -616,7 +616,7 @@ bool CmdPut::execute(Being* being, const std::vector<std::string>& args) {
     }
     if ((*it)->flags().test(ITEM_NODROP)) {
       // make sure they can let go of it
-      being->send("You can't let go of %s{x.\n", (*it)->identifiers().shortname().c_str());
+      being->send("You can't let go of %s{x.\n", (*it)->shortname().c_str());
     } else if ((*it)->isContainer()) {
       // until MySQL gets das boot, this is too much hassle
       being->send("You can't put a container inside another container.\n");
@@ -624,7 +624,7 @@ bool CmdPut::execute(Being* being, const std::vector<std::string>& args) {
       // transfer the item
       being->inventory().remove(*it);
       container->container()->inventory().add(*it);
-      being->send("You put %s{x in %s{x.\n", (*it)->identifiers().shortname().c_str(), container->identifiers().shortname().c_str());
+      being->send("You put %s{x in %s{x.\n", (*it)->shortname().c_str(), container->shortname().c_str());
       being->room()->send_cond("$a puts $o{x in $O{x.\n", being, *it, container);
       return true;
     }

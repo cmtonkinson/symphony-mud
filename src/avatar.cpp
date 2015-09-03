@@ -23,7 +23,7 @@ Avatar::Avatar(Socket* socket_) {
   disconnected(false);
   deletionStatus(DO_NOT_DELETE);
   socket(socket_);
-  if (socket() != nullptr) identifiers().shortname(estring(socket()->getFd()));
+  if (socket() != nullptr) shortname(estring(socket()->getFd()));
   board(0);
   note(NULL);
   bigBrother(os::LOG_INFO);
@@ -57,9 +57,9 @@ void Avatar::processOutput(std::string src) {
 
 // private
 void Avatar::changeIdentifiers(std::string str) {
-  identifiers().shortname(str);
-  identifiers().getKeywords().clear();
-  identifiers().getKeywords().insert(str);
+  shortname(str);
+  getKeywords().clear();
+  getKeywords().insert(str);
   return;
 }
 

@@ -1,12 +1,12 @@
 
-#include "identifiers.hpp"
+#include "has-identifiers.hpp"
 #include "regex.hpp"
 
-Identifiers::Identifiers(void) {
+HasIdentifiers::HasIdentifiers(void) {
   return;
 }
 
-Identifiers::Identifiers(const Identifiers& ref) {
+HasIdentifiers::HasIdentifiers(const HasIdentifiers& ref) {
   shortname(ref.shortname());
   longname(ref.longname());
   description(ref.description());
@@ -14,28 +14,28 @@ Identifiers::Identifiers(const Identifiers& ref) {
   return;
 }
 
-Identifiers::~Identifiers(void) {
+HasIdentifiers::~HasIdentifiers(void) {
   getKeywords().clear();
   return;
 }
 
-std::string Identifiers::getKeywordList(std::string glue) const {
+std::string HasIdentifiers::getKeywordList(std::string glue) const {
   return Regex::implode(glue, getKeywords());
 }
 
-void Identifiers::addKeyword(const std::string& keyword) {
+void HasIdentifiers::addKeyword(const std::string& keyword) {
   std::string foo = ColorString(keyword).stripColor();
   Regex::replace("[^a-z0-9]+", "", foo);
   getKeywords().insert(Regex::lower(foo));
   return;
 }
 
-void Identifiers::removeKeyword(const std::string& keyword) {
+void HasIdentifiers::removeKeyword(const std::string& keyword) {
   getKeywords().erase(Regex::lower(ColorString(keyword).stripColor()));
   return;
 }
 
-bool Identifiers::matchesKeyword(const std::string& keyword) const {
+bool HasIdentifiers::matchesKeyword(const std::string& keyword) const {
   std::string foo = Regex::lower(ColorString(keyword).stripColor());
   for (std::set<std::string>::const_iterator it = getKeywords().begin(); it != getKeywords().end(); ++it) {
     if (Regex::strPrefix(foo, *it)) {
@@ -45,11 +45,11 @@ bool Identifiers::matchesKeyword(const std::string& keyword) const {
   return false;
 }
 
-std::string Identifiers::serializeKeywords(void) const {
+std::string HasIdentifiers::serializeKeywords(void) const {
   return Regex::implode("|", getKeywords());
 }
 
-void Identifiers::unserializeKeywords(const std::string& serialization) {
+void HasIdentifiers::unserializeKeywords(const std::string& serialization) {
   std::vector<std::string> keywords = Regex::explode("|", serialization);
   for (std::vector<std::string>::iterator it = keywords.begin(); it != keywords.end(); ++it) {
     addKeyword(*it);
@@ -57,7 +57,7 @@ void Identifiers::unserializeKeywords(const std::string& serialization) {
   return;
 }
 
-std::string Identifiers::longestKeyword(void) const {
+std::string HasIdentifiers::longestKeyword(void) const {
   std::string longest = "";
   int longest_length  = 0;
   int length          = 0;

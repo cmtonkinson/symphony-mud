@@ -7,7 +7,7 @@
 #include "compound.hpp"
 #include "flag-bank.hpp"
 #include "flag-table.hpp"
-#include "identifiers.hpp"
+#include "has-identifiers.hpp"
 #include "modifier.hpp"
 
 class ItemArmor;
@@ -20,7 +20,7 @@ class ItemKey;
 class ItemTrash;
 class ItemWeapon;
 
-class Item {
+class Item: public HasIdentifiers {
   public:
     // constructors...
     Item(void);
@@ -68,9 +68,6 @@ class Item {
     std::string   listDecorativeFlags(void) const;
     std::string   printInformation(void) const;
 
-    // shortcuts
-    const char*   name(void) const  { return identifiers().shortname().c_str(); }
-
     // public accessors
     void                        type(Type type);
     void                        type(Type type, void* extra_ptr);
@@ -79,8 +76,6 @@ class Item {
     unsigned long               vnum(void) const                    { return _vnum; }
     FlagBank&                   flags(void)                         { return _flags; }
     const FlagBank&             flags(void) const                   { return _flags; }
-    Identifiers&                identifiers(void)                   { return _identifiers; }
-    const Identifiers&          identifiers(void) const             { return _identifiers; }
     void                        compound(const Compound* compound)  { _primary_compound = compound; }
     const Compound*             compound(void) const                { return _primary_compound; }
     std::set<const Compound*>&        composition(void)                   { return _other_compounds; }
@@ -110,7 +105,6 @@ class Item {
     Type                  _type;
     unsigned long         _vnum;
     FlagBank              _flags;
-    Identifiers           _identifiers;
     const Compound*             _primary_compound;
     std::set<const Compound*>   _other_compounds;
     unsigned              _level;

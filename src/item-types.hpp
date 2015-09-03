@@ -4,6 +4,7 @@
 
 #include "dice.hpp"
 #include "enum-table.hpp"
+#include "has-identifiers.hpp"
 #include "inventory-container.hpp"
 
 class Being;
@@ -43,7 +44,7 @@ class ItemClothing {
 ///////////////////////////////////////////////////////////////////////////////
 class ItemContainer {
   public:
-    ItemContainer(void): _inventory(&Identifiers::shortname)              { return; }
+    ItemContainer(void): _inventory(&HasIdentifiers::shortname)           { return; }
     ItemContainer(const ItemContainer& ref): _inventory(ref.inventory())  { return; }
     ~ItemContainer(void)                                                  { return; }
 

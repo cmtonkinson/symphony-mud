@@ -125,7 +125,7 @@ bool ICmdComposition::execute(Being* being, const std::vector<std::string>& args
 
   avatar()->send("Item composition is now: ");
   if (avatar()->iedit()->compound() != nullptr) {
-    avatar()->send("{y%s{x (primary) ", avatar()->iedit()->compound()->identifiers().shortname().c_str());
+    avatar()->send("{y%s{x (primary) ", avatar()->iedit()->compound()->shortname().c_str());
   }
   if (!avatar()->iedit()->composition().empty()) {
     avatar()->send("{y%s{x (other) ", avatar()->iedit()->serializeComposition(" ").c_str());
@@ -174,9 +174,9 @@ ICmdDescription::ICmdDescription(void) {
 
 bool ICmdDescription::execute(Being* being, const std::vector<std::string>& args) {
   IOHandler* h = new TeditIOHandler(being);
-  h->getState()["vector"] = (void*)(new std::vector<std::string>(Regex::explode("\n",avatar()->iedit()->identifiers().description())));
+  h->getState()["vector"] = (void*)(new std::vector<std::string>(Regex::explode("\n",avatar()->iedit()->description())));
   h->getState()["name"] = (void*)(new std::string("Item Description"));
-  h->getState()["pointer"] = (void*)avatar()->iedit()->identifiers().descriptionp();
+  h->getState()["pointer"] = (void*)avatar()->iedit()->descriptionp();
   avatar()->pushIOHandler(h);
   return true;
 }
@@ -378,11 +378,11 @@ ICmdKeywords::ICmdKeywords(void) {
 
 bool ICmdKeywords::execute(Being* being, const std::vector<std::string>& args) {
   std::vector<std::string> keywords = Regex::explode(" ", args[0]);
-  avatar()->iedit()->identifiers().getKeywords().clear();
+  avatar()->iedit()->getKeywords().clear();
   for (std::vector<std::string>::iterator it = keywords.begin(); it != keywords.end(); ++it) {
-    avatar()->iedit()->identifiers().addKeyword(*it);
+    avatar()->iedit()->addKeyword(*it);
   }
-  avatar()->send("You've set the item keywords to \"%s\".", avatar()->iedit()->identifiers().getKeywordList().c_str());
+  avatar()->send("You've set the item keywords to \"%s\".", avatar()->iedit()->getKeywordList().c_str());
   return true;
 }
 
@@ -409,8 +409,8 @@ ICmdLongname::ICmdLongname(void) {
 }
 
 bool ICmdLongname::execute(Being* being, const std::vector<std::string>& args) {
-  avatar()->iedit()->identifiers().longname(args[0]);
-  avatar()->send("You've set the item longname to \"%s{x\".", avatar()->iedit()->identifiers().longname().c_str());
+  avatar()->iedit()->longname(args[0]);
+  avatar()->send("You've set the item longname to \"%s{x\".", avatar()->iedit()->longname().c_str());
 
   return true;
 }
@@ -424,8 +424,8 @@ ICmdShortname::ICmdShortname(void) {
 }
 
 bool ICmdShortname::execute(Being* being, const std::vector<std::string>& args) {
-  avatar()->iedit()->identifiers().shortname(args[0]);
-  avatar()->send("You've set the item shortname to \"%s{x\".", avatar()->iedit()->identifiers().shortname().c_str());
+  avatar()->iedit()->shortname(args[0]);
+  avatar()->send("You've set the item shortname to \"%s{x\".", avatar()->iedit()->shortname().c_str());
   return true;
 }
 

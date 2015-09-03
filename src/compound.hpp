@@ -4,7 +4,7 @@
 
 #include <set>
 #include "flag-table.hpp"
-#include "identifiers.hpp"
+#include "has-identifiers.hpp"
 #include "math.hpp"
 
 /* Unless noted otherwise, each attribute is expected to be a unitless real number
@@ -22,7 +22,7 @@
  * will be carried out with proper units in Kelvin.
  */
 
-class Compound {
+class Compound: public HasIdentifiers {
   public:
 
     static constexpr double DARKNESS_MIN                = 0.0;
@@ -83,8 +83,6 @@ class Compound {
     ~Compound(void);
 
     // Public accessor methods...
-    Identifiers&        identifiers(void)                             { return _identifiers; }
-    const Identifiers&  identifiers(void) const                       { return _identifiers; }
     void       darkness(double darkness)                              { _darkness = Math::bound(darkness, DARKNESS_MIN, DARKNESS_MAX); }
     double     darkness(void) const                                   { return _darkness; }
     void       density(double density)                                { _density = Math::bound(density, DENSITY_MIN, DENSITY_MAX); }
@@ -121,7 +119,6 @@ class Compound {
     const FlagBank& tags(void) const                                  { return _tags; }
 
   private:
-    Identifiers   _identifiers;
     double         _darkness;
     double         _density;                // specific gravity, with water being 1.0
     double         _ductility;

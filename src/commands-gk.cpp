@@ -44,9 +44,9 @@ bool CmdGet::execute(Being* being, const std::vector<std::string>& args) {
     }
     for (std::list<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
       if ((*it)->flags().test(ITEM_NOGET)) {
-        being->send("You can't get %s{x.\n", (*it)->identifiers().shortname().c_str());
+        being->send("You can't get %s{x.\n", (*it)->shortname().c_str());
       } else {
-        being->send("You get %s.\n", (*it)->identifiers().shortname().c_str());
+        being->send("You get %s.\n", (*it)->shortname().c_str());
         being->room()->send_cond("$a gets $o.\n", being, *it);
         being->room()->inventory().remove(*it);
         being->inventory().add(*it);
@@ -64,14 +64,14 @@ bool CmdGet::execute(Being* being, const std::vector<std::string>& args) {
     }
     items = container->container()->inventory().searchItems(args[0]);
     if (items.empty()) {
-      being->send("There aren't any of those in %s{x.", container->identifiers().shortname().c_str());
+      being->send("There aren't any of those in %s{x.", container->shortname().c_str());
       return false;
     }
     for (std::list<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
       // transfer each item
       container->container()->inventory().remove(*it);
       being->inventory().add(*it);
-      being->send("You get %s{x from %s{x.\n", (*it)->identifiers().shortname().c_str(), container->identifiers().shortname().c_str());
+      being->send("You get %s{x from %s{x.\n", (*it)->shortname().c_str(), container->shortname().c_str());
       being->room()->send_cond("$a gets $o{x from $O{x.\n", being, *it, container);
     }
   }
@@ -107,12 +107,12 @@ bool CmdGive::execute(Being* being, const std::vector<std::string>& args) {
   for (std::list<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
     item = *it;
     if (item->flags().test(ITEM_NODROP)) {
-      being->send("You can't let go of %s.\n", item->identifiers().shortname().c_str());
+      being->send("You can't let go of %s.\n", item->shortname().c_str());
     } else {
       being->inventory().remove(item);
       target->inventory().add(item);
-      being->send("You give %s to %s.\n", item->identifiers().shortname().c_str(), target->identifiers().shortname().c_str());
-      target->send("%s gives you %s.\n", target->seeName(being, true).c_str(), item->identifiers().shortname().c_str());
+      being->send("You give %s to %s.\n", item->shortname().c_str(), target->shortname().c_str());
+      target->send("%s gives you %s.\n", target->seeName(being, true).c_str(), item->shortname().c_str());
       being->room()->send_cond("$a gives $c $O.\n", being, target, item, Room::TO_NOTVICT);
     }
   }
@@ -184,11 +184,11 @@ bool CmdGroup::execute(Being* being, const std::vector<std::string>& args) {
   // Empty name - list the group stats.
   if (name.empty()) {
     being->send("+----------------------------------------------------------------------------+\n");
-    being->send("| Group Leader: {B%-20s{x {YLEVEL   {GHEALTH      {CMANA       {MSTAMINA  {x|\n", this_group->leader()->identifiers().shortname().c_str());
+    being->send("| Group Leader: {B%-20s{x {YLEVEL   {GHEALTH      {CMANA       {MSTAMINA  {x|\n", this_group->leader()->shortname().c_str());
     being->send("+----------------------------------------------------------------------------+\n");
     for (std::set<Being*>::iterator it = this_group->members().begin(); it != this_group->members().end(); ++it) {
       being->send("| {W%-20s{x                {Y%3d{x  {G%4d{x/{g%-4u  {C%4u{x/{c%-4u       {M%3u{x    |\n",
-        (*it)->identifiers().shortname().c_str(),
+        (*it)->shortname().c_str(),
         (*it)->level(), (*it)->health(), (*it)->maxHealth(), (*it)->mana(), (*it)->maxMana(), (*it)->stamina()
      );
     }
@@ -224,8 +224,8 @@ bool CmdGroup::execute(Being* being, const std::vector<std::string>& args) {
       this_group->remove_member(*iter);
       new_group->add_member(*iter);
       (*iter)->group(new_group);
-      (*iter)->send("You are now grouped with %s.\n", leader->identifiers().shortname().c_str());
-      leader->send("%s has joined your group.\n", (*iter)->identifiers().shortname().c_str());
+      (*iter)->send("You are now grouped with %s.\n", leader->shortname().c_str());
+      leader->send("%s has joined your group.\n", (*iter)->shortname().c_str());
       (*iter)->room()->send_cond("$a is now grouped with $c.\n", *iter, leader, NULL, Room::TO_NOTVICT);
     }
   }
@@ -263,7 +263,7 @@ bool CmdHeal::execute(Being* being, const std::vector<std::string>& args) {
     } else {
       target->send(target->seeName(being, true));
       target->send(" has healed you.\n");
-      being->send("You have healed %s.\n", target->identifiers().shortname().c_str());
+      being->send("You have healed %s.\n", target->shortname().c_str());
     }
   }
   return true;
@@ -351,7 +351,7 @@ bool CmdIedit::execute(Being* being, const std::vector<std::string>& args) {
     // Make sure no one else is editing the item...
     for (std::map<std::string,Avatar*>::iterator a_it = World::Instance().getAvatars().begin(); a_it != World::Instance().getAvatars().end(); ++a_it) {
       if (a_it->second->mode().number() == MODE_IEDIT && a_it->second->iedit() == it->second) {
-        avatar()->send("Sorry, %s is currently editing %s (item %lu).", avatar()->seeName(((Being*)a_it->second)).c_str(), it->second->identifiers().shortname().c_str(), it->second->vnum());
+        avatar()->send("Sorry, %s is currently editing %s (item %lu).", avatar()->seeName(((Being*)a_it->second)).c_str(), it->second->shortname().c_str(), it->second->vnum());
         return false;
       }
     }
@@ -430,7 +430,7 @@ bool CmdIlist::execute(Being* being, const std::vector<std::string>& args) {
         // This search is a regex...
         for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
           for (std::map<unsigned long,Item*>::iterator o_it = (*a_it)->items().begin(); o_it != (*a_it)->items().end(); ++o_it) {
-            if (o_it->second->identifiers().matchesKeyword(mutable_args[0])) {
+            if (o_it->second->matchesKeyword(mutable_args[0])) {
               items.push_back(o_it->second);
             }
           }
@@ -440,7 +440,7 @@ bool CmdIlist::execute(Being* being, const std::vector<std::string>& args) {
         // We got a search string...
         for (std::set<Zone*,zone_comp>::iterator a_it = World::Instance().getZones().begin(); a_it != World::Instance().getZones().end(); ++a_it) {
           for (std::map<unsigned long,Item*>::iterator o_it = (*a_it)->items().begin(); o_it != (*a_it)->items().end(); ++o_it) {
-            if (o_it->second->identifiers().matchesKeyword(search)) {
+            if (o_it->second->matchesKeyword(search)) {
               items.push_back(o_it->second);
             }
           }
@@ -481,7 +481,7 @@ bool CmdIlist::execute(Being* being, const std::vector<std::string>& args) {
 
   output.append(" [{y vnum{x] {gname{x\n -------------------\n");
   for (std::vector<Item*>::iterator it = items.begin(); it != items.end(); ++it) {
-    sprintf(buffer, " [{y%5lu{x] %s{x\n", (*it)->vnum(), (*it)->identifiers().shortname().c_str());
+    sprintf(buffer, " [{y%5lu{x] %s{x\n", (*it)->vnum(), (*it)->shortname().c_str());
     output.append(buffer);
   }
 
@@ -508,13 +508,13 @@ bool CmdIload::execute(Being* being, const std::vector<std::string>& args) {
         being->send("Oload failed.");
         return false;
       }
-      if (item->identifiers().shortname().empty() || item->identifiers().longname().empty() || item->identifiers().getKeywords().empty()) {
+      if (item->shortname().empty() || item->longname().empty() || item->getKeywords().empty()) {
         avatar()->send("Sorry; that item isn't complete yet.");
         return false;
       }
       World::Instance().insert(item);
       being->inventory().add(item);
-      being->send("You load %s.", item->identifiers().shortname().c_str());
+      being->send("You load %s.", item->shortname().c_str());
       being->room()->send_cond("$a has created $o.", being, item);
       return true;
     }

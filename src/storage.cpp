@@ -180,10 +180,10 @@ void Storage::write(FILE* fp, Item* item, const char* suffix) {
   out(fp, "type",         item->type());
   out(fp, "wearable",     item->wearable());
   out(fp, "flags",        item->flags().value());
-  out(fp, "shortname",    item->identifiers().shortname());
-  out(fp, "longname",     item->identifiers().longname());
-  out(fp, "description",  item->identifiers().description());
-  out(fp, "keywords",     item->identifiers().serializeKeywords());
+  out(fp, "shortname",    item->shortname());
+  out(fp, "longname",     item->longname());
+  out(fp, "description",  item->description());
+  out(fp, "keywords",     item->serializeKeywords());
   out(fp, "modifiers",    item->serializeModifiers());
   out(fp, "compound",     item->serializeCompound());
   out(fp, "composition",  item->serializeComposition());
@@ -221,10 +221,10 @@ bool Storage::read(FILE* fp, Item* loading) {
     STORE_CASE_WITH_CODE("type",      unsigned,       "%u",   loading->type(static_cast<Item::Type>(val));)
     STORE_CASE_WITH_CODE("wearable",  unsigned,       "%u",   loading->wearable(static_cast<Item::Wearable>(val));)
     STORE_CASE_WITH_CODE("flags",     unsigned long,  "%lu",  loading->flags().value(val);)
-    STORE_CASE_STRING("shortname",    loading->identifiers().shortname(str);)
-    STORE_CASE_STRING("longname",     loading->identifiers().longname(str);)
-    STORE_CASE_STRING("description",  loading->identifiers().description(str);)
-    STORE_CASE_STRING("keywords",     loading->identifiers().unserializeKeywords(str);)
+    STORE_CASE_STRING("shortname",    loading->shortname(str);)
+    STORE_CASE_STRING("longname",     loading->longname(str);)
+    STORE_CASE_STRING("description",  loading->description(str);)
+    STORE_CASE_STRING("keywords",     loading->unserializeKeywords(str);)
     STORE_CASE_STRING("modifiers",    loading->unserializeModifiers(str);)
     STORE_CASE_STRING("compound",     loading->unserializeCompound(str);)
     STORE_CASE_STRING("composition",  loading->unserializeComposition(str);)
@@ -327,10 +327,10 @@ bool Storage::read(FILE* fp, Avatar* loading) {
  **************************************************************************************************/
 void Storage::write_base(FILE* fp, Being* being) {
   BEGIN("BEING")
-  out(fp, "shortname",    being->identifiers().shortname());
-  out(fp, "longname",     being->identifiers().longname());
-  out(fp, "description",  being->identifiers().description());
-  out(fp, "keywords",     being->identifiers().serializeKeywords());
+  out(fp, "shortname",    being->shortname());
+  out(fp, "longname",     being->longname());
+  out(fp, "description",  being->description());
+  out(fp, "keywords",     being->serializeKeywords());
   fprintf(fp, "identity %s %s %s\n",
     being->gender().string().c_str(),
     being->race().string().c_str(),
@@ -394,10 +394,10 @@ bool Storage::read_base(FILE* fp, Being* loading) {
   char input[32];
   unsigned load_status = 0;
   load_status = read_inner(fp, loading, input, "BEING", [&fp, &loading, &input]() {
-    STORE_CASE_STRING("shortname",    loading->identifiers().shortname(str);)
-    STORE_CASE_STRING("longname",     loading->identifiers().longname(str);)
-    STORE_CASE_STRING("description",  loading->identifiers().description(str);)
-    STORE_CASE_STRING("keywords",     loading->identifiers().unserializeKeywords(str);)
+    STORE_CASE_STRING("shortname",    loading->shortname(str);)
+    STORE_CASE_STRING("longname",     loading->longname(str);)
+    STORE_CASE_STRING("description",  loading->description(str);)
+    STORE_CASE_STRING("keywords",     loading->unserializeKeywords(str);)
     if (strcmp("identity", input) == 0) {
       char gender[32], race[32], klass[32];
       fscanf(fp, "%s %s %s", gender, race, klass);

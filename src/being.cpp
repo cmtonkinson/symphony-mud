@@ -7,7 +7,7 @@
 #include "display.hpp"
 #include "exit.hpp"
 #include "group.hpp"
-#include "identifiers.hpp"
+#include "has-identifiers.hpp"
 #include "io-handler.hpp"
 #include "item-set.hpp"
 #include "item-types.hpp"
@@ -20,7 +20,8 @@
 #include "zone.hpp"
 
 Being::Being(void):
-    _inventory(&Identifiers::shortname) {
+    HasIdentifiers(),
+    _inventory(&HasIdentifiers::shortname) {
   room(NULL);
   position().set(STANDING);
   action().set(0);
@@ -71,7 +72,7 @@ Being::Being(void):
 }
 
 Being::Being(const Being& ref):
-    _identifiers(ref.identifiers()),
+    HasIdentifiers(ref),
     _inventory(ref.inventory()),
     _equipment(ref.equipment()),
     _position(ref.position()),
@@ -286,7 +287,7 @@ Being* Being::findBeing(const std::string& name) {
   if (name == "self") return this;
 
   for (std::list<Being*>::iterator it = room()->beings().begin(); it != room()->beings().end(); ++it) {
-    if ((*it)->identifiers().matchesKeyword(name) && canSee(*it) == Being::SEE_NAME) {
+    if ((*it)->matchesKeyword(name) && canSee(*it) == Being::SEE_NAME) {
       return *it;
     }
   }
@@ -369,10 +370,10 @@ bool Being::wear(Item* article, std::string& message, Item*& removed) {
 
   // make sure we can wear it...
   if (location == WEARLOC_ERROR) {
-    message.assign("You can't wear ").append(article->identifiers().shortname()).append("{x.");
+    message.assign("You can't wear ").append(article->shortname()).append("{x.");
     return false;
   } else if (article->level() > level()) {
-    message.assign("You're not powerful enough to wear ").append(article->identifiers().shortname()).append("{x yet.");
+    message.assign("You're not powerful enough to wear ").append(article->shortname()).append("{x yet.");
     return false;
   }
 
@@ -431,7 +432,7 @@ bool Being::unwear(Item* article, std::string& message, bool force) {
   bool breaks_set = false;
   if (!force) {
     if (article->flags().test(ITEM_NOREMOVE)) {
-      message.assign("You can't remove ").append(article->identifiers().shortname().c_str()).append("{x.");
+      message.assign("You can't remove ").append(article->shortname().c_str()).append("{x.");
       return false;
     }
   }
@@ -641,7 +642,7 @@ std::string Being::listAttributes(void) {
 }
 
 std::string Being::ident(void) const {
-  std::string dest = identifiers().shortname();
+  std::string dest = shortname();
   if (isAvatar()) return dest << std::string(" @") << toAvatar()->ip();
   else if (isNpc()) return dest << std::string(" #") << toNpc()->vnum();
   else return "error";
@@ -746,7 +747,7 @@ unsigned short Being::canSee(Being* target) {
 
 std::string Being::seeName(Being* target, bool capitalize) {
   if (canSee(target) == Being::SEE_NAME) {
-    return target->identifiers().shortname();
+    return target->shortname();
   } else {
     return capitalize ? "Someone" : "someone";
   }
@@ -797,7 +798,7 @@ unsigned short Being::canSee(Item* target) {
 
 std::string Being::seeName(Item* target, bool capitalize) {
   if (canSee(target) == Being::SEE_NAME) {
-    return target->identifiers().shortname();
+    return target->shortname();
   } else {
     return capitalize ? "Something" : "something";
   }
@@ -877,8 +878,8 @@ bool Being::move(const unsigned short& direction) {
       if (member->canMove(direction, message)) {
         member->move(direction);
       } else {
-        send("%s could not follow you here.\n", member->identifiers().shortname().c_str());
-        member->send("You cannot follow %s %s.\n", identifiers().shortname().c_str(), Exit::name(direction));
+        send("%s could not follow you here.\n", member->shortname().c_str());
+        member->send("You cannot follow %s %s.\n", shortname().c_str(), Exit::name(direction));
         member->send(message);
       }
     }

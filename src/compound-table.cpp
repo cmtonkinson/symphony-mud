@@ -68,7 +68,7 @@ CompoundTable::~CompoundTable(void) {
 }
 
 void CompoundTable::add(Compound* t) {
-  compounds().insert(std::make_pair(t->identifiers().shortname(), t));
+  compounds().insert(std::make_pair(t->shortname(), t));
   return;
 }
 
@@ -78,7 +78,7 @@ Compound* CompoundTable::find(const std::string& name) const {
     return it->second;
   }
   for (it = compounds().begin(); it != compounds().end(); ++it) {
-    if (Regex::strPrefix(name, it->second->identifiers().shortname())) {
+    if (Regex::strPrefix(name, it->second->shortname())) {
       return it->second;
     }
   }
@@ -88,7 +88,7 @@ Compound* CompoundTable::find(const std::string& name) const {
 std::string CompoundTable::list(std::string glue) const {
   std::vector<std::string> items;
   for (std::map<std::string,Compound*>::const_iterator it = compounds().begin(); it != compounds().end(); ++it) {
-    items.push_back(it->second->identifiers().longname());
+    items.push_back(it->second->longname());
   }
   return Display::formatColumns(items);
 }

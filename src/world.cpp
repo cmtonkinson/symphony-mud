@@ -132,7 +132,7 @@ void World::recover(const unsigned int& fd) {
     if (fscanf(fp, "%d %s %s", &client_fd, ip, name) < 3) break;
     avatar = new Avatar(new Socket(client_fd));
     avatar->socket()->setIP(ip);
-    avatar->identifiers().shortname(name);
+    avatar->shortname(name);
     avatar->load();
     avatar->pushIOHandler(new InputIOHandler(avatar));
     insert(avatar);
@@ -372,7 +372,7 @@ void World::remove(Being* being) {
 
 Being* World::findBeing(const std::string& name) {
   for (std::set<Being*>::iterator it = getBeings().begin(); it != getBeings().end(); ++it) {
-    if ((*it)->identifiers().matchesKeyword(name)) {
+    if ((*it)->matchesKeyword(name)) {
       if ((*it)->isAvatar()) {
         if (((Avatar*)*it)->isConnected()) {
           return *it;
@@ -388,7 +388,7 @@ Being* World::findBeing(const std::string& name) {
 /* Avatar-specific search method (slightly more efficient when searching only for PCs) */
 Avatar* World::findAvatar(const std::string& name) {
   for (std::map<std::string,Avatar*>::iterator it = getAvatars().begin(); it != getAvatars().end(); ++it) {
-    if (it->second->isConnected() && it->second->identifiers().matchesKeyword(name)) {
+    if (it->second->isConnected() && it->second->matchesKeyword(name)) {
       return it->second;
     }
   }
@@ -494,7 +494,7 @@ Item* World::findItem(const std::string& name) {
   std::set<Item*>::iterator it;
   std::set<Item*>::iterator end = getItems().end();
   for (it = getItems().begin(); it != end; ++it) {
-    if ((*it)->identifiers().matchesKeyword(name)) {
+    if ((*it)->matchesKeyword(name)) {
       return *it;
     }
   }

@@ -2,6 +2,7 @@
 #include "being.hpp"
 #include "equipment-container.hpp"
 #include "item.hpp"
+#include "regex.hpp"
 
 EquipmentContainer::EquipmentContainer(void) {
   return;

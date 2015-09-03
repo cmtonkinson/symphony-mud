@@ -12,7 +12,7 @@
 #include "estring.hpp"
 #include "flag-table.hpp"
 #include "group.hpp"
-#include "identifiers.hpp"
+#include "has-identifiers.hpp"
 #include "inventory-container.hpp"
 #include "item.hpp"
 #include "job.hpp"
@@ -32,7 +32,7 @@ class Room;
 class SocialCommand;
 class Zone;
 
-class Being {
+class Being: public HasIdentifiers {
   public:
 
     // Wear Locations...
@@ -155,8 +155,6 @@ class Being {
     bool                        unwear(Item* article, std::string& message, bool force = false);
     Item*                       worn(const int& location) const;
     static bool                 isSingleWearLoc(const unsigned short& item_weartype);
-    Identifiers&                identifiers(void)                                               { return _identifiers; }
-    const Identifiers&          identifiers(void) const                                         { return _identifiers; }
     InventoryContainer&         inventory(void)                                                 { return _inventory; }
     const InventoryContainer&   inventory(void) const                                           { return _inventory; }
     EquipmentContainer&         equipment(void)                                                 { return _equipment; }
@@ -260,7 +258,6 @@ class Being {
     static std::string          listAttributes(void);
 
     // Shortcuts...
-    const char*                 name(void) const          { return identifiers().shortname().c_str(); }
     std::string                 ident(void) const;
     bool                        immortal(void) const      { return level() > DEMIGOD; }
 
@@ -402,7 +399,6 @@ class Being {
     std::vector<IOHandler*>     _IOhandlers;
     Room*                       _room;
     emap                        _values;
-    Identifiers                 _identifiers;
     InventoryContainer          _inventory;
     EquipmentContainer          _equipment;
     std::list<Modifier>         _modifiers;

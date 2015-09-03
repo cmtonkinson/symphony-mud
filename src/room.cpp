@@ -7,12 +7,12 @@
 #include "world.hpp"
 #include "zone.hpp"
 
-Room::Room(void): _inventory(&Identifiers::longname) {
+Room::Room(void): _inventory(&HasIdentifiers::longname) {
   for (unsigned u = 0; u < 6; ++u) _exits[u] = nullptr;
   return;
 }
 
-Room::Room(unsigned long vnum, Zone* zone): _inventory(&Identifiers::longname) {
+Room::Room(unsigned long vnum, Zone* zone): _inventory(&HasIdentifiers::longname) {
   this->zone(zone);
   zone->rooms().insert(std::make_pair(vnum, this));
   this->vnum(vnum);

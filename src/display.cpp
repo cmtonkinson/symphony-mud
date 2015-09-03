@@ -74,8 +74,8 @@ std::string Display::formatAction(const char* format, Being* actor, const void* 
         case 'r': message.append(withRespectTo ? withRespectTo->seePosessivePronoun((Being*)arg1) : "[r]"); break;
         case 'R': message.append(withRespectTo ? withRespectTo->seePosessivePronoun((Being*)arg2) : "[R]"); break;
         // items
-        case 'o': message.append(arg1 ? ((Item*)arg1)->identifiers().shortname() : "[o]");                  break;
-        case 'O': message.append(arg2 ? ((Item*)arg2)->identifiers().shortname() : "[O]");                  break;
+        case 'o': message.append(arg1 ? ((Item*)arg1)->shortname() : "[o]");                  break;
+        case 'O': message.append(arg2 ? ((Item*)arg2)->shortname() : "[O]");                  break;
         // exits
         case 'e': message.append(arg1 ? Exit::name(((Exit*)arg1)->direction().number()) : "[e]");           break;
         case 'E': message.append(arg2 ? Exit::name(((Exit*)arg2)->direction().number()) : "[E]");           break;

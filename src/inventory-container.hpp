@@ -5,7 +5,7 @@
 #include <list>
 #include <string>
 #include "container.hpp"
-#include "identifiers.hpp"
+#include "has-identifiers.hpp"
 
 class Item;
 
@@ -17,13 +17,13 @@ class Item;
 class InventoryContainer: public Container {
   public:
     // constructors...
-    InventoryContainer(std::string (Identifiers::*getName)(void) const);
+    InventoryContainer(std::string (HasIdentifiers::*getName)(void) const);
     InventoryContainer(const InventoryContainer& ref);
     virtual ~InventoryContainer(void);
 
     // Hack-job because I can't get getName() to return the method pointer
     // from within the copy constructor
-    std::string (Identifiers::*_getName)(void) const;
+    std::string (HasIdentifiers::*_getName)(void) const;
 
     // virtual methods....
     virtual void                add(Item* item);
@@ -42,7 +42,7 @@ class InventoryContainer: public Container {
     // public accessor methods...
     std::list<Item*>&                                   itemList(void)        { return _itemList; }
     const std::list<Item*>&                             itemList(void) const  { return _itemList; }
-    std::string (Identifiers::*getName(void))(void) const                         { return _getName; }
+    std::string (HasIdentifiers::*getName(void))(void) const                         { return _getName; }
 
   private:
     std::list<Item*> _itemList;

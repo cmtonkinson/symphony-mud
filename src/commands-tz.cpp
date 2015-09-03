@@ -48,9 +48,9 @@ bool CmdTell::execute(Being* being, const std::vector<std::string>& args) {
       avatar()->send("They're not receiving tells right now.");
       return false;
     }
-    target->replyTo(avatar()->identifiers().shortname());
+    target->replyTo(avatar()->shortname());
     target->send("%s tells you, \"{Y%s{x\"", target->seeName(avatar(), true).c_str(), args[1].c_str());
-    avatar()->send("You tell %s, \"{Y%s{x\"", target->identifiers().shortname().c_str(), args[1].c_str());
+    avatar()->send("You tell %s, \"{Y%s{x\"", target->shortname().c_str(), args[1].c_str());
   }
 
   return true;
@@ -253,10 +253,10 @@ bool CmdWear::execute(Being* being, const std::vector<std::string>& args) {
       if (being->wear(*it, error, removed)) {
         being->inventory().remove(*it);
         if (removed) {
-          being->send("You remove %s{x.\n", removed->identifiers().shortname().c_str());
+          being->send("You remove %s{x.\n", removed->shortname().c_str());
           being->room()->send_cond("$a removes $o.\n", being, removed);
         }
-        being->send("You wear %s{x.\n", (*it)->identifiers().shortname().c_str());
+        being->send("You wear %s{x.\n", (*it)->shortname().c_str());
         being->room()->send_cond("$a wears $o.\n", being, *it);
       } else {
         being->send(error);
@@ -293,7 +293,7 @@ bool CmdWho::execute(Being* being, const std::vector<std::string>& args) {
       if (!who.empty()) {
         output.append(who).append(1, ' ');
       }
-      output.append(it->second->identifiers().shortname());
+      output.append(it->second->shortname());
       output.append(it->second->title());
       output.append("{x\n");
     }
@@ -310,7 +310,7 @@ CmdWhoAmI::CmdWhoAmI(void) {
 }
 
 bool CmdWhoAmI::execute(Being* being, const std::vector<std::string>& args) {
-  being->send("You are logged in as %s.", being->identifiers().shortname().c_str());
+  being->send("You are logged in as %s.", being->shortname().c_str());
   return true;
 }
 

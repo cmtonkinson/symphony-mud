@@ -188,7 +188,7 @@ bool LoginNameIOHandler::handle(void) {
 
   // Check to make sure that name isn't already signed in...
   if ((test = World::Instance().findAvatar(input)) != NULL) {
-    if (test->identifiers().shortname() == input) {
+    if (test->shortname() == input) {
       avatar()->send("Sorry - they're already signed in.\n");
       avatar()->disconnected(true);
       INFO(test, "attempted double login")
@@ -316,7 +316,7 @@ bool CreationNameIOHandler::handle(void) {
 
 std::string CreationNameIOHandler::prompt(void) {
   std::string output;
-  output.append("Your name is ").append(avatar()->identifiers().shortname()).append(", then? [yes/no] ");
+  output.append("Your name is ").append(avatar()->shortname()).append(", then? [yes/no] ");
   return output;
 }
 
@@ -512,7 +512,7 @@ bool CreationSummaryIOHandler::handle(void) {
     avatar()->room(World::Instance().findRoom(0));
     avatar()->save();
     avatar()->load();
-    avatar()->send("\n\n{WWelcome to the realm, young %s!{x\n", avatar()->identifiers().shortname().c_str());
+    avatar()->send("\n\n{WWelcome to the realm, young %s!{x\n", avatar()->shortname().c_str());
     avatar()->restoreRoom();
     // If this is the first account, promote it to CREATOR.
     if (os::glob(os::avatar_glob_pattern()).size() == 1) {
@@ -535,7 +535,7 @@ bool CreationSummaryIOHandler::handle(void) {
 
 std::string CreationSummaryIOHandler::prompt(void) {
   std::string output("A summary of your choices:");
-  output.append("\n  Name:   {g").append(avatar()->identifiers().shortname()).append("{x");
+  output.append("\n  Name:   {g").append(avatar()->shortname()).append("{x");
   output.append("\n  Gender: {g").append(avatar()->gender().string()).append("{x");
   output.append("\n  Race:   {g").append(avatar()->race().string()).append("{x");
   output.append("\n  Class:  {g").append(avatar()->pClass().string()).append("{x");
@@ -758,7 +758,7 @@ void PeditIOHandler::deactivate(void) {
 
 std::string PeditIOHandler::prompt(void) {
   char buffer[Socket::MAX_BUFFER];
-  sprintf(buffer, "\n\n{W[{cPedit {x- {G%s{W] ", avatar()->pedit()->identifiers().shortname().c_str());
+  sprintf(buffer, "\n\n{W[{cPedit {x- {G%s{W] ", avatar()->pedit()->shortname().c_str());
   return buffer;
 }
 

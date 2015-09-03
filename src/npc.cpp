@@ -159,9 +159,9 @@ std::string Npc::printInformation(void) const {
 | {xmobility       {y%-5d{w | {xshortname {y%-25s{w |\n\
 | {xaggressiveness {y%-5d{w | {xlongname  {y%-25s{w |\n\
 +----------------------+-------------------------------------+{x",
-    vnum(), identifiers().getKeywordList().c_str(),
-    mobility(), identifiers().shortname().c_str(),
-    aggressiveness(), identifiers().longname().c_str()
+    vnum(), getKeywordList().c_str(),
+    mobility(), shortname().c_str(),
+    aggressiveness(), longname().c_str()
   );
   dest.append(buffer);
 
