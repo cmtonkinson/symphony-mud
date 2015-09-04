@@ -216,7 +216,7 @@ shortname 12:a small dirk
 longname 12:A small dirk
 description 0:
 keywords 10:dirk|small
-modifiers 19:str:1~hit:50~dam:50
+modifiers 11:0:0~0:0~0:0
 compound 4:iron
 composition 0:
 weapon_type 6:dagger
@@ -256,6 +256,21 @@ description 0:
 keywords 30:breast|breastplate|plate|rusty
 modifiers 0:
 compound 4:iron
+composition 0:
+/ITEM
+ITEM
+vnum 10
+level 1
+value 1
+type 0
+wearable 11
+flags 0
+shortname 7:a thing
+longname 7:a thing
+description 0:
+keywords 5:thing
+modifiers 3:2:1
+compound 0:
 composition 0:
 /ITEM
 NPC

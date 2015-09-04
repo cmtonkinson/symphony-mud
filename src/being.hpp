@@ -13,12 +13,12 @@
 #include "flag-table.hpp"
 #include "group.hpp"
 #include "has-identifiers.hpp"
+#include "has-modifiers.hpp"
 #include "inventory-container.hpp"
 #include "item.hpp"
 #include "job.hpp"
 #include "klass.hpp"
 #include "math.hpp"
-#include "modifier.hpp"
 #include "strike.hpp"
 
 class Ability;
@@ -32,7 +32,7 @@ class Room;
 class SocialCommand;
 class Zone;
 
-class Being: public HasIdentifiers {
+class Being: public HasIdentifiers, public HasModifiers {
   public:
 
     // Wear Locations...
@@ -159,8 +159,6 @@ class Being: public HasIdentifiers {
     const InventoryContainer&   inventory(void) const                                           { return _inventory; }
     EquipmentContainer&         equipment(void)                                                 { return _equipment; }
     const EquipmentContainer&   equipment(void) const                                           { return _equipment; }
-    std::list<Modifier>&        modifiers(void)                                                 { return _modifiers; }
-    const std::list<Modifier>&  modifiers(void) const                                           { return _modifiers; }
     void                        furniture(ItemFurniture* furniture)                             { _furniture = furniture; }
     ItemFurniture*              furniture(void) const                                           { return _furniture; }
 
@@ -295,9 +293,7 @@ class Being: public HasIdentifiers {
     void                        unsetModifications(Item* item);
     void                        setModifications(ItemSet* set);
     void                        unsetModifications(ItemSet* set);
-    void                        modify(Modifier modifier);
-    void                        unmodify(Modifier modifier);
-    void                        doModification(const unsigned short& attribute, const int& magnitude);
+    virtual void                modify(Modifier mod);
     int                         getAttribute(unsigned attribute);
     unsigned short              canSee(Being* target);
     std::string                 seeName(Being* target, bool capitalize = false);
@@ -401,7 +397,6 @@ class Being: public HasIdentifiers {
     emap                        _values;
     InventoryContainer          _inventory;
     EquipmentContainer          _equipment;
-    std::list<Modifier>         _modifiers;
     ItemFurniture*              _furniture;
     Position                    _position;
     Action                      _action;

@@ -26,3 +26,7 @@ Modifier::~Modifier(void) {
 bool Modifier::operator== (const Modifier& ref) const {
   return ((_attribute == ref.attribute()) && (_magnitude == ref.magnitude()));
 }
+
+Modifier Modifier::operator- (void) const {
+  return Modifier(attribute(), -magnitude());
+}

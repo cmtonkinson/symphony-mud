@@ -8,7 +8,7 @@
 #include "flag-bank.hpp"
 #include "flag-table.hpp"
 #include "has-identifiers.hpp"
-#include "modifier.hpp"
+#include "has-modifiers.hpp"
 
 class ItemArmor;
 class ItemClothing;
@@ -20,7 +20,7 @@ class ItemKey;
 class ItemTrash;
 class ItemWeapon;
 
-class Item: public HasIdentifiers {
+class Item: public HasIdentifiers, public HasModifiers {
   public:
     // constructors...
     Item(void);
@@ -57,8 +57,6 @@ class Item: public HasIdentifiers {
     const char*   wearableToString(void) const;
     void          stringToWearable(const std::string& src);
 
-    std::string   serializeModifiers(void) const;
-    void          unserializeModifiers(std::string ser);
     std::string   serializeCompound(void) const;
     void          unserializeCompound(std::string ser);
     std::string   serializeComposition(std::string sep = "~") const;
@@ -86,10 +84,10 @@ class Item: public HasIdentifiers {
     unsigned                    value(void) const                   { return _value; }
     void                        wearable(const Wearable& wearable)  { _wearable = wearable; }
     Wearable                    wearable(void) const                { return _wearable; }
-    std::list<Modifier*>&       modifiers(void)                     { return _modifiers; }
-    const std::list<Modifier*>& modifiers(void) const               { return _modifiers; }
     void                        extra(void* extra)                  { _extra = extra; }
     void*                       extra(void) const                   { return _extra; }
+
+    virtual void                modify(Modifier mod)                { return; }
 
     // additional accessors
     bool  noremove(void) const  { return flags().test(ITEM_NOREMOVE); }
@@ -110,7 +108,6 @@ class Item: public HasIdentifiers {
     unsigned              _level;
     unsigned              _value;
     Wearable              _wearable;
-    std::list<Modifier*>  _modifiers;
     void*                 _extra;
 
     // methods

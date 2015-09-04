@@ -7,7 +7,8 @@
 #include "socket.hpp"
 
 Item::Item(void):
-    HasIdentifiers() {
+    HasIdentifiers(),
+    HasModifiers() {
   extra(NULL);
   type(Type_Undefined);
   vnum(0);
@@ -22,6 +23,7 @@ Item::Item(void):
 
 Item::Item(const Item& ref):
     HasIdentifiers(ref),
+    HasModifiers(ref),
     _flags(ref.flags()),
     _primary_compound(ref.compound()),
     _other_compounds(ref.composition()) {
@@ -31,16 +33,10 @@ Item::Item(const Item& ref):
   level(ref.level());
   value(ref.value());
   wearable(ref.wearable());
-  for (std::list<Modifier*>::const_iterator it = ref.modifiers().begin(); it != ref.modifiers().end(); ++it) {
-    modifiers().push_back(new Modifier(**it));
-  }
   return;
 }
 
 Item::~Item(void) {
-  for (std::list<Modifier*>::const_iterator it = modifiers().begin(); it != modifiers().end(); ++it) {
-    delete *it;
-  }
   deleteExtra();
   return;
 }
@@ -217,30 +213,6 @@ void Item::stringToWearable(const std::string& src) {
   return;
 }
 
-std::string Item::serializeModifiers(void) const {
-  std::vector<std::string> foo;
-  char buf[128];
-  for (auto iter : modifiers()) {
-    sprintf(buf, "%s:%d", Being::attributeToString(iter->attribute()), iter->magnitude());
-    foo.push_back(buf);
-  }
-  return Regex::implode("~", foo);
-}
-
-void Item::unserializeModifiers(std::string ser) {
-  std::vector<std::string> foo = Regex::explode("~", ser);
-  std::vector<std::string> bar;
-  unsigned short attr = 0;
-  int mag = 0;
-  for (auto iter : foo) {
-    bar = Regex::explode(":", iter);
-    attr = Being::stringToAttribute(bar[0]);
-    sscanf(bar[1].c_str(), "%d", &mag);
-    modifiers().push_back(new Modifier(attr, mag));
-  }
-  return;
-}
-
 std::string Item::serializeCompound(void) const {
   return compound() == nullptr ? "" : compound()->shortname();
 }
@@ -308,8 +280,8 @@ std::string Item::printInformation(void) const {
 
   // Attribute modifiers...
   if (!modifiers().empty()) {
-    for (std::list<Modifier*>::const_iterator it = modifiers().begin(); it != modifiers().end(); ++it) {
-      sprintf(buffer, "| {x%s {%c%+d{x\n", Being::attributeToString((*it)->attribute()), (*it)->magnitude() > 0 ? 'G' : 'R', (*it)->magnitude());
+    for (auto iter : modifiers()) {
+      sprintf(buffer, "| {x%s {%c%+d{x\n", Being::attributeToString(iter.attribute()), iter.magnitude() > 0 ? 'G' : 'R', iter.magnitude());
       dest.append(buffer);
     }
     dest.append("+---------------------------------------------------------------------------+\n");

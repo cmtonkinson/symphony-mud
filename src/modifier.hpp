@@ -11,6 +11,7 @@ class Modifier {
     ~Modifier(void);
 
     bool operator== (const Modifier& ref) const;
+    Modifier operator- (void) const;
 
     // Public accessor methods...
     void            attribute(const unsigned short& attribute)  { _attribute = attribute; }

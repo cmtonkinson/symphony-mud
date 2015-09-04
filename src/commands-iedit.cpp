@@ -59,16 +59,16 @@ bool ICmdAttribute::execute(Being* being, const std::vector<std::string>& args) 
         return false;
       }
     }
-    avatar()->iedit()->modifiers().push_back(new Modifier(attr, mag));
+    avatar()->iedit()->add(Modifier(attr, mag));
     avatar()->send("You've added a modification of %d to %s.", mag, Being::attributeToString(attr));
   } else if (args.size() == 2 && Regex::strPrefix(args[0], "remove")) {
     if ((attr = Being::stringToAttribute(args[1])) == Being::ATTR_END) {
       avatar()->send("Sorry, that attribute wasn't recognized.");
       return false;
     }
-    for (std::list<Modifier*>::iterator it = avatar()->iedit()->modifiers().begin(); it != avatar()->iedit()->modifiers().end(); ++it) {
-      if ((*it)->attribute() == attr) {
-        avatar()->iedit()->modifiers().erase(it);
+    for (auto iter : avatar()->iedit()->modifiers()) {
+      if (iter.attribute() == attr) {
+        avatar()->iedit()->remove(iter);
         avatar()->send("You've dropped the %s modification.", Being::attributeToString(attr));
         return true;
       }

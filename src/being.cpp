@@ -21,6 +21,7 @@
 
 Being::Being(void):
     HasIdentifiers(),
+    HasModifiers(),
     _inventory(&HasIdentifiers::shortname) {
   room(NULL);
   position().set(STANDING);
@@ -73,6 +74,7 @@ Being::Being(void):
 
 Being::Being(const Being& ref):
     HasIdentifiers(ref),
+    HasModifiers(ref),
     _inventory(ref.inventory()),
     _equipment(ref.equipment()),
     _position(ref.position()),
@@ -83,7 +85,7 @@ Being::Being(const Being& ref):
     _pClass(ref.pClass()) {
   level(ref.level());
   room(NULL);
-  for (auto iter : ref.modifiers()) modifiers().push_back(iter);
+  for (auto iter : ref.modifiers()) add(iter);
   furniture(ref.furniture());
   formGroup();
   // stats...
@@ -649,59 +651,47 @@ std::string Being::ident(void) const {
 }
 
 void Being::setModifications(Item* item) {
-  for (auto iter :item->modifiers()) modify(*iter);
+  for (auto iter :item->modifiers()) add(iter);
   return;
 }
 
 void Being::unsetModifications(Item* item) {
-  for (auto iter :item->modifiers()) unmodify(*iter);
+  for (auto iter :item->modifiers()) remove(iter);
   return;
 }
 
 void Being::setModifications(ItemSet* set) {
-  for (auto iter : set->modifiers()) modify(iter);
+  for (auto iter : set->modifiers()) add(iter);
   return;
 }
 
 void Being::unsetModifications(ItemSet* set) {
-  for (auto iter : set->modifiers()) unmodify(iter);
+  for (auto iter : set->modifiers()) remove(iter);
   return;
 }
 
 void Being::modify(Modifier modifier) {
-  doModification(modifier.attribute(), modifier.magnitude());
-  modifiers().push_back(modifier);
-  return;
-}
-
-void Being::unmodify(Modifier modifier) {
-  doModification(modifier.attribute(), -(modifier.magnitude()));
-  modifiers().remove(modifier);
-  return;
-}
-
-void Being::doModification(const unsigned short& attribute, const int& magnitude) {
-  switch (attribute) {
-    case ATTR_HEALTH:     health(      health()       + magnitude); break;
-    case ATTR_MAX_HEALTH: maxHealth(   maxHealth()    + magnitude); break;
-    case ATTR_MANA:       mana(        mana()         + magnitude); break;
-    case ATTR_MAX_MANA:   maxMana(     maxMana()      + magnitude); break;
-    case ATTR_STAMINA:    stamina(     stamina()      + magnitude); break;
-    case ATTR_STR:        strength(    strength()     + magnitude); break;
-    case ATTR_DEX:        dexterity(   dexterity()    + magnitude); break;
-    case ATTR_CON:        constitution(constitution() + magnitude); break;
-    case ATTR_INT:        intelligence(intelligence() + magnitude); break;
-    case ATTR_FOC:        focus(       focus()        + magnitude); break;
-    case ATTR_CRE:        creativity(  creativity()   + magnitude); break;
-    case ATTR_CHA:        charisma(    charisma()     + magnitude); break;
-    case ATTR_LUC:        luck(        luck()         + magnitude); break;
-    case ATTR_ARMOR:      armor(       armor()        + magnitude); break;
-    case ATTR_BASH:       bash(        bash()         + magnitude); break;
-    case ATTR_SLASH:      slash(       slash()        + magnitude); break;
-    case ATTR_PIERCE:     pierce(      pierce()       + magnitude); break;
-    case ATTR_EXOTIC:     exotic(      exotic()       + magnitude); break;
-    case ATTR_HIT:        hitBonus(    hitBonus( )    + magnitude); break;
-    case ATTR_DAM:        damBonus(    damBonus( )    + magnitude); break;
+  switch (modifier.attribute()) {
+    case ATTR_HEALTH:     health(      health()       + modifier.magnitude()); break;
+    case ATTR_MAX_HEALTH: maxHealth(   maxHealth()    + modifier.magnitude()); break;
+    case ATTR_MANA:       mana(        mana()         + modifier.magnitude()); break;
+    case ATTR_MAX_MANA:   maxMana(     maxMana()      + modifier.magnitude()); break;
+    case ATTR_STAMINA:    stamina(     stamina()      + modifier.magnitude()); break;
+    case ATTR_STR:        strength(    strength()     + modifier.magnitude()); break;
+    case ATTR_DEX:        dexterity(   dexterity()    + modifier.magnitude()); break;
+    case ATTR_CON:        constitution(constitution() + modifier.magnitude()); break;
+    case ATTR_INT:        intelligence(intelligence() + modifier.magnitude()); break;
+    case ATTR_FOC:        focus(       focus()        + modifier.magnitude()); break;
+    case ATTR_CRE:        creativity(  creativity()   + modifier.magnitude()); break;
+    case ATTR_CHA:        charisma(    charisma()     + modifier.magnitude()); break;
+    case ATTR_LUC:        luck(        luck()         + modifier.magnitude()); break;
+    case ATTR_ARMOR:      armor(       armor()        + modifier.magnitude()); break;
+    case ATTR_BASH:       bash(        bash()         + modifier.magnitude()); break;
+    case ATTR_SLASH:      slash(       slash()        + modifier.magnitude()); break;
+    case ATTR_PIERCE:     pierce(      pierce()       + modifier.magnitude()); break;
+    case ATTR_EXOTIC:     exotic(      exotic()       + modifier.magnitude()); break;
+    case ATTR_HIT:        hitBonus(    hitBonus( )    + modifier.magnitude()); break;
+    case ATTR_DAM:        damBonus(    damBonus( )    + modifier.magnitude()); break;
     default: break;
   }
   return;
