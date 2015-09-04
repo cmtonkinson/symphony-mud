@@ -11,7 +11,7 @@ class HasIdentifiers {
     // Constructors...
     HasIdentifiers(void);
     HasIdentifiers(const HasIdentifiers& ref);
-    ~HasIdentifiers(void);
+    virtual ~HasIdentifiers(void);
 
     // Public accessor methods...
     void                          shortname(const std::string& shortname)             { _shortname.assign(shortname); }

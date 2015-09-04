@@ -87,8 +87,6 @@ class Item: public HasIdentifiers, public HasModifiers {
     void                        extra(void* extra)                  { _extra = extra; }
     void*                       extra(void) const                   { return _extra; }
 
-    virtual void                modify(Modifier mod)                { return; }
-
     // additional accessors
     bool  noremove(void) const  { return flags().test(ITEM_NOREMOVE); }
     bool  nodrop(void) const    { return flags().test(ITEM_NODROP); }

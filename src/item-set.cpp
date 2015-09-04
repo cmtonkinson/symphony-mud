@@ -1,12 +1,21 @@
 
 #include <vector>
 #include "being.hpp"
+#include "has-modifiers.hpp"
 #include "item-set.hpp"
 #include "modifier.hpp"
 #include "os.hpp"
 #include "regex.hpp"
 #include "world.hpp"
 #include "zone.hpp"
+
+ItemSet::ItemSet(void): HasModifiers() {
+  return;
+}
+
+ItemSet::~ItemSet(void) {
+  return;
+}
 
 std::string ItemSet::serializeItems(void) const {
   std::vector<std::string> foo;
@@ -32,40 +41,6 @@ void ItemSet::unserializeItems(std::string ser) {
     }
     World::Instance().addItemToSet(found->second, this);
   }
-  return;
-}
-
-std::string ItemSet::serializeModifiers(void) const {
-  std::vector<std::string> foo;
-  char buf[128];
-  for (auto iter : modifiers()) {
-    sprintf(buf, "%s:%d", Being::attributeToString(iter.attribute()), iter.magnitude());
-    foo.push_back(buf);
-  }
-  return Regex::implode("~", foo);
-}
-
-void ItemSet::unserializeModifiers(std::string ser) {
-  std::vector<std::string> foo = Regex::explode("~", ser);
-  std::vector<std::string> bar;
-  unsigned short attr = 0;
-  int mag = 0;
-  for (auto iter : foo) {
-    bar = Regex::explode(":", iter);
-    attr = Being::stringToAttribute(bar[0]);
-    sscanf(bar[1].c_str(), "%d", &mag);
-    add(Modifier(attr, mag));
-  }
-  return;
-}
-
-void ItemSet::add(Modifier mod) {
-  modifiers().push_back(mod);
-  return;
-}
-
-void ItemSet::remove(Modifier mod) {
-  modifiers().remove(mod);
   return;
 }
 

@@ -24,7 +24,7 @@ class HasModifiers {
     void  remove(Modifier mod);
     bool  has(Modifier mod);
 
-    virtual void modify(Modifier mod) = 0;
+    virtual void modify(Modifier mod) { return; }
 
   private:
     ModifierList _modifiers;

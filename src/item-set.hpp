@@ -4,28 +4,21 @@
 
 #include <list>
 #include <string>
+#include "has-modifiers.hpp"
 
 class Being;
 class Item;
-class Modifier;
 
-class ItemSet {
+class ItemSet: public HasModifiers {
   public:
-    ItemSet(void)  { return; }
-    ~ItemSet(void) { return; }
+    ItemSet(void);
+    ~ItemSet(void);
 
     std::list<Item*>&             items(void)         { return _items; }
     const std::list<Item*>&       items(void) const   { return _items; }
-    std::list<Modifier>&          modifiers(void)         { return _modifiers; }
-    const std::list<Modifier>&    modifiers(void) const   { return _modifiers; }
 
     std::string   serializeItems(void) const;
     void          unserializeItems(std::string ser);
-    std::string   serializeModifiers(void) const;
-    void          unserializeModifiers(std::string ser);
-
-    void  add(Modifier mod);
-    void  remove(Modifier mod);
 
     unsigned          size(void) const;
     unsigned          completion(Being* being) const;
@@ -38,7 +31,6 @@ class ItemSet {
 
   private:
     std::list<Item*>      _items;
-    std::list<Modifier>   _modifiers;
 };
 
 #endif // H_SYMPHONY_ITEM_SET
