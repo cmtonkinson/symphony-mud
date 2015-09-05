@@ -55,16 +55,16 @@ std::list<Item*> Container::search(const std::list<Item*>& items, const std::vec
     matches.insert(matches.end(), items.begin(), items.end());
   /* return all of the matched items */
   } else if (multiplier == ALL_W_KEYWORDS && index == NONE) {
-    for (std::list<Item*>::const_iterator it = items.begin(); it != items.end(); ++it) {
-      if (commonSearch(*it, keywords)) {
-        matches.push_back(*it);
+    for (auto iter : items) {
+      if (commonSearch(iter, keywords)) {
+        matches.push_back(iter);
       }
     }
   /* return only so many of the matched items */
   } else if (multiplier > 0 && index == NONE) {
-    for (std::list<Item*>::const_iterator it = items.begin(); it != items.end(); ++it) {
-      if (commonSearch(*it, keywords)) {
-        matches.push_back(*it);
+    for (auto iter : items) {
+      if (commonSearch(iter, keywords)) {
+        matches.push_back(iter);
         if (++counter >= multiplier) {
           break;
         }
@@ -72,9 +72,9 @@ std::list<Item*> Container::search(const std::list<Item*>& items, const std::vec
     }
   /* return a specific matched item */
   } else if (index > 0 && multiplier == 1) {
-    for (std::list<Item*>::const_iterator it = items.begin(); it != items.end(); ++it) {
-      if (commonSearch(*it, keywords) && ++counter == index) {
-        matches.push_back(*it);
+    for (auto iter : items) {
+      if (commonSearch(iter, keywords) && ++counter == index) {
+        matches.push_back(iter);
         break;
       }
     }
@@ -84,42 +84,9 @@ std::list<Item*> Container::search(const std::list<Item*>& items, const std::vec
 }
 
 std::list<Item*> Container::search(const std::map<int,Item*>& items, const std::vector<std::string>& keywords, const int& multiplier, const int& index) {
-  int counter = 0;
-  std::list<Item*> matches;
-
-  /* return everything */
-  if (multiplier == ALL && index == NONE) {
-    for (std::map<int,Item*>::const_iterator it = items.begin(); it != items.end(); ++it) {
-      matches.push_back(it->second);
-    }
-  /* return all of the matched items */
-  } else if (multiplier == ALL_W_KEYWORDS && index == NONE) {
-    for (std::map<int,Item*>::const_iterator it = items.begin(); it != items.end(); ++it) {
-      if (commonSearch(it->second, keywords)) {
-        matches.push_back(it->second);
-      }
-    }
-  /* return only so many of the matched items */
-  } else if (multiplier > 0 && index == NONE) {
-    for (std::map<int,Item*>::const_iterator it = items.begin(); it != items.end(); ++it) {
-      if (commonSearch(it->second, keywords)) {
-        matches.push_back(it->second);
-        if (++counter >= multiplier) {
-          break;
-        }
-      }
-    }
-  /* return a specific matched item */
-  } else if (index > 0 && multiplier == 1) {
-    for (std::map<int,Item*>::const_iterator it = items.begin(); it != items.end(); ++it) {
-      if (commonSearch(it->second, keywords) && ++counter == index) {
-        matches.push_back(it->second);
-        break;
-      }
-    }
-  }
-
-  return matches;
+  std::list<Item*> values;
+  for (auto iter : items) values.push_back(iter.second);
+  return search(values, keywords, multiplier, index);
 }
 
 bool Container::commonSearch(Item* item, const std::vector<std::string>& keywords) {

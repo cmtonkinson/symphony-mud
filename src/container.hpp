@@ -27,7 +27,7 @@ class Container {
 
     static std::vector<std::string> parseQuery(const std::string& q, int& multiplier, int& index);
     std::list<Item*>                search(const std::list<Item*>& items, const std::vector<std::string>& keywords, const int& multiplier, const int& index);
-    static std::list<Item*>         search(const std::map<int,Item*>& items, const std::vector<std::string>& keywords, const int& multiplier, const int& index);
+    std::list<Item*>                search(const std::map<int,Item*>& items, const std::vector<std::string>& keywords, const int& multiplier, const int& index);
     static bool                     commonSearch(Item* item, const std::vector<std::string>& keywords);
 };
 
