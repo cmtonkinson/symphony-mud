@@ -2,24 +2,24 @@ require 'spec_helper'
 
 describe Command::Argument do
 
-  describe "#parse" do
+  describe "#study" do
 
-    it "should parse a String" do
+    it "should parse a string" do
       arg = Command::Argument.new "foo"
       expect(arg.name).to eq "foo"
-      expect(arg.type).to eq :string
+      expect(arg.type).to eq :literal
     end
 
-    it "should parse a Symbol" do
+    it "should parse a symbol" do
       arg = Command::Argument.new :bar
       expect(arg.name).to eq "bar"
       expect(arg.type).to eq :id
     end
 
-    it "should parse an Array of values" do
-      arg = Command::Argument.new ["to", "from"]
-      expect(arg.name).to eq "anonymous"
-      expect(arg.type).to eq :array
+    it "should parse an array of values" do
+      arg = Command::Argument.new x: ["to", "from"]
+      expect(arg.name).to eq "x"
+      expect(arg.type).to eq :set
       expect(arg.value).to eq ["to", "from"]
     end
 
