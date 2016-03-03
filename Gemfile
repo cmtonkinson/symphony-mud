@@ -1,25 +1,25 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gem 'rake'
+gem "rake"
 
 group :setup do
 end
 
 group :app do
-  gem 'i18n'
+  gem "i18n"
 end
 
 group :development, :test do
-  gem 'awesome_print'
-  gem 'pry'
+  gem "awesome_print"
+  gem "pry"
 end
 
 group :development do
 end
 
 group :test do
-  gem 'fuubar', github: 'thekompanee/fuubar'
-  gem 'rspec', github: 'rspec'
+  gem "fuubar"
+  gem "rspec"
 end
 
 group :production do

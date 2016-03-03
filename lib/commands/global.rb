@@ -4,10 +4,14 @@ module Command
   # help
   ##################################################################################################
   define :help do
-    format
-    format :command
+    usage
+    usage :command
     exec do
-      user.puts "Executed HELP command."
+      if command
+        user.puts "Executed HELP for command '#{command}'"
+      else
+        user.puts "Executed HELP"
+      end
     end
   end
 
@@ -15,6 +19,7 @@ module Command
   # quit
   ##################################################################################################
   define :quit do
+    usage
     exec do
       user.puts "Logging out. Goodbye."
       user.client.should_terminate = true
@@ -25,8 +30,19 @@ module Command
   # say
   ##################################################################################################
   define :say do
+    usage :rest
     exec do
-      user.puts "You say, \"#{@arg_string}\""
+      user.puts "You say, \"#{rest}\""
+    end
+  end
+
+  ##################################################################################################
+  # look
+  ##################################################################################################
+  define :look do
+    usage
+    exec do
+      user.puts "You look around."
     end
   end
 

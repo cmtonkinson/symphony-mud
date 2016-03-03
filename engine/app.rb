@@ -10,6 +10,7 @@
 ####################################################################################################
 class App
   attr_reader :env, :binary, :root, :modules, :setup, :initializers
+  attr_accessor :logger
 
   ENGINE_DIRNAME       = 'engine'
   CONFIG_DIRNAME       = 'config'
@@ -18,12 +19,13 @@ class App
   INITIALIZERS_DIRNAME = 'initializers'
 
   def initialize
-    @env     = ENV['SYMPHONY_ENV'].to_sym
-    @root    = Pathname.new File.expand_path '../..', __FILE__
-    @binary  = @root.join BINARY_NAME
-    @modules = @root.join ENGINE_DIRNAME, MODULE_DIRNAME
-    @setup   = @root.join ENGINE_DIRNAME, SETUP_DIRNAME
+    @env          = ENV['SYMPHONY_ENV'].to_sym
+    @root         = Pathname.new File.expand_path '../..', __FILE__
+    @binary       = @root.join BINARY_NAME
+    @modules      = @root.join ENGINE_DIRNAME, MODULE_DIRNAME
+    @setup        = @root.join ENGINE_DIRNAME, SETUP_DIRNAME
     @initializers = @root.join CONFIG_DIRNAME, INITIALIZERS_DIRNAME
+    @logger       = nil
   end
 
 end

@@ -1,26 +1,12 @@
-GIT
-  remote: git://github.com/rspec/rspec.git
-  revision: 35343500981f0a0a56d843d2b95fb9dd938a8038
-  specs:
-    rspec (3.0.0.beta2)
-      rspec-core (= 3.0.0.beta2)
-      rspec-expectations (= 3.0.0.beta2)
-      rspec-mocks (= 3.0.0.beta2)
-
-GIT
-  remote: git://github.com/thekompanee/fuubar.git
-  revision: d70db7dff331aa9e168fd8bbfaae2b3290fea3ea
-  specs:
-    fuubar (2.0.0.beta1)
-      rspec (~> 3.0.beta)
-      ruby-progressbar (~> 1.3)
-
 GEM
   remote: https://rubygems.org/
   specs:
     awesome_print (1.2.0)
     coderay (1.1.0)
     diff-lcs (1.2.5)
+    fuubar (2.0.0)
+      rspec (~> 3.0)
+      ruby-progressbar (~> 1.4)
     i18n (0.6.9)
     method_source (0.8.2)
     pry (0.9.12.6)
@@ -28,15 +14,20 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
     rake (10.2.2)
-    rspec-core (3.0.0.beta2)
-      rspec-support (= 3.0.0.beta2)
-    rspec-expectations (3.0.0.beta2)
+    rspec (3.4.0)
+      rspec-core (~> 3.4.0)
+      rspec-expectations (~> 3.4.0)
+      rspec-mocks (~> 3.4.0)
+    rspec-core (3.4.3)
+      rspec-support (~> 3.4.0)
+    rspec-expectations (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (= 3.0.0.beta2)
-    rspec-mocks (3.0.0.beta2)
-      rspec-support (= 3.0.0.beta2)
-    rspec-support (3.0.0.beta2)
-    ruby-progressbar (1.4.2)
+      rspec-support (~> 3.4.0)
+    rspec-mocks (3.4.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.4.0)
+    rspec-support (3.4.1)
+    ruby-progressbar (1.7.5)
     slop (3.5.0)
 
 PLATFORMS
@@ -44,8 +35,11 @@ PLATFORMS
 
 DEPENDENCIES
   awesome_print
-  fuubar!
+  fuubar
   i18n
   pry
   rake
-  rspec!
+  rspec
+
+BUNDLED WITH
+   1.11.2

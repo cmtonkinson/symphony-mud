@@ -3,7 +3,7 @@
 ## Defining new commands
 
 Symphony has a metaprogramming interface (commonly, wrongly, called a "DSL" in Ruby) to make
-defining new commands as clean as possible. These can be defined in arbitrary files matching  the
+defining new commands as clean as possible. These can be defined in arbitrary files matching the
 pattern `lib/commands/*.rb`.
 
 Here's an example:
@@ -11,17 +11,28 @@ Here's an example:
     module Command
       # The command name will be created by sending #to_s on this variable.
       define :wink do
-        # Minimum required character level required to execute the command. (default 1)
+
+        # Minimum required character level required to execute the command. (default: `1`)
         level 10
-        # Command group - arbitrary (useful for grouping related commands, default :global)
+
+        # Command group - arbitrary symbol (useful for grouping related stuff, default: `:global`)
         group :social
-        # The block here is the actual command code to be executed when a user issues the command.
-        # Certain instance variables are available within command exec code:
-        #  @user         - Base::User which invoked the command.
-        #  @full_command - String of the entire command line entry.
-        #  @arg_string   - String of the command line entry, minus the command name itself.
+
+        # Usages - ways to invoke the command
+        usage # command can be invoked with no arguments
+        usage :target # command can be issued at someone/something
+        usage "at", :target # same as above, but explicitly aware of English preposition
+
+        # The `exec` block is the actual code to be run when a user issues the command.
+        # Certain methods are available by default within the `exec` block:
+        #  user       - Base::User which invoked the command.
+        #  user_input - String of the entire command line entry.
         exec do
-          @user.puts "You wink suggestively."
+          if target
+            user.puts "You wink suggestively at #{target.name}."
+          else
+            user.puts "You wink suggestively."
+          end
         end
       end
     end
@@ -34,11 +45,16 @@ though, since that method is so meta.
       Command_wink < Command
         def initialize
           setup
-          @name = "wink"
+          @name  = "wink"
           @level = 10
           @group = :social
+          @usages.push Argument.new(), Argument.new(:target), Argument.new("at", :target)
           @exec = Proc.new do
-            @user.puts "You wink suggestively."
+            if target
+              user.puts "You wink suggestively at #{target.name}."
+            else
+              user.puts "You wink suggestively."
+            end
           end
         end
       end

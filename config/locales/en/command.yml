@@ -1,6 +1,13 @@
 en:
   command:
     bad_array_length: "Command format arrays expect 2 elements (%{given} given)"
-    duplicate_name: "Command cannot have duplicate argument names (specified '%{name}' twice)"
-    state_key_overlap: "'%{name}' is invalid as a Command argument name because it would shadow a reserved variable"
     invalid_type: "'%{type}' is an invalid Command argument type"
+    only_one_empty: "Command cannot have more than one empty format"
+    state_key_overlap: "'%{name}' is invalid as a Command argument name because it would shadow a reserved variable"
+    variable_overshadow: "Command Argument '%{name}' would overshadow a default context variable"
+    argument:
+      bad_argument_definition: "'%{arg}' is an invalid Command argument"
+      bad_array_value: "Argument Array cannot contain a %{type} (only Strings are acceptable)"
+    usage:
+      duplicate_name: "Command cannot have duplicate argument names (specified '%{name}' twice)"
+      push_non_argument: "Command::Usage can only contain instances of Command::Argument"

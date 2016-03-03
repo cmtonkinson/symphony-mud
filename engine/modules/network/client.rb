@@ -7,6 +7,8 @@ module Network
       @should_terminate = false
       @socket           = tcp_socket
       @user             = nil
+
+      Symphony.logger.info "New Client on socket #{get_fd}"
     end
 
     def get_fd
@@ -35,6 +37,7 @@ module Network
       self.puts "\n\n"
       self.puts quote["body"]
       self.puts "  -#{quote["author"]}\n\n"
+      Symphony.logger.info "Closing Client on socket #{get_fd}"
       self.socket.close
     end
 

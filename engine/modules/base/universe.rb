@@ -22,6 +22,7 @@ module Base
     end
 
     def live
+      Symphony.logger.info "Server listening on #{Network.configuration.listen_ip}:#{Network.configuration.listen_port}"
       until self.should_stop do
         welcome self.server.accept
         handle_input
@@ -29,6 +30,7 @@ module Base
         begin_reboot if self.should_reboot
         sleep Base.configuration.sleep_interval
       end
+      Symphony.logger.info "Server shutting down."
     end
 
     def welcome(client)
@@ -55,6 +57,7 @@ module Base
     end
 
     def begin_reboot
+      Symphony.logger.info "Server beginning reboot"
       server_fd  = self.server.to_i
       client_fds = self.clients.map { |c| c.get_fd }
       env = {
@@ -74,6 +77,7 @@ module Base
       @clients.each { |c| options[c.get_fd] = c.get_fd }
       # Begin anew.
       Process.exec env, Symphony.binary.to_s, options
+      Symphony.logger.info "Reboot failed"
     end
 
     def recover_from_reboot
@@ -91,7 +95,7 @@ module Base
       ENV.delete "SYMPHONY_REBOOT"
       ENV.delete "SYMPHONY_SERVER_FD"
       ENV.delete "SYMPHONY_CLIENT_FDS"
-      STDOUT.puts "Listening once more!"
+      Symphony.logger.info "Server recovered from reboot"
     end
 
   end

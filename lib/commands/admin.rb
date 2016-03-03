@@ -4,6 +4,7 @@ module Command
   # reboot
   ##################################################################################################
   define :reboot do
+    usage
     exec do
       user.puts "Hold on to your butts... Copyover!!"
       $universe.should_reboot = true
@@ -14,6 +15,7 @@ module Command
   # shutdown
   ##################################################################################################
   define :shutdown do
+    usage
     exec do
       user.puts "Shutting down the server."
       $universe.should_stop = true
