@@ -30,9 +30,7 @@ module Command
       @command.usages.each do |usage|
         Symphony.logger.everything "  Considering Usage #{usage}"
         context = usage.try_parse input_string
-        if !context.nil?
-          return context
-        end
+        return context if !context.nil?
       end
       return nil
     end
