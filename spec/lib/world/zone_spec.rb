@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Zone::Zone do
+describe World::Zone do
 
   describe "#" do
 
     it "should work" do
-      z = Zone::Zone.new
+      z = World::Zone.new
       expect(true).to eq true
     end
 

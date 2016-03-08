@@ -1,4 +1,4 @@
-module Zone
+module World
 
   class Configuration
 

@@ -1,6 +1,6 @@
 require "securerandom"
 
-module Zone
+module World
 
   class Zone
     attr_reader :id
