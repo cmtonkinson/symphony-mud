@@ -4,8 +4,7 @@ module Command
 
     ###########################################################################
     def initialize(client, command_set)
-      @state       = {}
-      @last_input  = ""
+      @last_input  = "" # TODO - implement this
       @client      = client
       @command     = nil
       @command_set = command_set
@@ -13,7 +12,7 @@ module Command
 
     ###########################################################################
     def handle(input)
-      Symphony.logger.everything "Operator::handle('#{input}')"
+      Symphony.logger.everything "Command::Operator#handle('#{input}')"
       cmd_name, _, rest = input.partition " "
 
       @command = @command_set.find { |c| c.get_name == cmd_name }

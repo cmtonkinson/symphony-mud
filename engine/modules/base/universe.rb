@@ -5,6 +5,7 @@ module Base
   class Universe
     attr_accessor :clients, :server, :should_stop, :should_reboot, :quotes
 
+    ###########################################################################
     def initialize
       @clients     = []
       @quotes      = []
@@ -12,6 +13,7 @@ module Base
       setup_server
     end
 
+    ###########################################################################
     def setup_server
       if ENV["SYMPHONY_REBOOT"] == "true"
         recover_from_reboot
@@ -21,45 +23,50 @@ module Base
       @quotes = YAML.load IO.read Symphony.root.join "data", "quotes.yml"
     end
 
+    ###########################################################################
     def live
       Symphony.logger.info "Server listening on #{Network.configuration.listen_ip}:#{Network.configuration.listen_port}"
-      until self.should_stop do
-        welcome self.server.accept
+      until should_stop do
+        welcome server.accept
         handle_input
         handle_disconnections
-        begin_reboot if self.should_reboot
+        begin_reboot if should_reboot
         sleep Base.configuration.sleep_interval
       end
       Symphony.logger.info "Server shutting down."
     end
 
+    ###########################################################################
     def welcome(client)
       return if client.nil?
       user = User.new
       user.bind client
       user.puts "Welcome!"
-      self.clients << client
+      clients << client
     end
 
+    ###########################################################################
     def handle_input
-      self.clients.each do |client|
+      clients.each do |client|
         input = client.recv
         next if input.nil?
         client.user.operators.peek.handle input
       end
     end
 
+    ###########################################################################
     def handle_disconnections
-      self.clients.select { |c| c.should_terminate }.each do |c|
+      clients.select { |c| c.should_terminate }.each do |c|
         c.close
-        self.clients.delete c
+        clients.delete c
       end
     end
 
+    ###########################################################################
     def begin_reboot
       Symphony.logger.info "Server beginning reboot"
-      server_fd  = self.server.to_i
-      client_fds = self.clients.map { |c| c.get_fd }
+      server_fd  = server.to_i
+      client_fds = clients.map { |c| c.get_fd }
       env = {
         "SYMPHONY_REBOOT"     => "true",
         "SYMPHONY_SERVER_FD"  => server_fd.to_s,
@@ -80,6 +87,7 @@ module Base
       Symphony.logger.info "Reboot failed"
     end
 
+    ###########################################################################
     def recover_from_reboot
       # Restart the server.
       @server = Network::Server.for_fd ENV["SYMPHONY_SERVER_FD"].to_i

@@ -1,0 +1,5 @@
+require_relative "configuration"
+require_relative "objekt"
+require_relative "room"
+require_relative "zone"
+require_relative "avatar"

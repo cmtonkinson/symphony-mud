@@ -6,6 +6,7 @@ group :setup do
 end
 
 group :app do
+  gem "aasm"
   gem "i18n"
 end
 
