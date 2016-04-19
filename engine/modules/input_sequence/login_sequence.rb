@@ -63,8 +63,11 @@ module InputSequence
 
     ###########################################################################
     def get_name_handler(input)
-      # look for user
-      #
+      # look up user
+
+      # Fail if:
+      #   not exists
+      #   already signed in
     end
 
   end
