@@ -8,7 +8,8 @@ module InputSequence
 
     ###########################################################################
     def handle(input)
-      _handle input
+      Symphony.logger.everything "#{self.class.name} in state '#{aasm.current_state}' handling '#{input}'"
+      send "#{aasm.current_state}_handler", input
     end
 
     #########################################################################
@@ -19,7 +20,8 @@ module InputSequence
 
     #########################################################################
     def log_status_change
-      str = "transitioning "
+      str = self.class.name
+      str << " transitioning "
       str << "from '#{aasm.from_state}' " if aasm.from_state != nil
       str << "to '#{aasm.to_state}' "
       str << "(on '#{aasm.current_event}')"
@@ -29,4 +31,3 @@ module InputSequence
   end
 
 end
-

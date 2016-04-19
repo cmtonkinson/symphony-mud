@@ -14,11 +14,9 @@ module InputSequence
 
     ###########################################################################
     def handle(input)
-      Symphony.logger.everything "InputSequence::Controller#handle('#{input}')"
       @sequence.handle input
     end
 
   end
 
 end
-

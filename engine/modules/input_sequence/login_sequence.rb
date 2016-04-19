@@ -30,6 +30,9 @@ module InputSequence
 
       event :accept_existing_name do
         transitions from: :get_name, to: :get_password
+        after do
+          user.print "Please enter your password: "
+        end
       end
 
       event :accept_existing_password do
@@ -59,11 +62,11 @@ module InputSequence
     end
 
     ###########################################################################
-    def _handle(input)
-user.puts "TODO: LoginSequence#_handle"
+    def get_name_handler(input)
+      # look for user
+      #
     end
 
   end
 
 end
-
