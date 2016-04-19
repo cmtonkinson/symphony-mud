@@ -11,11 +11,12 @@
 # This class is designed to be a globally-available singleton.
 ###############################################################################
 class App
-  attr_reader :env, :binary, :root, :modules, :setup, :initializers
+  attr_reader :env, :binary, :root, :modules, :setup, :initializers, :templates
   attr_accessor :logger
 
   CONFIG_DIRNAME       = "config"
   DATA_DIRNAME         = "data"
+  TEMPLATES_DIRNAME    = "templates"
   ENGINE_DIRNAME       = "engine"
   INITIALIZERS_DIRNAME = "initializers"
   MODULE_DIRNAME       = "modules"
@@ -28,6 +29,7 @@ class App
     @modules      = @root.join ENGINE_DIRNAME, MODULE_DIRNAME
     @setup        = @root.join ENGINE_DIRNAME, SETUP_DIRNAME
     @initializers = @root.join CONFIG_DIRNAME, INITIALIZERS_DIRNAME
+    @templates    = @root.join DATA_DIRNAME, TEMPLATES_DIRNAME
     @logger       = nil
   end
 

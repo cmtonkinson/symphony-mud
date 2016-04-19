@@ -12,20 +12,20 @@ module Network
     end
 
     def get_fd
-      self.socket.to_i
+      socket.to_i
     end
 
-    def send(message)
-      self.socket.send message, 0
+    def print(message)
+      _send message
     end
 
     def puts(message)
-      self.send "#{message}\n"
+      _send "#{message}\n"
     end
 
     def recv
       begin
-        input = self.socket.recv_nonblock Network.configuration.recv_maxlen
+        input = socket.recv_nonblock Network.configuration.recv_maxlen
         return input.strip
       rescue Errno::EWOULDBLOCK, Errno::EINTR
         return nil
@@ -41,6 +41,13 @@ module Network
       self.socket.close
     end
 
+    private
+
+    def _send(message)
+      socket.send message, 0
+    end
+
   end
 
 end
+

@@ -1,1 +1,2 @@
-Logger.configuration.verbosity = :info
+Logger.configuration.verbosity = :everything
+

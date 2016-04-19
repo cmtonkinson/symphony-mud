@@ -12,15 +12,19 @@ module Base
     ###########################################################################
     def bind(client)
       self.client = client
-      client.user = self
-      self.operators.push Command::Operator.new self, Command.configuration.command_sets[:global]
-      self.operators.push InputSequence::Controller.new self, InputSequence::LoginSequence.new
-      self.operators.peek.get_password!
+      self.client.user = self
+      operators.push Command::Operator.new self, Command.configuration.command_sets[:global]
+      operators.push InputSequence::Controller.new self, InputSequence::LoginSequence.new
+    end
+
+    ###########################################################################
+    def print(message)
+      client.print message
     end
 
     ###########################################################################
     def puts(message)
-      self.client.puts message if self.client
+      client.puts message
     end
 
   end

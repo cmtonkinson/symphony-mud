@@ -40,8 +40,8 @@ module Base
     def welcome(client)
       return if client.nil?
       user = User.new
+      client.puts $templates.welcome_banner
       user.bind client
-      user.puts "Welcome!"
       clients << client
     end
 
