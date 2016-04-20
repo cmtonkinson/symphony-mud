@@ -2,10 +2,16 @@ module Base
 
   class Configuration
     attr_accessor :sleep_interval, :command_sets
+    attr_accessor :hash_salt, :hash_iterations, :hash_digest
 
     def initialize
       # Wait time (in seconds) between iterations of the primary server loop.
       @sleep_interval = 0.1
+
+      # For account management
+      @hash_salt      = nil
+      @hash_iteration = 20_000
+      @hash_digest    = OpenSSL::Digest::SHA512.new
     end
   end
 

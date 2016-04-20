@@ -41,6 +41,9 @@ module InputSequence
 
       event :accept_new_name do
         transitions from: :get_name, to: :confirm_name
+        after do
+          user.print "Please confirm your name: "
+        end
       end
 
       event :accept_name_confirmation do
@@ -63,11 +66,15 @@ module InputSequence
 
     ###########################################################################
     def get_name_handler(input)
-      # look up user
+      ::Base::Account.exists?(input) ? accept_existing_name : accept_new_name
+    end
 
-      # Fail if:
-      #   not exists
-      #   already signed in
+    ###########################################################################
+    def get_password_handler(input)
+    end
+
+    ###########################################################################
+    def confirm_name_handler(input)
     end
 
   end
