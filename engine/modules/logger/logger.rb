@@ -1,14 +1,14 @@
 module Logger
 
   VERBOSITY = {
-    everything: 0,
-    verbose:    1,
-    debug:      2,
-    info:       3,
-    warning:    4,
-    error:      5,
-    fatal:      6,
-    silent:     7,
+    absurd:   0,
+    verbose:  1,
+    debug:    2,
+    info:     3,
+    warning:  4,
+    error:    5,
+    fatal:    6,
+    silent:   7,
   }
 
   class Logger

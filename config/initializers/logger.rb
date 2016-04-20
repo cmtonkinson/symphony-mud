@@ -1,2 +1,1 @@
-Logger.configuration.verbosity = :everything
-
+Logger.configuration.verbosity = :absurd

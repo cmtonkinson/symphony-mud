@@ -4,6 +4,7 @@ module InputSequence
 
     ###########################################################################
     def initialize
+      super
       @name = "login"
     end
 
@@ -58,23 +59,54 @@ module InputSequence
         transitions from: :confirm_password, to: :login
       end
 
+      event :complete do
+        transitions to: :login
+        after do
+          user.print "Welcome!"
+          user.operators.pop
+        end
+      end
+
       event :reject do
         transitions to: :disconnect
+        after do
+          user.client.should_terminate = true
+          user.print "Disconnecting."
+        end
       end
 
     end
 
     ###########################################################################
     def get_name_handler(input)
-      ::Base::Account.exists?(input) ? accept_existing_name : accept_new_name
+      @context.name = input
+      if ::Base::Account.exists? @context.name
+        @context.existing_name = true
+        accept_existing_name
+      else
+        @context.existing_name = false
+        accept_new_name
+      end
     end
 
     ###########################################################################
     def get_password_handler(input)
+      @context.password = input
+      if ::Base::Account.authenticate @context.name, @context.password
+        complete
+      else
+        reject
+      end
     end
 
     ###########################################################################
     def confirm_name_handler(input)
+      @context.name_confirmation = input
+      if @context.name == @context.name_confirmation
+      else
+        user.puts "That doesn't match the name you entered; let's try again."
+        reset
+      end
     end
 
   end

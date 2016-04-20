@@ -12,7 +12,7 @@ module Command
 
     ###########################################################################
     def handle(input)
-      Symphony.logger.everything "Command::Operator#handle('#{input}')"
+      Symphony.logger.absurd "Command::Operator#handle('#{input}')"
       cmd_name, _, rest = input.partition " "
 
       @command = @command_set.find { |c| c.get_name == cmd_name }
@@ -27,7 +27,7 @@ module Command
     ###########################################################################
     def parse(input_string)
       @command.usages.each do |usage|
-        Symphony.logger.everything "  Considering Usage #{usage}"
+        Symphony.logger.absurd "  Considering Usage #{usage}"
         context = usage.try_parse input_string
         return context if !context.nil?
       end

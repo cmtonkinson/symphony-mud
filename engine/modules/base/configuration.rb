@@ -9,9 +9,9 @@ module Base
       @sleep_interval = 0.1
 
       # For account management
-      @hash_salt      = nil
-      @hash_iteration = 20_000
-      @hash_digest    = OpenSSL::Digest::SHA512.new
+      @hash_salt       = ""
+      @hash_iterations = 20_000
+      @hash_digest     = OpenSSL::Digest::SHA512.new
     end
   end
 
