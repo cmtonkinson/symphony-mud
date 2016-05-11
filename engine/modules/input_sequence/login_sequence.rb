@@ -53,6 +53,9 @@ module InputSequence
 
       event :accept_new_password do
         transitions from: :set_password, to: :confirm_password
+        after do
+          user.print "Please enter a password: "
+        end
       end
 
       event :accept_password_confirmation do
@@ -103,10 +106,16 @@ module InputSequence
     def confirm_name_handler(input)
       @context.name_confirmation = input
       if @context.name == @context.name_confirmation
+        accept_name_confirmation
       else
         user.puts "That doesn't match the name you entered; let's try again."
         reset
       end
+    end
+
+    ###########################################################################
+    def set_password_handler(input)
+
     end
 
   end

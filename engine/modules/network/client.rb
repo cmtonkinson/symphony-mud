@@ -44,10 +44,9 @@ module Network
     private
 
     def _send(message)
-      socket.send message, 0
+      socket.send ::Base::Terminal.colorize(message), 0
     end
 
   end
 
 end
-

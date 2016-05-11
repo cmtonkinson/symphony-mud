@@ -11,6 +11,15 @@ module Logger
     silent:   7,
   }
 
+  COLORS = {
+    absurd:   "m",
+    verbose:  "M",
+    debug:    "c",
+    warning:  "y",
+    error:    "r",
+    fatal:    "R",
+  }
+
   class Logger
 
     def initialize
@@ -22,6 +31,10 @@ module Logger
       message = message.prepend Time.now.to_s + " "
       # Prepend the verbosity
       message = message.prepend label.to_s.upcase + " "
+      # Should this be colored?
+      if COLORS.key? label
+        message = message.prepend("{#{COLORS[label]}") + "{x"
+      end
       # Proxy to the underlying Logger instance.
       _log message
     end
