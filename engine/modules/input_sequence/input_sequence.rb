@@ -24,11 +24,19 @@ module InputSequence
     aasm do
       after_all_transitions :log_status_change
       state :_pending, initial: true
+      state :_finished
 
       event :reset do
         transitions to: :_pending
         after do
           _start
+        end
+      end
+
+      event :finish do
+        transitions to: :_finished
+        after do
+          user.operators.pop
         end
       end
     end

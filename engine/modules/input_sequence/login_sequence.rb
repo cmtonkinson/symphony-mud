@@ -76,7 +76,7 @@ module InputSequence
         transitions to: :login
         after do
           user.print "Welcome!"
-          user.operators.pop
+          finish
         end
       end
 
@@ -85,6 +85,7 @@ module InputSequence
         after do
           user.client.should_terminate = true
           user.print "Disconnecting."
+          finish
         end
       end
 
