@@ -25,8 +25,9 @@ module Logger
     def initialize
     end
 
-    def log(label, index, message)
+    def log(label, index, payload)
       return if index < VERBOSITY[::Logger.configuration.verbosity]
+      message = payload.is_a?(String) ? payload.clone : payload.inspect
       # Prepend the verbosity
       message = message.prepend label.to_s.upcase + " "
       # Prepend the timestamp
