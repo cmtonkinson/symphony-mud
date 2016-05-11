@@ -27,10 +27,10 @@ module Logger
 
     def log(label, index, message)
       return if index < VERBOSITY[::Logger.configuration.verbosity]
-      # Prepend the timestamp
-      message = message.prepend Time.now.to_s + " "
       # Prepend the verbosity
       message = message.prepend label.to_s.upcase + " "
+      # Prepend the timestamp
+      message = message.prepend Time.now.to_s + " "
       # Should this be colored?
       if COLORS.key? label
         message = message.prepend("{#{COLORS[label]}") + "{x"
