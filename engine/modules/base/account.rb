@@ -79,7 +79,7 @@ module Base
       # Don't kill the file.
       raise ArgumentError.new "user_map is nil" if user_map.nil?
       # Write the updated YAML.
-      File.open(file_path, "w") { |f| f.write @user_map }
+      File.open(file_path, "w") { |f| f.write YAML.dump(@user_map) }
       # Invalidate the cache.
       @user_map = nil
     end

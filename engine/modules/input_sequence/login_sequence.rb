@@ -49,17 +49,27 @@ module InputSequence
 
       event :accept_name_confirmation do
         transitions from: :confirm_name, to: :set_password
-      end
-
-      event :accept_new_password do
-        transitions from: :set_password, to: :confirm_password
         after do
           user.print "Please enter a password: "
         end
       end
 
+      event :accept_new_password do
+        transitions from: :set_password, to: :confirm_password
+        after do
+          user.print "Please confirm your password: "
+        end
+      end
+
       event :accept_password_confirmation do
         transitions from: :confirm_password, to: :login
+      end
+
+      event :reject_password_confirmation do
+        transitions from: :confirm_password, to: :set_password
+        after do
+          user.print "Passwords do not match; please enter your password again: "
+        end
       end
 
       event :complete do
@@ -115,7 +125,19 @@ module InputSequence
 
     ###########################################################################
     def set_password_handler(input)
+      @context.new_password = input
+      accept_new_password
+    end
 
+    ###########################################################################
+    def confirm_password_handler(input)
+      @context.password_confirmation = input
+      if ::Base::Account.equal_time_compare @context.new_password, @context.password_confirmation
+        ::Base::Account.add @context.name, @context.new_password
+        complete
+      else
+        reject_password_confirmation
+      end
     end
 
   end
