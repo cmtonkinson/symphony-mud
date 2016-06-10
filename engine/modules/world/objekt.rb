@@ -22,6 +22,15 @@ module World
     end
     alias_method :<<, :insert
 
+    ###########################################################################
+    # requires the definiton of the following in the child class:
+    #
+    def save
+      klass = self.class.name.split("::").last.downcase
+      subdirectory = Symphony.accounts.join klass, "#{id}.yml"
+      puts subdirectory
+    end
+
   end
 
 end

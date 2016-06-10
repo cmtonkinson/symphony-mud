@@ -56,11 +56,6 @@ module Base
       equal_time_compare user_map[name], hash(given_passphrase)
     end
 
-    ###########################################################################
-    def self.load(name)
-      user_map[name]
-    end
-
     private
 
     ###########################################################################

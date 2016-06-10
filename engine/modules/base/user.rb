@@ -1,11 +1,12 @@
 module Base
 
   class User
-    attr_accessor :client, :operators
+    attr_accessor :client, :avatar, :operators
 
     ###########################################################################
     def initialize
       @client    = nil
+      @avatar    = nil
       @operators = Util::Stack.new
     end
 

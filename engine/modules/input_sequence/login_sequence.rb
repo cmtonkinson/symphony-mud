@@ -76,6 +76,8 @@ module InputSequence
         transitions to: :login
         after do
           user.print "Welcome!"
+          user.avatar = World::Avatar.new
+          user.avatar.save
           finish
         end
       end
