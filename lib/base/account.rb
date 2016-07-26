@@ -67,7 +67,7 @@ module Base
 
     ###########################################################################
     def self.file_path
-      Symphony.data.join("accounts.yml")
+      Symphony.data.join "accounts.yml"
     end
 
     ###########################################################################
