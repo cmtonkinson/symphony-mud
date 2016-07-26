@@ -7,8 +7,8 @@ module World
     attr_accessor :name
 
     ###########################################################################
-    def initialize
-      @id   = SecureRandom.uuid
+    def initialize(id = nil)
+      @id   = id || SecureRandom.uuid
       @name = "_name"
     end
 
@@ -23,19 +23,27 @@ module World
     alias_method :<<, :insert
 
     ###########################################################################
+    #
+    def save
+      File.open self.class.file_path(id), "w" do |f|
+        f.write YAML.dump self
+      end
+    end
+
+    ###########################################################################
     # requires the definiton of the following in the child class:
     #
-    def save_file_path
-      klass  = self.class.name.split("::").last.downcase
+    def self.file_path(objekt_id)
+      klass  = self.name.split("::").last.downcase
       subdir = Symphony.data.join klass
-      subdir.join "#{id}.yml"
+      subdir.join "#{objekt_id}.yml"
     end
 
     ###########################################################################
     #
-    def save
-      File.open save_file_path, "w" do |f|
-        f.write YAML.dump self
+    def self.load(objekt_id)
+      File.open file_path(objekt_id), "r" do |f|
+        YAML.load f.read
       end
     end
 

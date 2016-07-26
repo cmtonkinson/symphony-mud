@@ -3,8 +3,9 @@ module World
   class Avatar < Objekt
 
     ###########################################################################
-    def initialize
-      super
+    def initialize(id = nil, name = nil)
+      super id
+      @name = name
     end
 
     ###########################################################################

@@ -13,11 +13,11 @@ module InputSequence
       # Initial state.
       state :get_name
       # Path for an existing user.
-      state :get_password
+      state :get_passphrase
       # Path for a new user.
       state :confirm_name
-      state :set_password
-      state :confirm_password
+      state :set_passphrase
+      state :confirm_passphrase
       # Final states.
       state :login
       state :disconnect
@@ -30,14 +30,14 @@ module InputSequence
       end
 
       event :accept_existing_name do
-        transitions from: :get_name, to: :get_password
+        transitions from: :get_name, to: :get_passphrase
         after do
-          user.print "Please enter your password: "
+          user.print "Please enter your passphrase: "
         end
       end
 
-      event :accept_existing_password do
-        transitions from: :get_password, to: :login
+      event :accept_existing_passphrase do
+        transitions from: :get_passphrase, to: :login
       end
 
       event :accept_new_name do
@@ -48,37 +48,44 @@ module InputSequence
       end
 
       event :accept_name_confirmation do
-        transitions from: :confirm_name, to: :set_password
+        transitions from: :confirm_name, to: :set_passphrase
         after do
-          user.print "Please enter a password: "
+          user.print "Please enter a passphrase: "
         end
       end
 
-      event :accept_new_password do
-        transitions from: :set_password, to: :confirm_password
+      event :accept_new_passphrase do
+        transitions from: :set_passphrase, to: :confirm_passphrase
         after do
-          user.print "Please confirm your password: "
+          user.print "Please confirm your passphrase: "
         end
       end
 
-      event :accept_password_confirmation do
-        transitions from: :confirm_password, to: :login
+      event :accept_passphrase_confirmation do
+        transitions from: :confirm_passphrase, to: :login
       end
 
-      event :reject_password_confirmation do
-        transitions from: :confirm_password, to: :set_password
+      event :reject_passphrase_confirmation do
+        transitions from: :confirm_passphrase, to: :set_passphrase
         after do
-          user.print "Passwords do not match; please enter your password again: "
+          user.print "Passwords do not match; please enter your passphrase again: "
         end
       end
 
       event :complete do
         transitions to: :login
         after do
-          user.print "Welcome!"
-          user.avatar = World::Avatar.new
-          user.avatar.save
-          finish
+          case @context.account_type
+          when :new
+            user.print "Welcome!"
+            user.avatar = World::Avatar.new @context.avatar_id, @context.name
+            user.avatar.save
+            finish
+          when :existing
+            user.print "Welcome back!"
+            user.avatar = World::Avatar.load @context.avatar_id
+            finish
+          end
         end
       end
 
@@ -106,9 +113,10 @@ module InputSequence
     end
 
     ###########################################################################
-    def get_password_handler(input)
-      @context.password = input
-      if ::Base::Account.authenticate @context.name, @context.password
+    def get_passphrase_handler(input)
+      @context.passphrase = input
+      if @context.avatar_id = ::Base::Account.authenticate(@context.name, @context.passphrase)
+        @context.account_type = :existing
         complete
       else
         reject
@@ -127,19 +135,21 @@ module InputSequence
     end
 
     ###########################################################################
-    def set_password_handler(input)
-      @context.new_password = input
-      accept_new_password
+    def set_passphrase_handler(input)
+      @context.new_passphrase = input
+      accept_new_passphrase
     end
 
     ###########################################################################
-    def confirm_password_handler(input)
-      @context.password_confirmation = input
-      if ::Base::Account.equal_time_compare @context.new_password, @context.password_confirmation
-        ::Base::Account.add @context.name, @context.new_password
+    def confirm_passphrase_handler(input)
+      @context.passphrase_confirmation = input
+      if ::Base::Account.equal_time_compare @context.new_passphrase, @context.passphrase_confirmation
+        @context.account_type = :new
+        @context.avatar_id    = SecureRandom.uuid
+        ::Base::Account.add @context.name, @context.avatar_id, @context.new_passphrase
         complete
       else
-        reject_password_confirmation
+        reject_passphrase_confirmation
       end
     end
 

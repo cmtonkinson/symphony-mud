@@ -35,8 +35,11 @@ module Base
     end
 
     ###########################################################################
-    def self.add(name, given_passphrase)
-      user_map[name] = hash(given_passphrase)
+    def self.add(name, id, given_passphrase)
+      user_map[name] = {
+        id: id,
+        passphrase: hash(given_passphrase)
+      }
       update_user_map!
     end
 
@@ -53,7 +56,11 @@ module Base
 
     ###########################################################################
     def self.authenticate(name, given_passphrase)
-      equal_time_compare user_map[name], hash(given_passphrase)
+      if equal_time_compare user_map[name][:passphrase], hash(given_passphrase)
+        user_map[name][:id]
+      else
+        false
+      end
     end
 
     private
@@ -66,7 +73,7 @@ module Base
     ###########################################################################
     def self.user_map
       # Cache the file contents.
-      @user_map ||= YAML.load File.read file_path
+      @user_map ||= (YAML.load(File.read(file_path)) || {})
     end
 
     ###########################################################################
