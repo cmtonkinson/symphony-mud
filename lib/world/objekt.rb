@@ -25,10 +25,18 @@ module World
     ###########################################################################
     # requires the definiton of the following in the child class:
     #
+    def save_file_path
+      klass  = self.class.name.split("::").last.downcase
+      subdir = Symphony.data.join klass
+      subdir.join "#{id}.yml"
+    end
+
+    ###########################################################################
+    #
     def save
-      klass = self.class.name.split("::").last.downcase
-      subdirectory = Symphony.accounts.join klass, "#{id}.yml"
-      puts subdirectory
+      File.open save_file_path, "w" do |f|
+        f.write YAML.dump self
+      end
     end
 
   end
