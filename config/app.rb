@@ -27,12 +27,13 @@ class App
   end
 
   # Other readers and accessors.
-  attr_reader :env, :root, :accounts
+  attr_reader :env, :root, :accounts, :binary
   attr_accessor :logger
 
   def initialize
     @env    = ENV["SYMPHONY_ENV"].to_sym
     @root   = Pathname.new File.expand_path "../..", __FILE__
+    @binary = @root.join "symphony.rb"
     @logger = nil
 
     DIRECTORIES.each do |dir, subdirs|

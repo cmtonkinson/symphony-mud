@@ -3,7 +3,7 @@ require 'yaml'
 module Base
 
   class Universe
-    attr_accessor :clients, :server, :should_stop, :should_reboot, :quotes
+    attr_accessor :clients, :server, :should_stop, :quotes, :should_reboot
 
     ###########################################################################
     def initialize
@@ -64,27 +64,31 @@ module Base
 
     ###########################################################################
     def begin_reboot
-      Symphony.logger.info "Server beginning reboot"
-      server_fd  = server.to_i
-      client_fds = clients.map { |c| c.get_fd }
-      env = {
-        "SYMPHONY_REBOOT"     => "true",
-        "SYMPHONY_SERVER_FD"  => server_fd.to_s,
-        "SYMPHONY_CLIENT_FDS" => Marshal.dump(client_fds),
-      }
-      options = {
-        :in           => :in,
-        :out          => :out,
-        :err          => :err,
-        :close_others => false,
-      }
-      # Add the server socket to the options Hash.
-      options[server_fd] = server_fd
-      # Add all the client sockets to the options Hash.
-      @clients.each { |c| options[c.get_fd] = c.get_fd }
-      # Begin anew.
-      Process.exec env, Symphony.binary.to_s, options
-      Symphony.logger.info "Reboot failed"
+      begin
+        Symphony.logger.info "Server beginning reboot"
+        server_fd  = server.to_i
+        client_fds = clients.map { |c| c.get_fd }
+        env = {
+          "SYMPHONY_REBOOT"     => "true",
+          "SYMPHONY_SERVER_FD"  => server_fd.to_s,
+          "SYMPHONY_CLIENT_FDS" => Marshal.dump(client_fds),
+        }
+        options = {
+          :in           => :in,
+          :out          => :out,
+          :err          => :err,
+          :close_others => false,
+        }
+        # Add the server socket to the options Hash.
+        options[server_fd] = server_fd
+        # Add all the client sockets to the options Hash.
+        @clients.each { |c| options[c.get_fd] = c.get_fd }
+        # Begin anew.
+        Process.exec env, Symphony.binary.to_s, options
+      rescue Exception => e
+        @should_reboot = false
+        Symphony.logger.info "Reboot failed: #{e}"
+      end
     end
 
     ###########################################################################
