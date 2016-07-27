@@ -1,3 +1,5 @@
+require "ostruct"
+
 ###############################################################################
 # If you're familiar with Rails, a lot of the patterns for this App class will
 # be familiar to you.
@@ -27,14 +29,15 @@ class App
   end
 
   # Other readers and accessors.
-  attr_reader :env, :root, :accounts, :binary
+  attr_reader :env, :root, :accounts, :binary, :configuration
   attr_accessor :logger
 
   def initialize
-    @env    = ENV["SYMPHONY_ENV"].to_sym
-    @root   = Pathname.new File.expand_path "../..", __FILE__
-    @binary = @root.join "symphony.rb"
-    @logger = nil
+    @env           = ENV["SYMPHONY_ENV"].to_sym
+    @root          = Pathname.new File.expand_path "../..", __FILE__
+    @binary        = @root.join "symphony.rb"
+    @logger        = nil
+    @configuration = OpenStruct.new
 
     DIRECTORIES.each do |dir, subdirs|
       instance_variable_set "@#{dir}", @root.join(dir.to_s)

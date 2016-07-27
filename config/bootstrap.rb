@@ -1,30 +1,36 @@
-####################################################################################################
+###############################################################################
 # Assess the environment.
-####################################################################################################
+###############################################################################
 # We assume development environment by default.
-ENV['SYMPHONY_ENV'] ||= 'development'
+ENV["SYMPHONY_ENV"] ||= "development"
 # Standard practice puts the Gemfile at the project root.
-ENV['GEMFILE'] ||= File.expand_path '../../Gemfile', __FILE__
+ENV["GEMFILE"] ||= File.expand_path "../../Gemfile", __FILE__
 
-####################################################################################################
+###############################################################################
 # Consume the Gemfile and create our base App object.
 # We break gem processing into two steps around App initialization so that App itself can make use
 # of gems.
-####################################################################################################
+###############################################################################
 # Initialize gems from the Gemfile.
-require 'bundler/setup' if File.exists? ENV['GEMFILE']
-# Our application object. If you're familiar with Rails, this will feel familiar.
-require_relative 'app'
+require "bundler/setup" if File.exists? ENV["GEMFILE"]
+# Our application object. If you"re familiar with Rails, this will feel familiar.
+require_relative "app"
 Symphony = App.new
 # Gorge ourselves on 3rd party gems...
 Bundler.require :default, :setup, :app, Symphony.env
 
-####################################################################################################
+###############################################################################
 # Application autoload/autoconfig heavy lifting.
-####################################################################################################
+###############################################################################
 # Autoload core modules.
-Dir[Symphony.lib.join '*'].each { |mod| require "#{mod}/init" }
-# Autorun application configuration scripts.
-Dir[Symphony.initializers.join '*.rb'].each { |file| require file }
+Dir[Symphony.lib.join "*"].each { |mod| require "#{mod}/init" }
 # Bring all the infrastructure into existence.
-Dir[Symphony.setup.join '*.rb'].each { |file| require file }
+Dir[Symphony.setup.join "*.rb"].each { |file| require file }
+
+###############################################################################
+# Configure the application.
+###############################################################################
+# Initialization scripts.
+Dir[Symphony.initializers.join "*.rb"].each { |file| require file }
+# Other external configuration.
+require_relative "configuration"
