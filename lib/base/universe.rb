@@ -25,6 +25,11 @@ module Base
 
     ###########################################################################
     def live
+      if Symphony.configuration.console
+        repl
+        return
+      end
+
       Symphony.logger.info "Server listening on #{Network.configuration.listen_ip}:#{Network.configuration.listen_port}"
       until should_stop do
         welcome server.accept
@@ -108,6 +113,16 @@ module Base
       ENV.delete "SYMPHONY_SERVER_FD"
       ENV.delete "SYMPHONY_CLIENT_FDS"
       Symphony.logger.info "Server recovered from reboot"
+    end
+
+    ###########################################################################
+    # Laughably simplistic, but gets the job done for now.
+    def repl
+      loop do
+        print "> "
+        result = eval gets.chomp!
+        puts "=> #{result}"
+      end
     end
 
   end
