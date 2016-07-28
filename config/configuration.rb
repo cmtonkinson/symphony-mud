@@ -55,15 +55,20 @@ end
 ###############################################################################
 # Check the command line for configuration settings.
 ###############################################################################
-OptionParser.new do |opts|
-  opts.banner = "Usage: symphony.rb [options]"
+# We want to skip over the OptionParser if the application is being loaded in
+# the context of another program (e.g. rspec) or this will cause any CLI args
+# intended for that program to be processd here.
+if $0 =~ /symphony/
+  OptionParser.new do |opts|
+    opts.banner = "Usage: symphony.rb [options]"
 
-  CONFIGURATION.each do |config|
-    short = "-" + config[ :short]
-    long  = "--" + config[:long] + (config.key?(:placeholder) ? " #{config[:placeholder]}" : "")
-    desc  = config[:description]
-    func  = config[:callback]
-    opts.on short, long, desc, func
-  end
+    CONFIGURATION.each do |config|
+      short = "-" + config[ :short]
+      long  = "--" + config[:long] + (config.key?(:placeholder) ? " #{config[:placeholder]}" : "")
+      desc  = config[:description]
+      func  = config[:callback]
+      opts.on short, long, desc, func
+    end
 
-end.parse!
+  end.parse!
+end
