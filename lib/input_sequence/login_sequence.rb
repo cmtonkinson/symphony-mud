@@ -79,11 +79,11 @@ module InputSequence
           when :new
             user.print "Welcome!"
             user.avatar = World::Avatar.new @context.avatar_id, @context.name
-            user.avatar.save
+            World::Scribe.save user.avatar
             finish
           when :existing
             user.print "Welcome back!"
-            user.avatar = World::Avatar.load @context.avatar_id
+            user.avatar = World::Scribe.load World::Avatar, @context.avatar_id
             finish
           end
         end

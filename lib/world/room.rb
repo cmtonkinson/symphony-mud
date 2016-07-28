@@ -45,6 +45,20 @@ module World
       EXITS::keys.each { |exit| send "#{exit}=", nil }
     end
 
+    ###########################################################################
+    def hashify
+      {
+        zone: @zone.id,
+        coords: @coords.to_a.join(","),
+      }
+    end
+
+    ###########################################################################
+    def dehashify(hash)
+      @zone   = nil # need global lookups sooner than I thought
+      @coords = Vector[*hash[:coords].split(",")]
+    end
+
   end
 
 end

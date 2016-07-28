@@ -1,0 +1,33 @@
+module World
+
+  class Scribe
+    ###########################################################################
+    def self.save(objekt)
+      path    = pathname objekt.class, objekt.id
+      content = objekt.serialize
+      # Ensure the directory exists.
+      FileUtils.mkdir_p File.dirname path
+      # Write the serialized content to disk.
+      File.open(path, "w") { |fp| fp.write content }
+    end
+
+    ###########################################################################
+    def self.load(klass, objekt_id)
+      File.open pathname(klass, objekt_id), "r" do |fp|
+        klass.deserialize fp.read
+      end
+    end
+
+    ###########################################################################
+    def self.pathname(klass, objekt_id)
+      dirname(klass).join "#{objekt_id}.yml"
+    end
+
+    ###########################################################################
+    def self.dirname(klass)
+      Symphony.data.join klass.name.split("::").last.downcase
+    end
+
+  end
+
+end

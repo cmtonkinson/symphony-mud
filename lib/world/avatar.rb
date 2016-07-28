@@ -11,6 +11,16 @@ module World
     end
 
     ###########################################################################
+    def hashify
+      {
+        room: @room.id
+      }
+    end
+
+    ###########################################################################
+    def dehashify(hash)
+      @room = nil # again, global lookup
+    end
 
   end
 

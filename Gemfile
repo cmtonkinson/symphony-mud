@@ -7,6 +7,7 @@ end
 
 group :app do
   gem "aasm"
+  gem "deep_merge"
   gem "i18n"
 end
 
@@ -19,6 +20,7 @@ group :development do
 end
 
 group :test do
+  gem "fakefs", require: "fakefs/safe"
   gem "fuubar"
   gem "rspec"
 end
