@@ -7,10 +7,10 @@
     body: "The significant problems we face cannot be solved by the same level of thinking that created them."
   -
     author: "Bill Bryson"
-    body: "A computer is a stupid machine with the ability to do incredibly smart things, while computer programmers are smart people with the ability to do incredibly stupid things.  They are, in short, a perfect match."
+    body: "A computer is a stupid machine with the ability to do incredibly smart things, while computer programmers are smart people with the ability to do incredibly stupid things. They are, in short, a perfect match."
   -
     author: "Brian Kernighan"
-    body: "Debugging is twice as hard as writing the code in the first place.  Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it."
+    body: "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it."
   -
     author: "Charles Petzold"
     body: "Owning a computer without programming is like having a kitchen and using only the microwave oven."
@@ -55,19 +55,19 @@
     body: "Program, n.: (1) A magic spell cast upon a computer to enable it to turn your input into error messages. (2) v.t., A pastime similar to banging your head against a wall but with fewer opportunities for reward."
   -
     author: "The Guild"
-    body: "Blades: \"Wiggley, you don't have an arsenal.  You're in a pit of noob and you can't get out.\""
+    body: "Blades: \"Wiggley, you don't have an arsenal. You're in a pit of noob and you can't get out.\""
   -
     author: "The Guild"
     body: "Codex: \"You can't be bald and confident?\"\nClara: \"Um... your skull is out all the time.\""
   -
     author: "The Guild"
-    body: "Vork: \"You will be dead to me as a person.  So much so, that were I faced with the decision of saving you or a strange stray dog that I'd never met before from drowning, I would do my best to drown you myself to save the strange dog that I would not even care to keep, but would, afterwards, place in a non-abusive foster home.  Good day, sir!\""
+    body: "Vork: \"You will be dead to me as a person. So much so, that were I faced with the decision of saving you or a strange stray dog that I'd never met before from drowning, I would do my best to drown you myself to save the strange dog that I would not even care to keep, but would, afterwards, place in a non-abusive foster home. Good day, sir!\""
   -
     author: "The Guild"
     body: "Zaboo: \"There is so much fail in that sentence I can hardly begin.\""
   -
     author: "Howard Aiken"
-    body: "Don't worry about people stealing your ideas.  If it's original, you'll have to ram it down their throats."
+    body: "Don't worry about people stealing your ideas. If it's original, you'll have to ram it down their throats."
   -
     author: "Isaac Asimov"
     body: "The most exciting phrase to hear in science, the one that heralds new discoveries, is not 'Eureka!' but 'That's funny...'"
@@ -94,7 +94,7 @@
     body: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand."
   -
     author: "Nathaniel S Borenstein"
-    body: "It should be noted that no ethically-trained software engineer would ever consent to write a DestroyBaghdad procedure.  Basic professional ethics would instead require him to write a DestroyCity procedure, to which Baghdad could be given as a parameter."
+    body: "It should be noted that no ethically-trained software engineer would ever consent to write a DestroyBaghdad procedure. Basic professional ethics would instead require him to write a DestroyCity procedure, to which Baghdad could be given as a parameter."
   -
     author: "P. J. Plauger"
     body: "My definition of an expert in any field is a person who knows enough about what's really going on to be scared."
@@ -106,7 +106,7 @@
     body: "There are only two hard problems in Computer Science: cache invalidation and naming things."
   -
     author: "Rich Cook"
-    body: "Programming today is a race between software engineers striving to build bigger and better idiot-proof programs, and the Universe trying to produce bigger and better idiots.  So far, the Universe is winning."
+    body: "Programming today is a race between software engineers striving to build bigger and better idiot-proof programs, and the Universe trying to produce bigger and better idiots. So far, the Universe is winning."
   -
     author: "Robert Sewell"
     body: "If Java had true garbage collection, most programs would delete themselves upon execution."
@@ -154,10 +154,10 @@
     body: "The best code is no code at all."
   -
     author: "Unknown"
-    body: "Theory is when you know something, but it doesn't work.  Practice is when something works, but you don't know why.  Programmers combine theory and practice: Nothing works and they don't know why."
+    body: "Theory is when you know something, but it doesn't work. Practice is when something works, but you don't know why. Programmers combine theory and practice: Nothing works and they don't know why."
   -
     author: "Unknown"
-    body: "There are 10 types of people in this world.  Those who understand binary, and those who don't."
+    body: "There are 10 types of people in this world. Those who understand binary, and those who don't."
   -
     author: "Unknown"
     body: "There are only two industries that refer to their customers as users."
