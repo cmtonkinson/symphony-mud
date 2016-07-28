@@ -4,7 +4,8 @@ module World
     attr_accessor :rooms, :items, :npcs
 
     ###########################################################################
-    def initialize
+    def initialize(id = nil)
+      super id
       @rooms = Util::AttrHash.new
       @items = Util::AttrHash.new
       @npcs  = Util::AttrHash.new

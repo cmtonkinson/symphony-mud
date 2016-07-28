@@ -1,2 +1,4 @@
 /data/avatar/*
 !/data/avatar/.keep
+/data/zone/*
+!/data/zone/.keep
