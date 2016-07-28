@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-include World
+include Realm
 
-describe World::Avatar do
+describe Realm::Zone do
 
   describe "#" do
 
     it "should work" do
-      a = Avatar.new
+      z = Zone.new
       expect(true).to eq true
     end
 

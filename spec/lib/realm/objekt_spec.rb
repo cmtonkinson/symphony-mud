@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-include World
+include Realm
 
 describe Objekt do
 
@@ -38,7 +38,7 @@ describe Objekt do
     end
 
     it "encodes base Objekt attributes" do
-      expect(@yaml).to include "World::TestObj"
+      expect(@yaml).to include "Realm::TestObj"
       expect(@yaml).to include ":objekt_id"
       expect(@yaml).to include ":objekt_name"
     end

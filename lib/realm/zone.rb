@@ -1,4 +1,4 @@
-module World
+module Realm
 
   class Zone < Objekt
     attr_accessor :rooms, :items, :npcs

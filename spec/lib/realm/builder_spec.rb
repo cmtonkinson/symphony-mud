@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-include World
+include Realm
 
-describe World::Builder do
+describe Realm::Builder do
 
   #############################################################################
   describe "#create_room" do

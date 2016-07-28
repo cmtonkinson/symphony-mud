@@ -1,6 +1,6 @@
 require "matrix"
 
-module World
+module Realm
 
   class Room < Objekt
 

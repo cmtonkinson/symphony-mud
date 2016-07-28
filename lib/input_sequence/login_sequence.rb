@@ -78,12 +78,12 @@ module InputSequence
           case @context.account_type
           when :new
             user.print "Welcome!"
-            user.avatar = World::Avatar.new @context.avatar_id, @context.name
-            World::Scribe.save user.avatar
+            user.avatar = Realm::Avatar.new @context.avatar_id, @context.name
+            Realm::Scribe.save user.avatar
             finish
           when :existing
             user.print "Welcome back!"
-            user.avatar = World::Scribe.load World::Avatar, @context.avatar_id
+            user.avatar = Realm::Scribe.load Realm::Avatar, @context.avatar_id
             finish
           end
         end

@@ -1,4 +1,4 @@
-module World
+module Realm
 
   class Configuration
 

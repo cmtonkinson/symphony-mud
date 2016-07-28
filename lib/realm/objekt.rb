@@ -16,7 +16,7 @@
 require "securerandom"
 require "yaml"
 
-module World
+module Realm
 
   class Objekt
     attr_reader :id

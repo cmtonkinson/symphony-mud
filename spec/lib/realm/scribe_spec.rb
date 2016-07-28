@@ -1,8 +1,8 @@
 require "spec_helper"
 
-include World
+include Realm
 
-describe World::Scribe do
+describe Realm::Scribe do
 
   #############################################################################
   describe "#save" do
