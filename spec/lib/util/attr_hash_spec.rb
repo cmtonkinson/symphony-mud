@@ -1,9 +1,11 @@
 require 'spec_helper'
 
+include Util
+
 describe Util::AttrHash do
 
   it "should be a normal Hash" do
-    ah = Util::AttrHash.new
+    ah = AttrHash.new
 
     expect(ah).to be_a Hash
 
@@ -20,12 +22,12 @@ describe Util::AttrHash do
   describe "#initialize" do
 
     it "should default the key attribute to :id" do
-      ah = Util::AttrHash.new
+      ah = AttrHash.new
       expect(ah.attribute).to eq :id
     end
 
     it "should allow overwriting the key attribute" do
-      ah = Util::AttrHash.new :baz
+      ah = AttrHash.new :baz
       expect(ah.attribute).to eq :baz
     end
 
@@ -34,7 +36,7 @@ describe Util::AttrHash do
   describe "#insert" do
 
     it "should attempt insertion by the configured attribute" do
-      @ah = Util::AttrHash.new :qux
+      @ah = AttrHash.new :qux
       s1 = OpenStruct.new foo: "a", bar: "b"
       s2 = OpenStruct.new baz: "c", qux: "d"
 
@@ -48,7 +50,7 @@ describe Util::AttrHash do
     end
 
     it "should be aliased as :<<" do
-      @ah = Util::AttrHash.new :qux
+      @ah = AttrHash.new :qux
       s2 = OpenStruct.new baz: "c", qux: "d"
       expect(@ah.respond_to?(:<<)).to eq true
       expect { @ah << s2 }.not_to raise_error
