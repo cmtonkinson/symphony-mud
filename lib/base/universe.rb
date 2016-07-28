@@ -118,9 +118,15 @@ module Base
     ###########################################################################
     # Laughably simplistic, but gets the job done for now.
     def repl
+      context = binding
       loop do
         print "> "
-        result = eval gets.chomp!
+        input = gets.chomp!
+        begin
+          result = context.eval input
+        rescue Exception => e
+          puts "Exception: #{e}"
+        end
         puts "=> #{result}"
       end
     end
