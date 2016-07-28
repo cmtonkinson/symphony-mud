@@ -16,7 +16,7 @@ module World
     # Given an obj of type Thing
     # Attempts to send `@things << obj`
     def insert(obj)
-      container = obj.class.name.downcase.to_s + "s"
+      container = obj.class.name.split("::").last.downcase.to_s + "s"
       raise ArgumentError.new "Cannot insert object of type #{obj.class.name}" unless respond_to? container
       send(container) << obj
     end
