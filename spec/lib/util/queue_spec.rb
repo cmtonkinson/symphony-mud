@@ -2,19 +2,18 @@ require 'spec_helper'
 
 include Util
 
-####################################################################################################
-# Queue
-####################################################################################################
 describe Util::Queue do
 
   subject { Util::Queue.new }
 
+  #############################################################################
   describe "#push" do
     it "should return self" do
       expect(subject.push 1).to be subject
     end
   end
 
+  #############################################################################
   describe "#pop" do
     context "when empty" do
       it "should return false" do
@@ -32,6 +31,7 @@ describe Util::Queue do
     end
   end
 
+  #############################################################################
   describe "#peek" do
     context "when empty" do
       it "should return false" do
@@ -49,6 +49,7 @@ describe Util::Queue do
     end
   end
 
+  #############################################################################
   describe "#empty" do
     context "when empty" do
       it "should return true" do

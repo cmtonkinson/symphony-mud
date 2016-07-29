@@ -1,14 +1,15 @@
 module Realm
 
   class Zone < Objekt
-    attr_accessor :rooms, :items, :npcs
+
+    CONTAINERS = %w(rooms)
+
+    CONTAINERS.each { |c| attr_accessor c.to_sym }
 
     ###########################################################################
     def initialize(id = nil)
       super id
-      @rooms = Util::AttrHash.new
-      @items = Util::AttrHash.new
-      @npcs  = Util::AttrHash.new
+      CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     end
 
   end

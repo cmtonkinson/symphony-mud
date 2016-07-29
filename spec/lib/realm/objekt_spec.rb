@@ -9,7 +9,7 @@ describe Objekt do
 
     it "should set a default name" do
       r = Objekt.new
-      expect(r.name).to eq "_name"
+      expect(r.name).to eq Objekt::DEFAULTS[:name]
     end
 
   end
@@ -20,6 +20,44 @@ describe Objekt do
     it "should reject invalid object types" do
       r = Objekt.new
       expect { r.insert OpenStruct.new }.to raise_error ArgumentError
+    end
+
+  end
+
+  #############################################################################
+  describe "#clone" do
+
+    before :each do
+      @original = TestObj.new
+      @clone = @original.clone
+    end
+
+    it "assigns a new id" do
+      expect(@clone.id).not_to eq @original.id
+    end
+
+    it "sets the cloned_from attribute" do
+      expect(@clone.cloned_from).to eq @original.id
+    end
+
+    it "deep copies base class Objekt attributes" do
+      %i(name).each do |att|
+        # The values should be the same.
+        expect(@clone.send(att)).to eq @original.send(att)
+        # The objects should not be the same.
+        expect(@clone.send(att)).not_to be @original.send(att)
+      end
+    end
+
+    it "deep copies subclass attributes" do
+      %i(my_num).each do |att|
+        # The values should be the same.
+        expect(@clone.send(att)).to eq @original.send(att)
+        # The objects should not be the same.
+        unless @clone.send(att).is_a? NilClass
+          expect(@clone.send(att)).not_to be @original.send(att)
+        end
+      end
     end
 
   end
@@ -54,7 +92,7 @@ describe Objekt do
 
     it "decodes base Objekct attributes" do
       expect(@reloaded.id).to eq 42
-      expect(@reloaded.name).to eq "_name"
+      expect(@reloaded.name).to eq Objekt::DEFAULTS[:name]
     end
 
     it "decodes subclass attributes" do

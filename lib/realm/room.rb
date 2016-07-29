@@ -4,6 +4,8 @@ module Realm
 
   class Room < Objekt
 
+    CONTAINERS = %w(avatars)
+
     EXITS = {
       "north" => {
         opposite: "south",
@@ -33,16 +35,17 @@ module Realm
 
     attr_accessor :zone, :items, :npcs
     attr_accessor :coords
-    EXITS::keys.each { |exit| attr_accessor exit }
+
+    CONTAINERS.each { |cont| attr_accessor cont }
+    EXITS.keys.each { |exit| attr_accessor exit }
 
     ###########################################################################
     def initialize(id = nil)
       super id
       @zone   = nil
-      @items  = Util::AttrHash.new
-      @npcs   = Util::AttrHash.new
       @coords = Vector[0, 0, 0]
-      EXITS::keys.each { |exit| send "#{exit}=", nil }
+      EXITS.keys.each { |exit| send "#{exit}=", nil }
+      CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     end
 
     ###########################################################################
@@ -55,7 +58,7 @@ module Realm
 
     ###########################################################################
     def dehashify(hash)
-      @zone   = nil # need global lookups sooner than I thought
+      @zone   = Util::Registry.lookup hash[:zone]
       @coords = Vector[*hash[:coords].split(",")]
     end
 

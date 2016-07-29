@@ -21,6 +21,11 @@ module Realm
       @my_num = hash[:my_num]
     end
 
+    ###########################################################################
+    def deep_copy(other)
+      other.my_num = @my_num
+    end
+
   end
 
 end
