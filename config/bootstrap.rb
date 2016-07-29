@@ -34,3 +34,8 @@ Dir[Symphony.setup.join "*.rb"].each { |file| require file }
 Dir[Symphony.initializers.join "*.rb"].each { |file| require file }
 # Other external configuration.
 require_relative "configuration"
+
+###############################################################################
+# At this point, we're finished setup and ready to boot.
+###############################################################################
+require_relative "dispatch"

@@ -8,13 +8,13 @@
 #    will automatically assign a new UUIDv4 to the id attribute.
 #
 # 2. To take advantage of saving/loading through the Scribe, you should
-#    implement #hashify and #dehashify methods. #hashify takes no parameters
+#    implement #_hashify and #_dehashify methods. #_hashify takes no parameters
 #    and returns a Hash suitable for serialization (such as to YAML). The
 #    #dehashify method takes one Hash as a parameter, and you should consume
 #    these Hash keys/values to initialize your instance to the desired state.
 #
 # 3. To enable smart deep copying via the #clone method, your subclass must
-#    implement a #deep_copy method.
+#    implement a #_deep_copy method.
 ###############################################################################
 require "securerandom"
 require "set"
@@ -122,31 +122,31 @@ module Realm
       dolly = self.class.new
       dolly.instance_variable_set :@cloned_from, id
       # Deep copy Objekct properties.
-      _deep_copy dolly
-      # Deep copy subclass properties.
       deep_copy dolly
+      # Deep copy subclass properties.
+      _deep_copy dolly
       # Return the clone.
       dolly
     end
 
     ###########################################################################
-    def _deep_copy(other)
+    def deep_copy(other)
       other.name = name.dup
     end
 
     ###########################################################################
     def serialize
       raise NotImplementedError.new "#{self.class.name}#serialize called but #hashify is not implemented" unless respond_to? :hashify
-      YAML.dump _hashify
+      YAML.dump hashify
     end
 
     ###########################################################################
-    def _hashify
+    def hashify
       {
         objekt_class: self.class.name,
         objekt_id: @id,
         objekt_name: @name,
-      }.deep_merge! hashify
+      }.deep_merge! _hashify
     end
 
     ###########################################################################

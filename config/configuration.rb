@@ -33,6 +33,14 @@ CONFIGURATION = [
     description: "Change the system logging verbosity",
     callback: Proc.new { |value| Logger.configuration.verbosity = value.to_sym }
   },
+  {
+    short: "s",
+    long: "script",
+    placeholder: "FILE",
+    default: false,
+    description: "Run a script",
+    callback: Proc.new { |value| Symphony.configuration.script = value }
+  },
 ]
 
 ###############################################################################

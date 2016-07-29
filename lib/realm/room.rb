@@ -49,15 +49,18 @@ module Realm
     end
 
     ###########################################################################
-    def hashify
+    def _hashify
       {
         zone: @zone.id,
         coords: @coords.to_a.join(","),
+        exits: Hash[EXITS.keys.map do |direction|
+          [direction, (exit = self.send(direction)) ? exit.id : nil]
+        end]
       }
     end
 
     ###########################################################################
-    def dehashify(hash)
+    def _dehashify(hash)
       @zone   = Util::Registry.lookup hash[:zone]
       @coords = Vector[*hash[:coords].split(",")]
     end

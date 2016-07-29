@@ -24,12 +24,7 @@ module Base
     end
 
     ###########################################################################
-    def live
-      if Symphony.configuration.console
-        repl
-        return
-      end
-
+    def do_server
       Symphony.logger.info "Server listening on #{Network.configuration.listen_ip}:#{Network.configuration.listen_port}"
       until should_stop do
         welcome server.accept
@@ -116,8 +111,8 @@ module Base
     end
 
     ###########################################################################
-    # Laughably simplistic, but gets the job done for now.
-    def repl
+    # Laughably simplistic REPL, but gets the job done for now.
+    def do_console
       context = binding
       loop do
         print "> "
@@ -129,6 +124,13 @@ module Base
         end
         puts "=> #{result}"
       end
+    end
+
+    ###########################################################################
+    def do_script
+      context = binding
+      content = File.read Symphony.configuration.script
+      context.eval content
     end
 
   end
