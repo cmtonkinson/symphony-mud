@@ -1,9 +1,10 @@
 require "optparse"
 
 ###############################################################################
-# Configuration configuration, with default configurations. Yo dawg.
-# Seriously though: this Array defines all of the settings available for the
-# application. There is a strict order of precedence, from low to high:
+# Configuration configuration, with default configurations. It's turtles all
+# the way down. Seriously though: this Array defines all of the settings
+# available for the application. There is a strict order of precedence, from
+# low to high:
 #
 #   1. Defaults (defined below)
 #   2. Environment variables (e.g. SYMPHONY_LOG_LEVEL)
@@ -68,7 +69,7 @@ end
 # intended for that program to be processd here.
 if $0 =~ /symphony/
   OptionParser.new do |opts|
-    opts.banner = "Usage: symphony.rb [options]"
+    opts.banner = "Usage: #{BINARY_NAME} [options]"
 
     CONFIGURATION.each do |config|
       short = "-" + config[ :short]

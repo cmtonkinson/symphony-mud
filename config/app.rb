@@ -35,7 +35,7 @@ class App
   def initialize
     @env           = ENV["SYMPHONY_ENV"].to_sym
     @root          = Pathname.new File.expand_path "../..", __FILE__
-    @binary        = @root.join "symphony.rb"
+    @binary        = @root.join BINARY_NAME
     @logger        = nil
     @configuration = OpenStruct.new
 

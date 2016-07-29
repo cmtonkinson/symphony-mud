@@ -10,19 +10,19 @@ module Realm
     end
 
     ###########################################################################
-    def hashify
+    def _hashify
       {
         my_num: 456
       }
     end
 
     ###########################################################################
-    def dehashify(hash)
+    def _dehashify(hash)
       @my_num = hash[:my_num]
     end
 
     ###########################################################################
-    def deep_copy(other)
+    def _deep_copy(other)
       other.my_num = @my_num
     end
 

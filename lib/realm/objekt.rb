@@ -105,19 +105,14 @@ module Realm
 
     ###########################################################################
     def container_for(obj)
-      container = container_name obj.class
+      container = obj.class.name.split("::").last.downcase.to_s + "s"
       raise ArgumentError.new "No #{obj.class.name} container configured on #{self.class.name}" unless respond_to? container
       send container
     end
 
     ###########################################################################
-    def container_name(klass)
-      klass.name.split("::").last.downcase.to_s + "s"
-    end
-
-    ###########################################################################
     def clone
-      raise NotImplementedError.new "#{self.class.name}#clone called but #deep_copy is not implemented" unless respond_to? :deep_copy
+      raise NotImplementedError.new "#{self.class.name}#clone called but #_deep_copy is not implemented" unless respond_to? :deep_copy
       # Generate a new subclass-type Objekt, setting the cloned_from id.
       dolly = self.class.new
       dolly.instance_variable_set :@cloned_from, id
@@ -136,7 +131,7 @@ module Realm
 
     ###########################################################################
     def serialize
-      raise NotImplementedError.new "#{self.class.name}#serialize called but #hashify is not implemented" unless respond_to? :hashify
+      raise NotImplementedError.new "#{self.class.name}#serialize called but #_hashify is not implemented" unless respond_to? :hashify
       YAML.dump hashify
     end
 
@@ -151,17 +146,17 @@ module Realm
 
     ###########################################################################
     def self.deserialize(yaml)
-      base_dehashify YAML.load yaml
+      dehashify YAML.load yaml
     end
 
     ###########################################################################
-    def self.base_dehashify(hash)
+    def self.dehashify(hash)
       # Instantiate an Object of the appropriate class.
       objekt = Object.const_get(hash[:objekt_class]).new hash[:objekt_id]
       # Load Objekt-specific attributes.
       objekt.name = hash[:objekt_name]
       # Load subclass attributes.
-      objekt.dehashify hash
+      objekt._dehashify hash
       # Return the completed objekt.
       objekt
     end
