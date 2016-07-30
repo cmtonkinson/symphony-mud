@@ -26,10 +26,11 @@ module Realm
     def find(objekt_id)
       Util::Registry.lookup objekt_id
     end
+    alias_method :[], :find
 
     ###########################################################################
     def find_room(room_id)
-      (room = Util::Registry.lookup room_id) ? room : Util::Registry.lookup(THE_VOID_ID)
+      (room = find room_id) ? room : find(THE_VOID_ID)
     end
 
   end

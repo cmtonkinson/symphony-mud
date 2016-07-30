@@ -79,6 +79,7 @@ module InputSequence
           when :new
             user.print "Welcome!"
             user.avatar = Realm::Avatar.new @context.avatar_id, @context.name
+            user.avatar.room = $world.find_room Realm::World::THE_VOID_ID
             Realm::Scribe.save user.avatar
             finish
           when :existing

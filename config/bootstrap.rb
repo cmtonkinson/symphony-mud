@@ -34,3 +34,9 @@ Dir[Symphony.setup.join "*.rb"].each { |file| require file }
 Dir[Symphony.initializers.join "*.rb"].each { |file| require file }
 # Other external configuration.
 require_relative "configuration"
+
+###############################################################################
+# Big Bang.
+###############################################################################
+$universe = Base::Universe.new
+$world    = Realm::World.new

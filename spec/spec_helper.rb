@@ -21,6 +21,11 @@ end
 Dir[Symphony.root.join "spec", "helpers", "*_helper.rb"].each { |file| require file }
 
 ###############################################################################
+# Spin up a telnet server for smoke testing.
+###############################################################################
+$universe.setup_server
+
+###############################################################################
 # Configuration blocks for testing utilities.
 ###############################################################################
 RSpec.configure do |config|

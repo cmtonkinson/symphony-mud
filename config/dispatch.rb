@@ -1,6 +1,3 @@
-$universe = Base::Universe.new
-$world    = Realm::World.new
-
 if Symphony.configuration.console
   $universe.do_console
 elsif Symphony.configuration.script
