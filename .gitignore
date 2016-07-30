@@ -1,4 +1,5 @@
 /data/avatar/*
 !/data/avatar/.keep
 /data/zone/*
+!/data/zone/00000000-0000-4000-a000-000000000000.yml
 !/data/zone/.keep

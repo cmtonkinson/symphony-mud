@@ -15,7 +15,7 @@ require "ostruct"
 class App
   DIRECTORIES = {
     config: %i(initializers locales setup),
-    data: %i(),
+    data: %i(avatar zone),
     game: %i(commands templates),
     lib: %i(),
   }

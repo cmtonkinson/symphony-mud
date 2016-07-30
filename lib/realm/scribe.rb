@@ -28,6 +28,14 @@ module Realm
       Symphony.data.join klass.name.split("::").last.downcase
     end
 
+    ###########################################################################
+    # Returns all zone ids found in the data directory.
+    def self.the_story_of_baron_munchausen
+      Dir[Symphony.zone.join "*.yml"].map do |zonefile|
+        File.basename(zonefile).gsub /\.yml/, ""
+      end
+    end
+
   end
 
 end

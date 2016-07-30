@@ -86,20 +86,20 @@ module Realm
     ###########################################################################
     # Given an obj of type Thing
     # Attempts to call `@things.insert obj`
-    def insert(obj)
-      container = container_for obj
-      container.insert obj
-      obj.containers.add self
+    def insert(objekt)
+      container = container_for objekt
+      container.insert objekt
+      objekt.containers.add self
     end
     alias_method :<<, :insert
 
     ###########################################################################
     # Given an obj of type Thing
     # Attempts to call `@things.remove obj`
-    def remove(obj)
-      container = container_for obj
-      container.remove obj
-      obj.containers.delete self
+    def remove(objekt)
+      container = container_for objekt
+      container.remove objekt
+      objekt.containers.delete self
     end
     alias_method :-, :insert
 
