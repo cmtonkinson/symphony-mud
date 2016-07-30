@@ -10,6 +10,7 @@ module Base
       @clients     = []
       @quotes      = []
       @should_stop = false
+
       setup_server
     end
 

@@ -13,7 +13,6 @@ module Realm
     def initialize(id = nil)
       super id
       CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
-      load_zones
     end
 
     ###########################################################################

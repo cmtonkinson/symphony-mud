@@ -112,7 +112,7 @@ module Realm
 
     ###########################################################################
     def clone
-      raise NotImplementedError.new "#{self.class.name}#clone called but #_deep_copy is not implemented" unless respond_to? :deep_copy
+      raise NotImplementedError.new "#{self.class.name}#clone called but #_deep_copy is not implemented" unless respond_to? :_deep_copy
       # Generate a new subclass-type Objekt, setting the cloned_from id.
       dolly = self.class.new
       dolly.instance_variable_set :@cloned_from, id
@@ -131,7 +131,7 @@ module Realm
 
     ###########################################################################
     def serialize
-      raise NotImplementedError.new "#{self.class.name}#serialize called but #_hashify is not implemented" unless respond_to? :hashify
+      raise NotImplementedError.new "#{self.class.name}#serialize called but #_hashify is not implemented" unless respond_to? :_hashify
       YAML.dump hashify
     end
 
