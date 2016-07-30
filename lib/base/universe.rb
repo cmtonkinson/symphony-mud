@@ -4,14 +4,12 @@ module Base
 
   class Universe
     attr_accessor :clients, :server, :should_stop, :quotes, :should_reboot
-    attr_reader :world
 
     ###########################################################################
     def initialize
       @clients     = []
       @quotes      = []
       @should_stop = false
-      @world       = Realm::World.new
       setup_server
     end
 

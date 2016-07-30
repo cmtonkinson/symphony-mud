@@ -19,7 +19,7 @@ module Realm
 
     ###########################################################################
     def dehashify(hash)
-      @room = Util::Registry.lookup hash[:room]
+      @room = $world.find_room hash[:room]
     end
 
   end

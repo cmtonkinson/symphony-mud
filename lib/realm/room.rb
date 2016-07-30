@@ -61,7 +61,7 @@ module Realm
 
     ###########################################################################
     def _dehashify(hash)
-      @zone   = Util::Registry.lookup hash[:zone]
+      @zone   = $world.find hash[:zone]
       @coords = Vector[*hash[:coords].split(",")]
     end
 

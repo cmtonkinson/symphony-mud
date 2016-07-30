@@ -2,9 +2,11 @@ module Realm
 
   class World < Objekt
 
+    ZONE_ZERO_ID = "00000000-0000-4000-a000-000000000000"
+    THE_VOID_ID  = "00000000-0000-4000-a000-000000000001"
+
     CONTAINERS = %w(zones)
 
-    attr_reader :room_zero
     CONTAINERS.each { |cont| attr_accessor cont }
 
     ###########################################################################
@@ -19,6 +21,16 @@ module Realm
       Realm::Scribe.the_story_of_baron_munchausen.each do |zone_id|
         @zones << Realm::Scribe.load(Realm::Zone, zone_id)
       end
+    end
+
+    ###########################################################################
+    def find(objekt_id)
+      Util::Registry.lookup objekt_id
+    end
+
+    ###########################################################################
+    def find_room(room_id)
+      (room = Util::Registry.lookup room_id) ? room : Util::Registry.lookup(THE_VOID_ID)
     end
 
   end
