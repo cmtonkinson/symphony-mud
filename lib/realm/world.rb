@@ -11,7 +11,7 @@ module Realm
 
     ###########################################################################
     def initialize(id = nil)
-      super id
+      super
       CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     end
 

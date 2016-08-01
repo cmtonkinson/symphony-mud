@@ -41,7 +41,7 @@ module Realm
 
     ###########################################################################
     def initialize(id = nil)
-      super id
+      super
       @zone   = nil
       @coords = Vector[0, 0, 0]
       EXITS.keys.each { |exit| send "#{exit}=", nil }

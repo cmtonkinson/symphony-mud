@@ -101,4 +101,101 @@ describe Objekt do
 
   end
 
+  #############################################################################
+  describe "#hook" do
+
+    around :each do |example|
+      class HookedObjekt < Objekt
+        attr_accessor :prop
+        def initialize(id = nil)
+          super
+          @prop = false
+        end
+      end
+      @hooked = HookedObjekt.new
+
+      example.run
+
+      Object.send :remove_const, :HookedObjekt
+    end
+
+    it "should add a hook declaration method" do
+      expect(@hooked).not_to respond_to :custom_hook
+      class HookedObjekt
+        hook :custom_hook
+      end
+      expect(@hooked.class).to respond_to :custom_hook
+    end
+
+    it "should allow definition of new hook callbacks" do
+      expect { class HookedObjekt
+        hook :custom_hook
+        custom_hook -> obj { obj.prop = true }
+      end }.not_to raise_error
+    end
+
+    it "should invoke callbacks when hooks are triggered" do
+      class HookedObjekt
+        hook :custom_hook
+        custom_hook -> obj { obj.prop = true }
+      end
+
+      expect(@hooked.prop).to eq false
+      @hooked.trigger :custom_hook
+      expect(@hooked.prop).to eq true
+    end
+
+  end
+
+  #############################################################################
+  describe "#simple_flag" do
+
+    around :each do |example|
+      class FlaggedObjekt < Objekt
+        def initialize(id = nil)
+          super
+        end
+      end
+      @unflagged = FlaggedObjekt.new
+
+      example.run
+
+      Object.send :remove_const, :FlaggedObjekt
+    end
+
+    it "should add an instance variable and " do
+      expect(@unflagged).not_to respond_to :switch
+      class FlaggedObjekt
+        simple_flag :switch, false, :on?, :on!, :off?, :off!
+      end
+      expect(@unflagged).to respond_to :switch
+      expect(@unflagged).to respond_to :switch=
+    end
+
+    it "should add an instance variable and accessors" do
+      expect(@unflagged).not_to respond_to :switch
+      class FlaggedObjekt
+        simple_flag :switch, false, :on?, :on!, :off?, :off!
+      end
+      @flagged = FlaggedObjekt.new
+
+      expect(@flagged).to have_attributes(switch: false)
+
+      expect(@flagged).to respond_to :on?
+      expect(@flagged.on?).to eq false
+
+      expect(@flagged).to respond_to :off?
+      expect(@flagged.off?).to eq true
+
+      expect(@flagged).to respond_to :on!
+      @flagged.on!
+      expect(@flagged.on?).to eq true
+
+      expect(@flagged).to respond_to :off!
+      @flagged.off!
+      expect(@flagged.off?).to eq true
+    end
+
+  end
+
 end
