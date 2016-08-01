@@ -1,8 +1,6 @@
 module Command
 
   ##################################################################################################
-  # help
-  ##################################################################################################
   define :help do
     usage
     usage :command
@@ -16,7 +14,14 @@ module Command
   end
 
   ##################################################################################################
-  # quit
+  define :commands do
+    usage
+    exec do
+      user.puts "The following commands are available:"
+      user.puts "TODO iterate over User.operators"
+    end
+  end
+
   ##################################################################################################
   define :quit do
     usage
@@ -27,8 +32,6 @@ module Command
   end
 
   ##################################################################################################
-  # say
-  ##################################################################################################
   define :say do
     usage :rest
     exec do
@@ -37,12 +40,25 @@ module Command
   end
 
   ##################################################################################################
-  # look
-  ##################################################################################################
   define :look do
     usage
     exec do
       user.puts "You look around."
+    end
+  end
+
+  ##################################################################################################
+  Realm::Room::EXITS.keys.each do |direction|
+    define direction do
+      usage
+      exec do
+        msg = being.can_move?(direction)
+        if msg.is_a? String
+          user.puts msg
+        else
+          being.move direction
+        end
+      end
     end
   end
 

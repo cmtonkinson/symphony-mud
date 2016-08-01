@@ -38,7 +38,7 @@ module Realm
       # Each Objekt must have a globally unique identifier. By default, a UUID
       # (version 4) is generated automatically, but an id can be explicitly
       # passed to override this behavior. If an id is passed manually, it MUST
-      # be globally unique or Bad Things™ will happen.
+      # be globally unique or Bad Things(tm) will happen.
       @id = id || DEFAULTS[:id].call
 
       # When #clone is called on an Objekt, a new Objekt is returned with the
@@ -159,6 +159,17 @@ module Realm
       objekt._dehashify hash
       # Return the completed objekt.
       objekt
+    end
+
+    ###########################################################################
+    def self.simple_flag(flag_name, default, test_true, set, test_false, clear)
+      self.class_eval do
+        # attr_accessor flag_name
+        define_method(test_true) { instance_variable_get "@#{flag_name}" }
+        define_method(set) { instance_variable_set "@#{flag_name}", true }
+        define_method(test_false) { !instance_variable_get "@#{flag_name}" }
+        define_method(clear) { instance_variable_set "@#{flag_name}", false }
+      end
     end
 
   end
