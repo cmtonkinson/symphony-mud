@@ -48,18 +48,18 @@ module Command
   end
 
   ##################################################################################################
-  Realm::Room::EXITS.keys.each do |direction|
-    define direction do
-      usage
-      exec do
-        msg = being.can_move?(direction)
-        if msg.is_a? String
-          user.puts msg
-        else
-          being.move direction
-        end
-      end
-    end
-  end
+#  Realm::Exit::DIRECTIONS.keys.each do |direction|
+#    define direction do
+#      usage
+#      exec do
+#        msg = being.can_move?(direction)
+#        if msg.is_a? String
+#          user.puts msg
+#        else
+#          being.move direction
+#        end
+#      end
+#    end
+#  end
 
 end
