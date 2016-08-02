@@ -36,8 +36,8 @@ describe Realm::Builder do
     end
 
     it "sets both exits in opposing directions" do
-      expect(@room_a.east).to be @room_b
-      expect(@room_b.west).to be @room_a
+      expect(@room_a.east_room).to be @room_b
+      expect(@room_b.west_room).to be @room_a
     end
 
   end

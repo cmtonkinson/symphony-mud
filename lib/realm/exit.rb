@@ -59,8 +59,12 @@ module Realm
 
     ###########################################################################
     def _dehashify(hash)
-      open = default_open = hash[:default_open]
-      lock = default_lock = hash[:default_lock]
+      @open = @default_open = hash[:default_open]
+      @lock = @default_lock = hash[:default_lock]
+
+      DIRECTIONS.keys.each { |dir|
+        send "#{dir}=", $world.find(hash[dir])
+      }
     end
 
   end

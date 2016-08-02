@@ -22,7 +22,8 @@ module Realm
 
     ###########################################################################
     def _dehashify(hash)
-      hash[:rooms].each { |room_hash| @rooms << Realm::Room.dehashify(room_hash) }
+      hash[:rooms].each { |hash| @rooms << Realm::Room.dehashify(hash) }
+      hash[:exits].each { |hash| @exits << Realm::Exit.dehashify(hash) }
     end
 
   end
