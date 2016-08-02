@@ -1,17 +1,11 @@
 ---
 :objekt_class: Realm::Zone
 :objekt_id: 00000000-0000-4000-a000-000000000000
-:objekt_name: Zone Zero
+:objekt_name: Origin
 :rooms:
 - :objekt_class: Realm::Room
   :objekt_id: 00000000-0000-4000-a000-000000000001
   :objekt_name: The Void
   :zone: 00000000-0000-4000-a000-000000000000
   :coords: '0,0,0'
-  :exits:
-    north:
-    east:
-    south:
-    west:
-    up:
-    down:
+:exits:
