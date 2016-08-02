@@ -2,7 +2,7 @@ module Realm
 
   class Zone < Objekt
 
-    CONTAINERS = %w(rooms)
+    CONTAINERS = %w(rooms exits)
 
     CONTAINERS.each { |c| attr_accessor c.to_sym }
 
@@ -16,6 +16,7 @@ module Realm
     def _hashify
       {
         rooms: @rooms.values.map(&:hashify),
+        exits: @exits.values.map(&:hashify),
       }
     end
 

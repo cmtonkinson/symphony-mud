@@ -1,50 +1,21 @@
-require "matrix"
-
 module Realm
 
   class Room < Objekt
 
     CONTAINERS = %w(avatars)
 
-    EXITS = {
-      "north" => {
-        opposite: "south",
-        transform: Vector[0, 1, 0],
-      },
-      "east" => {
-        opposite: "west",
-        transform: Vector[1, 0, 0],
-      },
-      "south" => {
-        opposite: "north",
-        transform: Vector[0, -1, 0],
-      },
-      "west" => {
-        opposite: "east",
-        transform: Vector[-1, 0, 0],
-      },
-      "up" => {
-        opposite: "down",
-        transform: Vector[0, 0, 1],
-      },
-      "down" => {
-        opposite: "up",
-        transform: Vector[0, 0, -1],
-      },
-    }
-
     attr_accessor :zone, :items, :npcs
     attr_accessor :coords
 
     CONTAINERS.each { |cont| attr_accessor cont }
-    EXITS.keys.each { |exit| attr_accessor exit }
+    Realm::Exit::DIRECTIONS.keys.each { |exit| attr_accessor exit }
 
     ###########################################################################
     def initialize(id = nil)
       super
       @zone   = nil
       @coords = Vector[0, 0, 0]
-      EXITS.keys.each { |exit| send "#{exit}=", nil }
+      Realm::Exit::DIRECTIONS.keys.each { |exit| send "#{exit}=", nil }
       CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     end
 
@@ -53,9 +24,6 @@ module Realm
       {
         zone: @zone.id,
         coords: @coords.to_a.join(","),
-        exits: Hash[EXITS.keys.map do |direction|
-          [direction, (exit = self.send(direction)) ? exit.id : nil]
-        end]
       }
     end
 
@@ -63,6 +31,11 @@ module Realm
     def _dehashify(hash)
       @zone   = $world.find hash[:zone]
       @coords = Vector[*hash[:coords].split(",")]
+    end
+
+    ###########################################################################
+    Realm::Exit::DIRECTIONS.keys.each do |exit|
+      define_method "#{exit}_room", Proc.new { send(exit).room }
     end
 
   end

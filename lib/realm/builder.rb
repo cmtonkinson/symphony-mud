@@ -13,8 +13,19 @@ module Realm
 
     ###########################################################################
     def self.link_existing_rooms(a, b, direction)
-      a.send "#{direction}=", b
-      b.send "#{Room::EXITS[direction][:opposite]}=", a
+      # Create a new Exit
+      exit = Exit.new
+      exit.send "#{direction}=", b
+      exit.send "#{Exit::DIRECTIONS[direction][:opposite]}=", a
+
+      # Point the Rooms on either side to the new Exit.
+      a.send "#{direction}=", exit
+      b.send "#{Exit::DIRECTIONS[direction][:opposite]}=", exit
+
+      # Add the Exit to the appropriate container. If the Rooms are in the same
+      # Zone, that Zone "owns" the Exit. If the Rooms are in differing Zones,
+      # then the World singleton "owns" the Exit.
+      (a.zone == b.zone ? a.zone : $world) << exit
     end
 
     ###########################################################################
@@ -28,7 +39,7 @@ module Realm
     def self.create_linked_room(existing_room, direction)
       new_room = create_room existing_room.zone
       link_existing_rooms existing_room, new_room, direction
-      new_room.coords = existing_room.coords + Room::EXITS[direction][:transform]
+      new_room.coords = existing_room.coords + Exit::DIRECTIONS[direction][:transform]
       new_room
     end
 
