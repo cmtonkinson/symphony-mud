@@ -78,13 +78,12 @@ module InputSequence
           case @context.account_type
           when :new
             user.puts "Welcome!"
-            user.avatar = Realm::Avatar.new @context.avatar_id, @context.name, user
+            user.bind_avatar Realm::Avatar.new @context.avatar_id, @context.name
             user.avatar.room = $world.find_room Realm::World::THE_VOID_ID
             Realm::Scribe.save user.avatar
           when :existing
             user.puts "Welcome back!"
-            user.avatar = Realm::Scribe.load Realm::Avatar, @context.avatar_id
-            user.avatar.user = user
+            user.bind_avatar Realm::Scribe.load Realm::Avatar, @context.avatar_id
           else
             message = "#{self.class.name} incomplete transition to :complete - invalid @context.account_type = '#{@context.account_type}'"
             Symphony.logger.fatal message

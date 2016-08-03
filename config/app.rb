@@ -18,6 +18,7 @@ class App
     data: %i(avatar zone),
     game: %i(commands templates),
     lib: %i(),
+    tmp: %i(),
   }
 
   # Create a reader accessor for each project directory.

@@ -5,10 +5,9 @@ module Realm
     attr_accessor :user
 
     ###########################################################################
-    def initialize(id = nil, name = nil, user = nil)
+    def initialize(id = nil, name = nil)
       super id
       @name = name
-      @user = user
     end
 
     ###########################################################################

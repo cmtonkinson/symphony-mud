@@ -42,7 +42,7 @@ module Base
       return if client.nil?
       user = User.new
       client.puts $templates.welcome_banner
-      user.bind client
+      user.bind_client client
       clients << client
     end
 
@@ -64,9 +64,17 @@ module Base
     end
 
     ###########################################################################
+    def broadcast(message)
+      formatted = message.prepend I18n.t("universe.broadcast")
+      Symphony.logger.debug formatted
+      @clients.each { |client| client.puts formatted }
+    end
+
+    ###########################################################################
     def begin_reboot
       begin
-        Symphony.logger.info "Server beginning reboot"
+        Symphony.logger.warning "Server beginning reboot"
+        broadcast I18n.t("universe.reboot.begin")
         server_fd  = server.to_i
         client_fds = clients.map { |c| c.get_fd }
         env = {
@@ -80,6 +88,9 @@ module Base
           :err          => :err,
           :close_others => false,
         }
+        # Store to disk a mapping of client socket descriptors to Avatar ids.
+        recovery_map = Hash[@clients.map { |c| [c.get_fd, c.user.avatar.id] }]
+        File.write Base.configuration.recovery_file, YAML.dump(recovery_map)
         # Add the server socket to the options Hash.
         options[server_fd] = server_fd
         # Add all the client sockets to the options Hash.
@@ -88,19 +99,23 @@ module Base
         Process.exec env, Symphony.binary.to_s, options
       rescue Exception => e
         @should_reboot = false
-        Symphony.logger.info "Reboot failed: #{e}"
+        Symphony.logger.error "Reboot failed: #{e}"
+        broadcast I18n.t("universe.reboot.fail")
       end
     end
 
     ###########################################################################
     def recover_from_reboot
+      # Read the recovery Hash.
+      recovery_map = YAML.load File.read Base.configuration.recovery_file
       # Restart the server.
       @server = Network::Server.for_fd ENV["SYMPHONY_SERVER_FD"].to_i
       # Reconnect all the clients.
       Marshal.load(ENV["SYMPHONY_CLIENT_FDS"]).each do |fd|
         client = Network::Client.new TCPSocket.for_fd fd.to_i
         user = User.new
-        user.bind client
+        user.bind_client client, false
+        user.bind_avatar Realm::Scribe.load Realm::Avatar, recovery_map[fd]
         user.puts "Welcome back!"
         @clients << client
       end
@@ -108,7 +123,8 @@ module Base
       ENV.delete "SYMPHONY_REBOOT"
       ENV.delete "SYMPHONY_SERVER_FD"
       ENV.delete "SYMPHONY_CLIENT_FDS"
-      Symphony.logger.info "Server recovered from reboot"
+      Symphony.logger.warning "Server recovered from reboot"
+      broadcast I18n.t("universe.reboot.succeed")
     end
 
     ###########################################################################

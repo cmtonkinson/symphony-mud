@@ -1,7 +1,7 @@
 module Base
 
   class Configuration
-    attr_accessor :sleep_interval, :command_sets
+    attr_accessor :sleep_interval, :recovery_file
     attr_accessor :hash_salt, :hash_iterations, :hash_digest
 
     def initialize
@@ -12,6 +12,9 @@ module Base
       @hash_salt       = ""
       @hash_iterations = 20_000
       @hash_digest     = OpenSSL::Digest::SHA512.new
+
+      # Where to store the reboot fd => Avatar Hash?
+      @recovery_file = Symphony.tmp.join "recovery.yml"
     end
   end
 

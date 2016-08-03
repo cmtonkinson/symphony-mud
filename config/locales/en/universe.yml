@@ -1,0 +1,7 @@
+en:
+  universe:
+    broadcast: "{WBROADCAST:{x "
+    reboot:
+      begin: "{Ybeginning reboot"
+      fail: "{Rreboot failed"
+      succeed: "{Greboot successful"

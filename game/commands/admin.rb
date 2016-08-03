@@ -4,7 +4,7 @@ module Command
   define :reboot do
     usage
     exec do
-      user.puts "Hold on to your butts... Copyover!!"
+      being.puts "Hold on to your butts... Copyover!!"
       $universe.should_reboot = true
     end
   end
@@ -13,7 +13,7 @@ module Command
   define :shutdown do
     usage
     exec do
-      user.puts "Shutting down the server."
+      being.puts "Shutting down the server."
       $universe.should_stop = true
     end
   end

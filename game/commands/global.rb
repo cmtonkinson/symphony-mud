@@ -40,6 +40,14 @@ module Command
   end
 
   ##################################################################################################
+  define :summary do
+    usage
+    exec do
+      being.puts I18n.t("summary.name") + " " + I18n.t("objekt.identify", being.identify)
+    end
+  end
+
+  ##################################################################################################
   define :look do
     usage
     exec do
@@ -50,7 +58,7 @@ module Command
         .join " "
 
       being.puts I18n.t "objekt.identify", room.identify
-      being.puts I18n.t "movement.room.exit_list", exits: exits
+      being.puts I18n.t "look.exit_list", exits: exits
     end
   end
 

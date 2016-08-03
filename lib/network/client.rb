@@ -20,7 +20,7 @@ module Network
     end
 
     def puts(message)
-      _send "#{message}\n"
+      _send "#{message}{x\n"
     end
 
     def recv
