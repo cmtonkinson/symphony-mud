@@ -3,11 +3,11 @@ module Command
   class Operator
 
     ###########################################################################
-    def initialize(client, command_set)
+    def initialize(user, command_set_name = :global)
       @last_input  = "" # TODO - implement this
-      @client      = client
+      @user        = user
       @command     = nil
-      @command_set = command_set
+      @command_set = ::Command.configuration.command_sets[command_set_name]
     end
 
     ###########################################################################
@@ -21,7 +21,7 @@ module Command
       context = parse rest
       return if context.nil?
 
-      @command.perform @client, context, rest
+      @command.perform @user.avatar, context, rest
     end
 
     ###########################################################################

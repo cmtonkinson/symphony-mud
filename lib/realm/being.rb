@@ -7,6 +7,7 @@ module Realm
     ###########################################################################
     def initialize(id = nil)
       super
+      @output_buffer = ""
     end
 
     ###########################################################################
@@ -20,6 +21,24 @@ module Realm
     def _dehashify(hash)
       @room = $world.find_room hash[:room]
     end
+
+    ###########################################################################
+    %i(print puts).each do |meth|
+      define_method meth do |message|
+        @output_buffer << message
+      end
+    end
+
+    ###########################################################################
+    # NOTE Command::Operator has a dependency on the interface of Base::User.
+    # This method will work as long as that dependency is limited to a single
+    # property called `avatar`, since we're basically passing a Stub object
+    # in the form of an OpenStruct.
+    def command_proxy(command_string)
+      @proxy_operator ||= Command::Operator.new OpenStruct.new(avatar: self)
+      @proxy_operator.handle command_string
+    end
+    alias_method :cmd, :command_proxy
 
     ###########################################################################
     # Returns true or a String containing an error message.
@@ -42,8 +61,7 @@ module Realm
       @room = to
 
       # Look around.
-      operator = Command::Operator.new self.user, Command.configuration.command_sets[:global]
-      operator.handle "look"
+      cmd "look"
     end
 
   end

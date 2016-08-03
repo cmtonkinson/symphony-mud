@@ -23,19 +23,19 @@ module Command
     end
 
     # Heart and soul of the command processing subsystem.
-    def perform(user, context, input_string)
+    def perform(being, context, input_string)
       # Store the new context.
       @context = context
 
       # Add additional default context variables.
-      @context.being      = user.avatar if user.avatar.is_a? Realm::Avatar
+      @context.being      = being
+      @context.room       = being.room
       @context.full_input = input_string
-      @context.user       = user
 
       # Pass control to the Command exec Proc.
       @exec.call
 
-      # Purge the context (just in case).
+      # Eagerly purge the context (to be safe).
       @context = nil
     end
 

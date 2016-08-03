@@ -9,3 +9,5 @@ en:
       down: "down"
     no_exit: "You cannot go that way."
     closed: "That door is closed."
+    room:
+      exit_list: "Exits are: {R%{exits}{x"

@@ -14,18 +14,16 @@ module Base
     def bind(client)
       @client = client
       @client.user = self
-      operators.push Command::Operator.new self, Command.configuration.command_sets[:global]
+      operators.push Command::Operator.new self
       operators.push InputSequence::Controller.new self, InputSequence::LoginSequence.new
     end
 
     ###########################################################################
-    def print(message)
-      client.print message
-    end
-
-    ###########################################################################
-    def puts(message)
-      client.puts message
+    # Proxy Client methods.
+    %i(print puts).each do |meth|
+      define_method meth do |message|
+        client.send meth, message
+      end
     end
 
   end

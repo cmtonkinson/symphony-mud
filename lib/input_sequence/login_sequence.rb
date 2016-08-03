@@ -81,12 +81,17 @@ module InputSequence
             user.avatar = Realm::Avatar.new @context.avatar_id, @context.name, user
             user.avatar.room = $world.find_room Realm::World::THE_VOID_ID
             Realm::Scribe.save user.avatar
-            finish
           when :existing
             user.puts "Welcome back!"
             user.avatar = Realm::Scribe.load Realm::Avatar, @context.avatar_id
-            finish
+            user.avatar.user = user
+          else
+            message = "#{self.class.name} incomplete transition to :complete - invalid @context.account_type = '#{@context.account_type}'"
+            Symphony.logger.fatal message
+            raise RuntimeError.new message
           end
+          user.avatar.cmd "look"
+          finish
         end
       end
 

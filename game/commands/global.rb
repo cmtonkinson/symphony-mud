@@ -6,9 +6,9 @@ module Command
     usage :command
     exec do
       if command
-        user.puts "Executed HELP for command '#{command}'"
+        being.puts "Executed HELP for command '#{command}'"
       else
-        user.puts "Executed HELP"
+        being.puts "Executed HELP"
       end
     end
   end
@@ -17,8 +17,8 @@ module Command
   define :commands do
     usage
     exec do
-      user.puts "The following commands are available:"
-      user.puts "TODO iterate over User.operators"
+      being.puts "The following commands are available:"
+      being.puts "TODO iterate over User.operators"
     end
   end
 
@@ -26,7 +26,7 @@ module Command
   define :quit do
     usage
     exec do
-      user.puts "Logging out. Goodbye."
+      being.puts "Logging out. Goodbye."
       user.client.should_terminate = true
     end
   end
@@ -35,7 +35,7 @@ module Command
   define :say do
     usage :rest
     exec do
-      user.puts "You say, \"#{rest}\""
+      being.puts "You say, \"#{rest}\""
     end
   end
 
@@ -45,12 +45,12 @@ module Command
     exec do
       exits = Realm::Exit::DIRECTIONS
         .keys
-        .map { |dir| dir if being.room.send dir }
+        .map { |dir| I18n.t("movement.exits.#{dir}") if being.room.send dir }
         .compact
         .join " "
 
-      user.puts "You are in #{being.room.name}"
-      user.puts "Exits are: #{exits}"
+      being.puts I18n.t "objekt.identify", room.identify
+      being.puts I18n.t "movement.room.exit_list", exits: exits
     end
   end
 

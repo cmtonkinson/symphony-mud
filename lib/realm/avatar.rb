@@ -13,7 +13,7 @@ module Realm
 
     ###########################################################################
     # Proxy the following methods to the User object.
-    %i(puts print).each do |meth|
+    %i(print puts).each do |meth|
       define_method meth do |message|
         @user.send meth, message
       end

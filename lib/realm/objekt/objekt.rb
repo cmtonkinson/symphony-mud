@@ -89,6 +89,11 @@ module Realm
       @_disposal_requested = true
     end
 
+    ###########################################################################
+    def identify
+      {name: @name, id: @id}
+    end
+
   end
 
 end
