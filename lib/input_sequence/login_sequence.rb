@@ -77,13 +77,13 @@ module InputSequence
         after do
           case @context.account_type
           when :new
-            user.print "Welcome!"
-            user.avatar = Realm::Avatar.new @context.avatar_id, @context.name
+            user.puts "Welcome!"
+            user.avatar = Realm::Avatar.new @context.avatar_id, @context.name, user
             user.avatar.room = $world.find_room Realm::World::THE_VOID_ID
             Realm::Scribe.save user.avatar
             finish
           when :existing
-            user.print "Welcome back!"
+            user.puts "Welcome back!"
             user.avatar = Realm::Scribe.load Realm::Avatar, @context.avatar_id
             finish
           end
@@ -94,7 +94,7 @@ module InputSequence
         transitions to: :disconnect
         after do
           user.client.should_terminate = true
-          user.print "Disconnecting."
+          user.puts "Disconnecting."
           finish
         end
       end

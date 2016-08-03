@@ -2,25 +2,21 @@ module Realm
 
   class Avatar < Being
 
-    attr_accessor :room
+    attr_accessor :user
 
     ###########################################################################
-    def initialize(id = nil, name = nil)
+    def initialize(id = nil, name = nil, user = nil)
       super id
       @name = name
-      @room = $world.find_room Realm::World::THE_VOID_ID
+      @user = user
     end
 
     ###########################################################################
-    def _hashify
-      {
-        room: @room.id
-      }
-    end
-
-    ###########################################################################
-    def _dehashify(hash)
-      @room = $world.find_room hash[:room]
+    # Proxy the following methods to the User object.
+    %i(puts print).each do |meth|
+      define_method meth do |message|
+        @user.send meth, message
+      end
     end
 
   end

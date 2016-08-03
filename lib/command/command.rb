@@ -28,8 +28,9 @@ module Command
       @context = context
 
       # Add additional default context variables.
-      @context.user       = user
+      @context.being      = user.avatar if user.avatar.is_a? Realm::Avatar
       @context.full_input = input_string
+      @context.user       = user
 
       # Pass control to the Command exec Proc.
       @exec.call

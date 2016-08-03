@@ -12,8 +12,8 @@ module Base
 
     ###########################################################################
     def bind(client)
-      self.client = client
-      self.client.user = self
+      @client = client
+      @client.user = self
       operators.push Command::Operator.new self, Command.configuration.command_sets[:global]
       operators.push InputSequence::Controller.new self, InputSequence::LoginSequence.new
     end

@@ -1,0 +1,11 @@
+en:
+  movement:
+    exits:
+      north: "north"
+      east: "east"
+      south: "south"
+      west: "west"
+      up: "up"
+      down: "down"
+    no_exit: "You cannot go that way."
+    closed: "That door is closed."

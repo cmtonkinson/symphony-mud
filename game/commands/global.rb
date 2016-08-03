@@ -43,23 +43,30 @@ module Command
   define :look do
     usage
     exec do
-      user.puts "You look around."
+      exits = Realm::Exit::DIRECTIONS
+        .keys
+        .map { |dir| dir if being.room.send dir }
+        .compact
+        .join " "
+
+      user.puts "You are in #{being.room.name}"
+      user.puts "Exits are: #{exits}"
     end
   end
 
   ##################################################################################################
-#  Realm::Exit::DIRECTIONS.keys.each do |direction|
-#    define direction do
-#      usage
-#      exec do
-#        msg = being.can_move?(direction)
-#        if msg.is_a? String
-#          user.puts msg
-#        else
-#          being.move direction
-#        end
-#      end
-#    end
-#  end
+  Realm::Exit::DIRECTIONS.keys.each do |direction|
+    define direction do
+      usage
+      exec do
+        msg = being.can_move? direction
+        if msg === true
+          being.move direction
+        else
+          being.puts msg
+        end
+      end
+    end
+  end
 
 end
