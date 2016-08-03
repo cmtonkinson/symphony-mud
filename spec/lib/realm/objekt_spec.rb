@@ -102,52 +102,6 @@ describe Objekt do
   end
 
   #############################################################################
-  describe "#hook" do
-
-    around :each do |example|
-      class HookedObjekt < Objekt
-        attr_accessor :prop
-        def initialize(id = nil)
-          super
-          @prop = false
-        end
-      end
-      @hooked = HookedObjekt.new
-
-      example.run
-
-      Object.send :remove_const, :HookedObjekt
-    end
-
-    it "should add a hook declaration method" do
-      expect(@hooked).not_to respond_to :custom_hook
-      class HookedObjekt
-        hook :custom_hook
-      end
-      expect(@hooked.class).to respond_to :custom_hook
-    end
-
-    it "should allow definition of new hook callbacks" do
-      expect { class HookedObjekt
-        hook :custom_hook
-        custom_hook -> obj { obj.prop = true }
-      end }.not_to raise_error
-    end
-
-    it "should invoke callbacks when hooks are triggered" do
-      class HookedObjekt
-        hook :custom_hook
-        custom_hook -> obj { obj.prop = true }
-      end
-
-      expect(@hooked.prop).to eq false
-      @hooked.trigger :custom_hook
-      expect(@hooked.prop).to eq true
-    end
-
-  end
-
-  #############################################################################
   describe "#simple_flag" do
 
     around :each do |example|

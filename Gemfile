@@ -8,6 +8,7 @@ end
 group :app do
   gem "aasm"
   gem "deep_merge"
+  gem "hooks"
   gem "i18n"
 end
 

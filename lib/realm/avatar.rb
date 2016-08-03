@@ -1,6 +1,6 @@
 module Realm
 
-  class Avatar < Objekt
+  class Avatar < Being
 
     attr_accessor :room
 

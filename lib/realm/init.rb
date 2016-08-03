@@ -1,9 +1,14 @@
 require_relative "configuration"
+
 require_relative "objekt"
+
 require_relative "exit"
 require_relative "room"
 require_relative "zone"
+require_relative "being"
 require_relative "avatar"
+
 require_relative "world"
+
 require_relative "builder"
 require_relative "scribe"
