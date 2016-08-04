@@ -91,6 +91,15 @@ module Util
       return name.prepend (I18n.t("linguist.article.indefinite.consonant") + " ")
     end
 
+    ###########################################################################
+    # Thanks http://stackoverflow.com/a/12203172/77047
+    def self.truncate_middle(src, len)
+      half = (len - 3) / 2
+      splits = src.scan(/(.{0,#{half}})(.*?)(.{0,#{half}}$)/)[0]
+      splits[1] = "..." if splits[1].length > 3
+      splits.join
+    end
+
   end
 
 end
