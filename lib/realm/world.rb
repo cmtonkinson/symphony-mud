@@ -10,7 +10,7 @@ module Realm
     CONTAINERS.each { |cont| attr_accessor cont }
 
     ###########################################################################
-    def initialize(id = nil)
+    def initialize(id = nil, props = {})
       super
       CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     end

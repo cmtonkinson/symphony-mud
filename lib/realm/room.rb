@@ -2,7 +2,7 @@ module Realm
 
   class Room < Objekt
 
-    CONTAINERS = %w(avatars)
+    CONTAINERS = %w(beings)
 
     attr_accessor :zone, :items, :npcs
     attr_accessor :coords
@@ -11,7 +11,7 @@ module Realm
     Realm::Exit::DIRECTIONS.keys.each { |exit| attr_accessor exit }
 
     ###########################################################################
-    def initialize(id = nil)
+    def initialize(id = nil, props = {})
       super
       @zone   = nil
       @coords = Vector[0, 0, 0]
@@ -39,6 +39,14 @@ module Realm
         # Yo dawg, I heard you like to send exit to your send exit.
         send(exit).send(exit)
       }
+    end
+
+    ###########################################################################
+    def puts(format, *args)
+      message = Util::Linguist.interpret format, *args
+      @beings.values.each do |being|
+        being.puts message
+      end
     end
 
   end

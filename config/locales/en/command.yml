@@ -18,5 +18,6 @@ en:
   # User facing stuff, keyed by Command name.
   look:
     exit_list: "Exits are: {R%{exits}{x"
+    is_here: "$being is here."
   summary:
     name: "Your name is"

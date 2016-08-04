@@ -5,3 +5,6 @@ en:
       begin: "{Ybeginning reboot"
       fail: "{Rreboot failed"
       succeed: "{Greboot successful"
+    room_announce_newbie: "Rejoice, for $being has joined the Realm!"
+    room_announce_return: "$being has returned to the Realm!"
+    room_announce_exit: "$being has left the Realm."

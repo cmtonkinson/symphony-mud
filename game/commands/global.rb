@@ -27,7 +27,7 @@ module Command
     usage
     exec do
       being.puts "Logging out. Goodbye."
-      user.client.should_terminate = true
+      being.user.client.should_terminate = true
     end
   end
 
@@ -53,12 +53,14 @@ module Command
     exec do
       exits = Realm::Exit::DIRECTIONS
         .keys
-        .map { |dir| I18n.t("movement.exits.#{dir}") if being.room.send dir }
+        .map { |dir| I18n.t("movement.exit.#{dir}") if being.room.send dir }
         .compact
         .join " "
 
       being.puts I18n.t "objekt.identify", room.identify
       being.puts I18n.t "look.exit_list", exits: exits
+
+      being.other_beings.each { |b| being.puts I18n.t("look.is_here"), b }
     end
   end
 

@@ -2,12 +2,13 @@ module Realm
 
   class Being < Objekt
 
-    attr_accessor :room
+    attr_accessor :room, :gender
 
     ###########################################################################
-    def initialize(id = nil)
-      super
+    def initialize(id = nil, props = {})
+      @gender = Gender::NEUTER
       @output_buffer = ""
+      super
     end
 
     ###########################################################################
@@ -20,12 +21,13 @@ module Realm
     ###########################################################################
     def _dehashify(hash)
       @room = $world.find_room hash[:room]
+      @room.insert self
     end
 
     ###########################################################################
     %i(print puts).each do |meth|
-      define_method meth do |message|
-        @output_buffer << message
+      define_method meth do |format, *args|
+        @output_buffer << Util::Linguist.interpret(format, *args)
       end
     end
 
@@ -55,14 +57,23 @@ module Realm
       exit = @room.send direction
       to   = exit.send direction
 
-      # Perform the actual switch.
-      from - self
-      to << self
+      from.remove self
+
+      from.puts "$being leaves to $exit.", self, direction
+      to.puts "$being has arrived from $opposite.", self, direction
+
+      to.insert self
       @room = to
 
       # Look around.
       cmd "look"
     end
+
+    ###########################################################################
+    def other_beings_in_room
+      (@room.beings.values.reject { |b| b == self }) || []
+    end
+    alias_method :other_beings, :other_beings_in_room
 
   end
 

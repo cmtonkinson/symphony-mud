@@ -15,6 +15,8 @@ Network.configure do |config|
   config.listen_port = 6501
 end
 
+Logger.configuration.verbosity = :silent
+
 ###############################################################################
 # Load our custom helpers.
 ###############################################################################

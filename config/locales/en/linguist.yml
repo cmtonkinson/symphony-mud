@@ -1,0 +1,27 @@
+en:
+  linguist:
+    article:
+      indefinite:
+        consonant: "a"
+        vowel: "an"
+    gender:
+      male: "male"
+      female: "female"
+      neuter: "neuter"
+    pronoun:
+      object:
+        male: "his"
+        female: "hers"
+        neuter: "its"
+      subject:
+        male: "he"
+        female: "she"
+        neuter: "it"
+      possessive:
+        male: "his"
+        female: "her"
+        neuter: "its"
+      reflexive:
+        male: "himself"
+        female: "herself"
+        neuter: "itself"

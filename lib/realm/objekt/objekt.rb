@@ -37,7 +37,7 @@ module Realm
     define_hooks :after_initialize
 
     ###########################################################################
-    def initialize(id = nil)
+    def initialize(id = nil, props = {})
       # Each Objekt must have a globally unique identifier. By default, a UUID
       # (version 4) is generated automatically, but an id can be explicitly
       # passed to override this behavior. If an id is passed manually, it MUST
@@ -55,6 +55,10 @@ module Realm
       # contain a string that makes sense in the context of whatever your
       # subclass is.
       @name = DEFAULTS[:name].dup
+
+      # Allow setting custom attributes on the Objekt at initialization time by
+      # passing a Hash of attributes and values.
+      props.each { |key,val| instance_variable_set "@#{key}", val }
 
       # By adding `Util::AttrHash` instance members to your subclasses, you
       # can easily keep collections of Objekts organized. If you decide to

@@ -17,9 +17,22 @@ describe Objekt do
   #############################################################################
   describe "#insert" do
 
+    before :each do
+      @bucket = TestBucket.new
+      @parent = TestParent.new
+      @child  = TestChild.new
+    end
+
     it "should reject invalid object types" do
-      r = Objekt.new
-      expect { r.insert OpenStruct.new }.to raise_error ArgumentError
+      expect { @bucket.insert OpenStruct.new }.to raise_error ArgumentError
+    end
+
+    it "should allow insertion of defined containers" do
+      expect { @bucket.insert @parent }.not_to raise_error
+    end
+
+    it "should allow insertion of subclass instances to parent containers" do
+      expect { @bucket.insert @child }.not_to raise_error
     end
 
   end

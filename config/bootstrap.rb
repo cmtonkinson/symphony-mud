@@ -20,6 +20,13 @@ Symphony = App.new
 Bundler.require :default, :setup, :app, Symphony.env
 
 ###############################################################################
+# I18n needs to come in before we autoload the core.
+###############################################################################
+I18n.enforce_available_locales = true
+I18n.load_path += Dir[Symphony.locales.join "**", "*.yml"]
+I18n.default_locale = :en
+
+###############################################################################
 # Application autoload/autoconfig heavy lifting.
 ###############################################################################
 # Autoload core modules.

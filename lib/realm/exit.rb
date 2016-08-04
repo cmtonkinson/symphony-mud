@@ -37,7 +37,7 @@ module Realm
     simple_flag :lock, false, :locked?, :lock!, :unlocked?, :unlock!
 
     ###########################################################################
-    def initialize(id = nil)
+    def initialize(id = nil, props = {})
       super
       DIRECTIONS.keys.each { |exit| send "#{exit}=", nil }
     end

@@ -7,7 +7,7 @@ module Realm
     def self.create_room(zone)
       new_room = Room.new
       new_room.zone = zone
-      zone << new_room
+      zone.insert new_room
       new_room
     end
 
@@ -25,7 +25,7 @@ module Realm
       # Add the Exit to the appropriate container. If the Rooms are in the same
       # Zone, that Zone "owns" the Exit. If the Rooms are in differing Zones,
       # then the World singleton "owns" the Exit.
-      (a.zone == b.zone ? a.zone : $world) << exit
+      (a.zone == b.zone ? a.zone : $world).insert exit
     end
 
     ###########################################################################

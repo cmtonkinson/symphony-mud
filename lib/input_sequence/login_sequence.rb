@@ -80,10 +80,15 @@ module InputSequence
             user.puts "Welcome!"
             user.bind_avatar Realm::Avatar.new @context.avatar_id, @context.name
             user.avatar.room = $world.find_room Realm::World::THE_VOID_ID
+            user.avatar.room.insert user
+            user.avatar.room.puts I18n.t("universe.room_announce_newbie"), user.avatar
+            Symphony.logger.info "New Avatar '#{user.avatar.name}' #{user.avatar.id}"
             Realm::Scribe.save user.avatar
           when :existing
             user.puts "Welcome back!"
             user.bind_avatar Realm::Scribe.load Realm::Avatar, @context.avatar_id
+            user.avatar.room.puts I18n.t("universe.room_announce_return"), user.avatar
+            Symphony.logger.info "Avatar '#{user.avatar.name}' #{user.avatar.id} logged in"
           else
             message = "#{self.class.name} incomplete transition to :complete - invalid @context.account_type = '#{@context.account_type}'"
             Symphony.logger.fatal message

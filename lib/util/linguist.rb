@@ -1,0 +1,96 @@
+module Util
+
+  class Linguist
+
+    ###########################################################################
+    def self.interpret(format, *args)
+      message = format.gsub /\$[a-z]+/ do |interpreter|
+        if args.empty?
+          Symphony.logger.error "Room#interpret with format '#{format}' - no args left to interpret '#{interpreter}'"
+          next Realm.configuration.error_string
+        end
+
+        arg = args.shift
+
+        begin
+          send "interpret_" + interpreter[1..-1], arg
+        rescue NoMethodError
+          Symphony.logger.error "Room#interpret with format '#{format}' - no interpreter for '#{interpreter}' (arg is a #{arg.class.name}"
+          Realm.configuration.error_string
+        end
+      end
+
+      unless args.empty?
+        Symphony.logger.error "Room#interpret with format '#{format}' - args leftover after interpreters exhausted (remaining: [#{args.join ', '}])"
+      end
+
+      message
+    end
+
+    ###########################################################################
+    def self.interpret_string(arg)
+      arg
+    end
+
+    ###########################################################################
+    def self.interpret_being(arg)
+      prepend_article arg
+    end
+
+    ###########################################################################
+    def self.interpret_item(arg)
+      prepend_article arg
+    end
+
+    ###########################################################################
+    def self.interpret_exit(arg)
+      I18n.t "movement.exit_from.#{arg}"
+    end
+
+    ###########################################################################
+    def self.interpret_opposite(arg)
+      opposite = Realm::Exit::DIRECTIONS[arg][:opposite]
+      I18n.t "movement.exit_from.#{opposite}"
+    end
+
+    ###########################################################################
+    def self.interpret_object(arg)
+      Gender.object_pronoun arg.gender
+    end
+
+    ###########################################################################
+    def self.interpret_subject(arg)
+      Gender.subject_pronoun arg.gender
+    end
+
+    ###########################################################################
+    def self.interpret_possessive(arg)
+      Gender.possessive_pronoun arg.gender
+    end
+
+    ###########################################################################
+    def self.interpret_reflexive(arg)
+      Gender.reflexive_pronoun arg.gender
+    end
+
+    ###########################################################################
+    def self.prepend_article(arg)
+      name       = arg.name
+      first_char = name[0]
+
+      # Don't modify Avatar names.
+      return name if arg.is_a? Realm::Avatar
+
+      # It's some other kind of proper noun, so we leave it be.
+      return name if first_char == first_char.upcase
+
+      # Starts with a vowel, so we add "an"
+      return name.prepend (I18n.t("linguist.article.indefinite.vowel") + " ") if first_char.match /[aeiou]/
+
+      # Just a regular name, so we add "a"
+      return name.prepend (I18n.t("linguist.article.indefinite.consonant") + " ")
+    end
+
+  end
+
+end
