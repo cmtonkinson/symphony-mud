@@ -1,0 +1,5 @@
+en:
+  being:
+    you_go: "You go to $exit."
+    leaves: "$being leaves to $exit."
+    arrived: "$being has arrived from $opposite."

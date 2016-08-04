@@ -35,7 +35,8 @@ module Command
   define :say do
     usage :rest
     exec do
-      being.puts "You say, \"#{rest}\""
+      being.puts I18n.t("say.you_say"), rest
+      room.puts I18n.t("say.says"), being, rest, exclude: being
     end
   end
 

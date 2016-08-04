@@ -57,13 +57,15 @@ module Realm
       exit = @room.send direction
       to   = exit.send direction
 
+      # Move.
       from.remove self
-
-      from.puts "$being leaves to $exit.", self, direction
-      to.puts "$being has arrived from $opposite.", self, direction
-
       to.insert self
       @room = to
+
+      # Notify.
+      puts I18n.t("being.you_go"), direction
+      from.puts I18n.t("being.leaves"), self, direction
+      to.puts I18n.t("being.arrived"), self, direction, exclude: self
 
       # Look around.
       cmd "look"

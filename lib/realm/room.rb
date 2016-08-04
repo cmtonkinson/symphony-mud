@@ -42,9 +42,13 @@ module Realm
     end
 
     ###########################################################################
-    def puts(format, *args)
+    def puts(format, *args, **opts)
       message = Util::Linguist.interpret format, *args
       @beings.values.each do |being|
+        if opts.key?(:exclude)
+          dont_message = opts[:exclude].is_a?(Array) ? opts[:exclude] : [opts[:exclude]]
+          next if dont_message.include? being
+        end
         being.puts message
       end
     end

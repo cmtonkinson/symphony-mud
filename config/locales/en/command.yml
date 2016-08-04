@@ -21,3 +21,6 @@ en:
     is_here: "$being is here."
   summary:
     name: "Your name is"
+  say:
+    you_say: "You say, \"{G$string{x\""
+    says: "$being says, \"{G$string{x\""
