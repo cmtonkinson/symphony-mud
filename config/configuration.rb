@@ -7,8 +7,9 @@ require "optparse"
 # low to high:
 #
 #   1. Defaults (defined below)
-#   2. Environment variables (e.g. SYMPHONY_LOG_LEVEL)
-#   3. Command line options (e.g. --log-level)
+#   2. Configuration file (e.g. /path/to/symphony/config.yml)
+#   3. Environment variables (e.g. SYMPHONY_LOG_LEVEL)
+#   4. Command line options (e.g. --log-level)
 #
 # Note that initializer scripts run BEFORE any of these are processed.
 ###############################################################################
@@ -48,6 +49,21 @@ CONFIGURATION = [
 # Set all the defaults.
 ###############################################################################
 CONFIGURATION.each { |config| config[:callback].call config[:default] }
+
+###############################################################################
+# Check for a configuration file.
+###############################################################################
+config_file = Symphony.root.join "config.yml"
+
+if File.readable? config_file
+  config_hash = YAML.load File.read config_file
+  CONFIGURATION.each do |config|
+    yml_var_name = config[:long].gsub /-/, "_"
+    if config_hash.key? yml_var_name
+      config[:callback].call config_hash[yml_var_name]
+    end
+  end
+end
 
 ###############################################################################
 # Check the environment for configuration settings.
