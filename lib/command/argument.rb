@@ -99,7 +99,7 @@ module Command
           @type  = :literal
           @name  = definition
         else
-          raise ArgumentError.new I18n.t("command.bad_argument_definition", arg: definition.inspect)
+          raise ArgumentError.new I18n.t("command.argument.bad_argument_definition", arg: definition.inspect)
         end
 
         if DEFAULT_CONTEXT.include? @name

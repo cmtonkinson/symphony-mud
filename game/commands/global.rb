@@ -6,7 +6,20 @@ module Command
     usage :command
     exec do
       if command
-        being.puts "Executed HELP for command '#{command}'"
+        cmd = ::Command.configuration.command_registry.find do |c|
+          c.get_name == command.name
+        end
+
+        if cmd.nil?
+          being.puts "No command '#{command.name}'."
+          break
+        end
+
+        being.puts "Help for {W#{cmd.get_name}{x: #{cmd.get_brief}"
+        being.puts "Usage:"
+        cmd.usages.reverse.each do |arg|
+          being.puts "  #{cmd.get_name} " + arg.data.map(&:name).join(" ")
+        end
       else
         being.puts "Executed HELP"
       end
@@ -18,7 +31,8 @@ module Command
     usage
     exec do
       being.puts "The following commands are available:"
-      being.puts "TODO iterate over User.operators"
+      command_set = being.user.operators.peek.command_set
+      being.puts command_set.map(&:get_name).join ", "
     end
   end
 
@@ -26,7 +40,7 @@ module Command
   define :quit do
     usage
     exec do
-      being.puts "Logging out. Goodbye."
+      being.puts I18n.t("quit")
       being.user.client.should_terminate = true
     end
   end

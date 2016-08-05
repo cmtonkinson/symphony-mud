@@ -92,10 +92,12 @@ module Util
     end
 
     ###########################################################################
-    # Thanks http://stackoverflow.com/a/12203172/77047
-    def self.truncate_middle(src, len)
-      half = (len - 3) / 2
-      splits = src.scan(/(.{0,#{half}})(.*?)(.{0,#{half}}$)/)[0]
+    # Truncate the middle of a `source` string, replacing enough characters
+    # with an elipses so that the result is no longer than `final_length`.
+    # From http://stackoverflow.com/a/12203172/77047
+    def self.truncate_middle(source, final_length)
+      half = (final_length - 3) / 2
+      splits = source.scan(/(.{0,#{half}})(.*?)(.{0,#{half}}$)/)[0]
       splits[1] = "..." if splits[1].length > 3
       splits.join
     end

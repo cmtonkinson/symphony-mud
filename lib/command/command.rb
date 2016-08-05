@@ -14,6 +14,7 @@ module Command
     # Set sane defaults, and run the `define` block from the command file.
     def setup(&block)
       @name    = "_"
+      @brief   = "TODO"
       @level   = 1
       @group   = :global
       @exec    = nil
@@ -33,7 +34,12 @@ module Command
       @context.full_input = input_string
 
       # Pass control to the Command exec Proc.
-      @exec.call
+      begin
+        @exec.call
+      rescue Exception => e
+        Symphony.logger.error "Command '#{@name}' with #{input_string.inspect} by '#{being.name}' #{being.id} raised '#{e}'"
+        e.backtrace.each { |line| Symphony.logger.debug line.sub(Symphony.root.to_s, "") }
+      end
 
       # Eagerly purge the context (to be safe).
       @context = nil
@@ -56,6 +62,7 @@ module Command
     end
 
     def get_name;  @name;  end
+    def get_brief; @brief; end
     def get_level; @level; end
     def get_group; @group; end
     def get_exec;  @exec;  end
@@ -65,7 +72,11 @@ module Command
     ###########################################################################
     # These "private" setters are designed for the Command metaprogramming interface.
     def name(name)
-      @name  = name.to_s
+      @name = name.to_s
+    end
+
+    def brief(brief)
+      @brief = brief.to_s
     end
 
     def level(level)
@@ -77,7 +88,7 @@ module Command
     end
 
     def exec(&exec)
-      @exec  = exec
+      @exec = exec
     end
 
     ###########################################################################

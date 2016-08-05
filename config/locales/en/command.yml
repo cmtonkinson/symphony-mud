@@ -1,6 +1,6 @@
 en:
   #############################################################################
-  # Developer stuff / API error messages.
+  # Developer stuff / API error messages / misc.
   command:
     bad_array_length: "Command format arrays expect 2 elements (%{given} given)"
     invalid_type: "'%{type}' is an invalid Command argument type"
@@ -13,6 +13,7 @@ en:
     usage:
       duplicate_name: "Command cannot have duplicate argument names (specified '%{name}' twice)"
       push_non_argument: "Command::Usage can only contain instances of Command::Argument"
+    exception: "That command caused a system error, which has been logged and reported."
 
   #############################################################################
   # User facing stuff, keyed by Command name.
@@ -24,3 +25,4 @@ en:
   say:
     you_say: "You say, \"{G$string{x\""
     says: "$being says, \"{G$string{x\""
+  quit: "Logging out. Goodbye."

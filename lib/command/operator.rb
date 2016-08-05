@@ -2,6 +2,8 @@ module Command
 
   class Operator
 
+    attr_reader :command_set
+
     ###########################################################################
     def initialize(user, command_set_name = :global)
       @last_input  = "" # TODO - implement this
