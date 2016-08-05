@@ -1,0 +1,6 @@
+Help for {W$string{x: $string
+{YUsage:{x
+$string
+
+{YDescription:{x
+$string

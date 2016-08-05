@@ -21,7 +21,14 @@ module Command
       return if @command.nil?
 
       context = parse rest
-      return if context.nil?
+
+      # If a context for execution wasn't created, that means the Command was
+      # invoked improperly, so we recurse to provide the help topic for the
+      # requested Command.
+      if context.nil?
+        handle "help #{cmd_name}"
+        return
+      end
 
       @command.perform @user.avatar, context, rest
     end

@@ -17,12 +17,16 @@ en:
 
   #############################################################################
   # User facing stuff, keyed by Command name.
+  commands: "The following commands are available:"
+  help:
+    not_found: "No help topic for '$string'."
+    no_description: "No additional information available for '%{cmd}'."
   look:
     exit_list: "Exits are: {R%{exits}{x"
     is_here: "$being is here."
-  summary:
-    name: "Your name is"
+  quit: "Logging out. Goodbye."
   say:
     you_say: "You say, \"{G$string{x\""
     says: "$being says, \"{G$string{x\""
-  quit: "Logging out. Goodbye."
+  summary:
+    name: "Your name is"

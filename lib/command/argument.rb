@@ -28,12 +28,12 @@ module Command
     },
     literal: {
       pattern: / \S+ /ix,
-      description: "a literal argument - an explicitly defined value",
+      description: -> arg { "the literal text \"#{arg.name}\"" },
       examples: ["in", "to", "at"],
     },
     set: {
       pattern: nil,
-      description: "a set of possible values: a list of literals",
+      description: -> arg { "any one of: " + arg.value.join(", ") },
       examples: ["silver,gold", "to,from,on,at"],
     },
     string: {
@@ -58,7 +58,16 @@ module Command
       description: "a target object name (with optional quotes and optional multiplier or offset)",
       examples: ["elf", "rat#2", "bread*5", "'short sword'"],
     },
+    rest: {
+      pattern: /\A.+/ix,
+      cast_func: -> (src) {
+        c = src[0]
+        return (c == '"' || c == "'") ? src.slice(1..-2) : src
+      },
+      description: "any other text on the line (e.g. the remainder of the input)",
+    },
   }
+
 
   # This shitty indirection is just so that we can automate assertions that no one is creating
   # Command formats with variable names (which become context methods) that would overlap default
@@ -192,15 +201,36 @@ module Command
       dest = "Argument<"
 
       if empty?
-        dest += "empty"
+        dest << "empty"
       else
-        dest += "#{name}(#{type}"
-        dest += ":#{value}" if !value.nil?
-        dest += ")"
+        dest << "#{name}(#{type}"
+        dest << ":#{value}" if !value.nil?
+        dest << ")"
       end
 
-      dest += ">"
+      dest << ">"
       dest
+    end
+
+    ###########################################################################
+    def help_name
+      case @type
+      when :literal then @name
+      when :set then @name
+      when :rest then "..."
+      else @name.upcase
+      end
+    end
+
+    ###########################################################################
+    def help_description
+      defn = ARGUMENT_TYPES[@type][:description]
+      case defn
+      when String then defn
+      when Proc then defn.call self
+      when Array then defn.join "|"
+      else raise "No handler for description definition of type #{defn.class.name} for Argument type '#{@type}'"
+      end
     end
 
   end
