@@ -15,7 +15,7 @@ module Util
 
       # Pipe the content of all .rb files in the project directory into Ruby's
       # built-in syntax checking function.
-      lint_command = "find #{Symphony.root} -name '*.rb' | xargs cat | ruby -c > /dev/null"
+      lint_command = "find #{Symphony.root} -name '*.rb' | xargs cat | #{ruby_bin} -c > /dev/null"
 
       # The exit status of `ruby -c` will tell us whether there were errors,
       # and if there are errors the stderr of that process will hold the
