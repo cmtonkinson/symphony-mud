@@ -1,0 +1,1 @@
+Log out of the game and disconnect from the server.

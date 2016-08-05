@@ -1,0 +1,2 @@
+Shows your character details such as experience, attributes, and status
+effects.

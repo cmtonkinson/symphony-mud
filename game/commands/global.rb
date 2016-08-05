@@ -16,9 +16,17 @@ module Command
         end
 
         being.puts "Help for {W#{cmd.get_name}{x: #{cmd.get_brief}"
-        being.puts "Usage:"
+        being.puts "{YUsage:{x"
         cmd.usages.reverse.each do |arg|
           being.puts "  #{cmd.get_name} " + arg.data.map(&:name).join(" ")
+        end
+        if $help[:command].key? cmd.get_name
+          being.puts "\n{YDescription:{x"
+          being.puts $help[:command][cmd.get_name]
+        else
+          message = "No description is available for the '#{cmd.get_name}' command."
+          being.puts "\n#{message}"
+          Symphony.logger.debug message
         end
       else
         being.puts "Executed HELP"

@@ -1,0 +1,2 @@
+Displays information about the room you're in, such as the name, available
+exits, other players and NPCs, etc.
