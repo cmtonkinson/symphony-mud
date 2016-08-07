@@ -1,5 +1,4 @@
 module Realm
-
   class Scribe
     ###########################################################################
     def self.save(objekt)
@@ -37,5 +36,4 @@ module Realm
     end
 
   end
-
 end

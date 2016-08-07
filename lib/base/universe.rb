@@ -58,7 +58,9 @@ module Base
     ###########################################################################
     def handle_disconnections
       clients.select { |c| c.should_terminate }.each do |c|
-        c.user.avatar.run_hook :before_disconnect if c.user.avatar
+        if avatar = c.user.avatar
+          avatar.run_hook :before_disconnect
+        end
         c.close
         clients.delete c
       end

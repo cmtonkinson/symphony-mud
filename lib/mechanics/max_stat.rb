@@ -7,7 +7,7 @@ module Mechanics
 
     ###########################################################################
     def initialize(max_value)
-      @current  = 0
+      @current  = max_value
       @max_stat = SimpleStat.new max_value
     end
 

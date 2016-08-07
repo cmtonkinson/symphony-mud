@@ -1,5 +1,4 @@
 module Realm
-
   class Zone < Objekt
 
     CONTAINERS = %w(rooms exits)
@@ -13,15 +12,15 @@ module Realm
     end
 
     ###########################################################################
-    def _hashify
+    on_hashify -> {
       {
         rooms: @rooms.values.map(&:hashify),
         exits: @exits.values.map(&:hashify),
       }
-    end
+    }
 
     ###########################################################################
-    def _dehashify(hash)
+    on_dehashify -> hash {
       hash[:rooms].each { |hash| @rooms << Realm::Room.dehashify(hash) }
 
       hash[:exits].each do |hash|
@@ -37,10 +36,8 @@ module Realm
           # Point the Room to this Exit (the link directions are opposing).
           room.send "#{Realm::Exit::DIRECTIONS[dir][:opposite]}=", exit
         end
-
       end
-    end
+    }
 
   end
-
 end

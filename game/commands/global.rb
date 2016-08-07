@@ -4,6 +4,31 @@ module Command
 # TODO - set default aliases (NESWUP, kill, etc.)
 
 ###############################################################################
+Realm::Exit::DIRECTIONS.keys.each do |direction| define direction do
+###############################################################################
+  usage
+  exec do
+    msg = being.can_move? direction
+    if msg === true
+      being.move direction
+    else
+      being.puts msg
+    end
+  end
+end; end
+
+###############################################################################
+define :commands do
+###############################################################################
+  usage
+  exec do
+    being.puts I18n.t("commands")
+    command_set = being.user.operators.peek.command_set
+    being.puts command_set.map(&:get_name).join ", "
+  end
+end
+
+###############################################################################
 define :help do
 ###############################################################################
   usage :command
@@ -30,13 +55,20 @@ define :help do
 end
 
 ###############################################################################
-define :commands do
+define :look do
 ###############################################################################
   usage
   exec do
-    being.puts I18n.t("commands")
-    command_set = being.user.operators.peek.command_set
-    being.puts command_set.map(&:get_name).join ", "
+    exits = Realm::Exit::DIRECTIONS
+      .keys
+      .map { |dir| I18n.t("movement.exit.#{dir}") if being.room.send dir }
+      .compact
+      .join " "
+
+    being.puts I18n.t "objekt.identify", room.identify
+    being.puts I18n.t "look.exit_list", exits: exits
+
+    being.other_beings.each { |b| being.puts I18n.t("look.is_here"), b }
   end
 end
 
@@ -45,8 +77,20 @@ define :quit do
 ###############################################################################
   usage
   exec do
+    being.cmd "save"
     being.puts I18n.t("quit")
     being.user.client.should_terminate = true
+  end
+end
+
+###############################################################################
+define :save do
+###############################################################################
+  usage
+  exec do
+    being.print "Saving your profile..."
+    Realm::Scribe.save being
+    being.puts " done!"
   end
 end
 
@@ -65,41 +109,22 @@ define :summary do
 ###############################################################################
   usage
   exec do
-    being.puts I18n.t("summary.name") + " " + I18n.t("objekt.identify", being.identify)
-  end
-end
+    being.puts I18n.t("summary.name", name: being.name)
+    being.puts "({c#{being.id}{x)" # TODO hide unless admin
 
-###############################################################################
-define :look do
-###############################################################################
-  usage
-  exec do
-    exits = Realm::Exit::DIRECTIONS
-      .keys
-      .map { |dir| I18n.t("movement.exit.#{dir}") if being.room.send dir }
-      .compact
-      .join " "
-
-    being.puts I18n.t "objekt.identify", room.identify
-    being.puts I18n.t "look.exit_list", exits: exits
-
-    being.other_beings.each { |b| being.puts I18n.t("look.is_here"), b }
-  end
-end
-
-Realm::Exit::DIRECTIONS.keys.each do |direction|
-###############################################################################
-  define direction do
-###############################################################################
-    usage
-    exec do
-      msg = being.can_move? direction
-      if msg === true
-        being.move direction
-      else
-        being.puts msg
-      end
-    end
+    # The arguments below for sprintf follow the summary template line by line.
+    being.puts $templates.summary % [
+      "race", being.strength.current, being.hit_bonus.current, being.level,
+      "class", being.dexterity.current, being.damage_bonus.current, being.health.current, being.health.max,
+      "gender", being.constitution.current, being.mana.current, being.mana.max,
+      0, being.intelligence.current, being.armor.current, being.stamina.current,
+      "hand", being.focus.current, being.bash.current, being.exp,
+      "height", being.creativity.current, being.slash.current, being.tnl,
+      "weight", being.charisma.current, being.pierce.current, 0,
+      "totem", being.luck.current, being.exotic.current,
+      0, 0, 0, 0,
+      0, 0, 0
+    ]
   end
 end
 

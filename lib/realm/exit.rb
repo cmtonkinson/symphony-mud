@@ -1,7 +1,6 @@
 require "matrix"
 
 module Realm
-
   class Exit < Objekt
 
     DIRECTIONS = {
@@ -43,7 +42,7 @@ module Realm
     end
 
     ###########################################################################
-    def _hashify
+    on_hashify -> {
       # We want a Hash mapping each direction to the id of the Room to which
       # it points, or nil.
       exit_room_ids = Hash[DIRECTIONS.keys.map { |dir|
@@ -55,18 +54,17 @@ module Realm
         default_open: default_open,
         default_lock: default_lock,
       }.merge! exit_room_ids
-    end
+    }
 
     ###########################################################################
-    def _dehashify(hash)
+    on_dehashify -> hash {
       @open = @default_open = hash[:default_open]
       @lock = @default_lock = hash[:default_lock]
 
       DIRECTIONS.keys.each { |dir|
         send "#{dir}=", $world.find(hash[dir])
       }
-    end
+    }
 
   end
-
 end

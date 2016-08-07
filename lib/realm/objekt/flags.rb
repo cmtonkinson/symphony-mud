@@ -1,5 +1,4 @@
 module Realm
-
   class Objekt
 
     ###########################################################################
@@ -12,13 +11,12 @@ module Realm
         define_method(test_false) { !instance_variable_get "@#{flag_name}" }       if test_false
         define_method(clear)      { instance_variable_set "@#{flag_name}", false } if clear
 
-        after_initialize -> obj {
-          obj.instance_variable_set "@default_#{flag_name}", default
-          obj.instance_variable_set "@#{flag_name}", default
+        after_initialize -> {
+          instance_variable_set "@default_#{flag_name}", default
+          instance_variable_set "@#{flag_name}", default
         }
       end
     end
 
   end
-
 end

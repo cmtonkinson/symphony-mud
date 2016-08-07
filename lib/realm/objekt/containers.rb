@@ -1,7 +1,6 @@
 require "set"
 
 module Realm
-
   class Objekt
 
     attr_accessor :containers
@@ -47,5 +46,4 @@ module Realm
     end
 
   end
-
 end

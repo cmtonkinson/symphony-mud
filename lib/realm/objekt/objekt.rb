@@ -19,9 +19,7 @@
 require "securerandom"
 
 module Realm
-
   class Objekt
-    include Hooks
 
     # Defining Objekt property defaults at the class-level like this makes
     # certain meta-operations easier, such as for testing.
@@ -33,8 +31,6 @@ module Realm
     attr_reader :id
     attr_accessor :name
     attr_accessor :_disposal_requested, :_disposal_check_visits
-
-    define_hooks :after_initialize
 
     ###########################################################################
     def initialize(id = nil, props = {})
@@ -85,7 +81,7 @@ module Realm
       @_disposal_check_visits = 0
 
       # Allow subclasses to define custom logic after Objekt initialization.
-      run_hook :after_initialize, self
+      self.run_hook :after_initialize
     end
 
     ###########################################################################
@@ -99,5 +95,4 @@ module Realm
     end
 
   end
-
 end

@@ -1,5 +1,4 @@
 module Realm
-
   class Room < Objekt
 
     CONTAINERS = %w(beings)
@@ -20,18 +19,18 @@ module Realm
     end
 
     ###########################################################################
-    def _hashify
+    on_hashify -> {
       {
         zone: @zone.id,
         coords: @coords.to_a.join(","),
       }
-    end
+    }
 
     ###########################################################################
-    def _dehashify(hash)
+    on_dehashify -> hash {
       @zone   = $world.find hash[:zone]
       @coords = Vector[*hash[:coords].split(",")]
-    end
+    }
 
     ###########################################################################
     Realm::Exit::DIRECTIONS.keys.each do |exit|
@@ -54,5 +53,4 @@ module Realm
     end
 
   end
-
 end

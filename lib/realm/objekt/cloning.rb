@@ -1,5 +1,4 @@
 module Realm
-
   class Objekt
 
     attr_reader :cloned_from
@@ -24,5 +23,4 @@ module Realm
     end
 
   end
-
 end

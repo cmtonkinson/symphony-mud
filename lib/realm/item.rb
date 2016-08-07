@@ -1,5 +1,4 @@
 module Realm
-
   class Item < Objekt
 
     def initialize(id = nil, props = {})
@@ -7,5 +6,4 @@ module Realm
     end
 
   end
-
 end

@@ -29,4 +29,4 @@ en:
     you_say: "You say, \"{G$string{x\""
     says: "$being says, \"{G$string{x\""
   summary:
-    name: "Your name is"
+    name: "Your name is %{name}."

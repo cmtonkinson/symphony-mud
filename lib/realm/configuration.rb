@@ -1,5 +1,4 @@
 module Realm
-
   class Configuration
 
     attr_accessor :error_string
@@ -17,5 +16,4 @@ module Realm
   def self.configure
     yield configuration if block_given?
   end
-
 end

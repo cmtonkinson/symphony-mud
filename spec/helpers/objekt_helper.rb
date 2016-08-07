@@ -4,22 +4,22 @@ module Realm
 
     attr_accessor :my_num
 
-    def initialize(id = nil)
+    def initialize(id = nil, props = {})
       super
     end
 
     ###########################################################################
     # For testing serialization.
     ###########################################################################
-    def _hashify
+    on_hashify -> {
       {
         my_num: 456
       }
-    end
+    }
 
-    def _dehashify(hash)
+    on_dehashify -> hash {
       @my_num = hash[:my_num]
-    end
+    }
 
     ###########################################################################
     # For testing deep Objekt copies.

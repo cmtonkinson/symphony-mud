@@ -16,9 +16,9 @@ describe SimpleStat do
       expect(@stat.current).to eq @baseline
     end
 
-    it "should return no less than 1" do
+    it "should return no less than 0" do
       @stat.modify -100
-      expect(@stat.current).to eq 1
+      expect(@stat.current).to eq 0
     end
 
   end
