@@ -6,7 +6,7 @@ module Base
     BOLD    = "\e[1m"
 
     COLORS = {
-      "gray":           {code: "w", escape: "\e[30m"},
+      "gray":           {code: "w", escape: "\e[30m#{BOLD}"},
       "white":          {code: "W", escape: "\e[37m#{BOLD}"},
       "red":            {code: "r", escape: "\e[31m"},
       "bright red":     {code: "R", escape: "\e[31m#{BOLD}"},
@@ -32,7 +32,7 @@ module Base
     end
 
     def self.colorize(source)
-      source.gsub /\{./, escape_map
+      source.gsub /\{[WwrRgGyYbBmMcCx{]/, escape_map
     end
 
   end
