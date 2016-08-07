@@ -17,9 +17,18 @@ module Command
       Symphony.logger.absurd "Command::Operator#handle('#{input}')"
       cmd_name, _, rest = input.partition " "
 
+      # Try to find a Command by exact name.
       @command = @command_set.find { |c| c.get_name == cmd_name }
+
+      # If no Command was found by exact name, search for prefix matches.
+      if @command.nil?
+        @command = @command_set.find { |c| c.get_name.index(cmd_name) === 0 }
+      end
+
+      # Couldn't find a Command by exact name or prefix match.
       return if @command.nil?
 
+      # We found a Command, so let's see if the usage is correct.
       context = parse rest
 
       # If a context for execution wasn't created, that means the Command was

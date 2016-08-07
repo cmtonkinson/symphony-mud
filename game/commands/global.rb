@@ -1,5 +1,8 @@
 module Command
 
+# TODO - support aliases (esp. for command shortcuts like NESWUD)
+# TODO - set default aliases (NESWUP, kill, etc.)
+
 ###############################################################################
 define :help do
 ###############################################################################
