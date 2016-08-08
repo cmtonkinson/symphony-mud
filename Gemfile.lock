@@ -2,7 +2,6 @@ GEM
   remote: https://rubygems.org/
   specs:
     aasm (4.10.0)
-    awesome_print (1.6.1)
     coderay (1.1.1)
     deep_merge (1.0.1)
     diff-lcs (1.2.5)
@@ -14,6 +13,7 @@ GEM
       uber (~> 0.0.14)
     i18n (0.7.0)
     method_source (0.8.2)
+    pqueue (2.1.0)
     pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -43,12 +43,12 @@ PLATFORMS
 
 DEPENDENCIES
   aasm
-  awesome_print
   deep_merge
   fakefs
   fuubar
   hooks
   i18n
+  pqueue
   pry
   rake
   rspec

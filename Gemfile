@@ -10,11 +10,11 @@ group :app do
   gem "deep_merge"
   gem "hooks"
   gem "i18n"
+  gem "pqueue"
   gem "ruby-enum"
 end
 
 group :development, :test do
-  gem "awesome_print"
   gem "pry"
 end
 
