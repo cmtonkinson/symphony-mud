@@ -6,7 +6,7 @@ module Realm
     ###########################################################################
     def initialize(id = nil, props = {})
       @gender        = Gender::NEUTER
-      @output_buffer = "" # TODO used later to redirect output during possession
+      @output_buffer = ""
       super
     end
 
@@ -27,10 +27,35 @@ module Realm
     }
 
     ###########################################################################
-    %i(print puts).each do |meth|
-      define_method meth do |format, *args|
-        @output_buffer << Util::Linguist.interpret(format, *args)
-      end
+    def print(format, *args)
+      @output_buffer << Util::Linguist.interpret(format, *args)
+    end
+
+    ###########################################################################
+    def puts(format, *args)
+      print format, *args
+      @output_buffer << "\n" unless @output_buffer[-1] == "\n"
+    end
+
+    ###########################################################################
+    def output?
+      !@output_buffer.empty?
+    end
+
+    ###########################################################################
+    def output!
+      buf = @output_buffer.dup + prompt
+      @output_buffer = ""
+      buf
+    end
+
+    ###########################################################################
+    def prompt
+      "\n[{G%d{x/{g%d{x {C%d{x/{c%d{x {Y%d{x] " % [
+        health.current, health.max,
+        mana.current, mana.max,
+        stamina.current, stamina.max,
+      ]
     end
 
     ###########################################################################

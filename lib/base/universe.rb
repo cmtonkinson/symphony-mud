@@ -15,12 +15,13 @@ module Base
     ###########################################################################
     def do_server
       setup_server
-
       Symphony.logger.info "Server listening on #{Network.configuration.listen_ip}:#{Network.configuration.listen_port}"
+
       until should_stop do
         welcome server.accept
         $world.handle_jobs
         handle_input
+        handle_output
         handle_disconnections
         begin_reboot if should_reboot
         sleep Base.configuration.sleep_interval
@@ -57,10 +58,20 @@ module Base
     end
 
     ###########################################################################
+    def handle_output
+      clients.each do |client|
+        user   = client.user
+        avatar = user.avatar
+        client.print avatar.output! if avatar && avatar.output?
+      end
+    end
+
+    ###########################################################################
     def handle_disconnections
       clients.select { |c| c.should_terminate }.each do |c|
         if avatar = c.user.avatar
           avatar.run_hook :before_disconnect
+          avatar.dispose
         end
         c.close
         clients.delete c
@@ -153,6 +164,7 @@ module Base
         user   = User.new
         user.bind_client client, false
         user.bind_avatar Realm::Scribe.load Realm::Avatar, recovery_map[fd]
+        user.avatar.vivify
         @clients << client
       end
     end

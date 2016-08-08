@@ -1,6 +1,8 @@
 module Realm
   class Being
 
+    MAX_STAMINA = 100
+
     # Core names can be grouped into five distinct buckets.
     EXPERIENCE = %i(level exp tnl)
     WELLNESS   = %i(health mana stamina)
@@ -72,6 +74,31 @@ module Realm
       DEFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(hash[name]) }
       OFFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(hash[name]) }
     }
+
+    ###########################################################################
+    def vivify
+      $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_health
+      $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_mana
+      $world.schedule Mechanics::RecurringJob.new 0, self, 3, :auto_stamina
+    end
+
+    ###########################################################################
+    def auto_health
+      this_heal      = Util.bound health.max / 10, 1, health.current
+      health.current = health.current + this_heal
+    end
+
+    ###########################################################################
+    def auto_mana
+      this_heal    = Util.bound mana.max / 10, 1, mana.current
+      mana.current = mana.current + this_heal
+    end
+
+    ###########################################################################
+    def auto_stamina
+      this_heal       = Util.bound level / 5, 1, MAX_STAMINA / 2.5
+      stamina.current = stamina.current + this_heal
+    end
 
   end
 end

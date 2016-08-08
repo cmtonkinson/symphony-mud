@@ -12,14 +12,13 @@ module Realm
 
     ###########################################################################
     def initialize(id = nil, props = {})
+      props[:name] ||= "World"
       super
     end
 
     ###########################################################################
     after_initialize -> {
       @schedule = Mechanics::Schedule.new
-      schedule 2, self, -> world { Symphony.logger.absurd "TICK!!!" }
-
       CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     }
 
@@ -42,8 +41,8 @@ module Realm
     end
 
     ###########################################################################
-    def schedule(*args, &block)
-      @schedule.add Mechanics::Job.new *args, &block
+    def schedule(job)
+      @schedule.add job
     end
 
     ###########################################################################

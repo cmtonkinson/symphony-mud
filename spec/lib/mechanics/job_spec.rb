@@ -102,13 +102,13 @@ describe Job do
 
       expect(job.who).not_to be_nil
       expect(job.what).not_to be_nil
-      expect(job.wen).not_to be_nil
+      expect(job.wen).not_to eq 0
       expect(job.dead?).to eq false
 
       job.kill
       expect(job.who).to be_nil
       expect(job.what).to be_nil
-      expect(job.wen).to be_nil
+      expect(job.wen).to eq 0
       expect(job.dead?).to eq true
     end
   end

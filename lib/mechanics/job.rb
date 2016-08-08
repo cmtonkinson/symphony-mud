@@ -39,9 +39,9 @@ module Mechanics
       @dead = false
 
       # One-off by default.
+      @recurring    = false
       @repeat_every = 0
       @repeat_times = 0
-      @recurring = false
     end
 
     ###########################################################################
@@ -88,7 +88,9 @@ module Mechanics
     # priority queue, which is O(n). Since Jobs are small objects in memory,
     # this tradeoff is worth it.
     def kill
-      @who = @what = @wen = nil
+      @who  = nil
+      @what = nil
+      @wen  = 0
       @dead = true
     end
 
@@ -98,5 +100,29 @@ module Mechanics
       @dead
     end
 
+    ###########################################################################
+    def to_s
+      buf = "<Job"
+      buf << " @#{@wen} (in #{@wen - Time.now.to_i})"
+      buf << " #{@who.class.name}"
+      buf << " #{@who.name} (#{@who.id})" if @who.is_a? Realm::Objekt
+      buf << if @what.respond_to? :to_sym
+        " :" + @what.to_sym.to_s
+      else
+        " #{@what.lambda? ? 'lambda' : 'proc'} %s:%s" % @what.source_location
+      end
+      buf << ">"
+    end
+
   end
+
+
+  # RecurringJob provides a one-liner initialization for creating repeat Jobs.
+  class RecurringJob < Job
+    def initialize(wen, who, every, callable = nil, &block)
+      super wen, who, callable, &block
+      recur every, -1
+    end
+  end
+
 end

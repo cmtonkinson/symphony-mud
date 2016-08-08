@@ -13,17 +13,12 @@ module Mechanics
 
     ###########################################################################
     def current=(value)
-      @current = self.class.bound value, 0, max
+      @current = Util.bound value, 0, max
     end
 
     ###########################################################################
     def max
       @max_stat.current
-    end
-
-    ###########################################################################
-    def self.bound(x, low, high)
-      x < low ? (low) : (x > high ? high : x)
     end
 
   end

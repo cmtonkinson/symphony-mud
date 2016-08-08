@@ -78,17 +78,21 @@ module InputSequence
           case @context.account_type
           when :new
             user.puts "Welcome!"
-            user.bind_avatar Realm::Avatar.new @context.avatar_id, @context.name
-            user.avatar.room = $world.find_room Realm::World::THE_VOID_ID
-            user.avatar.room.insert user
-            user.avatar.room.puts I18n.t("universe.room_announce_newbie"), user.avatar
-            Symphony.logger.info "New Avatar '#{user.avatar.name}' #{user.avatar.id}"
-            Realm::Scribe.save user.avatar
+            avatar = Realm::Avatar.new @context.avatar_id, name: @context.name
+            user.bind_avatar avatar
+            avatar.room = $world.find_room Realm::World::THE_VOID_ID
+            avatar.room.insert avatar
+            avatar.vivify
+            avatar.room.puts I18n.t("universe.room_announce_newbie"), avatar
+            Symphony.logger.info "New Avatar '#{avatar.name}' #{avatar.id}"
+            Realm::Scribe.save avatar
           when :existing
             user.puts "Welcome back!"
-            user.bind_avatar Realm::Scribe.load Realm::Avatar, @context.avatar_id
-            user.avatar.room.puts I18n.t("universe.room_announce_return"), user.avatar
-            Symphony.logger.info "Avatar '#{user.avatar.name}' #{user.avatar.id} logged in"
+            avatar = Realm::Scribe.load Realm::Avatar, @context.avatar_id
+            user.bind_avatar avatar
+            avatar.room.puts I18n.t("universe.room_announce_return"), avatar
+            avatar.vivify
+            Symphony.logger.info "Avatar '#{avatar.name}' #{avatar.id} logged in"
           else
             message = "#{self.class.name} incomplete transition to :complete - invalid @context.account_type = '#{@context.account_type}'"
             Symphony.logger.fatal message
