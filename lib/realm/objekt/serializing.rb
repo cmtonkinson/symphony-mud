@@ -3,8 +3,6 @@ require "yaml"
 module Realm
   class Objekt
 
-    define_hooks :on_hashify
-
     ###########################################################################
     def serialize
       YAML.dump hashify

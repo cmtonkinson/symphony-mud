@@ -8,6 +8,8 @@ module Mechanics
     # When is the Job to be done? (unix time; integral seconds after epoch)
     attr_reader :wen
 
+    attr_reader :repeat_every, :repeat_times
+
     ###########################################################################
     def initialize(wen, who, callable = nil, &block)
       raise ArgumentError.new("no method or proc given") if callable.nil? && !block_given?
@@ -17,10 +19,51 @@ module Mechanics
         raise ArgumentError.new("callable does not respond to :to_sym or :call")
       end
 
-      @wen  = wen
-      @who  = who
+      # If the value of wen is less than 31,536,000 (in unix time that's
+      # approximately Jan 1, 1971 or 1 year past epoch) then we assume it
+      # represents a number of seconds from "now," rather than an absolute
+      # time (which for any value under about 1.4 billion is in the past).
+      @wen = wen
+      @wen += Time.now.to_i if wen < 31_536_000
+
+      # If the Job is being created for an Objekt, we want to make sure the
+      # Objekt knows about the Job so it can bookkeep correctly.
+      @who = who
+      @who.jobs.add self if @who.is_a? Realm::Objekt
+
+      # Either we have a block, or `callable` is a method name or something
+      # responding to :call.
       @what = block_given? ? block : callable
+
+      # Never felt more alive!
       @dead = false
+
+      # One-off by default.
+      @repeat_every = 0
+      @repeat_times = 0
+      @recurring = false
+    end
+
+    ###########################################################################
+    def recurring?
+      @recurring
+    end
+
+    ###########################################################################
+    def recur(every = 60, times = -1)
+      @recurring    = true
+      @repeat_every = every
+      @repeat_times = times
+    end
+
+    ###########################################################################
+    def recur!
+      @wen = Time.now.to_i + @repeat_every
+      if @repeat_times == 0
+        return nil
+      else
+        return self
+      end
     end
 
     ###########################################################################
@@ -32,6 +75,7 @@ module Mechanics
     ###########################################################################
     # Execute the callable.
     def fire
+      @repeat_times -= 1 if @repeat_times > 0
       @what.respond_to?(:call) ? @what.call(@who) : @who.send(@what.to_sym)
     end
 

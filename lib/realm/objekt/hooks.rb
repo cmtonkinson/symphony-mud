@@ -9,6 +9,9 @@ module Realm
     # after_initialize is invoked at the end of Objekt#initialize.
     define_hook :after_initialize
 
+    # before_disposal is invoked at the beginninf of Objekt#dispose.
+    define_hook :before_disposal
+
     # on_hashify is invoked when serializing an Objekt. It should return a Hash
     # object including any relevant key/value pairs that you wish to have
     # persisted to disk for the Objekt.

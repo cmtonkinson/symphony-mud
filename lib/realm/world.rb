@@ -4,6 +4,8 @@ module Realm
     ORIGIN_ZONE_ID = "00000000-0000-4000-a000-000000000000"
     THE_VOID_ID    = "00000000-0000-4000-a000-000000000001"
 
+    JOBS_PER_BATCH = 5
+
     CONTAINERS = %w(zones)
 
     CONTAINERS.each { |cont| attr_accessor cont }
@@ -11,8 +13,15 @@ module Realm
     ###########################################################################
     def initialize(id = nil, props = {})
       super
-      CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     end
+
+    ###########################################################################
+    after_initialize -> {
+      @schedule = Mechanics::Schedule.new
+      schedule 2, self, -> world { Symphony.logger.absurd "TICK!!!" }
+
+      CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
+    }
 
     ###########################################################################
     def load_zones
@@ -30,6 +39,29 @@ module Realm
     ###########################################################################
     def find_room(room_id)
       (room = find room_id) ? room : find(THE_VOID_ID)
+    end
+
+    ###########################################################################
+    def schedule(*args, &block)
+      @schedule.add Mechanics::Job.new *args, &block
+    end
+
+    ###########################################################################
+    # Execute JOBS_PER_BATCH Jobs' worth of actual useful work.
+    def handle_jobs
+      ctr = 0
+      while ctr < JOBS_PER_BATCH
+        # Try to fire the next Job.
+        retval = @schedule.fire!
+
+        # Stop processing if there is nothing more to be done.
+        break if retval == nil
+
+        # Don't count pruning a dead Job as doing actual work.
+        next if retval == false
+
+        ctr += 1
+      end
     end
 
   end

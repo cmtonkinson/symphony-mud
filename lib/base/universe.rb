@@ -19,6 +19,7 @@ module Base
       Symphony.logger.info "Server listening on #{Network.configuration.listen_ip}:#{Network.configuration.listen_port}"
       until should_stop do
         welcome server.accept
+        $world.handle_jobs
         handle_input
         handle_disconnections
         begin_reboot if should_reboot

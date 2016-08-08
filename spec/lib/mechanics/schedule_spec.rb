@@ -84,6 +84,66 @@ describe Schedule do
       expect(@docket.top).not_to be @job_a
     end
 
+    context "with a recurring Job" do
+
+      before :each do
+        @repeat_tester = JobTester.new
+        @repeat_job    = Job.new 0, @repeat_tester, :call_me_maybe
+      end
+
+      it "should re-add the Job after firing" do
+        @repeat_job.recur
+        expect(@docket).to be_empty
+        @schedule.add @repeat_job
+
+        expect(@docket.top).to be @repeat_job
+        expect(@schedule.fire!).to eq true
+        expect(@docket.top).to be @repeat_job
+      end
+
+      it "should not re-add the Job if the Job is dead" do
+        @repeat_job.recur
+        @schedule.add @repeat_job
+        expect(@docket.top).to be @repeat_job
+
+        @repeat_job.kill
+        @schedule.fire!
+        expect(@docket).to be_empty
+      end
+
+      it "should recur the Job a set number of times" do
+        count = 0
+        times = 5
+
+        @repeat_job.recur 0, times
+        @schedule.add @repeat_job
+
+        until @schedule.fire!.nil?
+          count += 1
+        end
+
+        expect(count).to eq times
+      end
+
+      it "should recur the Job infinitely" do
+        count = 1
+
+        @repeat_job.recur 0, -1
+        @schedule.add @repeat_job
+
+        until count > 20
+          expect(@schedule.fire!).to eq true
+          expect(@docket.top).to be @repeat_job
+          expect(@repeat_job.repeat_times).to eq -1
+          count += 1
+        end
+      end
+
+      it "should recur the Job after the set delay" do
+      end
+
+    end
+
   end
 
 end

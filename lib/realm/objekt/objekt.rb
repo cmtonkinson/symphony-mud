@@ -40,12 +40,6 @@ module Realm
       # be globally unique or Bad Things(tm) will happen.
       @id = id || DEFAULTS[:id].call
 
-      # When #clone is called on an Objekt, a new Objekt is returned with the
-      # exact properties of the original, except two: the new Objekt has its
-      # own id, and the cloned_from property will be set to the id of the
-      # original.
-      @cloned_from = nil
-
       # The name attribute is more descriptive than anything else. At this time
       # its use is not strictly defined by the Objekt class but it should
       # contain a string that makes sense in the context of whatever your
@@ -55,15 +49,6 @@ module Realm
       # Allow setting custom attributes on the Objekt at initialization time by
       # passing a Hash of attributes and values.
       props.each { |key,val| instance_variable_set "@#{key}", val }
-
-      # By adding `Util::AttrHash` instance members to your subclasses, you
-      # can easily keep collections of Objekts organized. If you decide to
-      # use the Objekt methods #insert and #remove as abstractions over these
-      # containers, Objekt will automatically keep track of which containers
-      # your Objekt is held in. In other words, the #insert and #remove helpers
-      # will bookkeep the bidirectional association between a container and
-      # each Objekt in it.
-      @containers = Set.new
 
       # Every Objekt created stores itself in the Registry singleton:
       # 1. For various bookkeeping tasks
@@ -86,7 +71,13 @@ module Realm
 
     ###########################################################################
     def dispose
+      self.run_hook :before_disposal
       @_disposal_requested = true
+    end
+
+    ###########################################################################
+    def disposed?
+      @_disposal_requested
     end
 
     ###########################################################################

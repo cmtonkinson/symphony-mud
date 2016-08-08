@@ -6,6 +6,7 @@ module Mechanics
     ###########################################################################
     def initialize
       @docket = PQueue.new { |a,b| a.wen < b.wen }
+      @recurring = {}
     end
 
     ###########################################################################
@@ -24,17 +25,23 @@ module Mechanics
     def fire!
       return nil if @docket.empty?
 
-      next_job = @docket.top
+      top_job = @docket.top
 
-      if next_job.dead?
+      if top_job.dead?
         @docket.pop
         return false
       end
 
-      return nil unless next_job.ready?
+      return nil unless top_job.ready?
 
-      next_job.fire
+      top_job.fire
       @docket.pop
+
+      if top_job.recurring?
+        again = top_job.recur!
+        add again unless again.nil?
+      end
+
       true
     end
 

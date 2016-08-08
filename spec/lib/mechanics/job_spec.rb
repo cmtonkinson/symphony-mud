@@ -19,6 +19,18 @@ describe Job do
       expect { Job.new(1, OpenStruct.new, {}) }.to raise_error(ArgumentError, /not respond/)
     end
 
+    it "should assume low wen values are 'in the future'" do
+      expect(Job.new(1, OpenStruct.new, :meth).wen).to eq Time.now.to_i + 1
+      expect(Job.new(1_470_638_651, OpenStruct.new, :meth).wen).to eq 1_470_638_651
+    end
+
+    it "should add itself to an Objekt's job list" do
+      o = Objekt.new
+      expect(o.jobs.empty?).to be true
+      j = Job.new 1, o, :meth
+      expect(o.jobs).to contain_exactly j
+    end
+
   end
 
   #############################################################################
@@ -71,6 +83,13 @@ describe Job do
       job = Job.new 0, @job_tester, -> tester { tester.call_me_maybe }
       job.fire
       expect(@job_tester.x).to eq 10
+    end
+
+    it "should no-op if the Objekt has been disposed" do
+      ob  = Objekt.new
+      job = Job.new 0, ob, :meth
+      ob.dispose
+      expect(job.dead?).to eq true
     end
 
   end
