@@ -1,3 +1,6 @@
+require "simplecov"
+SimpleCov.start
+
 ###############################################################################
 # Bootstrap Symphony; this code is the test analogue of the dispatch script.
 ###############################################################################
