@@ -44,4 +44,15 @@ define :shutdown do
   end
 end
 
+###############################################################################
+define :worldsave do
+###############################################################################
+  usage
+  exec do
+    being.print "Saving the World..."
+    $world.save
+    being.puts " success!"
+  end
+end
+
 end

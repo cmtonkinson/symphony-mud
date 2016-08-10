@@ -6,7 +6,7 @@ module Realm
 
     JOBS_PER_BATCH = 5
 
-    CONTAINERS = %w(zones)
+    CONTAINERS = %w(zones beings avatars)
 
     CONTAINERS.each { |cont| attr_accessor cont }
 
@@ -27,6 +27,15 @@ module Realm
       Realm::Scribe.the_story_of_baron_munchausen.each do |zone_id|
         @zones << Realm::Scribe.load(Realm::Zone, zone_id)
       end
+    end
+
+    ###########################################################################
+    def save
+      Symphony.logger.info "World#save beginning"
+      s = Realm::Scribe
+      @zones.each { |id, z| s.save z }
+      @avatars.each { |id, a| s.save a }
+      Symphony.logger.info "World#save complete"
     end
 
     ###########################################################################

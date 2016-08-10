@@ -2,7 +2,7 @@ module Realm
 
   class TestObj < Objekt
 
-    attr_accessor :my_num
+    attr_accessor :my_num, :my_nil
 
     def initialize(id = nil, props = {})
       super
@@ -24,9 +24,10 @@ module Realm
     ###########################################################################
     # For testing deep Objekt copies.
     ###########################################################################
-    def _deep_copy(other)
-      other.my_num = @my_num
-    end
+    on_deep_copy -> other {
+      @my_num = other.my_num
+      @my_nil = other.my_nil
+    }
 
   end
 

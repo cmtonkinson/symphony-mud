@@ -35,7 +35,7 @@ module Realm
       objekt = Object.const_get(hash[:objekt_class]).new hash[:objekt_id], name: hash[:objekt_name]
       # Run dehashification hooks to complete the loading.
       objekt.run_hook :on_dehashify, hash
-      # Return the completed objekt.
+      # Return the completed Objekt.
       objekt
     end
 

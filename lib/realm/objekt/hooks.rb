@@ -21,5 +21,10 @@ module Realm
     # so that you may reinitialize your Objekt accordingly.
     define_hook :on_dehashify
 
+    # on_deep_copy is invoked when cloning an Objekt. It takes an Objekt
+    # reference (which is the object being cloned from) and the callback runs
+    # in the context of the clone.
+    define_hook :on_deep_copy
+
   end
 end

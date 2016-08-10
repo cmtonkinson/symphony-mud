@@ -15,6 +15,26 @@ module Realm
           instance_variable_set "@default_#{flag_name}", default
           instance_variable_set "@#{flag_name}", default
         }
+
+        on_hashify -> {
+          hash = Hash.new
+          hash[flag_name] = instance_variable_get "@#{flag_name}"
+          {simple_flags: hash}
+        }
+
+        on_dehashify -> hash {
+          # Adding new flags to existing Objekts should be backwards compatible
+          # with the on-disk format.
+          return unless hash.key? :simple_flags
+          hash = hash[:simple_flags]
+
+          instance_variable_set "@#{flag_name}", hash[flag_name]
+        }
+
+        on_deep_copy -> parent {
+          instance_variable_set("@#{flag_name}", parent.instance_variable_get("@#{flag_name}"))
+        }
+
       end
     end
 

@@ -41,8 +41,8 @@ describe Objekt do
   describe "#clone" do
 
     before :each do
-      @original = TestObj.new
-      @clone = @original.clone
+      @original = TestObj.new nil, my_num: 387, my_nil: nil
+      @clone    = @original.clone
     end
 
     it "assigns a new id" do
@@ -63,11 +63,11 @@ describe Objekt do
     end
 
     it "deep copies subclass attributes" do
-      %i(my_num).each do |att|
+      %i(my_num my_nil).each do |att|
         # The values should be the same.
         expect(@clone.send(att)).to eq @original.send(att)
         # The objects should not be the same.
-        unless @clone.send(att).is_a? NilClass
+        unless [NilClass, Fixnum].include? @clone.send(att).class
           expect(@clone.send(att)).not_to be @original.send(att)
         end
       end
