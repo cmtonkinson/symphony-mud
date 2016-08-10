@@ -29,7 +29,7 @@ define :reboot do
 ###############################################################################
   usage
   exec do
-    being.puts "Hold on to your butts... Copyover!!"
+    being.puts "Hold on to your butts..."
     $universe.should_reboot = true
   end
 end

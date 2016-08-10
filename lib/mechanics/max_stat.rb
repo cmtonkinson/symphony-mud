@@ -21,6 +21,16 @@ module Mechanics
       @max_stat.current
     end
 
+    ###########################################################################
+    def percent
+      1.0 * current / max
+    end
+
+    ###########################################################################
+    def restore
+      current = max
+    end
+
   end
 
 end

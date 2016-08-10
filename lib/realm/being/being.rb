@@ -51,10 +51,11 @@ module Realm
 
     ###########################################################################
     def prompt
-      "\n[{G%d{x/{g%d{x {C%d{x/{c%d{x {Y%d{x] " % [
+      "\n[{G%d{x/{g%d{xhp {C%d{x/{c%d{xmana {M%d{xstamina {y%d{xtnl] " % [
         health.current, health.max,
         mana.current, mana.max,
-        stamina.current, stamina.max,
+        stamina.current,
+        tnl,
       ]
     end
 
