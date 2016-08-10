@@ -1,6 +1,7 @@
-# README
+# Symphony [![build status](https://gitlab.com/cmtonkinson/symphony/badges/master/build.svg)](https://gitlab.com/cmtonkinson/symphony/commits/master)
+The harmonius MUD codebase
 
-## Symphony, the harmonius MUD codebase [![build status](https://gitlab.com/cmtonkinson/symphony/badges/master/build.svg)](https://gitlab.com/cmtonkinson/symphony/commits/master)
+---
 Symphony is a modern MUD codebase. The inspiration comes from the Rom-family of MUDs, and the user
 experience inherits from that style of play. The primary project goal is **extensibility** in both
 form and function. It should be simple and intuitive to customize the interface, extend and modify
