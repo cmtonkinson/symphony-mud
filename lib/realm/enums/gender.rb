@@ -1,5 +1,5 @@
 module Realm
-  class Realm::Gender
+  class Gender
 
     include Ruby::Enum
 

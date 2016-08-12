@@ -60,22 +60,22 @@ module Util
 
     ###########################################################################
     def self.interpret_subjective(arg)
-      Gender.subjective_pronoun arg.gender
+      Realm::Gender.subjective_pronoun arg.gender
     end
 
     ###########################################################################
     def self.interpret_objective(arg)
-      Gender.objective_pronoun arg.gender
+      Realm::Gender.objective_pronoun arg.gender
     end
 
     ###########################################################################
     def self.interpret_possessive(arg)
-      Gender.possessive_pronoun arg.gender
+      Realm::Gender.possessive_pronoun arg.gender
     end
 
     ###########################################################################
     def self.interpret_reflexive(arg)
-      Gender.reflexive_pronoun arg.gender
+      Realm::Gender.reflexive_pronoun arg.gender
     end
 
     ###########################################################################

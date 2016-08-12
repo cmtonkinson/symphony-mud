@@ -2,13 +2,13 @@
 :objekt:
   :class: Realm::Zone
   :id: 00000000-0000-4000-a000-000000000000
-  :rid: 
+  :rid: 1
   :name: Origin
 :rooms:
 - :objekt:
     :class: Realm::Room
     :id: 00000000-0000-4000-a000-000000000001
-    :rid: 
+    :rid: 1
     :name: The Void
   :zone: 00000000-0000-4000-a000-000000000000
   :coords: '0,0,0'
