@@ -5,6 +5,7 @@ module Command
 ###############################################################################
 define :connections do
 ###############################################################################
+  level Realm::Being::GOD
   usage
   exec do
     dns_width = 35
@@ -27,14 +28,15 @@ end
 ###############################################################################
 define :disconnect do
 ###############################################################################
+  level Realm::Being::GOD
   usage({victim: :string})
-  brief "Disconnect the victim from the server."
   exec do
     target = $world.find_avatar victim
-    being.puts "They're not in this realm." and next if target.nil?
-    being.puts "You can't disconnect yourself." and next if target == being
+    being.puts t "err_nobody" and next if target.nil?
+    being.puts t "err_self" and next if target == being
 
-    target.puts "You have been unceremoniously disconnected by $being.", being
+    being.puts t("actor"), target
+    target.puts t("victim"), being
     target.cmd "quit"
   end
 end
@@ -42,16 +44,16 @@ end
 ###############################################################################
 define :goto do
 ###############################################################################
+  level Realm::Being::DEMIGOD
   usage({room_id: :int})
-  brief "Transport yourself to the given room."
   exec do
     target = $world.find_room room_id
-    being.puts "Room not found." and next if target.nil?
-    being.puts "You're already there!" and next if room == target
+    being.puts t "err_nowhere" and next if target.nil?
+    being.puts t "err_there" and next if room == target
 
-    being.puts I18n.t("goto.you"), target
-    room.puts I18n.t("goto.leave"), being, exclude: being
-    target.puts I18n.t("goto.arrive"), being
+    being.puts t("actor"), target
+    room.puts t("leave"), being, exclude: being
+    target.puts t("arrive"), being
     being.transport target
   end
 end
@@ -59,16 +61,15 @@ end
 ###############################################################################
 define :jobs do
 ###############################################################################
+  level Realm::Being::CREATOR
   usage
-  brief "List scheduler statistics."
   exec do
-    jobs_to_inspect = 10
+    num_jobs = 10
+    stats    = $world.schedule_stats num_jobs
 
-    stats = $world.schedule_stats jobs_to_inspect
-    being.puts "There are {Y%u{x jobs in the queue." % stats[:length]
-    being.puts "The schedule runs {Y%u{x jobs at a time." % stats[:batch_size]
-
-    being.puts "\nThe next #{jobs_to_inspect} jobs:"
+    being.puts t("queue_length") % stats[:length]
+    being.puts t("batch_size") % stats[:batch_size]
+    being.puts t("next_jobs") % num_jobs
     being.puts stats[:up_next].map(&:to_s).join "\n"
   end
 end
@@ -76,19 +77,37 @@ end
 ###############################################################################
 define :reboot do
 ###############################################################################
+  level Realm::Being::CREATOR
   usage
   exec do
-    being.puts "Hold on to your butts..."
+    being.puts t("actor")
     $universe.should_reboot = true
+  end
+end
+
+###############################################################################
+define :rooms do
+###############################################################################
+  usage
+  usage({id: :int})
+  exec do
+    zone = id.nil? ? being.room.zone : $world.zones.values.find { |z| z.rid == id }
+    being.puts t "err_nowhere" and next if zone.nil?
+
+    being.puts t("title"), zone
+    zone.rooms.each do |id,room|
+      being.puts t("line"), room, room
+    end
   end
 end
 
 ###############################################################################
 define :shutdown do
 ###############################################################################
+  level Realm::Being::CREATOR
   usage
   exec do
-    being.puts "Shutting down the server."
+    being.puts t("actor")
     $universe.should_stop = true
   end
 end
@@ -96,18 +115,18 @@ end
 ###############################################################################
 define :summon do
 ###############################################################################
+  level Realm::Being::GOD
   usage({victim: :string})
-  brief "Yank a person from wherever they are to appear before you."
   exec do
     target = $world.find_avatar victim
-    being.puts "You can't summon yourself." and next if victim == being
-    being.puts "They're not in this realm." and next if target.nil?
-    being.puts "But they're already here!" and next if target.room == room
+    being.puts t("err_self") and next if target == being
+    being.puts t("err_nobody") and next if target.nil?
+    being.puts t("err_here"), target and next if target.room == room
 
-    being.puts I18n.t("summon.actor"), target
-    target.puts I18n.t("summon.victim"), being, being
-    target.room.puts I18n.t("summon.leave"), target, exclude: target
-    room.puts I18n.t("summon.arrive"), target
+    being.puts t("actor"), target
+    target.puts t("victim"), being, being
+    target.room.puts t("leave"), target, exclude: target
+    room.puts t("arrive"), target
     target.transport room
   end
 end
@@ -115,11 +134,12 @@ end
 ###############################################################################
 define :worldsave do
 ###############################################################################
+  level Realm::Being::CREATOR
   usage
   exec do
-    being.print "Saving the World..."
+    being.print t("start")
     $world.save
-    being.puts " success!"
+    being.puts t("success")
   end
 end
 

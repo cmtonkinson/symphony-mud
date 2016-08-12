@@ -16,26 +16,84 @@ en:
     exception: "That command caused a system error, which has been logged and reported."
 
   #############################################################################
-  # User facing stuff, keyed by Command name.
-  commands: "The following commands are available:"
-  help:
-    not_found: "No help topic for '$string'."
-    no_description: "No additional information available for '%{cmd}'."
+  # admin
+  connections:
+    _brief: "Print netorking information on connected players."
+  disconnect:
+    _brief: "Immediately disconnect the victim from the server."
+    actor: "You have kicked $being. So long, sucker!"
+    err_nobody: "They're not in this realm."
+    err_self: "You can't disconnect yourself."
+    victim: "You have been unceremoniously disconnected by $being."
   goto:
-    you: "You squeeze through the dimensions to appear in {W$room{x."
-    leave: "$being squeezes through the dimensions and out of sight."
+    _brief: "Transport yourself to the given room."
+    actor: "You squeeze through the dimensions to appear in {W$room{x."
     arrive: "$being emerges from thin air in front of you."
-  look:
-    exit_list: "Exits are: {R%{exits}{x"
-    is_here: "$being is here."
-  quit: "Logging out. Goodbye."
-  say:
-    you_say: "You say, \"{G$string{x\""
-    says: "$being says, \"{G$string{x\""
-  summary:
-    name: "Your name is %{name}."
+    err_nowhere: "Room not found."
+    err_there: "You're already there."
+    leave: "$being squeezes through the dimensions and out of sight."
+  jobs:
+    _brief: "List scheduler statistics."
+    batch_size: "The schedule runs {Y%u{x jobs at a time."
+    next_jobs: "\nThe next {Y%u{x jobs:"
+    queue_length: "There are {Y%u{x jobs in the queue."
+  reboot:
+     _brief: "Save the World state, reload the server process, and restore connections."
+     actor: "Hold on to your butts..."
+  rooms:
+    _brief: "List the Rooms in the given Zone (or the current Zone if unspecified)"
+    err_nowhere: "Couldn't find that Zone."
+    title: "Rooms in {m$zone{x:\n\n"
+    line: "[{C$rid{x] {M$room{x"
+  shutdown:
+    _brief: "Close all connections, save all Zones, and terminate the server process."
+    actor: "Shutting down the server."
   summon:
+    _brief: "Yank a person from wherever they are to appear before you."
     actor: "You call $being to stand before you."
-    victim: "$being calls you to stand before $objective."
-    leave: "$being dissapears without warning."
     arrive: "$being appeares suddenly, looking dazed."
+    err_here: "$subjective is already here."
+    err_nobody: "They're not in this realm."
+    err_self: "You can't summon yourself."
+    leave: "$being dissapears without warning."
+    victim: "$being calls you to stand before $objective."
+  worldsave:
+    _brief: "Save all loaded Zones and connected Avatars."
+    start: "Saving the World..."
+    success: " success!"
+
+  #############################################################################
+  # global
+  commands:
+    _brief: "Display a list of available commands."
+    actor: "The following commands are available:"
+  help:
+    _brief: "Display details and usage of a command."
+    err_no_desc: "No additional information available."
+    err_not_found: "No help topic for '$string'."
+  look:
+    _brief: "Examine your surroundings."
+    exit_list: "\nExits are: {R$string{x"
+    here: "$being is here."
+    title: "[{C$rid{x] {W$room{x"
+  quit:
+    _brief: "Save your Avatar and disconnect from the server."
+    actor: "Logging out. Goodbye."
+  save:
+    _brief: "Store up-to-date information about your Avatar on the server."
+    start: "Saving your profile..."
+    success: " done!"
+  say:
+    _brief: "Talk to others in the room. This is an in-character channel."
+    actor: "You say, \"{G$string{x\""
+    hear: "$being says, \"{G$string{x\""
+  summary:
+    _brief: "Display information about the current state of your Avatar."
+    name: "Your name is %{name}."
+  who:
+    _brief: "Display a list of players online."
+    title: "Currently online:\n\n"
+  zones:
+    _brief: "List the different zones in the Realm."
+    line: "[{C$rid{x] {m$zone{x ($string rooms)"
+    title: "Zones in the realm:\n\n"

@@ -22,7 +22,7 @@ define :commands do
 ###############################################################################
   usage
   exec do
-    being.puts I18n.t("commands")
+    being.puts t("actor")
     command_set = being.user.operators.peek.command_set
     being.puts command_set.map(&:get_name).join ", "
   end
@@ -37,7 +37,7 @@ define :help do
       cmd = ::Command.configuration.command_registry.find do |c|
         c.get_name == command.name
       end
-      being.puts I18n.t("help.not_found"), command.name and next if cmd.nil?
+      being.puts t("err_not_found"), command.name and next if cmd.nil?
 
       name  = cmd.get_name
       brief = cmd.get_brief
@@ -46,7 +46,7 @@ define :help do
       desc = if $help[:command].key?(cmd.get_name)
         $help[:command][cmd.get_name]
       else
-        I18n.t("help.no_description", cmd: cmd.get_name)
+        t "err_no_desc"
       end
 
       being.puts $templates.help, name, brief, usage, desc
@@ -65,10 +65,10 @@ define :look do
       .compact
       .join " "
 
-    being.puts I18n.t "objekt.identify", room.identify
-    being.puts I18n.t "look.exit_list", exits: exits
+    being.puts t("title"), room, room
+    being.puts t("exit_list"), exits
 
-    being.other_beings.each { |b| being.puts I18n.t("look.is_here"), b }
+    being.other_beings.each { |b| being.puts t("here"), b }
   end
 end
 
@@ -78,29 +78,8 @@ define :quit do
   usage
   exec do
     being.cmd "save"
-    being.puts I18n.t("quit")
+    being.puts t("actor")
     being.user.client.should_terminate = true
-  end
-end
-
-###############################################################################
-define :rooms do
-###############################################################################
-  usage
-  usage({id: :int})
-  brief "List the Rooms in the given Zone (or the current Zone if unspecified)"
-  exec do
-    zone = id.nil? ? being.room.zone : $world.zones.values.find { |z| z.rid == id }
-
-    if zone.nil?
-      being.puts "Couldn't find that Zone."
-      next
-    end
-
-    being.puts "Rooms in {m%s{x:\n\n" % zone.name
-    zone.rooms.each do |id,room|
-      being.puts "[{C%3u{x] {M%s{x" % [room.rid, room.name]
-    end
   end
 end
 
@@ -109,9 +88,9 @@ define :save do
 ###############################################################################
   usage
   exec do
-    being.print "Saving your profile..."
+    being.print t("start")
     Realm::Scribe.save being
-    being.puts " done!"
+    being.puts t("success")
   end
 end
 
@@ -120,8 +99,8 @@ define :say do
 ###############################################################################
   usage :rest
   exec do
-    being.puts I18n.t("say.you_say"), rest
-    room.puts I18n.t("say.says"), being, rest, exclude: being
+    being.puts t("actor"), rest
+    room.puts t("hear"), being, rest, exclude: being
   end
 end
 
@@ -130,8 +109,7 @@ define :summary do
 ###############################################################################
   usage
   exec do
-    being.puts I18n.t("summary.name", name: being.name)
-    being.puts I18n.t("objekt.identify", being.identify) # TODO hide unless admin
+    being.puts t("name", name: being.name)
 
     # The arguments below for sprintf follow the summary template line by line.
     being.puts $templates.summary % [
@@ -153,9 +131,8 @@ end
 define :who do
 ###############################################################################
   usage
-  brief "Display a list of players online."
   exec do
-    being.puts "Currently online:\n\n"
+    being.puts t("title")
     $world.avatars.values.each do |a|
       being.puts "  " + a.name
     end
@@ -166,11 +143,10 @@ end
 define :zones do
 ###############################################################################
   usage
-  brief "List the different zones in the Realm."
   exec do
-    being.puts "Zones in the realm:\n\n"
+    being.puts t("title")
     $world.zones.each do |id,zone|
-      being.puts "[{C%3u{x] {m%s{x (%u rooms)" % [zone.rid, zone.name, zone.rooms.length]
+      being.puts t("line"), zone, zone, zone.rooms.length
     end
   end
 end

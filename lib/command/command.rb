@@ -4,13 +4,16 @@ module Command
 
     attr_reader :usages
 
+    ###########################################################################
     def initialize
     end
 
+    ###########################################################################
     def <=> (other)
       @name <=> other.get_name
     end
 
+    ###########################################################################
     # Set sane defaults, and run the `define` block from the command file.
     def setup(&block)
       @name    = "_"
@@ -23,6 +26,7 @@ module Command
       instance_eval &block if block_given?
     end
 
+    ###########################################################################
     # Heart and soul of the command processing subsystem.
     def perform(being, context, input_string)
       # Store the new context.
@@ -48,6 +52,16 @@ module Command
       @context = nil
     end
 
+    ###########################################################################
+    # Since we key all command text translations by the command name, we can
+    # provide a convenience method to invoke I18n#t, prefix the command name
+    # and pass through the optional arguments.
+    def translate(str, *args)
+      I18n.t "#{get_name}.#{str}", *args
+    end
+    alias_method :t, :translate
+
+    ###########################################################################
     # This enables us to access anything in the @context Hash with a simple method call inside the
     # Command exec blocks. Said another way, the only access we allow through method_missing is to
     # return values out of the @context Hash for Command execution.
@@ -64,6 +78,7 @@ module Command
       end
     end
 
+    ###########################################################################
     def get_name;  @name;  end
     def get_brief; @brief; end
     def get_level; @level; end
@@ -123,6 +138,7 @@ module Command
       define_method :initialize do
         method(:setup).call &init_block
         method(:name).call cmd_name.to_s
+        method(:brief).call I18n.t("#{cmd_name}._brief")
       end
     end
     ::Command.const_set class_name, class_definition
