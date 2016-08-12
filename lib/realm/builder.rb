@@ -4,7 +4,7 @@ module Realm
     ###########################################################################
     # Generate a new Room within the given `zone`.
     def self.create_room(zone)
-      new_room = Room.new
+      new_room = Room.new nil, rid: $world.next_room_rid
       new_room.zone = zone
       zone.insert new_room
       new_room

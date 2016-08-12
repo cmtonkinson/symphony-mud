@@ -21,6 +21,10 @@ en:
   help:
     not_found: "No help topic for '$string'."
     no_description: "No additional information available for '%{cmd}'."
+  goto:
+    you: "You squeeze through the dimensions to appear in {W$room{x."
+    leave: "$being squeezes through the dimensions and out of sight."
+    arrive: "$being emerges from thin air in front of you."
   look:
     exit_list: "Exits are: {R%{exits}{x"
     is_here: "$being is here."
@@ -30,3 +34,8 @@ en:
     says: "$being says, \"{G$string{x\""
   summary:
     name: "Your name is %{name}."
+  summon:
+    actor: "You call $being to stand before you."
+    victim: "$being calls you to stand before $objective."
+    leave: "$being dissapears without warning."
+    arrive: "$being appeares suddenly, looking dazed."

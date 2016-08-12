@@ -72,7 +72,7 @@ module Command
   # This shitty indirection is just so that we can automate assertions that no one is creating
   # Command formats with variable names (which become context methods) that would overlap default
   # context methods in the `exec` block. See Command#perform as well as Command#usage for more.
-  DEFAULT_CONTEXT = %i(user full_input)
+  DEFAULT_CONTEXT = %i(user full_input being room)
 
   class Argument
     attr_reader :name, :type, :value

@@ -45,13 +45,37 @@ module Realm
     alias_method :[], :find
 
     ###########################################################################
-    def find_room(room_id)
-      (room = find room_id) ? room : find(THE_VOID_ID)
+    def find_room(rid_or_uuid)
+      # It's a RID
+      if rid_or_uuid.is_a? Numeric
+        return nil if @zones.empty?
+        room_ary = @zones.values.map(&:rooms).flat_map(&:values)
+        return nil if room_ary.empty?
+        room_ary.find { |r| r.rid == rid_or_uuid }
+      # It's a UUID
+      elsif rid_or_uuid.match /\h{8}-?\h{4}-?\h{4}-?\h{4}-?\h{12}/i
+        (room = find rid_or_uuid) ? room : find(THE_VOID_ID)
+      end
+    end
+
+    ###########################################################################
+    def find_avatar(name)
+      return nil if @avatars.empty?
+      @avatars.values.find { |a| a.name.downcase == name.downcase }
     end
 
     ###########################################################################
     def schedule(job)
       @schedule.add job
+    end
+
+    ###########################################################################
+    def schedule_stats(n)
+      {
+        length: @schedule.length,
+        batch_size: JOBS_PER_BATCH,
+        up_next: @schedule.take(n),
+      }
     end
 
     ###########################################################################
@@ -70,6 +94,14 @@ module Realm
 
         ctr += 1
       end
+    end
+
+    ###########################################################################
+    def next_room_rid
+      return 1 if @zones.empty?
+      rooms = @zones.values.map(&:rooms).flat_map(&:values)
+      return 1 if rooms.empty?
+      rooms.max_by(&:rid).rid + 1
     end
 
   end

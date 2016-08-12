@@ -24,6 +24,10 @@ describe Realm::Builder do
       expect(@zone.rooms.keys).to include @room.id
     end
 
+    it "assign a rid to the Room" do
+      expect(@room.rid).to be_a Integer
+    end
+
   end
 
   #############################################################################

@@ -45,5 +45,15 @@ module Mechanics
       true
     end
 
+    ###########################################################################
+    def length
+      @docket.length
+    end
+
+    ###########################################################################
+    def take(n)
+      @docket.to_a.reverse.take n
+    end
+
   end
 end

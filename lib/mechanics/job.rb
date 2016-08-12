@@ -101,9 +101,14 @@ module Mechanics
     end
 
     ###########################################################################
+    def ready_in
+      @wen - Time.now.to_i
+    end
+
+    ###########################################################################
     def to_s
       buf = "<Job"
-      buf << " @#{@wen} (in #{@wen - Time.now.to_i})"
+      buf << " @#{@wen} (in #{ready_in})"
       buf << " #{@who.class.name}"
       buf << " #{@who.name} (#{@who.id})" if @who.is_a? Realm::Objekt
       buf << if @what.respond_to? :to_sym

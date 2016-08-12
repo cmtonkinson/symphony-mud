@@ -13,7 +13,8 @@ module Realm
     ###########################################################################
     on_hashify -> {
       hash = {
-        room: @room.id
+        room: @room.id,
+        gender: @gender,
       }
 
       {being: hash}
@@ -24,6 +25,8 @@ module Realm
       hash = hash[:being]
       @room = $world.find_room hash[:room]
       @room.insert self
+
+      @gender = hash[:gender]
     }
 
     ###########################################################################
@@ -85,15 +88,21 @@ module Realm
       exit = @room.send direction
       to   = exit.send direction
 
-      # Move.
-      from.remove self
-      to.insert self
-      @room = to
-
       # Notify.
       puts I18n.t("being.you_go"), direction
-      from.puts I18n.t("being.leaves"), self, direction
-      to.puts I18n.t("being.arrived"), self, direction, exclude: self
+      from.puts I18n.t("being.leaves"), self, direction, exclude: self
+      to.puts I18n.t("being.arrived"), self, direction
+
+      # Move.
+      transport to
+    end
+
+    ###########################################################################
+    def transport(to)
+      # Swap.
+      @room.remove self
+      @room = to
+      @room.insert self
 
       # Look around.
       cmd "look"

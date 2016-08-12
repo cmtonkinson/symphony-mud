@@ -30,8 +30,10 @@ module Command
 
       # Add additional default context variables.
       @context.being      = being
-      @context.room       = being.room
       @context.full_input = input_string
+
+      # Convenience methods.
+      @context.define_singleton_method :room, -> { being.room }
 
       # Pass control to the Command exec Proc.
       begin
