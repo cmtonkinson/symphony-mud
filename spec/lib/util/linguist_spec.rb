@@ -63,13 +63,13 @@ describe Linguist do
       [["$opposite", "down"],  "above"],
       #######################################################################
       # Pronouns.
-      [["$object", chuck],    "his"],
-      [["$object", charlene], "hers"],
-      [["$object", pat],      "its"],
+      [["$subjective", chuck],    "he"],
+      [["$subjective", charlene], "she"],
+      [["$subjective", pat],      "it"],
 
-      [["$subject", chuck],    "he"],
-      [["$subject", charlene], "she"],
-      [["$subject", pat],      "it"],
+      [["$objective", chuck],    "him"],
+      [["$objective", charlene], "her"],
+      [["$objective", pat],      "it"],
 
       [["$possessive", chuck],    "his"],
       [["$possessive", charlene], "her"],

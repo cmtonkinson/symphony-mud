@@ -9,13 +9,13 @@ en:
       female: "female"
       neuter: "neuter"
     pronoun:
-      object:
-        male: "his"
-        female: "hers"
-        neuter: "its"
-      subject:
+      subjective:
         male: "he"
         female: "she"
+        neuter: "it"
+      objective:
+        male: "him"
+        female: "her"
         neuter: "it"
       possessive:
         male: "his"

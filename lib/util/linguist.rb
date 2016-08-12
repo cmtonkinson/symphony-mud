@@ -38,6 +38,11 @@ module Util
     end
 
     ###########################################################################
+    def self.interpret_room(arg)
+      prepend_article arg
+    end
+
+    ###########################################################################
     def self.interpret_item(arg)
       prepend_article arg
     end
@@ -54,13 +59,13 @@ module Util
     end
 
     ###########################################################################
-    def self.interpret_object(arg)
-      Gender.object_pronoun arg.gender
+    def self.interpret_subjective(arg)
+      Gender.subjective_pronoun arg.gender
     end
 
     ###########################################################################
-    def self.interpret_subject(arg)
-      Gender.subject_pronoun arg.gender
+    def self.interpret_objective(arg)
+      Gender.objective_pronoun arg.gender
     end
 
     ###########################################################################
