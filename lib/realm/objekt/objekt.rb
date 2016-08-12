@@ -24,12 +24,13 @@ module Realm
     # Defining Objekt property defaults at the class-level like this makes
     # certain meta-operations easier, such as for testing.
     DEFAULTS = {
-      id: -> { SecureRandom.uuid },
-      name: "[name]",
+      id:   -> { SecureRandom.uuid },
+      rid:  -> { nil },
+      name: -> { "[name]".dup },
     }
 
     attr_reader :id
-    attr_accessor :name
+    attr_accessor :rid, :name
     attr_accessor :_disposal_requested, :_disposal_check_visits
 
     ###########################################################################
@@ -40,11 +41,23 @@ module Realm
       # be globally unique or Bad Things(tm) will happen.
       @id = id || DEFAULTS[:id].call
 
+      # Objekts may be assigned a "Realm Identifier" (`rid`). The RID is a
+      # superficial field and has no meaning to the Objekt class itself; the
+      # Objekt class only defines the field, accessors and hashify/dehashify
+      # hooks, therefore the RID itself must be some data type natively JSON
+      # serializable. It is intended primarily for use as a more user-friendly
+      # alternative to UUIDs for circumstances where users will need to
+      # manipulate various objects by some simple deterministic label,
+      # analogous to the way vnums are manipulated by admins and builders in
+      # ROM-based games. However, the actual use (or non-use) of the RID is
+      # left as an implementation detail of each individual Objekt subclass.
+      @rid = DEFAULTS[:rid].call
+
       # The name attribute is more descriptive than anything else. At this time
       # its use is not strictly defined by the Objekt class but it should
       # contain a string that makes sense in the context of whatever your
       # subclass is.
-      @name = DEFAULTS[:name].dup
+      @name = DEFAULTS[:name].call
 
       # Allow setting custom attributes on the Objekt at initialization time by
       # passing a Hash of attributes and values.
@@ -82,7 +95,7 @@ module Realm
 
     ###########################################################################
     def identify
-      {name: @name, id: @id}
+      {name: @name, id: @id, rid: @rid}
     end
 
   end

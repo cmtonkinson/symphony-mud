@@ -9,7 +9,7 @@ describe Objekt do
 
     it "should set a default name" do
       r = Objekt.new
-      expect(r.name).to eq Objekt::DEFAULTS[:name]
+      expect(r.name).to eq Objekt::DEFAULTS[:name].call
     end
 
   end
@@ -90,8 +90,11 @@ describe Objekt do
 
     it "encodes base Objekt attributes" do
       expect(@yaml).to include "Realm::TestObj"
-      expect(@yaml).to include ":objekt_id"
-      expect(@yaml).to include ":objekt_name"
+      expect(@yaml).to include ":objekt:"
+      expect(@yaml).to include "\n  :class:"
+      expect(@yaml).to include "\n  :id:"
+      expect(@yaml).to include "\n  :rid:"
+      expect(@yaml).to include "\n  :name:"
     end
 
     it "encodes subclass attributes" do
@@ -105,7 +108,7 @@ describe Objekt do
 
     it "decodes base Objekct attributes" do
       expect(@reloaded.id).to eq 42
-      expect(@reloaded.name).to eq Objekt::DEFAULTS[:name]
+      expect(@reloaded.name).to eq Objekt::DEFAULTS[:name].call
     end
 
     it "decodes subclass attributes" do

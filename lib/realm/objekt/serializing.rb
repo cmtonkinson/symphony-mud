@@ -12,9 +12,12 @@ module Realm
     def hashify
       # Create a base Hash.
       hash = {
-        objekt_class: self.class.name,
-        objekt_id: @id,
-        objekt_name: @name,
+        objekt: {
+          class: self.class.name,
+          id: @id,
+          rid: @rid,
+          name: @name,
+        },
       }
       # Run the hook to get other Hashes from different functional areas.
       sub_hashes = run_hook :on_hashify
@@ -31,8 +34,12 @@ module Realm
 
     ###########################################################################
     def self.dehashify(hash)
+      o_hash = hash[:objekt]
       # Instantiate an Object of the appropriate class.
-      objekt = Object.const_get(hash[:objekt_class]).new hash[:objekt_id], name: hash[:objekt_name]
+      objekt = Object.const_get(o_hash[:class]).new(o_hash[:id], {
+        rid: o_hash[:rid],
+        name: o_hash[:name],
+      })
       # Run dehashification hooks to complete the loading.
       objekt.run_hook :on_dehashify, hash
       # Return the completed Objekt.

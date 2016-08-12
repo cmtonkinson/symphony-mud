@@ -1,11 +1,15 @@
 ---
-:objekt_class: Realm::Zone
-:objekt_id: 00000000-0000-4000-a000-000000000000
-:objekt_name: Origin
+:objekt:
+  :class: Realm::Zone
+  :id: 00000000-0000-4000-a000-000000000000
+  :rid: 
+  :name: Origin
 :rooms:
-- :objekt_class: Realm::Room
-  :objekt_id: 00000000-0000-4000-a000-000000000001
-  :objekt_name: The Void
+- :objekt:
+    :class: Realm::Room
+    :id: 00000000-0000-4000-a000-000000000001
+    :rid: 
+    :name: The Void
   :zone: 00000000-0000-4000-a000-000000000000
   :coords: '0,0,0'
 :exits: []
