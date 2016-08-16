@@ -96,6 +96,9 @@ en:
   who:
     _brief: "Display a list of players online."
     title: "Currently online:\n\n"
+  whoami:
+    _brief: "Display your current profile name."
+    actor: "Your name is {W$being{x"
   zones:
     _brief: "List the different zones in the Realm."
     line: "[{C$rid{x] {m$zone{x ($string rooms)"
