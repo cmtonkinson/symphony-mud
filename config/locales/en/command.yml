@@ -76,6 +76,9 @@ en:
     exit_list: "\nExits are: {R$string{x"
     here: "$being is here."
     title: "[{C$rid{x] {W$room{x"
+  map:
+    _brief: "Display the layout of the current zone."
+    title: "Your map of {m$zone{x:"
   quit:
     _brief: "Save your Avatar and disconnect from the server."
     actor: "Logging out. Goodbye."

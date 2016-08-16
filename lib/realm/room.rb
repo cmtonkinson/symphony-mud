@@ -29,7 +29,7 @@ module Realm
     ###########################################################################
     on_dehashify -> hash {
       @zone   = $world.find hash[:zone]
-      @coords = Vector[*hash[:coords].split(",")]
+      @coords = Vector[*hash[:coords].split(",").map(&:to_i)]
     }
 
     ###########################################################################
@@ -38,6 +38,14 @@ module Realm
         # Yo dawg, I heard you like to send exit to your send exit.
         send(exit).send(exit)
       }
+    end
+
+    ###########################################################################
+    %w(x y z).each_with_index do |coord_name, coord_index|
+      define_method "#{coord_name}_coordinate" do
+        @coords[coord_index]
+      end
+      alias_method :"#{coord_name}", :"#{coord_name}_coordinate"
     end
 
     ###########################################################################

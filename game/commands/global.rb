@@ -73,6 +73,40 @@ define :look do
 end
 
 ###############################################################################
+# TODO implement "exploration" where players don't see Rooms mapped until they
+# have visited them. Could link up to achievements, exp bonuses, show up on
+# the summary page, etc.
+define :map do
+###############################################################################
+  usage
+  exec do
+    zone   = being.room.zone
+    layout = zone.get_layout
+    height = layout.length
+    width  = layout[0].length
+    buffer = ""
+
+    being.puts t("title"), zone
+
+    layout.reverse.each_with_index do |row,row_index|
+      row.each_with_index do |point,col_index|
+        buffer << case point
+        when Realm::Room
+          room == point ? "{C@{x" : "x"
+        when Realm::Exit
+          point.north.nil? ? "-" : "|"
+        else
+          " "
+        end
+      end
+      buffer << "\n"
+    end
+
+    being.puts buffer
+  end
+end
+
+###############################################################################
 define :quit do
 ###############################################################################
   usage
