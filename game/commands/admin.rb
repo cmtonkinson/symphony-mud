@@ -34,6 +34,7 @@ define :disconnect do
     target = $world.find_avatar victim
     being.puts t "err_nobody" and next if target.nil?
     being.puts t "err_self" and next if target == being
+    being.puts t("err_seniority"), target and next unless being.has_seniority? target
 
     being.puts t("actor"), target
     target.puts t("victim"), being
@@ -44,11 +45,13 @@ end
 ###############################################################################
 define :force do
 ###############################################################################
+  level Realm::Being::GOD
   usage({victim: :string}, :rest)
   exec do
     target = room.find_being victim
     being.puts t "err_nobody" and next if target.nil?
     being.puts t "err_self" and next if target == being
+    being.puts t("err_seniority"), target and next unless being.has_seniority? target
 
     being.puts t("actor"), target
     target.puts t("victim"), being
@@ -103,6 +106,7 @@ end
 ###############################################################################
 define :rooms do
 ###############################################################################
+  level Realm::Being::DEMIGOD
   usage
   usage({id: :int})
   exec do
@@ -137,6 +141,7 @@ define :summon do
     being.puts t("err_self") and next if target == being
     being.puts t("err_nobody") and next if target.nil?
     being.puts t("err_here"), target and next if target.room == room
+    being.puts t("err_seniority"), target and next unless being.has_seniority? target
 
     being.puts t("actor"), target
     target.puts t("victim"), being, being

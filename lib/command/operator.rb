@@ -16,6 +16,7 @@ module Command
     def handle(input)
       Symphony.logger.absurd "Command::Operator#handle('#{input}')"
       cmd_name, _, rest = input.partition " "
+      being             = @user.avatar
 
       # Try to find a Command by exact name.
       @command = @command_set.find { |c| c.get_name == cmd_name }
@@ -26,7 +27,10 @@ module Command
       end
 
       # Couldn't find a Command by exact name or prefix match.
-      return if @command.nil?
+      being.puts I18n.t("command.operator.err_not_found") and return if @command.nil?
+
+      # We found a Command; can we invoke it?
+      being.puts I18n.t("command.operator.err_low_level") and return if @command.get_level > being.level
 
       # We found a Command, so let's see if the usage is correct.
       context = parse rest
@@ -35,11 +39,12 @@ module Command
       # invoked improperly, so we recurse to provide the help topic for the
       # requested Command.
       if context.nil?
+        being.puts I18n.t("command.operator.err_invocation")
         handle "help #{cmd_name}"
         return
       end
 
-      @command.perform @user.avatar, context, rest
+      @command.perform being, context, rest
     end
 
     ###########################################################################

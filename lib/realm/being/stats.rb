@@ -18,6 +18,11 @@ module Realm
     DEMIGOD = HERO + 10
     GOD     = HERO + 15
     CREATOR = HERO + 20
+    # Many immortal commands (such as 'force' and 'summon') require that in
+    # order to perform them, the actor be a sufficiently higher level than the
+    # victim. This is a sort of "chain of command" security measure and this is
+    # minimum required level difference is codified as IMMORTAL_SENIORITY.
+    IMMORTAL_SENIORITY = 5
 
     FITNESS_BASE      = 15
     FITNESS_THRESHOLD = 20
@@ -100,6 +105,21 @@ module Realm
       DEFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(hash[name]) }
       OFFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(hash[name]) }
     }
+
+    ###########################################################################
+    def newbie?
+      @level < NEWBIE
+    end
+
+    ###########################################################################
+    %w(HERO LORD DUKE KING DEMIGOD GOD CREATOR).each do |lvl|
+      define_method :"#{lvl.downcase}?", Proc.new { @level >= const_get(lvl) }
+    end
+
+    ###########################################################################
+    def has_seniority?(victim)
+      victim.level < @level - IMMORTAL_SENIORITY
+    end
 
     ###########################################################################
     def vivify

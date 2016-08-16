@@ -1,6 +1,6 @@
 en:
   #############################################################################
-  # Developer stuff / API error messages / misc.
+  # Developer stuff / API / error messages / misc.
   command:
     bad_array_length: "Command format arrays expect 2 elements (%{given} given)"
     invalid_type: "'%{type}' is an invalid Command argument type"
@@ -14,6 +14,10 @@ en:
       duplicate_name: "Command cannot have duplicate argument names (specified '%{name}' twice)"
       push_non_argument: "Command::Usage can only contain instances of Command::Argument"
     exception: "That command caused a system error, which has been logged and reported."
+    operator:
+      err_not_found: "That command is not available."
+      err_low_level: "You aren't powerful enough to use that command."
+      err_invocation: "That doesn't make sense. Here's some help:\n\n"
 
   #############################################################################
   # admin
@@ -24,12 +28,14 @@ en:
     actor: "You have kicked $being. So long, sucker!"
     err_nobody: "They're not in this realm."
     err_self: "You can't disconnect yourself."
+    err_seniority: "You aren't powerful enough to disconnect $being."
     victim: "You have been unceremoniously disconnected by $being."
   force:
     _brief: "Make another being take some action... whether they like it or not."
+    actor: "You force $being into action."
     err_nobody: "You don't see them here."
     err_self: "Forcing yourself? That would be too meta."
-    actor: "You force $being into action."
+    err_seniority: "You aren't powerful enough to force $being."
     victim: "You are forced into action by $being."
   goto:
     _brief: "Transport yourself to the given room."
@@ -61,6 +67,7 @@ en:
     err_here: "$subjective is already here."
     err_nobody: "They're not in this realm."
     err_self: "You can't summon yourself."
+    err_seniority: "You aren't powerful enough to summon $being."
     leave: "$being dissapears without warning."
     victim: "$being calls you to stand before $objective."
   worldsave:
