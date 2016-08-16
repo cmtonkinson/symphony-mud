@@ -64,6 +64,12 @@ en:
 
   #############################################################################
   # global
+  colors:
+    _brief: "Display the color map"
+    title: "You can use color by typing any of the codes below.\n\
+            Each code is a bracket followed by a letter:\n\n"
+    bracket: "\nTo make a bracket, type two of them in a row:\n\n"
+    reset: "\nTo reset to the default color, the code is '{{x':\n\n"
   commands:
     _brief: "Display a list of available commands."
     actor: "The following commands are available:"

@@ -18,6 +18,22 @@ Realm::Exit::DIRECTIONS.keys.each do |direction| define direction do
 end; end
 
 ###############################################################################
+define :colors do
+###############################################################################
+  usage
+  exec do
+    being.puts t("title")
+    Base::Terminal::COLORS.each do |name,info|
+      being.puts "  {{#{info[:code]} = {#{info[:code]}#{name}{x"
+    end
+    being.puts t("reset")
+    being.puts "  {{x = clear/default"
+    being.puts t("bracket")
+    being.puts "  {{{{ = {"
+  end
+end
+
+###############################################################################
 define :commands do
 ###############################################################################
   usage
