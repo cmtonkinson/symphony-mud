@@ -38,9 +38,19 @@ define :commands do
 ###############################################################################
   usage
   exec do
+    command_set       = being.user.operators.peek.command_set
+    commands_by_level = command_set.group_by &:get_level
+
     being.puts t("actor")
-    command_set = being.user.operators.peek.command_set
-    being.puts command_set.map(&:get_name).join ", "
+
+    Realm::Being::LEVELS.reverse.each do |level_name|
+      level_num = Realm::Being.const_get level_name
+      next unless being.level >= level_num
+      next unless commands_by_level.key? level_num
+
+      being.puts "\n--== {Y#{level_name}{x (#{commands_by_level[level_num].length} commands) ==--"
+      being.puts commands_by_level[level_num].map(&:get_name).join ", "
+    end
   end
 end
 
@@ -168,7 +178,7 @@ define :summary do
 ###############################################################################
   usage
   exec do
-    being.puts t("name", name: being.name)
+    being.puts t("title"), being.name, being.level_label
 
     # The arguments below for sprintf follow the summary template line by line.
     being.puts $templates.summary % [
@@ -214,6 +224,7 @@ define :zones do
   exec do
     being.puts t("title")
     $world.zones.each do |id,zone|
+      next if zone.rid == 1 && !being.demigod?
       being.puts t("line"), zone, zone, zone.rooms.length
     end
   end

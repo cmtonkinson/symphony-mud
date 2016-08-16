@@ -10,7 +10,8 @@ module Realm
     BASE_TNL   = 100
     TARGET_TNL = 100_00
 
-    NEWBIE  = 10
+    NEWBIE  = 1
+    NOVICE  = 10
     HERO    = 100
     LORD    = HERO + 1
     DUKE    = HERO + 3
@@ -18,6 +19,9 @@ module Realm
     DEMIGOD = HERO + 10
     GOD     = HERO + 15
     CREATOR = HERO + 20
+
+    LEVELS = %w(NEWBIE NOVICE HERO LORD DUKE KING DEMIGOD GOD CREATOR)
+
     # Many immortal commands (such as 'force' and 'summon') require that in
     # order to perform them, the actor be a sufficiently higher level than the
     # victim. This is a sort of "chain of command" security measure and this is
@@ -108,17 +112,22 @@ module Realm
 
     ###########################################################################
     def newbie?
-      @level < NEWBIE
+      @level < NOVICE
     end
 
     ###########################################################################
-    %w(HERO LORD DUKE KING DEMIGOD GOD CREATOR).each do |lvl|
-      define_method :"#{lvl.downcase}?", Proc.new { @level >= const_get(lvl) }
+    (LEVELS - %w(NEWBIE)).each do |lvl|
+      define_method :"#{lvl.downcase}?", Proc.new { @level >= Realm::Being.const_get(lvl) }
     end
 
     ###########################################################################
     def has_seniority?(victim)
       victim.level < @level - IMMORTAL_SENIORITY
+    end
+
+    ###########################################################################
+    def level_label
+      LEVELS.reverse.find { |lvl| @level >= Realm::Being.const_get(lvl) }.downcase
     end
 
     ###########################################################################
