@@ -73,6 +73,8 @@ en:
   commands:
     _brief: "Display a list of available commands."
     actor: "The following commands are available:"
+  emote:
+    _brief: "Perform some custom in-character action."
   help:
     _brief: "Display details and usage of a command."
     err_no_desc: "No additional information available."
