@@ -12,11 +12,15 @@ module Realm
     ###########################################################################
     def initialize(id = nil, props = {})
       super
+    end
+
+    ###########################################################################
+    after_initialize -> {
       @zone   = nil
       @coords = Vector[0, 0, 0]
       Realm::Exit::DIRECTIONS.keys.each { |exit| send "#{exit}=", nil }
       CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
-    end
+    }
 
     ###########################################################################
     on_hashify -> {

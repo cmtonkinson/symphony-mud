@@ -8,8 +8,12 @@ module Realm
     ###########################################################################
     def initialize(id = nil, props = {})
       super
-      CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     end
+
+    ###########################################################################
+    after_initialize -> {
+      CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
+    }
 
     ###########################################################################
     on_hashify -> {
