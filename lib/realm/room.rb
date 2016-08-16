@@ -60,5 +60,10 @@ module Realm
       end
     end
 
+    ###########################################################################
+    def find_being(name)
+      beings.values.find { |b| b.name.index(name) == 0 }
+    end
+
   end
 end

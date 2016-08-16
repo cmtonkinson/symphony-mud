@@ -42,6 +42,21 @@ define :disconnect do
 end
 
 ###############################################################################
+define :force do
+###############################################################################
+  usage({victim: :string}, :rest)
+  exec do
+    target = room.find_being victim
+    being.puts t "err_nobody" and next if target.nil?
+    being.puts t "err_self" and next if target == being
+
+    being.puts t("actor"), target
+    target.puts t("victim"), being
+    target.cmd rest
+  end
+end
+
+###############################################################################
 define :goto do
 ###############################################################################
   level Realm::Being::DEMIGOD

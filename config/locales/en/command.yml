@@ -25,6 +25,12 @@ en:
     err_nobody: "They're not in this realm."
     err_self: "You can't disconnect yourself."
     victim: "You have been unceremoniously disconnected by $being."
+  force:
+    _brief: "Make another being take some action... whether they like it or not."
+    err_nobody: "You don't see them here."
+    err_self: "Forcing yourself? That would be too meta."
+    actor: "You force $being into action."
+    victim: "You are forced into action by $being."
   goto:
     _brief: "Transport yourself to the given room."
     actor: "You squeeze through the dimensions to appear in {W$room{x."
