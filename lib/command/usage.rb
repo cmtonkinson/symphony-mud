@@ -29,6 +29,8 @@ module Command
         substr = argument.scan remaining
         return nil if substr == false
 
+        return nil if argument.type == :literal && substr != argument.name
+
         context[argument.name] = argument.cast substr
         remaining.slice! 0, substr.length
         remaining.strip!

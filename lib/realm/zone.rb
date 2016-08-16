@@ -1,7 +1,9 @@
 module Realm
   class Zone < Objekt
 
-    CONTAINERS = %w(rooms exits)
+    include Realm
+
+    CONTAINERS = %w(rooms exits items)
 
     CONTAINERS.each { |c| attr_accessor c.to_sym }
 
@@ -20,18 +22,19 @@ module Realm
       {
         rooms: @rooms.values.map(&:hashify),
         exits: @exits.values.map(&:hashify),
+        items: @items.values.map(&:hashify),
       }
     }
 
     ###########################################################################
     on_dehashify -> hash {
-      hash[:rooms].each { |hash| @rooms << Realm::Room.dehashify(hash) }
+      hash[:rooms].each { |hash| @rooms.insert Realm::Room.dehashify(hash) }
 
       hash[:exits].each do |hash|
         exit = Realm::Exit.dehashify hash
 
         # Add the Exit to the Zone's collection.
-        @exits << exit
+        @exits.insert exit
 
         Realm::Exit::DIRECTIONS.keys.each do |dir|
           # Most links will be nil.
@@ -41,6 +44,8 @@ module Realm
           room.send "#{Realm::Exit::DIRECTIONS[dir][:opposite]}=", exit
         end
       end
+
+      hash[:items].each { |hash| @items.insert Realm::Item.dehashify(hash) }
     }
 
     ###########################################################################

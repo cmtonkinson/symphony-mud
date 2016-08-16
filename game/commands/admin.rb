@@ -77,6 +77,23 @@ define :goto do
 end
 
 ###############################################################################
+define :items do
+###############################################################################
+  level Realm::Being::DEMIGOD
+  usage
+  usage({id: :int})
+  exec do
+    zone = id.nil? ? being.room.zone : $world.zones.values.find { |z| z.rid == id }
+    being.puts t "err_nowhere" and next if zone.nil?
+
+    being.puts t("title"), zone
+    zone.items.each do |id,item|
+      being.puts t("line"), item, item
+    end
+  end
+end
+
+###############################################################################
 define :jobs do
 ###############################################################################
   level Realm::Being::CREATOR

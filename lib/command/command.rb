@@ -57,7 +57,7 @@ module Command
     # provide a convenience method to invoke I18n#t, prefix the command name
     # and pass through the optional arguments.
     def translate(str, *args)
-      I18n.t "#{get_name}.#{str}", *args
+      I18n.t "#{get_group}.#{get_name}.#{str}", *args
     end
     alias_method :t, :translate
 
@@ -138,7 +138,7 @@ module Command
       define_method :initialize do
         method(:setup).call &init_block
         method(:name).call cmd_name.to_s
-        method(:brief).call I18n.t("#{cmd_name}._brief")
+        method(:brief).call I18n.t("#{get_group}.#{cmd_name}._brief")
       end
     end
     ::Command.const_set class_name, class_definition

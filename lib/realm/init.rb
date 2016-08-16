@@ -1,3 +1,5 @@
+require_relative "realm"
+
 require_relative "enums"
 
 require_relative "configuration"

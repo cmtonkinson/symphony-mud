@@ -42,5 +42,12 @@ module Realm
       new_room
     end
 
+    ###########################################################################
+    def self.create_item(zone)
+      new_item = Item.new nil, rid: zone.next_objekt_rid(Realm::Item)
+      zone.insert new_item
+      new_item
+    end
+
   end
 end
