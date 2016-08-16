@@ -2,19 +2,20 @@ module Command
 
   class Operator
 
-    attr_reader :command_set
+    attr_reader :command_set, :set_name
 
     ###########################################################################
     def initialize(user, command_set_name = :global)
       @last_input  = "" # TODO - implement this
       @user        = user
       @command     = nil
-      @command_set = ::Command.configuration.command_sets[command_set_name]
+      @set_name    = command_set_name
+      @command_set = ::Command.configuration.command_sets[@set_name]
     end
 
     ###########################################################################
     def handle(input)
-      Symphony.logger.absurd "Command::Operator#handle('#{input}')"
+      Symphony.logger.absurd "Operator handling '#{input}' in :#{set_name}"
       cmd_name, _, rest = input.partition " "
       being             = @user.avatar
 
@@ -27,10 +28,10 @@ module Command
       end
 
       # Couldn't find a Command by exact name or prefix match.
-      being.puts I18n.t("command.operator.err_not_found") and return if @command.nil?
+      return false if @command.nil?
 
       # We found a Command; can we invoke it?
-      being.puts I18n.t("command.operator.err_low_level") and return if @command.get_level > being.level
+      being.puts I18n.t("command.operator.err_low_level") and return true if @command.get_level > being.level
 
       # We found a Command, so let's see if the usage is correct.
       context = parse rest
@@ -41,10 +42,11 @@ module Command
       if context.nil?
         being.puts I18n.t("command.operator.err_invocation")
         handle "help #{cmd_name}"
-        return
+        return true
       end
 
       @command.perform being, context, rest
+      return true
     end
 
     ###########################################################################

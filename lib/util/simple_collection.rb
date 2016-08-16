@@ -29,6 +29,10 @@ module Util
       @array.empty?
     end
 
+    def each(&block)
+      @array.each &block
+    end
+
   end
 
   ##################################################################################################

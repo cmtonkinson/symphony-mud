@@ -53,7 +53,7 @@ module Base
       clients.each do |client|
         input = client.recv
         next if input.nil?
-        client.user.operators.peek.handle input
+        client.user.handle input
       end
     end
 

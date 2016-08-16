@@ -39,6 +39,12 @@ module Base
       end
     end
 
+    ###########################################################################
+    def handle(input)
+      operators.each { |op| return if op.handle(input) == true }
+      puts I18n.t "command.operator.err_not_found"
+    end
+
   end
 
 end
