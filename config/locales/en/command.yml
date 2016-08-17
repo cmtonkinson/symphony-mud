@@ -95,7 +95,7 @@ en:
       reset: "\nTo reset to the default color, the code is '{{x':\n\n"
     commands:
       _brief: "Display a list of available commands."
-      actor: "The following commands are available:"
+      actor: "\nThe following commands are available for {y$string{x:"
     emote:
       _brief: "Perform some custom in-character action."
     help:
@@ -140,3 +140,9 @@ en:
     exit:
       _brief: "Leave item editing mode."
       actor: "You have left item editing mode."
+    level:
+      _brief: "Change the level of the item."
+      actor: "Item level changed to '{y$string{x'."
+    name:
+      _brief: "Change the name of the item."
+      actor: "Item name changed to '{y$string{x'."

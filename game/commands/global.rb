@@ -38,18 +38,19 @@ define :commands do
 ###############################################################################
   usage
   exec do
-    command_set       = being.user.operators.peek.command_set
-    commands_by_level = command_set.group_by &:get_level
+    being.user.operators.each do |operator|
+      command_set       = operator.command_set
+      commands_by_level = command_set.group_by &:get_level
 
-    being.puts t("actor")
+      being.puts t("actor"), operator.set_name
+      Realm::Being::LEVELS.reverse.each do |level_name|
+        level_num = Realm::Being.const_get level_name
+        next unless being.level >= level_num
+        next unless commands_by_level.key? level_num
 
-    Realm::Being::LEVELS.reverse.each do |level_name|
-      level_num = Realm::Being.const_get level_name
-      next unless being.level >= level_num
-      next unless commands_by_level.key? level_num
-
-      being.puts "\n--== {Y#{level_name}{x (#{commands_by_level[level_num].length} commands) ==--"
-      being.puts commands_by_level[level_num].map(&:get_name).join ", "
+        being.puts "\n  --== {Y#{level_name}{x (#{commands_by_level[level_num].length} commands) ==--"
+        being.puts "  " + commands_by_level[level_num].map(&:get_name).join(", ")
+      end
     end
   end
 end
