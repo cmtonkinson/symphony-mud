@@ -6,5 +6,7 @@ before_script:
   - bundle install -j $(nproc)
 
 rspec:
+  tags:
+    - docker
   script:
-  - rspec --format=documentation --color
+    - rspec --format=documentation --color
