@@ -1,3 +1,5 @@
+/.bundle
+/commands.txt
 /config.yml
 /coverage
 /data/accounts.yml
