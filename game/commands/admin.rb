@@ -87,7 +87,7 @@ define :items do
     being.puts t "err_nowhere" and next if zone.nil?
 
     being.puts t("title"), zone
-    zone.items.each do |id,item|
+    zone.items.each do |_, item|
       being.puts t("line"), item, item
     end
   end

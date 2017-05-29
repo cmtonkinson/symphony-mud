@@ -90,7 +90,7 @@ module Util
 
     ###########################################################################
     def self.prepend_article(arg)
-      name       = arg.name
+      name       = arg.name.clone
       first_char = name[0]
 
       # Don't modify Avatar names.
@@ -120,3 +120,4 @@ module Util
   end
 
 end
+
