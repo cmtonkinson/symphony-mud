@@ -36,7 +36,9 @@ describe Realm::Builder do
     before :each do
       @zone   = Zone.new
       @room_a = Builder.create_room @zone
-      @room_b = Builder.create_linked_room @room_a, "east"
+      @room_b = Builder.create_room @zone
+
+      Builder.link_existing_rooms @room_a, @room_b, "east"
     end
 
     it "sets both exits in opposing directions" do
