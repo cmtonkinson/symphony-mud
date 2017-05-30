@@ -15,7 +15,7 @@ module Command
 
     ###########################################################################
     def handle(input)
-      Symphony.logger.absurd "Operator handling '#{input}' in :#{set_name}"
+      Symphony.logger.debug "Operator handling '#{input}' in :#{set_name}"
       cmd_name, _, rest = input.partition " "
       being             = @user.avatar
 
@@ -52,7 +52,7 @@ module Command
     ###########################################################################
     def parse(input_string)
       @command.usages.each do |usage|
-        Symphony.logger.absurd "  Considering Usage #{usage}"
+        Symphony.logger.debug "  Considering Usage #{usage}"
         context = usage.try_parse input_string
         return context if !context.nil?
       end

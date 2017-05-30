@@ -33,7 +33,7 @@ CONFIGURATION = [
     placeholder: "LEVEL",
     default: "info",
     description: "Change the system logging verbosity",
-    callback: Proc.new { |value| Logger.configuration.verbosity = value.to_sym }
+    callback: Proc.new { |value| Symphony.logger.level = value.to_sym }
   },
   {
     short: "s",

@@ -22,6 +22,8 @@ module Base
       "bright cyan":    {code: "C", escape: "\e[36m#{BOLD}"},
     }
 
+    PATTERN = /\{[WwrRgGyYbBmMcCx{]/
+
     def self.escape_map
       @escape_map ||= {
         "{x" => RESET,
@@ -32,9 +34,14 @@ module Base
     end
 
     def self.colorize(source)
-      source.gsub /\{[WwrRgGyYbBmMcCx{]/, escape_map
+      source.gsub PATTERN, escape_map
+    end
+
+    def self.uncolor(source)
+      source.gsub PATTERN, ''
     end
 
   end
 
 end
+

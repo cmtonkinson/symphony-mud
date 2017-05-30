@@ -1,4 +1,8 @@
 #!/usr/bin/env ruby
-BINARY_NAME = __FILE__
+
+require "pathname"
+BINARY_NAME = Pathname.new(__FILE__).basename
+
 require_relative "config/bootstrap"
 require_relative "config/dispatch"
+

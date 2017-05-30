@@ -16,7 +16,7 @@ module InputSequence
 
     ###########################################################################
     def handle(input)
-      Symphony.logger.absurd "#{self.class.name} in state '#{aasm.current_state}' handling '#{input}'"
+      Symphony.logger.debug "#{self.class.name} in state '#{aasm.current_state}' handling '#{input}'"
       send "#{aasm.current_state}_handler", input
     end
 
@@ -48,7 +48,7 @@ module InputSequence
       str << "from '#{aasm.from_state}' " if aasm.from_state != nil
       str << "to '#{aasm.to_state}' "
       str << "(on '#{aasm.current_event}')"
-      Symphony.logger.absurd str
+      Symphony.logger.debug str
     end
 
   end
