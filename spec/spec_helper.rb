@@ -18,7 +18,7 @@ Network.configure do |config|
   config.listen_port = 6501
 end
 
-Loggr.configuration.verbosity = :silent
+Symphony.logger = Logger.new("/dev/null")
 
 ###############################################################################
 # Load our custom helpers.
