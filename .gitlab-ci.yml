@@ -10,3 +10,5 @@ rspec:
     - docker
   script:
     - rspec --format=documentation --color
+  coverage: '/\(\d+.\d+\%\) covered/'
+
