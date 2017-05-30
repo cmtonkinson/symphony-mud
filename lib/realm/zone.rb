@@ -73,10 +73,10 @@ module Realm
         # bidirectional means that we only have to examine the North and East
         # direction of each Exit and we'll have accounted for all intrazone
         # links.
-        exit_x = adjusted_x
-        exit_y = adjusted_y
         marker = ""
         %i(north east).each do |direction|
+          exit_x = adjusted_x
+          exit_y = adjusted_y
           next if room.send(direction).nil?
           case direction
           when :north then exit_y += 1
