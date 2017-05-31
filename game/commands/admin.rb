@@ -110,6 +110,22 @@ define :jobs do
 end
 
 ###############################################################################
+define :load do
+###############################################################################
+  usage("item", {rid: :int})
+  exec do
+    if item == "item"
+      model = being.room.zone.find_by_rid Realm::Item, rid
+      being.puts t "err_nothing" and next if model.nil?
+
+      copy = model.clone
+      being.items << copy
+      being.puts t("actor"), copy
+    end
+  end
+end
+
+###############################################################################
 define :pry do
 ###############################################################################
   level Realm::Being::CREATOR

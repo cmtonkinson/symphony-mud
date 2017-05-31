@@ -13,4 +13,16 @@
   :zone: 00000000-0000-4000-a000-000000000000
   :coords: '0,0,0'
 :exits: []
-:items: []
+:items:
+- :objekt:
+    :class: Realm::Item
+    :id: ceeda618-c5d5-4522-b023-ad24b74ddee9
+    :rid: 1
+    :name: rusty broadsword
+  :level: 120
+- :objekt:
+    :class: Realm::Item
+    :id: 03dd72be-ec0e-4479-a660-5303539d0305
+    :rid: 2
+    :name: iPhone
+  :level: 10

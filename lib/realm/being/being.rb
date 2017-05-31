@@ -1,7 +1,11 @@
 module Realm
   class Being < Objekt
 
+    CONTAINERS = %w(inventory)
+
     attr_accessor :room, :gender
+
+    CONTAINERS.each { |cont| attr_accessor cont }
 
     ###########################################################################
     def initialize(id = nil, props = {})
@@ -11,10 +15,16 @@ module Realm
     end
 
     ###########################################################################
+    after_initialize -> {
+      CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
+    }
+
+    ###########################################################################
     on_hashify -> {
       hash = {
         room: @room.id,
         gender: @gender,
+        inventory: @inventory.values.map(&:hashify),
       }
 
       {being: hash}
@@ -27,6 +37,8 @@ module Realm
       @room.insert self
 
       @gender = hash[:gender]
+
+      hash[:inventory].each { |hash| @inventory.insert Realm::Item.dehashify(hash) }
     }
 
     ###########################################################################

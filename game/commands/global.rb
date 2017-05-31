@@ -91,6 +91,18 @@ define :help do
 end
 
 ###############################################################################
+define :inventory do
+###############################################################################
+  usage
+  exec do
+    being.puts t("title")
+    being.inventory.values.each do |item|
+      being.puts t("item"), item
+    end
+  end
+end
+
+###############################################################################
 define :look do
 ###############################################################################
   usage
@@ -191,7 +203,7 @@ define :summary do
       "height", being.creativity.current, being.slash.current, being.tnl,
       "weight", being.charisma.current, being.pierce.current, 0,
       "totem", being.luck.current, being.exotic.current,
-      0, 0, 0, 0,
+      being.inventory.length, 0, 0, 0,
       0, 0, 0
     ]
   end
@@ -226,7 +238,7 @@ define :zones do
     being.puts t("title")
     $world.zones.each do |id,zone|
       next if zone.rid == 1 && !being.demigod?
-      being.puts t("line"), zone, zone, zone.rooms.length
+      being.puts t("line"), zone, zone, zone.rooms.length, zone.items.length
     end
   end
 end

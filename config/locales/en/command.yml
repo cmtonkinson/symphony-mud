@@ -59,6 +59,10 @@ en:
       batch_size: "The schedule runs {Y%u{x jobs at a time."
       next_jobs: "\nThe next {Y%u{x jobs:"
       queue_length: "There are {Y%u{x jobs in the queue."
+    load:
+      _brief: "Create a new object from the current zone by rid"
+      actor: "You create {W$item{x."
+      err_nothing: "No item by that id in this zone."
     pry:
       _brief: "Blocks the server process by executing `binding.pry` for live debugging"
     reboot:
@@ -104,6 +108,10 @@ en:
       _brief: "Display details and usage of a command."
       err_no_desc: "No additional information available."
       err_not_found: "No help topic for '$string'."
+    inventory:
+      _brief: "List the items in your inventory."
+      item: "  $item"
+      title: "You are currently holding:"
     look:
       _brief: "Examine your surroundings."
       exit_list: "\nExits are: {R$string{x"
@@ -134,7 +142,7 @@ en:
       actor: "Your name is {W$being{x"
     zones:
       _brief: "List the different zones in the Realm."
-      line: "[{C$rid{x] {m$zone{x ($string rooms)"
+      line: "[{C$rid{x] {M$zone{x ($string rooms, $string items)"
       title: "Zones in the realm:\n\n"
 
   #############################################################################
