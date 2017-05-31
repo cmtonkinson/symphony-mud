@@ -98,5 +98,10 @@ module Realm
       {name: @name, id: @id, rid: @rid}
     end
 
+    ###########################################################################
+    def id_str
+      I18n.translate "objekt.identify", self.identify
+    end
+
   end
 end

@@ -84,15 +84,17 @@ module InputSequence
             avatar.room.insert avatar
             avatar.vivify
             avatar.room.puts I18n.t("universe.room_announce_newbie"), avatar
-            Symphony.logger.info "New Avatar '#{avatar.name}' #{avatar.id}"
+            Symphony.logger.info "New Avatar #{avatar.id_str}"
             Realm::Scribe.save avatar
+            avatar.run_hook :on_first_login
           when :existing
             user.puts "Welcome back!"
             avatar = Realm::Scribe.load Realm::Avatar, @context.avatar_id
             user.bind_avatar avatar
             avatar.room.puts I18n.t("universe.room_announce_return"), avatar
             avatar.vivify
-            Symphony.logger.info "Avatar '#{avatar.name}' #{avatar.id} logged in"
+            Symphony.logger.info "Avatar #{avatar.id_str} logged in"
+            avatar.run_hook :on_login
           else
             message = "#{self.class.name} incomplete transition to :complete - invalid @context.account_type = '#{@context.account_type}'"
             Symphony.logger.fatal message

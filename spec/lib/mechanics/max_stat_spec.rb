@@ -39,4 +39,20 @@ describe MaxStat do
 
   end
 
+  #############################################################################
+  describe "#restore" do
+
+    it "should set the current value to the defined max" do
+      max = 337
+      val = 89
+      stat = MaxStat.new max 
+      stat.current = val
+
+      expect(stat.current).to eq val
+      stat.restore
+      expect(stat.current).to eq max
+    end
+
+  end
+
 end

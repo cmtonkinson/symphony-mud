@@ -158,18 +158,18 @@ module Realm
     end
 
     ###########################################################################
-    def award_experience(experience)
+    def award_experience(exp_gained)
       return if level >= HERO
 
-      puts "You gain {Y%d{x experience points!" % experience
-      @exp += experience
+      puts "You gain {Y%d{x experience points!" % exp_gained
+      @exp = exp + exp_gained
 
-      while experience > 0
-        if experience < tnl
-          tnl -= experience
+      while exp_gained > 0
+        if exp_gained < tnl
+          @tnl = tnl - exp_gained
           break
         else
-          experience -= tnl
+          exp_gained = exp_gained - tnl
           gain_level
           return if level >= HERO
         end
@@ -178,23 +178,25 @@ module Realm
 
     ###########################################################################
     def gain_level
-      # Adjust wellness stats
+      # Calculate gains
       new_level    = level + 1
       new_tnl      = 1
       health_boost = 1
       mana_boost   = 1
       trains_boost = 1
-      # Clear TNL for new heros
-      tnl = level < HERO ? new_tnl : 0
+      # Apply gains
+      @level = new_level
+      @tnl   = hero? ? 0 : new_tnl
+      health.max_stat.baseline += health_boost
       # heal
       heal
       # notify
       puts "\n\nCONGRATULATIONS! You grow to level {G%u{x!" % level
-      puts "You gain {G%u{X health points." % health_boost
-      puts "You gain {C%u{X mana points." % mana_boost
-      puts "You gain {B%u{X training points." % trains_boost
+      puts "You gain {G%u{x health points." % health_boost
+      puts "You gain {C%u{x mana points." % mana_boost
+      puts "You gain {B%u{x training points." % trains_boost
       puts "You have {Y%u{x experience to your next level." % tnl if level < HERO
-      Symphony.logger.verbose "%s has grown to level %u" % [name, level]
+      Symphony.logger.debug "%s has grown to level %u" % [id_str, level]
     end
 
     ###########################################################################
