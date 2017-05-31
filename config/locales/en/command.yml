@@ -59,9 +59,11 @@ en:
       batch_size: "The schedule runs {Y%u{x jobs at a time."
       next_jobs: "\nThe next {Y%u{x jobs:"
       queue_length: "There are {Y%u{x jobs in the queue."
+    pry:
+      _brief: "Blocks the server process by executing `binding.pry` for live debugging"
     reboot:
-       _brief: "Save the World state, reload the server process, and restore connections."
-       actor: "Hold on to your butts..."
+      _brief: "Save the World state, reload the server process, and restore connections."
+      actor: "Hold on to your butts..."
     rooms:
       _brief: "List the Rooms in the given Zone (or the current Zone if unspecified)"
       err_nowhere: "Couldn't find that Zone."

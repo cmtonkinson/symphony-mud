@@ -1,0 +1,5 @@
+Execute `binding.pry`. Useful when you have a shell session connected to
+the running instance so you can debug the server from the inside out in a
+REPL with pure Ruby.
+
+See https://github.com/pry/pry
