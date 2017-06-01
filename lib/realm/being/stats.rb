@@ -196,7 +196,7 @@ module Realm
       puts "You gain {C%u{x mana points." % mana_boost
       puts "You gain {B%u{x training points." % trains_boost
       puts "You have {Y%u{x experience to your next level." % tnl if level < HERO
-      Symphony.logger.debug "%s has grown to level %u" % [id_str, level]
+      Symphony.logger.debug "%s has grown to level %u" % [fqid_str, level]
     end
 
     ###########################################################################

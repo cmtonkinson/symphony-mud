@@ -15,6 +15,36 @@ describe Objekt do
   end
 
   #############################################################################
+  describe "#fully_qualified_indentifier" do
+
+    before :each do
+      @sut = TestObj.new
+      @fqid = @sut.fully_qualified_identifier
+    end
+
+    it "should return a class name (without module)" do
+      expect(@fqid).to have_key :klass
+      expect(@fqid[:klass]).to eq @sut.class.name.split(":").last
+    end
+
+    it "should return a name" do
+      expect(@fqid).to have_key :name
+      expect(@fqid[:name]).to eq @sut.name
+    end
+
+    it "should return a rid" do
+      expect(@fqid).to have_key :rid
+      expect(@fqid[:rid]).to eq @sut.rid
+    end
+
+    it "should return an id" do
+      expect(@fqid).to have_key :id
+      expect(@fqid[:id]).to eq @sut.id
+    end
+
+  end
+
+  #############################################################################
   describe "#insert" do
 
     before :each do

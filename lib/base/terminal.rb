@@ -22,7 +22,11 @@ module Base
       "bright cyan":    {code: "C", escape: "\e[36m#{BOLD}"},
     }
 
-    PATTERN = /\{[WwrRgGyYbBmMcCx{]/
+    # The negative lookbehind for % is so that this class' behavior doesn't
+    # interefere with I18n interpolation syntax (which is `%{varname}`)
+    # otherwise we could end up accidentally sending a string like `%arname}`
+    # to `I18n#t`.
+    PATTERN = /(?<!%)\{[WwrRgGyYbBmMcCx{]/
 
     def self.escape_map
       @escape_map ||= {

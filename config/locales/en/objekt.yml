@@ -1,3 +1,3 @@
 en:
   objekt:
-    identify: "{W%{name}{x ({C%{rid}{x:{c%{id}{x)"
+    identify: "{y%{klass}{x:{W%{name}{x:{C%{rid}{x:{c%{id}{x"

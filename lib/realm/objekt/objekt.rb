@@ -94,14 +94,16 @@ module Realm
     end
 
     ###########################################################################
-    def identify
-      {name: @name, id: @id, rid: @rid}
+    def fully_qualified_identifier
+      {klass: self.class.name.split('::').last, name: @name, id: @id, rid: @rid}
     end
+    alias_method :fqid, :fully_qualified_identifier
 
     ###########################################################################
-    def id_str
-      I18n.translate "objekt.identify", self.identify
+    def fully_qualified_identifier_string
+      I18n.translate "objekt.identify", self.fully_qualified_identifier
     end
+    alias_method :fqid_str, :fully_qualified_identifier_string
 
   end
 end
