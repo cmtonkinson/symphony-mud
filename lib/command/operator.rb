@@ -15,9 +15,10 @@ module Command
 
     ###########################################################################
     def handle(input)
-      Symphony.logger.debug "Operator handling '#{input}' in :#{set_name}"
       cmd_name, _, rest = input.partition " "
       being             = @user.avatar
+
+      Symphony.logger.debug "Operator handling '#{input}' in :#{set_name} for #{being.fqid_str}"
 
       # Try to find a Command by exact name.
       @command = @command_set.find { |c| c.get_name == cmd_name }
