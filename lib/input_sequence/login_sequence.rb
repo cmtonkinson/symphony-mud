@@ -88,19 +88,25 @@ module InputSequence
             Realm::Scribe.save avatar
             avatar.run_hook :on_first_login
           when :existing
-            user.puts "Welcome back!"
             avatar = Realm::Scribe.load Realm::Avatar, @context.avatar_id
-            user.bind_avatar avatar
-            avatar.room.puts I18n.t("universe.room_announce_return"), avatar
-            avatar.vivify
-            Symphony.logger.info "#{avatar.fqid_str} logged in"
-            avatar.run_hook :on_login
+            if avatar
+              user.puts "Welcome back!"
+              user.bind_avatar avatar
+              avatar.room.puts I18n.t("universe.room_announce_return"), avatar
+              avatar.vivify
+              Symphony.logger.info "#{avatar.fqid_str} logged in"
+              avatar.run_hook :on_login
+            else
+              user.puts "{RSomething went wrong loading your save data; please contact an administrator"
+              Symphony.logger.error "Failed to complete login of existing avatar #{@context.avatar_id}"
+              reject
+            end
           else
             message = "#{self.class.name} incomplete transition to :complete - invalid @context.account_type = '#{@context.account_type}'"
             Symphony.logger.fatal message
             raise RuntimeError.new message
           end
-          user.avatar.cmd "look"
+          user.avatar.cmd "look" if avatar
           finish
         end
       end

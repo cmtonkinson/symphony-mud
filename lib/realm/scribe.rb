@@ -13,7 +13,13 @@ module Realm
     ###########################################################################
     def self.load(klass, objekt_id)
       File.open pathname(klass, objekt_id), "r" do |fp|
-        klass.deserialize fp.read
+        begin
+          klass.deserialize fp.read
+        rescue NoMethodError => e
+          Symphony.logger.error "Error while loading #{klass}:#{objekt_id}"
+          Symphony.logger.debug "  error at #{e.backtrace[0]}"
+          return false
+        end
       end
     end
 
