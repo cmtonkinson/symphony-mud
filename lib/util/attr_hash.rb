@@ -26,6 +26,22 @@ module Util
       obj.send @attribute
     end
 
+    ###########################################################################
+    def locate(input)
+      ids = input.match Command::ARGUMENT_TYPES[:id][:pattern]
+      puts Command::ARGUMENT_TYPES[:id][:pattern].inspect
+      puts "input: " + input.inspect
+      puts "ids: " + ids.inspect
+
+      f = Command::ARGUMENT_TYPES[:id][:cast_func]
+
+      i = ids.map { |id| f.call id[0] }
+        .map { |obj| obj.name }
+        .reduce :+
+
+      puts "realsies: #{i}"
+    end
+
   end
 
 end

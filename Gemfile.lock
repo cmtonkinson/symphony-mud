@@ -27,6 +27,8 @@ GEM
       rspec-core (~> 3.6.0)
       rspec-expectations (~> 3.6.0)
       rspec-mocks (~> 3.6.0)
+    rspec-collection_matchers (1.1.3)
+      rspec-expectations (>= 2.99.0.beta1)
     rspec-core (3.6.0)
       rspec-support (~> 3.6.0)
     rspec-expectations (3.6.0)
@@ -61,6 +63,7 @@ DEPENDENCIES
   pry
   rake
   rspec
+  rspec-collection_matchers
   ruby-enum
   simplecov
 

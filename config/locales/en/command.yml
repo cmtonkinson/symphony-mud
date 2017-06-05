@@ -102,6 +102,10 @@ en:
     commands:
       _brief: "Display a list of available commands."
       actor: "\nThe following commands are available for {y$string{x:"
+    drop:
+      _brief: "Move items from your inventory to the current room."
+      actor: "You drop $item."
+      other: "$being drops $item."
     emote:
       _brief: "Perform some custom in-character action."
     help:

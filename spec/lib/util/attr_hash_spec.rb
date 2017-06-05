@@ -78,4 +78,88 @@ describe Util::AttrHash do
 
   end
 
+  #############################################################################
+  describe "#locate" do
+
+    before :each do
+      @h = AttrHash.new
+      ["sword", "sword", "sword", "crystal", "mushroom", "small cup", "mutton"].each_with_index do |name, i|
+        @h.insert TestItem.new nil, name: name, rid: i
+      end
+    end
+
+    describe "in the positive case" do
+
+      it "should find a single Objekt by exact name" do
+        found = @h.locate "crystal"
+        expect(found).to be_an Array
+        expect(found).to have_exactly(1).items
+        expect(found[0].name).to eq "crystal"
+
+        found = @h.locate "'mutton'"
+        expect(found).to be_an Array
+        expect(found).to have_exactly(1).items
+        expect(found[0].name).to eq "mutton"
+      end
+
+      it "should find all Objekts by exact name" do
+        found = @h.locate "sword"
+        expect(found).to have_exactly(3).items
+        expect(found.map &:name).to contain_exactly *%w(sword sword sword)
+      end
+
+      it "should find all Objekts by name prefix" do
+        found = @h.locate "mu"
+        expect(found).to have_exactly(2).items
+        expect(found.map &:name).to contain_exactly *%w(mushroom mutton)
+      end
+
+      it "should find no more than N Objekts by quantity" do
+        found = @h.locate "sword*2"
+        expect(found).to have_exactly(2).items
+        expect(found.map &:name).to contain_exactly *%w(sword sword)
+      end
+
+      it "should find an Objekt by index" do
+        found = @h.locate "sword#2"
+        expect(found).to have_exactly(1).items
+        expect(found[0].rid).to eq 1
+      end
+
+      it "should find Objekts by multi-word name" do
+        found = @h.locate "'small cup'"
+        expect(found).to have_exactly(1).items
+        expect(found[0].name).to eq "small cup"
+      end
+
+      it "should find multiple Objekts by multiple names" do
+        found = @h.locate "sword mushroom 'small cup'"
+        expect(found).to have_exactly(3).items
+        expect(found.map &:name).to contain_exactly ["sward", "mushroom", "small cup"]
+      end
+
+    end
+
+    describe "in the negative case" do
+
+      it "should not return more Objekts than are available" do
+        found = @h.locate "s*100"
+        expect(found).to have_exactly(4).items
+      end
+
+      it "should return empty when the index exceeds the number of matching names" do
+        found = @h.locate "sword#4"
+        expect(found).to have_exactly(0).items
+      end
+
+      it "should return empty when there is no prefix match" do
+        found = @h.locate "nadda"
+        expect(found).to have_exactly(0).items
+      end
+
+    end
+
+  end
+
 end
+

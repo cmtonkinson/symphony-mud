@@ -25,6 +25,7 @@ group :test do
   gem "fakefs", require: "fakefs/safe"
   gem "fuubar"
   gem "rspec"
+  gem "rspec-collection_matchers"
   gem "simplecov"
 end
 

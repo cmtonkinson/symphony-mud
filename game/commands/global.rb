@@ -56,6 +56,22 @@ define :commands do
 end
 
 ###############################################################################
+define :drop do
+###############################################################################
+  usage(items: :id)
+  exec do
+    targets = being.inventory.locate items.name
+
+    items.each do |item|
+      being.inventory.remove item
+      room.inventory.add item
+      being.puts t("actor"), item
+      room.puts t("other"), item
+    end
+  end
+end
+
+###############################################################################
 define :emote do
 ###############################################################################
   usage :rest
