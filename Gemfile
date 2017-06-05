@@ -12,6 +12,7 @@ group :app do
   gem "i18n"
   gem "pqueue"
   gem "ruby-enum"
+  gem "text"
 end
 
 group :development, :test do

@@ -60,13 +60,13 @@ define :drop do
 ###############################################################################
   usage(items: :id)
   exec do
-    targets = being.inventory.locate items.name
+    targets = being.inventory.locate items
+    being.puts t("err_not_found") and next if targets.empty?
 
-    items.each do |item|
-      being.inventory.remove item
-      room.inventory.add item
+    targets.each do |item|
+      being.inventory.transfer item, room.inventory
       being.puts t("actor"), item
-      room.puts t("other"), item
+      room.puts t("other"), being, item, exclude: being
     end
   end
 end
@@ -77,6 +77,22 @@ define :emote do
   usage :rest
   exec do
     room.puts rest.prepend("$being "), being
+  end
+end
+
+###############################################################################
+define :get do
+###############################################################################
+  usage items: :id
+  exec do
+    targets = room.inventory.locate items
+    being.puts t("err_not_found") and next if targets.empty?
+
+    targets.each do |item|
+      room.inventory.transfer item, being.inventory
+      being.puts t("actor"), item
+      room.puts t("other"), being, item, exclude: being
+    end
   end
 end
 
@@ -111,10 +127,7 @@ define :inventory do
 ###############################################################################
   usage
   exec do
-    being.puts t("title")
-    being.inventory.values.each do |item|
-      being.puts t("item"), item
-    end
+    being.puts t("title"), being.inventory.display_contents
   end
 end
 
@@ -133,6 +146,8 @@ define :look do
     being.puts t("exit_list"), exits
 
     being.other_beings.each { |b| being.puts t("here"), b }
+
+    being.puts t("item_list"), room.inventory.display_contents
   end
 end
 

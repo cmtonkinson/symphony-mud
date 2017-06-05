@@ -83,8 +83,8 @@ describe Util::AttrHash do
 
     before :each do
       @h = AttrHash.new
-      ["sword", "sword", "sword", "crystal", "mushroom", "small cup", "mutton"].each_with_index do |name, i|
-        @h.insert TestItem.new nil, name: name, rid: i
+      ["sword", "sword", "crystal", "sword", "mushroom", "small cup", "mutton"].each_with_index do |name, i|
+        @h.insert Realm::TestItem.new nil, name: name, rid: i
       end
     end
 
@@ -103,15 +103,15 @@ describe Util::AttrHash do
       end
 
       it "should find all Objekts by exact name" do
-        found = @h.locate "sword"
+        found = @h.locate "sword*all"
         expect(found).to have_exactly(3).items
         expect(found.map &:name).to contain_exactly *%w(sword sword sword)
       end
 
-      it "should find all Objekts by name prefix" do
+      it "should find an Objekt by name prefix" do
         found = @h.locate "mu"
-        expect(found).to have_exactly(2).items
-        expect(found.map &:name).to contain_exactly *%w(mushroom mutton)
+        expect(found).to have_exactly(1).items
+        expect(found[0].name).to eq "mushroom"
       end
 
       it "should find no more than N Objekts by quantity" do
@@ -132,11 +132,12 @@ describe Util::AttrHash do
         expect(found[0].name).to eq "small cup"
       end
 
-      it "should find multiple Objekts by multiple names" do
-        found = @h.locate "sword mushroom 'small cup'"
-        expect(found).to have_exactly(3).items
-        expect(found.map &:name).to contain_exactly ["sward", "mushroom", "small cup"]
-      end
+      # TODO: nice to have
+      #it "should find multiple Objekts by multiple names" do
+      #  found = @h.locate "sword mushroom 'small cup'"
+      #  expect(found).to have_exactly(3).items
+      #  expect(found.map &:name).to contain_exactly ["sward", "mushroom", "small cup"]
+      #end
 
     end
 

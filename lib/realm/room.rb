@@ -1,7 +1,7 @@
 module Realm
   class Room < Objekt
 
-    CONTAINERS = %w(beings)
+    CONTAINERS = %w(beings inventory)
 
     attr_accessor :zone, :items, :npcs
     attr_accessor :coords

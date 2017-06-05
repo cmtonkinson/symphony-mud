@@ -4,7 +4,7 @@ module Util
 
     ###########################################################################
     def self.interpret(format, *args)
-      message = format.gsub /\$[a-z]+/ do |interpreter|
+      message = format.gsub /\$[a-z]+/i do |interpreter|
         if args.empty?
           Symphony.logger.error "Room#interpret with format '#{format}' - no args left to interpret '#{interpreter}'"
           next Realm.configuration.error_string
@@ -100,7 +100,7 @@ module Util
       return name if first_char == first_char.upcase
 
       # Starts with a vowel, so we add "an"
-      return name.prepend (I18n.t("linguist.article.indefinite.vowel") + " ") if first_char.match /[aeiou]/
+      return name.prepend (I18n.t("linguist.article.indefinite.vowel") + " ") if first_char.match /[aeiou]/i
 
       # Just a regular name, so we add "a"
       return name.prepend (I18n.t("linguist.article.indefinite.consonant") + " ")

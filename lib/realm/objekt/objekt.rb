@@ -15,6 +15,10 @@
 #
 # 3. To enable smart deep copying via the #clone method, your subclass must
 #    implement a #_deep_copy method.
+#
+# 4. To enable the Lingust class to smartly print an Objekt, you need to
+#    supply the correct formatting hint by implementing a subclass method
+#    called _interpret_name and returning a String (e.g. "$item").
 ###############################################################################
 require "securerandom"
 
@@ -104,6 +108,12 @@ module Realm
       I18n.translate "objekt.identify", self.fully_qualified_identifier
     end
     alias_method :fqid_str, :fully_qualified_identifier_string
+
+    ###########################################################################
+    # Must be 
+    def interpret_name
+      _interpret_name      
+    end
 
   end
 end

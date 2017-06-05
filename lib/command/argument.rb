@@ -46,13 +46,13 @@ module Command
       examples: ["hello world", "you won 2nd place!", "can you say 'hello world?'"],
     },
     id: {
-      pattern: / (?:[^'"\s]+ | (?:('|") [^\1]+? \1)) (?:([#*]) (\d+))? /ix,
+      pattern: / (?:[^'"\s]+ | (?:('|") [^\1]+? \1)) (?:([#*]) (\d+|all|half))? /ix,
       cast_func: -> (x) {
-        name, symbol, number = x.partition /#\*/
-        return OpenStruct.new(
-          name: name,
+        name, symbol, number = x.partition /#|\*/
+        id = OpenStruct.new(
+          name: name.downcase.sub(/('|") (.+?) \1/ix, '\2'),
           symbol: symbol,
-          number: number.to_i,
+          number: if %w(all half).include?(number) then number else number.to_i end
         )
       },
       description: "a target object name (with optional quotes and optional multiplier or offset)",
