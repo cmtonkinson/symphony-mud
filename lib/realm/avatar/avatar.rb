@@ -9,6 +9,7 @@ module Realm
     ###########################################################################
     def initialize(id = nil, props = {})
       super
+      @force_output = false
     end
 
     ###########################################################################
@@ -17,6 +18,18 @@ module Realm
       Symphony.logger.info "%s logged out" % fqid_str
       @room.beings.remove self
     }
+
+    ###########################################################################
+    def force_output!
+      @force_output = true
+    end
+
+    ###########################################################################
+    def test_and_clear_forced_output
+      o = @force_output
+      @force_output = false
+      return o
+    end
 
   end
 end

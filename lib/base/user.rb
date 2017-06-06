@@ -41,6 +41,10 @@ module Base
 
     ###########################################################################
     def handle(input)
+      if input.match /\A\s*\z/
+        @avatar.force_output!
+        return false
+      end
       operators.each { |op| return if op.handle(input) == true }
       puts I18n.t "command.operator.err_not_found"
     end

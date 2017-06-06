@@ -62,7 +62,7 @@ module Base
       clients.each do |client|
         user   = client.user
         avatar = user.avatar
-        client.print avatar.output! if avatar && avatar.output?
+        client.print avatar.output! if avatar && (avatar.output? || avatar.test_and_clear_forced_output)
       end
     end
 

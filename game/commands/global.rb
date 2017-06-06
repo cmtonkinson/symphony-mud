@@ -147,6 +147,7 @@ define :look do
 
     being.other_beings.each { |b| being.puts t("here"), b }
 
+    next if room.inventory.empty?
     being.puts t("item_list"), room.inventory.display_contents
   end
 end
