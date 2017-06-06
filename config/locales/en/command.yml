@@ -24,6 +24,12 @@ en:
     # admin
     connections:
       _brief: "Print netorking information on connected players."
+    dig:
+      _brief: "Create a new room and link to it in the given direction"
+      err_no_way: "That's not a real direction."
+      err_already: "There's already an exit in that direction."
+      actor: "Before your eyes, a new passage opens to the $string."
+      other: "$being opens a new passage to the $string."
     disconnect:
       _brief: "Immediately disconnect the victim from the server."
       actor: "You have kicked $being. So long, sucker!"

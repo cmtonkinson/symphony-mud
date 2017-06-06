@@ -26,6 +26,24 @@ define :connections do
 end
 
 ###############################################################################
+define :dig do
+###############################################################################
+  level Realm::Being::DEMIGOD
+  usage direction: :string
+  exec do
+    being.puts t "err_no_way" and next unless Realm::Exit::DIRECTIONS.keys.include?(direction)
+    being.puts t "err_already" and next unless room.send(direction).nil?
+
+    Realm::Builder.create_linked_room room, direction
+
+    being.puts t("actor"), direction
+    room.puts t("other"), being, direction, exclude: being
+
+    being.cmd direction
+  end 
+end
+
+###############################################################################
 define :disconnect do
 ###############################################################################
   level Realm::Being::GOD
