@@ -19,6 +19,7 @@ module Realm
       # Deep copy Objekct properties.
       dolly.instance_variable_set :@cloned_from, id
       dolly.name = name.dup
+      dolly.rid = rid.dup
       # Deep copy subclass properties.
       dolly.run_hook :on_deep_copy, self
       # Return the clone.
