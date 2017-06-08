@@ -27,7 +27,7 @@ define :iedit do
       being.iedit = item
       being.user.operators.push Operator.new being.user, :edit_item
       being.print t "edit"
-      being.puts I18n.t("objekt.identify", being.iedit.identify)
+      being.puts I18n.t("objekt.identify", being.iedit.fqid)
       being.puts being.iedit.summary
     end
   end
