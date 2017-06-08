@@ -44,7 +44,7 @@ module Command
         raise "@exec undefined" if @exec.nil?
         @exec.call
       rescue Exception => e
-        Symphony.logger.error "Command '#{@name}' with #{input_string.inspect} by '#{being.name}' #{being.id} raised -- #{e}"
+        Symphony.logger.error "Command '#{@name}' with #{input_string.inspect} by '#{being.fqid_str}' raised -- #{e}"
         e.backtrace.each { |line| Symphony.logger.debug line.sub(Symphony.root.to_s, "") }
       end
 
