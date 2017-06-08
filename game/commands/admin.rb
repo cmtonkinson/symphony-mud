@@ -95,23 +95,6 @@ define :goto do
 end
 
 ###############################################################################
-define :items do
-###############################################################################
-  level Realm::Being::DEMIGOD
-  usage
-  usage({id: :int})
-  exec do
-    zone = id.nil? ? being.room.zone : $world.zones.values.find { |z| z.rid == id }
-    being.puts t "err_nowhere" and next if zone.nil?
-
-    being.puts t("title"), zone
-    zone.items.each do |_, item|
-      being.puts t("line"), item, item
-    end
-  end
-end
-
-###############################################################################
 define :jobs do
 ###############################################################################
   level Realm::Being::CREATOR
@@ -130,7 +113,9 @@ end
 ###############################################################################
 define :load do
 ###############################################################################
+  level Realm::Being::DEMIGOD
   usage("item", {rid: :int})
+  usage("npc", {rid: :int})
   exec do
     if item == "item"
       model = being.room.zone.find_by_rid Realm::Item, rid
@@ -140,7 +125,15 @@ define :load do
       being.inventory << copy
       being.puts t("actor"), copy
       Symphony.logger.debug "%s loaded %s as a clone of %s" % [being.fqid_str, copy.fqid_str, model.fqid_str]
-    end
+    elsif npc == "npc"
+      model = being.room.zone.find_by_rid Realm::NPC, rid
+      being.puts t "err_nothing" and next if model.nil?
+
+      copy = model.clone
+      room.inventory << copy
+      being.puts t("actor"), copy
+      Symphony.logger.debug "%s loaded %s as a clone of %s" % [being.fqid_str, copy.fqid_str, model.fqid_str]
+     end
   end
 end
 

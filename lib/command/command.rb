@@ -132,12 +132,13 @@ module Command
   #############################################################################
   # Command::define is the metaprogramming interface which allows convenient definition of new
   # commands.
-  def self.define(cmd_name, &init_block)
-    class_name = "Command_#{cmd_name.to_s}"
+  def self.define(cmd_name, group_name = :global, &init_block)
+    class_name = "Command_#{group_name}_#{cmd_name.to_s}"
     class_definition = Class.new(Command) do
       define_method :initialize do
         method(:setup).call &init_block
         method(:name).call cmd_name.to_s
+        method(:group).call group_name.to_s
         method(:brief).call I18n.t("#{get_group}.#{cmd_name}._brief")
       end
     end

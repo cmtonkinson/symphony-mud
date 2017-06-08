@@ -1,14 +1,5 @@
 module Command
 
-setup = -> {
-  group :edit_item
-  level Realm::Being::DEMIGOD
-}
-
-precheck = -> {
-
-}
-
 ###############################################################################
 define :iedit do
 ###############################################################################
@@ -34,9 +25,25 @@ define :iedit do
 end
 
 ###############################################################################
-define :information do
+define :items do
 ###############################################################################
-  group :edit_item
+  level Realm::Being::DEMIGOD
+  usage
+  usage({zone_rid: :int})
+  exec do
+    zone = zone_rid.nil? ? being.room.zone : $world.zones.values.find { |z| z.rid == zone_rid }
+    being.puts t "err_nowhere" and next if zone.nil?
+
+    being.puts t("title"), zone
+    zone.items.each do |_, item|
+      being.puts t("line"), item, item
+    end
+  end
+end
+
+###############################################################################
+define :information, :edit_item do
+###############################################################################
   level Realm::Being::DEMIGOD
   usage
   exec do
@@ -45,9 +52,8 @@ define :information do
 end
 
 ###############################################################################
-define :exit do
+define :exit, :edit_item do
 ###############################################################################
-  group :edit_item
   level Realm::Being::DEMIGOD
   usage
   exec do
@@ -58,9 +64,8 @@ define :exit do
 end
 
 ###############################################################################
-define :level do
+define :level, :edit_item do
 ###############################################################################
-  group :edit_item
   level Realm::Being::DEMIGOD
   usage({new_level: :int})
   exec do
@@ -70,9 +75,8 @@ define :level do
 end
 
 ###############################################################################
-define :name do
+define :name, :edit_item do
 ###############################################################################
-  group :edit_item
   level Realm::Being::DEMIGOD
   usage :rest
   exec do

@@ -72,4 +72,30 @@ describe Realm::Builder do
 
   end
 
+  ###########################################################################
+  describe "#create_npc" do
+
+    before :each do
+      @zone = Zone.new
+      @npc  = Builder.create_npc @zone
+    end
+
+    it "returns a new NPC" do
+      expect(@npc).to be_a NPC
+      expect(@npc).to be_a Being
+      expect(@npc).to be_a Objekt
+    end
+
+    it "assigns an Integral RID" do
+      expect(@npc.rid).to be_a Integer
+      expect(@npc.rid).to be > 0
+      expect(@npc.level).to eq 1
+    end
+
+    it "adds the NPC to the Zone" do
+      expect(@zone.npcs.values).to include(@npc)
+    end
+
+  end
+
 end

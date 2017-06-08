@@ -3,7 +3,7 @@ module Realm
 
     include Realm
 
-    CONTAINERS = %w(rooms exits items)
+    CONTAINERS = %w(rooms exits items npcs)
 
     CONTAINERS.each { |c| attr_accessor c.to_sym }
 
@@ -23,6 +23,7 @@ module Realm
         rooms: @rooms.values.map(&:hashify),
         exits: @exits.values.map(&:hashify),
         items: @items.values.map(&:hashify),
+        npcs: @npcs.values.map(&:hashify),
       }
     }
 
@@ -46,6 +47,7 @@ module Realm
       end
 
       hash[:items].each { |hash| @items.insert Realm::Item.dehashify(hash) }
+      hash[:npcs].each { |hash| @npcs.insert Realm::NPC.dehashify(hash) }
     }
 
     ###########################################################################
@@ -102,3 +104,4 @@ module Realm
 
   end
 end
+

@@ -10,6 +10,7 @@ require_relative "exit"
 require_relative "room"
 require_relative "zone"
 require_relative "being"
+require_relative "npc"
 require_relative "avatar"
 
 require_relative "item"

@@ -41,7 +41,7 @@ module Realm
     DEFENSE    = %i(armor bash slash pierce exotic)
     OFFENSE    = %i(hit_bonus damage_bonus)
 
-    # Disallow direct manipulation of any core names.
+    # Discourage direct manipulation of any core names.
     EXPERIENCE.each { |name| attr_reader name }
     WELLNESS.each { |name| attr_reader name }
     FITNESS.each { |name| attr_reader name }

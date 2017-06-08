@@ -22,7 +22,7 @@ module Realm
     ###########################################################################
     on_hashify -> {
       hash = {
-        room: @room.id,
+        room: @room&.id,
         gender: @gender,
         inventory: @inventory.values.map(&:hashify),
       }
@@ -33,8 +33,11 @@ module Realm
     ###########################################################################
     on_dehashify -> hash {
       hash = hash[:being]
-      @room = $world.find_room hash[:room]
-      @room.insert self
+
+      unless is_a? NPC
+        @room = $world.find_room hash[:room]
+        @room.insert self
+      end
 
       @gender = hash[:gender]
 

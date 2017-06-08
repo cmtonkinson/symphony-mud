@@ -46,6 +46,7 @@ module Realm
 
     ###########################################################################
     def find_room(rid_or_uuid)
+      return find THE_VOID_ID if !rid_or_uuid
       # It's a RID
       if rid_or_uuid.is_a? Numeric
         return nil if @zones.empty?
@@ -55,6 +56,8 @@ module Realm
       # It's a UUID
       elsif rid_or_uuid.match /\h{8}-?\h{4}-?\h{4}-?\h{4}-?\h{12}/i
         (room = find rid_or_uuid) ? room : find(THE_VOID_ID)
+      else
+        find THE_VOID_ID
       end
     end
 
