@@ -1,0 +1,70 @@
+en:
+  global:
+    ###########################################################################
+    # Administrative commands
+    connections:
+      _brief: "Print netorking information on connected players."
+    dig:
+      _brief: "Create a new room and link to it in the given direction"
+      err_no_way: "That's not a real direction."
+      err_already: "There's already an exit in that direction."
+      actor: "Before your eyes, a new passage opens to the $string."
+      other: "$being opens a new passage to the $string."
+    disconnect:
+      _brief: "Immediately disconnect the victim from the server."
+      actor: "You have kicked $being. So long, sucker!"
+      err_nobody: "They're not in this realm."
+      err_self: "You can't disconnect yourself."
+      err_seniority: "You aren't powerful enough to disconnect $being."
+      victim: "You have been unceremoniously disconnected by $being."
+    force:
+      _brief: "Make another being take some action... whether they like it or not."
+      actor: "You force $being into action."
+      err_nobody: "You don't see them here."
+      err_self: "Forcing yourself? That would be too meta."
+      err_seniority: "You aren't powerful enough to force $being."
+      victim: "You are forced into action by $being."
+    goto:
+      _brief: "Transport yourself to the given room."
+      actor: "You squeeze through the dimensions to appear in {W$room{x."
+      arrive: "$being emerges from thin air in front of you."
+      err_nowhere: "Room not found."
+      err_there: "You're already there."
+      leave: "$being squeezes through the dimensions and out of sight."
+    jobs:
+      _brief: "List scheduler statistics."
+      batch_size: "The schedule runs {Y%u{x jobs at a time."
+      next_jobs: "\nThe next {Y%u{x jobs:"
+      queue_length: "There are {Y%u{x jobs in the queue."
+    load:
+      _brief: "Create a new object from the current zone by rid"
+      actor: "You create {W$item{x."
+      err_nothing: "No item by that id in this zone."
+    pry:
+      _brief: "Blocks the server process by executing `binding.pry` for live debugging"
+    reboot:
+      _brief: "Save the World state, reload the server process, and restore connections."
+      actor: "Hold on to your butts..."
+    rooms:
+      _brief: "List the Rooms in the given Zone (or the current Zone if unspecified)"
+      err_nowhere: "Couldn't find that Zone."
+      title: "Rooms in {m$zone{x:\n\n"
+      line: "[{C$rid{x] {M$room{x"
+    shutdown:
+      _brief: "Close all connections, save all Zones, and terminate the server process."
+      actor: "Shutting down the server."
+    summon:
+      _brief: "Yank a person from wherever they are to appear before you."
+      actor: "You call $being to stand before you."
+      arrive: "$being appeares suddenly, looking dazed."
+      err_here: "$subjective is already here."
+      err_nobody: "They're not in this realm."
+      err_self: "You can't summon yourself."
+      err_seniority: "You aren't powerful enough to summon $being."
+      leave: "$being dissapears without warning."
+      victim: "$being calls you to stand before $objective."
+    worldsave:
+      _brief: "Save all loaded Zones and connected Avatars."
+      start: "Saving the World..."
+      success: " success!"
+

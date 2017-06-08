@@ -1,0 +1,25 @@
+en:
+  global:
+    iedit:
+      _brief: "Enter the item editor with either a new or existing item."
+      edit: "You're now editing item "
+      err_nothing: "No item by that id in this zone."
+    items:
+      _brief: "List the Items in the given Zone (or the current Zone if unspecified)"
+      err_nowhere: "Couldn't find that Zone."
+      title: "Items in {m$zone{x:\n\n"
+      line: "[{C$rid{x] {M$item{x"
+
+  #############################################################################
+  # Item Edit mode
+  edit_item:
+    exit:
+      _brief: "Leave item editing mode."
+      actor: "You have left item editing mode."
+    level:
+      _brief: "Change the level of the item."
+      actor: "Item level changed to '{y$string{x'."
+    name:
+      _brief: "Change the name of the item."
+      actor: "Item name changed to '{y$string{x'."
+

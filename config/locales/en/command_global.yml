@@ -1,0 +1,66 @@
+en:
+  #############################################################################
+  # Standard commands
+  global:
+    colors:
+      _brief: "Display the color map"
+      title: "You can use color by typing any of the codes below.\n\
+              Each code is a bracket followed by a letter:\n\n"
+      bracket: "\nTo make a bracket, type two of them in a row:\n\n"
+      reset: "\nTo reset to the default color, the code is '{{x':\n\n"
+    commands:
+      _brief: "Display a list of available commands."
+      actor: "\nThe following commands are available for {y$string{x:"
+    drop:
+      _brief: "Move items from your inventory to the current room."
+      err_not_found: "You aren't carrying that."
+      actor: "You drop $item."
+      other: "$being drops $item."
+    emote:
+      _brief: "Perform some custom in-character action."
+    get:
+      _brief: "Retrieve items from the current room into your inventory."
+      err_not_found: "You don't see that here."
+      actor: "You get $item."
+      other: "$being picks up $item."
+    help:
+      _brief: "Display details and usage of a command."
+      err_no_desc: "No additional information available."
+      err_not_found: "No help topic for '$string'."
+    inventory:
+      _brief: "List the items in your inventory."
+      title: "You are currently holding:\n$string{x"
+    look:
+      _brief: "Examine your surroundings."
+      exit_list: "\nExits are: {R$string{x"
+      here: "$being is here."
+      item_list: "\nYou see:\n$string{x"
+      title: "[{C$rid{x] {W$room{x"
+    map:
+      _brief: "Display the layout of the current zone."
+      title: "Your map of {m$zone{x:"
+    quit:
+      _brief: "Save your Avatar and disconnect from the server."
+      actor: "Logging out. Goodbye."
+    save:
+      _brief: "Store up-to-date information about your Avatar on the server."
+      start: "Saving your profile..."
+      success: " done!"
+    say:
+      _brief: "Talk to others in the room. This is an in-character channel."
+      actor: "You say, \"{G$string{x\""
+      hear: "$being says, \"{G$string{x\""
+    summary:
+      _brief: "Display information about the current state of your Avatar."
+      title: "Your name is $string and you are a $string."
+    who:
+      _brief: "Display a list of players online."
+      title: "Currently online:\n\n"
+    whoami:
+      _brief: "Display your current profile name."
+      actor: "Your name is {W$being{x"
+    zones:
+      _brief: "List the different zones in the Realm."
+      line: "[{C$rid{x] {M$zone{x ($string rooms, $string items)"
+      title: "Zones in the realm:\n\n"
+

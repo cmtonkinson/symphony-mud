@@ -1,0 +1,25 @@
+en:
+  global:
+    nedit:
+      _brief: "Enter the npc editor with either a new or existing npc."
+      edit: "You're now editing npc "
+      err_nothing: "No npc by that id in this zone."
+    npcs:
+      _brief: "List the NPCs in the given Zone (or the current Zone if unspecified)"
+      err_nowhere: "Couldn't find that Zone."
+      title: "NPCs in {m$zone{x:\n\n"
+      line: "[{C$rid{x] {M$being{x"
+
+  #############################################################################
+  # NPC Edit mode
+  edit_npc:
+    exit:
+      _brief: "Leave npc editing mode."
+      actor: "You have left npc editing mode."
+    level:
+      _brief: "Change the level of the npc."
+      actor: "NPC level changed to '{y$string{x'."
+    name:
+      _brief: "Change the name of the npc."
+      actor: "NPC name changed to '{y$string{x'."
+

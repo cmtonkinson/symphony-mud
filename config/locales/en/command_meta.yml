@@ -1,0 +1,21 @@
+en:
+  #############################################################################
+  # Developer stuff / API / error messages / misc.
+  command:
+    bad_array_length: "Command format arrays expect 2 elements (%{given} given)"
+    invalid_type: "'%{type}' is an invalid Command argument type"
+    only_one_empty: "Command cannot have more than one empty format"
+    state_key_overlap: "'%{name}' is invalid as a Command argument name because it would shadow a reserved variable"
+    variable_overshadow: "Command Argument '%{name}' would overshadow a default context variable"
+    argument:
+      bad_argument_definition: "'%{arg}' is an invalid Command argument"
+      bad_array_value: "Argument Array cannot contain a %{type} (only Strings are acceptable)"
+    usage:
+      duplicate_name: "Command cannot have duplicate argument names (specified '%{name}' twice)"
+      push_non_argument: "Command::Usage can only contain instances of Command::Argument"
+    exception: "That command caused a system error, which has been logged and reported."
+    operator:
+      err_not_found: "That command is not available."
+      err_low_level: "You aren't powerful enough to use that command."
+      err_invocation: "That doesn't make sense. Here's some help:\n\n"
+
