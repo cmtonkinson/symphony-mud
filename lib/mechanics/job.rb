@@ -109,8 +109,11 @@ module Mechanics
     def to_s
       buf = "<Job"
       buf << " @#{@wen} (in #{ready_in})"
-      buf << " #{@who.class.name}"
-      buf << " #{@who.name} (#{@who.id})" if @who.is_a? Realm::Objekt
+      if @who.is_a? Realm::Objekt
+        buf << " #{@who.fqid_str}" if @who.is_a? Realm::Objekt
+      else
+        buf << " #{@who.class.name}"
+      end
       buf << if @what.respond_to? :to_sym
         " :" + @what.to_sym.to_s
       else

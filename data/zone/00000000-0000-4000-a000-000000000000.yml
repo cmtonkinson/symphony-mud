@@ -26,5 +26,35 @@
     :rid: 2
     :name: iPhone
   :level: 10
-:npcs: []
-
+:npcs:
+- :objekt:
+    :class: Realm::NPC
+    :id: 21d0e69b-c1f4-4113-8444-c27b3894db48
+    :rid: 1
+    :name: angry dog
+  :being:
+    :room: 
+    :gender: neuter
+    :inventory: []
+  :stats:
+    :level: 24
+    :exp: 0
+    :tnl: 100
+    :health: 100/100
+    :mana: 100/100
+    :stamina: 100/100
+    :strength: '15:20'
+    :dexterity: '15:20'
+    :constitution: '15:20'
+    :intelligence: '15:20'
+    :focus: '15:20'
+    :creativity: '15:20'
+    :charisma: '15:20'
+    :luck: '15:20'
+    :armor: 0
+    :bash: 0
+    :slash: 0
+    :pierce: 0
+    :exotic: 0
+    :hit_bonus: 0
+    :damage_bonus: 0

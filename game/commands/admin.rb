@@ -131,6 +131,8 @@ define :load do
 
       copy = model.clone
       room.inventory << copy
+      copy.room = room
+      copy.vivify
       being.puts t("actor"), copy
       Symphony.logger.debug "%s loaded %s as a clone of %s" % [being.fqid_str, copy.fqid_str, model.fqid_str]
      end

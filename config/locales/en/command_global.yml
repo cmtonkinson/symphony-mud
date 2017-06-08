@@ -61,6 +61,6 @@ en:
       actor: "Your name is {W$being{x"
     zones:
       _brief: "List the different zones in the Realm."
-      line: "[{C$rid{x] {M$zone{x ($string rooms, $string items)"
+      line: "[{C$rid{x] {M$zone{x ($string rooms, $string items, $string NPCs)"
       title: "Zones in the realm:\n\n"
 
