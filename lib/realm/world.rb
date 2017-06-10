@@ -62,6 +62,15 @@ module Realm
     end
 
     ###########################################################################
+    def find_zone(rid_or_uuid = ZONE_ORIGIN_ID)
+      if rid_or_uuid.is_a? Numeric
+        @zones.values.find { |z| z.rid == rid_or_uuid }
+      else rid_or_uuid.match /\h{8}-?\h{4}-?\h{4}-?\h{4}-?\h{12}/i
+        (zone = find rid_or_uuid) ? zone : find(ZONE_ORIGIN_ID)
+      end
+    end
+
+    ###########################################################################
     def find_avatar(name)
       return nil if @avatars.empty?
       @avatars.values.find { |a| a.name.downcase == name.downcase }
@@ -105,6 +114,15 @@ module Realm
       rooms = @zones.values.map(&:rooms).flat_map(&:values)
       return 1 if rooms.empty?
       rooms.max_by(&:rid).rid + 1
+    end
+
+    ###########################################################################
+    def next_zone_rid
+      return 1 if @zones.empty?
+      zone_rids = @zones.values.map &:rid
+      puts zone_rids.inspect
+      return 1 if zone_rids.all? &:nil?
+      zone_rids.max + 1
     end
 
   end

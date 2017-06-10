@@ -102,6 +102,14 @@ module Realm
       ]
     end
 
+    ###########################################################################
+    def summary
+      $templates.zone_summary % [
+        rid, name,
+        id,
+        @rooms.length, @items.length, @npcs.length,
+      ]
+    end
   end
 end
 

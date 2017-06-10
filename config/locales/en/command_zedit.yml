@@ -1,0 +1,22 @@
+en:
+  global:
+    zedit:
+      _brief: "Enter the zone editor with either a new or existing zone."
+      edit: "You're now editing zone "
+      err_nothing: "No zone by that id in this zone."
+    zones:
+      _brief: "List the Zones in the given Zone (or the current Zone if unspecified)"
+      err_nowhere: "Couldn't find that Zone."
+      title: "Zones in {m$zone{x:\n\n"
+      line: "[{C$rid{x] {M$zone{x"
+
+  #############################################################################
+  # Zone Edit mode
+  edit_zone:
+    exit:
+      _brief: "Leave zone editing mode."
+      actor: "You have left zone editing mode."
+    name:
+      _brief: "Change the name of the zone."
+      actor: "Zone name changed to '{y$string{x'."
+

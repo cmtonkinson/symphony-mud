@@ -98,4 +98,23 @@ describe Realm::Builder do
 
   end
 
+  #############################################################################
+  describe "#create_zone" do
+
+    before :each do
+      @zone = Builder.create_zone
+    end
+
+    it "returns a new Zone" do
+      expect(@zone).to be_a Zone
+      expect(@zone).to be_a Objekt
+    end
+
+    it "assigns an Integral RID" do
+      expect(@zone.rid).to be_a Integer
+      expect(@zone.rid).to be > 0
+    end
+
+  end
+
 end

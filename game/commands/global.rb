@@ -268,7 +268,7 @@ define :zones do
   usage
   exec do
     being.puts t("title")
-    $world.zones.each do |id,zone|
+    $world.zones.values.sort_by(&:rid).each do |zone|
       next if zone.rid == 1 && !being.demigod?
       being.puts t("line"), zone, zone, zone.rooms.length, zone.items.length, zone.npcs.length
     end

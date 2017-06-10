@@ -55,6 +55,14 @@ module Realm
       zone.insert new_npc
       new_npc 
     end
+ 
+    ###########################################################################
+    def self.create_zone
+      new_zone = Zone.new nil, rid: $world.next_zone_rid
+      $world.zones.insert new_zone
+      new_zone
+    end
 
   end
 end
+
