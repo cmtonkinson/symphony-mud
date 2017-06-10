@@ -1,0 +1,80 @@
+###############################################################################
+# ADMIN
+###############################################################################
+adminnote at       bigbrother clone        crash
+dashboard delete   demote     description disable
+dunce     eat      enable            gecho
+heal      identify iedit      ilist       iload       incognito
+inventory      nedit      nlist       nload       password
+peace     pedit    placement  poofin      poofout     promote
+purge        redit      restring    rlist       sedit
+     test             tutor       zedit
+
+###############################################################################
+# USER
+###############################################################################
+affinity  afk       boards    bored     busy      cast
+channels  close           drop
+equipment get       give      group           kill
+lay       learn     lock
+          note
+ooc       open      put             remove    reply
+             sit       skills    socials   spells
+stand        tell      time      title     train
+ungroup   unlock    wear
+
+###############################################################################
+# ITEM EDIT
+###############################################################################
+armortype         attribute        composition
+delete            description      flag
+furniturecapacity furniturelayon   furnituresitat
+furnituresiton    furniturestandon 
+keywords          longname
+type             value
+weapondamage      weaponstat       weapontype
+weaponverb        wearable
+
+###############################################################################
+# NPC EDIT
+###############################################################################
+aggressiveness class       description
+gender         information keywords
+level          longname    mobility
+race           shortname
+
+###############################################################################
+# AVATAR EDIT
+###############################################################################
+color     headbuilder
+
+###############################################################################
+# ROOM EDIT
+###############################################################################
+create      delete   description
+dig         exitflag flag
+information key      link
+name        smell    sound
+terrain     unlink
+
+###############################################################################
+# SOCIAL EDIT
+###############################################################################
+audible      delete     information
+tactile      targetnone targetself
+targetvictim noneactor  noneroom
+selfactor    selfroom   victimactor
+victimvictim victimroom
+
+###############################################################################
+# TEXT EDIT
+###############################################################################
+append cancel clear
+delete insert replace
+send   show
+
+###############################################################################
+# ZONE EDIT
+###############################################################################
+delete     information name
+permission terrain
