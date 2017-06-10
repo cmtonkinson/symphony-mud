@@ -9,6 +9,6 @@ rspec:
   tags:
     - docker
   script:
-    - rspec --format=documentation --color
+    - rspec --format=documentation --force-color
   coverage: '/\(\d+.\d+\%\) covered/'
 
