@@ -4,18 +4,18 @@
 adminnote at       bigbrother clone        crash
 dashboard delete   demote     description disable
 dunce     eat      enable            gecho
-heal      identify iedit      ilist       iload       incognito
-inventory      nedit      nlist       nload       password
+heal      identify incognito
+password
 peace     pedit    placement  poofin      poofout     promote
-purge        redit      restring    rlist       sedit
+purge        redit      restring    sedit
      test             tutor       zedit
 
 ###############################################################################
 # USER
 ###############################################################################
 affinity  afk       boards    bored     busy      cast
-channels  close           drop
-equipment get       give      group           kill
+channels  close           
+equipment give      group           kill
 lay       learn     lock
           note
 ooc       open      put             remove    reply
@@ -40,8 +40,8 @@ weaponverb        wearable
 ###############################################################################
 aggressiveness class       description
 gender         information keywords
-level          longname    mobility
-race           shortname
+longname    mobility
+race           
 
 ###############################################################################
 # AVATAR EDIT
