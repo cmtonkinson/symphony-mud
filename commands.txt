@@ -8,7 +8,7 @@ heal      identify incognito
 password
 peace     pedit    placement  poofin      poofout     promote
 purge        redit      restring    sedit
-     test             tutor       zedit
+     test             tutor       
 
 ###############################################################################
 # USER
@@ -76,5 +76,5 @@ send   show
 ###############################################################################
 # ZONE EDIT
 ###############################################################################
-delete     information name
+delete     
 permission terrain
