@@ -7,6 +7,8 @@ module Realm
 
     CONTAINERS.each { |cont| attr_accessor cont }
 
+    define_hooks :before_room_change, :after_room_change
+
     ###########################################################################
     def initialize(id = nil, props = {})
       @gender        = Gender::NEUTER
@@ -69,12 +71,18 @@ module Realm
 
     ###########################################################################
     def prompt
-      "\n[{G%d{x/{g%d{xhp {C%d{x/{c%d{xmana {M%d{xstamina {y%d{xtnl] " % [
+      "\n%s[{G%d{x/{g%d{xhp {C%d{x/{c%d{xmana {M%d{xstamina {y%d{xtnl] " % [
+        prompt_prefix,
         health.current, health.max,
         mana.current, mana.max,
         stamina.current,
         tnl,
       ]
+    end
+
+    ###########################################################################
+    def prompt_prefix
+      _prompt_prefix
     end
 
     ###########################################################################
@@ -114,10 +122,15 @@ module Realm
 
     ###########################################################################
     def transport(to)
+      from = @room
+      self.run_hook :before_room_change, from, to
+
       # Swap.
-      @room.remove self
+      from.remove self
       @room = to
-      @room.insert self
+      to.insert self
+
+      self.run_hook :after_room_change, from, to 
 
       # Look around.
       cmd "look"

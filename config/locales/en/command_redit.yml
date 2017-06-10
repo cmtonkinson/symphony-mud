@@ -1,0 +1,17 @@
+en:
+  global:
+    redit:
+      _brief: "Enter the room editor with either a new or existing room."
+      edit: "You're now editing room "
+      err_nothing: "No room by that id in this zone."
+
+  #############################################################################
+  # Room Edit mode
+  edit_room:
+    exit:
+      _brief: "Leave room editing mode."
+      actor: "You have left room editing mode."
+    name:
+      _brief: "Change the name of the room."
+      actor: "Room name changed to '{y$string{x'."
+

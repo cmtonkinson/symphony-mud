@@ -51,10 +51,10 @@ color     headbuilder
 ###############################################################################
 # ROOM EDIT
 ###############################################################################
-create      delete   description
+delete   description
 dig         exitflag flag
-information key      link
-name        smell    sound
+key      link
+smell    sound
 terrain     unlink
 
 ###############################################################################

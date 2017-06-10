@@ -69,5 +69,14 @@ module Realm
       beings.values.find { |b| b.name.index(name) == 0 }
     end
 
+    ###########################################################################
+    def summary
+      $templates.room_summary % [
+        rid, name,
+        id,
+        zone.name,
+      ]
+    end
+
   end
 end
