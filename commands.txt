@@ -1,7 +1,7 @@
 ###############################################################################
 # ADMIN
 ###############################################################################
-adminnote at       bigbrother clone        crash
+adminnote bigbrother clone        crash
 dashboard delete   demote     description disable
 dunce     eat      enable            gecho
 heal      identify incognito

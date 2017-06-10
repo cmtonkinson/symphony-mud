@@ -2,6 +2,10 @@ en:
   global:
     ###########################################################################
     # Administrative commands
+    at:
+      _brief: "Execute a command as if in a different place"
+      err_nowhere: "Room not found."
+      err_here": "But you're already here!"
     connections:
       _brief: "Print netorking information on connected players."
     dig:

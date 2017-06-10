@@ -3,6 +3,26 @@ require "resolv"
 module Command
 
 ###############################################################################
+define :at do
+###############################################################################
+  level Realm::Being::DEMIGOD
+  usage({room_rid: :int}, :rest)
+  exec do
+    target = $world.find_room room_rid
+    being.puts t "err_nowhere" and next if target.nil?
+    being.puts t "err_here" and next if room == target
+
+    current_room = room
+    being.room = target
+    begin
+      being.cmd rest
+    ensure
+      being.room = current_room
+    end
+  end
+end
+
+###############################################################################
 define :connections do
 ###############################################################################
   level Realm::Being::GOD
