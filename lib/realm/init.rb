@@ -17,5 +17,3 @@ require_relative "item"
 
 require_relative "world"
 
-require_relative "builder"
-require_relative "scribe"

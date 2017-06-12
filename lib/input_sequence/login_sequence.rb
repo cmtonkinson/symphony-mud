@@ -85,10 +85,10 @@ module InputSequence
             avatar.vivify
             avatar.room.puts I18n.t("universe.room_announce_newbie"), avatar
             Symphony.logger.info "New account #{avatar.fqid_str}"
-            Realm::Scribe.save avatar
+            Logistics::Scribe.save avatar
             avatar.run_hook :on_first_login
           when :existing
-            avatar = Realm::Scribe.load Realm::Avatar, @context.avatar_id
+            avatar = Logistics::Scribe.load Realm::Avatar, @context.avatar_id
             if avatar
               user.puts "Welcome back!"
               user.bind_avatar avatar

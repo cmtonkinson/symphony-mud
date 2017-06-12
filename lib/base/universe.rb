@@ -163,7 +163,7 @@ module Base
         client = Network::Client.new TCPSocket.for_fd fd.to_i
         user   = User.new
         user.bind_client client, false
-        user.bind_avatar Realm::Scribe.load Realm::Avatar, recovery_map[fd]
+        user.bind_avatar Logistics::Scribe.load Realm::Avatar, recovery_map[fd]
         user.avatar.vivify
         @clients << client
       end

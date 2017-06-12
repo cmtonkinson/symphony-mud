@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-include Realm
+include Logistics
 
-describe Realm::Builder do
+describe Logistics::Builder do
 
   #############################################################################
   describe "#create_room" do

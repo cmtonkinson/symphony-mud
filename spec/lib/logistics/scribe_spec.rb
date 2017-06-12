@@ -1,8 +1,8 @@
 require "spec_helper"
 
-include Realm
+include Logistics
 
-describe Realm::Scribe do
+describe Logistics::Scribe do
 
   #############################################################################
   describe "#save" do

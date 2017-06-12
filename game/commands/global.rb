@@ -203,7 +203,7 @@ define :save do
   usage
   exec do
     being.print t("start")
-    Realm::Scribe.save being
+    Logistics::Scribe.save being
     being.puts t("success")
   end
 end
