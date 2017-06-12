@@ -14,4 +14,12 @@ en:
     name:
       _brief: "Change the name of the room."
       actor: "Room name changed to '{y$string{x'."
-
+    placement:
+      _brief: "View/manipulate reset rules for the current room."
+      err_nothing: "There is no placement %d here."
+      err_no_npc: "No NPC with that ID in this Zone."
+      err_no_item: "No Item with that ID in this Zone."
+      deleted: "Placement deleted."
+      empty_list: "This room currently has no placements."
+      new: "Placement added."
+      list_title: "Placements in $room:"

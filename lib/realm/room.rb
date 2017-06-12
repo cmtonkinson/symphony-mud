@@ -1,9 +1,9 @@
 module Realm
   class Room < Objekt
 
-    CONTAINERS = %w(beings inventory)
+    CONTAINERS = %w(beings inventory placements)
 
-    attr_accessor :zone, :items, :npcs
+    attr_accessor :zone
     attr_accessor :coords
 
     CONTAINERS.each { |cont| attr_accessor cont }
@@ -27,6 +27,7 @@ module Realm
       {
         zone: @zone.id,
         coords: @coords.to_a.join(","),
+        placements: @placements.values.map(&:hashify),
       }
     }
 
@@ -34,6 +35,13 @@ module Realm
     on_dehashify -> hash {
       @zone   = $world.find hash[:zone]
       @coords = Vector[*hash[:coords].split(",").map(&:to_i)]
+      if hash.key? :placements
+        hash[:placements].each do |ser|
+          p = Realm::Placement.dehashify ser
+          p.room = self
+          insert p
+        end
+      end
     }
 
     ###########################################################################
@@ -67,6 +75,13 @@ module Realm
     ###########################################################################
     def find_being(name)
       beings.values.find { |b| b.name.index(name) == 0 }
+    end
+
+    ###########################################################################
+    def next_placement_rid
+      rids = placements.values.map &:rid
+      return 1 if rids.empty?
+      rids.max + 1
     end
 
     ###########################################################################

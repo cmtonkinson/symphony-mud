@@ -1,0 +1,13 @@
+Placements are the rules by which Symphony instantiates Items and NPCs
+in a given Zone when the Zone is "reset."
+
+Each Room has its own list of Placement rules that get evaluated when
+the Zone resets. For all Placements, <number> specifies how many clones
+(Items or NPCs) should be generated at reset time. No more such clones
+will be created after there are <max> copies already in the Zone (for
+Items, only those Items "on the ground" are counted toward the max).
+By default, the engine will clone <number> clones on every Zone reset
+until <max> is reached, but by specifying the optional <probability>
+(as a number between 1 and 99), you can control how likely any clone
+is to be made during a reset.
+
