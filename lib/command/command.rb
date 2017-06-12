@@ -16,13 +16,14 @@ module Command
     ###########################################################################
     # Set sane defaults, and run the `define` block from the command file.
     def setup(&block)
-      @name    = "_"
-      @brief   = "TODO"
-      @level   = 1
-      @group   = :global
-      @exec    = nil
-      @usages  = [] # A collection of Usages
-      @context = nil
+      @name     = "_"
+      @shortcut = nil
+      @brief    = "TODO"
+      @level    = 1
+      @group    = :global
+      @exec     = nil
+      @usages   = [] # A collection of Usages
+      @context  = nil
       instance_eval &block if block_given?
     end
 
@@ -79,11 +80,12 @@ module Command
     end
 
     ###########################################################################
-    def get_name;  @name;  end
-    def get_brief; @brief; end
-    def get_level; @level; end
-    def get_group; @group; end
-    def get_exec;  @exec;  end
+    def get_name;     @name;     end
+    def get_shortcut; @shortcut; end
+    def get_brief;    @brief;    end
+    def get_level;    @level;    end
+    def get_group;    @group;    end
+    def get_exec;     @exec;     end
 
     private
 
@@ -91,6 +93,10 @@ module Command
     # These "private" setters are designed for the Command metaprogramming interface.
     def name(name)
       @name = name.to_s
+    end
+
+    def shortcut(shortcut)
+      @shortcut = shortcut.to_s
     end
 
     def brief(brief)
@@ -147,3 +153,4 @@ module Command
   end
 
 end
+

@@ -6,6 +6,7 @@ module Command
 ###############################################################################
 Realm::Exit::DIRECTIONS.keys.each do |direction| define direction do
 ###############################################################################
+  shortcut direction[0]
   usage
   exec do
     msg = being.can_go? direction
@@ -125,6 +126,7 @@ end
 ###############################################################################
 define :inventory do
 ###############################################################################
+  shortcut "i"
   usage
   exec do
     being.puts t("title"), being.inventory.display_contents
@@ -134,6 +136,7 @@ end
 ###############################################################################
 define :look do
 ###############################################################################
+  shortcut "l"
   usage
   exec do
     exits = Realm::Exit::DIRECTIONS

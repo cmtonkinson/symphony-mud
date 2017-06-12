@@ -15,20 +15,28 @@ module Command
 
     ###########################################################################
     def handle(input)
+      @command          = nil
       cmd_name, _, rest = input.partition " "
       being             = @user.avatar
 
       Symphony.logger.debug "Operator handling '#{input}' in :#{set_name} for #{being.fqid_str}"
 
-      # Try to find a Command by exact name.
-      @command = @command_set.find { |c| c.get_name == cmd_name }
+      # If the input was a single character, is it a shortcut?
+      if cmd_name.length == 1
+        @command = @command_set.find { |c| c.get_shortcut == cmd_name }
+      end
 
-      # If no Command was found by exact name, search for prefix matches.
+      # Try to find by exact name.
+      if @command.nil?
+        @command = @command_set.find { |c| c.get_name == cmd_name }
+      end
+
+      # Try to find by prefix matches.
       if @command.nil?
         @command = @command_set.find { |c| c.get_name.index(cmd_name) === 0 }
       end
 
-      # Couldn't find a Command by exact name or prefix match.
+      # Couldn't find a Command for this input string. 
       return false if @command.nil?
 
       # We found a Command; can we invoke it?
