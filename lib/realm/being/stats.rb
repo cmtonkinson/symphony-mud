@@ -111,6 +111,13 @@ module Realm
     }
 
     ###########################################################################
+    vivify -> {
+      $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_health
+      $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_mana
+      $world.schedule Mechanics::RecurringJob.new 0, self, 3, :auto_stamina
+    }
+
+    ###########################################################################
     def newbie?
       @level < NOVICE
     end
@@ -128,15 +135,6 @@ module Realm
     ###########################################################################
     def level_label
       LEVELS.reverse.find { |lvl| @level >= Realm::Being.const_get(lvl) }.downcase
-    end
-
-    ###########################################################################
-    def vivify
-      $world.beings.insert self
-      $world.avatars.insert self if is_a? Realm::Avatar
-      $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_health
-      $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_mana
-      $world.schedule Mechanics::RecurringJob.new 0, self, 3, :auto_stamina
     end
 
     ###########################################################################

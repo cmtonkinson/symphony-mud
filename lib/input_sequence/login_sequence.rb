@@ -82,7 +82,7 @@ module InputSequence
             user.bind_avatar avatar
             avatar.room = $world.find_room Realm::World::THE_VOID_ID
             avatar.room.insert avatar
-            avatar.vivify
+            avatar.run_hook :vivify
             avatar.room.puts I18n.t("universe.room_announce_newbie"), avatar
             Symphony.logger.info "New account #{avatar.fqid_str}"
             Logistics::Scribe.save avatar
@@ -93,7 +93,7 @@ module InputSequence
               user.puts "Welcome back!"
               user.bind_avatar avatar
               avatar.room.puts I18n.t("universe.room_announce_return"), avatar
-              avatar.vivify
+              avatar.run_hook :vivify
               Symphony.logger.info "#{avatar.fqid_str} logged in"
               avatar.run_hook :on_login
             else

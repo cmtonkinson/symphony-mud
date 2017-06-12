@@ -47,6 +47,11 @@ module Realm
     }
 
     ###########################################################################
+    vivify -> {
+      $world.beings.insert self
+    }
+    
+    ###########################################################################
     def print(format, *args)
       @output_buffer << Util::Linguist.interpret(format, *args)
     end

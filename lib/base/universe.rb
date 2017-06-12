@@ -164,7 +164,7 @@ module Base
         user   = User.new
         user.bind_client client, false
         user.bind_avatar Logistics::Scribe.load Realm::Avatar, recovery_map[fd]
-        user.avatar.vivify
+        user.avatar.run_hook :vivify
         @clients << client
       end
     end

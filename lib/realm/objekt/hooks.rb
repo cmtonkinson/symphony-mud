@@ -26,5 +26,10 @@ module Realm
     # in the context of the clone.
     define_hook :on_deep_copy
 
+    # on_vivify is invoked when an Objekt is stitched into the World. For an
+    # Avatar, that could be as a final step of logging in. For an Item, that
+    # could (for example) be as a final step of being loaded by a placement.
+    define_hook :vivify
+
   end
 end

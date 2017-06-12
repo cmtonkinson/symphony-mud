@@ -20,6 +20,11 @@ module Realm
     }
 
     ###########################################################################
+    vivify -> {
+      $world.avatars.insert self if is_a? Realm::Avatar
+    }
+
+    ###########################################################################
     def force_output!
       @force_output = true
     end
