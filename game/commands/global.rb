@@ -222,6 +222,25 @@ define :say do
 end
 
 ###############################################################################
+define :shortcuts do
+###############################################################################
+  usage
+  exec do
+    commands = []
+    ::Command.configuration.command_sets.values.each { |set| commands << set.to_a }
+
+    list = commands.flatten
+      .reject { |c| c.get_shortcut.nil? }
+      .select { |c| being.level >= (c.level || 0) }
+      .sort_by { |c| c.get_shortcut }
+      .map { |c| "  %s - %s" % [c.get_shortcut, c.get_name] }
+   
+    being.puts t("title") 
+    being.puts list.join "\n"
+ end
+end
+
+###############################################################################
 define :summary do
 ###############################################################################
   usage

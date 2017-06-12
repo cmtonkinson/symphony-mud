@@ -50,6 +50,9 @@ en:
       _brief: "Talk to others in the room. This is an in-character channel."
       actor: "You say, \"{G$string{x\""
       hear: "$being says, \"{G$string{x\""
+    shortcuts:
+      _brief: "Display shortcuts for all commands that have one."
+      title: "The following command shortcuts are available:"
     summary:
       _brief: "Display information about the current state of your Avatar."
       title: "Your name is $string and you are a $string."
