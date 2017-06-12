@@ -16,7 +16,7 @@ module Realm
     before_disconnect -> {
       @room.puts I18n.t("universe.room_announce_exit"), self
       Symphony.logger.info "%s logged out" % fqid_str
-      @room.beings.remove self
+      @room.beings.delete self
     }
 
     ###########################################################################

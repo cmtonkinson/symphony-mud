@@ -9,9 +9,9 @@ module Realm
     after_initialize -> {
       # By adding `Util::AttrHash` instance members to your subclasses, you
       # can easily keep collections of Objekts organized. If you decide to
-      # use the Objekt methods #insert and #remove as abstractions over these
+      # use the Objekt methods #insert and #delete as abstractions over these
       # containers, Objekt will automatically keep track of which containers
-      # your Objekt is held in. In other words, the #insert and #remove helpers
+      # your Objekt is held in. In other words, the #insert and #delete helpers
       # will bookkeep the bidirectional association between a container and
       # each Objekt in it.
       @containers = Set.new
