@@ -25,7 +25,9 @@ module Realm
     ###########################################################################
     def load_zones
       Logistics::Scribe.the_story_of_baron_munchausen.each do |zone_id|
-        @zones.insert Logistics::Scribe.load(Realm::Zone, zone_id)
+        zone = Logistics::Scribe.load(Realm::Zone, zone_id)
+        next unless zone
+        @zones.insert zone
       end
     end
 

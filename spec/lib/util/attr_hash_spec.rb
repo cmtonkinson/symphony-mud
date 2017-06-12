@@ -52,14 +52,6 @@ describe Util::AttrHash do
       expect(h.values).to eq [s2]
     end
 
-    it "should be aliased as :<<" do
-      h = AttrHash.new :qux
-      s2 = OpenStruct.new baz: "c", qux: "d"
-      expect(h.respond_to?(:<<)).to eq true
-      expect { h << s2 }.not_to raise_error
-      expect(h.size).to eq 1
-    end
-
   end
 
   #############################################################################
@@ -72,7 +64,7 @@ describe Util::AttrHash do
       expect(h.size).to eq 0
       expect { h.insert s }.not_to raise_error
       expect(h.size).to eq 1
-      expect { h.remove s }.not_to raise_error
+      expect { h.delete s }.not_to raise_error
       expect(h.size).to eq 0
     end
 

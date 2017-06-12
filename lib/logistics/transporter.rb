@@ -30,7 +30,7 @@ module Logistics
 
       unless operation == :add
         quarry.run_hook :before_remove
-        source.remove quarry unless operation == :add
+        source.delete quarry unless operation == :add
         quarry.run_hook :after_remove
       end
 

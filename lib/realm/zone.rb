@@ -110,6 +110,7 @@ module Realm
         @rooms.length, @items.length, @npcs.length,
       ]
     end
+
   end
 end
 

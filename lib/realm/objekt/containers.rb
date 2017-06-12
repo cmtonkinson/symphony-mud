@@ -29,9 +29,9 @@ module Realm
     ###########################################################################
     # Given an obj of type Thing
     # Attempts to call `@things.remove obj`
-    def remove(objekt)
+    def delete(objekt)
       container = container_for objekt
-      container.remove objekt
+      container.delete objekt
       objekt.containers.delete self
     end
 

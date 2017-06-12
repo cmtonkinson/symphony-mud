@@ -12,13 +12,11 @@ module Util
     def insert(obj)
       store attribute_value(obj), obj
     end
-    alias_method :<<, :insert
 
     ###########################################################################
-    def remove(obj)
-      delete attribute_value(obj)
+    def delete(obj)
+      super attribute_value(obj)
     end
-    alias_method :-, :remove
 
     ###########################################################################
     def attribute_value(obj)
@@ -28,7 +26,7 @@ module Util
 
     ###########################################################################
     def transfer(obj, other_attr_hash)
-      remove obj
+      delete obj
       other_attr_hash.insert obj
     end
 
