@@ -8,9 +8,9 @@ Realm::Exit::DIRECTIONS.keys.each do |direction| define direction do
 ###############################################################################
   usage
   exec do
-    msg = being.can_move? direction
+    msg = being.can_go? direction
     if msg === true
-      being.move direction
+      being.go direction
     else
       being.puts msg
     end

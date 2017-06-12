@@ -98,7 +98,7 @@ module Realm
 
     ###########################################################################
     # Returns true or a String containing an error message.
-    def can_move?(direction)
+    def can_go?(direction)
       exit = @room.send direction
       return I18n.t("movement.no_exit") if exit.nil?
       return I18n.t("movement.closed") if exit.closed?
@@ -106,31 +106,28 @@ module Realm
     end
 
     ###########################################################################
-    def move(direction)
-      from = @room
+    def go(direction)
+      src  = @room
       exit = @room.send direction
-      to   = exit.send direction
+      dst  = exit.send direction
 
       # Notify.
       puts I18n.t("being.you_go"), direction
-      from.puts I18n.t("being.leaves"), self, direction, exclude: self
-      to.puts I18n.t("being.arrived"), self, direction
+      src.puts I18n.t("being.leaves"), self, direction, exclude: self
+      dst.puts I18n.t("being.arrived"), self, direction
 
       # Move.
-      transport to
+      transport dst
     end
 
     ###########################################################################
-    def transport(to)
-      from = @room
-      self.run_hook :before_room_change, from, to
+    def transport(dst)
+      src = @room
 
-      # Swap.
-      from.remove self
-      @room = to
-      to.insert self
-
-      self.run_hook :after_room_change, from, to 
+      self.run_hook :before_room_change, src, dst
+      move.from(src.beings).to(dst.beings)
+      @room = dst
+      self.run_hook :after_room_change, src, dst 
 
       # Look around.
       cmd "look"
