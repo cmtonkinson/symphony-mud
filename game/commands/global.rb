@@ -64,7 +64,7 @@ define :drop do
     being.puts t("err_not_found") and next if targets.empty?
 
     targets.each do |item|
-      being.inventory.transfer item, room.inventory
+      item.move.from(being.inventory).to(room.inventory)
       being.puts t("actor"), item
       room.puts t("other"), being, item, exclude: being
     end
@@ -89,7 +89,7 @@ define :get do
     being.puts t("err_not_found") and next if targets.empty?
 
     targets.each do |item|
-      room.inventory.transfer item, being.inventory
+      item.move.from(room.inventory).to(being.inventory)
       being.puts t("actor"), item
       room.puts t("other"), being, item, exclude: being
     end
