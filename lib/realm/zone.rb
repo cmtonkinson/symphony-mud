@@ -51,6 +51,11 @@ module Realm
     }
 
     ###########################################################################
+    vivify -> {
+      $world.schedule Mechanics::RecurringJob.new 0, self, 90, :reset
+    }
+
+    ###########################################################################
     def get_layout
       # Create a 2D Array that is large enough to hold the shape of the Zone.
       x_min, x_max  = extreme_coords 0
@@ -109,6 +114,11 @@ module Realm
         id,
         @rooms.length, @items.length, @npcs.length,
       ]
+    end
+
+    ###########################################################################
+    def reset
+      @rooms.values.each &:reset
     end
 
   end

@@ -33,12 +33,12 @@
     :max: 3
   - :objekt:
       :class: Realm::Placement
-      :id: da950964-caa7-4fab-b460-ce3b5b559137
+      :id: 122c6d22-94d3-4bf1-9f76-15f7ee11e509
       :rid: 3
       :name: "[name]"
-    :klass: Realm::Item
-    :objekt_id: 03dd72be-ec0e-4479-a660-5303539d0305
-    :number: 1
+    :klass: Realm::NPC
+    :objekt_id: 21d0e69b-c1f4-4113-8444-c27b3894db48
+    :number: 3
     :max: 10
 :exits: []
 :items:

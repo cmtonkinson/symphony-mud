@@ -93,5 +93,10 @@ module Realm
       ]
     end
 
+    ###########################################################################
+    def reset
+      @placements.values.each &:load
+    end
+    
   end
 end

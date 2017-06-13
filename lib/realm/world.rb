@@ -28,6 +28,7 @@ module Realm
         zone = Logistics::Scribe.load(Realm::Zone, zone_id)
         next unless zone
         @zones.insert zone
+        zone.run_hook :vivify
       end
     end
 

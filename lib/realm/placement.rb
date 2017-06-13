@@ -48,6 +48,36 @@ module Realm
       ]
     end
 
+    ###########################################################################
+    def load
+      Symphony.logger.debug "%s loading" % fqid_str
+      raise "Placement Room reference is nil" if room.nil?
+      raise "Could not find Placement target" if target.nil?
+      zone = room.zone
+
+      Symphony.logger.debug "  into room %s" % room.fqid_str
+
+      # Find out how many clones of this Item are already on the ground in
+      # this Zone.
+      how_many = zone.rooms.values
+        .map { |r| r.inventory.values }
+        .flatten
+        .count { |item| item.cloned_from == target.id }
+
+      # We already have enough; bail.
+      return if how_many >= max
+
+      # Clone
+      clones = (1..number).map { |_| target.clone }
+      Symphony.logger.debug "  %d clones of %s" % [clones.length, target.fqid_str]
+
+      # Stitch the Item into the Room.
+      clones.each do |item|
+        item.add.to room.inventory
+        item.run_hook :vivify
+      end
+    end
+
   end
 
 end
