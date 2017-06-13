@@ -49,13 +49,13 @@ module Realm
     end
 
     ###########################################################################
-    def load
-      Symphony.logger.debug "%s loading" % fqid_str
+    def place
+      Symphony.logger.debug "%s placing" % fqid_str
       raise "Placement Room reference is nil" if room.nil?
       raise "Could not find Placement target" if target.nil?
       zone = room.zone
 
-      Symphony.logger.debug "  into room %s" % room.fqid_str
+      Symphony.logger.debug "  into %s" % room.fqid_str
 
       # Find out how many clones of this Item are already on the ground in
       # this Zone.
