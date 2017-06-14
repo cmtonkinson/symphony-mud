@@ -8,7 +8,7 @@ define :zedit do
   usage({zone_rid: :int})
   exec do
     if create == "create"
-      zone = Realm::Builder.create_zone
+      zone = Logistics::Builder.create_zone
       being.cmd "zedit #{zone.rid}"
     elsif zone_rid.is_a? Integer
       zone = $world.find_zone zone_rid

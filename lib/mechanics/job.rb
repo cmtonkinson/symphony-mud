@@ -5,13 +5,15 @@ module Mechanics
     attr_reader :who
     # What is to be done? (this will respond to #call)
     attr_reader :what
+    # Optional arguments to be sent when :what is invoked
+    attr_reader :args
     # When is the Job to be done? (unix time; integral seconds after epoch)
     attr_reader :wen
 
     attr_reader :repeat_every, :repeat_times
 
     ###########################################################################
-    def initialize(wen, who, callable = nil, &block)
+    def initialize(wen, who, callable = nil, *args, &block)
       raise ArgumentError.new("no method or proc given") if callable.nil? && !block_given?
       raise ArgumentError.new("both method and proc given") if !callable.nil? && block_given?
 
@@ -34,6 +36,7 @@ module Mechanics
       # Either we have a block, or `callable` is a method name or something
       # responding to :call.
       @what = block_given? ? block : callable
+      @args = args
 
       # Never felt more alive!
       @dead = false
@@ -76,7 +79,7 @@ module Mechanics
     # Execute the callable.
     def fire
       @repeat_times -= 1 if @repeat_times > 0
-      @what.respond_to?(:call) ? @what.call(@who) : @who.send(@what.to_sym)
+      @what.respond_to?(:call) ? @what.call(@who, *@args) : @who.send(@what.to_sym, *@args)
     end
 
     ###########################################################################
@@ -127,8 +130,8 @@ module Mechanics
 
   # RecurringJob provides a one-liner initialization for creating repeat Jobs.
   class RecurringJob < Job
-    def initialize(wen, who, every, callable = nil, &block)
-      super wen, who, callable, &block
+    def initialize(wen, who, every, callable = nil, *args, &block)
+      super wen, who, callable, *args, &block
       recur every, -1
     end
   end

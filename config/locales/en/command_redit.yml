@@ -19,6 +19,7 @@ en:
       err_nothing: "There is no placement %d here."
       err_no_npc: "No NPC with that ID in this Zone."
       err_no_item: "No Item with that ID in this Zone."
+      err_duplicate: "There is already a Placement for that here."
       deleted: "Placement deleted."
       empty_list: "This room currently has no placements."
       new: "Placement added."

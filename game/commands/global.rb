@@ -134,6 +134,22 @@ define :inventory do
 end
 
 ###############################################################################
+define :kill do
+###############################################################################
+  shortcut "k"
+  usage({victim: :id})
+  exec do
+    targets = room.beings.locate victim
+    being.puts t("err_noone") and next if targets.empty?
+    being.puts t("err_too_many") and next if targets.length > 1
+    target = targets.first
+
+    being.puts t("title"), target
+    $world.schedule Mechanics::Job.new 1, Combat::Strike, :new, being, target
+  end
+end
+
+###############################################################################
 define :look do
 ###############################################################################
   shortcut "l"

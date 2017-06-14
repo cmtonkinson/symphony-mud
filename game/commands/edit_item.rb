@@ -8,7 +8,7 @@ define :iedit do
   usage({rid: :int})
   exec do
     if create == "create"
-      item = Realm::Builder.create_item room.zone
+      item = Logistics::Builder.create_item room.zone
       being.cmd "iedit #{item.rid}"
     elsif rid.is_a? Integer
       zone = room.zone

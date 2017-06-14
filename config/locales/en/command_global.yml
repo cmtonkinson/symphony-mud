@@ -30,6 +30,11 @@ en:
     inventory:
       _brief: "List the items in your inventory."
       title: "You are currently holding:\n$string{x"
+    kill:
+      _brief: "Start a fight by hitting someone."
+      err_noone: "You don't see them here."
+      err_too_many: "You can't target more than one victim."
+      title: "You pick a fight with $being."
     look:
       _brief: "Examine your surroundings."
       exit_list: "\nExits are: {R$string{x"

@@ -19,7 +19,7 @@ module Command
       cmd_name, _, rest = input.partition " "
       being             = @user.avatar
 
-      Symphony.logger.debug "Handling '#{input}' in :#{set_name} for #{being.fqid_str}"
+      #Symphony.logger.debug "Handling '#{input}' in :#{set_name} for #{being.fqid_str}"
 
       # If the input was a single character, is it a shortcut?
       if cmd_name.length == 1
@@ -61,7 +61,7 @@ module Command
     ###########################################################################
     def parse(input_string)
       @command.usages.each do |usage|
-        Symphony.logger.debug "  Considering Usage #{usage}"
+        #Symphony.logger.debug "  Considering Usage #{usage}"
         context = usage.try_parse input_string
         return context if !context.nil?
       end

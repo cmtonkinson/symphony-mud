@@ -8,7 +8,7 @@ define :nedit do
   usage({rid: :int})
   exec do
     if create == "create"
-      npc = Realm::Builder.create_npc room.zone
+      npc = Logistics::Builder.create_npc room.zone
       being.cmd "nedit #{npc.rid}"
     elsif rid.is_a? Integer
       zone = room.zone

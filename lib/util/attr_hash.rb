@@ -70,6 +70,13 @@ module Util
     end
 
     ###########################################################################
+    def locate_first(input)
+      matches = locate input
+      return nil if matches.empty?
+      matches.first
+    end
+
+    ###########################################################################
     def display_contents(stack = true)
       values
         .group_by(&:name)

@@ -54,13 +54,18 @@ module Realm
       raise "Placement Room reference is nil" if room.nil?
       raise "Could not find Placement target" if target.nil?
       zone = room.zone
+      container_name = case target 
+                       when Item then :inventory
+                       when Being then :beings
+                       else raise "Objekt type not configured for Placement"
+                       end
 
       Symphony.logger.debug "  into %s" % room.fqid_str
 
       # Find out how many clones of this Item are already on the ground in
       # this Zone.
       how_many = zone.rooms.values
-        .map { |r| r.inventory.values }
+        .map { |r| r.send(container_name).values }
         .flatten
         .count { |item| item.cloned_from == target.id }
 
@@ -71,10 +76,10 @@ module Realm
       clones = (1..number).map { |_| target.clone }
       Symphony.logger.debug "  %d clones of %s" % [clones.length, target.fqid_str]
 
-      # Stitch the Item into the Room.
-      clones.each do |item|
-        item.add.to room.inventory
-        item.run_hook :vivify
+      # Stitch the Objekt into the Room.
+      clones.each do |clone|
+        clone.add.to room.send(container_name)
+        clone.run_hook :vivify
       end
     end
 

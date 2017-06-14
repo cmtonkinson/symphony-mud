@@ -8,7 +8,7 @@ define :redit do
   usage "create"
   exec do
     if create == "create"
-      target_room = Realm::Builder.create_room room.zone
+      target_room = Logistics::Builder.create_room room.zone
       being.cmd "goto #{target_room.rid}"
       being.cmd "redit"
     else
@@ -82,6 +82,11 @@ define :placement, :edit_room do
       elsif item == "item"
         objekt = room.zone.items.values.find { |i| i.rid == item_rid }
         being.puts t("err_no_item") and next if objekt.nil?
+      end
+
+      if room.placements.values.any? { |p| p.klass == objekt.class.name && p.objekt_id == objekt.id }
+        being.puts t("err_duplicate")
+        next
       end
 
       placement = Realm::Placement.new(nil, {
