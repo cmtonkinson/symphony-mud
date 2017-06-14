@@ -32,6 +32,14 @@ module Mechanics
     end
 
     ###########################################################################
+    def increase(value)
+      self.current = @current + value
+    end
+
+    ###########################################################################
+    def decrease(value)
+      self.current = @current - value
+    end
 
   end
 

@@ -139,25 +139,26 @@ module Realm
 
     ###########################################################################
     def auto_health
-      this_heal      = Util.bound health.max / 10, 1, health.current
-      health.current = health.current + this_heal
+      this_heal = Util.bound health.max / 10, 1, health.current
+      health.increase this_heal
     end
 
     ###########################################################################
     def auto_mana
-      this_heal    = Util.bound mana.max / 10, 1, mana.current
-      mana.current = mana.current + this_heal
+      this_heal = Util.bound mana.max / 10, 1, mana.current
+      mana.increase this_heal
     end
 
     ###########################################################################
     def auto_stamina
-      this_heal       = Util.bound level / 5, 1, MAX_STAMINA / 2.5
-      stamina.current = stamina.current + this_heal
+      this_heal = Util.bound level / 5, 1, MAX_STAMINA / 2.5
+      stamina.increase this_heal
     end
 
     ###########################################################################
+    # NOTE: Avatars stop gaining experience and show 0 tnl once they reach HERO
     def award_experience(exp_gained)
-      return if level >= HERO
+      return if self.is_a?(Avatar) && level >= HERO
 
       puts "You gain {Y%d{x experience points!" % exp_gained
       @exp = exp + exp_gained
@@ -169,7 +170,7 @@ module Realm
         else
           exp_gained = exp_gained - tnl
           gain_level
-          return if level >= HERO
+          return if self.is_a?(Avatar) && level >= HERO
         end
       end
     end
@@ -184,7 +185,7 @@ module Realm
       trains_boost = 1
       # Apply gains
       @level = new_level
-      @tnl   = hero? ? 0 : new_tnl
+      @tnl   = (is_a?(Avatar) && hero?) ? 0 : new_tnl
       health.max_stat.baseline += health_boost
       # heal
       heal
@@ -193,8 +194,8 @@ module Realm
       puts "You gain {G%u{x health points." % health_boost
       puts "You gain {C%u{x mana points." % mana_boost
       puts "You gain {B%u{x training points." % trains_boost
-      puts "You have {Y%u{x experience to your next level." % tnl if level < HERO
-      Symphony.logger.debug "%s has grown to level %u" % [fqid_str, level]
+      puts "You have {Y%u{x experience to your next level." % tnl if (is_a?(Avatar) && hero?)
+      Symphony.logger.debug "%s has grown to level %u with %u tnl" % [fqid_str, level, tnl]
     end
 
     ###########################################################################

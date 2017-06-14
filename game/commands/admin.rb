@@ -54,7 +54,7 @@ define :dig do
     being.puts t "err_no_way" and next unless Realm::Exit::DIRECTIONS.keys.include?(direction)
     being.puts t "err_already" and next unless room.send(direction).nil?
 
-    Realm::Builder.create_linked_room room, direction
+    Logistics::Builder.create_linked_room room, direction
 
     being.puts t("actor"), direction
     room.puts t("other"), being, direction, exclude: being
@@ -156,6 +156,31 @@ define :load do
       being.puts t("actor"), copy
       Symphony.logger.debug "%s loaded %s as a clone of %s" % [being.fqid_str, copy.fqid_str, model.fqid_str]
      end
+  end
+end
+
+###############################################################################
+define :promote do
+###############################################################################
+  level Realm::Being::GOD
+  usage({target: :id}, {to_level: :int})
+  exec do
+    victim = room.beings.locate_first target
+    being.puts t("err_not_found") and next if victim.nil?
+    being.puts t("err_no_permission") and next if victim == being
+    being.puts t("err_already_there") and next if victim.level >= to_level
+    being.puts t("err_no_permission") and next unless being.has_seniority?(victim)
+    being.puts t("err_no_permission") and next if to_level > being.level - Realm::Being::IMMORTAL_SENIORITY
+
+    being.puts t("actor"), victim 
+    victim.puts t("victim"), being
+
+    # When the victim is an Avatar and the target level is above HERO, we need
+    # to account for the fact that their TNL will stay at 0. So we award normal
+    # experience up through HERO, and then we have to directly trigger the
+    # level gains.
+    victim.award_experience victim.tnl while victim.tnl > 0 && victim.level < to_level
+    victim.gain_level while victim.level < to_level
   end
 end
 

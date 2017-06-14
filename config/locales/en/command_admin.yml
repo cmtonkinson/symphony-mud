@@ -44,6 +44,13 @@ en:
       _brief: "Create a new object from the current zone by rid"
       actor: "You create {W$item{x."
       err_nothing: "No item by that id in this zone."
+    promote:
+      _brief: "Promote the victim to a higher level."
+      err_not_found: "You don't see them here."
+      err_already_there: "That wouldn't be much of a promotion."
+      err_no_permission: "You don't have authority to do that."
+      actor: "You award $being with overwhelming experience."
+      victim: "$being overwhelms you with experience."
     pry:
       _brief: "Blocks the server process by executing `binding.pry` for live debugging"
     reboot:
