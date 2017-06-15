@@ -51,6 +51,8 @@ module Realm
     # Shortcuts!
     WELLNESS.each { |name| alias_method :"#{name[0..2]}", :"#{name}" }
 
+    attr_accessor :circumstance
+
     ###########################################################################
     # Set default values for performance attributes.
     after_initialize -> {
@@ -65,6 +67,8 @@ module Realm
       FITNESS.each { |name| instance_variable_set "@#{name}", Mechanics::ThresholdStat.new(FITNESS_BASE, FITNESS_THRESHOLD) }
       DEFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(DEFENSE_BASE) }
       OFFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(OFFENSE_BASE) }
+
+      @circumstance = nil
     }
 
     ###########################################################################
@@ -221,6 +225,19 @@ module Realm
       end
 
       room.puts str, self, exclude: self
+    end
+
+    ###########################################################################
+    def circumstance_name
+      case @circumstance
+      when Combat::Battle then "battle"
+      else "normal"
+      end
+    end
+
+    ###########################################################################
+    def in_battle?
+      @circumstance.is_a? Combat::Battle
     end
 
   end

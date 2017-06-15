@@ -113,7 +113,9 @@ module Mechanics
       buf = "<Job"
       buf << " @#{@wen} (in #{ready_in})"
       if @who.is_a? Realm::Objekt
-        buf << " #{@who.fqid_str}" if @who.is_a? Realm::Objekt
+        buf << " #{@who.fqid_str}"
+      elsif !(@who.instance_of? Object)
+        buf << " %s" % @who
       else
         buf << " #{@who.class.name}"
       end

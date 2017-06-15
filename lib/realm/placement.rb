@@ -79,6 +79,7 @@ module Realm
       # Stitch the Objekt into the Room.
       clones.each do |clone|
         clone.add.to room.send(container_name)
+        clone.room = room if clone.is_a?(Being)
         clone.run_hook :vivify
       end
     end

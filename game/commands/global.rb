@@ -145,7 +145,7 @@ define :kill do
     target = targets.first
 
     being.puts t("title"), target
-    $world.schedule Mechanics::Job.new 1, Combat::Strike, :new, being, target
+    Combat.embattle being, target
   end
 end
 
