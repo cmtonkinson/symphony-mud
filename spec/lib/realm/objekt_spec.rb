@@ -37,9 +37,9 @@ describe Objekt do
       expect(@fqid[:rid]).to eq @sut.rid
     end
 
-    it "should return an id" do
+    it "should return the first 8 bytes of the uuid" do
       expect(@fqid).to have_key :id
-      expect(@fqid[:id]).to eq @sut.id
+      expect(@fqid[:id]).to eq @sut.id[0..7]
     end
 
   end

@@ -99,7 +99,12 @@ module Realm
 
     ###########################################################################
     def fully_qualified_identifier
-      {klass: self.class.name.split('::').last, name: @name, id: @id, rid: @rid}
+      {
+        klass: self.class.name.split('::').last,
+        name: @name,
+        id: @id[0..7],
+        rid: @rid,
+      }
     end
     alias_method :fqid, :fully_qualified_identifier
 
