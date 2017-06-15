@@ -110,25 +110,52 @@ module Mechanics
 
     ###########################################################################
     def to_s
-      buf = "<Job"
-      buf << " @#{@wen} (in #{ready_in})"
-      if @who.is_a? Realm::Objekt
-        buf << " #{@who.fqid_str}"
-      elsif !(@who.instance_of? Object)
-        buf << " %s" % @who
-      else
-        buf << " #{@who.class.name}"
-      end
-      buf << if @what.respond_to? :to_sym
-        " :" + @what.to_sym.to_s
-      else
-        " #{@what.lambda? ? 'lambda' : 'proc'} %s:%s" % @what.source_location
-      end
-      buf << ">"
+      "<Job %s %s %s %s>" % [wen_to_s, who_to_s, what_to_s, args_to_s]
     end
 
-  end
+    #############################################################################
+    def wen_to_s
+      "@%d (in %d)" % [wen, ready_in]
+    end
 
+    #############################################################################
+    def who_to_s
+      if @who.is_a? Realm::Objekt
+        @who.fqid_str
+      elsif !(@who.instance_of? Object)
+        @who.to_s
+      else
+        @who.class.name
+      end
+    end
+
+    #############################################################################
+    def what_to_s
+      if @what.respond_to? :to_sym
+        ":" + @what.to_sym.to_s
+      else
+        "%s %s:%s" % [(@what.lambda? ? 'lambda' : 'proc'), *@what.source_location]
+      end
+    end
+
+    #############################################################################
+    def args_to_s
+      if @args.length
+        "(%s)" % @args.map do |arg|
+          if arg.is_a? Realm::Objekt
+            arg.fqid_str
+          elsif arg.respond_to? :to_s
+            arg.to_s
+          else
+            "?"
+          end
+        end.join(", ")
+      else
+        ""
+      end 
+    end
+ 
+  end
 
   # RecurringJob provides a one-liner initialization for creating repeat Jobs.
   class RecurringJob < Job
@@ -139,3 +166,4 @@ module Mechanics
   end
 
 end
+

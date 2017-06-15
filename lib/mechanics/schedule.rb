@@ -13,7 +13,7 @@ module Mechanics
     # Insert the Job into the priority queue.
     def add(job)
       @docket.push job
-      Symphony.logger.debug "Scheduled a new Job %s" % job
+      Symphony.logger.debug "Scheduled %s" % job
     end
 
     ###########################################################################
