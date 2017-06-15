@@ -49,7 +49,7 @@ module Realm
     OFFENSE.each { |name| attr_reader name }
 
     # Shortcuts!
-    WELLNESS.each { |name| alias_method :"#{name[0..2]}", :"#{name}" }
+    FITNESS.each { |name| alias_method :"#{name[0..2]}", :"#{name}" }
 
     attr_accessor :circumstance
 
@@ -210,6 +210,29 @@ module Realm
     end
 
     ###########################################################################
+    def take_damage(amount, iDoesDamage)
+      Symphony.logger.error amount
+      Symphony.logger.error health.current
+      stamina.decrease 1
+      health.decrease amount
+      Symphony.logger.error health.current
+      die(iDoesDamage) if health.current == 0
+    end
+
+    ###########################################################################
+    def die(iDoesDamage)
+      result = self.run_hook :before_death
+      return if result.halted?
+
+      peace
+
+      Symphony.logger.info "%s killed %s" % [iDoesDamage.whodunnit, self].map(&:fqid_str) if self.is_a?(Avatar)
+      puts "%s {RKILLED{X you{x!!!!" % iDoesDamage.whodunnit.name
+      puts "You {RDIED{x!!!!"
+      room.puts "$being is {RDEAD{x!!!!", self, exclude: self
+    end
+
+    ###########################################################################
     def announce_status
       p = health.percent
 
@@ -233,11 +256,6 @@ module Realm
       when Combat::Battle then "battle"
       else "normal"
       end
-    end
-
-    ###########################################################################
-    def in_battle?
-      @circumstance.is_a? Combat::Battle
     end
 
   end

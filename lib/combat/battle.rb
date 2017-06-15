@@ -1,6 +1,5 @@
 module Combat
 
-
   class Battle
 
     attr_reader :belligerents

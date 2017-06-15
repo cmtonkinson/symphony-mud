@@ -30,9 +30,9 @@ I18n.default_locale = :en
 # Application autoload/autoconfig heavy lifting.
 ###############################################################################
 # Autoload core modules.
-Dir[Symphony.lib.join "*"].each { |mod| require "#{mod}/init" }
+Dir[Symphony.lib.join "*"].sort.each { |mod| require "#{mod}/init" }
 # Bring all the infrastructure into existence.
-Dir[Symphony.setup.join "*.rb"].each { |file| require file }
+Dir[Symphony.setup.join "*.rb"].sort.each { |file| require file }
 
 ###############################################################################
 # Configure the application.
@@ -47,3 +47,4 @@ require_relative "configuration"
 ###############################################################################
 $universe = Base::Universe.new
 $world    = Realm::World.new
+
