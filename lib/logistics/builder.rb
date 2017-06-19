@@ -11,6 +11,13 @@ module Logistics
     end
 
     ###########################################################################
+    # Create a pathway between two existing Rooms. The new Exit will exist as
+    # `direction` from Room a, and the opposite from b.
+    # Example:
+    #
+    #   link_existing_rooms alpha, beta, "east"
+    #   # => Going "east" from alpha will lead to beta
+    #   # => Going "west" from beta will lead to alpha
     def self.link_existing_rooms(a, b, direction)
       # Create a new Exit
       exit = Realm::Exit.new

@@ -44,6 +44,24 @@ define :exit, :edit_room do
 end
 
 ###############################################################################
+define :link, :edit_room do
+###############################################################################
+  level Realm::Being::DEMIGOD
+  usage({direction: :string}, {room_rid: :int})
+  exec do
+    target_room = $world.find_room room_rid
+    target_direction = Realm::Exit.is_direction? direction
+
+    being.puts t("no_way") and next if target_direction.nil?
+    being.puts t("no_where") and next if target_room.nil?
+
+    Logistics::Builder.link_existing_rooms room, target_room, target_direction
+    room.puts t("room"), target_direction
+    target_room.puts t("room"), Realm::Exit::DIRECTIONS[target_direction][:opposite]
+  end
+end
+
+###############################################################################
 define :name, :edit_room do
 ###############################################################################
   level Realm::Being::DEMIGOD
