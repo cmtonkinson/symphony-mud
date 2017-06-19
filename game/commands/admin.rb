@@ -138,8 +138,9 @@ define :jobs do
 ###############################################################################
   level Realm::Being::CREATOR
   usage
+  usage({jobs: :int})
   exec do
-    num_jobs = 10
+    num_jobs = jobs.nil? ? 10 : jobs
     stats    = $world.schedule_stats num_jobs
 
     being.puts t("queue_length") % stats[:length]
