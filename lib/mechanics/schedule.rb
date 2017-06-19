@@ -1,12 +1,16 @@
+require "benchmark"
 require "pqueue"
 
 module Mechanics
   class Schedule
 
+    attr_reader :execution_times
+
     ###########################################################################
     def initialize
-      @docket = PQueue.new { |a,b| a.wen < b.wen }
-      @recurring = {}
+      @docket          = PQueue.new { |a,b| a.wen < b.wen }
+      @recurring       = {}
+      @execution_times = []
     end
 
     ###########################################################################
@@ -34,7 +38,12 @@ module Mechanics
 
       return nil unless top_job.ready?
 
-      top_job.fire
+      realtime = Benchmark.realtime do
+        top_job.fire
+      end
+      # Keep track of execution times (in microseconds)
+      @execution_times << realtime * 1_000_000.0
+
       @docket.pop
 
       if top_job.recurring?
@@ -57,3 +66,4 @@ module Mechanics
 
   end
 end
+

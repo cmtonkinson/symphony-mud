@@ -4,7 +4,7 @@ module Realm
     ORIGIN_ZONE_ID = "00000000-0000-4000-a000-000000000000"
     THE_VOID_ID    = "00000000-0000-4000-a000-000000000001"
 
-    JOBS_PER_BATCH = 5
+    JOBS_PER_BATCH = 10
 
     CONTAINERS = %w(zones beings avatars)
 
@@ -82,6 +82,11 @@ module Realm
     ###########################################################################
     def schedule(job)
       @schedule.add job
+    end
+
+    ###########################################################################
+    def job_times
+      @schedule.execution_times
     end
 
     ###########################################################################

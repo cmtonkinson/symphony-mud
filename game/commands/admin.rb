@@ -46,6 +46,25 @@ define :connections do
 end
 
 ###############################################################################
+define :dashboard do
+###############################################################################
+  level Realm::Being::CREATOR
+  usage
+  exec do
+    job_stats = $world.schedule_stats 0
+    run       = $world.job_times
+    being.puts "{Y%d{x jobs in the queue running {Y%d{x at a time." % [job_stats[:length], job_stats[:batch_size]]
+    being.puts "Job wall-time analysis (units in microseconds):"
+    being.puts "  jobs run so far: {Y%d{x" % run.number
+    being.puts "  mean: {Y%d{x" % run.mean
+    being.puts "  median: {Y%d{x" % run.median 
+    being.puts "  stddev: {Y%.2f{x" % run.standard_deviation
+    being.puts "  min: {Y%d{x" % run.min
+    being.puts "  max: {Y%d{x" % run.max
+  end
+end
+
+###############################################################################
 define :dig do
 ###############################################################################
   level Realm::Being::DEMIGOD
@@ -203,6 +222,37 @@ define :reboot do
   exec do
     being.puts t("actor")
     $universe.should_reboot = true
+  end
+end
+
+###############################################################################
+define :repeat do
+###############################################################################
+  level Realm::Being::CREATOR
+  usage({times: :int}, :rest)
+  exec do
+    min = 1
+    max = 1000
+    being.puts t("err_range") % [min, max] and next if times < min || times > max
+ 
+    (0..times).each { being.cmd rest }
+  end
+end
+
+###############################################################################
+define :reset do
+###############################################################################
+  level Realm::Being::GOD
+  usage
+  usage "all"
+  exec do
+    if all == "all"
+      $world.zones.values.each &:reset
+      being.puts t("all")
+    else
+      room.zone.reset
+      being.puts t("current")
+    end
   end
 end
 

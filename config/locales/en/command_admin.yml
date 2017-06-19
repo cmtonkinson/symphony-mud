@@ -56,6 +56,13 @@ en:
     reboot:
       _brief: "Save the World state, reload the server process, and restore connections."
       actor: "Hold on to your butts..."
+    reset:
+      _brief: "Reset a Zone"
+      all: "All Zones have been reset."
+      current: "The current Zone has been reset."
+    repeat:
+      _brief: "Repeat the same command some number of times."
+      err_range: "You can only repeat something between %d and %d times."
     rooms:
       _brief: "List the Rooms in the given Zone (or the current Zone if unspecified)"
       err_nowhere: "Couldn't find that Zone."
