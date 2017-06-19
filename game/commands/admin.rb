@@ -151,7 +151,7 @@ define :load do
       being.puts t "err_nothing" and next if model.nil?
 
       copy = model.clone
-      copy.add.to room.inventory
+      copy.add.to room.beings
       copy.room = room
       copy.run_hook :vivify
       being.puts t("actor"), copy
