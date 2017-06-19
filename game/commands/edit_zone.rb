@@ -8,8 +8,10 @@ define :zedit do
   usage({zone_rid: :int})
   exec do
     if create == "create"
-      zone = Logistics::Builder.create_zone
-      being.cmd "zedit #{zone.rid}"
+      new_zone = Logistics::Builder.create_zone
+      new_room = Logistics::Builder.create_room new_zone
+      being.cmd "goto #{new_room.rid}"
+      being.cmd "zedit #{new_zone.rid}"
     elsif zone_rid.is_a? Integer
       zone = $world.find_zone zone_rid
       being.puts t "err_nothing" and next if zone.nil?
