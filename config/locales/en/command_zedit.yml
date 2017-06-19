@@ -4,11 +4,6 @@ en:
       _brief: "Enter the zone editor with either a new or existing zone."
       edit: "You're now editing zone "
       err_nothing: "No zone by that id in this zone."
-    zones:
-      _brief: "List the Zones in the given Zone (or the current Zone if unspecified)"
-      err_nowhere: "Couldn't find that Zone."
-      title: "Zones in {m$zone{x:\n\n"
-      line: "[{C$rid{x] {M$zone{x"
 
   #############################################################################
   # Zone Edit mode
