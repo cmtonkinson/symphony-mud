@@ -2,8 +2,9 @@ Symphony.logger = Logger.new(STDOUT)
 
 Symphony.logger.formatter = proc do |severity, datetime, progname, msg|
   colors = {
-    "DEBUG" => "{w",
-    "INFO"  => "{x",
+    "TRACE" => "{w",
+    "DEBUG" => "{x",
+    "INFO"  => "{W",
     "WARN"  => "{y",
     "ERROR" => "{r",
     "FATAL" => "{R",
