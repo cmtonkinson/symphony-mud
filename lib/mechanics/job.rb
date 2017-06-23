@@ -78,6 +78,7 @@ module Mechanics
     ###########################################################################
     # Execute the callable.
     def fire
+      Symphony.logger.trace "Firing %s" % self
       @repeat_times -= 1 if @repeat_times > 0
       @what.respond_to?(:call) ? @what.call(@who, *@args) : @who.send(@what.to_sym, *@args)
     end
