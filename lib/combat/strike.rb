@@ -21,8 +21,6 @@ module Combat
     end
 
     ###########################################################################
-
-    ###########################################################################
     def exec
       attacker.puts "You strike $being!", defender
       defender.puts "$being strikes you!", attacker

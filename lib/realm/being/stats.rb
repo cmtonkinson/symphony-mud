@@ -224,7 +224,7 @@ module Realm
       result = self.run_hook :before_death
       return if result.halted?
 
-      peace
+      self.run_hook :on_death
 
       Symphony.logger.info "%s killed %s" % [iDoesDamage.whodunnit, self].map(&:fqid_str) if self.is_a?(Avatar)
       puts "%s {RKILLED{X you{x!!!!" % iDoesDamage.whodunnit.name
