@@ -9,15 +9,33 @@ module Realm
     define_hook :after_death
 
     ###########################################################################
+    after_initialize -> {
+      @dead = false
+    }
+
+    ###########################################################################
+    enervate -> {
+      # Ensure the Being is removed from Battle.
+      @circumstance.delete_belligerent self if in_battle?
+    }
+
+    ###########################################################################
     def in_battle?
       @circumstance.is_a? Combat::Battle
     end
 
     ###########################################################################
+    def dead?
+      @dead
+    end
+
+    ###########################################################################
     def peace
-      @circumstance = nil
-      scheduled_attacks = @jobs.select { |j| j.who == Combat::Strike }
-      scheduled_attacks.each &:kill
+      @circumstance.run_hook :on_death, self if in_battle?
+
+      unless dead?
+        $world.schedule(Mechanics::Job.new(30, self) { @dead = false })
+      end
     end
 
     ###########################################################################
@@ -41,16 +59,13 @@ module Realm
 
     ###########################################################################
     before_death -> {
-      !hero?
+      !god?
     }
 
     ###########################################################################
     on_death -> {
+      @dead = true
       peace
-    }
-
-    ###########################################################################
-    after_death -> {
     }
 
   end

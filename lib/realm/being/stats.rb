@@ -211,12 +211,9 @@ module Realm
 
     ###########################################################################
     def take_damage(amount, iDoesDamage)
-      Symphony.logger.error amount
-      Symphony.logger.error health.current
       stamina.decrease 1
       health.decrease amount
-      Symphony.logger.error health.current
-      die(iDoesDamage) if health.current == 0
+      die iDoesDamage if health.current < 1
     end
 
     ###########################################################################
@@ -227,9 +224,11 @@ module Realm
       self.run_hook :on_death
 
       Symphony.logger.info "%s killed %s" % [iDoesDamage.whodunnit, self].map(&:fqid_str) if self.is_a?(Avatar)
-      puts "%s {RKILLED{X you{x!!!!" % iDoesDamage.whodunnit.name
+      puts "%s {RKILLED{x you{x!!!!" % iDoesDamage.whodunnit.name
       puts "You {RDIED{x!!!!"
       room.puts "$being is {RDEAD{x!!!!", self, exclude: self
+
+      self.run_hook :after_death
     end
 
     ###########################################################################

@@ -81,7 +81,7 @@ module Mechanics
       Symphony.logger.trace "Firing %s" % self
       @repeat_times -= 1 if @repeat_times > 0
       @what.respond_to?(:call) ? @what.call(@who, *@args) : @who.send(@what.to_sym, *@args)
-      kill
+      kill unless recurring?
     end
 
     ###########################################################################
@@ -93,6 +93,8 @@ module Mechanics
     # priority queue, which is O(n). Since Jobs are small objects in memory,
     # this tradeoff is worth it.
     def kill
+      return if dead?
+      Symphony.logger.trace "Killing %s" % self
       @who.jobs.delete self if @who.is_a? Realm::Objekt
       @who  = nil
       @what = nil
@@ -114,7 +116,7 @@ module Mechanics
 
     ###########################################################################
     def to_s
-      "<Job %s %s %s %s>" % [wen_to_s, who_to_s, what_to_s, args_to_s]
+      dead? ? "<Dead Job>" : "<Job %s %s %s %s>" % [wen_to_s, who_to_s, what_to_s, args_to_s]
     end
 
     #############################################################################

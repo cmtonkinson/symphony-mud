@@ -11,9 +11,8 @@ module Combat
     def initialize(attacker, defender, bout = nil, parent = nil)
       @attacker = attacker
       @defender = defender
-      @bout     = bout || Bout.new(attacker, defender)
+      @bout     = bout
       @parent   = parent
-      Symphony.logger.warn "strike"
 
       before
       exec
@@ -27,10 +26,7 @@ module Combat
       attacker.room.puts "$being strikes $being!", attacker, defender, exclude: [attacker, defender]
 
       attacker.stamina.decrease 1
-      defender.take_damage attacker.level / defender.level, self
-
-      # Only schedule one new Strike per Bout
-      $world.schedule Mechanics::Job.new(1, Strike, :new, defender, attacker) if parent.nil?
+      defender.take_damage 1 + rand(attacker.level), self
     end
 
     ###########################################################################

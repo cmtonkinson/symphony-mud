@@ -52,6 +52,12 @@ module Realm
     }
     
     ###########################################################################
+    enervate -> {
+      $world.beings.delete self
+      @room.delete self
+    }
+
+    ###########################################################################
     def print(format, *args)
       @output_buffer << Util::Linguist.interpret(format, *args)
     end

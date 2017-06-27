@@ -52,7 +52,8 @@ module Realm
 
     ###########################################################################
     vivify -> {
-      $world.schedule Mechanics::RecurringJob.new 0, self, 90, :reset
+      reset
+      $world.schedule Mechanics::RecurringJob.new 90, self, 90, :reset
     }
 
     ###########################################################################
