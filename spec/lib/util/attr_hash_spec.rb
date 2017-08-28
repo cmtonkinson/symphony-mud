@@ -75,7 +75,7 @@ describe Util::AttrHash do
 
     before :each do
       @h = AttrHash.new
-      ["sword", "sword", "crystal", "sword", "mushroom", "small cup", "mutton"].each_with_index do |name, i|
+      ["sword", "sword", "crystal", "sword", "mushroom", "small cup", "mutton", "little pink flower"].each_with_index do |name, i|
         @h.insert Realm::TestItem.new nil, name: name, rid: i
       end
     end
@@ -122,6 +122,12 @@ describe Util::AttrHash do
         found = @h.locate "'small cup'"
         expect(found).to have_exactly(1).items
         expect(found[0].name).to eq "small cup"
+      end
+
+      it "should find Objekts by subsequent terms" do
+        found = @h.locate "pink" 
+        expect(found).to have_exactly(1).items
+        expect(found[0].name).to eq "little pink flower"
       end
 
       # TODO: nice to have
