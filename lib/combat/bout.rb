@@ -18,18 +18,19 @@ module Combat
     end
 
     ###########################################################################
-    # During each Bout, each belligerent attacks one defender. That attack
-    # could be the first of of an entire back-and-forth (in light of e.g.
-    # 'second attack' or 'counter attack' skills) but everybody gets at least
-    # one shot in per Bout.
+    # During each Bout, each belligerent group member attacks one defender.
+    # That attack could be the first of of an entire back-and-forth (in light
+    # of e.g. 'second attack' or 'counter attack' skills) but everybody gets at
+    # least one shot in per Bout.
     def make_strikes
+      fighters = battle.belligerents.flat_map { |b| b.members }
       # Don't start the Bout output on a line with a prompt. It's weird.
-      battle.belligerents.each { |b| b.puts "" }
+      fighters.each { |f| f.puts "" }
 
-      battle.belligerents.each do |attacker|
+      fighters.each do |attacker|
         next if attacker.dead?
 
-        defender = battle.opponents_of(attacker).first
+        defender = attacker.group.all_opponent_members.first
         next if defender.dead?
 
         Strike.new attacker, defender, self        

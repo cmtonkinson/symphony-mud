@@ -1,7 +1,9 @@
 module Realm
 
   class Being
-  
+
+    attr_reader :group
+
     define_hooks :before_strike_attack, :after_strike_attack
     define_hooks :before_strike_defense, :after_strike_defense
     define_hook :before_death, halts_on_falsey: true
@@ -10,7 +12,8 @@ module Realm
 
     ###########################################################################
     after_initialize -> {
-      @dead = false
+      @dead  = false
+      @group = Combat::Group.new
     }
 
     ###########################################################################

@@ -3,8 +3,7 @@ module Combat
   class Battle
     include Hooks
 
-    define_hook :on_death
-    define_hook :after_belligerent_deleted
+    define_hooks :after_belligerent_added, :after_belligerent_deleted
 
     attr_reader :belligerents, :bouts, :job
 
@@ -18,21 +17,17 @@ module Combat
     end
 
     ###########################################################################
-    def add_belligerent(being)
-      @belligerents.add being
-      being.circumstance = self
+    def add_belligerent(group)
+      @belligerents.add group
+      group.battle = self
+      self.run_hook :after_belligerent_added, group
     end
 
     ###########################################################################
-    def delete_belligerent(being)
-      @belligerents.delete being
-      being.circumstance = nil
-      self.run_hook :after_belligerent_deleted
-    end
-
-    ###########################################################################
-    def opponents_of(being)
-      @belligerents.difference([being]).to_a
+    def delete_belligerent(group)
+      @belligerents.delete group
+      group.battle = nil
+      self.run_hook :after_belligerent_deleted, group
     end
 
     ###########################################################################
@@ -41,12 +36,11 @@ module Combat
     end
 
     ###########################################################################
-    on_death -> (stiff) {
-      delete_belligerent stiff
+    after_belligerent_added -> (belligerent) {
     }
 
     ###########################################################################
-    after_belligerent_deleted -> {
+    after_belligerent_deleted -> (belligerent) {
       if @belligerents.size < 2
         # Remove the remaining Belligerent (if there is one).
         @belligerents.each { |b| delete_belligerent b }
