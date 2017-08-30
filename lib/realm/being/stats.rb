@@ -251,8 +251,7 @@ module Realm
 
     ###########################################################################
     def circumstance_name
-      case @circumstance
-      when Combat::Battle then "battle"
+      if battle then "battle"
       else "normal"
       end
     end

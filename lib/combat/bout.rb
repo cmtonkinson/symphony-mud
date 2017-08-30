@@ -23,7 +23,8 @@ module Combat
     # of e.g. 'second attack' or 'counter attack' skills) but everybody gets at
     # least one shot in per Bout.
     def make_strikes
-      fighters = battle.belligerents.flat_map { |b| b.members }
+      fighters = battle.belligerents.map { |b| b.members }.reduce(:+)
+
       # Don't start the Bout output on a line with a prompt. It's weird.
       fighters.each { |f| f.puts "" }
 

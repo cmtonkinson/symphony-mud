@@ -7,28 +7,37 @@ module Combat
     attr_reader :opponents
 
     ###########################################################################
-    def initialize
+    def initialize(leader)
       @battle    = nil
       @members   = Set.new
       @opponents = Set.new
+
+      add_member leader
     end
 
     ###########################################################################
     def add_member(being)
+      raise ArgumentError.new "Cannot add a #{being.class.name} as a Group member" unless being.is_a? Realm::Being
       being.group.remove_member being if being.group
       @members.add being
-      being.group = self
+      being.set_group self
     end
 
     ###########################################################################
     def remove_member(being)
       @members.delete being
       @opponents.clear if @members.empty?
-      being.group = nil
+      being.set_group nil
+    end
+
+    ###########################################################################
+    def member_died(being)
+      
     end
 
     ###########################################################################
     def add_opponent(group)
+      raise ArgumentError.new "Cannot add a #{group.class.name} as a Group opponent" unless group.is_a? Group
       @opponents.add group
     end
 
@@ -39,7 +48,7 @@ module Combat
 
     ###########################################################################
     def all_opponent_members
-      @opponents.flat_map(:members)
+      @opponents.map { |b| b.members }.reduce(:+)
     end
 
   end

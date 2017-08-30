@@ -13,7 +13,7 @@ module Realm
     ###########################################################################
     after_initialize -> {
       @dead  = false
-      @group = Combat::Group.new
+      Combat::Group.new self
     }
 
     ###########################################################################
@@ -23,22 +23,18 @@ module Realm
     }
 
     ###########################################################################
-    def in_battle?
-      @circumstance.is_a? Combat::Battle
+    def set_group(group)
+      @group = group
+    end
+
+    ###########################################################################
+    def battle
+      group.battle
     end
 
     ###########################################################################
     def dead?
       @dead
-    end
-
-    ###########################################################################
-    def peace
-      @circumstance.run_hook :on_death, self if in_battle?
-
-      unless dead?
-        $world.schedule(Mechanics::Job.new(30, self) { @dead = false })
-      end
     end
 
     ###########################################################################
@@ -62,13 +58,14 @@ module Realm
 
     ###########################################################################
     before_death -> {
-      !god?
+      return false if god?
+      return true
     }
 
     ###########################################################################
     on_death -> {
       @dead = true
-      peace
+      group.run_hook :on_death, self
     }
 
   end

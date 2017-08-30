@@ -18,6 +18,7 @@ module Combat
 
     ###########################################################################
     def add_belligerent(group)
+      raise ArugmentError.new "Cannot add a #{group.class.name} as a Battle belligerent" unless group.is_a? Combat::Group
       @belligerents.add group
       group.battle = self
       self.run_hook :after_belligerent_added, group
