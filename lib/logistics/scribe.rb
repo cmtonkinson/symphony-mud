@@ -18,6 +18,8 @@ module Logistics
         rescue NoMethodError => e
           Symphony.logger.error "Error while loading #{klass}:#{objekt_id}"
           Symphony.logger.debug "  error at #{e.backtrace[0]}"
+          Symphony.logger.debug "  error at #{e.backtrace[1]}"
+          Symphony.logger.debug "  error at #{e.backtrace[2]}"
           return false
         end
       end

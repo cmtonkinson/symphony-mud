@@ -18,8 +18,6 @@ module Realm
 
     ###########################################################################
     enervate -> {
-      # Ensure the Being is removed from Battle.
-      @circumstance.delete_belligerent self if in_battle?
     }
 
     ###########################################################################
@@ -65,7 +63,6 @@ module Realm
     ###########################################################################
     on_death -> {
       @dead = true
-      group.run_hook :on_death, self
     }
 
   end

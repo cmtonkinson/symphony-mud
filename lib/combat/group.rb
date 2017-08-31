@@ -9,8 +9,8 @@ module Combat
     ###########################################################################
     def initialize(leader)
       @battle    = nil
-      @members   = Set.new
-      @opponents = Set.new
+      @members   = Array.new
+      @opponents = Array.new
 
       add_member leader
     end
@@ -19,7 +19,7 @@ module Combat
     def add_member(being)
       raise ArgumentError.new "Cannot add a #{being.class.name} as a Group member" unless being.is_a? Realm::Being
       being.group.remove_member being if being.group
-      @members.add being
+      @members.push being
       being.set_group self
     end
 
@@ -38,7 +38,7 @@ module Combat
     ###########################################################################
     def add_opponent(group)
       raise ArgumentError.new "Cannot add a #{group.class.name} as a Group opponent" unless group.is_a? Group
-      @opponents.add group
+      @opponents.push group
     end
 
     ###########################################################################

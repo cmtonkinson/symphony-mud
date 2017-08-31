@@ -8,22 +8,22 @@ module Combat
     ###########################################################################
     def initialize(battle)
       @battle  = battle
-      @strikes = []
+      @strikes = Array.new
       make_strikes 
     end
 
     ###########################################################################
     def push(strike)
-      @strikes << strike
+      @strikes.push strike
     end
 
     ###########################################################################
-    # During each Bout, each belligerent group member attacks one defender.
+    # During each Bout, each group group member attacks one defender.
     # That attack could be the first of of an entire back-and-forth (in light
     # of e.g. 'second attack' or 'counter attack' skills) but everybody gets at
     # least one shot in per Bout.
     def make_strikes
-      fighters = battle.belligerents.map { |b| b.members }.reduce(:+)
+      fighters = battle.groups.map { |b| b.members }.reduce(:+)
 
       # Don't start the Bout output on a line with a prompt. It's weird.
       fighters.each { |f| f.puts "" }
@@ -31,8 +31,8 @@ module Combat
       fighters.each do |attacker|
         next if attacker.dead?
 
-        defender = attacker.group.all_opponent_members.first
-        next if defender.dead?
+        defender = attacker.acquire_target
+        next if defender.nil?
 
         Strike.new attacker, defender, self        
       end
