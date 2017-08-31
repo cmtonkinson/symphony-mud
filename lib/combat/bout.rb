@@ -31,6 +31,17 @@ module Combat
       fighters.each do |attacker|
         next if attacker.dead?
 
+        # TODO
+        # This isn't terribly awesome. We use the ability of a fighter to
+        # acquire a valid target as our criteria for continuing the Battle (see
+        # Battle#new_bout) but unfortunately I don't see a clear way at the
+        # time of writing to cache that acquired target for use here, since
+        # conditions may have changed since it was computed.
+        #
+        # In the future, it would be nice to revisit this mechanic such that
+        # we weren't performing the same non-trivial operation twice per Bout
+        # per participant. For example, perhaps a "removed from active combat"
+        # flag or hook could be implemented to help with this.
         defender = attacker.acquire_target
         next if defender.nil?
 

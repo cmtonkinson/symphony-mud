@@ -51,6 +51,13 @@ module Combat
       @opponents.map { |b| b.members }.reduce(:+)
     end
 
+    ###########################################################################
+    # Returns true if there is at least one Group member who can acquire a
+    # valid target.
+    def acquire_targets
+      members.any? { |m| m.acquire_target }
+    end
+
   end
 
 end

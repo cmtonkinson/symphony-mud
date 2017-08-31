@@ -31,6 +31,14 @@ module Realm
     end
 
     ###########################################################################
+    def acquire_target
+      group.all_opponent_members
+        .reject { |b| b.dead? }
+        .reject { |b| b.room != room }
+        .first
+    end
+
+    ###########################################################################
     def dead?
       @dead
     end
