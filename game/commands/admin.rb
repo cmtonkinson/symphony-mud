@@ -134,6 +134,21 @@ define :goto do
 end
 
 ###############################################################################
+define :heal do
+###############################################################################
+  level Realm::Being::GOD
+  usage({victim: :string})
+  exec do
+    target = room.find_being victim
+    being.puts t "err_nobody" and next if target.nil?
+    
+    being.puts t("actor"), target
+    target.puts t("victim"), being
+    target.heal    
+  end
+end
+
+###############################################################################
 define :jobs do
 ###############################################################################
   level Realm::Being::CREATOR

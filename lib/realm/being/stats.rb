@@ -213,7 +213,11 @@ module Realm
     def take_damage(amount, iDoesDamage)
       stamina.decrease 1
       health.decrease amount
-      die iDoesDamage if health.current < 1
+      if health.current < 1
+        die iDoesDamage
+      else
+        announce_status
+      end
     end
 
     ###########################################################################
@@ -241,9 +245,10 @@ module Realm
       elsif    p > 0.50 then "$being is in {Cgood{x condition."
       elsif    p > 0.35 then "$being looks a little {cworn{x."
       elsif    p > 0.20 then "$being looks pretty {mworn{x."
-      elsif    p > 0.10 then "$being looks very {ybattered{x."
-      elsif    p > 0.05 then "$being is pretty {rbeat up{x."
-      else                   "$being looks {wterrible{x."
+      elsif    p > 0.10 then "$being looks pretty {ybattered{x."
+      elsif    p > 0.05 then "$being is very {rbeat up{x."
+      elsif    p > 0.01 then "$being looks {wterrible{x."
+      else                   "$being is on the {wbrink of death.{x"
       end
 
       room.puts str, self, exclude: self

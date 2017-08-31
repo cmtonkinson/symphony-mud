@@ -35,6 +35,11 @@ en:
       err_nowhere: "Room not found."
       err_there: "You're already there."
       leave: "$being squeezes through the dimensions and out of sight."
+    heal:
+      _brief: "Restore health, mana, and stamina."
+      actor: "You heal $being."
+      err_nobody: "You don't see them here."
+      victim: "You are healed by $being."
     jobs:
       _brief: "List scheduler statistics."
       batch_size: "The schedule runs {Y%u{x jobs at a time."
