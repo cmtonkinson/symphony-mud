@@ -23,6 +23,14 @@ en:
       err_not_found: "You don't see that here."
       actor: "You get $item."
       other: "$being picks up $item."
+    group:
+      _brief: "View and manage group membership."
+      err_your_group: "You can't leave your own group."
+      err_not_leader: "You can't disband someone else's group."
+      pending: "Your membership into $being's group is currently pending."
+      pending_members: "\nYou have members waiting to join your group:\n\n"
+      members: "$being's group:\n\n"
+      member: "  $being {G$string{x/{g$string{xhp {C$string{x/{c$string{xmana {M$string{xstamina {y$string{xtnl"
     help:
       _brief: "Display details and usage of a command."
       err_no_desc: "No additional information available."

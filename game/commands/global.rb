@@ -98,6 +98,62 @@ define :get do
 end
 
 ###############################################################################
+define :group do
+###############################################################################
+  usage
+  usage({action: %w(leave disband)})
+  usage({action: %w(join withdraw accept deny kick)}, {victim: :id})
+  exec do
+    group  = being.group
+    leader = group.leader
+
+    if action == "leave"
+      being.puts t("err_your_group") and next if being == leader
+      group.leave being
+    elsif action == "disband"
+      being.puts t("err_not_leader") and next unless being == leader
+      group.disband
+    elsif action
+      target = room.beings.locate_first victim
+      being.puts t("err_nobody") and next if target.nil?
+
+      case action
+      when "join" then target.group.request_join being
+      when "withdraw" then target.group.request_withdraw being
+      when "accept" then being.group.request_accept target
+      when "deny" then being.group.request_deny target
+      end
+    else
+      being.puts t("pending"), being.pending_group.leader if !being.pending_group.nil?
+
+      being.puts t("members"), leader
+      group.members.each do |member|
+        being.puts t("member"), member,
+          member.health.current,
+          member.health.max,
+          member.mana.current,
+          member.mana.max,
+          member.stamina.current,
+          member.tnl
+      end
+
+      if being == leader && !group.pending.empty?
+        being.puts t("pending_members")
+        group.pending.each do |pend|
+          being.puts t("member"), pend,
+            pend.health.current,
+            pend.health.max,
+            pend.mana.current,
+            pend.mana.max,
+            pend.stamina.current,
+            pend.tnl
+        end
+      end
+    end
+  end
+end
+
+###############################################################################
 define :help do
 ###############################################################################
   usage :command

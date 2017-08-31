@@ -3,6 +3,7 @@ module Realm
   class Being
 
     attr_reader :group
+    attr_accessor :pending_group
 
     define_hooks :before_strike_attack, :after_strike_attack
     define_hooks :before_strike_defense, :after_strike_defense
@@ -14,6 +15,7 @@ module Realm
     after_initialize -> {
       @dead  = false
       Combat::Group.new self
+      @pending_group = nil
     }
 
     ###########################################################################
