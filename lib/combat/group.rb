@@ -1,5 +1,4 @@
 module Combat
-
   class Group
 
     attr_accessor :battle
@@ -126,7 +125,16 @@ module Combat
       members.any? { |m| m.acquire_target }
     end
 
-  end
+    ###########################################################################
+    # NOTE: This needs to be changed so that the experience awarded to the
+    # Group is distributed across the members in some interesting way, rather
+    # than just dividing it evenly.
+    def award_experience(exp_gained, room)
+      eligible = members.reject { |m| m.room != room }
+        .reject { |m| m.dead? } 
+        .each { |m| m.award_experience exp_gained / eligible.size }
+    end
 
+  end
 end
 
