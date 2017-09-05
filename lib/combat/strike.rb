@@ -26,7 +26,7 @@ module Combat
       attacker.room.puts "$being strikes $being!", attacker, defender, exclude: [attacker, defender]
 
       attacker.stamina.decrease 1
-      defender.take_damage 1 + rand(attacker.level), self
+      defender.take_damage attacker.level + rand(attacker.level), self
     end
 
     ###########################################################################

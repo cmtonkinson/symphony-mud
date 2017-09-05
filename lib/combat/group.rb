@@ -129,10 +129,9 @@ module Combat
     # NOTE: This needs to be changed so that the experience awarded to the
     # Group is distributed across the members in some interesting way, rather
     # than just dividing it evenly.
-    def award_experience(exp_gained, room)
-      eligible = members.reject { |m| m.room != room }
-        .reject { |m| m.dead? } 
-        .each { |m| m.award_experience exp_gained / eligible.size }
+    def award_experience(exp_gained, stiff)
+      eligible = members.reject { |m| m.room != stiff.room }.reject { |m| m.dead? }
+      eligible.each { |m| m.award_experience exp_gained / eligible.size }
     end
 
   end
