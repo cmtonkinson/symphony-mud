@@ -183,14 +183,15 @@ module Realm
     def gain_level
       # Calculate gains
       new_level    = level + 1
-      new_tnl      = 1
-      health_boost = 1
-      mana_boost   = 1
-      trains_boost = 1
+      new_tnl      = reset_tnl
+      health_boost = health_gain
+      mana_boost   = mana_gain
+      trains_boost = trains_gain
       # Apply gains
       @level = new_level
       @tnl   = (is_a?(Avatar) && hero?) ? 0 : new_tnl
       health.max_stat.baseline += health_boost
+      mana.max_stat.baseline += mana_boost
       # heal
       heal
       # notify
@@ -200,6 +201,26 @@ module Realm
       puts "You gain {B%u{x training points." % trains_boost
       puts "You have {Y%u{x experience to your next level." % tnl if (is_a?(Avatar) && hero?)
       Symphony.logger.debug "%s has grown to level %u with %u tnl" % [fqid_str, level, tnl]
+    end
+
+    ###########################################################################
+    def health_gain
+      level
+    end
+
+    ###########################################################################
+    def mana_gain
+      level
+    end
+
+    ###########################################################################
+    def trains_gain
+      1
+    end
+
+    ###########################################################################
+    def reset_tnl
+      level * 10
     end
 
     ###########################################################################
