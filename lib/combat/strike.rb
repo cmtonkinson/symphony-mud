@@ -21,7 +21,7 @@ module Combat
 
     ###########################################################################
     def exec
-      dam = attacker.level + rand(attacker.level)
+      dam = 2 * attacker.level + rand(attacker.level)
       verb = Display::Format.damage dam
 
       attacker.puts "Your strike $string $being! [$string]", verb, defender, dam
