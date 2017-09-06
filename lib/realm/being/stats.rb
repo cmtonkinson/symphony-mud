@@ -258,21 +258,8 @@ module Realm
 
     ###########################################################################
     def announce_status
-      p = health.percent
-
-      str = if p > 0.98 then "$being looks {Gfantastic{x."
-      elsif    p > 0.90 then "$being is in {Bexcellent{x condition."
-      elsif    p > 0.70 then "$being is in {Mgreat{x condition."
-      elsif    p > 0.50 then "$being is in {Cgood{x condition."
-      elsif    p > 0.35 then "$being looks a little {cworn{x."
-      elsif    p > 0.20 then "$being looks pretty {mworn{x."
-      elsif    p > 0.10 then "$being looks pretty {ybattered{x."
-      elsif    p > 0.05 then "$being is very {rbeat up{x."
-      elsif    p > 0.01 then "$being looks {wterrible{x."
-      else                   "$being is on the {wbrink of death.{x"
-      end
-
-      room.puts str, self, exclude: self
+      str = "$being #{Display::Format.health(health.percent)}. [$string]"
+      room.puts str, self, self.health.current, exclude: self
     end
 
     ###########################################################################

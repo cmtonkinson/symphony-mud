@@ -20,24 +20,31 @@ module Base
       "bright magenta": {code: "M", escape: "\e[35m#{BOLD}"},
       "cyan":           {code: "c", escape: "\e[36m"},
       "bright cyan":    {code: "C", escape: "\e[36m#{BOLD}"},
+
+      "reset":          {code: "x", escape: RESET},
+      "bracket":        {code: "{", escape: "{"},
     }
 
     # The negative lookbehind for % is so that this class' behavior doesn't
     # interefere with I18n interpolation syntax (which is `%{varname}`)
     # otherwise we could end up accidentally sending a string like `%arname}`
     # to `I18n#t`.
-    PATTERN = /(?<!%)\{[WwrRgGyYbBmMcCx{]/
+    VALID_CODES   = COLORS.values.map { |defn| defn[:code] }
+    SPECIAL_CODES = [RESET, "{", "?"]
+    PATTERN       = /(?<!%)\{[#{VALID_CODES.join}]/
 
     def self.escape_map
-      @escape_map ||= {
-        "{x" => RESET,
-        "{{" => "{",
-      }.merge(Hash[COLORS.map do |k,v|
+      @escape_map ||= Hash[COLORS.map do |k,v|
         ["{#{v[:code]}", v[:escape]]
-      end])
+      end]
     end
 
     def self.colorize(source)
+      source.gsub! /\{\?/ do |_|
+        COLORS.values.map { |v| v[:escape] }
+          .reject { |x| SPECIAL_CODES.include?(x) }
+          .sample
+      end
       source.gsub PATTERN, escape_map
     end
 

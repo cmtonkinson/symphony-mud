@@ -21,12 +21,15 @@ module Combat
 
     ###########################################################################
     def exec
-      attacker.puts "You strike $being!", defender
-      defender.puts "$being strikes you!", attacker
-      attacker.room.puts "$being strikes $being!", attacker, defender, exclude: [attacker, defender]
+      dam = attacker.level + rand(attacker.level)
+      verb = Display::Format.damage dam
+
+      attacker.puts "Your strike $string $being! [$string]", verb, defender, dam
+      defender.puts "$being strike $string you! [$string]", attacker, verb, dam
+      attacker.room.puts "$being strike $string $being!", attacker, verb, defender, exclude: [attacker, defender]
 
       attacker.stamina.decrease 1
-      defender.take_damage attacker.level + rand(attacker.level), self
+      defender.take_damage dam, self
     end
 
     ###########################################################################
