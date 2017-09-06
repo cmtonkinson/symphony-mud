@@ -37,11 +37,6 @@ module Combat
     end
 
     ###########################################################################
-    def member_died(being)
-      
-    end
-
-    ###########################################################################
     def add_opponent(group)
       raise ArgumentError.new "Cannot add a #{group.class.name} as a Group opponent" unless group.is_a? Group
       @opponents.push group
@@ -73,6 +68,11 @@ module Combat
     def disband
       puts "The group has been disbanded."
       @members.each { |m| remove_member m }
+      @battle    = nil
+      @leader    = nil
+      @opponents = nil
+      @pending   = nil
+      @leader    = nil
     end
 
     ###########################################################################

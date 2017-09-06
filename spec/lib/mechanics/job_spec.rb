@@ -108,7 +108,6 @@ describe Job do
       job.kill
       expect(job.who).to be_nil
       expect(job.what).to be_nil
-      expect(job.wen).to eq 0
       expect(job.dead?).to eq true
     end
   end

@@ -98,7 +98,6 @@ module Mechanics
       @who.jobs.delete self if @who.is_a? Realm::Objekt
       @who  = nil
       @what = nil
-      @wen  = 0
       @args = nil
       @dead = true
     end
