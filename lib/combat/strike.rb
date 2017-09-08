@@ -6,13 +6,15 @@ module Combat
     attr_reader :attacker, :defender
     attr_reader :bout, :battle
     attr_reader :parent
+    attr_reader :created_by
 
     ###########################################################################
-    def initialize(attacker, defender, bout = nil, parent = nil)
-      @attacker = attacker
-      @defender = defender
-      @bout     = bout
-      @parent   = parent
+    def initialize(attacker, defender, bout = nil, parent = nil, created_by = :bout)
+      @attacker   = attacker
+      @defender   = defender
+      @bout       = bout
+      @parent     = parent
+      @created_by = created_by
 
       before
       exec

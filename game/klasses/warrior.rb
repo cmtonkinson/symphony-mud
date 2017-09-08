@@ -6,21 +6,21 @@ module Talent
       @health_rate = 4
       @mana_rate   = 0.3
  
-      ################################### level  trains  difficulty  stamina   successRate
+      ################################# level  trains  difficulty  stamina  mana  successRate
       # Offense
-      add_ability Skill::SecondAttack.new 25,    2,      3,          1,        80
-      add_ability Skill::ThirdAttack.new  50,    3,      3,          2,        80
-      add_ability Skill::FourthAttack.new 75,    4,      3,          3,        80
-      add_ability Skill::Whirlwind.new    60,    4,      4,          10,       95
+      add_ability SecondAttackSkill.new 25,    2,      3,          1,       0,    80
+      add_ability ThirdAttackSkill.new  50,    3,      3,          2,       0,    80
+      add_ability FourthAttackSkill.new 75,    4,      3,          3,       0,    80
+#      add_ability WhirlwindSkill.new    60,    4,      4,          10,      0,    95
 
       # Defense
-      add_ability Skill::Block.new        15,    1,      3,          2,        25
-      add_ability Skill::Parry.new        45,    1,      3,          2,        40
+#      add_ability BlockSkill.new        15,    1,      3,          2,       0,    25
+#      add_ability ParrySkill.new        45,    1,      3,          2,       0,    40
 
       # Dependency graph
-      add_dependency Skill::SecondAttack, Skill::ThirdAttack
-      add_dependency Skill::ThirdAttack,  Skill::FourthAttack
-      add_dependency Skill::Block,        Skill::Parry
+#      add_dependency SecondAttackSkill, Skill::ThirdAttack
+#      add_dependency ThirdAttackSkill,  Skill::FourthAttack
+#      add_dependency BlockSkill,        Skill::Parry
 
     end
 

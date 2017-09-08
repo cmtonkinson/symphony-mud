@@ -2,6 +2,7 @@ module Realm
   class Objekt
 
     include Hooks
+    include Hooks::InstanceHooks
 
     # Unless otherwise noted, all Objekt hooks run in the context of an Objekt
     # instance.

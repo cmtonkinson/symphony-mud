@@ -45,7 +45,8 @@ module Combat
         defender = attacker.acquire_target
         next if defender.nil?
 
-        Strike.new attacker, defender, self        
+        Strike.new attacker, defender, self
+        defender.announce_status unless defender.dead?
       end
     end
 

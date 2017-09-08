@@ -4,6 +4,7 @@ module Realm
     CONTAINERS = %w(inventory)
 
     attr_accessor :room, :gender
+    attr_accessor :abilities, :enablers, :klass
 
     CONTAINERS.each { |cont| attr_accessor cont }
 
@@ -13,6 +14,9 @@ module Realm
     def initialize(id = nil, props = {})
       @gender        = Gender::NEUTER
       @output_buffer = ""
+      @abilities     = Array.new
+      @enablers      = Array.new
+      @klass         = nil
       super
     end
 
@@ -24,6 +28,7 @@ module Realm
     ###########################################################################
     on_hashify -> {
       hash = {
+        klass: @klass.name,
         room: @room&.id,
         gender: @gender,
         inventory: @inventory.values.map(&:hashify),
@@ -35,6 +40,11 @@ module Realm
     ###########################################################################
     on_dehashify -> hash {
       hash = hash[:being]
+
+      if hash[:klass]
+        @klass = Talent.const_get(hash[:klass].capitalize).new
+        add_enabler @klass
+      end
 
       unless is_a? NPC
         @room = $world.find_room hash[:room]
@@ -150,5 +160,18 @@ module Realm
     end
     alias_method :other_beings, :other_beings_in_room
 
+    ###########################################################################
+    def add_enabler(enabler)
+      @enablers.push enabler
+      enabler.abilities.each { |a| add_ability a }
+    end
+
+    ###########################################################################
+    def add_ability(ability)
+      @abilities.push ability
+      ability.added_to self
+    end
+
   end
 end
+

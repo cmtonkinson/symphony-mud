@@ -1,20 +1,23 @@
 module Talent
   class Ability
 
-    attr_reader :name
-    attr_reader :level, :trains, :difficulty, :stamina, :mana, :successRate
+    attr_reader :type, :category, :name
     attr_reader :prerequisites
+    attr_reader :level, :trains, :difficulty, :stamina, :mana, :successRate
 
     ###########################################################################
     def initialize(level, trains, difficulty, stamina, mana, successRate)
+      @type          = nil # active or passive
+      @category      = nil # skill, spell, craft, etc.
       @name          = nil
+      @prerequisites = Array.new
+
       @level         = level
       @trains        = trains
       @difficulty    = difficulty
       @stamina       = stamina
       @mana          = mana
       @successRate   = successRate
-      @prerequisites = Array.new
     end
 
     ###########################################################################
@@ -23,8 +26,23 @@ module Talent
     end
 
     ###########################################################################
-    def exec
-      raise StandardError.new "Talent::Ability#exec not implemented"
+    def category_s
+      category.to_s.gsub /_/, ' '
+    end
+
+    ###########################################################################
+    def name_s
+      name.to_s.gsub /_/, ' '
+    end
+
+    ###########################################################################
+    def added_to
+      raise StandardError.new "Talent::Ability#added_to not redefined"
+    end
+
+    ###########################################################################
+    def act
+      raise StandardError.new "Talent::Ability#act not redefined"
     end
 
   end

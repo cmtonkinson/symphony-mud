@@ -322,7 +322,7 @@ define :summary do
     # The arguments below for sprintf follow the summary template line by line.
     being.puts $templates.summary % [
       "race", being.strength.current, being.hit_bonus.current, being.level,
-      "class", being.dexterity.current, being.damage_bonus.current, being.health.current, being.health.max,
+      being.klass&.name, being.dexterity.current, being.damage_bonus.current, being.health.current, being.health.max,
       being.gender, being.constitution.current, being.mana.current, being.mana.max,
       0, being.intelligence.current, being.armor.current, being.stamina.current,
       "hand", being.focus.current, being.bash.current, being.exp,

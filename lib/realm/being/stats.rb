@@ -236,8 +236,6 @@ module Realm
       health.decrease amount
       if health.current < 1
         die iDoesDamage
-      else
-        announce_status
       end
     end
 
