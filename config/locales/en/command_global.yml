@@ -66,6 +66,10 @@ en:
     shortcuts:
       _brief: "Display shortcuts for all commands that have one."
       title: "The following command shortcuts are available:"
+    skills:
+      _brief: "Display skills you currently know."
+      title: "You have learned the following skills:\n\n"
+      skill: "  $string"
     summary:
       _brief: "Display information about the current state of your Avatar."
       title: "Your name is $string and you are a $string."

@@ -18,9 +18,9 @@ module Talent
 #      add_ability ParrySkill.new        45,    1,      3,          2,       0,    40
 
       # Dependency graph
-#      add_dependency SecondAttackSkill, Skill::ThirdAttack
-#      add_dependency ThirdAttackSkill,  Skill::FourthAttack
-#      add_dependency BlockSkill,        Skill::Parry
+#      add_dependency SecondAttackSkill, ThirdAttackSkill
+#      add_dependency ThirdAttackSkill,  FourthAttackSkill
+#      add_dependency BlockSkill,        ParrySkill
 
     end
 

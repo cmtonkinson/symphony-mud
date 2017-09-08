@@ -16,6 +16,8 @@ module Combat
       @parent     = parent
       @created_by = created_by
 
+      return if defender.dead?
+
       before
       exec
       after

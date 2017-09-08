@@ -172,6 +172,11 @@ module Realm
       ability.added_to self
     end
 
+    ###########################################################################
+    def get_ability(name)
+      @abilities.first { |a| a.name == name }
+    end
+
   end
 end
 

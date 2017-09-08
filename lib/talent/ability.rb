@@ -41,8 +41,15 @@ module Talent
     end
 
     ###########################################################################
-    def act
-      raise StandardError.new "Talent::Ability#act not redefined"
+    def invoke(*args)
+      will_run, error = precheck
+      return error unless will_run
+      _invoke *args
+    end
+
+    ###########################################################################
+    def precheck
+      return true, nil
     end
 
   end
