@@ -6,8 +6,6 @@ before_script:
   - bundle install -j $(nproc)
 
 rspec:
-  tags:
-    - docker
   script:
     - rspec --format=documentation --force-color
   coverage: '/\(\d+.\d+\%\) covered/'
