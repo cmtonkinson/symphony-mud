@@ -1,7 +1,6 @@
 module Util
 
   class Linguist
-
     ###########################################################################
     def self.interpret(format, *args)
       message = format.gsub /\$[a-z]+/i do |interpreter|
@@ -116,7 +115,6 @@ module Util
       splits[1] = '...' if splits[1].length > 3
       splits.join
     end
-
   end
 
 end

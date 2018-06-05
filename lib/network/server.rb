@@ -3,7 +3,6 @@ require 'socket'
 module Network
 
   class Server < TCPServer
-
     def initialize
       config = Network.configuration
       super config.listen_ip, config.listen_port
@@ -17,7 +16,6 @@ module Network
       end
       client
     end
-
   end
 
 end

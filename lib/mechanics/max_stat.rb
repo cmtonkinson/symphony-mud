@@ -1,7 +1,6 @@
 module Mechanics
 
   class MaxStat
-
     attr_reader :current
     attr_accessor :max_stat
 
@@ -40,7 +39,6 @@ module Mechanics
     def decrease(value)
       self.current = @current - value
     end
-
   end
 
 end

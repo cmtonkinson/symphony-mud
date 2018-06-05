@@ -1,6 +1,5 @@
 module Realm
   class Objekt
-
     attr_reader :jobs
 
     ###########################################################################
@@ -17,6 +16,5 @@ module Realm
       @jobs.each &:kill
       @jobs.clear
     }
-
   end
 end

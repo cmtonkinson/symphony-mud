@@ -99,7 +99,6 @@ module Util
         }
         .join("\n")
     end
-
   end
 
 end

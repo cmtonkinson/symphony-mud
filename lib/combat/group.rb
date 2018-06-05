@@ -1,6 +1,5 @@
 module Combat
   class Group
-
     attr_accessor :battle
     attr_reader :leader
     attr_reader :members
@@ -133,7 +132,6 @@ module Combat
       eligible = members.reject { |m| m.room != stiff.room }.reject { |m| m.dead? }
       eligible.each { |m| m.award_experience exp_gained / eligible.size }
     end
-
   end
 end
 

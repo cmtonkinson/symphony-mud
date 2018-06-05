@@ -3,7 +3,6 @@ require 'pqueue'
 
 module Mechanics
   class Schedule
-
     attr_reader :execution_times
 
     ###########################################################################
@@ -63,7 +62,6 @@ module Mechanics
     def take(n)
       @docket.to_a.reverse.take n
     end
-
   end
 end
 

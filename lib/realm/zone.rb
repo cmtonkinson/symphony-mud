@@ -1,6 +1,5 @@
 module Realm
   class Zone < Objekt
-
     include Realm
 
     CONTAINERS = %w[rooms exits items npcs]
@@ -122,7 +121,6 @@ module Realm
       Symphony.logger.debug 'Zone reset: %s' % fqid_str
       @rooms.values.each &:reset
     end
-
   end
 end
 

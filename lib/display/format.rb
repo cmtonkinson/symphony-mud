@@ -1,6 +1,5 @@
 module Display
   class Format
-
     ###########################################################################
     def self.quantity(value, hash)
       found = hash.find { |x,y| value >= x }
@@ -54,7 +53,6 @@ module Display
         0    => 'does nothing to',
       })
     end
-
   end
 end
 

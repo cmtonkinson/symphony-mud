@@ -42,7 +42,6 @@ module Logistics
 
       return nil
     end
-
   end
 
   class Adder < Transporter

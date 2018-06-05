@@ -46,7 +46,6 @@ module Network
     def _send(message)
       socket.send ::Base::Terminal.colorize(message), 0
     end
-
   end
 
 end

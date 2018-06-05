@@ -42,7 +42,6 @@ module Logistics
         File.basename(zonefile).gsub /\.yml/, ''
       end
     end
-
   end
 end
 

@@ -52,7 +52,6 @@ module Base
       operators.each { |op| return if op.handle(input) == true }
       puts I18n.t 'command.operator.err_not_found'
     end
-
   end
 
 end

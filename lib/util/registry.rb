@@ -1,7 +1,6 @@
 module Util
 
   class Registry
-
     @@hash = {}
 
     ###########################################################################
@@ -49,7 +48,6 @@ module Util
         buckets: buckets,
       }
     end
-
   end
 
 end

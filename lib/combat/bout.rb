@@ -1,7 +1,6 @@
 module Combat
 
   class Bout
-
     attr_reader :battle
     attr_reader :strikes
 
@@ -49,7 +48,6 @@ module Combat
         defender.announce_status unless defender.dead?
       end
     end
-
   end
 
 end

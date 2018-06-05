@@ -1,7 +1,6 @@
 module Mechanics
 
   class SimpleStat
-
     attr_accessor :baseline, :modifier
 
     ###########################################################################
@@ -25,7 +24,6 @@ module Mechanics
     def unmodify(magnitude)
       @modifier -= magnitude
     end
-
   end
 
 end

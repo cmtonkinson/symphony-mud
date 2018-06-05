@@ -191,7 +191,6 @@ module Base
       content = File.read Symphony.configuration.script
       context.eval content
     end
-
   end
 
 end

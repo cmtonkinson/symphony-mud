@@ -1,6 +1,5 @@
 module Realm
   class Item < Objekt
-
     attr_accessor :level
 
 # level
@@ -55,6 +54,5 @@ module Realm
         %w[].sort.join(', '),
       ]
     end
-
   end
 end

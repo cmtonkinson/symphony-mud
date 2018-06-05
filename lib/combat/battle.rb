@@ -68,7 +68,6 @@ module Combat
         @job.kill
       end
     }
-
   end
 
 end

@@ -12,7 +12,6 @@ module Talent
       @mana_rate   = 0
       @abilities   = Array.new
     end
-
   end
 end
 

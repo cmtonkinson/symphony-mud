@@ -1,7 +1,6 @@
 module Command
 
   class Command
-
     attr_reader :usages
 
     ###########################################################################
@@ -132,7 +131,6 @@ module Command
       @usages << args
       @usages.sort_by!(&:sort_method)
     end
-
   end
 
   #############################################################################

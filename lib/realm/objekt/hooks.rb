@@ -1,6 +1,5 @@
 module Realm
   class Objekt
-
     include Hooks
     include Hooks::InstanceHooks
 
@@ -37,6 +36,5 @@ module Realm
     # disposal process, but whereas Objekt#dispose is a low-level mechanical
     # operation, the enevrate hook is a game-level operation to perform work.
     define_hook :enervate
-
   end
 end

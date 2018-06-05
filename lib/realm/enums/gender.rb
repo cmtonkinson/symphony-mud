@@ -1,6 +1,5 @@
 module Realm
   class Gender
-
     include Ruby::Enum
 
     define :MALE,   I18n.t('linguist.gender.male')
@@ -35,6 +34,5 @@ module Realm
         defns[key gender]
       end
     end
-
   end
 end

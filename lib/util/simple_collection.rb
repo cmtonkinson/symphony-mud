@@ -6,7 +6,6 @@ module Util
   # ADT to keep simple collections DRY
   ##################################################################################################
   class SimpleCollection
-
     def initialize(*args)
       @array = Array.[](*args)
     end
@@ -32,31 +31,26 @@ module Util
     def each(&block)
       @array.each &block
     end
-
   end
 
   ##################################################################################################
   # Queue.
   ##################################################################################################
   class Queue < SimpleCollection
-
     def push(element)
       @array.push element
       self
     end
-
   end
 
   ##################################################################################################
   # Stack
   ##################################################################################################
   class Stack < SimpleCollection
-
     def push(element)
       @array.unshift element
       self
     end
-
   end
 
 end

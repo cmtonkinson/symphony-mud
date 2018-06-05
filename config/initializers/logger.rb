@@ -4,7 +4,6 @@ require 'logger'
 
 
 class Logger
-
   self.send :remove_const, 'SEV_LABEL'
   SEV_LABEL = {
    -1 => 'TRACE',
@@ -27,6 +26,5 @@ class Logger
   def trace?
     @level <= TRACE
   end
-
 end
 

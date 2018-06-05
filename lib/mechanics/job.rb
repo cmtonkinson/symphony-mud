@@ -1,6 +1,5 @@
 module Mechanics
   class Job
-
     # Who "owns" the Job? (this will be an Objekt object).
     attr_reader :who
     # What is to be done? (this will respond to #call)

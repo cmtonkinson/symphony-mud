@@ -1,12 +1,10 @@
 module Realm
   class Configuration
-
     attr_accessor :error_string
 
     def initialize
       @error_string = '[{RERROR{x]'
     end
-
   end
 
   def self.configuration

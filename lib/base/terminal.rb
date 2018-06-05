@@ -1,7 +1,6 @@
 module Base
 
   class Terminal
-
     RESET   = "\e[0m"
     BOLD    = "\e[1m"
 
@@ -51,7 +50,6 @@ module Base
     def self.uncolor(source)
       source.gsub PATTERN, ''
     end
-
   end
 
 end

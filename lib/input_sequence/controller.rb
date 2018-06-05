@@ -16,7 +16,6 @@ module InputSequence
     def handle(input)
       @sequence.handle input
     end
-
   end
 
 end

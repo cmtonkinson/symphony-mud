@@ -1,5 +1,4 @@
 class PriorityQueue
-
   #############################################################################
   def initialize
     @elements = [nil]
@@ -71,6 +70,5 @@ class PriorityQueue
   def exchange(source, target)
     @elements[source], @elements[target] = @elements[target], @elements[source]
   end
-
 end
 

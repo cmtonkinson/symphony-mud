@@ -50,7 +50,6 @@ module InputSequence
       str << "(on '#{aasm.current_event}')"
       Symphony.logger.trace str
     end
-
   end
 
 end

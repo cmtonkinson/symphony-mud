@@ -1,6 +1,5 @@
 module Talent
   class Warrior < Klass
-
     def initialize
       @name        = 'warrior'
       @health_rate = 4
@@ -23,7 +22,6 @@ module Talent
 #      add_dependency BlockSkill,        ParrySkill
 
     end
-
   end
 end
 

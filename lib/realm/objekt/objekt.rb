@@ -24,7 +24,6 @@ require 'securerandom'
 
 module Realm
   class Objekt
-
     # Defining Objekt property defaults at the class-level like this makes
     # certain meta-operations easier, such as for testing.
     DEFAULTS = {
@@ -119,6 +118,5 @@ module Realm
     def interpret_name
       _interpret_name      
     end
-
   end
 end

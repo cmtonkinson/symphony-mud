@@ -1,7 +1,6 @@
 module Command
 
   class Usage < Array
-
     ###########################################################################
     # Add a new Argument. Raise if something goes wrong.
     def push(arg)
@@ -54,6 +53,5 @@ module Command
     def to_s
       "Usage<#{length}:#{map(&:to_s).join(',')}>"
     end
-
   end
 end

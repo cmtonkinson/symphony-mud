@@ -2,7 +2,6 @@ require 'matrix'
 
 module Realm
   class Exit < Objekt
-
     DIRECTIONS = {
       'north' => {
         opposite: 'south',
@@ -73,6 +72,5 @@ module Realm
       test = DIRECTIONS.keys.find { |name| name.index(str) == 0 }
       test.nil? ? nil : test
     end
-
   end
 end

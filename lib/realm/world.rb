@@ -1,6 +1,5 @@
 module Realm
   class World < Objekt
-
     ORIGIN_ZONE_ID = '00000000-0000-4000-a000-000000000000'
     THE_VOID_ID    = '00000000-0000-4000-a000-000000000001'
 
@@ -131,6 +130,5 @@ module Realm
       return 1 if zone_rids.all? &:nil?
       zone_rids.max + 1
     end
-
   end
 end

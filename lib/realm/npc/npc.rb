@@ -1,6 +1,5 @@
 module Realm
   class NPC < Being
-
     # NPCs (during building) have an obvious need for full stat manipulation
     # even though Being says that's 'discouraged'.
     EXPERIENCE.each { |name| attr_writer name }
@@ -28,7 +27,6 @@ module Realm
         %w[].sort.join(', '),
       ]
     end
-
   end
 end
 

@@ -1,6 +1,5 @@
 module Realm
   class Avatar
-
     attr_accessor :num_logins
 
     define_hooks :on_first_login
@@ -34,6 +33,5 @@ module Realm
       # Notify.
       puts "\n\n{WAs the first Avatar in the system, you have been made system administrator (level {Y%d{W aka 'CREATOR')" % level
     }
-
   end
 end

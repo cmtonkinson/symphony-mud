@@ -2,6 +2,7 @@ module Talent
   class Ability
 
     attr_reader :type, :category, :name
+    attr_reader :level, :trains, :difficulty, :stamina, :mana, :successRate
     attr_reader :prerequisites
     attr_reader :level, :trains, :difficulty, :stamina, :mana, :successRate
 
@@ -56,7 +57,6 @@ module Talent
     def exec
       raise StandardError.new 'Talent::Ability#exec not implemented'
     end
-
   end
 end
 

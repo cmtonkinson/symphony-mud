@@ -1,7 +1,6 @@
 module InputSequence
 
   class LoginSequence < InputSequence
-
     ###########################################################################
     def initialize
       super
@@ -174,7 +173,6 @@ module InputSequence
         reject_passphrase_confirmation
       end
     end
-
   end
 
 end

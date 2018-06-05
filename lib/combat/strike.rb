@@ -53,7 +53,6 @@ module Combat
       attacker.run_hook :after_strike_attack, self
       defender.run_hook :after_strike_defense, self
     end
-
   end
 
 end

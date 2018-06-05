@@ -232,6 +232,5 @@ module Command
       else raise "No handler for description definition of type #{defn.class.name} for Argument type '#{@type}'"
       end
     end
-
   end
 end

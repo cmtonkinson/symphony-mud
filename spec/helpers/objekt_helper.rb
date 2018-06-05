@@ -1,7 +1,6 @@
 module Realm
 
   class TestObj < Objekt
-
     attr_accessor :my_num, :my_nil
 
     attr_reader :before_remove_ran, :after_remove_ran, :before_add_ran, :after_add_ran
@@ -35,7 +34,6 @@ module Realm
     after_remove  -> { @after_remove_ran  = true }
     before_add    -> { @before_add_ran    = true }
     after_add     -> { @after_add_ran     = true }
-
   end
 
   ###########################################################################

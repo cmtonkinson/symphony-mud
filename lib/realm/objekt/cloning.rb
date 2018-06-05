@@ -1,6 +1,5 @@
 module Realm
   class Objekt
-
     attr_reader :cloned_from
 
     ###########################################################################
@@ -25,6 +24,5 @@ module Realm
       # Return the clone.
       dolly
     end
-
   end
 end

@@ -10,5 +10,4 @@ class JobTester
   def call_me_maybe
     @x += 10
   end
-
 end

@@ -2,7 +2,6 @@ require 'set'
 
 module Realm
   class Objekt
-
     attr_reader :containers
 
     ###########################################################################
@@ -56,6 +55,5 @@ module Realm
 
       send container_name
     end
-
   end
 end

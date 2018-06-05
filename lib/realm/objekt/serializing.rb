@@ -2,7 +2,6 @@ require 'yaml'
 
 module Realm
   class Objekt
-
     ###########################################################################
     def serialize
       YAML.dump hashify
@@ -45,6 +44,5 @@ module Realm
       # Return the completed Objekt.
       objekt
     end
-
   end
 end

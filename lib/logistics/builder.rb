@@ -1,6 +1,5 @@
 module Logistics
   class Builder
-
     ###########################################################################
     # Generate a new Room within the given `zone`.
     def self.create_room(zone)
@@ -69,7 +68,6 @@ module Logistics
       $world.zones.insert new_zone
       new_zone
     end
-
   end
 end
 

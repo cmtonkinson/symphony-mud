@@ -1,7 +1,6 @@
 module Realm
 
   class Being
-
     attr_reader :group
     attr_accessor :pending_group
 
@@ -85,7 +84,6 @@ module Realm
       @dead = true
       emit_experience
     }
-
   end
 
 end

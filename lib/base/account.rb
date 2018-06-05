@@ -1,7 +1,6 @@
 module Base
 
   class Account
-
     ###########################################################################
     def self.hash(message)
       binary = OpenSSL::PKCS5.pbkdf2_hmac(
@@ -91,7 +90,6 @@ module Base
       # Invalidate the cache.
       @user_map = nil
     end
-
   end
 
 end

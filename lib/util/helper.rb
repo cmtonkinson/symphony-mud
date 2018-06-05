@@ -1,7 +1,6 @@
 module Util
 
   class Helper
-
     def self.print_usages_for(command)
       usages = command.usages.reverse
 
@@ -13,7 +12,6 @@ module Util
         output
       end.join "\n"
     end
-
   end
 
 end

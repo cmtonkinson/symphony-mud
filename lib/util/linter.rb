@@ -3,7 +3,6 @@ require 'open3'
 module Util
 
   class Linter
-
     ###########################################################################
     # This method can search the entire project source code for any syntax
     # errors as would be reported by the Ruby interpreter. It's used as a pre-
@@ -25,7 +24,6 @@ module Util
       # Raise a SyntaxError if a syntax error is found.
       raise SyntaxError.new lint_stderr unless lint_status == 0
     end
-
   end
 
 end

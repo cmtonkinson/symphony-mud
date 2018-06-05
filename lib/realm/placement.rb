@@ -84,7 +84,6 @@ module Realm
         clone.run_hook :vivify
       end
     end
-
   end
 
 end

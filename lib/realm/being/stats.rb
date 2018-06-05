@@ -1,6 +1,5 @@
 module Realm
   class Being
-
     BASE_HEALTH = 100
     BASE_MANA   = 100
     MAX_STAMINA = 100
@@ -266,7 +265,6 @@ module Realm
       else 'normal'
       end
     end
-
   end
 end
 

@@ -1,6 +1,5 @@
 module Realm
   class Objekt
-
     define_hooks :before_remove, :after_remove
     define_hooks :before_add, :after_add
 
@@ -18,7 +17,6 @@ module Realm
     def move
       Logistics::Mover.new self
     end
-
   end
 end
 
