@@ -54,7 +54,7 @@ module Util
       end
 
       # If no prefix matches were found, give up.
-      return [] if candidates.empty? 
+      return [] if candidates.empty?
 
       case id.symbol
       when '#' # Return a single candidate (if exists) by 1-indexed list

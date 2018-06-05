@@ -35,7 +35,7 @@ module Command
         @command = @command_set.find { |c| c.get_name.index(cmd_name) === 0 }
       end
 
-      # Couldn't find a Command for this input string. 
+      # Couldn't find a Command for this input string.
       return false if @command.nil?
 
       # We found a Command; can we invoke it?

@@ -55,7 +55,7 @@ module Realm
       raise 'Placement Room reference is nil' if room.nil?
       raise 'Could not find Placement target' if target.nil?
       zone = room.zone
-      container_name = case target 
+      container_name = case target
                        when Item then :inventory
                        when Being then :beings
                        else raise 'Objekt type not configured for Placement'

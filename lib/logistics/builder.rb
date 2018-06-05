@@ -59,9 +59,9 @@ module Logistics
     def self.create_npc(zone)
       new_npc = Realm::NPC.new nil, rid: zone.next_objekt_rid(Realm::NPC)
       zone.insert new_npc
-      new_npc 
+      new_npc
     end
- 
+
     ###########################################################################
     def self.create_zone
       new_zone = Realm::Zone.new nil, rid: $world.next_zone_rid

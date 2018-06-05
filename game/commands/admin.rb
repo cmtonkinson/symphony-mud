@@ -57,7 +57,7 @@ define :dashboard do
     being.puts 'Job wall-time analysis (units in microseconds):'
     being.puts '  jobs run so far: {Y%d{x' % run.number
     being.puts '  mean: {Y%d{x' % run.mean
-    being.puts '  median: {Y%d{x' % run.median 
+    being.puts '  median: {Y%d{x' % run.median
     being.puts '  stddev: {Y%.2f{x' % run.standard_deviation
     being.puts '  min: {Y%d{x' % run.min
     being.puts '  max: {Y%d{x' % run.max
@@ -79,7 +79,7 @@ define :dig do
     room.puts t('other'), being, direction, exclude: being
 
     being.cmd direction
-  end 
+  end
 end
 
 ###############################################################################
@@ -141,10 +141,10 @@ define :heal do
   exec do
     target = room.find_being victim
     being.puts t 'err_nobody' and next if target.nil?
-    
+
     being.puts t('actor'), target
     target.puts t('victim'), being
-    target.heal    
+    target.heal
   end
 end
 
@@ -208,7 +208,7 @@ define :promote do
     being.puts t('err_no_permission') and next unless being.has_seniority?(victim)
     being.puts t('err_no_permission') and next if to_level > being.level - Realm::Being::IMMORTAL_SENIORITY
 
-    being.puts t('actor'), victim 
+    being.puts t('actor'), victim
     victim.puts t('victim'), being
 
     # When the victim is an Avatar and the target level is above HERO, we need
@@ -250,7 +250,7 @@ define :repeat do
     min = 1
     max = 1000
     being.puts t('err_range') % [min, max] and next if times < min || times > max
- 
+
     (0..times).each { being.cmd rest }
   end
 end

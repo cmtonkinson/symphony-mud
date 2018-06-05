@@ -306,8 +306,8 @@ define :shortcuts do
       .select { |c| being.level >= (c.level || 0) }
       .sort_by { |c| c.get_shortcut }
       .map { |c| '  %s - %s' % [c.get_shortcut, c.get_name] }
-   
-    being.puts t('title') 
+
+    being.puts t('title')
     being.puts list.join "\n"
  end
 end

@@ -125,7 +125,7 @@ describe Util::AttrHash do
       end
 
       it 'should find Objekts by subsequent terms' do
-        found = @h.locate 'pink' 
+        found = @h.locate 'pink'
         expect(found).to have_exactly(1).items
         expect(found[0].name).to eq 'little pink flower'
       end

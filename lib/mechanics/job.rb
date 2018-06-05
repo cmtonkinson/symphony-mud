@@ -156,9 +156,9 @@ module Mechanics
         end.join(', ')
       else
         ''
-      end 
+      end
     end
- 
+
   end
 
   # RecurringJob provides a one-liner initialization for creating repeat Jobs.

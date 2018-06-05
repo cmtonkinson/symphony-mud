@@ -5,7 +5,7 @@ module Talent
       @health_rate = 4
       @mana_rate   = 0.3
  
-      ################################# level  trains  difficulty  stamina  mana  successRate
+      ################################### level  trains  difficulty  stamina   successRate
       # Offense
       add_ability SecondAttackSkill.new 25,    2,      3,          1,       0,    80
       add_ability ThirdAttackSkill.new  50,    3,      3,          2,       0,    80

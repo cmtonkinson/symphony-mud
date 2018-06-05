@@ -96,7 +96,7 @@ module Realm
     def reset
       @placements.values.each &:place
     end
-    
+
   end
 end
 

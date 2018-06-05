@@ -59,7 +59,7 @@ module Realm
     vivify -> {
       $world.beings.insert self
     }
-    
+
     ###########################################################################
     enervate -> {
       $world.beings.delete self
@@ -147,7 +147,7 @@ module Realm
       self.run_hook :before_room_change, src, dst
       move.from(src.beings).to(dst.beings)
       @room = dst
-      self.run_hook :after_room_change, src, dst 
+      self.run_hook :after_room_change, src, dst
 
       # Look around.
       cmd 'look'

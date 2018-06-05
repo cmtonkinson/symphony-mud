@@ -9,7 +9,7 @@ Symphony.logger.formatter = proc do |severity, datetime, progname, msg|
     'ERROR' => '{r',
     'FATAL' => '{R',
   }
-  
+
   puts Base::Terminal.colorize('%s[%s %d] %s -- %s: %s{x' % [
     colors.key?(severity) ? colors[severity] : '',
     datetime,

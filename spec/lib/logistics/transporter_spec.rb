@@ -46,7 +46,7 @@ describe Logistics::Transporter do
       expect(@src.length).to eq 1
       expect(@dest.length).to eq 0
 
-      # Move the Objekt. 
+      # Move the Objekt.
       expect(@ob.move.from(@src).to(@dest)).to be_nil
       expect(@src.length).to eq 0
       expect(@dest.length).to eq 1
