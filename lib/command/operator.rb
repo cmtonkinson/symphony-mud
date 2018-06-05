@@ -6,7 +6,7 @@ module Command
 
     ###########################################################################
     def initialize(user, command_set_name = :global)
-      @last_input  = '' # TODO - implement this
+      @last_input  = '' # TODO: implement this
       @user        = user
       @command     = nil
       @set_name    = command_set_name

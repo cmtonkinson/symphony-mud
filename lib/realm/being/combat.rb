@@ -54,6 +54,25 @@ module Realm
       cui_bono = group.battle.groups.select { |g| g.opponents.include? group }
       cui_bono.each { |g| g.award_experience experience_given, self }
     end
+ 
+    ###########################################################################
+    before_strike_attack -> (strike) {
+    }
+
+    ###########################################################################
+    after_strike_attack -> (strike) {
+      # TODO: Leaving this here as a reminder of how to implement e.g. Second Strike
+      #return if strike.parent
+      #Combat::Strike.new strike.attacker, strike.defender, strike.bout, strike
+    }
+
+    ###########################################################################
+    before_strike_defense -> (strike) {
+    }
+
+    ###########################################################################
+    after_strike_defense -> (strike) {
+    }
 
     ###########################################################################
     before_death -> {
