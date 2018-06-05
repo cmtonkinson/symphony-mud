@@ -14,7 +14,7 @@ module Command
     },
     bool: {
       pattern: / t(?:rue)? | f(?:alse)? | y(?:es)? | n(?:o)? | 1 | 0 /ix,
-      cast_func: -> (b, regexp) {
+      cast_func: lambda { |b, regexp|
         return !/t(?:rue)|y(?:es)|1/.match(b).nil?
       },
       description: 'a true or false value',
@@ -37,7 +37,7 @@ module Command
     },
     string: {
       pattern: / [^'"\s]+ | (?:('|") [^\1]*? \1) /ix,
-      cast_func: -> (src) {
+      cast_func: lambda { |src|
         c = src[0]
         return (c == '"' || c == "'") ? src.slice(1..-2) : src
       },
@@ -46,7 +46,7 @@ module Command
     },
     id: {
       pattern: / (?:[^'"\s]+ | (?:('|") [^\1]+? \1)) (?:([#*]) (\d+|all|half))? /ix,
-      cast_func: -> (x) {
+      cast_func: lambda { |x|
         name, symbol, number = x.partition /#|\*/
         id = OpenStruct.new(
           name: name.downcase.sub(/('|") (.+?) \1/ix, '\2'),
@@ -59,7 +59,7 @@ module Command
     },
     rest: {
       pattern: /\A.+/ix,
-      cast_func: -> (src) {
+      cast_func: lambda { |src|
         c = src[0]
         return (c == '"' || c == "'") ? src.slice(1..-2) : src
       },
