@@ -6,16 +6,23 @@ module Util
   # Returns min if the value is less than min.
   # Returns max if the value is greater than max.
   def self.bound(value, min, max)
-    value < min ? (min) : (value > max ? max : value)
+    if value < min
+      min
+    elsif value > max
+      max
+    else
+      value
+    end
   end
 
   #############################################################################
   # Plain and simple implementation of the Logistic Function.
   # See: https://en.wikipedia.org/wiki/Logistic_function
   def logistic_curve(x, limit, min, half_max_x)
-    a      = 1.0 * (limit - min) / min
-    k      = 1.0 * Math.log(a) / half_max_x
-    result = limit / (1 + a * Math::E**(-k * x))
+    a = 1.0 * (limit - min) / min
+    k = 1.0 * Math.log(a) / half_max_x
+    
+    limit / (1 + a * Math::E**(-k * x))
   end
 
   #############################################################################
@@ -24,13 +31,14 @@ module Util
   # y_min, and y_max. x_min is defined as 1.
   def polynomial_curve(x, x_max, y_min, y_max)
     exponent = Math.log(y_max - y_min) / Math.log(x_max - 1)
-    result   = 1.0 * y_min + (x - 1) ** exponent
+
+    1.0 * y_min + (x - 1)**exponent
   end
 
   #############################################################################
   # Determine whether a randomized event will occur "this time" given a
   # probability expressed as a percent chance from 0 to 100.
   def percent_chance(percent)
-    (1 + Random.rand(100)) <= percent
+    Random.rand(1..100) <= percent
   end
 end
