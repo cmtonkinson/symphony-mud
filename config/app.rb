@@ -14,11 +14,11 @@ require 'ostruct'
 ###############################################################################
 class App
   DIRECTORIES = {
-    config: %i(initializers locales setup),
-    data: %i(avatar zone),
-    game: %i(commands klasses skills templates help),
-    lib: %i(),
-    tmp: %i(),
+    config: %i[initializers locales setup],
+    data: %i[avatar zone],
+    game: %i[commands klasses skills templates help],
+    lib: %i[],
+    tmp: %i[],
   }
 
   # Create a reader accessor for each project directory.

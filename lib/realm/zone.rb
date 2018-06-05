@@ -3,7 +3,7 @@ module Realm
 
     include Realm
 
-    CONTAINERS = %w(rooms exits items npcs)
+    CONTAINERS = %w[rooms exits items npcs]
 
     CONTAINERS.each { |c| attr_accessor c.to_sym }
 
@@ -82,7 +82,7 @@ module Realm
         # direction of each Exit and we'll have accounted for all intrazone
         # links.
         marker = ''
-        %i(north east).each do |direction|
+        %i[north east].each do |direction|
           exit_x = adjusted_x
           exit_y = adjusted_y
           next if room.send(direction).nil?

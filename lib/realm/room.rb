@@ -1,7 +1,7 @@
 module Realm
   class Room < Objekt
 
-    CONTAINERS = %w(beings inventory placements)
+    CONTAINERS = %w[beings inventory placements]
 
     attr_accessor :zone
     attr_accessor :coords
@@ -53,7 +53,7 @@ module Realm
     end
 
     ###########################################################################
-    %w(x y z).each_with_index do |coord_name, coord_index|
+    %w[x y z].each_with_index do |coord_name, coord_index|
       define_method "#{coord_name}_coordinate" do
         @coords[coord_index]
       end

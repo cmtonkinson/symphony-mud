@@ -84,7 +84,7 @@ describe Objekt do
     end
 
     it 'deep copies base class Objekt attributes' do
-      %i(name).each do |att|
+      %i[name].each do |att|
         # The values should be the same.
         expect(@clone.send(att)).to eq @original.send(att)
         # The objects should not be the same.
@@ -93,7 +93,7 @@ describe Objekt do
     end
 
     it 'deep copies subclass attributes' do
-      %i(my_num my_nil).each do |att|
+      %i[my_num my_nil].each do |att|
         # The values should be the same.
         expect(@clone.send(att)).to eq @original.send(att)
         # The objects should not be the same.

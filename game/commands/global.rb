@@ -101,8 +101,8 @@ end
 define :group do
 ###############################################################################
   usage
-  usage({ action: %w(leave disband) })
-  usage({ action: %w(join withdraw accept deny kick) }, { victim: :id })
+  usage({ action: %w[leave disband] })
+  usage({ action: %w[join withdraw accept deny kick] }, { victim: :id })
   exec do
     group  = being.group
     leader = group.leader

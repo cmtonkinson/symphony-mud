@@ -20,7 +20,7 @@ module Realm
     GOD     = HERO + 15
     CREATOR = HERO + 20
 
-    LEVELS = %w(NEWBIE NOVICE HERO LORD DUKE KING DEMIGOD GOD CREATOR)
+    LEVELS = %w[NEWBIE NOVICE HERO LORD DUKE KING DEMIGOD GOD CREATOR]
 
     # Many immortal commands (such as 'force' and 'summon') require that in
     # order to perform them, the actor be a sufficiently higher level than the
@@ -35,11 +35,11 @@ module Realm
     OFFENSE_BASE = 0
 
     # Core names can be grouped into five distinct buckets.
-    EXPERIENCE = %i(level exp tnl)
-    WELLNESS   = %i(health mana stamina)
-    FITNESS    = %i(strength dexterity constitution intelligence focus creativity charisma luck)
-    DEFENSE    = %i(armor bash slash pierce exotic)
-    OFFENSE    = %i(hit_bonus damage_bonus)
+    EXPERIENCE = %i[level exp tnl]
+    WELLNESS   = %i[health mana stamina]
+    FITNESS    = %i[strength dexterity constitution intelligence focus creativity charisma luck]
+    DEFENSE    = %i[armor bash slash pierce exotic]
+    OFFENSE    = %i[hit_bonus damage_bonus]
 
     # Discourage direct manipulation of any core names.
     EXPERIENCE.each { |name| attr_reader name }
@@ -127,7 +127,7 @@ module Realm
     end
 
     ###########################################################################
-    (LEVELS - %w(NEWBIE)).each do |lvl|
+    (LEVELS - %w[NEWBIE]).each do |lvl|
       define_method :"#{lvl.downcase}?", Proc.new { @level >= Realm::Being.const_get(lvl) }
     end
 

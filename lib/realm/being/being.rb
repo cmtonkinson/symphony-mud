@@ -1,7 +1,7 @@
 module Realm
   class Being < Objekt
 
-    CONTAINERS = %w(inventory)
+    CONTAINERS = %w[inventory]
 
     attr_accessor :room, :gender
     attr_accessor :abilities, :enablers, :klass

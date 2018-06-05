@@ -25,7 +25,7 @@ module Realm
         rid, name,
         id,
         level,
-        %w().sort.join(', '),
+        %w[].sort.join(', '),
       ]
     end
 

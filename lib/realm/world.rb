@@ -6,7 +6,7 @@ module Realm
 
     JOBS_PER_BATCH = 25 
 
-    CONTAINERS = %w(zones beings avatars)
+    CONTAINERS = %w[zones beings avatars]
 
     CONTAINERS.each { |cont| attr_accessor cont }
 

@@ -33,7 +33,7 @@ module Base
 
     ###########################################################################
     # Proxy Client methods.
-    %i(print puts).each do |meth|
+    %i[print puts].each do |meth|
       define_method meth do |message|
         client.send meth, message
       end

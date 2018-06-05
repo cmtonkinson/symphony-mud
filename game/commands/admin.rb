@@ -30,7 +30,7 @@ define :connections do
   exec do
     dns_width = 35
     format = "%-15s{C%-6s{Y%-23s{W%-#{dns_width}s"
-    being.puts format % %w(Name Sock IP:Port DNS)
+    being.puts format % %w[Name Sock IP:Port DNS]
     being.puts '-------------------------------------------------------------------------------'
     $universe.clients.each do |client|
       sock_domain, remote_port, remote_hostname, remote_ip = client.socket.peeraddr
