@@ -11,7 +11,7 @@ module Base
         Base.configuration.hash_digest.length,
         Base.configuration.hash_digest,
       )
-      hex = binary.unpack("h*")
+      hex = binary.unpack('h*')
       hex.first # unpack returns an Array; in this case only a single element
     end
 
@@ -67,7 +67,7 @@ module Base
 
     ###########################################################################
     def self.file_path
-      Symphony.data.join "accounts.yml"
+      Symphony.data.join 'accounts.yml'
     end
 
     ###########################################################################
@@ -85,9 +85,9 @@ module Base
     ###########################################################################
     def self.update_user_map!
       # Don't kill the file.
-      raise ArgumentError.new "user_map is nil" if user_map.nil?
+      raise ArgumentError.new 'user_map is nil' if user_map.nil?
       # Write the updated YAML.
-      File.open(file_path, "w") { |f| f.write YAML.dump(@user_map) }
+      File.open(file_path, 'w') { |f| f.write YAML.dump(@user_map) }
       # Invalidate the cache.
       @user_map = nil
     end

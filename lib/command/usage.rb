@@ -8,12 +8,12 @@ module Command
 
       # Don't accept custom data structures.
       unless arg.is_a? Argument
-        raise ArgumentError.new I18n.t "command.usage.push_non_argument"
+        raise ArgumentError.new I18n.t 'command.usage.push_non_argument'
       end
 
       # Argument names must be unique.
       if any? { |a| a.name == arg.name }
-        raise ArgumentError.new I18n.t "command.usage.duplicate_name", name: arg.name
+        raise ArgumentError.new I18n.t 'command.usage.duplicate_name', name: arg.name
       end
 
       # Append.

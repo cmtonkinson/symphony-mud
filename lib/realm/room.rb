@@ -26,7 +26,7 @@ module Realm
     on_hashify -> {
       {
         zone: @zone.id,
-        coords: @coords.to_a.join(","),
+        coords: @coords.to_a.join(','),
         placements: @placements.values.map(&:hashify),
       }
     }
@@ -34,7 +34,7 @@ module Realm
     ###########################################################################
     on_dehashify -> hash {
       @zone   = $world.find hash[:zone]
-      @coords = Vector[*hash[:coords].split(",").map(&:to_i)]
+      @coords = Vector[*hash[:coords].split(',').map(&:to_i)]
       if hash.key? :placements
         hash[:placements].each do |ser|
           p = Realm::Placement.dehashify ser

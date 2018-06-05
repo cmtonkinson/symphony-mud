@@ -6,7 +6,7 @@ module Util
       usages = command.usages.reverse
 
       usages.map do |usage|
-        output = "  %s %s" % [command.get_name, usage.map(&:help_name).join(" ")]
+        output = '  %s %s' % [command.get_name, usage.map(&:help_name).join(' ')]
         usage.each do |arg|
           output << "\n    where %s is %s" % [arg.help_name, arg.help_description]
         end

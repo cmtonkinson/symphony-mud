@@ -13,7 +13,7 @@ module Util
         arg = args.shift
 
         begin
-          send "interpret_" + interpreter[1..-1], arg
+          send 'interpret_' + interpreter[1..-1], arg
         rescue NoMethodError
           Symphony.logger.error "Room#interpret with format '#{format}' - no interpreter for '#{interpreter}' (arg is a #{arg.class.name}"
           Realm.configuration.error_string
@@ -100,10 +100,10 @@ module Util
       return name if first_char == first_char.upcase
 
       # Starts with a vowel, so we add "an"
-      return name.prepend (I18n.t("linguist.article.indefinite.vowel") + " ") if first_char.match /[aeiou]/i
+      return name.prepend (I18n.t('linguist.article.indefinite.vowel') + ' ') if first_char.match /[aeiou]/i
 
       # Just a regular name, so we add "a"
-      return name.prepend (I18n.t("linguist.article.indefinite.consonant") + " ")
+      return name.prepend (I18n.t('linguist.article.indefinite.consonant') + ' ')
     end
 
     ###########################################################################
@@ -113,7 +113,7 @@ module Util
     def self.truncate_middle(source, final_length)
       half = (final_length - 3) / 2
       splits = source.scan(/(.{0,#{half}})(.*?)(.{0,#{half}}$)/)[0]
-      splits[1] = "..." if splits[1].length > 3
+      splits[1] = '...' if splits[1].length > 3
       splits.join
     end
 

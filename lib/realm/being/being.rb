@@ -13,7 +13,7 @@ module Realm
     ###########################################################################
     def initialize(id = nil, props = {})
       @gender        = Gender::NEUTER
-      @output_buffer = ""
+      @output_buffer = ''
       @abilities     = Array.new
       @enablers      = Array.new
       @klass         = nil
@@ -86,7 +86,7 @@ module Realm
     ###########################################################################
     def output!
       buf = @output_buffer.dup + prompt
-      @output_buffer = ""
+      @output_buffer = ''
       buf
     end
 
@@ -121,8 +121,8 @@ module Realm
     # Returns true or a String containing an error message.
     def can_go?(direction)
       exit = @room.send direction
-      return I18n.t("movement.no_exit") if exit.nil?
-      return I18n.t("movement.closed") if exit.closed?
+      return I18n.t('movement.no_exit') if exit.nil?
+      return I18n.t('movement.closed') if exit.closed?
       true
     end
 
@@ -133,9 +133,9 @@ module Realm
       dst  = exit.send direction
 
       # Notify.
-      puts I18n.t("being.you_go"), direction
-      src.puts I18n.t("being.leaves"), self, direction, exclude: self
-      dst.puts I18n.t("being.arrived"), self, direction
+      puts I18n.t('being.you_go'), direction
+      src.puts I18n.t('being.leaves'), self, direction, exclude: self
+      dst.puts I18n.t('being.arrived'), self, direction
 
       # Move.
       transport dst
@@ -151,7 +151,7 @@ module Realm
       self.run_hook :after_room_change, src, dst 
 
       # Look around.
-      cmd "look"
+      cmd 'look'
     end
 
     ###########################################################################

@@ -10,7 +10,7 @@ module Command
     decimal: {
       pattern: / [+-]? \d+\.\d+ /ix,
       cast_func: :to_f,
-      description: "a number with a decimal point",
+      description: 'a number with a decimal point',
       examples: [3.14, 1.618, +4.2, 0.0, -5.0],
     },
     bool: {
@@ -18,23 +18,23 @@ module Command
       cast_func: -> (b, regexp) {
         return !/t(?:rue)|y(?:es)|1/.match(b).nil?
       },
-      description: "a true or false value",
-      examples: ["t", "true", "f", "false", "y", "yes", "n", "no", 0, 1],
+      description: 'a true or false value',
+      examples: ['t', 'true', 'f', 'false', 'y', 'yes', 'n', 'no', 0, 1],
     },
     token: {
       pattern: / [\w\d]+ /ix,
-      description: "a sequence of letters, digits, and underscores - no spaces or punctuation",
-      examples: ["batman", "off_set", "field1"],
+      description: 'a sequence of letters, digits, and underscores - no spaces or punctuation',
+      examples: ['batman', 'off_set', 'field1'],
     },
     literal: {
       pattern: / \S+ /ix,
       description: -> arg { "the literal text \"#{arg.name}\"" },
-      examples: ["in", "to", "at"],
+      examples: ['in', 'to', 'at'],
     },
     set: {
       pattern: nil,
-      description: -> arg { "any one of: " + arg.value.join(", ") },
-      examples: ["silver,gold", "to,from,on,at"],
+      description: -> arg { 'any one of: ' + arg.value.join(', ') },
+      examples: ['silver,gold', 'to,from,on,at'],
     },
     string: {
       pattern: / [^'"\s]+ | (?:('|") [^\1]*? \1) /ix,
@@ -42,8 +42,8 @@ module Command
         c = src[0]
         return (c == '"' || c == "'") ? src.slice(1..-2) : src
       },
-      description: "arbitrary text (can include letters, numbers, words, spaces, and puctuation)",
-      examples: ["hello world", "you won 2nd place!", "can you say 'hello world?'"],
+      description: 'arbitrary text (can include letters, numbers, words, spaces, and puctuation)',
+      examples: ['hello world', 'you won 2nd place!', "can you say 'hello world?'"],
     },
     id: {
       pattern: / (?:[^'"\s]+ | (?:('|") [^\1]+? \1)) (?:([#*]) (\d+|all|half))? /ix,
@@ -55,8 +55,8 @@ module Command
           number: if %w(all half).include?(number) then number else number.to_i end
         )
       },
-      description: "a target object name (with optional quotes and optional multiplier or offset)",
-      examples: ["elf", "rat#2", "bread*5", "'short sword'"],
+      description: 'a target object name (with optional quotes and optional multiplier or offset)',
+      examples: ['elf', 'rat#2', 'bread*5', "'short sword'"],
     },
     rest: {
       pattern: /\A.+/ix,
@@ -64,7 +64,7 @@ module Command
         c = src[0]
         return (c == '"' || c == "'") ? src.slice(1..-2) : src
       },
-      description: "any other text on the line (e.g. the remainder of the input)",
+      description: 'any other text on the line (e.g. the remainder of the input)',
     },
   }
 
@@ -99,7 +99,7 @@ module Command
         when Symbol
           if definition == :rest
             @type = :rest
-            @name = "rest"
+            @name = 'rest'
           else
             @type = :id
             @name = definition.to_s
@@ -108,11 +108,11 @@ module Command
           @type  = :literal
           @name  = definition
         else
-          raise ArgumentError.new I18n.t("command.argument.bad_argument_definition", arg: definition.inspect)
+          raise ArgumentError.new I18n.t('command.argument.bad_argument_definition', arg: definition.inspect)
         end
 
         if DEFAULT_CONTEXT.include? @name
-          raise ArgumentError.new I18n.t("command.variable_overshadow", name: @name)
+          raise ArgumentError.new I18n.t('command.variable_overshadow', name: @name)
         end
       end
     end
@@ -125,7 +125,7 @@ module Command
         @value = []
         kind.each do |elt|
           if !elt.is_a? String
-            raise ArgumentError.new I18n.t "command.argument.bad_array_value", type: elt.class
+            raise ArgumentError.new I18n.t 'command.argument.bad_array_value', type: elt.class
           end
           @value << elt
         end
@@ -144,7 +144,7 @@ module Command
 
     ###########################################################################
     def scan_for_set(input)
-      next_token = input.partition(" ").first
+      next_token = input.partition(' ').first
       if @value.include? next_token
         return next_token
       else
@@ -198,17 +198,17 @@ module Command
 
     ###########################################################################
     def to_s
-      dest = "Argument<"
+      dest = 'Argument<'
 
       if empty?
-        dest << "empty"
+        dest << 'empty'
       else
         dest << "#{name}(#{type}"
         dest << ":#{value}" if !value.nil?
-        dest << ")"
+        dest << ')'
       end
 
-      dest << ">"
+      dest << '>'
       dest
     end
 
@@ -217,7 +217,7 @@ module Command
       case @type
       when :literal then @name
       when :set then @name
-      when :rest then "..."
+      when :rest then '...'
       else @name.upcase
       end
     end
@@ -228,7 +228,7 @@ module Command
       case defn
       when String then defn
       when Proc then defn.call self
-      when Array then defn.join "|"
+      when Array then defn.join '|'
       else raise "No handler for description definition of type #{defn.class.name} for Argument type '#{@type}'"
       end
     end

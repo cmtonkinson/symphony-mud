@@ -1,11 +1,11 @@
-require "spec_helper"
+require 'spec_helper'
 
 include Logistics
 
 describe Logistics::Scribe do
 
   #############################################################################
-  describe "#save" do
+  describe '#save' do
 
     around :each do |example|
       @id = SecureRandom.uuid
@@ -16,14 +16,14 @@ describe Logistics::Scribe do
       end
     end
 
-    it "creates the parent directory" do
+    it 'creates the parent directory' do
       parent_dir = File.dirname Scribe.pathname TestObj, @id
       expect(File.directory? parent_dir).to be false
       Scribe.save @ob
       expect(File.directory? parent_dir).to be true
     end
 
-    it "creates the data file" do
+    it 'creates the data file' do
       data_file = Scribe.pathname TestObj, @id
       expect(File.readable? data_file).to be false
       Scribe.save @ob

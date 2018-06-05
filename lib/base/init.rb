@@ -1,5 +1,5 @@
-require_relative "configuration"
-require_relative "universe"
-require_relative "user"
-require_relative "account"
-require_relative "terminal"
+require_relative 'configuration'
+require_relative 'universe'
+require_relative 'user'
+require_relative 'account'
+require_relative 'terminal'

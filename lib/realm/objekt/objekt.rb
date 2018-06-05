@@ -20,7 +20,7 @@
 #    supply the correct formatting hint by implementing a subclass method
 #    called _interpret_name and returning a String (e.g. "$item").
 ###############################################################################
-require "securerandom"
+require 'securerandom'
 
 module Realm
   class Objekt
@@ -30,7 +30,7 @@ module Realm
     DEFAULTS = {
       id:   -> { SecureRandom.uuid },
       rid:  -> { nil },
-      name: -> { "[name]".dup },
+      name: -> { '[name]'.dup },
     }
 
     attr_reader :id
@@ -110,7 +110,7 @@ module Realm
 
     ###########################################################################
     def fully_qualified_identifier_string
-      I18n.translate "objekt.identify", self.fully_qualified_identifier
+      I18n.translate 'objekt.identify', self.fully_qualified_identifier
     end
     alias_method :fqid_str, :fully_qualified_identifier_string
 

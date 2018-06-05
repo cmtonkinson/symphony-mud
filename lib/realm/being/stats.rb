@@ -100,13 +100,13 @@ module Realm
       EXPERIENCE.each { |name| instance_variable_set "@#{name}", hash[name] }
 
       WELLNESS.each do |name|
-        cur, max = hash[name].split "/"
+        cur, max = hash[name].split '/'
         instance_variable_set "@#{name}", Mechanics::MaxStat.new(max.to_i)
         send(name).current = cur.to_i
       end
 
       FITNESS.each do |name|
-        baseline, threshold = hash[name].split ":"
+        baseline, threshold = hash[name].split ':'
         instance_variable_set "@#{name}", Mechanics::ThresholdStat.new(baseline.to_i, threshold.to_i)
       end
 
@@ -164,7 +164,7 @@ module Realm
     def award_experience(exp_gained)
       return if self.is_a?(Avatar) && level >= HERO
 
-      puts "You gain {Y%d{x experience points!" % exp_gained
+      puts 'You gain {Y%d{x experience points!' % exp_gained
       @exp = exp + exp_gained
 
       while exp_gained > 0
@@ -196,11 +196,11 @@ module Realm
       heal
       # notify
       puts "\n\nCONGRATULATIONS! You grow to level {G%u{x!" % level
-      puts "You gain {G%u{x health points." % health_boost
-      puts "You gain {C%u{x mana points." % mana_boost
-      puts "You gain {B%u{x training points." % trains_boost
-      puts "You have {Y%u{x experience to your next level." % tnl if (is_a?(Avatar) && hero?)
-      Symphony.logger.debug "%s has grown to level %u with %u tnl" % [fqid_str, level, tnl]
+      puts 'You gain {G%u{x health points.' % health_boost
+      puts 'You gain {C%u{x mana points.' % mana_boost
+      puts 'You gain {B%u{x training points.' % trains_boost
+      puts 'You have {Y%u{x experience to your next level.' % tnl if (is_a?(Avatar) && hero?)
+      Symphony.logger.debug '%s has grown to level %u with %u tnl' % [fqid_str, level, tnl]
     end
 
     ###########################################################################
@@ -246,10 +246,10 @@ module Realm
 
       self.run_hook :on_death
 
-      Symphony.logger.info "%s killed %s" % [iDoesDamage.whodunnit, self].map(&:fqid_str) if self.is_a?(Avatar)
-      puts "%s {RKILLED{x you{x!!!!" % iDoesDamage.whodunnit.name
-      puts "You {RDIED{x!!!!"
-      room.puts "$being is {RDEAD{x!!!!", self, exclude: self
+      Symphony.logger.info '%s killed %s' % [iDoesDamage.whodunnit, self].map(&:fqid_str) if self.is_a?(Avatar)
+      puts '%s {RKILLED{x you{x!!!!' % iDoesDamage.whodunnit.name
+      puts 'You {RDIED{x!!!!'
+      room.puts '$being is {RDEAD{x!!!!', self, exclude: self
 
       self.run_hook :after_death
     end
@@ -262,8 +262,8 @@ module Realm
 
     ###########################################################################
     def circumstance_name
-      if battle then "battle"
-      else "normal"
+      if battle then 'battle'
+      else 'normal'
       end
     end
 

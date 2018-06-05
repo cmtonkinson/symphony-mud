@@ -60,13 +60,13 @@ module Combat
     ###########################################################################
     def leave(being)
       remove_member being
-      being.puts "You have left the group led by $being.", leader
-      puts "$being has left the group.", being
+      being.puts 'You have left the group led by $being.', leader
+      puts '$being has left the group.', being
     end
 
     ###########################################################################
     def disband
-      puts "The group has been disbanded."
+      puts 'The group has been disbanded.'
       @members.each { |m| remove_member m }
       @battle    = nil
       @leader    = nil
@@ -83,8 +83,8 @@ module Combat
 
       @pending.push being
       being.pending_group = self
-      leader.puts "$being has requested to join your group.", being
-      being.puts "You have requested to join the group led by $being.", leader
+      leader.puts '$being has requested to join your group.', being
+      being.puts 'You have requested to join the group led by $being.', leader
     end
 
     ###########################################################################
@@ -93,8 +93,8 @@ module Combat
 
       @pending.delete being
       being.pending_group = nil
-      being.puts "You have withdrawn your request to join the group led by $being.", leader
-      leader.puts "$being has withdrawn $possessive group membership request.", being, being
+      being.puts 'You have withdrawn your request to join the group led by $being.', leader
+      leader.puts '$being has withdrawn $possessive group membership request.', being, being
     end
 
     ###########################################################################
@@ -103,8 +103,8 @@ module Combat
 
       being.pending_group = nil
       @pending.delete being
-      being.puts "$being has accepted your group membership.", leader
-      puts "$being has joined the group.", being
+      being.puts '$being has accepted your group membership.', leader
+      puts '$being has joined the group.', being
       add_member being
     end
 
@@ -114,8 +114,8 @@ module Combat
 
       @pending.delete being
       being.pending_group = nil
-      being.puts "$being has declined your group membership request.", leader
-      leader.puts "You have denied $being membership into your group.", being
+      being.puts '$being has declined your group membership request.', leader
+      leader.puts 'You have denied $being membership into your group.', being
     end
 
     ###########################################################################

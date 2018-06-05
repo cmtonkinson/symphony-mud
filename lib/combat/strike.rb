@@ -28,9 +28,9 @@ module Combat
       dam = 2 * attacker.level + rand(attacker.level)
       verb = Display::Format.damage dam
 
-      attacker.puts "Your strike $string $being! [$string]", verb, defender, dam
-      defender.puts "$being strike $string you! [$string]", attacker, verb, dam
-      attacker.room.puts "$being strike $string $being!", attacker, verb, defender, exclude: [attacker, defender]
+      attacker.puts 'Your strike $string $being! [$string]', verb, defender, dam
+      defender.puts '$being strike $string you! [$string]', attacker, verb, dam
+      attacker.room.puts '$being strike $string $being!', attacker, verb, defender, exclude: [attacker, defender]
 
       attacker.stamina.decrease 1
       defender.take_damage dam, self

@@ -16,9 +16,9 @@ module Command
     ###########################################################################
     # Set sane defaults, and run the `define` block from the command file.
     def setup(&block)
-      @name     = "_"
+      @name     = '_'
       @shortcut = nil
-      @brief    = "TODO"
+      @brief    = 'TODO'
       @level    = 1
       @group    = :global
       @exec     = nil
@@ -42,11 +42,11 @@ module Command
 
       # Pass control to the Command exec Proc.
       begin
-        raise "@exec undefined" if @exec.nil?
+        raise '@exec undefined' if @exec.nil?
         @exec.call
       rescue Exception => e
         Symphony.logger.error "Command '#{@name}' with #{input_string.inspect} by '#{being.fqid_str}' raised -- #{e}"
-        e.backtrace.each { |line| Symphony.logger.debug line.sub(Symphony.root.to_s, "") }
+        e.backtrace.each { |line| Symphony.logger.debug line.sub(Symphony.root.to_s, '') }
       end
 
       # Eagerly purge the context (to be safe).
@@ -124,7 +124,7 @@ module Command
       args = Usage.new
       # Can only have one empty usage.
       if argument_list.empty? && @usages.any?(&:empty?)
-        raise ArgumentError.new I18n.t "command.only_one_empty"
+        raise ArgumentError.new I18n.t 'command.only_one_empty'
       end
       # Add each Argument to the Usage.
       argument_list.each { |defn| args.push Argument.new defn }

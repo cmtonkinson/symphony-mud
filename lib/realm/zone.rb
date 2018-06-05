@@ -81,7 +81,7 @@ module Realm
         # bidirectional means that we only have to examine the North and East
         # direction of each Exit and we'll have accounted for all intrazone
         # links.
-        marker = ""
+        marker = ''
         %i(north east).each do |direction|
           exit_x = adjusted_x
           exit_y = adjusted_y
@@ -119,7 +119,7 @@ module Realm
 
     ###########################################################################
     def reset
-      Symphony.logger.debug "Zone reset: %s" % fqid_str
+      Symphony.logger.debug 'Zone reset: %s' % fqid_str
       @rooms.values.each &:reset
     end
 

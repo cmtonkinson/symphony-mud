@@ -5,11 +5,11 @@ include Command
 describe Command::Operator do
 
   before :each do
-    user = double("User")
+    user = double('User')
     @o   = Operator.new user
   end
 
-  describe "#handle" do
+  describe '#handle' do
 
   end
 

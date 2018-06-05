@@ -1,8 +1,8 @@
 module Realm
   class World < Objekt
 
-    ORIGIN_ZONE_ID = "00000000-0000-4000-a000-000000000000"
-    THE_VOID_ID    = "00000000-0000-4000-a000-000000000001"
+    ORIGIN_ZONE_ID = '00000000-0000-4000-a000-000000000000'
+    THE_VOID_ID    = '00000000-0000-4000-a000-000000000001'
 
     JOBS_PER_BATCH = 25 
 
@@ -12,7 +12,7 @@ module Realm
 
     ###########################################################################
     def initialize(id = nil, props = {})
-      props[:name] ||= "World"
+      props[:name] ||= 'World'
       super
     end
 
@@ -34,11 +34,11 @@ module Realm
 
     ###########################################################################
     def save
-      Symphony.logger.info "World#save beginning"
+      Symphony.logger.info 'World#save beginning'
       s = Logistics::Scribe
       @zones.each { |id, z| s.save z }
       @avatars.each { |id, a| s.save a }
-      Symphony.logger.info "World#save complete"
+      Symphony.logger.info 'World#save complete'
     end
 
     ###########################################################################

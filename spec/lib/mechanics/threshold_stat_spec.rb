@@ -5,9 +5,9 @@ include Mechanics
 describe ThresholdStat do
 
   #############################################################################
-  describe "#percent" do
+  describe '#percent' do
 
-    it "should return the ratio of the current value to the threshold" do
+    it 'should return the ratio of the current value to the threshold' do
       stat = ThresholdStat.new 15, 20
       expect(stat.percent).to eq 0.75
 

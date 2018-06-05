@@ -2,16 +2,16 @@ Symphony.logger = Logger.new(STDOUT)
 
 Symphony.logger.formatter = proc do |severity, datetime, progname, msg|
   colors = {
-    "TRACE" => "{w",
-    "DEBUG" => "{x",
-    "INFO"  => "{x",
-    "WARN"  => "{y",
-    "ERROR" => "{r",
-    "FATAL" => "{R",
+    'TRACE' => '{w',
+    'DEBUG' => '{x',
+    'INFO'  => '{x',
+    'WARN'  => '{y',
+    'ERROR' => '{r',
+    'FATAL' => '{R',
   }
   
-  puts Base::Terminal.colorize("%s[%s %d] %s -- %s: %s{x" % [
-    colors.key?(severity) ? colors[severity] : "",
+  puts Base::Terminal.colorize('%s[%s %d] %s -- %s: %s{x' % [
+    colors.key?(severity) ? colors[severity] : '',
     datetime,
     Process.pid,
     severity,

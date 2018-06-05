@@ -14,8 +14,8 @@ module Realm
 
     ###########################################################################
     before_disconnect -> {
-      @room.puts I18n.t("universe.room_announce_exit"), self
-      Symphony.logger.info "%s logged out" % fqid_str
+      @room.puts I18n.t('universe.room_announce_exit'), self
+      Symphony.logger.info '%s logged out' % fqid_str
       @room.beings.delete self
     }
 
@@ -44,9 +44,9 @@ module Realm
     ###########################################################################
     def _prompt_prefix
       if redit
-        "{RREDIT{x {Y%d{x " % room.rid
+        '{RREDIT{x {Y%d{x ' % room.rid
       else
-        ""
+        ''
       end
     end
 

@@ -9,12 +9,12 @@ module Base
       @sleep_interval = 0.1
 
       # For account management
-      @hash_salt       = ""
+      @hash_salt       = ''
       @hash_iterations = 20_000
       @hash_digest     = OpenSSL::Digest::SHA512.new
 
       # Where to store the reboot fd => Avatar Hash?
-      @recovery_file = Symphony.tmp.join "recovery.yml"
+      @recovery_file = Symphony.tmp.join 'recovery.yml'
     end
   end
 

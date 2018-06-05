@@ -4,7 +4,7 @@ module Realm
     attr_accessor :error_string
 
     def initialize
-      @error_string = "[{RERROR{x]"
+      @error_string = '[{RERROR{x]'
     end
 
   end

@@ -26,17 +26,17 @@ module Base
         begin_reboot if should_reboot
         sleep Base.configuration.sleep_interval
       end
-      Symphony.logger.info "Server shutting down."
+      Symphony.logger.info 'Server shutting down.'
     end
 
     ###########################################################################
     def setup_server
-      if ENV["SYMPHONY_REBOOT"] == "true"
+      if ENV['SYMPHONY_REBOOT'] == 'true'
         recover_from_reboot
       else
         @server = Network::Server.new
       end
-      @quotes = YAML.load IO.read Symphony.root.join "data", "quotes.yml"
+      @quotes = YAML.load IO.read Symphony.root.join 'data', 'quotes.yml'
     end
 
     ###########################################################################
@@ -80,7 +80,7 @@ module Base
 
     ###########################################################################
     def broadcast(message)
-      formatted = message.prepend I18n.t("universe.broadcast")
+      formatted = message.prepend I18n.t('universe.broadcast')
       Symphony.logger.debug formatted
       @clients.each { |client| client.puts formatted }
     end
@@ -88,8 +88,8 @@ module Base
     ###########################################################################
     def begin_reboot
       begin
-        Symphony.logger.warn "Server beginning reboot"
-        broadcast I18n.t("universe.reboot.begin")
+        Symphony.logger.warn 'Server beginning reboot'
+        broadcast I18n.t('universe.reboot.begin')
         # Syntax check.
         Util::Linter.lint_project_source
         # Save socket -> avatar mapping.
@@ -99,9 +99,9 @@ module Base
         Process.exec env, Symphony.binary.to_s, options
       rescue Exception => e
         @should_reboot = false
-        Symphony.logger.fatal "Reboot failed"
+        Symphony.logger.fatal 'Reboot failed'
         e.message.split("\n").each { |error_line| Symphony.logger.debug error_line }
-        broadcast I18n.t("universe.reboot.fail")
+        broadcast I18n.t('universe.reboot.fail')
       end
     end
 
@@ -111,9 +111,9 @@ module Base
       server_fd  = server.to_i
       client_fds = clients.map { |c| c.get_fd }
       env = {
-        "SYMPHONY_REBOOT"     => "true",
-        "SYMPHONY_SERVER_FD"  => server_fd.to_s,
-        "SYMPHONY_CLIENT_FDS" => Marshal.dump(client_fds),
+        'SYMPHONY_REBOOT'     => 'true',
+        'SYMPHONY_SERVER_FD'  => server_fd.to_s,
+        'SYMPHONY_CLIENT_FDS' => Marshal.dump(client_fds),
       }
       options = {
         :in           => :in,
@@ -132,18 +132,18 @@ module Base
     ###########################################################################
     def recover_from_reboot
       # Restart the server.
-      @server = Network::Server.for_fd ENV["SYMPHONY_SERVER_FD"].to_i
+      @server = Network::Server.for_fd ENV['SYMPHONY_SERVER_FD'].to_i
       # Restore user connections.
       load_reboot_map
       # Clean up ENV.
-      ENV.delete "SYMPHONY_REBOOT"
-      ENV.delete "SYMPHONY_SERVER_FD"
-      ENV.delete "SYMPHONY_CLIENT_FDS"
-      Symphony.logger.warn "Server recovered from reboot"
-      broadcast I18n.t("universe.reboot.succeed")
+      ENV.delete 'SYMPHONY_REBOOT'
+      ENV.delete 'SYMPHONY_SERVER_FD'
+      ENV.delete 'SYMPHONY_CLIENT_FDS'
+      Symphony.logger.warn 'Server recovered from reboot'
+      broadcast I18n.t('universe.reboot.succeed')
 
       # Force everyone to "look" around.
-      @clients.map(&:user).map(&:avatar).each { |a| a.cmd "look" }
+      @clients.map(&:user).map(&:avatar).each { |a| a.cmd 'look' }
     end
 
     ###########################################################################
@@ -159,7 +159,7 @@ module Base
       # Read the recovery Hash.
       recovery_map = YAML.load File.read Base.configuration.recovery_file
 
-      Marshal.load(ENV["SYMPHONY_CLIENT_FDS"]).each do |fd|
+      Marshal.load(ENV['SYMPHONY_CLIENT_FDS']).each do |fd|
         client = Network::Client.new TCPSocket.for_fd fd.to_i
         user   = User.new
         user.bind_client client, false
@@ -174,7 +174,7 @@ module Base
     def do_console
       context = binding
       loop do
-        print "> "
+        print '> '
         input = gets.chomp!
         begin
           result = context.eval input

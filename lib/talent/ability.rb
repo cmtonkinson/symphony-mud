@@ -37,7 +37,7 @@ module Talent
 
     ###########################################################################
     def added_to
-      raise StandardError.new "Talent::Ability#added_to not redefined"
+      raise StandardError.new 'Talent::Ability#added_to not redefined'
     end
 
     ###########################################################################
@@ -50,6 +50,11 @@ module Talent
     ###########################################################################
     def precheck
       return true, nil
+    end
+
+    ###########################################################################
+    def exec
+      raise StandardError.new 'Talent::Ability#exec not implemented'
     end
 
   end

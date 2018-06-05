@@ -1,1 +1,1 @@
-require_relative "enums/gender"
+require_relative 'enums/gender'

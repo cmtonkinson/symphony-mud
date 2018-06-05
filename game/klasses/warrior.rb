@@ -2,7 +2,7 @@ module Talent
   class Warrior < Klass
 
     def initialize
-      @name        = "warrior"
+      @name        = 'warrior'
       @health_rate = 4
       @mana_rate   = 0.3
  

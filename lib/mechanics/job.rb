@@ -14,11 +14,11 @@ module Mechanics
 
     ###########################################################################
     def initialize(wen, who, callable = nil, *args, &block)
-      raise ArgumentError.new("no method or proc given") if callable.nil? && !block_given?
-      raise ArgumentError.new("both method and proc given") if !callable.nil? && block_given?
+      raise ArgumentError.new('no method or proc given') if callable.nil? && !block_given?
+      raise ArgumentError.new('both method and proc given') if !callable.nil? && block_given?
 
       if !callable.nil? && !callable.respond_to?(:to_sym) && !callable.respond_to?(:call)
-        raise ArgumentError.new("callable does not respond to :to_sym or :call")
+        raise ArgumentError.new('callable does not respond to :to_sym or :call')
       end
 
       # If the value of wen is less than 31,536,000 (in unix time that's
@@ -78,7 +78,7 @@ module Mechanics
     ###########################################################################
     # Execute the callable.
     def fire
-      Symphony.logger.trace "Firing %s" % self
+      Symphony.logger.trace 'Firing %s' % self
       @repeat_times -= 1 if @repeat_times > 0
       @what.respond_to?(:call) ? @what.call(@who, *@args) : @who.send(@what.to_sym, *@args)
       kill unless recurring?
@@ -94,7 +94,7 @@ module Mechanics
     # this tradeoff is worth it.
     def kill
       return if dead?
-      Symphony.logger.trace "Killing %s" % self
+      Symphony.logger.trace 'Killing %s' % self
       @who.jobs.delete self if @who.is_a? Realm::Objekt
       @who  = nil
       @what = nil
@@ -115,12 +115,12 @@ module Mechanics
 
     ###########################################################################
     def to_s
-      dead? ? "<Dead Job>" : "<Job %s %s %s %s>" % [wen_to_s, who_to_s, what_to_s, args_to_s]
+      dead? ? '<Dead Job>' : '<Job %s %s %s %s>' % [wen_to_s, who_to_s, what_to_s, args_to_s]
     end
 
     #############################################################################
     def wen_to_s
-      "@%d (in %d)" % [wen, ready_in]
+      '@%d (in %d)' % [wen, ready_in]
     end
 
     #############################################################################
@@ -137,26 +137,26 @@ module Mechanics
     #############################################################################
     def what_to_s
       if @what.respond_to? :to_sym
-        ":" + @what.to_sym.to_s
+        ':' + @what.to_sym.to_s
       else
-        "%s %s:%s" % [(@what.lambda? ? 'lambda' : 'proc'), *@what.source_location]
+        '%s %s:%s' % [(@what.lambda? ? 'lambda' : 'proc'), *@what.source_location]
       end
     end
 
     #############################################################################
     def args_to_s
       if @args.length
-        "(%s)" % @args.map do |arg|
+        '(%s)' % @args.map do |arg|
           if arg.is_a? Realm::Objekt
             arg.fqid_str
           elsif arg.respond_to? :to_s
             arg.to_s
           else
-            "?"
+            '?'
           end
-        end.join(", ")
+        end.join(', ')
       else
-        ""
+        ''
       end 
     end
  

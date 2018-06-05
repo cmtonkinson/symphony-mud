@@ -6,7 +6,7 @@ module Realm
     ###########################################################################
     def initialize(id = nil, props = {})
       super
-      @name = ""
+      @name = ''
     end
 
     ###########################################################################
@@ -41,7 +41,7 @@ module Realm
     def summary
       $templates.placement_summary % [
         rid,
-        klass.split("::").last,
+        klass.split('::').last,
         target.rid,
         target.name,
         number,
@@ -51,17 +51,17 @@ module Realm
 
     ###########################################################################
     def place
-      Symphony.logger.debug "Placing %s" % fqid_str
-      raise "Placement Room reference is nil" if room.nil?
-      raise "Could not find Placement target" if target.nil?
+      Symphony.logger.debug 'Placing %s' % fqid_str
+      raise 'Placement Room reference is nil' if room.nil?
+      raise 'Could not find Placement target' if target.nil?
       zone = room.zone
       container_name = case target 
                        when Item then :inventory
                        when Being then :beings
-                       else raise "Objekt type not configured for Placement"
+                       else raise 'Objekt type not configured for Placement'
                        end
 
-      Symphony.logger.trace "  into %s" % room.fqid_str
+      Symphony.logger.trace '  into %s' % room.fqid_str
 
       # Find out how many clones of this Item are already on the ground in
       # this Zone.
@@ -75,7 +75,7 @@ module Realm
 
       # Clone
       clones = (1..number).map { |_| target.clone }
-      Symphony.logger.trace "  %d clones of %s" % [clones.length, target.fqid_str]
+      Symphony.logger.trace '  %d clones of %s' % [clones.length, target.fqid_str]
 
       # Stitch the Objekt into the Room.
       clones.each do |clone|

@@ -1,4 +1,4 @@
-require_relative "interface"
+require_relative 'interface'
 
-require_relative "does_damage"
+require_relative 'does_damage'
 

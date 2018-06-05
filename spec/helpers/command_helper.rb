@@ -2,7 +2,7 @@ module Command
 
   class Command_apple < Command
     def initialize
-      @name = "apple"
+      @name = 'apple'
     end
     def execute(client, arguments)
     end
@@ -10,7 +10,7 @@ module Command
 
   class Command_banana < Command
     def initialize
-      @name = "banana"
+      @name = 'banana'
     end
     def execute(client, arguments)
     end
@@ -18,7 +18,7 @@ module Command
 
   class Command_cherry < Command
     def initialize
-      @name = "cherry"
+      @name = 'cherry'
     end
     def execute(client, arguments)
     end
@@ -26,7 +26,7 @@ module Command
 
   class Command_with_execute < Command
     def initialize
-      @name = "foo"
+      @name = 'foo'
     end
     def execute(client, arguments)
     end
@@ -34,7 +34,7 @@ module Command
 
   class Command_without_execute < Command
     def initialize
-      @name = "bar"
+      @name = 'bar'
     end
   end
 end

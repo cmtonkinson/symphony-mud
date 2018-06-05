@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe "smoke test" do
+describe 'smoke test' do
 
-  describe "TCPServer" do
+  describe 'TCPServer' do
 
     before :each do
       @universe = Base::Universe.new
     end
 
-    it "should accept new connections" do
+    it 'should accept new connections' do
       expect { TCPSocket.new Network.configuration.listen_ip, Network.configuration.listen_port }.not_to raise_error
     end
 

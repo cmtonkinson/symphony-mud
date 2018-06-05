@@ -6,7 +6,7 @@ module Command
 
     ###########################################################################
     def initialize(user, command_set_name = :global)
-      @last_input  = "" # TODO - implement this
+      @last_input  = '' # TODO - implement this
       @user        = user
       @command     = nil
       @set_name    = command_set_name
@@ -16,7 +16,7 @@ module Command
     ###########################################################################
     def handle(input)
       @command          = nil
-      cmd_name, _, rest = input.partition " "
+      cmd_name, _, rest = input.partition ' '
       being             = @user.avatar
 
       Symphony.logger.trace "Handling '#{input}' in :#{set_name} for #{being.fqid_str}"
@@ -40,7 +40,7 @@ module Command
       return false if @command.nil?
 
       # We found a Command; can we invoke it?
-      being.puts I18n.t("command.operator.err_low_level") and return true if @command.get_level > being.level
+      being.puts I18n.t('command.operator.err_low_level') and return true if @command.get_level > being.level
 
       # We found a Command, so let's see if the usage is correct.
       context = parse rest
@@ -49,7 +49,7 @@ module Command
       # invoked improperly, so we recurse to provide the help topic for the
       # requested Command.
       if context.nil?
-        being.puts I18n.t("command.operator.err_invocation")
+        being.puts I18n.t('command.operator.err_invocation')
         handle "help #{cmd_name}"
         return true
       end

@@ -5,7 +5,7 @@ module InputSequence
     ###########################################################################
     def initialize
       super
-      @name = "login"
+      @name = 'login'
     end
 
     ###########################################################################
@@ -25,14 +25,14 @@ module InputSequence
       event :_start do
         transitions from: :_pending, to: :get_name
         after do
-          user.print "Please enter your name: "
+          user.print 'Please enter your name: '
         end
       end
 
       event :accept_existing_name do
         transitions from: :get_name, to: :get_passphrase
         after do
-          user.print "Please enter your passphrase: "
+          user.print 'Please enter your passphrase: '
         end
       end
 
@@ -43,21 +43,21 @@ module InputSequence
       event :accept_new_name do
         transitions from: :get_name, to: :confirm_name
         after do
-          user.print "Please confirm your name: "
+          user.print 'Please confirm your name: '
         end
       end
 
       event :accept_name_confirmation do
         transitions from: :confirm_name, to: :set_passphrase
         after do
-          user.print "Please enter a passphrase: "
+          user.print 'Please enter a passphrase: '
         end
       end
 
       event :accept_new_passphrase do
         transitions from: :set_passphrase, to: :confirm_passphrase
         after do
-          user.print "Please confirm your passphrase: "
+          user.print 'Please confirm your passphrase: '
         end
       end
 
@@ -68,7 +68,7 @@ module InputSequence
       event :reject_passphrase_confirmation do
         transitions from: :confirm_passphrase, to: :set_passphrase
         after do
-          user.print "Passwords do not match; please enter your passphrase again: "
+          user.print 'Passwords do not match; please enter your passphrase again: '
         end
       end
 
@@ -77,27 +77,27 @@ module InputSequence
         after do
           case @context.account_type
           when :new
-            user.puts "Welcome!"
+            user.puts 'Welcome!'
             avatar = Realm::Avatar.new @context.avatar_id, name: @context.name
             user.bind_avatar avatar
             avatar.room = $world.find_room Realm::World::THE_VOID_ID
             avatar.room.insert avatar
             avatar.run_hook :vivify
-            avatar.room.puts I18n.t("universe.room_announce_newbie"), avatar
+            avatar.room.puts I18n.t('universe.room_announce_newbie'), avatar
             Symphony.logger.info "New account #{avatar.fqid_str}"
             Logistics::Scribe.save avatar
             avatar.run_hook :on_first_login
           when :existing
             avatar = Logistics::Scribe.load Realm::Avatar, @context.avatar_id
             if avatar
-              user.puts "Welcome back!"
+              user.puts 'Welcome back!'
               user.bind_avatar avatar
-              avatar.room.puts I18n.t("universe.room_announce_return"), avatar
+              avatar.room.puts I18n.t('universe.room_announce_return'), avatar
               avatar.run_hook :vivify
               Symphony.logger.info "#{avatar.fqid_str} logged in"
               avatar.run_hook :on_login
             else
-              user.puts "{RSomething went wrong loading your save data; please contact an administrator"
+              user.puts '{RSomething went wrong loading your save data; please contact an administrator'
               Symphony.logger.error "Failed to complete login of existing avatar #{@context.avatar_id}"
               reject
             end
@@ -106,7 +106,7 @@ module InputSequence
             Symphony.logger.fatal message
             raise RuntimeError.new message
           end
-          user.avatar.cmd "look" if avatar
+          user.avatar.cmd 'look' if avatar
           finish
         end
       end
@@ -115,7 +115,7 @@ module InputSequence
         transitions to: :disconnect
         after do
           user.client.should_terminate = true
-          user.puts "Disconnecting."
+          user.puts 'Disconnecting.'
           finish
         end
       end

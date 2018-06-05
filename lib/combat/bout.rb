@@ -26,7 +26,7 @@ module Combat
       fighters = battle.groups.map { |b| b.members }.reduce(:+)
 
       # Don't start the Bout output on a line with a prompt. It's weird.
-      fighters.each { |f| f.puts "" }
+      fighters.each { |f| f.puts '' }
 
       fighters.each do |attacker|
         next if attacker.dead?

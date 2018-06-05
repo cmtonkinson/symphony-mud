@@ -7,7 +7,7 @@ module Talent
 
     ###########################################################################
     def initialize
-      @name        = ""
+      @name        = ''
       @health_rate = 0
       @mana_rate   = 0
       @abilities   = Array.new

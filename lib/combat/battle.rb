@@ -51,7 +51,7 @@ module Combat
 
     ###########################################################################
     def cease
-      Symphony.logger.trace "Battle ceasing"
+      Symphony.logger.trace 'Battle ceasing'
     end
 
     ###########################################################################

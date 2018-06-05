@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Logistics::Transporter do
 
@@ -9,9 +9,9 @@ describe Logistics::Transporter do
   end
 
   #############################################################################
-  describe "#add#to" do
+  describe '#add#to' do
 
-    it "inserts the Objekt into the target container" do
+    it 'inserts the Objekt into the target container' do
       expect(@dest.length).to eq 0
       expect(@ob.add).to be_a Logistics::Adder
       expect(@ob.add.to @dest).to be_nil
@@ -20,9 +20,9 @@ describe Logistics::Transporter do
 
   end
 
-  describe "#remove#from" do
+  describe '#remove#from' do
 
-    it "removes the Objekt from the target container" do
+    it 'removes the Objekt from the target container' do
       @src.insert @ob
       expect(@src.length).to eq 1
       expect(@ob.remove).to be_a Logistics::Remover
@@ -32,9 +32,9 @@ describe Logistics::Transporter do
 
   end
 
-  describe "move" do
+  describe 'move' do
 
-    it "transfers the Objekt from source to destination" do
+    it 'transfers the Objekt from source to destination' do
       # Start out with @ob in @src
       @src.insert @ob
       expect(@src.length).to eq 1
@@ -59,9 +59,9 @@ describe Logistics::Transporter do
 
   end
 
-  describe "hooks" do
+  describe 'hooks' do
 
-    it "should be fired around add" do
+    it 'should be fired around add' do
       @ob.add.to @src
       expect(@ob.before_add_ran).to be_truthy
       expect(@ob.after_add_ran).to be_truthy
@@ -69,7 +69,7 @@ describe Logistics::Transporter do
       expect(@ob.after_remove_ran).to be_falsy
     end
 
-    it "should be fired around remove" do
+    it 'should be fired around remove' do
       @dest.insert @ob
       @ob.remove.from @dest
       expect(@ob.before_add_ran).to be_falsy
@@ -78,7 +78,7 @@ describe Logistics::Transporter do
       expect(@ob.after_remove_ran).to be_truthy
     end
 
-    it "should be fired around move" do
+    it 'should be fired around move' do
       @src.insert @ob
       @ob.move.from(@src).to(@dest)
       expect(@ob.before_add_ran).to be_truthy

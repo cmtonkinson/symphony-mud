@@ -1,4 +1,4 @@
-require "ostruct"
+require 'ostruct'
 
 ###############################################################################
 # If you're familiar with Rails, a lot of the patterns for this App class will
@@ -34,8 +34,8 @@ class App
   attr_accessor :logger
 
   def initialize
-    @env           = ENV["SYMPHONY_ENV"].to_sym
-    @root          = Pathname.new File.expand_path "../..", __FILE__
+    @env           = ENV['SYMPHONY_ENV'].to_sym
+    @root          = Pathname.new File.expand_path '../..', __FILE__
     @binary        = @root.join BINARY_NAME
     @logger        = nil
     @configuration = OpenStruct.new

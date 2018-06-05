@@ -35,7 +35,7 @@ module Network
     def close
       quote = $universe.quotes.sample
       self.puts "\n\n"
-      self.puts quote["body"]
+      self.puts quote['body']
       self.puts "  -#{quote["author"]}\n\n"
       Symphony.logger.info "Closing Client on socket #{get_fd}"
       self.socket.close

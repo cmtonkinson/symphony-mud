@@ -50,7 +50,7 @@ module Base
       end
 
       operators.each { |op| return if op.handle(input) == true }
-      puts I18n.t "command.operator.err_not_found"
+      puts I18n.t 'command.operator.err_not_found'
     end
 
   end

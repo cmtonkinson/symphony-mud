@@ -1,5 +1,5 @@
-require_relative "configuration"
-require_relative "argument"
-require_relative "usage"
-require_relative "command"
-require_relative "operator"
+require_relative 'configuration'
+require_relative 'argument'
+require_relative 'usage'
+require_relative 'command'
+require_relative 'operator'

@@ -1,31 +1,31 @@
-require "matrix"
+require 'matrix'
 
 module Realm
   class Exit < Objekt
 
     DIRECTIONS = {
-      "north" => {
-        opposite: "south",
+      'north' => {
+        opposite: 'south',
         transform: Vector[0, 1, 0],
       },
-      "east" => {
-        opposite: "west",
+      'east' => {
+        opposite: 'west',
         transform: Vector[1, 0, 0],
       },
-      "south" => {
-        opposite: "north",
+      'south' => {
+        opposite: 'north',
         transform: Vector[0, -1, 0],
       },
-      "west" => {
-        opposite: "east",
+      'west' => {
+        opposite: 'east',
         transform: Vector[-1, 0, 0],
       },
-      "up" => {
-        opposite: "down",
+      'up' => {
+        opposite: 'down',
         transform: Vector[0, 0, 1],
       },
-      "down" => {
-        opposite: "up",
+      'down' => {
+        opposite: 'up',
         transform: Vector[0, 0, -1],
       },
     }

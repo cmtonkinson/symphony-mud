@@ -1,4 +1,4 @@
-require "optparse"
+require 'optparse'
 
 ###############################################################################
 # Configuration configuration, with default configurations. It's turtles all
@@ -21,26 +21,26 @@ CONFIGURATION = [
   # description: Brief one-liner of what the option changes
   # callback: Proc that accepts the new value being passed in
   {
-    short: "c",
-    long: "console",
+    short: 'c',
+    long: 'console',
     default: false,
-    description: "Open an interactive console",
+    description: 'Open an interactive console',
     callback: Proc.new { |value| Symphony.configuration.console = value }
   },
   {
-    short: "l",
-    long: "log-level",
-    placeholder: "LEVEL",
-    default: "info",
-    description: "Change the system logging verbosity",
+    short: 'l',
+    long: 'log-level',
+    placeholder: 'LEVEL',
+    default: 'info',
+    description: 'Change the system logging verbosity',
     callback: Proc.new { |value| Symphony.logger.level = Logger.const_get(value.upcase) }
   },
   {
-    short: "s",
-    long: "script",
-    placeholder: "FILE",
+    short: 's',
+    long: 'script',
+    placeholder: 'FILE',
     default: false,
-    description: "Run a script",
+    description: 'Run a script',
     callback: Proc.new { |value| Symphony.configuration.script = value }
   },
 ]
@@ -53,12 +53,12 @@ CONFIGURATION.each { |config| config[:callback].call config[:default] }
 ###############################################################################
 # Check for a configuration file.
 ###############################################################################
-config_file = Symphony.root.join "config.yml"
+config_file = Symphony.root.join 'config.yml'
 
 if File.readable? config_file
   config_hash = YAML.load File.read config_file
   CONFIGURATION.each do |config|
-    yml_var_name = config[:long].gsub /-/, "_"
+    yml_var_name = config[:long].gsub /-/, '_'
     if config_hash.key? yml_var_name
       config[:callback].call config_hash[yml_var_name]
     end
@@ -70,7 +70,7 @@ end
 ###############################################################################
 CONFIGURATION.each do |config|
   # Convert the long name to an ENV_STYLE_TOKEN.
-  env_var_name = "SYMPHONY_#{config[:long]}".upcase.gsub /-/, "_"
+  env_var_name = "SYMPHONY_#{config[:long]}".upcase.gsub /-/, '_'
   # If the ENV var is found, invoke the callback with its value.
   if ENV.key? env_var_name
     config[:callback].call ENV[env_var_name]
@@ -88,8 +88,8 @@ if $0 =~ /symphony/
     opts.banner = "Usage: #{BINARY_NAME} [options]"
 
     CONFIGURATION.each do |config|
-      short = "-" + config[ :short]
-      long  = "--" + config[:long] + (config.key?(:placeholder) ? " #{config[:placeholder]}" : "")
+      short = '-' + config[ :short]
+      long  = '--' + config[:long] + (config.key?(:placeholder) ? " #{config[:placeholder]}" : '')
       desc  = config[:description]
       func  = config[:callback]
       opts.on short, long, desc, func

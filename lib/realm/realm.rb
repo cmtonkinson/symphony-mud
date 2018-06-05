@@ -11,7 +11,7 @@ module Realm
       raise ArgumentError.new "No #{klass.name} container configured on #{self.class.name}" if ancestor == Realm::Objekt
 
       # Construct a container name from the ancestor.
-      container_name = ancestor.name.split("::").last.downcase.to_s + "s"
+      container_name = ancestor.name.split('::').last.downcase.to_s + 's'
 
       # If the Objekct responds to the container name, then we've found the
       # most-specific container configured to accept objects of this type.

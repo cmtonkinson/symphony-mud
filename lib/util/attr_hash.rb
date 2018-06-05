@@ -57,14 +57,14 @@ module Util
       return [] if candidates.empty? 
 
       case id.symbol
-      when "#" # Return a single candidate (if exists) by 1-indexed list
+      when '#' # Return a single candidate (if exists) by 1-indexed list
         return [] if candidates.length < id.number
         [candidates[id.number - 1]]
-      when "*" # Return some quantity of candidates
+      when '*' # Return some quantity of candidates
         how_many = case id.number
                    when Integer then id.number
-                   when "all" then candidates.length
-                   when "half" then candidates.length / 2
+                   when 'all' then candidates.length
+                   when 'half' then candidates.length / 2
                    else 0
                    end
         candidates.take how_many
@@ -89,12 +89,12 @@ module Util
           pretty_name = Util::Linguist.interpret objekts[0].interpret_name, objekts[0]
           if stack
             if objekts.length > 1
-              " {W[%d]{x %s" % [objekts.length, pretty_name]
+              ' {W[%d]{x %s' % [objekts.length, pretty_name]
             else
-              " %s" % pretty_name
+              ' %s' % pretty_name
             end
           else
-            " %s" % pretty_name
+            ' %s' % pretty_name
           end
         }
         .join("\n")

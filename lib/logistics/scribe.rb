@@ -7,12 +7,12 @@ module Logistics
       # Ensure the directory exists.
       FileUtils.mkdir_p File.dirname path
       # Write the serialized content to disk.
-      File.open(path, "w") { |fp| fp.write content }
+      File.open(path, 'w') { |fp| fp.write content }
     end
 
     ###########################################################################
     def self.load(klass, objekt_id)
-      File.open pathname(klass, objekt_id), "r" do |fp|
+      File.open pathname(klass, objekt_id), 'r' do |fp|
         begin
           klass.deserialize fp.read
         rescue NoMethodError => e
@@ -32,14 +32,14 @@ module Logistics
 
     ###########################################################################
     def self.dirname(klass)
-      Symphony.data.join klass.name.split("::").last.downcase
+      Symphony.data.join klass.name.split('::').last.downcase
     end
 
     ###########################################################################
     # Returns all zone ids found in the data directory.
     def self.the_story_of_baron_munchausen
-      Dir[Symphony.zone.join "*.yml"].map do |zonefile|
-        File.basename(zonefile).gsub /\.yml/, ""
+      Dir[Symphony.zone.join '*.yml'].map do |zonefile|
+        File.basename(zonefile).gsub /\.yml/, ''
       end
     end
 

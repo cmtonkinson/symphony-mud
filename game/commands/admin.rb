@@ -1,4 +1,4 @@
-require "resolv"
+require 'resolv'
 
 module Command
 
@@ -9,8 +9,8 @@ define :at do
   usage({room_rid: :int}, :rest)
   exec do
     target = $world.find_room room_rid
-    being.puts t "err_nowhere" and next if target.nil?
-    being.puts t "err_here" and next if room == target
+    being.puts t 'err_nowhere' and next if target.nil?
+    being.puts t 'err_here' and next if room == target
 
     current_room = room
     being.room = target
@@ -31,7 +31,7 @@ define :connections do
     dns_width = 35
     format = "%-15s{C%-6s{Y%-23s{W%-#{dns_width}s"
     being.puts format % %w(Name Sock IP:Port DNS)
-    being.puts "-------------------------------------------------------------------------------"
+    being.puts '-------------------------------------------------------------------------------'
     $universe.clients.each do |client|
       sock_domain, remote_port, remote_hostname, remote_ip = client.socket.peeraddr
       dns_name = Resolv.getname remote_ip
@@ -53,14 +53,14 @@ define :dashboard do
   exec do
     job_stats = $world.schedule_stats 0
     run       = $world.job_times
-    being.puts "{Y%d{x jobs in the queue running {Y%d{x at a time." % [job_stats[:length], job_stats[:batch_size]]
-    being.puts "Job wall-time analysis (units in microseconds):"
-    being.puts "  jobs run so far: {Y%d{x" % run.number
-    being.puts "  mean: {Y%d{x" % run.mean
-    being.puts "  median: {Y%d{x" % run.median 
-    being.puts "  stddev: {Y%.2f{x" % run.standard_deviation
-    being.puts "  min: {Y%d{x" % run.min
-    being.puts "  max: {Y%d{x" % run.max
+    being.puts '{Y%d{x jobs in the queue running {Y%d{x at a time.' % [job_stats[:length], job_stats[:batch_size]]
+    being.puts 'Job wall-time analysis (units in microseconds):'
+    being.puts '  jobs run so far: {Y%d{x' % run.number
+    being.puts '  mean: {Y%d{x' % run.mean
+    being.puts '  median: {Y%d{x' % run.median 
+    being.puts '  stddev: {Y%.2f{x' % run.standard_deviation
+    being.puts '  min: {Y%d{x' % run.min
+    being.puts '  max: {Y%d{x' % run.max
   end
 end
 
@@ -70,13 +70,13 @@ define :dig do
   level Realm::Being::DEMIGOD
   usage direction: :string
   exec do
-    being.puts t "err_no_way" and next unless Realm::Exit::DIRECTIONS.keys.include?(direction)
-    being.puts t "err_already" and next unless room.send(direction).nil?
+    being.puts t 'err_no_way' and next unless Realm::Exit::DIRECTIONS.keys.include?(direction)
+    being.puts t 'err_already' and next unless room.send(direction).nil?
 
     Logistics::Builder.create_linked_room room, direction
 
-    being.puts t("actor"), direction
-    room.puts t("other"), being, direction, exclude: being
+    being.puts t('actor'), direction
+    room.puts t('other'), being, direction, exclude: being
 
     being.cmd direction
   end 
@@ -89,13 +89,13 @@ define :disconnect do
   usage({victim: :string})
   exec do
     target = $world.find_avatar victim
-    being.puts t "err_nobody" and next if target.nil?
-    being.puts t "err_self" and next if target == being
-    being.puts t("err_seniority"), target and next unless being.has_seniority? target
+    being.puts t 'err_nobody' and next if target.nil?
+    being.puts t 'err_self' and next if target == being
+    being.puts t('err_seniority'), target and next unless being.has_seniority? target
 
-    being.puts t("actor"), target
-    target.puts t("victim"), being
-    target.cmd "quit"
+    being.puts t('actor'), target
+    target.puts t('victim'), being
+    target.cmd 'quit'
   end
 end
 
@@ -106,12 +106,12 @@ define :force do
   usage({victim: :string}, :rest)
   exec do
     target = room.find_being victim
-    being.puts t "err_nobody" and next if target.nil?
-    being.puts t "err_self" and next if target == being
-    being.puts t("err_seniority"), target and next unless being.has_seniority? target
+    being.puts t 'err_nobody' and next if target.nil?
+    being.puts t 'err_self' and next if target == being
+    being.puts t('err_seniority'), target and next unless being.has_seniority? target
 
-    being.puts t("actor"), target
-    target.puts t("victim"), being
+    being.puts t('actor'), target
+    target.puts t('victim'), being
     target.cmd rest
   end
 end
@@ -123,12 +123,12 @@ define :goto do
   usage({room_id: :int})
   exec do
     target = $world.find_room room_id
-    being.puts t "err_nowhere" and next if target.nil?
-    being.puts t "err_there" and next if room == target
+    being.puts t 'err_nowhere' and next if target.nil?
+    being.puts t 'err_there' and next if room == target
 
-    being.puts t("actor"), target
-    room.puts t("leave"), being, exclude: being
-    target.puts t("arrive"), being
+    being.puts t('actor'), target
+    room.puts t('leave'), being, exclude: being
+    target.puts t('arrive'), being
     being.transport target
   end
 end
@@ -140,10 +140,10 @@ define :heal do
   usage({victim: :string})
   exec do
     target = room.find_being victim
-    being.puts t "err_nobody" and next if target.nil?
+    being.puts t 'err_nobody' and next if target.nil?
     
-    being.puts t("actor"), target
-    target.puts t("victim"), being
+    being.puts t('actor'), target
+    target.puts t('victim'), being
     target.heal    
   end
 end
@@ -158,9 +158,9 @@ define :jobs do
     num_jobs = jobs.nil? ? 10 : jobs
     stats    = $world.schedule_stats num_jobs
 
-    being.puts t("queue_length") % stats[:length]
-    being.puts t("batch_size") % stats[:batch_size]
-    being.puts t("next_jobs") % num_jobs
+    being.puts t('queue_length') % stats[:length]
+    being.puts t('batch_size') % stats[:batch_size]
+    being.puts t('next_jobs') % num_jobs
     being.puts stats[:up_next].map(&:to_s).join "\n"
   end
 end
@@ -169,28 +169,28 @@ end
 define :load do
 ###############################################################################
   level Realm::Being::DEMIGOD
-  usage("item", {rid: :int})
-  usage("npc", {rid: :int})
+  usage('item', {rid: :int})
+  usage('npc', {rid: :int})
   exec do
-    if item == "item"
+    if item == 'item'
       model = being.room.zone.find_by_rid Realm::Item, rid
-      being.puts t "err_nothing" and next if model.nil?
+      being.puts t 'err_nothing' and next if model.nil?
 
       copy = model.clone
       copy.add.to being.inventory
       copy.run_hook :vivify
-      being.puts t("actor"), copy
-      Symphony.logger.debug "%s loaded %s as a clone of %s" % [being.fqid_str, copy.fqid_str, model.fqid_str]
-    elsif npc == "npc"
+      being.puts t('actor'), copy
+      Symphony.logger.debug '%s loaded %s as a clone of %s' % [being.fqid_str, copy.fqid_str, model.fqid_str]
+    elsif npc == 'npc'
       model = being.room.zone.find_by_rid Realm::NPC, rid
-      being.puts t "err_nothing" and next if model.nil?
+      being.puts t 'err_nothing' and next if model.nil?
 
       copy = model.clone
       copy.add.to room.beings
       copy.room = room
       copy.run_hook :vivify
-      being.puts t("actor"), copy
-      Symphony.logger.debug "%s loaded %s as a clone of %s" % [being.fqid_str, copy.fqid_str, model.fqid_str]
+      being.puts t('actor'), copy
+      Symphony.logger.debug '%s loaded %s as a clone of %s' % [being.fqid_str, copy.fqid_str, model.fqid_str]
      end
   end
 end
@@ -202,14 +202,14 @@ define :promote do
   usage({target: :id}, {to_level: :int})
   exec do
     victim = room.beings.locate_first target
-    being.puts t("err_not_found") and next if victim.nil?
-    being.puts t("err_no_permission") and next if victim == being
-    being.puts t("err_already_there") and next if victim.level >= to_level
-    being.puts t("err_no_permission") and next unless being.has_seniority?(victim)
-    being.puts t("err_no_permission") and next if to_level > being.level - Realm::Being::IMMORTAL_SENIORITY
+    being.puts t('err_not_found') and next if victim.nil?
+    being.puts t('err_no_permission') and next if victim == being
+    being.puts t('err_already_there') and next if victim.level >= to_level
+    being.puts t('err_no_permission') and next unless being.has_seniority?(victim)
+    being.puts t('err_no_permission') and next if to_level > being.level - Realm::Being::IMMORTAL_SENIORITY
 
-    being.puts t("actor"), victim 
-    victim.puts t("victim"), being
+    being.puts t('actor'), victim 
+    victim.puts t('victim'), being
 
     # When the victim is an Avatar and the target level is above HERO, we need
     # to account for the fact that their TNL will stay at 0. So we award normal
@@ -236,7 +236,7 @@ define :reboot do
   level Realm::Being::CREATOR
   usage
   exec do
-    being.puts t("actor")
+    being.puts t('actor')
     $universe.should_reboot = true
   end
 end
@@ -249,7 +249,7 @@ define :repeat do
   exec do
     min = 1
     max = 1000
-    being.puts t("err_range") % [min, max] and next if times < min || times > max
+    being.puts t('err_range') % [min, max] and next if times < min || times > max
  
     (0..times).each { being.cmd rest }
   end
@@ -260,14 +260,14 @@ define :reset do
 ###############################################################################
   level Realm::Being::GOD
   usage
-  usage "all"
+  usage 'all'
   exec do
-    if all == "all"
+    if all == 'all'
       $world.zones.values.each &:reset
-      being.puts t("all")
+      being.puts t('all')
     else
       room.zone.reset
-      being.puts t("current")
+      being.puts t('current')
     end
   end
 end
@@ -280,11 +280,11 @@ define :rooms do
   usage({id: :int})
   exec do
     zone = id.nil? ? being.room.zone : $world.zones.values.find { |z| z.rid == id }
-    being.puts t "err_nowhere" and next if zone.nil?
+    being.puts t 'err_nowhere' and next if zone.nil?
 
-    being.puts t("title"), zone
+    being.puts t('title'), zone
     zone.rooms.each do |id,room|
-      being.puts t("line"), room, room
+      being.puts t('line'), room, room
     end
   end
 end
@@ -295,7 +295,7 @@ define :shutdown do
   level Realm::Being::CREATOR
   usage
   exec do
-    being.puts t("actor")
+    being.puts t('actor')
     $universe.should_stop = true
   end
 end
@@ -307,15 +307,15 @@ define :summon do
   usage({victim: :string})
   exec do
     target = $world.find_avatar victim
-    being.puts t("err_self") and next if target == being
-    being.puts t("err_nobody") and next if target.nil?
-    being.puts t("err_here"), target and next if target.room == room
-    being.puts t("err_seniority"), target and next unless being.has_seniority? target
+    being.puts t('err_self') and next if target == being
+    being.puts t('err_nobody') and next if target.nil?
+    being.puts t('err_here'), target and next if target.room == room
+    being.puts t('err_seniority'), target and next unless being.has_seniority? target
 
-    being.puts t("actor"), target
-    target.puts t("victim"), being, being
-    target.room.puts t("leave"), target, exclude: target
-    room.puts t("arrive"), target
+    being.puts t('actor'), target
+    target.puts t('victim'), being, being
+    target.room.puts t('leave'), target, exclude: target
+    room.puts t('arrive'), target
     target.transport room
   end
 end
@@ -326,9 +326,9 @@ define :worldsave do
   level Realm::Being::CREATOR
   usage
   exec do
-    being.print t("start")
+    being.print t('start')
     $world.save
-    being.puts t("success")
+    being.puts t('success')
   end
 end
 

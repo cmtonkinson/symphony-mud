@@ -9,7 +9,7 @@ module Realm
 
     ###########################################################################
     def respawn
-      puts "You have respawned."
+      puts 'You have respawned.'
 
       health.current  = 1
       mana.current    = 1
@@ -17,7 +17,7 @@ module Realm
 
       transport $world.find_room 1
 
-      room.puts "$being slowly appears from nothingness, wincing and squnting in the light.", self, exclude: self
+      room.puts '$being slowly appears from nothingness, wincing and squnting in the light.', self, exclude: self
     end
 
   end

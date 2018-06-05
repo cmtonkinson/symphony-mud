@@ -7,7 +7,7 @@ class PriorityQueue
 
   #############################################################################
   def push(element)
-    raise "element does not respond to :<=>" unless element.responds_to? :<=>
+    raise 'element does not respond to :<=>' unless element.responds_to? :<=>
     @elements << element
     bubble_up(@elements.size - 1)
   end

@@ -12,7 +12,7 @@ module Util
     end
 
     def push(element)
-      raise NoMethodError.new "Method not defined from ADT"
+      raise NoMethodError.new 'Method not defined from ADT'
     end
 
     def pop

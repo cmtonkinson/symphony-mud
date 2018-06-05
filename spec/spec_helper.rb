@@ -1,13 +1,13 @@
-require "rspec/collection_matchers"
-require "simplecov"
+require 'rspec/collection_matchers'
+require 'simplecov'
 SimpleCov.start
 
 ###############################################################################
 # Bootstrap Symphony; this code is the test analogue of the dispatch script.
 ###############################################################################
-BINARY_NAME = "" # stub
-ENV["SYMPHONY_ENV"] ||= "test"
-require File.expand_path "config/bootstrap"
+BINARY_NAME = '' # stub
+ENV['SYMPHONY_ENV'] ||= 'test'
+require File.expand_path 'config/bootstrap'
 
 ###############################################################################
 # Override initializers, as necessary.
@@ -15,16 +15,16 @@ require File.expand_path "config/bootstrap"
 # the structure of config/initializers?
 ###############################################################################
 Network.configure do |config|
-  config.listen_ip   = "127.0.0.1"
+  config.listen_ip   = '127.0.0.1'
   config.listen_port = 6501
 end
 
-Symphony.logger = Logger.new("/dev/null")
+Symphony.logger = Logger.new('/dev/null')
 
 ###############################################################################
 # Load our custom helpers.
 ###############################################################################
-Dir[Symphony.root.join "spec", "helpers", "*_helper.rb"].each { |file| require file }
+Dir[Symphony.root.join 'spec', 'helpers', '*_helper.rb'].each { |file| require file }
 
 ###############################################################################
 # Spin up a telnet server for smoke testing.
@@ -37,5 +37,5 @@ $universe.setup_server
 RSpec.configure do |config|
   # config.treat_symbols_as_metadata_keys_with_true_values = true
   config.run_all_when_everything_filtered = true
-  config.order = "random"
+  config.order = 'random'
 end
