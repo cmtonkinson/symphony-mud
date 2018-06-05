@@ -1,0 +1,6 @@
+--color
+--debug
+--display-cop-names
+--extra-details
+--fail-level=warning
+--format=clang

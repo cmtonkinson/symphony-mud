@@ -1,12 +1,34 @@
 image: "ruby:2.5"
 
+stages:
+  - test
+  - analyze
+
 before_script:
   - ruby -v
   - gem install bundler  --no-ri --no-rdoc
   - bundle install -j $(nproc)
 
+###############################################################################
+# TEST
+# Logical correctness
+###############################################################################
 rspec:
+  stage: test
+  tags:
+    - docker
   script:
     - rspec --format=documentation --force-color
   coverage: '/\(\d+.\d+\%\) covered/'
+
+###############################################################################
+# ANALYZE
+# Static analysis
+###############################################################################
+rubocop:
+  stage: analyze
+  tags:
+    - docker
+  script:
+    - rubocop
 
