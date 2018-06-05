@@ -1,5 +1,4 @@
 module Combat
-
   def self.embattle(attacker, defender)
     # Reference an existing Battle if one exists, otherwise start a new one.
     battle = attacker.group.battle || defender.group.battle || Battle.new
@@ -12,6 +11,5 @@ module Combat
     attacker.group.add_opponent defender.group
     defender.group.add_opponent attacker.group
   end
-
 end
 

@@ -168,6 +168,5 @@ module Mechanics
       recur every, -1
     end
   end
-
 end
 

@@ -1,5 +1,4 @@
 module Base
-
   class Configuration
     attr_accessor :sleep_interval, :recovery_file
     attr_accessor :hash_salt, :hash_iterations, :hash_digest
@@ -25,5 +24,4 @@ module Base
   def self.configure
     yield configuration if block_given?
   end
-
 end

@@ -1,5 +1,4 @@
 module Stat
-
   #############################################################################
   # Returns a gain for a stat based on a deterministic logistic function.
   #
@@ -27,5 +26,4 @@ module Stat
   def logistic_gain(level, base, target)
     Util.logistic_curve level, limit, min, Realm::Being::HERO
   end
-
 end

@@ -1,5 +1,4 @@
 module Realm
-
   class NPC
     ###########################################################################
     after_death -> {
@@ -8,6 +7,5 @@ module Realm
       dispose
     }
   end
-
 end
 

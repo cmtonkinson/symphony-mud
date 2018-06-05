@@ -1,5 +1,4 @@
 module Util
-
   #############################################################################
   # Ensure a value is no less than min and no greater than max.
   #
@@ -34,5 +33,4 @@ module Util
   def percent_chance(percent)
     (1 + Random.rand(100)) <= percent
   end
-
 end

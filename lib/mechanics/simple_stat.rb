@@ -1,5 +1,4 @@
 module Mechanics
-
   class SimpleStat
     attr_accessor :baseline, :modifier
 
@@ -25,5 +24,4 @@ module Mechanics
       @modifier -= magnitude
     end
   end
-
 end

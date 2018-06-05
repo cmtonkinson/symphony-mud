@@ -1,5 +1,4 @@
 module Network
-
   class Client
     attr_accessor :socket, :should_terminate, :user
 
@@ -47,5 +46,4 @@ module Network
       socket.send ::Base::Terminal.colorize(message), 0
     end
   end
-
 end

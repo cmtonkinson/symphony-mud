@@ -1,5 +1,4 @@
 module Base
-
   class Account
     ###########################################################################
     def self.hash(message)
@@ -91,5 +90,4 @@ module Base
       @user_map = nil
     end
   end
-
 end

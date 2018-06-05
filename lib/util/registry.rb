@@ -1,5 +1,4 @@
 module Util
-
   class Registry
     @@hash = {}
 
@@ -49,5 +48,4 @@ module Util
       }
     end
   end
-
 end

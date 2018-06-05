@@ -1,7 +1,6 @@
 # Define these classes together because otherwise autoload logic doesn't necessarily require the
 # ADT before the concrete subclasses.
 module Util
-
   ##################################################################################################
   # ADT to keep simple collections DRY
   ##################################################################################################
@@ -52,5 +51,4 @@ module Util
       self
     end
   end
-
 end

@@ -2,7 +2,7 @@ module Talent
   module Enabler
 
     def name
-      @name ||= ""
+      @name ||= ''
     end
 
     def abilities
@@ -24,7 +24,6 @@ module Talent
     def root_abilities
       abilities.select { |a| a.prerequisites.empty? }
     end
-
   end
 end
 

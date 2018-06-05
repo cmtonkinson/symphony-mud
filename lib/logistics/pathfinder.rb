@@ -1,5 +1,4 @@
 module Logistics
-
   class Pathfinder
     attr_reader :start, :finish
 
@@ -8,6 +7,5 @@ module Logistics
       @finish = finish
     end
   end
-
 end
 

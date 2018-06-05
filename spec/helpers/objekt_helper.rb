@@ -1,5 +1,4 @@
 module Realm
-
   class TestObj < Objekt
     attr_accessor :my_num, :my_nil
 
@@ -57,5 +56,4 @@ module Realm
       super
     end
   end
-
 end

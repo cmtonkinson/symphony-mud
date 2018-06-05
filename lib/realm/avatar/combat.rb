@@ -1,5 +1,4 @@
 module Realm
-
   class Avatar
     ###########################################################################
     after_death -> {
@@ -19,6 +18,5 @@ module Realm
       room.puts '$being slowly appears from nothingness, wincing and squnting in the light.', self, exclude: self
     end
   end
-
 end
 

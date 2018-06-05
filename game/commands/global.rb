@@ -1,5 +1,4 @@
 module Command
-
 # TODO: support aliases (esp. for command shortcuts like NESWUD)
 # TODO: set default aliases (NESWUP, kill, etc.)
 
@@ -381,5 +380,4 @@ define :zones do
     end
   end
 end
-
 end

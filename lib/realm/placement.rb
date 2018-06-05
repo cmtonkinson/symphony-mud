@@ -1,5 +1,4 @@
 module Realm
-
   class Placement < Objekt
     attr_accessor :room, :klass, :objekt_id, :number, :max
 
@@ -85,6 +84,5 @@ module Realm
       end
     end
   end
-
 end
 

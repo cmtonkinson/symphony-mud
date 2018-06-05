@@ -1,5 +1,4 @@
 module Command
-
   class Command
     attr_reader :usages
 
@@ -149,6 +148,5 @@ module Command
     ::Command.const_set class_name, class_definition
     ::Command.configure { |config| config.register_command(::Command.const_get(class_name).new) }
   end
-
 end
 

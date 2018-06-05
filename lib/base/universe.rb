@@ -1,7 +1,6 @@
 require 'yaml'
 
 module Base
-
   class Universe
     attr_accessor :clients, :server, :should_stop, :quotes, :should_reboot
 
@@ -192,5 +191,4 @@ module Base
       context.eval content
     end
   end
-
 end

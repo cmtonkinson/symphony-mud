@@ -1,7 +1,6 @@
 require 'socket'
 
 module Network
-
   class Server < TCPServer
     def initialize
       config = Network.configuration
@@ -17,5 +16,4 @@ module Network
       client
     end
   end
-
 end

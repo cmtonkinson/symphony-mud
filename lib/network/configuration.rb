@@ -1,5 +1,4 @@
 module Network
-
   class Configuration
     attr_accessor :listen_ip, :listen_port, :recv_maxlen
 
@@ -20,5 +19,4 @@ module Network
   def self.configure
     yield configuration if block_given?
   end
-
 end

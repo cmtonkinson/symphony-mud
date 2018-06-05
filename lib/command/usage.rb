@@ -1,5 +1,4 @@
 module Command
-
   class Usage < Array
     ###########################################################################
     # Add a new Argument. Raise if something goes wrong.

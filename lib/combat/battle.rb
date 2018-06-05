@@ -1,5 +1,4 @@
 module Combat
-
   class Battle
     include Hooks
 
@@ -69,6 +68,5 @@ module Combat
       end
     }
   end
-
 end
 

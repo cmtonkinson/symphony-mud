@@ -1,5 +1,4 @@
 module Command
-
   class Configuration
     attr_accessor :command_registry, :command_sets
 
@@ -22,5 +21,4 @@ module Command
   def self.configure
     yield configuration if block_given?
   end
-
 end

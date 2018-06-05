@@ -1,5 +1,4 @@
 module Command
-
   class Operator
     attr_reader :command_set, :set_name
 
@@ -67,5 +66,4 @@ module Command
       return nil
     end
   end
-
 end

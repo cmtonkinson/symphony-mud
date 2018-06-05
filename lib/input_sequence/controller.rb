@@ -1,5 +1,4 @@
 module InputSequence
-
   class Controller
     attr_reader :user, :sequence
 
@@ -17,5 +16,4 @@ module InputSequence
       @sequence.handle input
     end
   end
-
 end

@@ -1,5 +1,4 @@
 module Command
-
   ARGUMENT_TYPES = {
     int: {
       pattern: / [+-]? \d+ /ix,

@@ -1,7 +1,6 @@
 require 'ostruct'
 
 module InputSequence
-
   class InputSequence
     include AASM
 
@@ -51,5 +50,4 @@ module InputSequence
       Symphony.logger.trace str
     end
   end
-
 end

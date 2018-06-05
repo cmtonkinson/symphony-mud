@@ -1,5 +1,4 @@
 module Combat
-
   class Bout
     attr_reader :battle
     attr_reader :strikes
@@ -49,6 +48,5 @@ module Combat
       end
     end
   end
-
 end
 

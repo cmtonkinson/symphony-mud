@@ -1,5 +1,4 @@
 module Util
-
   class AttrHash < Hash
     attr_reader :attribute
 
@@ -100,6 +99,5 @@ module Util
         .join("\n")
     end
   end
-
 end
 

@@ -1,5 +1,4 @@
 module Realm
-
   #############################################################################
   def container_for_klass(klass)
     container_name = nil
@@ -36,5 +35,4 @@ module Realm
 
     container.values.find { |objekt| objekt.rid == rid }
   end
-
 end

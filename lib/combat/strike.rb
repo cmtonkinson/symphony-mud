@@ -1,5 +1,4 @@
 module Combat
-
   class Strike
     include ::DoesDamage
 
@@ -54,6 +53,5 @@ module Combat
       defender.run_hook :after_strike_defense, self
     end
   end
-
 end
 

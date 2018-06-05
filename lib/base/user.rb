@@ -1,5 +1,4 @@
 module Base
-
   class User
     attr_accessor :client, :avatar, :operators
 
@@ -53,5 +52,4 @@ module Base
       puts I18n.t 'command.operator.err_not_found'
     end
   end
-
 end

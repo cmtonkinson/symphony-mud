@@ -1,5 +1,4 @@
 module InputSequence
-
   class LoginSequence < InputSequence
     ###########################################################################
     def initialize
@@ -174,5 +173,4 @@ module InputSequence
       end
     end
   end
-
 end

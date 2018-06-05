@@ -1,5 +1,4 @@
 module Command
-
   class Command_apple < Command
     def initialize
       @name = 'apple'

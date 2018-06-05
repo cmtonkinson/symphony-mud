@@ -1,5 +1,4 @@
 module Logistics
-
   class Transporter
     attr_reader :quarry, :source, :destination, :operation
 
@@ -61,5 +60,4 @@ module Logistics
       super objekt, :move
     end
   end
-
 end

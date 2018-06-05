@@ -1,5 +1,4 @@
 module Util
-
   class Linguist
     ###########################################################################
     def self.interpret(format, *args)
@@ -116,6 +115,5 @@ module Util
       splits.join
     end
   end
-
 end
 

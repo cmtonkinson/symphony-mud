@@ -1,5 +1,4 @@
 module Mechanics
-
   class ThresholdStat
     attr_reader :current_stat, :threshold
 
@@ -19,5 +18,4 @@ module Mechanics
       1.0 * current / threshold
     end
   end
-
 end
