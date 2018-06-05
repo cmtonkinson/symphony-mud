@@ -17,4 +17,3 @@ require_relative 'placement'
 require_relative 'item'
 
 require_relative 'world'
-

@@ -51,4 +51,3 @@ module Base
     end
   end
 end
-

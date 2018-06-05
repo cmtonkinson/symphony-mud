@@ -28,4 +28,3 @@ describe Realm::Being do
 
   end
 end
-

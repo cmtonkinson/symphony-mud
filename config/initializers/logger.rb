@@ -27,4 +27,3 @@ class Logger
     @level <= TRACE
   end
 end
-

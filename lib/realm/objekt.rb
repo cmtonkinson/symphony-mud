@@ -7,4 +7,3 @@ require_relative 'objekt/jobs'
 require_relative 'objekt/objekt'
 require_relative 'objekt/serializing'
 require_relative 'objekt/transporter'
-

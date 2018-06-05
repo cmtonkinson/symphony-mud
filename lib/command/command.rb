@@ -149,4 +149,3 @@ module Command
     ::Command.configure { |config| config.register_command(::Command.const_get(class_name).new) }
   end
 end
-

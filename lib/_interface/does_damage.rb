@@ -4,4 +4,3 @@ module DoesDamage
   # Should return an Objekt
   method :whodunnit
 end
-

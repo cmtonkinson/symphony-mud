@@ -52,4 +52,3 @@ require_relative 'configuration'
 ###############################################################################
 $universe = Base::Universe.new
 $world    = Realm::World.new
-

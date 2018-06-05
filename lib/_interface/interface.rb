@@ -5,4 +5,3 @@ module Interface
     end
   end
 end
-

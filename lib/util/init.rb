@@ -6,4 +6,3 @@ require_relative 'registry'
 require_relative 'simple_collection'
 require_relative 'util'
 require_relative 'priority_queue'
-

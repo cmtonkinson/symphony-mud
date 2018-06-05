@@ -12,4 +12,3 @@ module Combat
     defender.group.add_opponent attacker.group
   end
 end
-

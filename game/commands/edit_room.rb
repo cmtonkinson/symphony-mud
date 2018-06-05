@@ -121,4 +121,3 @@ define :placement, :edit_room do
   end
 end
 end
-

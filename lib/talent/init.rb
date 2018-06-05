@@ -3,4 +3,3 @@ require_relative 'ability'
 require_relative 'active_ability'
 require_relative 'passive_ability'
 require_relative 'klass'
-

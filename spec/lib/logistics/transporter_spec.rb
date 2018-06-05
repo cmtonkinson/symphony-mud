@@ -90,4 +90,3 @@ describe Logistics::Transporter do
   end
 
 end
-

@@ -134,4 +134,3 @@ module Combat
     end
   end
 end
-

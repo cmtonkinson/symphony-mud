@@ -59,4 +59,3 @@ module Realm
     }
   end
 end
-

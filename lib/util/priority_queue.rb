@@ -71,4 +71,3 @@ class PriorityQueue
     @elements[source], @elements[target] = @elements[target], @elements[source]
   end
 end
-

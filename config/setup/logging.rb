@@ -19,4 +19,3 @@ Symphony.logger.formatter = proc do |severity, datetime, progname, msg|
     Base::Terminal.uncolor(msg.is_a?(String) ? msg.clone : msg.inspect),
   ])
 end
-

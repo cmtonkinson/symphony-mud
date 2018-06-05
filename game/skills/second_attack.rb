@@ -25,4 +25,3 @@ module Talent
 
   end
 end
-

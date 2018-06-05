@@ -8,4 +8,3 @@ module Logistics
     end
   end
 end
-

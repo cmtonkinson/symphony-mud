@@ -161,4 +161,3 @@ describe Util::AttrHash do
   end
 
 end
-

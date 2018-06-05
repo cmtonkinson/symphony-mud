@@ -8,4 +8,3 @@ module Realm
     }
   end
 end
-
