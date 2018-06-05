@@ -70,7 +70,7 @@ define :dig do
   level Realm::Being::DEMIGOD
   usage direction: :string
   exec do
-    being.puts t 'err_no_way' and next unless Realm::Exit::DIRECTIONS.keys.include?(direction)
+    being.puts t 'err_no_way' and next unless Realm::Exit::DIRECTIONS.key?(direction)
     being.puts t 'err_already' and next unless room.send(direction).nil?
 
     Logistics::Builder.create_linked_room room, direction
