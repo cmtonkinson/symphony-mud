@@ -31,4 +31,5 @@ rubocop:
     - docker
   script:
     - rubocop
+  allow_failure: true
 
