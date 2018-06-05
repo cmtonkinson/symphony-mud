@@ -26,12 +26,12 @@ describe Command::Argument do
     end
 
     it 'should reject complex Array values' do
-      expect { Argument.new ['to', 'from', {jason: :bourne}] }.to raise_error ArgumentError
+      expect { Argument.new ['to', 'from', { jason: :bourne }] }.to raise_error ArgumentError
       expect { Argument.new ['to', 'from', [:jason, :bourne]] }.to raise_error ArgumentError
     end
 
     it 'should parse a Hash' do
-      arg = Argument.new({confirmation: :bool})
+      arg = Argument.new({ confirmation: :bool })
       expect(arg.name).to eq 'confirmation'
       expect(arg.type).to eq :bool
     end

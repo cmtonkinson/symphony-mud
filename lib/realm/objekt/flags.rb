@@ -21,7 +21,7 @@ module Realm
         on_hashify -> {
           hash = Hash.new
           hash[flag_name] = instance_variable_get ivar
-          {simple_flags: hash}
+          { simple_flags: hash }
         }
 
         on_dehashify -> hash {

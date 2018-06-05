@@ -12,7 +12,7 @@ module Realm
         num_logins: @num_logins
       }
 
-      {guides: hash}
+      { guides: hash }
     }
 
     ###########################################################################

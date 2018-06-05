@@ -47,7 +47,7 @@ end
 define :link, :edit_room do
 ###############################################################################
   level Realm::Being::DEMIGOD
-  usage({direction: :string}, {room_rid: :int})
+  usage({ direction: :string }, { room_rid: :int })
   exec do
     target_room = $world.find_room room_rid
     target_direction = Realm::Exit.is_direction? direction
@@ -77,9 +77,9 @@ define :placement, :edit_room do
 ###############################################################################
   level Realm::Being::DEMIGOD
   usage 'list'
-  usage('delete', {rule: :int})
-  usage('add', 'npc', {npc_rid: :int}, {number: :int}, {max: :int})
-  usage('add', 'item', {item_rid: :int}, {number: :int}, {max: :int})
+  usage('delete', { rule: :int })
+  usage('add', 'npc', { npc_rid: :int }, { number: :int }, { max: :int })
+  usage('add', 'item', { item_rid: :int }, { number: :int }, { max: :int })
   exec do
     if list == 'list'
       being.puts t('empty_list') and next if room.placements.empty?

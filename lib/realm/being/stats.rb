@@ -90,7 +90,7 @@ module Realm
       DEFENSE.each { |name| hash[name] = send(name).baseline }
       OFFENSE.each { |name| hash[name] = send(name).baseline }
 
-      {stats: hash}
+      { stats: hash }
     }
 
     ###########################################################################

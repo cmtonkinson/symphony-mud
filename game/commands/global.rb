@@ -101,8 +101,8 @@ end
 define :group do
 ###############################################################################
   usage
-  usage({action: %w(leave disband)})
-  usage({action: %w(join withdraw accept deny kick)}, {victim: :id})
+  usage({ action: %w(leave disband) })
+  usage({ action: %w(join withdraw accept deny kick) }, { victim: :id })
   exec do
     group  = being.group
     leader = group.leader
@@ -193,7 +193,7 @@ end
 define :kill do
 ###############################################################################
   shortcut 'k'
-  usage({victim: :id})
+  usage({ victim: :id })
   exec do
     targets = room.beings.locate victim
     being.puts t('err_noone') and next if targets.empty?

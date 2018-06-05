@@ -34,7 +34,7 @@ module Realm
         inventory: @inventory.values.map(&:hashify),
       }
 
-      {being: hash}
+      { being: hash }
     }
 
     ###########################################################################

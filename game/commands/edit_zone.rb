@@ -5,7 +5,7 @@ define :zedit do
 ###############################################################################
   level Realm::Being::DEMIGOD
   usage 'create'
-  usage({zone_rid: :int})
+  usage({ zone_rid: :int })
   exec do
     if create == 'create'
       new_zone = Logistics::Builder.create_zone

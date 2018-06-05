@@ -6,7 +6,7 @@ module Command
 define :at do
 ###############################################################################
   level Realm::Being::DEMIGOD
-  usage({room_rid: :int}, :rest)
+  usage({ room_rid: :int }, :rest)
   exec do
     target = $world.find_room room_rid
     being.puts t 'err_nowhere' and next if target.nil?
@@ -86,7 +86,7 @@ end
 define :disconnect do
 ###############################################################################
   level Realm::Being::GOD
-  usage({victim: :string})
+  usage({ victim: :string })
   exec do
     target = $world.find_avatar victim
     being.puts t 'err_nobody' and next if target.nil?
@@ -103,7 +103,7 @@ end
 define :force do
 ###############################################################################
   level Realm::Being::GOD
-  usage({victim: :string}, :rest)
+  usage({ victim: :string }, :rest)
   exec do
     target = room.find_being victim
     being.puts t 'err_nobody' and next if target.nil?
@@ -120,7 +120,7 @@ end
 define :goto do
 ###############################################################################
   level Realm::Being::DEMIGOD
-  usage({room_id: :int})
+  usage({ room_id: :int })
   exec do
     target = $world.find_room room_id
     being.puts t 'err_nowhere' and next if target.nil?
@@ -137,7 +137,7 @@ end
 define :heal do
 ###############################################################################
   level Realm::Being::GOD
-  usage({victim: :string})
+  usage({ victim: :string })
   exec do
     target = room.find_being victim
     being.puts t 'err_nobody' and next if target.nil?
@@ -153,7 +153,7 @@ define :jobs do
 ###############################################################################
   level Realm::Being::CREATOR
   usage
-  usage({jobs: :int})
+  usage({ jobs: :int })
   exec do
     num_jobs = jobs.nil? ? 10 : jobs
     stats    = $world.schedule_stats num_jobs
@@ -169,8 +169,8 @@ end
 define :load do
 ###############################################################################
   level Realm::Being::DEMIGOD
-  usage('item', {rid: :int})
-  usage('npc', {rid: :int})
+  usage('item', { rid: :int })
+  usage('npc', { rid: :int })
   exec do
     if item == 'item'
       model = being.room.zone.find_by_rid Realm::Item, rid
@@ -199,7 +199,7 @@ end
 define :promote do
 ###############################################################################
   level Realm::Being::GOD
-  usage({target: :id}, {to_level: :int})
+  usage({ target: :id }, { to_level: :int })
   exec do
     victim = room.beings.locate_first target
     being.puts t('err_not_found') and next if victim.nil?
@@ -245,7 +245,7 @@ end
 define :repeat do
 ###############################################################################
   level Realm::Being::CREATOR
-  usage({times: :int}, :rest)
+  usage({ times: :int }, :rest)
   exec do
     min = 1
     max = 1000
@@ -277,7 +277,7 @@ define :rooms do
 ###############################################################################
   level Realm::Being::DEMIGOD
   usage
-  usage({id: :int})
+  usage({ id: :int })
   exec do
     zone = id.nil? ? being.room.zone : $world.zones.values.find { |z| z.rid == id }
     being.puts t 'err_nowhere' and next if zone.nil?
@@ -304,7 +304,7 @@ end
 define :summon do
 ###############################################################################
   level Realm::Being::GOD
-  usage({victim: :string})
+  usage({ victim: :string })
   exec do
     target = $world.find_avatar victim
     being.puts t('err_self') and next if target == being

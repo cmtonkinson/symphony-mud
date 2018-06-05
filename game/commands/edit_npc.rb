@@ -5,7 +5,7 @@ define :nedit do
 ###############################################################################
   level Realm::Being::DEMIGOD
   usage 'create'
-  usage({rid: :int})
+  usage({ rid: :int })
   exec do
     if create == 'create'
       npc = Logistics::Builder.create_npc room.zone
@@ -29,7 +29,7 @@ define :npcs do
 ###############################################################################
   level Realm::Being::DEMIGOD
   usage
-  usage({zone_rid: :int})
+  usage({ zone_rid: :int })
   exec do
     zone = zone_rid.nil? ? being.room.zone : $world.zones.values.find { |z| z.rid == zone_rid }
     being.puts t 'err_nowhere' and next if zone.nil?
@@ -67,7 +67,7 @@ end
 define :level, :edit_npc do
 ###############################################################################
   level Realm::Being::DEMIGOD
-  usage({new_level: :int})
+  usage({ new_level: :int })
   exec do
     being.nedit.level = new_level
     being.puts t('actor'), being.nedit.level
