@@ -57,9 +57,9 @@ module Base
         # history in a buffer so either we need to examine the top of that
         # buffer or add to it.
         if input == '!'
-          input = client.user.avatar.input_history.peek
+          input = client.last_input
         else
-          client.user.avatar.input_history.push input
+          client.last_input = input
         end
 
         client.user.handle input

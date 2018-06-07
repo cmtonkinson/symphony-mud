@@ -1,11 +1,12 @@
 module Network
   class Client
-    attr_accessor :socket, :should_terminate, :user
+    attr_accessor :socket, :should_terminate, :user, :last_input
 
     def initialize(tcp_socket)
       @should_terminate = false
       @socket           = tcp_socket
       @user             = nil
+      @last_input       = ''
       Symphony.logger.info "New Client on socket #{get_fd}"
     end
 
