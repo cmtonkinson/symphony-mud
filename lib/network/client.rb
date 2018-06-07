@@ -6,7 +6,6 @@ module Network
       @should_terminate = false
       @socket           = tcp_socket
       @user             = nil
-
       Symphony.logger.info "New Client on socket #{get_fd}"
     end
 

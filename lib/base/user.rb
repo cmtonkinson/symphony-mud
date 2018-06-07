@@ -48,7 +48,10 @@ module Base
         return false
       end
 
+      # Enumerate operators (in order) to find one able to handle the input.
       operators.each { |op| return if op.handle(input) == true }
+
+      # Nope!
       puts I18n.t 'command.operator.err_not_found'
     end
   end

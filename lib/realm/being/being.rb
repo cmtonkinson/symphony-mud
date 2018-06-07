@@ -4,6 +4,7 @@ module Realm
 
     attr_accessor :room, :gender
     attr_accessor :abilities, :enablers, :klass
+    attr_accessor :input_history
 
     CONTAINERS.each { |cont| attr_accessor cont }
 
@@ -11,8 +12,9 @@ module Realm
 
     ###########################################################################
     def initialize(id = nil, props = {})
-      @gender        = Gender::NEUTER
       @output_buffer = ''
+      @input_history = Util::LimitStack.new(100)
+      @gender        = Gender::NEUTER
       @abilities     = Array.new
       @enablers      = Array.new
       @klass         = nil

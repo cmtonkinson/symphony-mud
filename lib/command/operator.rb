@@ -14,8 +14,8 @@ module Command
     ###########################################################################
     def handle(input)
       @command          = nil
-      cmd_name, _, rest = input.partition ' '
       being             = @user.avatar
+      cmd_name, _, rest = input.partition ' '
 
       Symphony.logger.trace "Handling '#{input}' in :#{set_name} for #{being.fqid_str}"
 
