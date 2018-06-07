@@ -1,3 +1,5 @@
+require 'openssl'
+
 module Base
   class Configuration
     attr_accessor :sleep_interval, :recovery_file

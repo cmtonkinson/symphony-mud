@@ -320,7 +320,7 @@ define :skills do
 
     being.abilities
       .select { |a| a.category == :skill }
-      .each { |a| being.puts t("skill"), a.name }
+      .each { |a| being.puts t("skill"), a.name.to_s.gsub('_', ' ') }
   end
 end
 

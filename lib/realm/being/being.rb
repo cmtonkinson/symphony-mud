@@ -27,7 +27,7 @@ module Realm
     ###########################################################################
     on_hashify -> {
       hash = {
-        klass: @klass.name,
+        klass: @klass&.name,
         room: @room&.id,
         gender: @gender,
         inventory: @inventory.values.map(&:hashify),
