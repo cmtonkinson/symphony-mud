@@ -4,7 +4,6 @@ module Talent
     attr_reader :type, :category, :name
     attr_reader :level, :trains, :difficulty, :stamina, :mana, :successRate
     attr_reader :prerequisites
-    attr_reader :level, :trains, :difficulty, :stamina, :mana, :successRate
 
     ###########################################################################
     def initialize(level, trains, difficulty, stamina, mana, successRate)
