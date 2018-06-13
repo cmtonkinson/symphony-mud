@@ -8,6 +8,7 @@ module Realm
     CONTAINERS.each { |cont| attr_accessor cont }
 
     define_hooks :before_room_change, :after_room_change
+    define_hooks :before_ability_invocation, :after_ability_invocation
 
     ###########################################################################
     def initialize(id = nil, props = {})
@@ -178,4 +179,3 @@ module Realm
 
   end
 end
-

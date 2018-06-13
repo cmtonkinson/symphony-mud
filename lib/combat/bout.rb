@@ -7,6 +7,10 @@ module Combat
     def initialize(battle)
       @battle  = battle
       @strikes = Array.new
+    end
+
+    ###########################################################################
+    def start
       make_strikes
     end
 

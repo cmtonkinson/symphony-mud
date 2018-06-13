@@ -44,7 +44,9 @@ module Combat
       if @groups.empty?
         cease
       else
-        @bouts.push Bout.new(self)
+        bout = Bout.new(self)
+        @bouts.push bout
+        bout.start
       end
     end
 

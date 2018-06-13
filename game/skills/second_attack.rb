@@ -8,7 +8,7 @@ module Talent
       @name     = :second_attack
     end
 
-    def added_to(being)
+    def _added_to(being)
       skill = self
       being.after_strike_attack -> (strike) { skill.invoke strike }
     end

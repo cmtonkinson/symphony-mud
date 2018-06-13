@@ -8,13 +8,17 @@ module Talent
       @name     = :block
     end
 
-    def added_to(being)
+    def _added_to(being)
       skill = self
-      being.before_strike_defense -> (strike) { skill.invoke strike }
+      being.before_strike_defense -> (strike) { skill.invoke strike unless strike.avoided }
     end
 
     def _invoke(strike)
-      raise "broken"
+      return unless rand(1..100) < successRate
+
+      strike.avoid
+      strike.defender.puts "You block $being's strike!", strike.attacker
+      strike.attacker.puts '$being blocks your strike!', strike.defender
     end
 
   end

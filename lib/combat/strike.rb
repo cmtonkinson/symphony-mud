@@ -2,28 +2,32 @@ module Combat
   class Strike
     include ::DoesDamage
 
-    attr_reader :attacker, :defender
-    attr_reader :bout, :battle
-    attr_reader :parent
-    attr_reader :created_by
+    attr_reader :attacker, :defender # combatants (Beings)
+    attr_reader :parent, :bout, :battle # references
+    attr_reader :avoided # is this Strike going to be prevented in some way? (bool)
+    attr_reader :created_by # through what mechanism was this attack made?
 
     ###########################################################################
+    # Strike objects execute immediately upon construction and don't outlive
+    # the Battle.
     def initialize(attacker, defender, bout = nil, parent = nil, created_by = :bout)
+      # Setup
       @attacker   = attacker
       @defender   = defender
       @bout       = bout
       @parent     = parent
+      @avoided    = false
       @created_by = created_by
 
+      # Execute
       return if defender.dead?
-
       before
-      exec
+      perform unless avoided
       after
     end
 
     ###########################################################################
-    def exec
+    def perform 
       dam = 2 * attacker.level + rand(attacker.level)
       verb = Display::Format.damage dam
 
@@ -38,6 +42,11 @@ module Combat
     ###########################################################################
     def whodunnit
       attacker
+    end
+
+    ###########################################################################
+    def avoid
+      @avoided = true
     end
 
     ###########################################################################

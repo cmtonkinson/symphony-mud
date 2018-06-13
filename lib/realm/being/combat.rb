@@ -3,8 +3,10 @@ module Realm
     attr_reader :group
     attr_accessor :pending_group
 
-    define_hooks :before_strike_attack, :after_strike_attack
-    define_hooks :before_strike_defense, :after_strike_defense
+    define_hook :before_strike_attack, halts_on_falsey: true
+    define_hook :after_strike_attack
+    define_hook :before_strike_defense
+    define_hook :after_strike_defense
     define_hook :before_death, halts_on_falsey: true
     define_hook :on_death
     define_hook :after_death

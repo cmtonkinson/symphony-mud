@@ -4,6 +4,7 @@ module Talent
     attr_reader :type, :category, :name
     attr_reader :level, :trains, :difficulty, :stamina, :mana, :successRate
     attr_reader :prerequisites
+    attr_reader :able_being
 
     ###########################################################################
     def initialize(level, trains, difficulty, stamina, mana, successRate)
@@ -18,6 +19,8 @@ module Talent
       @stamina       = stamina
       @mana          = mana
       @successRate   = successRate
+
+      @able_being    = nil
     end
 
     ###########################################################################
@@ -36,15 +39,21 @@ module Talent
     end
 
     ###########################################################################
-    def added_to
-      raise StandardError.new 'Talent::Ability#added_to not redefined'
+    def added_to(being)
+      @able_being = being
+      _added_to being
     end
 
     ###########################################################################
     def invoke(*args)
       will_run, error = precheck
       return error unless will_run
-      _invoke *args
+
+      able_being.run_hook :before_ability_invocation, name
+      retval = _invoke *args
+      able_being.run_hook :after_ability_invocation, name
+
+      retval
     end
 
     ###########################################################################
