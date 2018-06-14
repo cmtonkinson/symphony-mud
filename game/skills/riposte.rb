@@ -10,7 +10,11 @@ module Talent
 
     def _added_to(being)
       skill = self
-      being.after_ability_invocation -> (ability_name) { skill.invoke if ability_name == :parry }
+      being.after_ability_invocation do |ability_name, retval|
+        if ability_name == :parry && retval == true
+          skill.invoke
+        end
+      end
     end
 
     def _invoke
@@ -26,10 +30,10 @@ module Talent
       # TODO: Fix this. It's really icky.
       current_bout = able_being.battle.bouts.last
       parent_strike = current_bout.strikes.last
+      attacker = parent_strike.defender
+      defender = parent_strike.attacker
 
-      parent_strike.defender.puts '  You respond quickly with a riposte!'
-      parent_strike.attacker.puts '  $being responds quickly with a riposte!', parent_strike.defender
-      Combat::Strike.new parent_strike.defender, parent_strike.attacker, current_bout, parent_strike, name
+      Combat::Strike.new attacker, defender, current_bout, parent_strike, name
     end
 
   end

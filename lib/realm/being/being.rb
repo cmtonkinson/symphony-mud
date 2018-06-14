@@ -14,8 +14,8 @@ module Realm
     def initialize(id = nil, props = {})
       @output_buffer = ''
       @gender        = Gender::NEUTER
-      @abilities     = Array.new
       @enablers      = Array.new
+      @abilities     = Array.new
       @klass         = nil
       super
     end
@@ -76,6 +76,12 @@ module Realm
     def puts(format, *args)
       print format, *args
       @output_buffer << "\n" unless @output_buffer[-1] == "\n"
+    end
+
+    ###########################################################################
+    def indented_puts(spaces, format, *args)
+      indented_format = (' ' * spaces) + format
+      puts indented_format, *args
     end
 
     ###########################################################################
@@ -174,7 +180,7 @@ module Realm
 
     ###########################################################################
     def get_ability(name)
-      @abilities.first { |a| a.name == name }
+      @abilities.find { |a| a.name == name.to_sym }
     end
 
   end

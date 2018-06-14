@@ -37,6 +37,9 @@ module Command
       # Couldn't find a Command for this input string.
       return false if @command.nil?
 
+      # We found a Command; is it a skill we have?
+      return false if @command.get_is_ability && !being.get_ability(@command.get_name)
+
       # We found a Command; can we invoke it?
       being.puts I18n.t('command.operator.err_low_level') and return true if @command.get_level > being.level
 

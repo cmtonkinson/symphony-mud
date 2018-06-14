@@ -17,8 +17,8 @@ module Talent
       return unless rand(1..100) < successRate
 
       strike.avoid
-      strike.defender.puts "You duck away from $being's strike!", strike.attacker
-      strike.attacker.puts '$being ducks away from your strike!', strike.defender
+      strike.defender.indented_puts strike.level, "You duck away from $being's $strike!", strike.attacker, strike
+      strike.attacker.indented_puts strike.level, '$being ducks away from your $strike!', strike.defender, strike
     end
 
   end

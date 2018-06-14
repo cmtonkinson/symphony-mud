@@ -67,6 +67,11 @@ module Util
     end
 
     ###########################################################################
+    def self.interpret_strike(arg)
+      arg.action
+    end
+
+    ###########################################################################
     def self.interpret_subjective(arg)
       Realm::Gender.subjective_pronoun arg.gender
     end

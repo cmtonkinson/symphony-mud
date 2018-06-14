@@ -30,12 +30,12 @@ module Talent
 
     ###########################################################################
     def category_s
-      category.to_s.gsub /_/, ' '
+      category.to_s.gsub '_', ' '
     end
 
     ###########################################################################
     def name_s
-      name.to_s.gsub /_/, ' '
+      name.to_s.gsub '_', ' '
     end
 
     ###########################################################################
@@ -51,7 +51,7 @@ module Talent
 
       able_being.run_hook :before_ability_invocation, name
       retval = _invoke *args
-      able_being.run_hook :after_ability_invocation, name
+      able_being.run_hook :after_ability_invocation, name, retval
 
       retval
     end

@@ -105,7 +105,9 @@ module Base
         save_reboot_map
         # Begin anew.
         env, options = reboot_exec_details
-        Process.exec env, Symphony.binary.to_s, options
+        cli = Symphony.binary.to_s + $command_line_args
+        [env, cli, options].each { |x| Symphony.logger.warn '  ' + x.inspect }
+        Process.exec env, cli, options
       rescue Exception => e
         @should_reboot = false
         Symphony.logger.fatal 'Reboot failed'

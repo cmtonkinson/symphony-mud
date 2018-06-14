@@ -17,8 +17,10 @@ module Talent
       return unless rand(1..100) < successRate
 
       strike.avoid
-      strike.defender.puts "You parry $being's strike!", strike.attacker
-      strike.attacker.puts '$being parries your strike!', strike.defender
+      strike.defender.indented_puts strike.level, "You parry $being's $strike!", strike.attacker, strike
+      strike.attacker.indented_puts strike.level, '$being parries your $strike!', strike.defender, strike
+
+      return true
     end
 
   end

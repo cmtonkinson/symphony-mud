@@ -7,15 +7,15 @@ module Talent
  
       ################################# level  trains  difficulty  stamina  mana  successRate
       # Offense
-      add_ability SecondAttackSkill.new 25,    2,      3,          1,       0,    80
+      add_ability SecondAttackSkill.new 25,    2,      3,          1,       0,    90
       add_ability ThirdAttackSkill.new  50,    3,      3,          2,       0,    80
-      add_ability FourthAttackSkill.new 75,    4,      3,          3,       0,    80
-#      add_ability WhirlwindSkill.new    60,    4,      4,          10,      0,    95
+      add_ability FourthAttackSkill.new 75,    4,      3,          3,       0,    70
+      add_ability KickSkill.new         30,    2,      2,          2,       0,    90
 
       # Defense
       add_ability DuckSkill.new         11,    1,      3,          2,       0,    15
-      add_ability BlockSkill.new        16,    1,      3,          2,       0,    20
-      add_ability DodgeSkill.new        25,    1,      3,          2,       0,    10
+      add_ability BlockSkill.new        16,    1,      3,          2,       0,    10
+      add_ability DodgeSkill.new        25,    1,      3,          2,       0,    20
       add_ability ParrySkill.new        45,    2,      3,          2,       0,    20
       add_ability RiposteSkill.new      65,    3,      5,          3,       0,    20
 

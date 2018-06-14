@@ -72,6 +72,12 @@ module Realm
     end
 
     ###########################################################################
+    def indented_puts(spaces, format, *args, **opts)
+      indented_format = (' ' * spaces) + format
+      puts indented_format, *args, **opts
+    end
+
+    ###########################################################################
     def find_being(name)
       beings.values.find { |b| b.name.index(name) == 0 }
     end

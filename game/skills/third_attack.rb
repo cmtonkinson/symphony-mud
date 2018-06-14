@@ -10,16 +10,12 @@ module Talent
 
     def _added_to(being)
       skill = self
-      being.after_strike_attack -> (strike) { skill.invoke strike }
+      being.after_strike_attack -> (strike) { skill.invoke strike if strike.created_by == :second_attack }
     end
     
     def _invoke(strike)
-      # Third attack Strikes only ever follow a second attack Strike.
-      return unless strike.created_by == :second_attack
-
-      # Generate a new Strike object, passing through all the details and
-      # setting the first strike as the parent.
-      Combat::Strike.new strike.attacker, strike.defender, strike.bout, strike, :third_attack
+      return unless rand(1..100) < successRate
+      Combat::Strike.new strike.attacker, strike.defender, strike.bout, strike, name
     end
 
   end

@@ -14,14 +14,15 @@ module Command
     ###########################################################################
     # Set sane defaults, and run the `define` block from the command file.
     def setup(&block)
-      @name     = '_'
-      @shortcut = nil
-      @brief    = 'TODO'
-      @level    = 1
-      @group    = :global
-      @exec     = nil
-      @usages   = [] # A collection of Usages
-      @context  = nil
+      @name       = '_'
+      @shortcut   = nil
+      @brief      = 'TODO'
+      @level      = 1
+      @group      = :global
+      @is_ability = false
+      @exec       = nil
+      @usages     = [] # A collection of Usages
+      @context    = nil
       instance_eval &block if block_given?
     end
 
@@ -78,12 +79,13 @@ module Command
     end
 
     ###########################################################################
-    def get_name;     @name;     end
-    def get_shortcut; @shortcut; end
-    def get_brief;    @brief;    end
-    def get_level;    @level;    end
-    def get_group;    @group;    end
-    def get_exec;     @exec;     end
+    def get_name;       @name;       end
+    def get_shortcut;   @shortcut;   end
+    def get_brief;      @brief;      end
+    def get_level;      @level;      end
+    def get_group;      @group;      end
+    def get_is_ability; @is_ability; end
+    def get_exec;       @exec;       end
 
     private
 
@@ -107,6 +109,10 @@ module Command
 
     def group(group)
       @group = group.to_sym
+    end
+
+    def is_ability
+      @is_ability = true
     end
 
     def exec(&exec)
