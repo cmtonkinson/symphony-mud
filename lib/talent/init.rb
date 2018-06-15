@@ -1,5 +1,6 @@
 require_relative 'enabler'
 require_relative 'ability'
+require_relative 'spell'
 require_relative 'active_ability'
 require_relative 'passive_ability'
 require_relative 'klass'

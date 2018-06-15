@@ -16,7 +16,7 @@ class App
   DIRECTORIES = {
     config: %i[initializers locales setup],
     data: %i[avatar zone],
-    game: %i[commands klasses skills templates help],
+    game: %i[commands klasses skills spells templates help],
     lib: %i[],
     tmp: %i[],
   }

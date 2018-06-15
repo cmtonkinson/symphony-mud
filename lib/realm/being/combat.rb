@@ -56,6 +56,13 @@ module Realm
     end
 
     ###########################################################################
+    def cast_spell(ability, target)
+      puts "You intone the '{c$ability{x' spell.", ability
+      room.puts '$being mutters something strange.', self, exclude: [self]
+      ability.invoke target
+    end
+
+    ###########################################################################
     before_strike_attack -> (strike) {
     }
 

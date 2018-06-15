@@ -72,6 +72,11 @@ module Util
     end
 
     ###########################################################################
+    def self.interpret_ability(arg)
+      arg.name
+    end
+
+    ###########################################################################
     def self.interpret_subjective(arg)
       Realm::Gender.subjective_pronoun arg.gender
     end
