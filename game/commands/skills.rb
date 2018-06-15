@@ -11,10 +11,19 @@ define :cast do
     being.puts t('err_no_spell') and next if ability.nil?
 
     # Locate the target
-    victims = room.beings.locate target
-    being.puts t('err_noone') and next if victims.empty?
-    being.puts t('err_too_many') and next if victims.length > 1
-    victim = victims.first
+    if target.nil?
+      case ability.default_target
+      when :self
+        victim = being
+      when :enemy
+        victim = being.acquire_target
+      end
+    else
+      victims = room.beings.locate target
+      being.puts t('err_noone') and next if victims.empty?
+      being.puts t('err_too_many') and next if victims.length > 1
+      victim = victims.first
+    end
 
     # Cast it like you... are fishing?
     #                 ... broke it playing hockey?
