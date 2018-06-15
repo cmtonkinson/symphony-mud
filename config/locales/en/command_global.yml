@@ -2,6 +2,11 @@ en:
   #############################################################################
   # Standard commands
   global:
+    cast:
+      _brief: "Cast a spell"
+      err_no_spell: "Wait, which spell was that?"
+      err_noone: "Who are you casting on?"
+      err_too_many: "Can't pick just one target? Try narrowing that down."
     colors:
       _brief: "Display the color map"
       title: "You can use color by typing any of the codes below.\n\

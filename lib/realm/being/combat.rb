@@ -30,6 +30,7 @@ module Realm
 
     ###########################################################################
     def acquire_target
+      return nil unless group.all_opponent_members
       group.all_opponent_members
         .reject { |b| b.dead? }
         .reject { |b| b.room != room }

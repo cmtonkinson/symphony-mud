@@ -17,6 +17,7 @@ define :cast do
         victim = being
       when :enemy
         victim = being.acquire_target
+        being.puts t('err_noone') and next if victim.nil?
       end
     else
       victims = room.beings.locate target
