@@ -7,6 +7,7 @@ module Talent
  
       ################################# level  trains  difficulty  stamina  mana  successRate
       add_ability FrostSpell.new        5,     2,      3,          3,       5,    90
+      add_ability HealSpell.new         5,     2,      3,          3,       5,    90
 
     end
   end
