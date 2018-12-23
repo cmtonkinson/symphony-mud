@@ -83,4 +83,20 @@ define :name, :edit_item do
     being.puts t('actor'), being.iedit.name
   end
 end
+
+###############################################################################
+define :wearable, :edit_item do
+###############################################################################
+  level Realm::Being::DEMIGOD
+  usage :location
+  usage 'none'
+  exec do
+    if none == 'none'
+      being.puts t('err_invalid_location') and next unless 
+      being.iedit.wearloc = location
+    else
+    end
+  end
+end
+
 end

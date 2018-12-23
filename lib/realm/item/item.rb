@@ -1,7 +1,8 @@
 module Realm
   class Item < Objekt
-    attr_accessor :level
+    attr_accessor :level, :type, :wearloc
 
+    TYPES = %i(armor clothing container food furniture jewelry key other weapon)
 # level
 # short
 # long
@@ -23,22 +24,33 @@ module Realm
 
     ###########################################################################
     after_initialize -> {
-      @level = 1
+      @level   = 1
+      @type    = :other
+      @wearloc = nil
     }
 
     ###########################################################################
     on_hashify -> {
-      {
-        level: @level
-      }
+      hash = {}
+
+      hash[:level] = @level
+      hash[:type] = @type
+      hash[:wearloc] = @wearloc if wearable?
     }
 
     ###########################################################################
     on_dehashify -> hash {
       hash
 
-      @level = hash[:level]
+      @level   = hash[:level]
+      @type    = hash[:type]
+      @wearloc = hash[:wearloc] if wearable?
     }
+
+    ###########################################################################
+    def wearable?
+      return %i(armor clothing jewelry weapon).include? type
+    end
 
     ###########################################################################
     def _interpret_name

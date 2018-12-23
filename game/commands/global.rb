@@ -81,6 +81,18 @@ define :emote do
 end
 
 ###############################################################################
+define :equipment do
+###############################################################################
+  usage
+  exec do
+    being.puts t('title')
+    Realm::Being::WEARLOCS.each do |sym, str|
+      being.puts t('position'), str, ' ' * (14 - str.length), ' a thing'
+    end 
+  end
+end
+
+###############################################################################
 define :get do
 ###############################################################################
   usage items: :id
@@ -357,6 +369,24 @@ define :summary do
       being.inventory.length, 0, 0, 0,
       0, 0, 0
     ]
+  end
+end
+
+###############################################################################
+define :wear do
+###############################################################################
+  usage :target
+  usage :target, :location
+  exec do
+    targets = being.inventory.locate target
+    being.puts t('err_not_found') and next if targets.empty?
+
+    targets.each do |item|
+      being.puts t('err_not_wearable'), item and next unless item.wearable?
+
+      being.puts t('equipped'), item, 'WEARLOC'
+      being.puts "STUB WEAR #{item.name}"
+    end
   end
 end
 

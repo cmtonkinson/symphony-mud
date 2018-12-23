@@ -30,6 +30,7 @@ module Realm
       ankle_r:    "right ankle",
       feet:       "feet",
     }
+
     # attr_accessor
 
     ###########################################################################
@@ -43,6 +44,12 @@ module Realm
     ###########################################################################
     on_dehashify -> hash {
     }
+
+    ###########################################################################
+    def valid_wearloc?(str)
+      if WEARLOCS.has_key?(
+      WEARLOCS.keys.map(&:t$o_str).include?(str)
+    end
 
   end
 end
