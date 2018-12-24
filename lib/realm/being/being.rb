@@ -3,7 +3,7 @@ module Realm
     CONTAINERS = %w[inventory]
 
     attr_accessor :room, :gender
-    attr_accessor :abilities, :enablers, :klass
+    attr_accessor :abilities, :enablers, :klass, :anatomy
 
     CONTAINERS.each { |cont| attr_accessor cont }
 
@@ -17,6 +17,7 @@ module Realm
       @enablers      = Array.new
       @abilities     = Array.new
       @klass         = nil
+      @anatomy       = nil
       super
     end
 
@@ -29,6 +30,7 @@ module Realm
     on_hashify -> {
       hash = {
         klass: @klass&.name,
+        anatomy: @anatomy&.name,
         room: @room&.id,
         gender: @gender,
         inventory: @inventory.values.map(&:hashify),
@@ -44,6 +46,11 @@ module Realm
       if hash[:klass]
         @klass = Talent.const_get(hash[:klass].capitalize).new
         add_enabler @klass
+      end
+
+      if hash[:anatomy]
+        @anatomy = Talent.const_get(hash[:anatomy].capitalize).new
+        add_enabler @anatomy
       end
 
       unless is_a? NPC

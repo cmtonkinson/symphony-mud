@@ -36,6 +36,8 @@ module Realm
       hash[:level] = @level
       hash[:type] = @type
       hash[:wearloc] = @wearloc if wearable?
+
+      hash
     }
 
     ###########################################################################
