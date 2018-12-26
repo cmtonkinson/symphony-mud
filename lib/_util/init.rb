@@ -1,3 +1,4 @@
+require_relative 'locatable'
 require_relative 'attr_hash'
 require_relative 'helper'
 require_relative 'linguist'

@@ -293,18 +293,14 @@ define :remove do
 #######################################################################
   usage :target
   exec do
-#    targets = being.inventory.locate target
-#    being.puts t('err_not_found') and next if targets.empty?
-#
-#    targets.each do |item|
-#      error_str = being.anatomy.wear item
-#      being.puts error_str and next if error_str
-#      being.inventory.delete item
-#      being.puts t('wear'), item
-#    end
+    targets = being.anatomy.locate target
+    being.puts t('err_not_found') and next if targets.empty?
+    targets.each do |item|
+      message = being.anatomy.remove item, being.inventory
+      being.puts *message
+    end
   end
 end
-
 
 ###############################################################################
 define :save do
@@ -404,10 +400,8 @@ define :wear do
     being.puts t('err_not_found') and next if targets.empty?
 
     targets.each do |item|
-      error_str = being.anatomy.wear item
-      being.puts error_str and next if error_str
-      being.inventory.delete item
-      being.puts t('wear'), item
+      message = being.anatomy.wear item, being.inventory
+      being.puts *message
     end
   end
 end

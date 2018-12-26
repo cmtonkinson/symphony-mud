@@ -1,0 +1,8 @@
+en:
+  anatomy:
+    incompatible: "That isn't compatible with your body type."
+    remove: "You stop wearing $item."
+    replace: "You remove $item and wear $item."
+    unwearable: "That isn't wearable."
+    wear: "You wear $item."
+    unworn: "You aren't wearing that."

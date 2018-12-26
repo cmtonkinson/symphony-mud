@@ -1,37 +1,12 @@
+# NOTE: To use this module, your class must implement a 'values' method which
+# returns a list of the Objekts within.
+
 module Util
-  class AttrHash < Hash
-    attr_reader :attribute
+  module Locatable
 
     ###########################################################################
-    def initialize(attribute_name = :id)
-      @attribute = attribute_name.to_sym
-    end
-
-    ###########################################################################
-    def insert(obj)
-      store attribute_value(obj), obj
-    end
-
-    ###########################################################################
-    def delete(obj)
-      super attribute_value(obj)
-    end
-
-    ###########################################################################
-    def attribute_value(obj)
-      raise ArgumentError.new "#{obj} does not respond to :#{@attribute}" unless obj.respond_to? @attribute
-      obj.send @attribute
-    end
-
-    ###########################################################################
-    def transfer(obj, other_attr_hash)
-      delete obj
-      other_attr_hash.insert obj
-    end
-
-    ###########################################################################
-    # Find Objekts by name in the AttrHash.
-    # Returns an Array of Objekts on success.
+    # Find Objekts by name in the values Array.
+    # Returns an Array of Objekts on success; or an empty Array on any failure.
     def locate(input)
       if input.is_a? String
         id_arg = Command::ARGUMENT_TYPES[:id]
@@ -80,23 +55,5 @@ module Util
       matches.first
     end
 
-    ###########################################################################
-    def display_contents(stack = true)
-      values
-        .group_by(&:name)
-        .map { |name, objekts|
-          pretty_name = Util::Linguist.interpret objekts[0].interpret_name, objekts[0]
-          if stack
-            if objekts.length > 1
-              ' {W[%d]{x %s' % [objekts.length, pretty_name]
-            else
-              ' %s' % pretty_name
-            end
-          else
-            ' %s' % pretty_name
-          end
-        }
-        .join("\n")
-    end
   end
 end

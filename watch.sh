@@ -3,5 +3,5 @@
 # This script is just a developer convenience. It keeps the TAGS file
 # up-to-date and also continually runs project tests.
 
-watch -c -n 0.1 'ctags -Re --exclude=tmp && bundle exec rspec --force-color'
+watch -c -n 0.1 './ctags.sh && ./test.sh'
 

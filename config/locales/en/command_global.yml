@@ -65,6 +65,9 @@ en:
     quit:
       _brief: "Save your Avatar and disconnect from the server."
       actor: "Logging out. Goodbye."
+    remove:
+      _brief: "Unequip an item."
+      err_not_found: "You aren't wearing that."
     save:
       _brief: "Store up-to-date information about your Avatar on the server."
       start: "Saving your profile..."
