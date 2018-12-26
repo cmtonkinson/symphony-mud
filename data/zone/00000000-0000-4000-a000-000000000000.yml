@@ -39,12 +39,18 @@
     :rid: 1
     :name: rusty broadsword
   :level: 120
+  :type: 
+  :wearable: true
+  :slot: :hold
 - :objekt:
     :class: Realm::Item
     :id: 03dd72be-ec0e-4479-a660-5303539d0305
     :rid: 2
     :name: iPhone
   :level: 10
+  :type: 
+  :wearable: 
+  :slot: 
 :npcs:
 - :objekt:
     :class: Realm::NPC
@@ -52,6 +58,8 @@
     :rid: 1
     :name: angry dog
   :being:
+    :klass: 
+    :anatomy: 
     :room: 
     :gender: neuter
     :inventory: []

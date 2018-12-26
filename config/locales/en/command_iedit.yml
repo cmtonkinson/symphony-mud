@@ -22,4 +22,7 @@ en:
     name:
       _brief: "Change the name of the item."
       actor: "Item name changed to '{y$string{x'."
-
+    wearable:
+      _brief: "Set (or clear) the wearable slot for the item."
+      none: "Item set to non-wearable."
+      set: "Item made wearable at slot '{y$string{x'."

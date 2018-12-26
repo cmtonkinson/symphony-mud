@@ -86,8 +86,13 @@ define :equipment do
   usage
   exec do
     being.puts t('title')
-    Realm::Being::WEARLOCS.each do |sym, str|
-      being.puts t('position'), str, ' ' * (14 - str.length), ' a thing'
+    being.anatomy.slots.each do |slot|
+      spaces = ' ' * (14 - slot.name.length)
+      if slot.empty?
+        being.puts t('position_unoccupied'), slot.name, spaces
+      else
+        being.puts t('position_occupied'), slot.name, spaces, slot.occupant
+      end
     end 
   end
 end
@@ -284,6 +289,24 @@ define :quit do
 end
 
 ###############################################################################
+define :remove do
+#######################################################################
+  usage :target
+  exec do
+#    targets = being.inventory.locate target
+#    being.puts t('err_not_found') and next if targets.empty?
+#
+#    targets.each do |item|
+#      error_str = being.anatomy.wear item
+#      being.puts error_str and next if error_str
+#      being.inventory.delete item
+#      being.puts t('wear'), item
+#    end
+  end
+end
+
+
+###############################################################################
 define :save do
 ###############################################################################
   usage
@@ -374,18 +397,17 @@ end
 
 ###############################################################################
 define :wear do
-###############################################################################
+#######################################################################
   usage :target
-  usage :target, :location
   exec do
     targets = being.inventory.locate target
     being.puts t('err_not_found') and next if targets.empty?
 
     targets.each do |item|
-      being.puts t('err_not_wearable'), item and next unless item.wearable?
-
-      being.puts t('equipped'), item, 'WEARLOC'
-      being.puts "STUB WEAR #{item.name}"
+      error_str = being.anatomy.wear item
+      being.puts error_str and next if error_str
+      being.inventory.delete item
+      being.puts t('wear'), item
     end
   end
 end

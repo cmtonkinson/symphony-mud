@@ -148,6 +148,19 @@ define :heal do
 end
 
 ###############################################################################
+define :identify do
+###############################################################################
+  level Realm::Being::DEMIGOD
+  usage({ item: :string })
+  exec do
+    target = being.inventory.locate_first item
+    being.puts t 'err_not_found' and next if target.nil?
+
+    being.puts target.summary
+  end
+end
+
+###############################################################################
 define :jobs do
 ###############################################################################
   level Realm::Being::CREATOR

@@ -1,4 +1,5 @@
 require_relative 'enabler'
+require_relative 'slotted'
 require_relative 'ability'
 require_relative 'spell'
 require_relative 'active_ability'

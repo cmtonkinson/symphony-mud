@@ -26,7 +26,8 @@ en:
     equipment:
       _brief: "Display current gear list."
       title: "You are currently wearing..."
-      position: "$string$string $string"
+      position_occupied: "$string$string $item"
+      position_unoccupied: "$string$string nothing"
     get:
       _brief: "Retrieve items from the current room into your inventory."
       err_not_found: "You don't see that here."
@@ -90,7 +91,7 @@ en:
       _brief: "Equip an item."
       err_not_found: "You can't find that."
       err_not_wearable: "$item is not wearable."
-      equipped: "You have equipped $item on your $string."
+      wear: "You have equipped $item."
     who:
       _brief: "Display a list of players online."
       title: "Currently online:\n\n"

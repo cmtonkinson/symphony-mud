@@ -1,6 +1,6 @@
 module Realm
   class Item < Objekt
-    attr_accessor :level, :type, :wearloc
+    attr_accessor :level, :type, :wearable, :slot
 
     TYPES = %i(armor clothing container food furniture jewelry key other weapon)
 # level
@@ -24,18 +24,20 @@ module Realm
 
     ###########################################################################
     after_initialize -> {
-      @level   = 1
-      @type    = :other
-      @wearloc = nil
+      @level    = 1
+      @type     = :other
+      @wearable = nil
+      @slot     = nil
     }
 
     ###########################################################################
     on_hashify -> {
       hash = {}
 
-      hash[:level] = @level
-      hash[:type] = @type
-      hash[:wearloc] = @wearloc if wearable?
+      hash[:level]    = @level
+      hash[:type]     = @type
+      hash[:wearable] = @wearable
+      hash[:slot]     = @slot
 
       hash
     }
@@ -44,15 +46,18 @@ module Realm
     on_dehashify -> hash {
       hash
 
-      @level   = hash[:level]
-      @type    = hash[:type]
-      @wearloc = hash[:wearloc] if wearable?
+      @level    = hash[:level]
+      @type     = hash[:type]
+      @wearable = hash[:wearable]
+      @slot     = hash[:slot]
     }
 
     ###########################################################################
-    def wearable?
-      return %i(armor clothing jewelry weapon).include? type
-    end
+    on_deep_copy -> (original) {
+      %w(level type wearable slot).each do |var|
+        instance_variable_set "@#{var}", original.send(var)
+      end
+    }
 
     ###########################################################################
     def _interpret_name
@@ -66,6 +71,7 @@ module Realm
         id,
         level,
         %w[].sort.join(', '),
+        (wearable ? 'yes' : 'no'), (wearable ? slot.to_s : 'N/A'),
       ]
     end
   end

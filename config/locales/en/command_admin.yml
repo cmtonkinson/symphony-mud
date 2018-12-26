@@ -40,6 +40,9 @@ en:
       actor: "You heal $being."
       err_nobody: "You don't see them here."
       victim: "You are healed by $being."
+    identify:
+      _brief: "Print full details of target item."
+      err_not_found: "You don't have that."
     jobs:
       _brief: "List scheduler statistics."
       batch_size: "The schedule runs {Y%u{x jobs at a time."

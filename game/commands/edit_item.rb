@@ -88,13 +88,18 @@ end
 define :wearable, :edit_item do
 ###############################################################################
   level Realm::Being::DEMIGOD
-  usage :location
   usage 'none'
+  usage({ slot: :string })
   exec do
     if none == 'none'
-      being.puts t('err_invalid_location') and next unless 
-      being.iedit.wearloc = location
+      being.iedit.wearable = false
+      being.puts t('none')
     else
+      # TODO - validate that the slot type actually exists (requires iterating
+      # all known Anatomies)
+      being.iedit.wearable = true
+      being.iedit.slot = slot.to_sym
+      being.puts t('set'), slot
     end
   end
 end
