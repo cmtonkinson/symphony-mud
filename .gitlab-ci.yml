@@ -6,7 +6,7 @@ stages:
 
 before_script:
   - ruby -v
-  - gem install bundler  --no-ri --no-rdoc
+  - gem install bundler --no-rdoc
   - bundle install -j $(nproc)
 
 ###############################################################################
