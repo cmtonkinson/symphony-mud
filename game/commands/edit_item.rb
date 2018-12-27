@@ -85,6 +85,17 @@ define :name, :edit_item do
 end
 
 ###############################################################################
+define :type, :edit_item do
+###############################################################################
+  level Realm::Being::DEMIGOD
+  usage({ type: :string })
+  exec do
+    being.iedit.type = type.to_sym
+    being.puts t('actor'), being.iedit.type
+  end
+end
+
+###############################################################################
 define :wearable, :edit_item do
 ###############################################################################
   level Realm::Being::DEMIGOD

@@ -39,18 +39,40 @@
     :rid: 1
     :name: rusty broadsword
   :level: 120
-  :type: 
+  :type: :weapon
   :wearable: true
   :slot: :hold
+  :max_items:  0
+  :load_factor: 0
+  :health: 0
+  :mana: 0
+  :max_occupants: 0
+  :opens_type: :room
+  :opens_rid: 0
+  :weapon_type: :club 
+  :damage_type: :bash
+  :hitroll: 0
+  :damroll: 0
 - :objekt:
     :class: Realm::Item
     :id: 03dd72be-ec0e-4479-a660-5303539d0305
     :rid: 2
     :name: iPhone
   :level: 10
-  :type: 
-  :wearable: 
-  :slot: 
+  :type: :other
+  :wearable: true
+  :slot: :hold
+  :max_items: 0
+  :load_factor: 0
+  :health: 0
+  :mana: 0
+  :max_occupants: 0
+  :opens_type: :room
+  :opens_rid: 0
+  :weapon_type: :club
+  :damage_type: :bash
+  :hitroll: 0
+  :damroll: 0
 :npcs:
 - :objekt:
     :class: Realm::NPC

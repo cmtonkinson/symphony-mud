@@ -1,21 +1,17 @@
 module Realm
   class Item < Objekt
-    attr_accessor :level, :type, :wearable, :slot
 
     TYPES = %i(armor clothing container food furniture jewelry key other weapon)
-# level
-# short
-# long
-# type
-#   armor (wearable)
-#   clothing (wearable)
-#   container
-#   food
-#   furniture
-#   jewelry (wearable)
-#   key
-#   trash
-#   weapon (wearable)
+
+    ATTRS = %i(level type wearable slot
+      max_items load_factor
+      health mana
+      max_occupants
+      opens_type opens_rid
+      weapon_type damage_type hitroll damroll
+    )
+
+    ATTRS.each { |name| attr_accessor name }
 
     ###########################################################################
     def initialize(id = nil, props = {})
@@ -24,39 +20,36 @@ module Realm
 
     ###########################################################################
     after_initialize -> {
-      @level    = 1
-      @type     = :other
-      @wearable = nil
-      @slot     = nil
+      @level         = 1
+      @type          = :other
+      @wearable      = false
+      @slot          = nil
+      @health        = 0
+      @mana          = 0
+      @max_occupants = 0
+      @opens_type    = :room
+      @opens_rid     = 0
+      @weapon_type   = :club
+      @damage_type   = :bash
+      @hitroll       = 0
+      @damroll       = 0
     }
 
     ###########################################################################
     on_hashify -> {
       hash = {}
-
-      hash[:level]    = @level
-      hash[:type]     = @type
-      hash[:wearable] = @wearable
-      hash[:slot]     = @slot
-
+      ATTRS.each { |name| hash[name] = send name }
       hash
     }
 
     ###########################################################################
-    on_dehashify -> hash {
-      hash
-
-      @level    = hash[:level]
-      @type     = hash[:type]
-      @wearable = hash[:wearable]
-      @slot     = hash[:slot]
+    on_dehashify -> (hash) {
+      ATTRS.each { |name| instance_variable_set "@#{name}", hash[name] }
     }
 
     ###########################################################################
     on_deep_copy -> (original) {
-      %w(level type wearable slot).each do |var|
-        instance_variable_set "@#{var}", original.send(var)
-      end
+      ATTRS.each { |name| instance_variable_set "@#{name}", original.send(name) }
     }
 
     ###########################################################################
@@ -66,13 +59,19 @@ module Realm
 
     ###########################################################################
     def summary
-      $templates.item_summary % [
+      str = $templates.item_summary % [
         rid, name,
         id,
-        level,
+        level, type,
         %w[].sort.join(', '),
-        (wearable ? 'yes' : 'no'), (wearable ? slot.to_s : 'N/A'),
+        *(wearable ? ['yes', slot.to_s] : ['no', 'N/A']),
       ]
+      if type == :weapon
+        str << $templates.item_weapon_summary % [
+          weapon_type, damage_type, hitroll, damroll
+        ]
+      end
+      str
     end
   end
 end
