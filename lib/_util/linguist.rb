@@ -13,7 +13,7 @@ module Util
         begin
           send 'interpret_' + interpreter[1..-1], arg
         rescue NoMethodError
-          Symphony.logger.error "Room#interpret with format '#{format}' - no interpreter for '#{interpreter}' (arg is a #{arg.class.name}"
+          Symphony.logger.error "Room#interpret with format '#{format}' - no interpreter for '#{interpreter}' (arg is a #{arg.class.name})"
           Realm.configuration.error_string
         end
       end

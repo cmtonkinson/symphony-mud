@@ -63,39 +63,6 @@ define :exit, :edit_item do
 end
 
 ###############################################################################
-define :level, :edit_item do
-###############################################################################
-  level Realm::Being::DEMIGOD
-  usage({ new_level: :int })
-  exec do
-    being.iedit.level = new_level
-    being.puts t('actor'), being.iedit.level
-  end
-end
-
-###############################################################################
-define :name, :edit_item do
-###############################################################################
-  level Realm::Being::DEMIGOD
-  usage :rest
-  exec do
-    being.iedit.name = rest
-    being.puts t('actor'), being.iedit.name
-  end
-end
-
-###############################################################################
-define :type, :edit_item do
-###############################################################################
-  level Realm::Being::DEMIGOD
-  usage({ type: :string })
-  exec do
-    being.iedit.type = type.to_sym
-    being.puts t('actor'), being.iedit.type
-  end
-end
-
-###############################################################################
 define :wearable, :edit_item do
 ###############################################################################
   level Realm::Being::DEMIGOD
@@ -115,4 +82,40 @@ define :wearable, :edit_item do
   end
 end
 
+###############################################################################
+is_positive = -> (x) { return (x > 0 ? true : false) }
+is_word     = -> (x) { return !x.match(/\Aa-z+\z/i) }
+
+[
+  [:level, :int, nil, is_positive, 'must be 1 or higher', nil],
+  [:type, :string, nil, -> (x) { return Realm::Item::TYPES.include?(x.to_sym) }, "must be one of: #{Realm::Item::TYPES.join(', ')}", -> (x) { return x.to_sym }],
+  [:slot, :string, nil, is_word, 'must be a word', -> (x) { return x.to_sym }],
+  [:max_items, :int, :container, is_positive, 'must be 1 or higher', nil],
+  [:load_factor, :int, :container, is_positive, 'must be 1 or higher', nil],
+  [:health, :int, :food, is_positive, 'must be 1 or higher', nil],
+  [:mana, :int, :food, is_positive, 'must be 1 or higher', nil],
+  [:max_occupants, :int, :furniture, is_positive, 'must be 1 or higher', nil],
+  [:opens_type, :string, :key, -> (x) { return %w(room item).include?(x) }, 'must be either room or item', nil],
+  [:opens_rid, :int, :key, is_positive, 'must be 1 or higher', nil],
+  [:weapon_type, :string, :weapon, is_word, 'must be a word', nil],
+  [:damage_type, :string, :weapon, is_word, 'must be a word', nil],
+  [:hitroll, :int, :weapon, is_positive, 'must be 1 or higher', nil],
+  [:damroll, :int, :weapon, is_positive, 'must be 1 or higher', nil],
+].each do |definition|
+  name, type, subtype, validation, hint, conversion = *definition
+  define name, :edit_item do
+###############################################################################
+    level Realm::Being::DEMIGOD
+    usage({ value: type })
+    exec do
+      being.puts "That property only applies to items that are a #{subtype}." and next if !subtype.nil? && subtype != being.iedit.type
+      being.puts "Failed to update #{name} - new value #{hint}." and next unless validation.call(value)
+      being.iedit.send "#{name}=", (conversion.nil? ? value : conversion.call(value))
+      new_value = being.iedit.send "#{name}"
+      being.puts "Item #{name} changed to #{new_value}"
+    end
+  end
 end
+
+end
+

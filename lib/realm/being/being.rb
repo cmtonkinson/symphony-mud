@@ -2,7 +2,7 @@ module Realm
   class Being < Objekt
     CONTAINERS = %w[inventory]
 
-    attr_accessor :room, :gender
+    attr_accessor :room, :gender, :hand
     attr_accessor :abilities, :enablers, :klass, :anatomy
 
     CONTAINERS.each { |cont| attr_accessor cont }
@@ -14,6 +14,7 @@ module Realm
     def initialize(id = nil, props = {})
       @output_buffer = ''
       @gender        = Gender::NEUTER
+      @hand          = nil
       @enablers      = Array.new
       @abilities     = Array.new
       @klass         = nil
@@ -33,6 +34,7 @@ module Realm
         anatomy: @anatomy&.name,
         room: @room&.id,
         gender: @gender,
+        hand: @hand,
         inventory: @inventory.values.map(&:hashify),
       }
 
@@ -49,7 +51,7 @@ module Realm
       end
 
       if hash[:anatomy]
-        @anatomy = Talent.const_get(hash[:anatomy].capitalize).new
+        @anatomy = Talent.const_get(hash[:anatomy].capitalize).new self
         add_enabler @anatomy
       end
 
@@ -59,6 +61,7 @@ module Realm
       end
 
       @gender = hash[:gender]
+      @hand = hash[:hand]
 
       hash[:inventory].each { |hash| @inventory.insert Realm::Item.dehashify(hash) }
     }

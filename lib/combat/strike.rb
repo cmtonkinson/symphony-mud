@@ -48,15 +48,17 @@ module Combat
 
     ###########################################################################
     def action
-      @action ||= case created_by
-                  when :second_attack then "second strike"
-                  when :third_attack then "third strike"
-                  when :fourth_attack then "fourth strike"
-                  when :riposte then "riposte"
-                  when :kick then "kick"
-                  else "strike"
-                  end
+      item = attacker.anatomy.primary_weapon
+      verb = item ? item.damage_type : 'punch'
 
+      @action ||= case created_by
+                  when :second_attack then "second #{verb}"
+                  when :third_attack then "third #{verb}"
+                  when :fourth_attack then "fourth #{verb}"
+                  when :riposte then "riposte #{verb}"
+                  when :kick then 'kick'
+                  else verb
+                  end
       @action
     end
 

@@ -381,7 +381,7 @@ define :summary do
       being.klass&.name, being.dexterity.current, being.damage_bonus.current, being.health.current, being.health.max,
       being.gender, being.constitution.current, being.mana.current, being.mana.max,
       0, being.intelligence.current, being.armor.current, being.stamina.current,
-      'hand', being.focus.current, being.bash.current, being.exp,
+      being.hand, being.focus.current, being.bash.current, being.exp,
       'height', being.creativity.current, being.slash.current, being.tnl,
       'weight', being.charisma.current, being.pierce.current, 0,
       'totem', being.luck.current, being.exotic.current,

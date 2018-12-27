@@ -42,17 +42,17 @@
   :type: :weapon
   :wearable: true
   :slot: :hold
-  :max_items:  0
+  :max_items: 0
   :load_factor: 0
   :health: 0
   :mana: 0
   :max_occupants: 0
   :opens_type: :room
   :opens_rid: 0
-  :weapon_type: :club 
-  :damage_type: :bash
-  :hitroll: 0
-  :damroll: 0
+  :weapon_type: longsword
+  :damage_type: slash
+  :hitroll: 199
+  :damroll: 199
 - :objekt:
     :class: Realm::Item
     :id: 03dd72be-ec0e-4479-a660-5303539d0305
@@ -84,6 +84,7 @@
     :anatomy: 
     :room: 
     :gender: neuter
+    :hand: 
     :inventory: []
   :stats:
     :level: 24

@@ -1,6 +1,7 @@
 module Talent
   class Human < Anatomy
-    def initialize
+    def initialize(being)
+      super
       @name = 'human'
 
       add_slot :head, 'head'
