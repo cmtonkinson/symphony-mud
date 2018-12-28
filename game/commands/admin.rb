@@ -50,6 +50,7 @@ define :dashboard do
   level Realm::Being::CREATOR
   usage
   exec do
+    # Job Performance
     job_stats = $world.schedule_stats 0
     run       = $world.job_times
     being.puts '{Y%d{x jobs in the queue running {Y%d{x at a time.' % [job_stats[:length], job_stats[:batch_size]]
@@ -60,6 +61,42 @@ define :dashboard do
     being.puts '  stddev: {Y%.2f{x' % run.standard_deviation
     being.puts '  min: {Y%d{x' % run.min
     being.puts '  max: {Y%d{x' % run.max
+
+    # Registry
+    report = Util::Registry.report
+    being.puts "\nThere are {C%d{x Objekts in the global registry at the moment." % report.size
+    report[:buckets].each do |name, details|
+      being.puts "  {c%6d{x %s\n" % [details[:size], name]
+    end
+  end
+end
+
+###############################################################################
+define :destroy do
+###############################################################################
+  level Realm::Being::DEMIGOD
+  usage('item', target: :id)
+  usage('npc', target: :id)
+  exec do
+    if item == 'item'
+      targets = being.inventory.locate target
+      being.puts t('err_no_item') and next if targets.empty?
+      targets.each do |item|
+        being.inventory.delete item
+        item.run_hook :enervate
+        room.puts t('item'), item
+        Symphony.logger.debug '%s destroyed %s' % [being.fqid_str, item.fqid_str]
+      end
+    elsif npc == 'npc'
+      targets = room.beings.locate target
+      being.puts t('err_no_npc') and next if targets.empty?
+      targets.each do |victim|
+        being.puts t('err_not_npc') and next unless victim.is_a? Realm::NPC
+        victim.run_hook :enervate
+        room.puts t('npc'), victim
+        Symphony.logger.debug '%s destroyed %s' % [being.fqid_str, victim.fqid_str]
+      end
+     end
   end
 end
 

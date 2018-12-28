@@ -114,9 +114,9 @@ module Realm
     alias_method :fqid_str, :fully_qualified_identifier_string
 
     ###########################################################################
-    # Must be
     def interpret_name
       _interpret_name
     end
   end
 end
+

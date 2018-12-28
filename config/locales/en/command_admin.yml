@@ -8,6 +8,12 @@ en:
       err_here": "But you're already here!"
     connections:
       _brief: "Print netorking information on connected players."
+    destroy:
+      _brief: "Remove an object from existance."
+      err_no_npc: "Can't find an NPC by that name here."
+      err_no_item: "You don't have that Item."
+      npc: "$being freezes in place and turns briefly gray before evaporating into nothingness."
+      item: "$item shakes violently while shrinking down into nothingness with a small 'pop'."
     dig:
       _brief: "Create a new room and link to it in the given direction"
       err_no_way: "That's not a real direction."

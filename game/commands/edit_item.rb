@@ -62,6 +62,30 @@ define :exit, :edit_item do
   end
 end
 
+modifiable_properties = (%i(health mana) + Realm::Being::FITNESS + Realm::Being::DEFENSE + Realm::Being::OFFENSE).map(&:to_s)
+###############################################################################
+define :modify, :edit_item do
+###############################################################################
+  level Realm::Being::DEMIGOD
+  usage({ property: modifiable_properties }, { amount: :int })
+  exec do
+    being.puts t('err_zero') and next if amount == 0
+    being.iedit.modifiers[property.to_sym] = amount
+    being.puts t('modified'), property, amount
+  end
+end
+
+###############################################################################
+define :unmodify, :edit_item do
+###############################################################################
+  level Realm::Being::DEMIGOD
+  usage({ property: modifiable_properties })
+  exec do
+    being.iedit.modifiers.delete property.to_sym
+    being.puts t('unmodified'), property, amount
+  end
+end
+
 ###############################################################################
 define :wearable, :edit_item do
 ###############################################################################
@@ -87,6 +111,7 @@ is_positive = -> (x) { return (x > 0 ? true : false) }
 is_word     = -> (x) { return !x.match(/\Aa-z+\z/i) }
 
 [
+  [:name, :string, nil, -> (x) { !x.empty? }, 'cannot be blank', nil],
   [:level, :int, nil, is_positive, 'must be 1 or higher', nil],
   [:type, :string, nil, -> (x) { return Realm::Item::TYPES.include?(x.to_sym) }, "must be one of: #{Realm::Item::TYPES.join(', ')}", -> (x) { return x.to_sym }],
   [:slot, :string, nil, is_word, 'must be a word', -> (x) { return x.to_sym }],
@@ -99,8 +124,8 @@ is_word     = -> (x) { return !x.match(/\Aa-z+\z/i) }
   [:opens_rid, :int, :key, is_positive, 'must be 1 or higher', nil],
   [:weapon_type, :string, :weapon, is_word, 'must be a word', nil],
   [:damage_type, :string, :weapon, is_word, 'must be a word', nil],
-  [:hitroll, :int, :weapon, is_positive, 'must be 1 or higher', nil],
-  [:damroll, :int, :weapon, is_positive, 'must be 1 or higher', nil],
+  [:hit_bonus, :int, :weapon, is_positive, 'must be 1 or higher', nil],
+  [:damage_bonus, :int, :weapon, is_positive, 'must be 1 or higher', nil],
 ].each do |definition|
   name, type, subtype, validation, hint, conversion = *definition
   define name, :edit_item do

@@ -16,15 +16,13 @@ en:
     exit:
       _brief: "Leave item editing mode."
       actor: "You have left item editing mode."
-    level:
-      _brief: "Change the level of the item."
-      actor: "Item level changed to '{y$string{x'."
-    name:
-      _brief: "Change the name of the item."
-      actor: "Item name changed to '{y$string{x'."
-    type:
-      _brief: "Change the type of the item."
-      actor: "Item type changed to '{y$string{x'."
+    modify:
+      _brief: "Add a stat modification to a wearable item."
+      err_zero: "Amount can be positive or negative, but not zero."
+      modified: "Item now modifies {y$string{x by {y$string{x."
+    unmodify:
+      _brief: "Remove a stat modification to the wearable item."
+      unmodified: "Item no longer modifies {y$string{x."
     wearable:
       _brief: "Set (or clear) the wearable slot for the item."
       none: "Item set to non-wearable."

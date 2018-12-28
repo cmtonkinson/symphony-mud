@@ -75,6 +75,7 @@ module Realm
     enervate -> {
       $world.beings.delete self
       @room.delete self
+      dispose
     }
 
     ###########################################################################

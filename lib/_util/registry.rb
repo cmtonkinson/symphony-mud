@@ -47,5 +47,19 @@ module Util
         buckets: buckets,
       }
     end
+
+    ###########################################################################
+    # Remove any disposed Objekts from the Registry. If all went well, the
+    # registry should be the last reference to anything marked for disposal,
+    # so after this the Ruby GC can actually reap them.
+    def self.cleanup
+      hash.each do |klass, bucket|
+        bucket.delete_if do |objekt_id, objekt|
+          Symphony.logger.trace "Disposing #{objekt.fqid_str}" if objekt.disposed?
+          objekt.disposed?
+        end
+      end
+    end
+
   end
 end

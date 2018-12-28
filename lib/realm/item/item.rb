@@ -59,6 +59,11 @@ module Realm
     }
 
     ###########################################################################
+    enervate -> {
+      dispose
+    }
+
+    ###########################################################################
     def _interpret_name
       '$item'
     end
@@ -80,7 +85,7 @@ module Realm
       if wearable && !@modifiers.empty?
         str << "{xModfiers:\n"
         @modifiers.each do |name, amount|
-          str << "{x %s %s%d{x\n" % [name.to_s, amount > 0 ? '{G' : '{R', amount]
+          str << "{x %-15s %s%d{x\n" % [name.to_s, amount > 0 ? '{G+' : '{R', amount]
         end
       end
       str

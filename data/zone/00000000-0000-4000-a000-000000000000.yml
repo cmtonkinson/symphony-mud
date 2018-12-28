@@ -54,9 +54,11 @@
   :hitroll: 199
   :damroll: 199
   :modifiers:
-    :hitroll: 80
-    :damroll: 80
-    :luck: 4
+    :hit_bonus: 80
+    :luck: 5
+    :creativity: -3
+    :health: 1000
+    :mana: -100
 - :objekt:
     :class: Realm::Item
     :id: 03dd72be-ec0e-4479-a660-5303539d0305
