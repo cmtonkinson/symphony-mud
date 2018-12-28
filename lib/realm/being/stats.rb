@@ -265,5 +265,22 @@ module Realm
       else 'normal'
       end
     end
+
+    ###########################################################################
+    def modify(modifiers, reverse = false)
+      modifiers.each do |stat_name, magnitude|
+        stat      = send(stat_name)
+        amount    = magnitude * (reverse ? -1 : 1)
+
+        case stat
+        when Mechanics::SimpleStat    then stat.modify amount
+        when Mechanics::MaxStat       then stat.max_stat.modify amount
+        when Mechanics::ThresholdStat then stat.current_stat.modify amount
+        else raise ArgumentError.new "Being#modify given an unrecognized Stat type (#{send(stat).class.name})"
+        end
+      end
+    end
+
   end
 end
+

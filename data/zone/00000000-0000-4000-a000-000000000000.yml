@@ -53,6 +53,10 @@
   :damage_type: slash
   :hitroll: 199
   :damroll: 199
+  :modifiers:
+    :hitroll: 80
+    :damroll: 80
+    :luck: 4
 - :objekt:
     :class: Realm::Item
     :id: 03dd72be-ec0e-4479-a660-5303539d0305
@@ -73,6 +77,7 @@
   :damage_type: :bash
   :hitroll: 0
   :damroll: 0
+  :modifiers: {}
 :npcs:
 - :objekt:
     :class: Realm::NPC

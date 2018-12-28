@@ -13,6 +13,8 @@ module Realm
 
     ATTRS.each { |name| attr_accessor name }
 
+    attr_accessor :modifiers
+
     ###########################################################################
     def initialize(id = nil, props = {})
       super
@@ -33,23 +35,27 @@ module Realm
       @damage_type   = :bash
       @hitroll       = 0
       @damroll       = 0
+      @modifiers     = Hash.new
     }
 
     ###########################################################################
     on_hashify -> {
       hash = {}
       ATTRS.each { |name| hash[name] = send name }
+      hash[:modifiers] = @modifiers
       hash
     }
 
     ###########################################################################
     on_dehashify -> (hash) {
       ATTRS.each { |name| instance_variable_set "@#{name}", hash[name] }
+      @modifiers = hash[:modifiers]
     }
 
     ###########################################################################
     on_deep_copy -> (original) {
       ATTRS.each { |name| instance_variable_set "@#{name}", original.send(name) }
+      @modifiers = Marshal.load(Marshal.dump(original.modifiers))
     }
 
     ###########################################################################
@@ -70,6 +76,12 @@ module Realm
         str << $templates.item_weapon_summary % [
           weapon_type, damage_type, hitroll, damroll
         ]
+      end
+      if wearable && !@modifiers.empty?
+        str << "{xModfiers:\n"
+        @modifiers.each do |name, amount|
+          str << "{x %s %s%d{x\n" % [name.to_s, amount > 0 ? '{G' : '{R', amount]
+        end
       end
       str
     end
