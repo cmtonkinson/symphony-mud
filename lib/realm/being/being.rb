@@ -75,6 +75,7 @@ module Realm
     enervate -> {
       $world.beings.delete self
       @room.delete self
+      # TODO ensure that carried Items, etc are cleaned up
       dispose
     }
 
