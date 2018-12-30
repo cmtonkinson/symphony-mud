@@ -36,7 +36,7 @@ module Realm
         gender: @gender,
         hand: @hand,
         inventory: @inventory.values.map(&:hashify),
-      }
+       }
 
       { being: hash }
     }

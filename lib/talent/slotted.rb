@@ -1,6 +1,7 @@
 module Talent
   module Slotted
 
+    ###########################################################################
     def slots
       @slots ||= Array.new
     end

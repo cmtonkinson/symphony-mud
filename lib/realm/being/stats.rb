@@ -74,6 +74,24 @@ module Realm
     on_hashify -> {
       hash = Hash.new
 
+      # NOTE: Must remove (and save) equipment before saving core stats. Not
+      # only does this make it easier to prevent and detect errors with save
+      # and restore logic, but it also makes it possible to edit Avatar files
+      # (esp. stats and equipment) by hand without worrying about cascading
+      # side effects.
+      #
+      # Unfortunately, this means we have to unload, save, and reload all
+      # equipment during Being::Stats#on_hashify.
+      saved_eq = {}
+      if @anatomy
+        hash[:equipment] = Hash[@anatomy.slots.map { |slot|
+          next if slot.empty?
+          item = slot.set nil
+          saved_eq[slot.name] = item
+          [slot.name, item.hashify]
+        }.compact]
+      end
+
       EXPERIENCE.each { |name| hash[name] = send name }
 
       WELLNESS.each do |name|
@@ -89,7 +107,12 @@ module Realm
       DEFENSE.each { |name| hash[name] = send(name).baseline }
       OFFENSE.each { |name| hash[name] = send(name).baseline }
 
-      { stats: hash }
+      # Restore the equipment back into position.
+      saved_eq.each do |slot_name, item|
+        @anatomy.get_empty_slot(slot_name).set item
+      end
+
+     { stats: hash }
     }
 
     ###########################################################################
@@ -111,7 +134,17 @@ module Realm
 
       DEFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(hash[name]) }
       OFFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(hash[name]) }
-    }
+
+      # Must restore core stats before restoring equipment
+      # See comments in on_hashify.
+      # TODO: Deduplicate this logic with the [logically] equivalent loop at the end of on_hashify.
+      if @anatomy && hash.has_key?(:equipment)
+        hash[:equipment].each do |slot_name, hash|
+          @anatomy.change_equipment @anatomy.get_empty_slot(slot_name), Realm::Item.dehashify(hash), nil
+        end
+      end
+      
+     }
 
     ###########################################################################
     vivify -> {
