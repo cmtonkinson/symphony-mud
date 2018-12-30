@@ -3,8 +3,9 @@ module Command
 define :iedit do
 ###############################################################################
   level Realm::Being::DEMIGOD
-  usage 'create'
   usage({ rid: :int })
+  usage :target
+  usage 'create'
   exec do
     if create == 'create'
       item = Logistics::Builder.create_item room.zone
@@ -13,6 +14,16 @@ define :iedit do
       zone = room.zone
       item = zone.find_by_rid Realm::Item, rid
       being.puts t 'err_nothing' and next if item.nil?
+
+      being.iedit = item
+      being.user.operators.push Operator.new being.user, :edit_item
+      being.print t 'edit'
+      being.puts I18n.t('objekt.identify', being.iedit.fqid)
+      being.puts being.iedit.summary
+    else
+      being.puts target.inspect
+      item = being.inventory.locate_first target
+      being.puts t 'err_not_holding' and next if item.nil?
 
       being.iedit = item
       being.user.operators.push Operator.new being.user, :edit_item
@@ -124,8 +135,8 @@ is_word     = -> (x) { return !x.match(/\Aa-z+\z/i) }
   [:opens_rid, :int, :key, is_positive, 'must be 1 or higher', nil],
   [:weapon_type, :string, :weapon, is_word, 'must be a word', nil],
   [:damage_type, :string, :weapon, is_word, 'must be a word', nil],
-  [:hit_bonus, :int, :weapon, is_positive, 'must be 1 or higher', nil],
-  [:damage_bonus, :int, :weapon, is_positive, 'must be 1 or higher', nil],
+  [:hitroll, :int, :weapon, is_positive, 'must be 1 or higher', nil],
+  [:damroll, :int, :weapon, is_positive, 'must be 1 or higher', nil],
 ].each do |definition|
   name, type, subtype, validation, hint, conversion = *definition
   define name, :edit_item do

@@ -4,6 +4,7 @@ en:
       _brief: "Enter the item editor with either a new or existing item."
       edit: "You're now editing item "
       err_nothing: "No item by that id in this zone."
+      err_not_holding: "You aren't holding anything like that."
     items:
       _brief: "List the Items in the given Zone (or the current Zone if unspecified)"
       err_nowhere: "Couldn't find that Zone."

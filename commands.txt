@@ -2,11 +2,11 @@
 # ADMIN
 ###############################################################################
 adminnote bigbrother clone        crash
-dashboard delete   demote     description disable
+delete   demote     description disable
 dunce     eat      enable            gecho
-heal      identify incognito
+incognito
 password
-peace     pedit    placement  poofin      poofout     promote
+peace     pedit    poofin      poofout     
 purge        redit      restring    sedit
      test             tutor       
 
@@ -15,13 +15,13 @@ purge        redit      restring    sedit
 ###############################################################################
 affinity  afk       boards    bored     busy      cast
 channels  close           
-equipment give      group           kill
+give      
 lay       learn     lock
           note
-ooc       open      put             remove    reply
-             sit       skills    socials   spells
+ooc       open      put             reply
+             sit       socials   
 stand        tell      time      title     train
-ungroup   unlock    wear
+unlock    
 
 ###############################################################################
 # ITEM EDIT
@@ -31,9 +31,9 @@ delete            description      flag
 furniturecapacity furniturelayon   furnituresitat
 furnituresiton    furniturestandon 
 keywords          longname
-type             value
-weapondamage      weaponstat       weapontype
-weaponverb        wearable
+value
+weaponstat       
+
 
 ###############################################################################
 # NPC EDIT
@@ -52,8 +52,8 @@ color     headbuilder
 # ROOM EDIT
 ###############################################################################
 delete   description
-dig         exitflag flag
-key      link
+exitflag flag
+key      
 smell    sound
 terrain     unlink
 
