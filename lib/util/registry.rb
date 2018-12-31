@@ -59,6 +59,7 @@ module Util
           objekt.disposed?
         end
       end
+      hash.delete_if { |klass, bucket| bucket.empty? }
     end
 
   end

@@ -1,3 +1,5 @@
+require_relative '../util/locatable'
+
 module Talent
   class Anatomy
     include Talent::Enabler

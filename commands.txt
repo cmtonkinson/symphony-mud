@@ -13,7 +13,7 @@ purge        redit      restring    sedit
 ###############################################################################
 # USER
 ###############################################################################
-affinity  afk       boards    bored     busy      cast
+affinity  afk       boards    bored     busy      
 channels  close           
 give      
 lay       learn     lock

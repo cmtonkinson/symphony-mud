@@ -29,8 +29,12 @@ module Combat
     end
 
     ###########################################################################
-    def perform 
-      dam = 2 * attacker.level + rand(attacker.level)
+    def perform
+      bonus = attacker.damage_bonus.current
+      weapon = attacker.anatomy.primary_weapon
+      weapon_bonus = attacker.level
+      weapon_bonus = weapon.hitroll if weapon
+      dam = 2 * attacker.level + rand(attacker.level) + rand((bonus / 2)..bonus) + rand(weapon_bonus * 2)
       verb = Display::Format.damage dam
 
       attacker.indented_puts level, 'Your $strike $string $being! [$string]', self, verb, defender, dam

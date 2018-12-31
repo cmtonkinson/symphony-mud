@@ -1,19 +1,19 @@
-module Combat
-  class Battle
-    include Hooks
+require_relative '../realm/objekt'
 
+module Combat
+  class Battle < Realm::Objekt
     define_hooks :after_group_added, :after_group_deleted
 
     attr_reader :groups, :bouts, :job
 
     ###########################################################################
-    def initialize
+    after_initialize -> { 
       @groups = Array.new
       @bouts  = Array.new
       @job    = Mechanics::RecurringJob.new 0, self, 2, :new_bout
 
       $world.schedule @job
-    end
+    }
 
     ###########################################################################
     def add_group(group)
@@ -52,8 +52,14 @@ module Combat
 
     ###########################################################################
     def cease
-      Symphony.logger.trace 'Battle ceasing'
+      Symphony.logger.debug 'Battle ceasing'
+      run_hook :enervate 
     end
+
+    ###########################################################################
+    enervate -> {
+      dispose
+    }
 
     ###########################################################################
     after_group_added -> (group) {
