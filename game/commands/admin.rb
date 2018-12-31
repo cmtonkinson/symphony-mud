@@ -172,14 +172,16 @@ end
 define :heal do
 ###############################################################################
   level Realm::Being::GOD
-  usage({ victim: :string })
+  usage({ victim: :id })
   exec do
-    target = room.find_being victim
-    being.puts t 'err_nobody' and next if target.nil?
+    targets = room.beings.locate victim
+    being.puts t 'err_nobody' and next if targets.empty?
 
-    being.puts t('actor'), target
-    target.puts t('victim'), being
-    target.heal
+    targets.each do |target|
+      being.puts t('actor'), target
+      target.puts t('victim'), being
+      target.heal
+    end
   end
 end
 

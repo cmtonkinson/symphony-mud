@@ -122,7 +122,7 @@ is_positive = -> (x) { return (x > 0 ? true : false) }
 is_word     = -> (x) { return !x.match(/\Aa-z+\z/i) }
 
 [
-  [:name, :string, nil, -> (x) { !x.empty? }, 'cannot be blank', nil],
+  [:name, :rest, nil, -> (x) { !x.empty? }, 'cannot be blank', nil],
   [:level, :int, nil, is_positive, 'must be 1 or higher', nil],
   [:type, :string, nil, -> (x) { return Realm::Item::TYPES.include?(x.to_sym) }, "must be one of: #{Realm::Item::TYPES.join(', ')}", -> (x) { return x.to_sym }],
   [:slot, :string, nil, is_word, 'must be a word', -> (x) { return x.to_sym }],
