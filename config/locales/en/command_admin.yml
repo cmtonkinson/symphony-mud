@@ -101,6 +101,11 @@ en:
       err_seniority: "You aren't powerful enough to summon $being."
       leave: "$being dissapears without warning."
       victim: "$being calls you to stand before $objective."
+    tutor:
+      _brief: "Grant the target mastery of all available abilities."
+      err_nobody: "They're not here."
+      victim: "$being overwhelms you with great knowledge."
+      actor: "You overwhelm $being with great knowledge."
     worldsave:
       _brief: "Save all loaded Zones and connected Avatars."
       start: "Saving the World..."

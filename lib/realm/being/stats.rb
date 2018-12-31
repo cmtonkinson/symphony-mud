@@ -143,8 +143,7 @@ module Realm
           @anatomy.change_equipment @anatomy.get_empty_slot(slot_name), Realm::Item.dehashify(hash), nil
         end
       end
-      
-     }
+    }
 
     ###########################################################################
     vivify -> {

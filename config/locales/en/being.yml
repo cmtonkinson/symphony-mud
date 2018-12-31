@@ -1,5 +1,14 @@
 en:
   being:
-    you_go: "You go to $exit."
-    leaves: "$being leaves to $exit."
+    # Movement
     arrived: "$being has arrived from $opposite."
+    leaves: "$being leaves to $exit."
+    you_go: "You go to $exit."
+    # Abilities
+    already_learned: "You already know how to do that."
+    already_mastered: "You have already mastered that ability."
+    cant_learn: "You can't learn that."
+    improved: "Your $string ability {Gimproves{x!"
+    learned: "You have {Glearned{x the $string ability!"
+    not_known: "You don't know how to do that."
+

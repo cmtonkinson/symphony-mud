@@ -394,6 +394,21 @@ define :summon do
 end
 
 ###############################################################################
+define :tutor do
+###############################################################################
+  level Realm::Being::CREATOR
+  usage({ target: :id })
+  exec do
+    victim = room.beings.locate_first target
+    being.puts t('err_nobody') and next if victim.nil?
+
+    victim.abilities.each(&:master)
+    victim.puts t('victim'), being
+    being.puts t('actor'), victim
+  end
+end
+
+###############################################################################
 define :worldsave do
 ###############################################################################
   level Realm::Being::CREATOR

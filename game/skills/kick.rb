@@ -8,7 +8,7 @@ module Talent
       @name     = :kick
     end
 
-    def _added_to(being)
+    def _learn
     end
 
     def _invoke(target)

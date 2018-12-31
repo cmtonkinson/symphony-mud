@@ -8,9 +8,9 @@ module Talent
       @name     = :riposte
     end
 
-    def _added_to(being)
+    def _learn
       skill = self
-      being.after_ability_invocation do |ability_name, retval|
+      able_being.after_ability_invocation do |ability_name, retval|
         if ability_name == :parry && retval == true
           skill.invoke
         end

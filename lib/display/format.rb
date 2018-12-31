@@ -53,5 +53,21 @@ module Display
         0    => 'does nothing to',
       })
     end
+
+    ###########################################################################
+    def self.mastery(percent)
+      quantity(percent, {
+        100 => '{Wmasterful{x',
+        95  => '{Gsuperb{x',
+        85  => '{Cexcellent{x',
+        75  => '{Mvery good{x',
+        60  => '{ggood{x',
+        41  => '{cokay{x',
+        31  => '{minferior{x',
+        15  => '{rpoor{x',
+        0   => '{wbad{x'
+      })
+    end
+
   end
 end

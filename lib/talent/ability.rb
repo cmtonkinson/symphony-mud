@@ -1,10 +1,14 @@
 module Talent
   class Ability
+    # TODO - some kind of global registry of available Abilities that can
+    # be iterated, processed, etc. (esp. as to allow gods easy path toward
+    # learning everything there is to be learned) perhaps with a static
+    # Array and using self.inherited
 
     attr_reader :type, :category, :name
     attr_reader :level, :trains, :difficulty, :stamina, :mana, :successRate
     attr_reader :prerequisites
-    attr_reader :able_being
+    attr_reader :able_being, :mastery
 
     ###########################################################################
     def initialize(level, trains, difficulty, stamina, mana, successRate)
@@ -21,6 +25,7 @@ module Talent
       @successRate   = successRate
 
       @able_being    = nil
+      @mastery       = 0 # 0 means unlearned
     end
 
     ###########################################################################
@@ -41,7 +46,32 @@ module Talent
     ###########################################################################
     def added_to(being)
       @able_being = being
-      _added_to being
+    end
+
+    ###########################################################################
+    def learn(default_mastery = 1)
+      @mastery = default_mastery
+      _learn
+    end
+
+    ###########################################################################
+    def learned?
+      mastery > 0
+    end
+
+    ###########################################################################
+    def mastered?
+      mastery == 100
+    end
+
+    ###########################################################################
+    def master
+      @mastery = 100
+    end
+
+    ###########################################################################
+    def improve
+      @mastery += 1 if learned? && !mastered?
     end
 
     ###########################################################################
@@ -67,3 +97,4 @@ module Talent
     end
   end
 end
+

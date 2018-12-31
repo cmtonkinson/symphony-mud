@@ -8,9 +8,9 @@ module Talent
       @name     = :parry
     end
 
-    def _added_to(being)
+    def _learn
       skill = self
-      being.before_strike_defense -> (strike) { skill.invoke strike unless strike.avoided }
+      able_being.before_strike_defense -> (strike) { skill.invoke strike unless strike.avoided }
     end
 
     def _invoke(strike)

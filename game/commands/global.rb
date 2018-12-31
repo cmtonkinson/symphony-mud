@@ -351,7 +351,8 @@ define :skills do
 
     being.abilities
       .select { |a| a.category == :skill }
-      .each { |a| being.puts t("skill"), a.name_s }
+      .select(&:learned?)
+      .each { |a| being.puts t("skill"), a.name_s, Display::Format.mastery(a.mastery) }
   end
 end
 

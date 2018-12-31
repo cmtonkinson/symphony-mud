@@ -82,7 +82,7 @@ en:
     skills:
       _brief: "Display skills you currently know."
       title: "You have learned the following skills:\n\n"
-      skill: "  $string"
+      skill: "  $string ($string)"
     spells:
       _brief: "Display spells you currently know."
       title: "You have learned the following spells:\n\n"

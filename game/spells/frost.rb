@@ -9,7 +9,7 @@ module Talent
       @default_target = :enemy
     end
 
-    def _added_to(being)
+    def _learned_by(being)
     end
 
     def _invoke(target)
