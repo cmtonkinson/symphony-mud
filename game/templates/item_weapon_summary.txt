@@ -1,0 +1,6 @@
+{w|                              {BWEAPON{x                                       {w| 
+{w| {xweapon type: {y%-20s{x
+{w| {xdamage type: {y%-20s{x
+{w| {xhitroll: {y%-3d{x
+{w| {xdamroll: {y%-3d{x
+{w+---------------------------------------------------------------------------+
