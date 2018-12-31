@@ -3,11 +3,11 @@
 ###############################################################################
 adminnote bigbrother clone        crash
 delete   demote     description disable
-dunce     eat      enable            gecho
+dunce     enable            gecho
 incognito
 password
 pedit    poofin      poofout     
-redit      restring    sedit
+redit      sedit
      test             tutor       
 
 ###############################################################################
