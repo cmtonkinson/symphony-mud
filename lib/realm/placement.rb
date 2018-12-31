@@ -55,7 +55,7 @@ module Realm
       raise 'Could not find Placement target' if target.nil?
       zone = room.zone
       container_name = case target
-                       when Item then :inventory
+                       when Item then :items
                        when Being then :beings
                        else raise 'Objekt type not configured for Placement'
                        end
@@ -78,7 +78,7 @@ module Realm
 
       # Stitch the Objekt into the Room.
       clones.each do |clone|
-        clone.add.to room.send(container_name)
+        clone.add.to room
         clone.room = room if clone.is_a?(Being)
         clone.run_hook :vivify
       end

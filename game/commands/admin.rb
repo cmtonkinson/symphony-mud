@@ -79,10 +79,9 @@ define :destroy do
   usage('npc', target: :id)
   exec do
     if item == 'item'
-      targets = being.inventory.locate target
+      targets = being.items.locate target
       being.puts t('err_no_item') and next if targets.empty?
       targets.each do |item|
-        being.inventory.delete item
         item.run_hook :enervate
         room.puts t('item'), item
         Symphony.logger.debug '%s destroyed %s' % [being.fqid_str, item.fqid_str]
@@ -190,7 +189,7 @@ define :identify do
   level Realm::Being::DEMIGOD
   usage({ item: :string })
   exec do
-    target = being.inventory.locate_first item
+    target = being.items.locate_first item
     being.puts t 'err_not_found' and next if target.nil?
 
     being.puts target.summary
@@ -226,7 +225,7 @@ define :load do
       being.puts t 'err_nothing' and next if model.nil?
 
       copy = model.clone
-      copy.add.to being.inventory
+      copy.add.to being
       copy.run_hook :vivify
       being.puts t('actor'), copy
       Symphony.logger.debug '%s loaded %s as a clone of %s' % [being.fqid_str, copy.fqid_str, model.fqid_str]
@@ -298,6 +297,18 @@ define :reboot do
   exec do
     being.puts t('actor')
     $universe.should_reboot = true
+  end
+end
+
+###############################################################################
+define :purge do
+###############################################################################
+  level Realm::Being::GOD
+  usage
+  exec do
+    room.items.values.each { |i| i.run_hook :enervate }
+    room.beings.values.each { |b| b.run_hook :enervate if b.is_a? Realm::NPC }
+    room.puts t('room')
   end
 end
 

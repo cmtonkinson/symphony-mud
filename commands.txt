@@ -6,8 +6,8 @@ delete   demote     description disable
 dunce     eat      enable            gecho
 incognito
 password
-peace     pedit    poofin      poofout     
-purge        redit      restring    sedit
+pedit    poofin      poofout     
+redit      restring    sedit
      test             tutor       
 
 ###############################################################################

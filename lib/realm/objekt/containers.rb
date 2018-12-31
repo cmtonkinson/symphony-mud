@@ -17,6 +17,15 @@ module Realm
     }
 
     ###########################################################################
+    enervate -> {
+      # When destroying an Objekt, we want to be sure it's removed from all
+      # containers it may be in (which should theoretically only be one at a
+      # time, but that may not always be true - hence @containers being an
+      # Array) or we could wind up with strange leaks.
+      @containers.each { |container| container.delete self }
+    }
+
+    ###########################################################################
     # Given an obj of type Thing
     # Attempts to call `@things.insert obj`
     def insert(objekt)

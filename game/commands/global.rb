@@ -60,11 +60,11 @@ define :drop do
 ###############################################################################
   usage(items: :id)
   exec do
-    targets = being.inventory.locate items
+    targets = being.items.locate items
     being.puts t('err_not_found') and next if targets.empty?
 
     targets.each do |item|
-      item.move.from(being.inventory).to(room.inventory)
+      item.move.from(being).to(room)
       being.puts t('actor'), item
       room.puts t('other'), being, item, exclude: being
     end
@@ -102,11 +102,11 @@ define :get do
 ###############################################################################
   usage items: :id
   exec do
-    targets = room.inventory.locate items
+    targets = room.items.locate items
     being.puts t('err_not_found') and next if targets.empty?
 
     targets.each do |item|
-      item.move.from(room.inventory).to(being.inventory)
+      item.move.from(room).to(being)
       being.puts t('actor'), item
       room.puts t('other'), being, item, exclude: being
     end
@@ -201,7 +201,7 @@ define :inventory do
   shortcut 'i'
   usage
   exec do
-    being.puts t('title'), being.inventory.display_contents
+    being.puts t('title'), being.items.display_contents
   end
 end
 
@@ -238,8 +238,8 @@ define :look do
 
     being.other_beings.each { |b| being.puts t('here'), b }
 
-    next if room.inventory.empty?
-    being.puts t('item_list'), room.inventory.display_contents
+    next if room.items.empty?
+    being.puts t('item_list'), room.items.display_contents
   end
 end
 
@@ -296,7 +296,7 @@ define :remove do
     targets = being.anatomy.locate target
     being.puts t('err_not_found') and next if targets.empty?
     targets.each do |item|
-      message = being.anatomy.remove item, being.inventory
+      message = being.anatomy.remove item, being
       being.puts *message
     end
   end
@@ -385,7 +385,7 @@ define :summary do
       'height', being.creativity.current, being.slash.current, being.tnl,
       'weight', being.charisma.current, being.pierce.current, 0,
       'totem', being.luck.current, being.exotic.current,
-      being.inventory.length, 0, 0, 0,
+      being.items.length, 0, 0, 0,
       0, 0, 0
     ]
   end
@@ -396,11 +396,11 @@ define :wear do
 #######################################################################
   usage :target
   exec do
-    targets = being.inventory.locate target
+    targets = being.items.locate target
     being.puts t('err_not_found') and next if targets.empty?
 
     targets.each do |item|
-      message = being.anatomy.wear item, being.inventory
+      message = being.anatomy.wear item, being
       being.puts *message
     end
   end

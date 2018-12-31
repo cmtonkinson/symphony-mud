@@ -68,6 +68,9 @@ en:
       err_no_permission: "You don't have authority to do that."
       actor: "You award $being with overwhelming experience."
       victim: "$being overwhelms you with experience."
+    purge:
+      _brief: "Destroy all Items and NPCs in the room."
+      room: "A deep and penetrating blackness permeates the air. As it subsides, things look slightly different..."
     pry:
       _brief: "Blocks the server process by executing `binding.pry` for live debugging"
     reboot:

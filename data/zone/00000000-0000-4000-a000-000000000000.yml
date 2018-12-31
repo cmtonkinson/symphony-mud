@@ -92,7 +92,7 @@
     :room: 
     :gender: neuter
     :hand: 
-    :inventory: []
+    :items: []
   :stats:
     :level: 24
     :exp: 0

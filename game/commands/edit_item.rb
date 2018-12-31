@@ -22,7 +22,7 @@ define :iedit do
       being.puts being.iedit.summary
     else
       being.puts target.inspect
-      item = being.inventory.locate_first target
+      item = being.items.locate_first target
       being.puts t 'err_not_holding' and next if item.nil?
 
       being.iedit = item

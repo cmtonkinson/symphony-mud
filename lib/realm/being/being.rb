@@ -1,6 +1,6 @@
 module Realm
   class Being < Objekt
-    CONTAINERS = %w[inventory]
+    CONTAINERS = %w(items)
 
     attr_accessor :room, :gender, :hand
     attr_accessor :abilities, :enablers, :klass, :anatomy
@@ -35,7 +35,7 @@ module Realm
         room: @room&.id,
         gender: @gender,
         hand: @hand,
-        inventory: @inventory.values.map(&:hashify),
+        items: @items.values.map(&:hashify),
        }
 
       { being: hash }
@@ -63,7 +63,7 @@ module Realm
       @gender = hash[:gender]
       @hand = hash[:hand]
 
-      hash[:inventory].each { |hash| @inventory.insert Realm::Item.dehashify(hash) }
+      hash[:items].each { |hash| insert Realm::Item.dehashify(hash) }
     }
 
     ###########################################################################
