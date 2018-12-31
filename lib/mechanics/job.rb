@@ -11,6 +11,11 @@ module Mechanics
 
     attr_reader :repeat_every, :repeat_times
 
+    # Some Jobs are scheduled and fired far too often to make the default
+    # behavior of 'trace' level logging practically useful, so we explicitly
+    # squelch them from even the most verbose logging output.
+    IGNORE_TRACE = -> (str) { str.match?(/Dead Job|auto_(health|mana|stamina)/) }
+
     ###########################################################################
     def initialize(wen, who, callable = nil, *args, &block)
       raise ArgumentError.new('no method or proc given') if callable.nil? && !block_given?
@@ -77,7 +82,7 @@ module Mechanics
     ###########################################################################
     # Execute the callable.
     def fire
-      Symphony.logger.trace 'Firing %s' % self
+      Symphony.logger.trace 'Firing %s' % self unless IGNORE_TRACE.call(self.to_s)
       @repeat_times -= 1 if @repeat_times > 0
       @what.respond_to?(:call) ? @what.call(@who, *@args) : @who.send(@what.to_sym, *@args)
       kill unless recurring?

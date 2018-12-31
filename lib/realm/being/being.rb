@@ -3,12 +3,11 @@ module Realm
     CONTAINERS = %w(items)
 
     attr_accessor :room, :gender, :hand
-    attr_accessor :abilities, :enablers, :klass, :anatomy
+    attr_accessor :enablers, :klass, :anatomy
 
     CONTAINERS.each { |cont| attr_accessor cont }
 
     define_hooks :before_room_change, :after_room_change
-    define_hooks :before_ability_invocation, :after_ability_invocation
 
     ###########################################################################
     def initialize(id = nil, props = {})
@@ -16,7 +15,6 @@ module Realm
       @gender        = Gender::NEUTER
       @hand          = nil
       @enablers      = Array.new
-      @abilities     = Array.new
       @klass         = nil
       @anatomy       = nil
       super
@@ -177,23 +175,6 @@ module Realm
       (@room.beings.values.reject { |b| b == self }) || []
     end
     alias_method :other_beings, :other_beings_in_room
-
-    ###########################################################################
-    def add_enabler(enabler)
-      @enablers.push enabler
-      enabler.abilities.each { |a| add_ability a }
-    end
-
-    ###########################################################################
-    def add_ability(ability)
-      @abilities.push ability
-      ability.added_to self
-    end
-
-    ###########################################################################
-    def get_ability(name)
-      @abilities.find { |a| a.name == name.to_sym }
-    end
 
   end
 end
