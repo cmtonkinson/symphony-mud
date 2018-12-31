@@ -378,15 +378,15 @@ define :summary do
     # The arguments below for sprintf follow the summary template line by line.
     being.puts $templates.summary % [
       being.anatomy&.name, being.strength.current, being.hit_bonus.current, being.level,
-      being.klass&.name, being.dexterity.current, being.damage_bonus.current, being.health.current, being.health.max,
-      being.gender, being.constitution.current, being.mana.current, being.mana.max,
-      0, being.intelligence.current, being.armor.current, being.stamina.current,
-      being.hand, being.focus.current, being.bash.current, being.exp,
-      'height', being.creativity.current, being.slash.current, being.tnl,
-      'weight', being.charisma.current, being.pierce.current, 0,
-      'totem', being.luck.current, being.exotic.current,
-      being.items.length, 0, 0, 0,
-      0, 0, 0
+      being.gender, being.dexterity.current, being.damage_bonus.current, being.health.current, being.health.max,
+      being.klass&.name, being.constitution.current, being.mana.current, being.mana.max,
+      being.hand, being.intelligence.current, being.armor.current, being.stamina.current,
+      being.focus.current, being.bash.current, being.exp,
+      0, being.creativity.current, being.slash.current, being.tnl,
+      'height', being.charisma.current, being.pierce.current, 0,
+      'weight', being.luck.current, being.exotic.current,
+      being.items.length, 0, 0, 0, 'alignment',
+      0, 0, 0, 'totem'
     ]
   end
 end

@@ -73,7 +73,13 @@ module Realm
     enervate -> {
       $world.beings.delete self
       @room.delete self
-      # TODO ensure that carried Items, etc are cleaned up
+
+      items.each { |i| i.run_hook :enervate }
+      anatomy.slots do |slot|
+        i = slot.set nil
+        i.run_hook :enervate if i
+      end if anatomy
+
       dispose
     }
 

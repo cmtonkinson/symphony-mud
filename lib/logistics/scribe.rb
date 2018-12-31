@@ -15,11 +15,11 @@ module Logistics
       File.open pathname(klass, objekt_id), 'r' do |fp|
         begin
           klass.deserialize fp.read
-        rescue NoMethodError => e
+        rescue StandardError => e
           Symphony.logger.error "Error while loading #{klass}:#{objekt_id}"
-          Symphony.logger.debug "  error at #{e.backtrace[0]}"
-          Symphony.logger.debug "  error at #{e.backtrace[1]}"
-          Symphony.logger.debug "  error at #{e.backtrace[2]}"
+          e.backtrace.each do |line|
+            Symphony.logger.debug "  error at #{line}"
+          end
           return false
         end
       end
