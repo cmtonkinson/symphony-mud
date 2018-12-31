@@ -8,7 +8,7 @@ incognito
 password
 pedit    poofin      poofout     
 redit      sedit
-     test             tutor       
+     test             
 
 ###############################################################################
 # USER
