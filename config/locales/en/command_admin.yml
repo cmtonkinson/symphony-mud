@@ -58,6 +58,9 @@ en:
       _brief: "Create a new object from the current zone by rid"
       actor: "You create {W$item{x."
       err_nothing: "No item by that id in this zone."
+    peace:
+      _brief: "Cease all combat in the room."
+      room: "A sense of calm overwhelms the room."
     promote:
       _brief: "Promote the victim to a higher level."
       err_not_found: "You don't see them here."

@@ -248,8 +248,10 @@ end
 define :peace do
 ###############################################################################
   level Realm::Being::GOD
+  usage
   exec do
-
+    room.beings.values.each { |b| b.group.remove_all_opponents }
+    room.puts t('room')
   end
 end
 

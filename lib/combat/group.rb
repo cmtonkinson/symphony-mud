@@ -52,6 +52,11 @@ module Combat
     end
 
     ###########################################################################
+    def remove_all_opponents
+      @opponents = Array.new
+    end
+
+    ###########################################################################
     def puts(format, *args)
       @members.each { |m| m.puts(format, *args) }
     end
