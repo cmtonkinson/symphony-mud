@@ -3,5 +3,6 @@
 ctags -e \
   --recurse \
   --exclude=tmp \
-  --exclude=coverage
+  --exclude=coverage \
+  --exclude=vendor
 

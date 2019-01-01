@@ -1,4 +1,4 @@
 #!/bin/bash
 
-bundle exec rspec --force-color
+bundle exec rspec
 
