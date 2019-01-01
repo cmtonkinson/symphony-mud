@@ -20,7 +20,7 @@ module Realm
     GOD     = HERO + 15
     CREATOR = HERO + 20
 
-    LEVELS = %w[NEWBIE NOVICE HERO LORD DUKE KING DEMIGOD GOD CREATOR]
+    LEVELS = %w(NEWBIE NOVICE HERO LORD DUKE KING DEMIGOD GOD CREATOR)
 
     # Many immortal commands (such as 'force' and 'summon') require that in
     # order to perform them, the actor be a sufficiently higher level than the
@@ -34,19 +34,22 @@ module Realm
     DEFENSE_BASE = 0
     OFFENSE_BASE = 0
 
-    # Core names can be grouped into five distinct buckets.
-    EXPERIENCE = %i[level exp tnl training_points]
-    WELLNESS   = %i[health mana stamina]
-    FITNESS    = %i[strength dexterity constitution intelligence focus creativity charisma luck]
-    DEFENSE    = %i[armor bash slash pierce exotic]
-    OFFENSE    = %i[hit_bonus damage_bonus]
+    BASE_AGE    = 17
+    BASE_HEIGHT = 1
+    BASE_WEIGHT = 1
 
-    # Discourage direct manipulation of any core names.
-    EXPERIENCE.each { |name| attr_reader name }
-    WELLNESS.each { |name| attr_reader name }
-    FITNESS.each { |name| attr_reader name }
-    DEFENSE.each { |name| attr_reader name }
-    OFFENSE.each { |name| attr_reader name }
+    # Core names can be grouped into five distinct buckets.
+    EXPERIENCE = %i(level exp tnl training_points)
+    WELLNESS   = %i(health mana stamina)
+    FITNESS    = %i(strength dexterity constitution intelligence focus creativity charisma luck)
+    DEFENSE    = %i(armor bash slash pierce exotic)
+    OFFENSE    = %i(hit_bonus damage_bonus)
+    PHYSICAL   = %i(age height weight)
+
+    # Discourage direct manipulation of any core names by only defining readers.
+    (EXPERIENCE + WELLNESS + FITNESS + DEFENSE + OFFENSE + PHYSICAL).each do |name|
+      attr_reader name
+    end
 
     # Shortcuts!
     FITNESS.each { |name| alias_method :"#{name[0..2]}", :"#{name}" }
@@ -68,6 +71,10 @@ module Realm
       FITNESS.each { |name| instance_variable_set "@#{name}", Mechanics::ThresholdStat.new(FITNESS_BASE, FITNESS_THRESHOLD) }
       DEFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(DEFENSE_BASE) }
       OFFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(OFFENSE_BASE) }
+
+      @age    = BASE_AGE
+      @height = BASE_HEIGHT
+      @weight = BASE_WEIGHT
 
       @circumstance = nil
     }
@@ -108,6 +115,8 @@ module Realm
 
       DEFENSE.each { |name| hash[name] = send(name).baseline }
       OFFENSE.each { |name| hash[name] = send(name).baseline }
+      
+      PHYSICAL.each { |name| hash[name] = send name }
 
       # Restore the equipment back into position.
       saved_eq.each do |slot_name, item|
@@ -136,6 +145,8 @@ module Realm
 
       DEFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(hash[name]) }
       OFFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(hash[name]) }
+
+      PHYSICAL.each { |name| instance_variable_set "@#{name}", hash[name] if hash.has_key? name }
 
       # Must restore core stats before restoring equipment
       # See comments in on_hashify.

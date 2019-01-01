@@ -69,5 +69,27 @@ module Display
       })
     end
 
+    ###########################################################################
+    def self.height(number)
+      quantity(number, {
+        5 => 'huge',
+        4 => 'tall',
+        3 => 'average',
+        2 => 'short',
+        1 => 'tiny',
+      })
+    end
+
+    ###########################################################################
+    def self.weight(number)
+      quantity(number, {
+        5 => 'obese',
+        4 => 'heavy',
+        3 => 'average',
+        2 => 'thin',
+        1 => 'bony',
+      })
+    end
+
   end
 end
