@@ -384,7 +384,7 @@ define :summary do
       being.hand, being.intelligence.current, being.armor.current, being.stamina.current,
       being.focus.current, being.bash.current, being.exp,
       0, being.creativity.current, being.slash.current, being.tnl,
-      'height', being.charisma.current, being.pierce.current, 0,
+      'height', being.charisma.current, being.pierce.current, being.training_points,
       'weight', being.luck.current, being.exotic.current,
       being.items.length, 0, 0, 0, 'alignment',
       0, 0, 0, 'totem'

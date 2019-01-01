@@ -4,10 +4,11 @@ module Realm
     BASE_MANA   = 100
     MAX_STAMINA = 100
 
-    BASE_LEVEL = 1
-    BASE_EXP   = 0
-    BASE_TNL   = 100
-    TARGET_TNL = 100_00
+    BASE_LEVEL  = 1
+    BASE_EXP    = 0
+    BASE_TNL    = 100
+    TARGET_TNL  = 100_00
+    BASE_TRAINS = 5
 
     NEWBIE  = 1
     NOVICE  = 10
@@ -34,7 +35,7 @@ module Realm
     OFFENSE_BASE = 0
 
     # Core names can be grouped into five distinct buckets.
-    EXPERIENCE = %i[level exp tnl]
+    EXPERIENCE = %i[level exp tnl training_points]
     WELLNESS   = %i[health mana stamina]
     FITNESS    = %i[strength dexterity constitution intelligence focus creativity charisma luck]
     DEFENSE    = %i[armor bash slash pierce exotic]
@@ -55,9 +56,10 @@ module Realm
     ###########################################################################
     # Set default values for performance attributes.
     after_initialize -> {
-      @level = BASE_LEVEL
-      @exp   = BASE_EXP
-      @tnl   = BASE_TNL
+      @level           = BASE_LEVEL
+      @exp             = BASE_EXP
+      @tnl             = BASE_TNL
+      @training_points = BASE_TRAINS
 
       @health  = Mechanics::MaxStat.new BASE_HEALTH
       @mana    = Mechanics::MaxStat.new BASE_MANA
@@ -213,16 +215,17 @@ module Realm
     ###########################################################################
     def gain_level
       # Calculate gains
-      new_level    = level + 1
-      new_tnl      = reset_tnl
-      health_boost = health_gain
-      mana_boost   = mana_gain
-      trains_boost = trains_gain
+      new_level      = level + 1
+      new_tnl        = reset_tnl
+      health_boost   = health_gain
+      mana_boost     = mana_gain
+      trains_boost   = trains_gain
       # Apply gains
-      @level = new_level
-      @tnl   = (is_a?(Avatar) && hero?) ? 0 : new_tnl
+      @level                   = new_level
+      @tnl                     = (is_a?(Avatar) && hero?) ? 0 : new_tnl
+      @training_points         += trains_boost
       health.max_stat.baseline += health_boost
-      mana.max_stat.baseline += mana_boost
+      mana.max_stat.baseline   += mana_boost
       # heal
       heal
       # notify
