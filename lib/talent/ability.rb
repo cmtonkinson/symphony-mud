@@ -60,6 +60,23 @@ module Talent
     end
 
     ###########################################################################
+    def can_learn?
+      # You need to be a high enough level.
+      return false if level > able_being.level
+
+      # You need to have learned any and all prerequisite Abilities first.
+      return false if prerequisites.any? { |prereq| !prereq.learned? }
+
+      # I mean... I *guess* it's okay...
+      return true
+    end
+
+    ###########################################################################
+    def prereq_string
+      prerequisites.map(&:name_s).join(', ')
+    end
+
+    ###########################################################################
     def mastered?
       mastery == 100
     end

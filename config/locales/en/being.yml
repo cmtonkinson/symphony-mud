@@ -1,6 +1,6 @@
 en:
   being:
-    # Movement
+  # Movement
     arrived: "$being has arrived from $opposite."
     leaves: "$being leaves to $exit."
     you_go: "You go to $exit."
@@ -11,4 +11,13 @@ en:
     improved: "Your $string ability {Gimproves{x!"
     learned: "You have {Glearned{x the $string ability!"
     not_known: "You don't know how to do that."
+    talents:
+      err_cannot_learn: "Sorry, you don't meet the requirements for that yet."
+      err_learned: "But you already know how to do that!"
+      err_not_found: "You don't know of an ability like that."
+      err_trains: "Oof - you don't have enough training points to learn that."
+      learned: "Congratulations! You spend {B$string{x training points to learn {W$string{x!"
+      list_can_learn: "  [{Y$string{x] {W$string$string{x"
+      list_cannot_learn: "  [{y$string{x] {w$string$string{x"
+      list_learned: "  [{Y$string{x] $string ($string){x"
 

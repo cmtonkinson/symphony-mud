@@ -20,9 +20,11 @@ module Talent
       add_ability RiposteSkill.new      65,    3,      5,          5,       0,    20
 
       # Dependency graph
-#      add_dependency SecondAttackSkill, ThirdAttackSkill
-#      add_dependency ThirdAttackSkill,  FourthAttackSkill
-#      add_dependency BlockSkill,        ParrySkill
+      add_prerequisite SecondAttackSkill, ThirdAttackSkill
+      add_prerequisite ThirdAttackSkill,  FourthAttackSkill
+      add_prerequisite BlockSkill,        ParrySkill
+      add_prerequisite SecondAttackSkill, RiposteSkill
+      add_prerequisite ParrySkill,        RiposteSkill
 
     end
   end

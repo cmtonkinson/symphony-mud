@@ -53,6 +53,8 @@ en:
       err_noone: "You don't see them here."
       err_too_many: "You can't target more than one victim."
       title: "You pick a fight with $being."
+    learn:
+      _brief: "Learn an available ability."
     look:
       _brief: "Examine your surroundings."
       exit_list: "\nExits are: {R$string{x"
@@ -80,13 +82,13 @@ en:
       _brief: "Display shortcuts for all commands that have one."
       title: "The following command shortcuts are available:"
     skills:
-      _brief: "Display skills you currently know."
-      title: "You have learned the following skills:\n\n"
-      skill: "  $string ($string)"
+      _brief: "Display list of skills."
+      learned: "Here are the skills you know:\n\n"
+      unlearned: "\nHere are other skills you might learn:\n\n"
     spells:
       _brief: "Display spells you currently know."
-      title: "You have learned the following spells:\n\n"
-      spell: "  $string"
+      learned: "Here are the spells you know:\n\n"
+      unlearned: "\nHere are other spells you might learn:\n\n"
     summary:
       _brief: "Display information about the current state of your Avatar."
       title: "Your name is $string and you are a $string."

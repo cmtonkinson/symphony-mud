@@ -222,6 +222,16 @@ define :kill do
 end
 
 ###############################################################################
+define :learn do
+###############################################################################
+  usage({ ability: :string })
+  exec do
+    err_str = being.learn ability
+    being.puts err_str and next if err_str
+  end
+end
+
+###############################################################################
 define :look do
 ###############################################################################
   shortcut 'l'
@@ -347,12 +357,10 @@ define :skills do
 ###############################################################################
   usage
   exec do
-    being.puts t("title")
-
-    being.abilities
-      .select { |a| a.category == :skill }
-      .select(&:learned?)
-      .each { |a| being.puts t("skill"), a.name_s, Display::Format.mastery(a.mastery) }
+    being.puts t('learned')
+    being.puts_abilities_list :skill, true
+    being.puts t('unlearned')
+    being.puts_abilities_list :skill, false
   end
 end
 
@@ -361,11 +369,10 @@ define :spells do
 ###############################################################################
   usage
   exec do
-    being.puts t("title")
-
-    being.abilities
-      .select { |a| a.category == :spell }
-      .each { |a| being.puts t("spell"), a.name_s }
+    being.puts t('learned')
+    being.puts_abilities_list :spell, true
+    being.puts t('unlearned')
+    being.puts_abilities_list :spell, false
   end
 end
 

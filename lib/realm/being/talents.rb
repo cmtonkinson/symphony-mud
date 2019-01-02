@@ -47,6 +47,43 @@ module Realm
       abilities.find { |a| a.name == name.to_sym }
     end
 
+    ###########################################################################
+    # Either learn the Ability successfully, or return a String indicating why
+    # that couldn't be done.
+    def learn(name)
+      ability = get_ability name
+
+      return I18n.t('being.talents.err_not_found') if ability.nil?
+      return I18n.t('being.talents.err_learned') if ability.learned?
+      return I18n.t('being.talents.err_cannot_learn') unless ability.can_learn?
+      return I18n.t('being.talents.err_trains') if ability.trains > training_points
+
+      @training_points -= ability.trains
+      ability.learn
+      puts I18n.t('being.talents.learned'), ability.trains, ability.name_s
+
+      nil
+    end
+
+    ###########################################################################
+    def puts_abilities_list(type = nil, learned = nil)
+      abilities
+        .select { |a| type.nil? ? true : a.category == type }
+        .select { |a| learned.nil? ? true : learned == a.learned? }
+        .sort_by(&:level)
+        .each do |a|
+          a_level = '%3d' % a.level
+          a_name  = '%-15s' % a.name_s
+
+          if a.learned?
+            puts I18n.t('being.talents.list_learned'), a_level, a_name, Display::Format.mastery(a.mastery)
+          else
+            deps = a.prerequisites.empty? ? '' : (' requires ' + a.prereq_string)
+            puts I18n.t('being.talents.list_' + (a.can_learn? ? 'can_learn' : 'cannot_learn')), a_level, a_name, deps
+          end
+        end
+    end
+
   end
 end
 
