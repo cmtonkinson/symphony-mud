@@ -16,7 +16,7 @@ redit      sedit
 affinity  afk       boards    bored     busy      
 channels  close           
 give      
-lay       learn     lock
+lay       lock
           note
 ooc       open      put             reply
              sit       socials   
