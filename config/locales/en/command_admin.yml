@@ -58,6 +58,9 @@ en:
       _brief: "Create a new object from the current zone by rid"
       actor: "You create {W$item{x."
       err_nothing: "No item by that id in this zone."
+    log_level:
+      _brief: "Dynamically adjust server logging verbosity - does not persist across reboot"
+      changed: "You have adjusted the server logging verbosity to '{W$string{x'."
     peace:
       _brief: "Cease all combat in the room."
       room: "A sense of calm overwhelms the room."

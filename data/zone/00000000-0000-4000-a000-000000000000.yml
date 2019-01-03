@@ -31,7 +31,31 @@
     :objekt_id: 21d0e69b-c1f4-4113-8444-c27b3894db48
     :number: 1
     :max: 3
-:exits: []
+- :objekt:
+    :class: Realm::Room
+    :id: 110111df-156f-4532-8615-18ed67b43d04
+    :rid: 2
+    :name: "[name]"
+  :zone: 00000000-0000-4000-a000-000000000000
+  :coords: '1,0,0'
+  :placements: []
+:exits:
+- :objekt:
+    :class: Realm::Exit
+    :id: 508c6d34-b96b-44db-be2a-93e39705ee03
+    :rid: 
+    :name: "[name]"
+  :simple_flags:
+    :open: true
+    :lock: false
+  :default_open: true
+  :default_lock: false
+  north: 
+  east: 110111df-156f-4532-8615-18ed67b43d04
+  south: 
+  west: 00000000-0000-4000-a000-000000000001
+  up: 
+  down: 
 :items:
 - :objekt:
     :class: Realm::Item

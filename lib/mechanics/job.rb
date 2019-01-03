@@ -80,6 +80,11 @@ module Mechanics
     end
 
     ###########################################################################
+    def overdue?(now = Time.now.to_i)
+      now > @wen
+    end
+
+    ###########################################################################
     # Execute the callable.
     def fire
       Symphony.logger.trace 'Firing %s' % self unless IGNORE_TRACE.call(self.to_s)

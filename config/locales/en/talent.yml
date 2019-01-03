@@ -1,0 +1,10 @@
+en:
+  talent:
+    ability:
+      err_no_stamina: "You are exhausted."
+      err_no_mana: "You feel drained."
+      confused: "You become confused and your '{y$string{x' fails."
+      improve: "You improve on your '{g$string{x' ability!"
+      improve_failure: "You learn from your mistakes and improve on your '{g$string{x' ability!"
+      improve_success: "You get even better at your '{g$string{x' ability!"
+

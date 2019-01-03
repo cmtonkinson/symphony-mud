@@ -3,8 +3,6 @@ module Realm
     ORIGIN_ZONE_ID = '00000000-0000-4000-a000-000000000000'
     THE_VOID_ID    = '00000000-0000-4000-a000-000000000001'
 
-    JOBS_PER_BATCH = 25
-
     CONTAINERS = %w[zones beings avatars]
 
     CONTAINERS.each { |cont| attr_accessor cont }
@@ -92,27 +90,14 @@ module Realm
     def schedule_stats(n)
       {
         length: @schedule.length,
-        batch_size: JOBS_PER_BATCH,
+        batch_size: @schedule.jobs_per_batch,
         up_next: @schedule.take(n),
       }
     end
 
     ###########################################################################
-    # Execute JOBS_PER_BATCH Jobs' worth of actual useful work.
     def handle_jobs
-      ctr = 0
-      while ctr < JOBS_PER_BATCH
-        # Try to fire the next Job.
-        retval = @schedule.fire!
-
-        # Stop processing if there is nothing more to be done.
-        break if retval == nil
-
-        # Don't count pruning a dead Job as doing actual work.
-        next if retval == false
-
-        ctr += 1
-      end
+      @schedule.fire_batch
     end
 
     ###########################################################################

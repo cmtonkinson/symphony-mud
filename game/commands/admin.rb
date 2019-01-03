@@ -246,6 +246,18 @@ define :load do
 end
 
 ###############################################################################
+define :log_level do
+###############################################################################
+  level Realm::Being::CREATOR
+  usage({ new_level: %w(trace debug info warn error fatal) })
+  exec do
+    Symphony.logger.level = Logger.const_get(new_level.upcase)
+    being.puts t('changed'), Symphony.logger.level
+    Symphony.logger.unknown "Log level changed dynamically to #{new_level.upcase} by #{being.fqid_str}"
+  end
+end
+
+###############################################################################
 define :peace do
 ###############################################################################
   level Realm::Being::GOD

@@ -14,7 +14,7 @@ module Base
     ###########################################################################
     def do_server
       setup_server
-      Symphony.logger.info "Server listening on #{Network.configuration.listen_ip}:#{Network.configuration.listen_port}"
+      Symphony.logger.unknown "Server listening on #{Network.configuration.listen_ip}:#{Network.configuration.listen_port}"
       until should_stop do
         welcome server.accept
         $world.handle_jobs
@@ -25,7 +25,7 @@ module Base
         Util::Registry.cleanup 
         sleep Base.configuration.sleep_interval
       end
-      Symphony.logger.info 'Server shutting down.'
+      Symphony.logger.unknown 'Server shutting down.'
     end
 
     ###########################################################################
