@@ -87,25 +87,58 @@ module Talent
     end
 
     ###########################################################################
-    def improve
-      @mastery += 1 if learned? && !mastered?
+    def improve(context = nil)
+      if learned? && !mastered?
+        @mastery += 1
+        which = case context
+        when nil then 'improve'
+        when true then 'improve_success'
+        when false then 'improve_failure'
+        else raise ArgumentError.new 'Ability#improve - context must be nil, true, or false (#{context.class.name} given)'
+        end
+        able_being.puts I18n.t("talent.ability.#{which}"), name_s
+      end
+    end
+
+    ###########################################################################
+    # Conditionally improves on the Ability, based inversely on the difficulty.
+    def randomly_improve(context = nil)
+      improve context if Util.percent_chance 90 / difficulty
     end
 
     ###########################################################################
     def invoke(*args)
-      will_run, error = precheck
-      return error unless will_run
+      # Do they have the resources to perform?
+      able_being.puts I18n.t('talent.ability.err_no_stamina') and return if able_being.stamina.current < stamina
+      able_being.puts I18n.t('talent.ability.err_no_mana') and return if able_being.mana.current < mana
 
+      # Deduct resources.
+      able_being.stamina.decrease stamina if stamina > 0
+      able_being.mana.decrease mana if mana > 0
+
+      # There is a random chance any non-mastered ability will fail.
+      if Util.percent_chance(100 - mastery)
+        able_being.puts I18n.t('talent.ability.confused'), name_s unless passive?
+        # Randomly improve upon the ability. The more advanced you are, the
+        # more instructive failure is.
+        randomly_improve false if Util.percent_chance(mastery)
+        return false
+      end
+
+      # NOTE: Here WOULD go a check for successRate. Instead, because some
+      # abilities need to handle failure in a unique way, that check must be
+      # done per _invoke, for each sub-Ability.
+
+      # Do the deed.
       able_being.run_hook :before_ability_invocation, name
       retval = _invoke *args
       able_being.run_hook :after_ability_invocation, name, retval
 
+      # Randomly improve upon the ability. The more novice you are, the more
+      # instructive success is.
+      randomly_improve true if retval == true && Util.percent_chance(100 - mastery)
+ 
       retval
-    end
-
-    ###########################################################################
-    def precheck
-      return true, nil
     end
 
     ###########################################################################

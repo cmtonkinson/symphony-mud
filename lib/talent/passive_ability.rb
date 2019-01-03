@@ -8,5 +8,13 @@ module Talent::PassiveAbility
     "passive"
   end
 
+  def passive?
+    true
+  end
+
+  def active?
+    false
+  end
+
 end
 
