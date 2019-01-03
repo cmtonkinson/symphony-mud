@@ -21,11 +21,19 @@ CONFIGURATION = [
   # description: Brief one-liner of what the option changes
   # callback: Proc that accepts the new value being passed in
   {
+    short: 'b',
+    long: 'bind',
+    placeholder: 'ADDRESS',
+    default: '127.0.0.1',
+    description: 'Host address on which to listen',
+    callback: Proc.new { |value| Network.configuration.listen_ip = value },
+  },
+  {
     short: 'c',
     long: 'console',
     default: false,
     description: 'Open an interactive console',
-    callback: Proc.new { |value| Symphony.configuration.console = value }
+    callback: Proc.new { |value| Symphony.configuration.console = value },
   },
   {
     short: 'l',
@@ -33,7 +41,15 @@ CONFIGURATION = [
     placeholder: 'LEVEL',
     default: 'info',
     description: 'Change the system logging verbosity',
-    callback: Proc.new { |value| Symphony.logger.level = Logger.const_get(value.upcase) }
+    callback: Proc.new { |value| Symphony.logger.level = Logger.const_get(value.upcase) },
+  },
+  {
+    short: 'p',
+    long: 'port',
+    placeholder: 'PORT',
+    default: 6500,
+    description: 'Server port on which to bind',
+    callback: Proc.new { |value| Network.configuration.listen_port = value },
   },
   {
     short: 's',
@@ -41,7 +57,7 @@ CONFIGURATION = [
     placeholder: 'FILE',
     default: false,
     description: 'Run a script',
-    callback: Proc.new { |value| Symphony.configuration.script = value }
+    callback: Proc.new { |value| Symphony.configuration.script = value },
   },
 ]
 
