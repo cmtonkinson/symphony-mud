@@ -8,7 +8,7 @@ before_script:
   - uname -a
   - cat /etc/os-release
   - ruby -v
-  - apt update && apt install lua5.1
+  - apt update && apt install lua5.1 liblua5.1-dev
   - gem install bundler
   - bundle install -j $(nproc)
 
