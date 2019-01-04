@@ -23,4 +23,6 @@ en:
     speak:
       actor: "You say, \"{G$string{x\""
       hear: "$being says, \"{G$string{x\""
+    avatar:
+      first_creator: "\n\n{WAs the first Avatar in the system, you have been made the system administrator (level {Y$string{W aka 'CREATOR')"
 

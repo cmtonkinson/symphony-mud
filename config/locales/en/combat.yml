@@ -1,0 +1,7 @@
+en:
+  combat:
+    strike:
+      attacker: 'Your $strike $string $being! [$string]'
+      defender: "$being's $strike $string you! [$string]"
+      room: '$being $strike $string $being [$string]!'
+

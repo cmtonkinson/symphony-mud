@@ -37,9 +37,15 @@ module Combat
       dam = 2 * attacker.level + rand(attacker.level) + rand((bonus / 2)..bonus) + rand(weapon_bonus * 2)
       verb = Display::Format.damage dam
 
-      attacker.indented_puts level, 'Your $strike $string $being! [$string]', self, verb, defender, dam
-      defender.indented_puts level, "$being's $strike $string you! [$string]", attacker, self, verb, dam
-      attacker.room.indented_puts level, '$being $strike $string $being!', attacker, self, verb, defender, exclude: [attacker, defender]
+      attacker.indented_puts level, I18n.t('combat.strike.attacker'), self, verb, defender, dam
+      defender.indented_puts level, I18n.t('combat.strike.defender'), attacker, self, verb, dam
+      attacker.room.indented_puts level,
+                                  I18n.t('combat.strike.room'),
+                                  attacker,
+                                  self,
+                                  verb,
+                                  defender,
+                                  exclude: [attacker, defender]
 
       attacker.stamina.decrease 1
       defender.take_damage dam, self

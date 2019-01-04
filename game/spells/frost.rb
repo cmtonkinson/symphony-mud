@@ -16,9 +16,15 @@ module Talent
       dam = rand(able_being.level / 2)
       verb = Display::Format.damage dam
 
-      able_being.puts '$being shivers as frost $string $objective.', target, verb, target
+      able_being.puts '$being shivers as frost $string $objective.',
+                      target,
+                      verb,
+                      target
       target.puts 'You shiver as frost $string you.', verb
-      able_being.room.puts '$being shivers as frost $string you.', target, verb, exclude: [able_being, target]
+      able_being.room.puts '$being shivers as frost $string you.',
+                           target,
+                           verb,
+                           exclude: [able_being, target]
 
       target.take_damage dam, able_being
     end

@@ -42,4 +42,14 @@ module Util
     Random.rand(1..100) <= percent
   end
 
+  def self.argerr(message)
+    trace = caller_locations(1, 1)[0]
+    raise ArgumentError.new 'ArgumentError: %s in %s at %s:%d' % [message,
+                                                                  trace.base_label,
+                                                                  trace.path.sub(Symphony.root.to_s + '/', ''),
+                                                                  trace.lineno
+    ]
+
+  end
+
 end

@@ -20,10 +20,10 @@ module Talent
     def add_prerequisite(dependent_class, independent_class)
       # Find both Ability objects.
       dependent = @abilities.find { |ability| ability.instance_of? dependent_class }
-      raise ArgumentError.new "Talent::Enabler#add_prerequisite - cannot find dependent Ability by class '#{dependent_class}'" if dependent.nil?
+      Util.argerr "cannot find dependent Ability by class '#{dependent_class}'" if dependent.nil?
 
       independent = @abilities.find { |ability| ability.instance_of? independent_class }
-      raise ArgumentError.new "Talent::Enabler#add_prerequisite - cannot find independent Ability by class '#{independent_class}'" if independent.nil?
+      Util.argerr "cannot find independent Ability by class '#{independent_class}'" if independent.nil?
 
       independent.add_prerequisite dependent
     end

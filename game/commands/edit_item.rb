@@ -73,7 +73,11 @@ define :exit, :edit_item do
   end
 end
 
-modifiable_properties = (%i(health mana) + Realm::Being::FITNESS + Realm::Being::DEFENSE + Realm::Being::OFFENSE).map(&:to_s)
+modifiable_properties = (%i(health mana) +
+                         Realm::Being::FITNESS +
+                         Realm::Being::DEFENSE +
+                         Realm::Being::OFFENSE
+                        ).map(&:to_s)
 ###############################################################################
 define :modify, :edit_item do
 ###############################################################################
@@ -120,11 +124,12 @@ end
 ###############################################################################
 is_positive = -> (x) { return (x > 0 ? true : false) }
 is_word     = -> (x) { return !x.match(/\Aa-z+\z/i) }
+in_types    = -> (x) { return Realm::Item::TYPES.include?(x.to_sym) }
 
 [
   [:name, :rest, nil, -> (x) { !x.empty? }, 'cannot be blank', nil],
   [:level, :int, nil, is_positive, 'must be 1 or higher', nil],
-  [:type, :string, nil, -> (x) { return Realm::Item::TYPES.include?(x.to_sym) }, "must be one of: #{Realm::Item::TYPES.join(', ')}", -> (x) { return x.to_sym }],
+  [:type, :string, nil, in_types, "must be one of: #{Realm::Item::TYPES.join(', ')}", -> (x) { return x.to_sym }],
   [:slot, :string, nil, is_word, 'must be a word', -> (x) { return x.to_sym }],
   [:max_items, :int, :container, is_positive, 'must be 1 or higher', nil],
   [:load_factor, :int, :container, is_positive, 'must be 1 or higher', nil],
@@ -144,7 +149,9 @@ is_word     = -> (x) { return !x.match(/\Aa-z+\z/i) }
     level Realm::Being::DEMIGOD
     usage({ value: type })
     exec do
-      being.puts "That property only applies to items that are a #{subtype}." and next if !subtype.nil? && subtype != being.iedit.type
+      if !subtype.nil? && subtype != being.iedit.type
+        being.puts "That property only applies to items that are a #{subtype}." and next
+      end
       being.puts "Failed to update #{name} - new value #{hint}." and next unless validation.call(value)
       being.iedit.send "#{name}=", (conversion.nil? ? value : conversion.call(value))
       new_value = being.iedit.send "#{name}"

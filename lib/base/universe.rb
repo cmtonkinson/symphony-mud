@@ -14,7 +14,7 @@ module Base
     ###########################################################################
     def do_server
       setup_server
-      Symphony.logger.unknown "Server listening on #{Network.configuration.listen_ip}:#{Network.configuration.listen_port}"
+      Symphony.logger.unknown "Server listening on #{@server.ip_port_s}"
       until should_stop do
         welcome server.accept
         $world.handle_jobs

@@ -104,7 +104,7 @@ module Talent
         when nil then 'improve'
         when true then 'improve_success'
         when false then 'improve_failure'
-        else raise ArgumentError.new 'Ability#improve - context must be nil, true, or false (#{context.class.name} given)'
+        else Util.argerr "context must be nil, true, or false (#{context.class.name} given)"
         end
         able_being.puts I18n.t("talent.ability.#{which}"), name_s
       end

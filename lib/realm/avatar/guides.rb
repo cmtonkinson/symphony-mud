@@ -31,7 +31,8 @@ module Realm
       gain_level while level < CREATOR
 
       # Notify.
-      puts "\n\n{WAs the first Avatar in the system, you have been made system administrator (level {Y%d{W aka 'CREATOR')" % level
+      puts I18n.t('being.avatar.first_creator'), level
     }
   end
 end
+

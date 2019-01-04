@@ -68,9 +68,11 @@ module Realm
       @mana    = Mechanics::MaxStat.new BASE_MANA
       @stamina = Mechanics::MaxStat.new MAX_STAMINA
 
+      # rubocop:disable Metrics/LineLength
       FITNESS.each { |name| instance_variable_set "@#{name}", Mechanics::ThresholdStat.new(FITNESS_BASE, FITNESS_THRESHOLD) }
       DEFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(DEFENSE_BASE) }
       OFFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(OFFENSE_BASE) }
+      # rubocop:enable Metrics/LineLength
 
       @age    = BASE_AGE
       @height = BASE_HEIGHT

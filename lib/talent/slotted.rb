@@ -19,7 +19,7 @@ module Talent
       when String
         slots.select { |s| s.name.include? type_or_name }
       else
-        raise ArgumentError.new "Talent::Slotted#get_slots() expects Symbol or String - '#{type_or_name.class.name}' given."
+        Util.argerr "expected Symbol or String; got #{type_or_name.class.name}"
       end
     end
 

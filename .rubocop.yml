@@ -6,7 +6,7 @@ AllCops:
 
 
 Metrics/LineLength:
-  Max: 100
+  Max: 120
 
 Style/FormatString:
   Enabled: false

@@ -100,9 +100,7 @@ module InputSequence
               reject
             end
           else
-            message = "#{self.class.name} incomplete transition to :complete - invalid @context.account_type = '#{@context.account_type}'"
-            Symphony.logger.fatal message
-            raise RuntimeError.new message
+            Util.argerr "incomplete transition to :complete; #{@context.account_type} unrecognized"
           end
           user.avatar.cmd 'look' if avatar
           finish

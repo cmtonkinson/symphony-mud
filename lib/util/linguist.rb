@@ -4,7 +4,8 @@ module Util
     def self.interpret(format, *args)
       message = format.gsub /\$[a-z]+/i do |interpreter|
         if args.empty?
-          Symphony.logger.error "Room#interpret with format '#{format}' - no args left to interpret '#{interpreter}'"
+          Symphony.logger.error "Room#interpret with format '#{format}' - \
+            no args left to interpret '#{interpreter}'"
           next Realm.configuration.error_string
         end
 
@@ -13,13 +14,15 @@ module Util
         begin
           send 'interpret_' + interpreter[1..-1], arg
         rescue NoMethodError
-          Symphony.logger.error "Room#interpret with format '#{format}' - no interpreter for '#{interpreter}' (arg is a #{arg.class.name})"
+          Symphony.logger.error "Room#interpret with format '#{format}' - \
+            no interpreter for '#{interpreter}' (arg is a #{arg.class.name})"
           Realm.configuration.error_string
         end
       end
 
       unless args.empty?
-        Symphony.logger.error "Room#interpret with format '#{format}' - args leftover after interpreters exhausted (remaining: [#{args.join ', '}])"
+        Symphony.logger.error "Room#interpret with format '#{format}' - \
+          args leftover after interpreters exhausted (remaining: [#{args.join ', '}])"
       end
 
       message

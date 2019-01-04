@@ -406,6 +406,17 @@ define :summon do
 end
 
 ###############################################################################
+# NOTE: This method is designed to be used for R&D. See the O'RLY Essentials
+#       book, "Changing Stuff and Seeing What Happens" (aka "The Kitten Book")
+define :test do
+###############################################################################
+  level Realm::Being::CREATOR
+  usage
+  exec do
+  end
+end
+
+###############################################################################
 define :tutor do
 ###############################################################################
   level Realm::Being::CREATOR
