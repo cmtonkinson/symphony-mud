@@ -25,7 +25,8 @@ module Display
     ###########################################################################
     def self.damage(amount)
       quantity(amount, {
-        2000 => 'does {?S{?O{?U{?L {?C{?R{?U{?S{?H{?I{?N{?G{x things to',
+        5000 => 'does {?I{?N{?C{?O{?M{?P{?R{?E{?H{?E{?N{?S{?I{?B{?L{?E{x things to',
+        2000 => 'does {wSOUL CRUSHING{x things to',
         1000 => '{WOBLITERATES{x',
         750  => '{RRUINS{x',
         500  => '{YTORTURES{x',

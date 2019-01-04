@@ -320,9 +320,9 @@ define :purge do
   level Realm::Being::GOD
   usage
   exec do
+    room.puts t('room')
     room.items.values.each { |i| i.run_hook :enervate }
     room.beings.values.each { |b| b.run_hook :enervate if b.is_a? Realm::NPC }
-    room.puts t('room')
   end
 end
 
