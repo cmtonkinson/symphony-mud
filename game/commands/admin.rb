@@ -91,7 +91,7 @@ module Command
           room.puts t('npc'), victim
           Symphony.logger.debug '%s destroyed %s' % [being.fqid_str, victim.fqid_str]
         end
-       end
+      end
     end
   end
 
@@ -229,7 +229,7 @@ module Command
         copy.run_hook :vivify
         being.puts t('actor'), copy
         Symphony.logger.debug '%s loaded %s as a clone of %s' % [being.fqid_str, copy.fqid_str, model.fqid_str]
-       end
+      end
     end
   end
 

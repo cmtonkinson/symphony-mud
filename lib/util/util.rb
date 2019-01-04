@@ -1,5 +1,4 @@
 module Util
-
   #############################################################################
   # Ensure a value is no less than min and no greater than max.
   #
@@ -50,5 +49,4 @@ module Util
                                                                   trace.path.sub(Symphony.root.to_s + '/', ''),
                                                                   trace.lineno]
   end
-
 end

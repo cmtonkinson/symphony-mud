@@ -180,8 +180,8 @@ module Command
         desc = if $help[:command].key?(cmd.get_name)
                  $help[:command][cmd.get_name]
                else
-                 t 'err_no_desc'
-        end
+                 t('err_no_desc')
+               end
 
         being.puts $templates.help, name, brief, usage, desc
       end
@@ -267,7 +267,7 @@ module Command
                       point.north.nil? ? '-' : '|'
                     else
                       ' '
-          end
+                    end
         end
         buffer << "\n"
       end

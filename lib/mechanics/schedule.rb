@@ -16,7 +16,7 @@ module Mechanics
       @job_cycle_counter  = 0
       @jobs_this_cycle    = 0
       @batches_per_second = 1 / Base.configuration.sleep_interval
-     end
+    end
 
     ###########################################################################
     # Insert the Job into the priority queue.
