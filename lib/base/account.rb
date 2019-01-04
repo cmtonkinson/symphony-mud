@@ -71,7 +71,7 @@ module Base
     def self.user_map
       # Cache the file contents.
       begin
-        @user_map ||= YAML.load File.read file_path
+        @user_map ||= YAML.safe_load File.read file_path
       rescue Errno::ENOENT
         @user_map = {}
       end

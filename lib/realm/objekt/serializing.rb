@@ -28,7 +28,7 @@ module Realm
 
     ###########################################################################
     def self.deserialize(yaml)
-      dehashify YAML.load yaml
+      dehashify YAML.safe_load yaml
     end
 
     ###########################################################################
