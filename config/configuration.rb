@@ -74,7 +74,7 @@ config_file = Symphony.root.join 'config.yml'
 if File.readable? config_file
   config_hash = YAML.load File.read config_file
   CONFIGURATION.each do |config|
-    yml_var_name = config[:long].gsub /-/, '_'
+    yml_var_name = config[:long].tr '-', '_'
     if config_hash.key? yml_var_name
       config[:callback].call config_hash[yml_var_name]
     end
@@ -86,7 +86,7 @@ end
 ###############################################################################
 CONFIGURATION.each do |config|
   # Convert the long name to an ENV_STYLE_TOKEN.
-  env_var_name = "SYMPHONY_#{config[:long]}".upcase.gsub /-/, '_'
+  env_var_name = "SYMPHONY_#{config[:long]}".upcase.tr '-', '_'
   # If the ENV var is found, invoke the callback with its value.
   if ENV.key? env_var_name
     config[:callback].call ENV[env_var_name]
