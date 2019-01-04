@@ -48,7 +48,7 @@ define :commands do
         next unless being.level >= level_num
         next unless commands_by_level.key? level_num
 
-        being.puts "\n  --== {Y#{level_name}{x (#{commands_by_level[level_num].length} commands) ==--"
+        being.puts "\n{Y#{level_name}{x"
         being.puts '  ' + commands_by_level[level_num].map(&:get_name).join(', ')
       end
     end
