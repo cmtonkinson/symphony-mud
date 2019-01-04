@@ -33,7 +33,7 @@ module Command
         remaining.strip!
       end
 
-      return nil if !remaining.match /\A\s*\z/
+      return nil if !remaining.match(/\A\s*\z/)
 
       context
     end

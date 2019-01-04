@@ -2,7 +2,7 @@ module Util
   class Linguist
     ###########################################################################
     def self.interpret(format, *args)
-      message = format.gsub /\$[a-z]+/i do |interpreter|
+      message = format.gsub(/\$[a-z]+/i) do |interpreter|
         if args.empty?
           Symphony.logger.error "Room#interpret with format '#{format}' - \
             no args left to interpret '#{interpreter}'"

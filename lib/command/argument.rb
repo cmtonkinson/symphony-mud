@@ -47,7 +47,7 @@ module Command
     id: {
       pattern: / (?:[^'"\s]+ | (?:('|") [^\1]+? \1)) (?:([#*]) (\d+|all|half))? /ix,
       cast_func: lambda { |x|
-        name, symbol, number = x.partition /#|\*/
+        name, symbol, number = x.partition(/#|\*/)
         OpenStruct.new(
           name: name.downcase.sub(/('|") (.+?) \1/ix, '\2'),
           symbol: symbol,
