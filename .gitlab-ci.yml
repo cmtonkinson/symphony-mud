@@ -5,9 +5,11 @@ stages:
   - analyze
 
 before_script:
+  - uname -a
+  - cat /etc/release*
   - ruby -v
+  - apt-get install lua liblua-dev
   - gem install bundler
-  - apt-get install lua5.1 liblua5.1-dev
   - bundle install -j $(nproc)
 
 ###############################################################################
