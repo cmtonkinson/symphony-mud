@@ -8,7 +8,7 @@ module Realm
   end
 
   def self.configuration
-    @config ||= Configuration.new
+    @configuration ||= Configuration.new
   end
 
   def self.configure
