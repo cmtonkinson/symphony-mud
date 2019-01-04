@@ -45,7 +45,7 @@ module Command
     usage({ direction: :string }, { room_rid: :int })
     exec do
       target_room = $world.find_room room_rid
-      target_direction = Realm::Exit.is_direction? direction
+      target_direction = Realm::Exit.direction? direction
 
       being.puts t('no_way') and next if target_direction.nil?
       being.puts t('no_where') and next if target_room.nil?

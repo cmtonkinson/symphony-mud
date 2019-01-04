@@ -179,7 +179,7 @@ module Realm
     end
 
     ###########################################################################
-    def has_seniority?(victim)
+    def seniority?(victim)
       victim.level < @level - IMMORTAL_SENIORITY
     end
 

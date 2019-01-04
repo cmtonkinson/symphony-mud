@@ -136,7 +136,7 @@ module Base
       # Add the server socket to the options Hash.
       options[server_fd] = server_fd
       # Add all the client sockets to the options Hash.
-      @clients.each { |c| options[c.fd] = c.get_fd }
+      @clients.each { |c| options[c.fd] = c.fd }
       # Return both env and options hashes.
       [env, options]
     end

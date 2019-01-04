@@ -57,7 +57,7 @@ module Realm
     }
 
     ###########################################################################
-    def get_layout
+    def layout
       # Create a 2D Array that is large enough to hold the shape of the Zone.
       x_min, x_max  = extreme_coords 0
       width         = x_max - x_min + 1

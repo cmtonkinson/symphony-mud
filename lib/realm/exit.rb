@@ -68,7 +68,7 @@ module Realm
     ###########################################################################
     # If the given string matches the prefix of a defined direction, return
     # the full string name of that direction. Otherwise, return nil.
-    def self.is_direction?(str)
+    def self.direction?(str)
       test = DIRECTIONS.keys.find { |name| name.index(str) == 0 }
       test.nil? ? nil : test
     end

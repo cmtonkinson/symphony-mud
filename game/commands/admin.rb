@@ -120,7 +120,7 @@ module Command
       target = $world.find_avatar victim
       being.puts t 'err_nobody' and next if target.nil?
       being.puts t 'err_self' and next if target == being
-      being.puts t('err_seniority'), target and next unless being.has_seniority? target
+      being.puts t('err_seniority'), target and next unless being.seniority? target
 
       being.puts t('actor'), target
       target.puts t('victim'), being
@@ -136,7 +136,7 @@ module Command
       target = room.find_being victim
       being.puts t 'err_nobody' and next if target.nil?
       being.puts t 'err_self' and next if target == being
-      being.puts t('err_seniority'), target and next unless being.has_seniority? target
+      being.puts t('err_seniority'), target and next unless being.seniority? target
 
       being.puts t('actor'), target
       target.puts t('victim'), being
@@ -263,7 +263,7 @@ module Command
       being.puts t('err_not_found') and next if victim.nil?
       being.puts t('err_no_permission') and next if victim == being
       being.puts t('err_already_there') and next if victim.level >= to_level
-      being.puts t('err_no_permission') and next unless being.has_seniority?(victim)
+      being.puts t('err_no_permission') and next unless being.seniority?(victim)
       being.puts t('err_no_permission') and next if to_level > being.level - Realm::Being::IMMORTAL_SENIORITY
 
       being.puts t('actor'), victim
@@ -374,7 +374,7 @@ module Command
       being.puts t('err_self') and next if target == being
       being.puts t('err_nobody') and next if target.nil?
       being.puts t('err_here'), target and next if target.room == room
-      being.puts t('err_seniority'), target and next unless being.has_seniority? target
+      being.puts t('err_seniority'), target and next unless being.seniority? target
 
       being.puts t('actor'), target
       target.puts t('victim'), being, being

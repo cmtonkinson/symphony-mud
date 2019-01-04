@@ -19,7 +19,7 @@ module Command
       @brief      = 'TODO'
       @level      = 1
       @group      = :global
-      @is_ability = false
+      @ability    = false
       @exec       = nil
       @usages     = [] # A collection of Usages
       @context    = nil
@@ -92,7 +92,7 @@ module Command
 
     def get_group;      @group;      end
 
-    def get_is_ability; @is_ability; end
+    def get_ability;    @ability;    end
 
     def get_exec;       @exec;       end
     # rubocop:enable Naming/AccessorMethodName
@@ -121,8 +121,8 @@ module Command
       @group = group.to_sym
     end
 
-    def is_ability
-      @is_ability = true
+    def ability?
+      @ability = true
     end
 
     def exec(&exec)

@@ -34,9 +34,9 @@ module Command
 
   ###############################################################################
   define :kick do
+    ability
     usage
     usage({ victim: :id })
-    is_ability
     exec do
       if being.battle
         target = being.acquire_target
