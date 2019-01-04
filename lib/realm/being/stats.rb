@@ -327,6 +327,12 @@ module Realm
       end
     end
 
+    ###########################################################################
+    def speak(content)
+      puts I18n.t('being.speak.actor'), content
+      room.puts I18n.t('being.speak.hear'), self, content, exclude: self
+    end
+
   end
 end
 

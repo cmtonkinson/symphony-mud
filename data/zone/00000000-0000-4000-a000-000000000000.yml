@@ -144,3 +144,7 @@
     :height: 1
     :weight: 1
   :abilities: {}
+  :npc:
+    :mobility: 0
+    :hostility: 0
+

@@ -20,4 +20,7 @@ en:
       list_can_learn: "  [{Y$string{x] {W$string$string{x"
       list_cannot_learn: "  [{y$string{x] {w$string$string{x"
       list_learned: "  [{Y$string{x] $string ($string){x"
+    speak:
+      actor: "You say, \"{G$string{x\""
+      hear: "$being says, \"{G$string{x\""
 

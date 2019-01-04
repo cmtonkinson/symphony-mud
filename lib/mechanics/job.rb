@@ -29,8 +29,8 @@ module Mechanics
       # approximately Jan 1, 1971 or 1 year past epoch) then we assume it
       # represents a number of seconds from "now," rather than an absolute
       # time (which for any value under about 1.4 billion is in the past).
-      @wen = wen
-      @wen += Time.now.to_i if wen < 31_536_000
+      @wen = resolve_time wen
+      @wen += Time.now.to_i if @wen < 31_536_000
 
       # If the Job is being created for an Objekt, we want to make sure the
       # Objekt knows about the Job so it can bookkeep correctly.
@@ -52,6 +52,15 @@ module Mechanics
     end
 
     ###########################################################################
+    def resolve_time(val)
+       case val
+       when Integer then val 
+       when Range then rand val
+       else raise ArgumentError.new "Job#resolve_time - val unrecognized type #{val.class.name}"
+       end
+    end
+
+    ###########################################################################
     def recurring?
       @recurring
     end
@@ -65,7 +74,7 @@ module Mechanics
 
     ###########################################################################
     def recur!
-      @wen = Time.now.to_i + @repeat_every
+      @wen = Time.now.to_i + resolve_time(@repeat_every)
       if @repeat_times == 0
         return nil
       else
@@ -179,3 +188,4 @@ module Mechanics
     end
   end
 end
+

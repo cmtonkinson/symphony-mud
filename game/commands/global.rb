@@ -328,8 +328,7 @@ define :say do
 ###############################################################################
   usage :rest
   exec do
-    being.puts t('actor'), rest
-    room.puts t('hear'), being, rest, exclude: being
+    being.speak rest
   end
 end
 
