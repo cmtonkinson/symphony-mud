@@ -70,7 +70,7 @@ module Realm
     def find_zone(rid_or_uuid = ZONE_ORIGIN_ID)
       if rid_or_uuid.is_a? Numeric
         @zones.values.find { |z| z.rid == rid_or_uuid }
-      elsif rid_or_uuid =~ /\h{8}-?\h{4}-?\h{4}-?\h{4}-?\h{12}/i
+      elsif /\h{8}-?\h{4}-?\h{4}-?\h{4}-?\h{12}/i.match?(rid_or_uuid)
         (zone = find rid_or_uuid) ? zone : find(ZONE_ORIGIN_ID)
       end
     end
