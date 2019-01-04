@@ -6,7 +6,7 @@ stages:
 
 before_script:
   - uname -a
-  - cat /etc/release*
+  - cat /etc/os-release*
   - ruby -v
   - apt-get install lua liblua-dev
   - gem install bundler
