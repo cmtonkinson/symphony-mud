@@ -4,6 +4,9 @@ AllCops:
   Include:
     - '**/*.rb'
 
+Layout/IndentationWidth:
+  Exclude:
+    - 'game/commands/*.rb'
 
 Metrics/LineLength:
   Max: 120

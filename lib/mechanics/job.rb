@@ -53,11 +53,11 @@ module Mechanics
 
     ###########################################################################
     def resolve_time(val)
-       case val
-       when Integer then val 
-       when Range then rand val
-       else raise ArgumentError.new "Job#resolve_time - val unrecognized type #{val.class.name}"
-       end
+      case val
+      when Integer then val 
+      when Range then rand val
+      else raise ArgumentError.new "Job#resolve_time - val unrecognized type #{val.class.name}"
+      end
     end
 
     ###########################################################################
