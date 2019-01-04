@@ -6,9 +6,9 @@ stages:
 
 before_script:
   - uname -a
-  - cat /etc/os-release*
+  - cat /etc/os-release
   - ruby -v
-  - apt-get install lua liblua-dev
+  - apt-get install lua5.1
   - gem install bundler
   - bundle install -j $(nproc)
 
