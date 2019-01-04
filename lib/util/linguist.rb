@@ -108,7 +108,7 @@ module Util
       return name if first_char == first_char.upcase
 
       # Starts with a vowel, so we add "an"
-      return name.prepend (I18n.t('linguist.article.indefinite.vowel') + ' ') if first_char.match /[aeiou]/i
+      return name.prepend (I18n.t('linguist.article.indefinite.vowel') + ' ') if first_char =~ /[aeiou]/i
 
       # Just a regular name, so we add "a"
       return name.prepend (I18n.t('linguist.article.indefinite.consonant') + ' ')

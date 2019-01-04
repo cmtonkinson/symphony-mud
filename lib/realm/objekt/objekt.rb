@@ -29,7 +29,7 @@ module Realm
     DEFAULTS = {
       id:   -> { SecureRandom.uuid },
       rid:  -> { nil },
-      name: -> { '[name]'.dup },
+      name: -> { +'[name]' },
     }
 
     attr_reader :id

@@ -54,7 +54,7 @@ module Realm
         return nil if room_ary.empty?
         room_ary.find { |r| r.rid == rid_or_uuid }
       # It's a UUID
-      elsif rid_or_uuid.match /\h{8}-?\h{4}-?\h{4}-?\h{4}-?\h{12}/i
+      elsif /\h{8}-?\h{4}-?\h{4}-?\h{4}-?\h{12}/i.match?(rid_or_uuid)
         (room = find rid_or_uuid) ? room : find(THE_VOID_ID)
       else
         find THE_VOID_ID
@@ -65,7 +65,7 @@ module Realm
     def find_zone(rid_or_uuid = ZONE_ORIGIN_ID)
       if rid_or_uuid.is_a? Numeric
         @zones.values.find { |z| z.rid == rid_or_uuid }
-      else rid_or_uuid.match /\h{8}-?\h{4}-?\h{4}-?\h{4}-?\h{12}/i
+      else rid_or_uuid =~ /\h{8}-?\h{4}-?\h{4}-?\h{4}-?\h{12}/i
         (zone = find rid_or_uuid) ? zone : find(ZONE_ORIGIN_ID)
       end
     end
@@ -73,7 +73,7 @@ module Realm
     ###########################################################################
     def find_avatar(name)
       return nil if @avatars.empty?
-      @avatars.values.find { |a| a.name.downcase == name.downcase }
+      @avatars.values.find { |a| a.name.casecmp(name).zero? }
     end
 
     ###########################################################################

@@ -43,7 +43,7 @@ define :commands do
       commands_by_level = command_set.group_by &:get_level
 
       being.puts t('actor'), operator.set_name
-      Realm::Being::LEVELS.reverse.each do |level_name|
+      Realm::Being::LEVELS.reverse_each do |level_name|
         level_num = Realm::Being.const_get level_name
         next unless being.level >= level_num
         next unless commands_by_level.key? level_num

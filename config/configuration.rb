@@ -100,7 +100,7 @@ end
 # the context of another program (e.g. rspec) or this will cause any CLI args
 # intended for that program to be processd here.
 $command_line_args = ARGF.argv.map { |a| ' ' + a }.reduce(:+) || ''
-if $0 =~ /symphony/
+if /symphony/.match?($0)
   OptionParser.new do |opts|
     opts.banner = "Usage: #{BINARY_NAME} [options]"
 

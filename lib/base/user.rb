@@ -43,7 +43,7 @@ module Base
       # If the user just hits Enter (with or without whitespace), send them
       # a new prompt. This is useful if they're just waiting on their stats
       # to heal.
-      if input.match /\A\s*\z/
+      if /\A\s*\z/.match?(input)
         @avatar.force_output!
         return false
       end
