@@ -48,7 +48,7 @@ module Command
       pattern: / (?:[^'"\s]+ | (?:('|") [^\1]+? \1)) (?:([#*]) (\d+|all|half))? /ix,
       cast_func: lambda { |x|
         name, symbol, number = x.partition /#|\*/
-        id = OpenStruct.new(
+        OpenStruct.new(
           name: name.downcase.sub(/('|") (.+?) \1/ix, '\2'),
           symbol: symbol,
           number: if %w[all half].include?(number) then number else number.to_i end

@@ -18,7 +18,7 @@ module Util
       # The exit status of `ruby -c` will tell us whether there were errors,
       # and if there are errors the stderr of that process will hold the
       # diagnostic output (e.g. what the problem(s) are).
-      lint_stdout, lint_stderr, lint_status = Open3.capture3 lint_command
+      _lint_stdout, lint_stderr, lint_status = Open3.capture3 lint_command
 
       # Raise a SyntaxError if a syntax error is found.
       raise SyntaxError.new lint_stderr unless lint_status == 0

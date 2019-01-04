@@ -252,8 +252,6 @@ module Command
     exec do
       zone   = being.room.zone
       layout = zone.get_layout
-      height = layout.length
-      width  = layout[0].length
       buffer = ''
 
       being.puts t('title'), zone

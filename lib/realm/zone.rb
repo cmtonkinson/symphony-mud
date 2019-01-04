@@ -67,7 +67,6 @@ module Realm
       height        = y_max - y_min + 1
       y_translation = y_min < 0 ? -y_min : 0
 
-      translation = Vector[x_translation, y_translation, 0]
       layout      = Array.new(height * 2) { Array.new(width * 2) { nil } }
 
       # Set a value for each coordinate that is occupied by a Room.
@@ -81,7 +80,6 @@ module Realm
         # bidirectional means that we only have to examine the North and East
         # direction of each Exit and we'll have accounted for all intrazone
         # links.
-        marker = ''
         %i[north east].each do |direction|
           exit_x = adjusted_x
           exit_y = adjusted_y

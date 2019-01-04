@@ -30,7 +30,7 @@ module Command
       being.puts format % %w[Name Sock IP:Port DNS]
       being.puts '-------------------------------------------------------------------------------'
       $universe.clients.each do |client|
-        sock_domain, remote_port, remote_hostname, remote_ip = client.socket.peeraddr
+        _sock_domain, remote_port, _remote_hostname, remote_ip = client.socket.peeraddr
         dns_name = Resolv.getname remote_ip
         being.puts format % [
           client.user.avatar.name,
