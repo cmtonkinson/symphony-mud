@@ -14,7 +14,7 @@ module Talent
     def _invoke(target)
       Combat.embattle able_being, target
 
-      if rand(1..100) > successRate
+      if rand(1..100) > success_rate
         able_being.puts 'You try to kick $being, but miss.', target
         target.puts '$being tries to kick you, but misses.', able_being
         able_being.room.puts '$being tries to kick $being, but misses.',

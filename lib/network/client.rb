@@ -7,10 +7,10 @@ module Network
       @socket           = tcp_socket
       @user             = nil
       @last_input       = ''
-      Symphony.logger.info "New Client on socket #{get_fd}"
+      Symphony.logger.info "New Client on socket #{fd}"
     end
 
-    def get_fd
+    def fd
       socket.to_i
     end
 
@@ -36,7 +36,7 @@ module Network
       self.puts "\n\n"
       self.puts quote['body']
       self.puts "  -#{quote["author"]}\n\n"
-      Symphony.logger.info "Closing Client on socket #{get_fd}"
+      Symphony.logger.info "Closing Client on socket #{fd}"
       self.socket.close
     end
 

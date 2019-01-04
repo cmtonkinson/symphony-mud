@@ -34,7 +34,7 @@ module Command
         dns_name = Resolv.getname remote_ip
         being.puts format % [
           client.user.avatar.name,
-          client.get_fd,
+          client.fd,
           "#{remote_ip}:#{remote_port}",
           Util::Linguist.truncate_middle(dns_name, dns_width)
         ]

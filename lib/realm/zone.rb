@@ -67,7 +67,7 @@ module Realm
       height        = y_max - y_min + 1
       y_translation = y_min < 0 ? -y_min : 0
 
-      layout      = Array.new(height * 2) { Array.new(width * 2) { nil } }
+      layout        = Array.new(height * 2) { Array.new(width * 2) { nil } }
 
       # Set a value for each coordinate that is occupied by a Room.
       @rooms.values.each do |room|

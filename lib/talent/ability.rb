@@ -6,12 +6,12 @@ module Talent
     # Array and using self.inherited
 
     attr_reader :type, :category, :name
-    attr_reader :level, :trains, :difficulty, :stamina, :mana, :successRate
+    attr_reader :level, :trains, :difficulty, :stamina, :mana, :success_rate
     attr_reader :prerequisites
     attr_reader :able_being, :mastery
 
     ###########################################################################
-    def initialize(level, trains, difficulty, stamina, mana, successRate)
+    def initialize(level, trains, difficulty, stamina, mana, success_rate)
       @type          = nil # active or passive
       @category      = nil # skill, spell, craft, etc.
       @name          = nil
@@ -22,7 +22,7 @@ module Talent
       @difficulty    = difficulty
       @stamina       = stamina
       @mana          = mana
-      @successRate   = successRate
+      @success_rate  = success_rate
 
       @able_being    = nil
       @mastery       = 0 # 0 means unlearned
@@ -135,7 +135,7 @@ module Talent
         return false
       end
 
-      # NOTE: Here WOULD go a check for successRate. Instead, because some
+      # NOTE: Here WOULD go a check for success_rate. Instead, because some
       # abilities need to handle failure in a unique way, that check must be
       # done per _invoke, for each sub-Ability.
 

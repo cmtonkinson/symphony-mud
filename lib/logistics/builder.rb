@@ -17,20 +17,20 @@ module Logistics
     #   link_existing_rooms alpha, beta, "east"
     #   # => Going "east" from alpha will lead to beta
     #   # => Going "west" from beta will lead to alpha
-    def self.link_existing_rooms(a, b, direction)
+    def self.link_existing_rooms(one, two, direction)
       # Create a new Exit
       exit = Realm::Exit.new
-      exit.send "#{direction}=", b
-      exit.send "#{Realm::Exit::DIRECTIONS[direction][:opposite]}=", a
+      exit.send "#{direction}=", two
+      exit.send "#{Realm::Exit::DIRECTIONS[direction][:opposite]}=", one
 
       # Point the Rooms on either side to the new Exit.
-      a.send "#{direction}=", exit
-      b.send "#{Realm::Exit::DIRECTIONS[direction][:opposite]}=", exit
+      one.send "#{direction}=", exit
+      two.send "#{Realm::Exit::DIRECTIONS[direction][:opposite]}=", exit
 
       # Add the Exit to the appropriate container. If the Rooms are in the same
       # Zone, that Zone "owns" the Exit. If the Rooms are in differing Zones,
       # then the World singleton "owns" the Exit.
-      (a.zone == b.zone ? a.zone : $world).insert exit
+      (one.zone == two.zone ? one.zone : $world).insert exit
     end
 
     ###########################################################################

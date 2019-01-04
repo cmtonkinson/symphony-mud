@@ -18,7 +18,7 @@ module Talent
     end
 
     def _invoke
-      return unless rand(1..100) < successRate
+      return unless rand(1..100) < success_rate
 
       # IMPORTANT ASSUMPTION:
       # If this is a riposte, we assume it immediately follows a

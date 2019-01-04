@@ -72,7 +72,7 @@ CONFIGURATION.each { |config| config[:callback].call config[:default] }
 config_file = Symphony.root.join 'config.yml'
 
 if File.readable? config_file
-  config_hash = YAML.safe_load File.read config_file
+  config_hash = YAML.load File.read config_file
   CONFIGURATION.each do |config|
     yml_var_name = config[:long].tr '-', '_'
     if config_hash.key? yml_var_name

@@ -14,7 +14,7 @@ module Talent
     end
 
     def _invoke(strike)
-      return unless rand(1..100) < successRate
+      return unless rand(1..100) < success_rate
 
       strike.avoid
       strike.defender.indented_puts strike.level, "You parry $being's $strike!", strike.attacker, strike

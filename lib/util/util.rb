@@ -1,4 +1,6 @@
 module Util
+
+  # rubocop:disable Naming/UncommunicativeMethodParamName
   #############################################################################
   # Ensure a value is no less than min and no greater than max.
   #
@@ -34,6 +36,7 @@ module Util
 
     1.0 * y_min + (x - 1)**exponent
   end
+  # rubocop:enable Naming/UncommunicativeMethodParamName
 
   #############################################################################
   # Determine whether a randomized event will occur "this time" given a

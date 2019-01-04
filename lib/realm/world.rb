@@ -93,11 +93,11 @@ module Realm
     end
 
     ###########################################################################
-    def schedule_stats(n)
+    def schedule_stats(num)
       {
         length: @schedule.length,
         batch_size: @schedule.jobs_per_batch,
-        up_next: @schedule.take(n),
+        up_next: @schedule.take(num),
       }
     end
 

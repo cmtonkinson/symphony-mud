@@ -138,8 +138,8 @@ module Mechanics
     end
 
     ###########################################################################
-    def take(n)
-      @docket.to_a.reverse.take n
+    def take(num)
+      @docket.to_a.reverse.take num
     end
   end
 end

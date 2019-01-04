@@ -2,6 +2,7 @@ require 'yaml'
 
 module Realm
   class Objekt
+
     ###########################################################################
     def serialize
       YAML.dump hashify
@@ -28,7 +29,7 @@ module Realm
 
     ###########################################################################
     def self.deserialize(yaml)
-      dehashify YAML.safe_load yaml
+      dehashify YAML.load yaml
     end
 
     ###########################################################################

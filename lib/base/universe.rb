@@ -35,7 +35,7 @@ module Base
       else
         @server = Network::Server.new
       end
-      @quotes = YAML.safe_load IO.read Symphony.root.join 'data', 'quotes.yml'
+      @quotes = YAML.load IO.read Symphony.root.join 'data', 'quotes.yml'
     end
 
     ###########################################################################
@@ -121,7 +121,7 @@ module Base
     def reboot_exec_details
       # We want to pass all open file descriptors to the new process.
       server_fd  = server.to_i
-      client_fds = clients.map { |c| c.get_fd }
+      client_fds = clients.map { |c| c.fd }
       env = {
         'SYMPHONY_REBOOT' => 'true',
         'SYMPHONY_SERVER_FD' => server_fd.to_s,
@@ -136,7 +136,7 @@ module Base
       # Add the server socket to the options Hash.
       options[server_fd] = server_fd
       # Add all the client sockets to the options Hash.
-      @clients.each { |c| options[c.get_fd] = c.get_fd }
+      @clients.each { |c| options[c.fd] = c.get_fd }
       # Return both env and options hashes.
       [env, options]
     end
@@ -161,7 +161,7 @@ module Base
     ###########################################################################
     # Store to disk a mapping of client socket descriptors to Avatar ids.
     def save_reboot_map
-      recovery_map = Hash[@clients.map { |c| [c.get_fd, c.user.avatar.id] }]
+      recovery_map = Hash[@clients.map { |c| [c.fd, c.user.avatar.id] }]
       File.write Base.configuration.recovery_file, YAML.dump(recovery_map)
     end
 
@@ -169,8 +169,9 @@ module Base
     # Reconnect all Avatars back to their corresponding descriptors.
     def load_reboot_map
       # Read the recovery Hash.
-      recovery_map = YAML.safe_load File.read Base.configuration.recovery_file
+      recovery_map = YAML.load File.read Base.configuration.recovery_file
 
+      # rubocop:disable Security/MarshalLoad
       Marshal.load(ENV['SYMPHONY_CLIENT_FDS']).each do |fd|
         client = Network::Client.new TCPSocket.for_fd fd.to_i
         user   = User.new
@@ -179,6 +180,7 @@ module Base
         user.avatar.run_hook :vivify
         @clients << client
       end
+      # rubocop:enable Security/MarshalLoad
     end
 
     ###########################################################################
