@@ -1,0 +1,16 @@
+AllCops:
+  Exclude:
+    - 'spec/**/*.rb'
+  Include:
+    - '**/*.rb'
+
+
+Metrics/LineLength:
+  Max: 100
+
+Style/FormatString:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+

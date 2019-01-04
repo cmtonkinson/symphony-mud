@@ -145,24 +145,24 @@ define :group do
       being.puts t('members'), leader
       group.members.each do |member|
         being.puts t('member'), member,
-          member.health.current,
-          member.health.max,
-          member.mana.current,
-          member.mana.max,
-          member.stamina.current,
-          member.tnl
+                                member.health.current,
+                                member.health.max,
+                                member.mana.current,
+                                member.mana.max,
+                                member.stamina.current,
+                                member.tnl
       end
 
       if being == leader && !group.pending.empty?
         being.puts t('pending_members')
         group.pending.each do |pend|
           being.puts t('member'), pend,
-            pend.health.current,
-            pend.health.max,
-            pend.mana.current,
-            pend.mana.max,
-            pend.stamina.current,
-            pend.tnl
+                                  pend.health.current,
+                                  pend.health.max,
+                                  pend.mana.current,
+                                  pend.mana.max,
+                                  pend.stamina.current,
+                                  pend.tnl
         end
       end
     end
