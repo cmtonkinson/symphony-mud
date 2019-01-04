@@ -190,19 +190,19 @@ module Realm
 
     ###########################################################################
     def auto_health
-      this_heal = Util.bound health.max / 10, 1, health.current
+      this_heal = Util::Computation.bound health.max / 10, 1, health.current
       health.increase this_heal
     end
 
     ###########################################################################
     def auto_mana
-      this_heal = Util.bound mana.max / 10, 1, mana.current
+      this_heal = Util::Computation.bound mana.max / 10, 1, mana.current
       mana.increase this_heal
     end
 
     ###########################################################################
     def auto_stamina
-      this_heal = Util.bound level / 5, 1, MAX_STAMINA / 2.5
+      this_heal = Util::Computation.bound level / 5, 1, MAX_STAMINA / 2.5
       stamina.increase this_heal
     end
 

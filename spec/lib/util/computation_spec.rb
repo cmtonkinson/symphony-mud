@@ -2,9 +2,9 @@ require 'spec_helper'
 
 TOLERANCE = 0.001
 
-describe Util do
+describe Util::Computation do
 
-  subject { Util }
+  subject { Util::Computation }
 
   #############################################################################
   describe '#bound' do

@@ -11,7 +11,7 @@ module Mechanics
 
     ###########################################################################
     def current=(value)
-      @current = Util.bound value, 0, max
+      @current = Util::Computation.bound value, 0, max
     end
 
     ###########################################################################

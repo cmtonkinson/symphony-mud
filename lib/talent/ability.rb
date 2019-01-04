@@ -113,7 +113,7 @@ module Talent
     ###########################################################################
     # Conditionally improves on the Ability, based inversely on the difficulty.
     def randomly_improve(context = nil)
-      improve context if Util.percent_chance 90 / difficulty
+      improve context if Util::Computation.percent_chance 90 / difficulty
     end
 
     ###########################################################################
@@ -127,11 +127,11 @@ module Talent
       able_being.mana.decrease mana if mana > 0
 
       # There is a random chance any non-mastered ability will fail.
-      if Util.percent_chance(100 - mastery)
+      if Util::Computation.percent_chance(100 - mastery)
         able_being.puts I18n.t('talent.ability.confused'), name_s unless passive?
         # Randomly improve upon the ability. The more advanced you are, the
         # more instructive failure is.
-        randomly_improve false if Util.percent_chance(mastery)
+        randomly_improve false if Util::Computation.percent_chance(mastery)
         return false
       end
 
@@ -146,7 +146,7 @@ module Talent
 
       # Randomly improve upon the ability. The more novice you are, the more
       # instructive success is.
-      randomly_improve true if retval == true && Util.percent_chance(100 - mastery)
+      randomly_improve true if retval == true && Util::Computation.percent_chance(100 - mastery)
 
       retval
     end

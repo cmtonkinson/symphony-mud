@@ -152,10 +152,12 @@ module InputSequence
     end
 
     ###########################################################################
+    # rubocop:disable Naming/AccessorMethodName
     def set_passphrase_handler(input)
       @context.new_passphrase = input
       accept_new_passphrase
     end
+    # rubocop:enable Naming/AccessorMethodName
 
     ###########################################################################
     def confirm_passphrase_handler(input)

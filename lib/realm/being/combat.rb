@@ -1,7 +1,6 @@
 module Realm
   class Being
-    attr_reader :group
-    attr_accessor :pending_group
+    attr_accessor :group, :pending_group
 
     define_hook :before_strike_attack, halts_on_falsey: true
     define_hook :after_strike_attack
@@ -17,11 +16,6 @@ module Realm
       Combat::Group.new self
       @pending_group = nil
     }
-
-    ###########################################################################
-    def set_group(group)
-      @group = group
-    end
 
     ###########################################################################
     def battle

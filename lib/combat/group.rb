@@ -24,7 +24,7 @@ module Combat
 
       being.group.remove_member being if being.group
       @members.push being
-      being.set_group self
+      being.group = self
     end
 
     ###########################################################################
@@ -32,7 +32,7 @@ module Combat
       @members.delete being
       @opponents.clear if @members.empty?
 
-      being.set_group nil
+      being.group = nil
       Combat::Group.new being if replace
     end
 
