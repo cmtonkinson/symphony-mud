@@ -97,7 +97,7 @@ module Base
     ###########################################################################
     def begin_reboot
       begin
-        Symphony.logger.warn 'Server beginning reboot'
+        Symphony.logger.unknown 'Server beginning reboot'
         broadcast I18n.t('universe.reboot.begin')
         # Syntax check.
         Util::Linter.lint_project_source
@@ -110,7 +110,7 @@ module Base
         Process.exec env, cli, options
       rescue Exception => e
         @should_reboot = false
-        Symphony.logger.fatal 'Reboot failed'
+        Symphony.logger.unknown 'Reboot failed'
         e.message.split("\n").each { |error_line| Symphony.logger.debug error_line }
         broadcast I18n.t('universe.reboot.fail')
       end
@@ -150,7 +150,7 @@ module Base
       ENV.delete 'SYMPHONY_REBOOT'
       ENV.delete 'SYMPHONY_SERVER_FD'
       ENV.delete 'SYMPHONY_CLIENT_FDS'
-      Symphony.logger.warn 'Server recovered from reboot'
+      Symphony.logger.unknown 'Server recovered from reboot'
       broadcast I18n.t('universe.reboot.succeed')
 
       # Force everyone to "look" around.
