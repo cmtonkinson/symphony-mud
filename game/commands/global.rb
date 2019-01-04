@@ -258,8 +258,8 @@ module Command
 
       being.puts t('title'), zone
 
-      layout.reverse.each_with_index do |row, row_index|
-        row.each_with_index do |point, col_index|
+      layout.reverse.each_with_index do |row, _row_index|
+        row.each_with_index do |point, _col_index|
           buffer << case point
                     when Realm::Room
                       room == point ? '{C@{x' : 'x'

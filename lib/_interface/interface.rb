@@ -1,6 +1,6 @@
 module Interface
   def method(name)
-    define_method(name) do |*args|
+    define_method(name) do |*_args|
       raise "Interface method #{name} not implemented"
     end
   end

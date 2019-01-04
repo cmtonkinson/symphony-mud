@@ -9,7 +9,7 @@ module Util
       @array = Array.[](*args)
     end
 
-    def push(element)
+    def push(_element)
       raise NoMethodError.new 'Method not defined from ADT'
     end
 

@@ -34,8 +34,8 @@ module Realm
     def save
       Symphony.logger.info 'World#save beginning'
       s = Logistics::Scribe
-      @zones.each { |id, z| s.save z }
-      @avatars.each { |id, a| s.save a }
+      @zones.each { |_id, z| s.save z }
+      @avatars.each { |_id, a| s.save a }
       Symphony.logger.info 'World#save complete'
     end
 

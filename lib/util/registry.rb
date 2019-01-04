@@ -17,7 +17,7 @@ module Util
     ###########################################################################
     def self.unregister(objekt)
       hash[objekt.class].delete objekt.id
-      hash.delete_if { |klass, bucket| bucket.empty? }
+      hash.delete_if { |_klass, bucket| bucket.empty? }
     end
     singleton_class.send :alias_method, :-, :unregister
 
@@ -53,13 +53,13 @@ module Util
     # registry should be the last reference to anything marked for disposal,
     # so after this the Ruby GC can actually reap them.
     def self.cleanup
-      hash.each do |klass, bucket|
-        bucket.delete_if do |objekt_id, objekt|
+      hash.each do |_klass, bucket|
+        bucket.delete_if do |_objekt_id, objekt|
           Symphony.logger.trace "Disposing #{objekt.fqid_str}" if objekt.disposed?
           objekt.disposed?
         end
       end
-      hash.delete_if { |klass, bucket| bucket.empty? }
+      hash.delete_if { |_klass, bucket| bucket.empty? }
     end
   end
 end

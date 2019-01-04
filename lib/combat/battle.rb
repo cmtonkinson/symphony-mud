@@ -67,7 +67,7 @@ module Combat
     after_group_added ->(group) {}
 
     ###########################################################################
-    after_group_deleted ->(group) {
+    after_group_deleted ->(_group) {
       # If less than two groups, end the battle
       if @groups.size < 2
         # Remove the remaining Group (if there is one).

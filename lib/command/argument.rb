@@ -14,7 +14,7 @@ module Command
     },
     bool: {
       pattern: / t(?:rue)? | f(?:alse)? | y(?:es)? | n(?:o)? | 1 | 0 /ix,
-      cast_func: lambda { |b, regexp|
+      cast_func: lambda { |b, _regexp|
         return !/t(?:rue)|y(?:es)|1/.match(b).nil?
       },
       description: 'a true or false value',

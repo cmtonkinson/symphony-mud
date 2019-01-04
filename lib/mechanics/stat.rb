@@ -23,7 +23,7 @@ module Stat
   #     Util.logistic(19, 6, 4000)
   #     # =>
   #
-  def logistic_gain(level, base, target)
+  def logistic_gain(level, _base, _target)
     Util.logistic_curve level, limit, min, Realm::Being::HERO
   end
 end
