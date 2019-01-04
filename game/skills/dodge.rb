@@ -10,7 +10,7 @@ module Talent
 
     def _learn
       skill = self
-      able_being.before_strike_defense -> (strike) { skill.invoke strike unless strike.avoided }
+      able_being.before_strike_defense ->(strike) { skill.invoke strike unless strike.avoided }
     end
 
     def _invoke(strike)
@@ -20,6 +20,5 @@ module Talent
       strike.defender.indented_puts strike.level, "You dodge $being's $strike!", strike.attacker, strike
       strike.attacker.indented_puts strike.level, '$being dodges your $strike!', strike.defender, strike
     end
-
   end
 end

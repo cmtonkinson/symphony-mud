@@ -19,6 +19,7 @@ module Base
     def self.equal_time_compare(left, right)
       # Don't continue if the lengths are different.
       return false unless left.length == right.length
+
       # Convert the right hand side to a byte array.
       right_bytes = right.bytes.to_a
       # We need an integer for bookkeeping.
@@ -72,7 +73,7 @@ module Base
     def self.user_map
       # Cache the file contents.
       begin
-        @user_map ||=  YAML.load File.read file_path
+        @user_map ||= YAML.load File.read file_path
       rescue Errno::ENOENT
         @user_map = {}
       end
@@ -84,6 +85,7 @@ module Base
     def self.update_user_map!
       # Don't kill the file.
       raise ArgumentError.new 'user_map is nil' if user_map.nil?
+
       # Write the updated YAML.
       File.open(file_path, 'w') { |f| f.write YAML.dump(@user_map) }
       # Invalidate the cache.

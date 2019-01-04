@@ -1,5 +1,4 @@
 module Talent::ActiveAbility
-
   def type
     :active
   end
@@ -7,6 +6,4 @@ module Talent::ActiveAbility
   def type_s
     "active"
   end
-
 end
-

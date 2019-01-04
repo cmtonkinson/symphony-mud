@@ -61,6 +61,5 @@ module Util
       end
       hash.delete_if { |klass, bucket| bucket.empty? }
     end
-
   end
 end

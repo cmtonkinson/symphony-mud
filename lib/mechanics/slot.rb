@@ -12,7 +12,7 @@ module Mechanics
     ###########################################################################
     # Track the given occupant as inhabiting this slot. If new_container is
     # given, insert the old occupant (if there was one) into it. Either way,
-    # return the old occupant or nil. 
+    # return the old occupant or nil.
     #
     # Set occupant to nil to clear the slot (this preserves the behavior as
     # explained above for new_container).
@@ -31,7 +31,5 @@ module Mechanics
     def empty?
       occupant.nil?
     end
-
   end
 end
-

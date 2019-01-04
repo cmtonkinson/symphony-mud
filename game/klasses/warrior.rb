@@ -4,7 +4,7 @@ module Talent
       @name        = 'warrior'
       @health_rate = 4
       @mana_rate   = 0.3
- 
+
       ################################# level  trains  difficulty  stamina  mana  successRate
       # Offense
       add_ability SecondAttackSkill.new 25,    2,      3,          1,       0,    90
@@ -25,7 +25,6 @@ module Talent
       add_prerequisite BlockSkill,        ParrySkill
       add_prerequisite SecondAttackSkill, RiposteSkill
       add_prerequisite ParrySkill,        RiposteSkill
-
     end
   end
 end

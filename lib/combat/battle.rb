@@ -7,7 +7,7 @@ module Combat
     attr_reader :groups, :bouts, :job
 
     ###########################################################################
-    after_initialize -> { 
+    after_initialize -> {
       @groups = Array.new
       @bouts  = Array.new
       @job    = Mechanics::RecurringJob.new 0, self, 2, :new_bout
@@ -19,6 +19,7 @@ module Combat
     def add_group(group)
       raise ArugmentError.new "Cannot add a #{group.class.name} as a Battle group" unless group.is_a? Combat::Group
       return if @groups.include? group
+
       @groups.push group
       group.battle = self
       self.run_hook :after_group_added, group
@@ -54,7 +55,7 @@ module Combat
     ###########################################################################
     def cease
       Symphony.logger.debug 'Battle ceasing'
-      run_hook :enervate 
+      run_hook :enervate
     end
 
     ###########################################################################
@@ -63,11 +64,10 @@ module Combat
     }
 
     ###########################################################################
-    after_group_added -> (group) {
-    }
+    after_group_added ->(group) {}
 
     ###########################################################################
-    after_group_deleted -> (group) {
+    after_group_deleted ->(group) {
       # If less than two groups, end the battle
       if @groups.size < 2
         # Remove the remaining Group (if there is one).

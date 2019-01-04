@@ -14,7 +14,7 @@ module Mechanics
     # Some Jobs are scheduled and fired far too often to make the default
     # behavior of 'trace' level logging practically useful, so we explicitly
     # squelch them from even the most verbose logging output.
-    IGNORE_TRACE = -> (str) { str.match?(/Dead Job|auto_(health|mana|stamina)/) }
+    IGNORE_TRACE = ->(str) { str.match?(/Dead Job|auto_(health|mana|stamina)/) }
 
     ###########################################################################
     def initialize(wen, who, callable = nil, *args, &block)
@@ -54,7 +54,7 @@ module Mechanics
     ###########################################################################
     def resolve_time(val)
       case val
-      when Integer then val 
+      when Integer then val
       when Range then rand val
       else raise ArgumentError.new "Job#resolve_time - val unrecognized type #{val.class.name}"
       end
@@ -112,6 +112,7 @@ module Mechanics
     # this tradeoff is worth it.
     def kill
       return if dead?
+
       Symphony.logger.trace 'Killing %s' % self
       @who.jobs.delete self if @who.is_a? Realm::Objekt
       @who  = nil
@@ -177,7 +178,6 @@ module Mechanics
         ''
       end
     end
-
   end
 
   # RecurringJob provides a one-liner initialization for creating repeat Jobs.
@@ -188,4 +188,3 @@ module Mechanics
     end
   end
 end
-

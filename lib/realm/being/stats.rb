@@ -97,6 +97,7 @@ module Realm
       if @anatomy
         hash[:equipment] = Hash[@anatomy.slots.map { |slot|
           next if slot.empty?
+
           item = slot.set nil
           saved_eq[slot.name] = item
           [slot.name, item.hashify]
@@ -117,7 +118,7 @@ module Realm
 
       DEFENSE.each { |name| hash[name] = send(name).baseline }
       OFFENSE.each { |name| hash[name] = send(name).baseline }
-      
+
       PHYSICAL.each { |name| hash[name] = send name }
 
       # Restore the equipment back into position.
@@ -125,11 +126,11 @@ module Realm
         @anatomy.get_empty_slot(slot_name).set item
       end
 
-     { stats: hash }
+      { stats: hash }
     }
 
     ###########################################################################
-    on_dehashify -> hash {
+    on_dehashify ->hash {
       hash = hash[:stats]
 
       EXPERIENCE.each { |name| instance_variable_set "@#{name}", hash[name] }
@@ -334,7 +335,5 @@ module Realm
       puts I18n.t('being.speak.actor'), content
       room.puts I18n.t('being.speak.hear'), self, content, exclude: self
     end
-
   end
 end
-

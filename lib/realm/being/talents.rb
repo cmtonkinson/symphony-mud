@@ -1,6 +1,5 @@
 module Realm
   class Being
-
     attr_accessor :abilities
 
     define_hooks :before_ability_invocation, :after_ability_invocation
@@ -20,8 +19,9 @@ module Realm
     }
 
     ###########################################################################
-    on_dehashify -> (hash) {
+    on_dehashify ->(hash) {
       return unless hash.has_key? :abilities
+
       hash = hash[:abilities]
 
       hash.each do |name, mastery|
@@ -83,7 +83,5 @@ module Realm
           end
         end
     end
-
   end
 end
-

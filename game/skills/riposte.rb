@@ -35,6 +35,5 @@ module Talent
 
       Combat::Strike.new attacker, defender, current_bout, parent_strike, name
     end
-
   end
 end

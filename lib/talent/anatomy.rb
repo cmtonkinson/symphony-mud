@@ -18,7 +18,7 @@ module Talent
     def values
       slots.map(&:occupant).compact
     end
-    
+
     ###########################################################################
     def wear(item, container = nil)
       return I18n.t('anatomy.unwearable') unless item.wearable
@@ -36,7 +36,7 @@ module Talent
           return change_equipment primary_slot, item, container
         else
           return change_equipment secondary_slot, item, container
-        end  
+        end
       # All other items in all other scenarios follow a generic pattern.
       else
         empty_slot = get_empty_slot item.slot
@@ -53,6 +53,7 @@ module Talent
     def remove(item, container = nil)
       slot = slots.find { |s| s.occupant == item }
       return I18n.t('anatomy.unworn') if slot.nil?
+
       return change_equipment slot, nil, container
     end
 
@@ -96,6 +97,5 @@ module Talent
     def secondary_weapon
       secondary_slot.occupant
     end
-
   end
 end

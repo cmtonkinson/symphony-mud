@@ -21,6 +21,7 @@ module Combat
     ###########################################################################
     def add_member(being)
       raise ArgumentError.new "Cannot add a #{being.class.name} as a Group member" unless being.is_a? Realm::Being
+
       being.group.remove_member being if being.group
       @members.push being
       being.set_group self
@@ -38,6 +39,7 @@ module Combat
     ###########################################################################
     def add_opponent(group)
       raise ArgumentError.new "Cannot add a #{group.class.name} as a Group opponent" unless group.is_a? Group
+
       @opponents.push group
     end
 

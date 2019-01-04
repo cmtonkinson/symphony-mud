@@ -27,8 +27,8 @@ module Realm
     # Defining Objekt property defaults at the class-level like this makes
     # certain meta-operations easier, such as for testing.
     DEFAULTS = {
-      id:   -> { SecureRandom.uuid },
-      rid:  -> { nil },
+      id: -> { SecureRandom.uuid },
+      rid: -> { nil },
       name: -> { +'[name]' },
     }
 
@@ -119,4 +119,3 @@ module Realm
     end
   end
 end
-

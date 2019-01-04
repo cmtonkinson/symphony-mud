@@ -105,12 +105,11 @@ if /symphony/.match?($0)
     opts.banner = "Usage: #{BINARY_NAME} [options]"
 
     CONFIGURATION.each do |config|
-      short = '-' + config[ :short]
+      short = '-' + config[:short]
       long  = '--' + config[:long] + (config.key?(:placeholder) ? " #{config[:placeholder]}" : '')
       desc  = config[:description]
       func  = config[:callback]
       opts.on short, long, desc, func
     end
-
   end.parse!
 end

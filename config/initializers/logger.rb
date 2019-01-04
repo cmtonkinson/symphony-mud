@@ -2,11 +2,10 @@
 # level under DEBUG called TRACE.
 require 'logger'
 
-
 class Logger
   self.send :remove_const, 'SEV_LABEL'
   SEV_LABEL = {
-   -1 => 'TRACE',
+    -1 => 'TRACE',
     0 => 'DEBUG',
     1 => 'INFO',
     2 => 'WARN',

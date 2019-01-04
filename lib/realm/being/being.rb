@@ -34,13 +34,13 @@ module Realm
         gender: @gender,
         hand: @hand,
         items: @items.values.map(&:hashify),
-       }
+      }
 
       { being: hash }
     }
 
     ###########################################################################
-    on_dehashify -> hash {
+    on_dehashify ->hash {
       hash = hash[:being]
 
       if hash[:klass]
@@ -145,6 +145,7 @@ module Realm
       exit = @room.send direction
       return I18n.t('movement.no_exit') if exit.nil?
       return I18n.t('movement.closed') if exit.closed?
+
       true
     end
 
@@ -181,6 +182,5 @@ module Realm
       (@room.beings.values.reject { |b| b == self }) || []
     end
     alias_method :other_beings, :other_beings_in_room
-
   end
 end

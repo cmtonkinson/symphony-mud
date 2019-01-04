@@ -1,6 +1,5 @@
 module Scripting
   class Lua
-
     #############################################################################
     def initialize
       @state = nil
@@ -8,13 +7,12 @@ module Scripting
 
     #############################################################################
     def allocate
-      @state = Rufus::Lua::State.new 
+      @state = Rufus::Lua::State.new
     end
 
     #############################################################################
     def deallocate
       @state.close
-    end 
-
+    end
   end
 end

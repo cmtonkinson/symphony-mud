@@ -51,7 +51,7 @@ module Realm
 
     ###########################################################################
     # Verify room edit permissions prior to room change.
-    before_room_change -> (from, to) {
+    before_room_change ->(from, to) {
       if redit && from.zone != to.zone
         self.redit = false
         self.user.operators.pop

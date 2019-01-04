@@ -24,7 +24,7 @@ module Realm
     }
 
     ###########################################################################
-    on_dehashify -> hash {
+    on_dehashify ->hash {
       @klass     = hash[:klass]
       @objekt_id = hash[:objekt_id]
       @number    = hash[:number]
@@ -53,6 +53,7 @@ module Realm
       Symphony.logger.debug 'Placing %s' % fqid_str
       raise 'Placement Room reference is nil' if room.nil?
       raise 'Could not find Placement target' if target.nil?
+
       zone = room.zone
       container_name = case target
                        when Item then :items
@@ -65,9 +66,9 @@ module Realm
       # Find out how many clones of this Item are already on the ground in
       # this Zone.
       how_many = zone.rooms.values
-        .map { |r| r.send(container_name).values }
-        .flatten
-        .count { |item| item.cloned_from == target.id }
+                     .map { |r| r.send(container_name).values }
+                     .flatten
+                     .count { |item| item.cloned_from == target.id }
 
       # We already have enough; bail.
       return if how_many >= max

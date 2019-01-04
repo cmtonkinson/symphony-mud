@@ -27,12 +27,12 @@ module Command
     },
     literal: {
       pattern: / \S+ /ix,
-      description: -> arg { "the literal text \"#{arg.name}\"" },
+      description: ->arg { "the literal text \"#{arg.name}\"" },
       examples: ['in', 'to', 'at'],
     },
     set: {
       pattern: nil,
-      description: -> arg { 'any one of: ' + arg.value.join(', ') },
+      description: ->arg { 'any one of: ' + arg.value.join(', ') },
       examples: ['silver,gold', 'to,from,on,at'],
     },
     string: {
@@ -66,7 +66,6 @@ module Command
       description: 'any other text on the line (e.g. the remainder of the input)',
     },
   }
-
 
   # This shitty indirection is just so that we can automate assertions that no one is creating
   # Command formats with variable names (which become context methods) that would overlap default
@@ -126,6 +125,7 @@ module Command
           if !elt.is_a? String
             raise ArgumentError.new I18n.t 'command.argument.bad_array_value', type: elt.class
           end
+
           @value << elt
         end
       else

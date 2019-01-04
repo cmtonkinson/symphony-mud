@@ -3,7 +3,6 @@ module Command
     ###########################################################################
     # Add a new Argument. Raise if something goes wrong.
     def push(arg)
-
       # Don't accept custom data structures.
       unless arg.is_a? Argument
         raise ArgumentError.new I18n.t 'command.usage.push_non_argument'

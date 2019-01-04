@@ -8,22 +8,22 @@ module Realm
 
     @pronouns = {
       objective: {
-        MALE:   I18n.t('linguist.pronoun.objective.male'),
+        MALE: I18n.t('linguist.pronoun.objective.male'),
         FEMALE: I18n.t('linguist.pronoun.objective.female'),
         NEUTER: I18n.t('linguist.pronoun.objective.neuter'),
       },
       subjective: {
-        MALE:   I18n.t('linguist.pronoun.subjective.male'),
+        MALE: I18n.t('linguist.pronoun.subjective.male'),
         FEMALE: I18n.t('linguist.pronoun.subjective.female'),
         NEUTER: I18n.t('linguist.pronoun.subjective.neuter'),
       },
       possessive: {
-        MALE:   I18n.t('linguist.pronoun.possessive.male'),
+        MALE: I18n.t('linguist.pronoun.possessive.male'),
         FEMALE: I18n.t('linguist.pronoun.possessive.female'),
         NEUTER: I18n.t('linguist.pronoun.possessive.neuter'),
       },
       reflexive: {
-        MALE:   I18n.t('linguist.pronoun.reflexive.male'),
+        MALE: I18n.t('linguist.pronoun.reflexive.male'),
         FEMALE: I18n.t('linguist.pronoun.reflexive.female'),
         NEUTER: I18n.t('linguist.pronoun.reflexive.neuter'),
       },

@@ -1,15 +1,13 @@
 module Realm
   class Item < Objekt
-
     TYPES = %i(armor clothing container food furniture jewelry key other weapon)
 
     ATTRS = %i(level type wearable slot
-      max_items load_factor
-      health mana
-      max_occupants
-      opens_type opens_rid
-      weapon_type damage_type hitroll damroll
-    )
+               max_items load_factor
+               health mana
+               max_occupants
+               opens_type opens_rid
+               weapon_type damage_type hitroll damroll)
 
     ATTRS.each { |name| attr_accessor name }
 
@@ -47,13 +45,13 @@ module Realm
     }
 
     ###########################################################################
-    on_dehashify -> (hash) {
+    on_dehashify ->(hash) {
       ATTRS.each { |name| instance_variable_set "@#{name}", hash[name] }
       @modifiers = hash[:modifiers]
     }
 
     ###########################################################################
-    on_deep_copy -> (original) {
+    on_deep_copy ->(original) {
       ATTRS.each { |name| instance_variable_set "@#{name}", original.send(name) }
       @modifiers = Marshal.load(Marshal.dump(original.modifiers))
     }

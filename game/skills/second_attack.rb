@@ -10,13 +10,13 @@ module Talent
 
     def _learn
       skill = self
-      able_being.after_strike_attack -> (strike) { skill.invoke strike if strike.created_by == :bout }
+      able_being.after_strike_attack ->(strike) { skill.invoke strike if strike.created_by == :bout }
     end
 
     def _invoke(strike)
       return unless rand(1..100) < successRate
+
       Combat::Strike.new strike.attacker, strike.defender, strike.bout, strike, name
     end
-
   end
 end

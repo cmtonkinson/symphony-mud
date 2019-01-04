@@ -15,7 +15,7 @@ module Realm
     }
 
     ###########################################################################
-    on_dehashify -> hash {
+    on_dehashify ->hash {
       @num_logins = hash[:num_logins]
     }
 
@@ -35,4 +35,3 @@ module Realm
     }
   end
 end
-

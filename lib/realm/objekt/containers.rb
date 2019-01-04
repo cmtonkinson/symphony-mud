@@ -46,6 +46,7 @@ module Realm
     ###########################################################################
     def container_for(obj)
       raise ArgumentError.new "#{obj.class.name} is not a subclass of Objekt" unless obj.is_a? Objekt
+
       container_name = nil
 
       obj.class.ancestors.each do |klass|

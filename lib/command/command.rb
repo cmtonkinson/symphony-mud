@@ -7,7 +7,7 @@ module Command
     end
 
     ###########################################################################
-    def <=> (other)
+    def <=>(other)
       @name <=> other.get_name
     end
 
@@ -42,6 +42,7 @@ module Command
       # Pass control to the Command exec Proc.
       begin
         raise '@exec undefined' if @exec.nil?
+
         @exec.call
       rescue Exception => e
         Symphony.logger.error "Command '#{@name}' with #{input_string.inspect} by '#{being.fqid_str}' raised -- #{e}"
@@ -73,6 +74,7 @@ module Command
           return super
         rescue NameError => e
           raise e if e.name == :execute
+
           return nil
         end
       end
@@ -80,11 +82,17 @@ module Command
 
     ###########################################################################
     def get_name;       @name;       end
+
     def get_shortcut;   @shortcut;   end
+
     def get_brief;      @brief;      end
+
     def get_level;      @level;      end
+
     def get_group;      @group;      end
+
     def get_is_ability; @is_ability; end
+
     def get_exec;       @exec;       end
 
     private
@@ -130,6 +138,7 @@ module Command
       if argument_list.empty? && @usages.any?(&:empty?)
         raise ArgumentError.new I18n.t 'command.only_one_empty'
       end
+
       # Add each Argument to the Usage.
       argument_list.each { |defn| args.push Argument.new defn }
       # Add the Usage to the approved formats for the command.

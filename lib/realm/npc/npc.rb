@@ -1,6 +1,5 @@
 module Realm
   class NPC < Being
-
     # NPCs (during building) have an obvious need for full stat manipulation
     # even though Being says that's 'discouraged'.
     EXPERIENCE.each { |name| attr_writer name }
@@ -27,7 +26,7 @@ module Realm
     }
 
     ###########################################################################
-    on_dehashify -> (hash) {
+    on_dehashify ->(hash) {
       npc = hash[:npc]
       SETTINGS.each { |s| instance_variable_set "@#{s}", npc[s] }
     }
@@ -69,6 +68,5 @@ module Realm
     def auto_attack
       speak 'attacking!'
     end
-
   end
 end

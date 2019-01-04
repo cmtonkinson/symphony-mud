@@ -22,6 +22,7 @@ module Util
     ###########################################################################
     def attribute_value(obj)
       raise ArgumentError.new "#{obj} does not respond to :#{@attribute}" unless obj.respond_to? @attribute
+
       obj.send @attribute
     end
 

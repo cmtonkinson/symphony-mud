@@ -1,6 +1,5 @@
 module Talent
   module Enabler
-
     ###########################################################################
     def name
       @name ||= ''
@@ -35,4 +34,3 @@ module Talent
     end
   end
 end
-

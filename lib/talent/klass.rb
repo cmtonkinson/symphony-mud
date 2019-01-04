@@ -11,6 +11,5 @@ module Talent
       @health_rate = 0
       @mana_rate   = 0
     end
-
   end
 end

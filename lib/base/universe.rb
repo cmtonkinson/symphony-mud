@@ -22,7 +22,7 @@ module Base
         handle_output
         handle_disconnections
         begin_reboot if should_reboot
-        Util::Registry.cleanup 
+        Util::Registry.cleanup
         sleep Base.configuration.sleep_interval
       end
       Symphony.logger.unknown 'Server shutting down.'
@@ -41,6 +41,7 @@ module Base
     ###########################################################################
     def welcome(client)
       return if client.nil?
+
       user = User.new
       client.puts $templates.welcome_banner
       user.bind_client client
@@ -122,14 +123,14 @@ module Base
       server_fd  = server.to_i
       client_fds = clients.map { |c| c.get_fd }
       env = {
-        'SYMPHONY_REBOOT'     => 'true',
-        'SYMPHONY_SERVER_FD'  => server_fd.to_s,
+        'SYMPHONY_REBOOT' => 'true',
+        'SYMPHONY_SERVER_FD' => server_fd.to_s,
         'SYMPHONY_CLIENT_FDS' => Marshal.dump(client_fds),
       }
       options = {
-        :in           => :in,
-        :out          => :out,
-        :err          => :err,
+        :in => :in,
+        :out => :out,
+        :err => :err,
         :close_others => false,
       }
       # Add the server socket to the options Hash.

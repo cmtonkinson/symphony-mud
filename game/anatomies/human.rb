@@ -32,7 +32,6 @@ module Talent
       add_slot :ankle, 'left ankle'
       add_slot :ankle, 'right ankle'
       add_slot :feet, 'feet'
-
     end
   end
 end

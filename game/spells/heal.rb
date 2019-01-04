@@ -1,6 +1,5 @@
 module Talent
-  class HealSpell < Spell 
-
+  class HealSpell < Spell
     def initialize(*args)
       super *args
       @category       = :spell
@@ -21,6 +20,5 @@ module Talent
 
       target.health.increase health
     end
-
   end
 end

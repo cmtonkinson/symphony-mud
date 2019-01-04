@@ -56,7 +56,7 @@ module Realm
     }
 
     ###########################################################################
-    on_dehashify -> hash {
+    on_dehashify ->hash {
       @open = @default_open = hash[:default_open]
       @lock = @default_lock = hash[:default_lock]
 

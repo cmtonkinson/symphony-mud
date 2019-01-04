@@ -101,10 +101,10 @@ module Talent
       if learned? && !mastered?
         @mastery += 1
         which = case context
-        when nil then 'improve'
-        when true then 'improve_success'
-        when false then 'improve_failure'
-        else Util.argerr "context must be nil, true, or false (#{context.class.name} given)"
+                when nil then 'improve'
+                when true then 'improve_success'
+                when false then 'improve_failure'
+                else Util.argerr "context must be nil, true, or false (#{context.class.name} given)"
         end
         able_being.puts I18n.t("talent.ability.#{which}"), name_s
       end
@@ -147,7 +147,7 @@ module Talent
       # Randomly improve upon the ability. The more novice you are, the more
       # instructive success is.
       randomly_improve true if retval == true && Util.percent_chance(100 - mastery)
- 
+
       retval
     end
 
@@ -157,4 +157,3 @@ module Talent
     end
   end
 end
-

@@ -1,4 +1,5 @@
 module Util
+
   #############################################################################
   # Ensure a value is no less than min and no greater than max.
   #
@@ -21,7 +22,7 @@ module Util
   def self.logistic_curve(x, limit, min, half_max_x)
     a = 1.0 * (limit - min) / min
     k = 1.0 * Math.log(a) / half_max_x
-    
+
     limit / (1 + a * Math::E**(-k * x))
   end
 
@@ -47,9 +48,7 @@ module Util
     raise ArgumentError.new 'ArgumentError: %s in %s at %s:%d' % [message,
                                                                   trace.base_label,
                                                                   trace.path.sub(Symphony.root.to_s + '/', ''),
-                                                                  trace.lineno
-    ]
-
+                                                                  trace.lineno]
   end
 
 end

@@ -61,7 +61,7 @@ module Mechanics
 
     ###########################################################################
     # Execute JOBS_PER_BATCH Jobs' worth of actual useful work.
-    def fire_batch 
+    def fire_batch
       ctr = 0
       while ctr < @jobs_per_batch
         # Try to fire the next Job.
@@ -125,6 +125,7 @@ module Mechanics
         # necessary. Reduce the batch size by 10%.
         new_rate = (@jobs_per_batch * 0.9).ceil
         return if new_rate < MIN_JOBS_PER_BATCH
+
         Symphony.logger.debug "World#rebalance_job_parameters - \
           decreasing batch size from #{@jobs_per_batch} to #{new_rate}"
         @jobs_per_batch = new_rate

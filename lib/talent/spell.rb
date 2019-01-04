@@ -1,6 +1,5 @@
 module Talent
   class Spell < Ability
-
     # Valid spell categories are...
     # :charm
     # :enchantment
@@ -11,7 +10,7 @@ module Talent
     # :conjuring
     # :transfiguration
     attr_reader :spell_category
-    
+
     # Valid default targets are...
     # :self
     # :enemy

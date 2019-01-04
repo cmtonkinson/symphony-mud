@@ -19,6 +19,5 @@ module Network
     def ip_port_s
       "#{Network.configuration.listen_ip}:#{Network.configuration.listen_port}"
     end
-
   end
 end

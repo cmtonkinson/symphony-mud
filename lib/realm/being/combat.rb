@@ -13,7 +13,7 @@ module Realm
 
     ###########################################################################
     after_initialize -> {
-      @dead  = false
+      @dead = false
       Combat::Group.new self
       @pending_group = nil
     }
@@ -31,10 +31,11 @@ module Realm
     ###########################################################################
     def acquire_target
       return nil unless group.all_opponent_members
+
       group.all_opponent_members
-        .reject { |b| b.dead? }
-        .reject { |b| b.room != room }
-        .first
+           .reject { |b| b.dead? }
+           .reject { |b| b.room != room }
+           .first
     end
 
     ###########################################################################
@@ -64,27 +65,25 @@ module Realm
     end
 
     ###########################################################################
-    before_strike_attack -> (strike) {
-    }
+    before_strike_attack ->(strike) {}
 
     ###########################################################################
-    after_strike_attack -> (strike) {
+    after_strike_attack ->(strike) {
       # TODO: Leaving this here as a reminder of how to implement e.g. Second Strike
-      #return if strike.parent
-      #Combat::Strike.new strike.attacker, strike.defender, strike.bout, strike
+      # return if strike.parent
+      # Combat::Strike.new strike.attacker, strike.defender, strike.bout, strike
     }
 
     ###########################################################################
-    before_strike_defense -> (strike) {
-    }
+    before_strike_defense ->(strike) {}
 
     ###########################################################################
-    after_strike_defense -> (strike) {
-    }
+    after_strike_defense ->(strike) {}
 
     ###########################################################################
     before_death -> {
       return false if god?
+
       return true
     }
 

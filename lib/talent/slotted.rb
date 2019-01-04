@@ -1,6 +1,5 @@
 module Talent
   module Slotted
-
     ###########################################################################
     def slots
       @slots ||= Array.new
@@ -32,6 +31,5 @@ module Talent
     def valid_slot_type?(type)
       slots.any? { |s| s.type == type.to_sym }
     end
-
   end
 end

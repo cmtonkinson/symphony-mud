@@ -26,6 +26,5 @@ module Talent
         Combat::Strike.new able_being, target, nil, nil, name
       end
     end
-
   end
 end

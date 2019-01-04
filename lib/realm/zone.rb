@@ -27,7 +27,7 @@ module Realm
     }
 
     ###########################################################################
-    on_dehashify -> hash {
+    on_dehashify ->hash {
       hash[:rooms].each { |hash| @rooms.insert Realm::Room.dehashify(hash) }
 
       hash[:exits].each do |hash|
@@ -40,6 +40,7 @@ module Realm
           # Most links will be nil.
           room = exit.send dir
           next if room.nil?
+
           # Point the Room to this Exit (the link directions are opposing).
           room.send "#{Realm::Exit::DIRECTIONS[dir][:opposite]}=", exit
         end
@@ -85,6 +86,7 @@ module Realm
           exit_x = adjusted_x
           exit_y = adjusted_y
           next if room.send(direction).nil?
+
           case direction
           when :north then exit_y += 1
           when :east  then exit_x += 1

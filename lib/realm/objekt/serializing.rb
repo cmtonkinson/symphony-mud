@@ -36,9 +36,9 @@ module Realm
       o_hash = hash[:objekt]
       # Instantiate an Object of the appropriate class.
       objekt = Object.const_get(o_hash[:class]).new(o_hash[:id], {
-        rid: o_hash[:rid],
-        name: o_hash[:name],
-      })
+                                                      rid: o_hash[:rid],
+                                                      name: o_hash[:name],
+                                                    })
       # Run dehashification hooks to complete the loading.
       objekt.run_hook :on_dehashify, hash
       # Return the completed Objekt.

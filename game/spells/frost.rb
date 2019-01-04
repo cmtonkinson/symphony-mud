@@ -1,6 +1,5 @@
 module Talent
-  class FrostSpell < Spell 
-
+  class FrostSpell < Spell
     def initialize(*args)
       super *args
       @category       = :spell
@@ -28,6 +27,5 @@ module Talent
 
       target.take_damage dam, able_being
     end
-
   end
 end

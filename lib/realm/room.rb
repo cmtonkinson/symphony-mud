@@ -31,7 +31,7 @@ module Realm
     }
 
     ###########################################################################
-    on_dehashify -> hash {
+    on_dehashify ->hash {
       @zone   = $world.find hash[:zone]
       @coords = Vector[*hash[:coords].split(',').map(&:to_i)]
       if hash.key? :placements
@@ -86,6 +86,7 @@ module Realm
     def next_placement_rid
       rids = placements.values.map &:rid
       return 1 if rids.empty?
+
       rids.max + 1
     end
 
@@ -102,6 +103,5 @@ module Realm
     def reset
       @placements.values.each &:place
     end
-
   end
 end

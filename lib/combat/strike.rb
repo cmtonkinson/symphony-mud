@@ -23,6 +23,7 @@ module Combat
 
       # Execute
       return if defender.dead?
+
       before
       perform unless avoided
       after

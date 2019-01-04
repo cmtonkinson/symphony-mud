@@ -4,8 +4,8 @@ Symphony.logger.formatter = proc do |severity, datetime, progname, msg|
   colors = {
     'TRACE' => '{w',
     'DEBUG' => '{x',
-    'INFO'  => '{x',
-    'WARN'  => '{y',
+    'INFO' => '{x',
+    'WARN' => '{y',
     'ERROR' => '{r',
     'FATAL' => '{R',
   }
