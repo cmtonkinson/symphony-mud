@@ -368,7 +368,7 @@ define :rooms do
     being.puts t 'err_nowhere' and next if zone.nil?
 
     being.puts t('title'), zone
-    zone.rooms.each do |id,room|
+    zone.rooms.each do |id, room|
       being.puts t('line'), room, room
     end
   end

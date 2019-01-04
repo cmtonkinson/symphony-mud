@@ -32,7 +32,7 @@ module Base
     PATTERN       = /(?<!%)\{[#{VALID_CODES.join}]/
 
     def self.escape_map
-      @escape_map ||= Hash[COLORS.map do |k,v|
+      @escape_map ||= Hash[COLORS.map do |k, v|
         ["{#{v[:code]}", v[:escape]]
       end]
     end

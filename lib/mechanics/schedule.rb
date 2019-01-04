@@ -9,7 +9,7 @@ module Mechanics
 
     ###########################################################################
     def initialize
-      @docket             = PQueue.new { |a,b| a.wen < b.wen }
+      @docket             = PQueue.new { |a, b| a.wen < b.wen }
       @recurring          = {}
       @execution_times    = []
       @jobs_per_batch     = MIN_JOBS_PER_BATCH

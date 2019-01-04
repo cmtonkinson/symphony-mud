@@ -23,7 +23,7 @@ define :colors do
   usage
   exec do
     being.puts t('title')
-    Base::Terminal::COLORS.each do |name,info|
+    Base::Terminal::COLORS.each do |name, info|
       being.puts "  {{#{info[:code]} = {#{info[:code]}#{name}{x"
     end
     being.puts t('reset')
@@ -269,8 +269,8 @@ define :map do
 
     being.puts t('title'), zone
 
-    layout.reverse.each_with_index do |row,row_index|
-      row.each_with_index do |point,col_index|
+    layout.reverse.each_with_index do |row, row_index|
+      row.each_with_index do |point, col_index|
         buffer << case point
         when Realm::Room
           room == point ? '{C@{x' : 'x'

@@ -64,7 +64,7 @@ module Realm
 
       # Allow setting custom attributes on the Objekt at initialization time by
       # passing a Hash of attributes and values.
-      props.each { |key,val| instance_variable_set "@#{key}", val }
+      props.each { |key, val| instance_variable_set "@#{key}", val }
 
       # Every Objekt created stores itself in the Registry singleton:
       # 1. For various bookkeeping tasks

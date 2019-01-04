@@ -2,7 +2,7 @@ module Display
   class Format
     ###########################################################################
     def self.quantity(value, hash)
-      found = hash.find { |x,y| value >= x }
+      found = hash.find { |x, y| value >= x }
       found ? found[1] : "[{RERROR{x - value (#{value}) outside of range for Display::Format::quantity]"
     end
 
