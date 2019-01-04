@@ -155,8 +155,8 @@ module Realm
       # See comments in on_hashify.
       # TODO: Deduplicate this logic with the [logically] equivalent loop at the end of on_hashify.
       if @anatomy && hash.has_key?(:equipment)
-        hash[:equipment].each do |slot_name, hash|
-          @anatomy.change_equipment @anatomy.get_empty_slot(slot_name), Realm::Item.dehashify(hash), nil
+        hash[:equipment].each do |slot_name, h|
+          @anatomy.change_equipment @anatomy.get_empty_slot(slot_name), Realm::Item.dehashify(h), nil
         end
       end
     }
@@ -175,7 +175,7 @@ module Realm
 
     ###########################################################################
     (LEVELS - %w[NEWBIE]).each do |lvl|
-      define_method :"#{lvl.downcase}?", Proc.new { @level >= Realm::Being.const_get(lvl) }
+      define_method :"#{lvl.downcase}?", (Proc.new { @level >= Realm::Being.const_get(lvl) })
     end
 
     ###########################################################################

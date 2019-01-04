@@ -61,7 +61,7 @@ module Realm
       @gender = hash[:gender]
       @hand = hash[:hand]
 
-      hash[:items].each { |hash| insert Realm::Item.dehashify(hash) }
+      hash[:items].each { |h| insert Realm::Item.dehashify(h) }
     }
 
     ###########################################################################

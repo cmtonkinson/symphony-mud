@@ -40,6 +40,7 @@ module Base
 
     ###########################################################################
     def handle(input)
+      handled = false
       # If the user just hits Enter (with or without whitespace), send them
       # a new prompt. This is useful if they're just waiting on their stats
       # to heal.
@@ -49,7 +50,13 @@ module Base
       end
 
       # Enumerate operators (in order) to find one able to handle the input.
-      operators.each { |op| return if op.handle(input) == true }
+      operators.each do |op|
+        if op.handle(input) == true
+          handled = true
+          break
+        end
+      end
+      return if handled
 
       # Nope!
       puts I18n.t 'command.operator.err_not_found'

@@ -62,8 +62,6 @@ module Base
       end
     end
 
-    private
-
     ###########################################################################
     def self.file_path
       Symphony.data.join 'accounts.yml'

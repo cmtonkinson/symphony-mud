@@ -283,7 +283,9 @@ module Command
     level Realm::Being::CREATOR
     usage
     exec do
+      # rubocop:disable Lint/Debugger
       binding.pry
+      # rubocop:enable Lint/Debugger
     end
   end
 

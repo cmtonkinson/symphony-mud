@@ -45,10 +45,10 @@ module Realm
 
     ###########################################################################
     Realm::Exit::DIRECTIONS.keys.each do |exit|
-      define_method "#{exit}_room", Proc.new {
+      define_method "#{exit}_room", (Proc.new {
         # Yo dawg, I heard you like to send exit to your send exit.
         send(exit).send(exit)
-      }
+      })
     end
 
     ###########################################################################

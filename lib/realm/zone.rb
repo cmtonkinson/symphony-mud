@@ -28,10 +28,10 @@ module Realm
 
     ###########################################################################
     on_dehashify ->hash {
-      hash[:rooms].each { |hash| @rooms.insert Realm::Room.dehashify(hash) }
+      hash[:rooms].each { |h| @rooms.insert Realm::Room.dehashify(h) }
 
-      hash[:exits].each do |hash|
-        exit = Realm::Exit.dehashify hash
+      hash[:exits].each do |h|
+        exit = Realm::Exit.dehashify h
 
         # Add the Exit to the Zone's collection.
         @exits.insert exit
@@ -46,8 +46,8 @@ module Realm
         end
       end
 
-      hash[:items].each { |hash| @items.insert Realm::Item.dehashify(hash) }
-      hash[:npcs].each { |hash| @npcs.insert Realm::NPC.dehashify(hash) }
+      hash[:items].each { |h| @items.insert Realm::Item.dehashify(h) }
+      hash[:npcs].each { |h| @npcs.insert Realm::NPC.dehashify(h) }
     }
 
     ###########################################################################

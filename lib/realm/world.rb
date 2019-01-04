@@ -58,6 +58,7 @@ module Realm
 
         room_ary.find { |r| r.rid == rid_or_uuid }
       # It's a UUID
+      # TODO centarlize the UUID regexp someplace - maybe under Util?
       elsif /\h{8}-?\h{4}-?\h{4}-?\h{4}-?\h{12}/i.match?(rid_or_uuid)
         (room = find rid_or_uuid) ? room : find(THE_VOID_ID)
       else
@@ -69,8 +70,8 @@ module Realm
     def find_zone(rid_or_uuid = ZONE_ORIGIN_ID)
       if rid_or_uuid.is_a? Numeric
         @zones.values.find { |z| z.rid == rid_or_uuid }
-      else rid_or_uuid =~ /\h{8}-?\h{4}-?\h{4}-?\h{4}-?\h{12}/i
-           (zone = find rid_or_uuid) ? zone : find(ZONE_ORIGIN_ID)
+      elsif rid_or_uuid =~ /\h{8}-?\h{4}-?\h{4}-?\h{4}-?\h{12}/i
+        (zone = find rid_or_uuid) ? zone : find(ZONE_ORIGIN_ID)
       end
     end
 

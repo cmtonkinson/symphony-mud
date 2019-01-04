@@ -109,7 +109,7 @@ module Base
         cli = Symphony.binary.to_s + $command_line_args
         [env, cli, options].each { |x| Symphony.logger.warn '  ' + x.inspect }
         Process.exec env, cli, options
-      rescue Exception => e
+      rescue StandardError => e
         @should_reboot = false
         Symphony.logger.unknown 'Reboot failed'
         e.message.split("\n").each { |error_line| Symphony.logger.debug error_line }
@@ -190,8 +190,8 @@ module Base
         input = gets.chomp!
         begin
           result = context.eval input
-        rescue Exception => e
-          puts "Exception: #{e}"
+        rescue StandardError => e
+          puts "StandardError: #{e}"
         end
         puts "=> #{result}"
       end
