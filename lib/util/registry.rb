@@ -24,7 +24,7 @@ module Util
     ###########################################################################
     def self.lookup(objekt_id)
       objekt = nil
-      if bucket = hash.values.find { |bucket| bucket.key? objekt_id }
+      if (bucket = hash.values.find { |bucket| bucket.key? objekt_id })
         objekt = bucket[objekt_id]
         if objekt._disposal_requested
           Symphony.logger.error "Lookup on disposed Objekt #{objekt.class.name} #{objekt.id}"

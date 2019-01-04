@@ -132,7 +132,7 @@ module InputSequence
     ###########################################################################
     def get_passphrase_handler(input)
       @context.passphrase = input
-      if @context.avatar_id = ::Base::Account.authenticate(@context.name, @context.passphrase)
+      if (@context.avatar_id = ::Base::Account.authenticate(@context.name, @context.passphrase))
         @context.account_type = :existing
         complete
       else
