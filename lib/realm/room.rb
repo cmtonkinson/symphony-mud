@@ -84,7 +84,7 @@ module Realm
 
     ###########################################################################
     def next_placement_rid
-      rids = placements.values.map &:rid
+      rids = placements.values.map(&:rid)
       return 1 if rids.empty?
 
       rids.max + 1
@@ -101,7 +101,7 @@ module Realm
 
     ###########################################################################
     def reset
-      @placements.values.each &:place
+      @placements.values.each(&:place)
     end
   end
 end

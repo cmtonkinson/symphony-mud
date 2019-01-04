@@ -13,7 +13,7 @@ module Realm
     ###########################################################################
     before_disposal -> {
       # Mark each Job registered to this Objekt as killed.
-      @jobs.each &:kill
+      @jobs.each(&:kill)
       @jobs.clear
     }
   end

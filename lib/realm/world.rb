@@ -119,8 +119,8 @@ module Realm
     def next_zone_rid
       return 1 if @zones.empty?
 
-      zone_rids = @zones.values.map &:rid
-      return 1 if zone_rids.all? &:nil?
+      zone_rids = @zones.values.map(&:rid)
+      return 1 if zone_rids.all?(&:nil?)
 
       zone_rids.max + 1
     end

@@ -93,7 +93,7 @@ module Command
 
         case definition
         when Hash
-          study_hash *definition.first
+          study_hash(*definition.first)
         when Symbol
           if definition == :rest
             @type = :rest

@@ -121,7 +121,7 @@ module Realm
     ###########################################################################
     def reset
       Symphony.logger.debug 'Zone reset: %s' % fqid_str
-      @rooms.values.each &:reset
+      @rooms.values.each(&:reset)
     end
   end
 end

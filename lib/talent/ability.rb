@@ -141,7 +141,7 @@ module Talent
 
       # Do the deed.
       able_being.run_hook :before_ability_invocation, name
-      retval = _invoke *args
+      retval = _invoke(*args)
       able_being.run_hook :after_ability_invocation, name, retval
 
       # Randomly improve upon the ability. The more novice you are, the more

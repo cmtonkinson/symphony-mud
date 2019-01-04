@@ -18,7 +18,7 @@ module Talent
 
     ###########################################################################
     def initialize(*args)
-      super *args
+      super(*args)
 
       @spell_category = nil
       @default_target = nil

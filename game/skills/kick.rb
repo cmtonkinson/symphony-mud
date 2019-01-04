@@ -3,7 +3,7 @@ module Talent
     include ActiveAbility
 
     def initialize(*args)
-      super *args
+      super(*args)
       @category = :skill
       @name     = :kick
     end

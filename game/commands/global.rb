@@ -39,7 +39,7 @@ module Command
     exec do
       being.user.operators.each do |operator|
         command_set       = operator.command_set
-        commands_by_level = command_set.group_by &:get_level
+        commands_by_level = command_set.group_by(&:get_level)
 
         being.puts t('actor'), operator.set_name
         Realm::Being::LEVELS.reverse_each do |level_name|
@@ -294,7 +294,7 @@ module Command
       being.puts t('err_not_found') and next if targets.empty?
       targets.each do |item|
         message = being.anatomy.remove item, being
-        being.puts *message
+        being.puts(*message)
       end
     end
   end
@@ -388,7 +388,7 @@ module Command
 
       targets.each do |item|
         message = being.anatomy.wear item, being
-        being.puts *message
+        being.puts(*message)
       end
     end
   end

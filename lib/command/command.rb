@@ -23,7 +23,7 @@ module Command
       @exec       = nil
       @usages     = [] # A collection of Usages
       @context    = nil
-      instance_eval &block if block_given?
+      instance_eval(&block) if block_given?
     end
 
     ###########################################################################
@@ -154,7 +154,7 @@ module Command
     class_name = "Command_#{group_name}_#{cmd_name}"
     class_definition = Class.new(Command) do
       define_method :initialize do
-        method(:setup).call &init_block
+        method(:setup).call(&init_block)
         method(:name).call cmd_name.to_s
         method(:group).call group_name.to_s
         method(:brief).call I18n.t("#{get_group}.#{cmd_name}._brief")

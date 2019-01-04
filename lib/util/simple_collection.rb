@@ -30,7 +30,7 @@ module Util
     end
 
     def each(&block)
-      @array.each &block
+      @array.each(&block)
     end
   end
 

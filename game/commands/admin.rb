@@ -328,7 +328,7 @@ module Command
     usage 'all'
     exec do
       if all == 'all'
-        $world.zones.values.each &:reset
+        $world.zones.values.each(&:reset)
         being.puts t('all')
       else
         room.zone.reset

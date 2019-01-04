@@ -1,7 +1,7 @@
 module Talent
   class FrostSpell < Spell
     def initialize(*args)
-      super *args
+      super(*args)
       @category       = :spell
       @name           = :frost
       @spell_category = :harm
