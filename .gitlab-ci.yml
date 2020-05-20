@@ -1,4 +1,6 @@
 image: "ruby:2.5"
+tags:
+  - docker
 
 stages:
   - test
