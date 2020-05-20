@@ -33,6 +33,7 @@ class App
   attr_reader :env, :root, :accounts, :binary, :configuration
   attr_accessor :logger
 
+  #############################################################################
   def initialize
     @env           = ENV['SYMPHONY_ENV'].to_sym
     @root          = Pathname.new File.expand_path '../..', __FILE__
@@ -47,4 +48,19 @@ class App
       end
     end
   end
+
+  #############################################################################
+  # This method primarily exists to support the hack at the bottom of the
+  # config/configuration.rb script, but is structured in a way that also could 
+  # allow for some tricky ops maneuvers such as snapshotting vs overwriting
+  # worldsaves.
+  def update_data_paths!
+    dd = configuration.data_dir
+    prefix = dd[0] == '/' ? Pathname.new(dd) : @root.join(dd)
+    DIRECTORIES[:data].each do |subdir|
+      instance_variable_set "@#{subdir.to_s}", prefix.join(subdir.to_s)
+    end
+  end
+
 end
+

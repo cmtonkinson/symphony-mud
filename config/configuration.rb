@@ -36,6 +36,14 @@ CONFIGURATION = [
     callback: Proc.new { |value| Symphony.configuration.console = value },
   },
   {
+    short: 'd',
+    long: 'data-dir',
+    placeholder: 'DATA_DIR',
+    default: 'data',
+    description: 'Top-level directory to use for instance-specific game data.',
+    callback: Proc.new { |value| Symphony.configuration.data_dir = value },
+  },
+  {
     short: 'l',
     long: 'log-level',
     placeholder: 'LEVEL',
@@ -113,3 +121,11 @@ if /symphony/.match?($0)
     end
   end.parse!
 end
+
+###############################################################################
+# Hack to correct data paths - App.new gets called in bootstrap, prior to the
+# options parsing in this file so we have to go back and replace data paths
+# to account for possible configuration overrides.
+###############################################################################
+Symphony.update_data_paths!
+
