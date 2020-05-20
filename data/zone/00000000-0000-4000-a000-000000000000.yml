@@ -81,8 +81,8 @@
     :hit_bonus: 80
     :luck: 5
     :creativity: -3
-    :health: 1000
-    :mana: -100
+    :health: -1
+    :mana: -1
 - :objekt:
     :class: Realm::Item
     :id: 03dd72be-ec0e-4479-a660-5303539d0305
