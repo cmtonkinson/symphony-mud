@@ -18,8 +18,6 @@ before_script:
 ###############################################################################
 rspec:
   stage: test
-  tags:
-    - docker
   script:
     - rspec --format=documentation --force-color
   coverage: '/\(\d+.\d+\%\) covered/'
@@ -30,16 +28,12 @@ rspec:
 ###############################################################################
 rubocop:
   stage: analyze
-  tags:
-    - docker
   script:
     - rubocop .
   allow_failure: true
 
 rubycritic:
   stage: analyze
-  tags:
-    - docker
   script:
     - OUTPUT=$(rubycritic --format=console)
     - echo "$OUTPUT"
