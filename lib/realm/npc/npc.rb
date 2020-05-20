@@ -43,6 +43,7 @@ module Realm
         id,
         level,
         %w[].sort.join(', '),
+        anatomy.name,
       ]
     end
 

@@ -46,6 +46,7 @@ module Combat
                                   self,
                                   verb,
                                   defender,
+                                  dam,
                                   exclude: [attacker, defender]
 
       attacker.stamina.decrease 1
@@ -60,7 +61,7 @@ module Combat
     ###########################################################################
     def action
       item = attacker.anatomy.primary_weapon
-      verb = item ? item.damage_type : 'punch'
+      verb = item ? item.damage_type : attacker.anatomy.default_damage
 
       @action ||= case created_by
                   when :second_attack then "second #{verb}"

@@ -65,6 +65,11 @@ module Realm
     }
 
     ###########################################################################
+    on_deep_copy -> (original) {
+      @anatomy = Talent.const_get(original.anatomy.class.name).new self
+    }
+
+    ###########################################################################
     vivify -> {
       $world.beings.insert self
     }
@@ -182,5 +187,6 @@ module Realm
       (@room.beings.values.reject { |b| b == self }) || []
     end
     alias_method :other_beings, :other_beings_in_room
+
   end
 end

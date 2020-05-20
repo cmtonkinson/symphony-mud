@@ -7,6 +7,7 @@ module Command
     exec do
       if create == 'create'
         npc = Logistics::Builder.create_npc room.zone
+        npc.anatomy = Talent::Human.new npc
         being.cmd "nedit #{npc.rid}"
       elsif rid.is_a? Integer
         zone = room.zone

@@ -360,20 +360,7 @@ module Command
     usage
     exec do
       being.puts t('title'), being.name, being.level_label
-
-      # The arguments below for sprintf follow the summary template line by line.
-      being.puts $templates.summary % [
-        being.anatomy&.name, being.strength.current, being.hit_bonus.current, being.level,
-        being.gender, being.dexterity.current, being.damage_bonus.current, being.health.current, being.health.max,
-        being.klass&.name, being.constitution.current, being.mana.current, being.mana.max,
-        being.hand, being.intelligence.current, being.armor.current, being.stamina.current,
-        being.focus.current, being.bash.current, being.exp,
-        being.age, being.creativity.current, being.slash.current, being.tnl,
-        Display::Format.height(being.height), being.charisma.current, being.pierce.current, being.training_points,
-        Display::Format.weight(being.weight), being.luck.current, being.exotic.current,
-        being.items.length, 0, 0, 0, 'alignment',
-        0, 0, 0, 'totem'
-      ]
+      being.puts being.summary_plate
     end
   end
 

@@ -80,22 +80,33 @@ module Talent
 
     ###########################################################################
     def primary_slot
-      get_slots(being.hand + ' hand').first
+      case being.anatomy
+      when Human then get_slots(being.hand + ' hand').first
+      else nil
+      end
     end
 
     ###########################################################################
     def secondary_slot
-      get_slots((being.hand == 'right' ? 'left' : 'right') + ' hand').first
+      case being.anatomy
+      when Human then get_slots((being.hand == 'right' ? 'left' : 'right') + ' hand').first
+      else nil
+      end
     end
 
     ###########################################################################
     def primary_weapon
-      primary_slot.occupant
+      primary_slot&.occupant
     end
 
     ###########################################################################
     def secondary_weapon
-      secondary_slot.occupant
+      secondary_slot&.occupant
+    end
+
+    ###########################################################################
+    def default_damage
+      I18n.t("anatomy.default_damage.#{@name}")
     end
   end
 end

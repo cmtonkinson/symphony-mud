@@ -18,7 +18,6 @@ module Util
 
       # Look for exact matches first.
       candidates = values.select { |obj| obj.name.downcase == id.name }
-
       # If no exact matches were found, look for prefix matches among the words in the name.
       if candidates.empty?
         candidates = values.select do |obj|

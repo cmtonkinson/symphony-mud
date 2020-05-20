@@ -179,12 +179,14 @@ module Command
   ###############################################################################
   define :identify do
     level Realm::Being::DEMIGOD
-    usage({ item: :string })
+    usage({ target: :string })
     exec do
-      target = being.items.locate_first item
-      being.puts t 'err_not_found' and next if target.nil?
+      it = being.items.locate_first(target) ||
+        being.room.items.locate_first(target) ||
+        being.room.beings.locate_first(target)
+      being.puts t 'err_not_found' and next if it.nil?
 
-      being.puts target.summary
+      being.puts it.summary
     end
   end
 
