@@ -52,6 +52,14 @@ CONFIGURATION = [
     callback: Proc.new { |value| Symphony.logger.level = Logger.const_get(value.upcase) },
   },
   {
+    short: 'o',
+    long: 'log-output',
+    placeholder: 'OUTPUT',
+    default: 'stdout',
+    description: 'Change where log output is sent',
+    callback: Proc.new { |value| Symphony.logger.reopen(value == 'stdout' ? STDOUT : value) },
+  },
+  {
     short: 'p',
     long: 'port',
     placeholder: 'PORT',
