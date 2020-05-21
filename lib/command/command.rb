@@ -83,17 +83,11 @@ module Command
     ###########################################################################
     # rubocop:disable Naming/AccessorMethodName
     def get_name;       @name;       end
-
     def get_shortcut;   @shortcut;   end
-
     def get_brief;      @brief;      end
-
     def get_level;      @level;      end
-
     def get_group;      @group;      end
-
     def get_ability;    @ability;    end
-
     def get_exec;       @exec;       end
     # rubocop:enable Naming/AccessorMethodName
 
