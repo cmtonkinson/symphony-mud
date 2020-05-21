@@ -20,8 +20,17 @@ module Network
       client
     end
 
-    def ip_port_s
-      "#{Network.configuration.listen_ip}:#{Network.configuration.listen_port}"
+    def address
+      local_address.ip_address
     end
+
+    def port
+      local_address.ip_port
+    end
+
+    def ip_port_s
+      "#{address}:#{port}"
+    end
+
   end
 end
