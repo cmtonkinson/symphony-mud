@@ -57,6 +57,7 @@ class App
   def update_data_paths!
     dd = configuration.data_dir
     prefix = dd[0] == '/' ? Pathname.new(dd) : @root.join(dd)
+    instance_variable_set "@data", prefix
     DIRECTORIES[:data].each do |subdir|
       instance_variable_set "@#{subdir.to_s}", prefix.join(subdir.to_s)
     end
