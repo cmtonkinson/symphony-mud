@@ -27,9 +27,10 @@ module Base
     # interefere with I18n interpolation syntax (which is `%{varname}`)
     # otherwise we could end up accidentally sending a string like `%arname}`
     # to `I18n#t`.
-    VALID_CODES   = COLORS.values.map { |defn| defn[:code] }
-    SPECIAL_CODES = [RESET, '{', '?']
-    PATTERN       = /(?<!%)\{[#{VALID_CODES.join}]/
+    VALID_CODES    = COLORS.values.map { |defn| defn[:code] }
+    SPECIAL_CODES  = [RESET, '{', '?']
+    CODE_PATTERN   = /(?<!%)\{[#{VALID_CODES.join}]/
+    ESCAPE_PATTERN = /\e\[3\dm|\e\[\dm/
 
     def self.escape_map
       @escape_map ||= Hash[COLORS.map do |_k, v|
@@ -43,11 +44,16 @@ module Base
               .reject { |x| SPECIAL_CODES.include?(x) }
               .sample
       end
-      source.gsub PATTERN, escape_map
+      source.gsub CODE_PATTERN, escape_map
     end
 
     def self.uncolor(source)
-      source.gsub PATTERN, ''
+      source.gsub CODE_PATTERN, ''
+    end
+
+    def self.unescape(source)
+      source.gsub ESCAPE_PATTERN, ''
     end
   end
 end
+
