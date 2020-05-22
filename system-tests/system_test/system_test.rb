@@ -16,7 +16,7 @@ module SystemTest
     end
 
     ###########################################################################
-    def conduct_test
+    def conduct_test(port, state_path)
       begin
         raise 'test undefined' if @test.nil?
 

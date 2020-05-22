@@ -55,7 +55,10 @@ module SystemTest
 
     ###########################################################################
     def start
-      @test_tree.breadth_each { |n| Micromanager.new n }
+      @test_tree.breadth_each do |n|
+        next if n.name == :root
+        Micromanager.new n
+      end
     end
 
   end

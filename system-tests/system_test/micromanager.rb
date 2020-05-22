@@ -8,11 +8,9 @@ module SystemTest
     def initialize(test_node)
       @node = test_node
       @test = @node.content
-      
-      if @node.name != :root
-        @id = @test.get_id
-        go
-      end
+      @id   = @test.get_id
+
+      go
     end
 
     ###########################################################################
@@ -32,23 +30,60 @@ module SystemTest
     def go
       puts "########################## Testing #{@test.get_id}"
 
-      server_thread = Thread.new {
-        # Clear out data from the last run of this test.
-        FileUtils.rm_rf state_path
-        # Ensure the data directory exists.
+      # Start the server thread.
+      server_thread = start_server_thread
+ 
+      # Start the test thread and wait for it to finish running.
+      # It will join once it's work is complete.
+      test_thread = start_test_client_thread
+      test_thread.join
+
+      # Need to stop the server process before joining the thread.
+      `kill -s USR1 #{IO.read(data_path.join('pidfile'))}`
+      server_thread.join
+
+      puts "########################## done"
+    end
+
+    ###########################################################################
+    def start_server_thread
+      # Ensure the data directory is clean.
+      FileUtils.rm_rf state_path
+
+      # If this is an independent test, create the data directory.
+      if @test.get_parent_id.nil?
         FileUtils.mkdir_p data_path
-        # Boot the server.
+      # Otherwise, copy the parent data to start with.
+      else
+        parent_data = $ROOT_DIR.join 'system-tests', 'state', @test.get_parent_id
+        FileUtils.cp_r parent_data, state_path
+        # Truncate any logs.
+        FileUtils.rm_rf Dir.glob(state_path.to_s + '/*-log.txt') 
+      end
+
+      th = Thread.new {
+        # Boot the server:
+        #   * on an ephemeral port
+        #   * with no loop throttling
+        #   * with its own data directory (pursuant to above condition)
+        #   * with file logging enabled
+        #   * with maximum verbosity
         `#{$SYMPHONY} -p 0 -i 0 -d #{data_path} -o #{log_path} -l trace`
       }
 
-      # Wait for the server to boot.
+      # Give the server a moment to boot.
       sleep 1
+      return th
+    end
+
+    ###########################################################################
+    def start_test_client_thread
+      # Get the ephemeral port the server is listening on from the log.
+      matches = /listening on 0\.0\.0\.0:(\d+)/.match(File.read log_path)
+      port = matches[1]
 
       client_thread = Thread.new {
-        # Get the ephemeral port the server is listening on from the log.
-        matches = /listening on 0\.0\.0\.0:(\d+)/.match(File.read log_path)
-        port = matches[1]
-
+#        @test.conduct_test(port, state_path)
         client = Client.new(port, state_path, 'foo')
         client.command 'foo'
         client.command 'foo'
@@ -57,11 +92,6 @@ module SystemTest
         client.command 'quit'
         client.close
       }
-
-      client_thread.join
-      server_thread.kill
-
-      puts "########################## done"
     end
 
   end
