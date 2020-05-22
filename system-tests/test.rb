@@ -3,6 +3,7 @@
 require 'pathname'
 $ROOT_DIR = Pathname.new(__dir__).join('..')
 $SYMPHONY = $ROOT_DIR.join('symphony.rb')
+$TELNET_DELAY = 0.1
 
 ###############################################################################
 puts "Bootstrapping system test suite..."

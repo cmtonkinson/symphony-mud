@@ -13,7 +13,6 @@ group :app do
   gem 'i18n'
   gem 'pqueue'
   gem 'ruby-enum'
-  gem 'rubytree'
   gem 'rufus-lua'
   gem 'text'
 end
@@ -31,10 +30,12 @@ end
 group :test do
   gem 'fakefs', require: 'fakefs/safe'
   gem 'fuubar'
+  gem 'net-telnet'
   gem 'rspec'
   gem 'rspec-collection_matchers'
   gem 'rubocop'
   gem 'rubycritic'
+  gem 'rubytree'
   gem 'simplecov'
 end
 

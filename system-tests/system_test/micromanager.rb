@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'net-telnet'
 
 module SystemTest
   class Micromanager
@@ -24,13 +25,12 @@ module SystemTest
     end
 
     def log_path
-      @log_path ||= state_path.join('log.txt')
+      @log_path ||= state_path.join('server-log.txt')
     end
 
     ###########################################################################
     def go
-      puts "#############################################"
-      puts "Testing #{@test.get_id}"
+      puts "########################## Testing #{@test.get_id}"
 
       server_thread = Thread.new {
         # Clear out data from the last run of this test.
@@ -41,21 +41,27 @@ module SystemTest
         `#{$SYMPHONY} -p 0 -i 0 -d #{data_path} -o #{log_path} -l trace`
       }
 
-      client_thread = Thread.new {
-        # Wait for the server to boot.
-        sleep 1
+      # Wait for the server to boot.
+      sleep 1
 
+      client_thread = Thread.new {
         # Get the ephemeral port the server is listening on from the log.
         matches = /listening on 0\.0\.0\.0:(\d+)/.match(File.read log_path)
         port = matches[1]
 
-        
+        client = Client.new(port, state_path, 'foo')
+        client.command 'foo'
+        client.command 'foo'
+        client.command 'foo'
+        client.command 'foo'
+        client.command 'quit'
+        client.close
       }
 
-      server_thread.join
       client_thread.join
+      server_thread.kill
 
-      puts "done"
+      puts "########################## done"
     end
 
   end
