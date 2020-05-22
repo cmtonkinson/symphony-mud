@@ -13,6 +13,7 @@ group :app do
   gem 'i18n'
   gem 'pqueue'
   gem 'ruby-enum'
+  gem 'rubytree'
   gem 'rufus-lua'
   gem 'text'
 end
