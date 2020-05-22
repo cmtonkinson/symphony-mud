@@ -11,6 +11,9 @@ module Talent
     def _learned_by(being)
     end
 
+    def _learn
+    end
+
     def _invoke(target)
       dam = rand(able_being.level / 2)
       verb = Display::Format.damage dam
