@@ -10,7 +10,7 @@ Symphony.logger.formatter = proc do |severity, datetime, _progname, msg|
       Process.pid,
       severity,
       BINARY_NAME,
-      msg.is_a?(String) ? msg.clone : msg.inspect
+      msg.is_a?(String) ? Base::Terminal.uncolor(msg) : msg.inspect
     ]
   else
     colors = {
