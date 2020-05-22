@@ -44,6 +44,14 @@ CONFIGURATION = [
     callback: Proc.new { |value| Symphony.configuration.data_dir = value },
   },
   {
+    short: 'i',
+    long: 'sleep-interval',
+    placeholder: 'SECONDS',
+    default: 0.02,
+    description: 'Wait time (in seconds) between server loops.',
+    callback: Proc.new { |value| Symphony.configuration.sleep_interval = value.to_f },
+  },
+  {
     short: 'l',
     long: 'log-level',
     placeholder: 'LEVEL',

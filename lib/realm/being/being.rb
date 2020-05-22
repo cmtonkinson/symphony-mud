@@ -17,6 +17,7 @@ module Realm
       @enablers      = Array.new
       @klass         = nil
       @anatomy       = nil
+      @hand          = 'right'
       super
     end
 

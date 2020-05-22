@@ -7,7 +7,7 @@ module Base
 
     def initialize
       # Wait time (in seconds) between iterations of the primary server loop.
-      @sleep_interval = 0.02
+      @sleep_interval = Symphony.configuration.sleep_interval
 
       # For account management
       @hash_salt       = ''
