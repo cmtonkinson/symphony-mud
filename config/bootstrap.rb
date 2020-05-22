@@ -55,3 +55,9 @@ IO.write(Symphony.pidfile, Process.pid.to_s, mode: 'w')
 ###############################################################################
 $universe = Base::Universe.new
 $world    = Realm::World.new
+
+trap('USR1') {
+  $universe.should_save = true
+  $universe.should_stop = true
+}
+

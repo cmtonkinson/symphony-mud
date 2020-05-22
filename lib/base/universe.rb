@@ -2,12 +2,14 @@ require 'yaml'
 
 module Base
   class Universe
-    attr_accessor :clients, :server, :should_stop, :quotes, :should_reboot
+    attr_accessor :clients, :server, :should_stop, :quotes, :should_reboot,
+      :should_save
 
     ###########################################################################
     def initialize
       @clients     = []
       @quotes      = []
+      @should_save = false
       @should_stop = false
     end
 
@@ -25,6 +27,7 @@ module Base
         Util::Registry.cleanup
         sleep Base.configuration.sleep_interval
       end
+      $world.save if should_save
       Symphony.logger.unknown 'Server shutting down.'
     end
 
