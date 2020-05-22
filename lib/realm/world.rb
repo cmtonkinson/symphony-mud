@@ -24,9 +24,16 @@ module Realm
       Logistics::Scribe.the_story_of_baron_munchausen.each do |zone_id|
         zone = Logistics::Scribe.load(Realm::Zone, zone_id)
         next unless zone
-
         @zones.insert zone
         zone.run_hook :vivify
+      end
+
+      # Seed the universe (e.g. for a fresh install with no prior data).
+      if @zones.empty?
+        origin = Realm::Zone.new ORIGIN_ZONE_ID, { name: 'The Origin' }
+        origin.rooms.insert Realm::Room.new THE_VOID_ID, { name: 'The Void' }
+        @zones.insert origin
+        origin.run_hook :vivify
       end
     end
 
