@@ -47,6 +47,9 @@ Dir[Symphony.initializers.join '*.rb'].each { |file| require file }
 # Other external configuration.
 require_relative 'configuration'
 
+# Write the pid to a file.
+IO.write(Symphony.pidfile, Process.pid.to_s, mode: 'w')
+
 ###############################################################################
 # Big Bang.
 ###############################################################################
