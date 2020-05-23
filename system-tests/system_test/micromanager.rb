@@ -76,8 +76,7 @@ module SystemTest
     ###########################################################################
     def start_test
       # Get the ephemeral port the server is listening on from the log.
-      puts IO.read log_path
-      matches = /listening on 0\.0\.0\.0:(\d+)/.match(IO.read log_path)
+      matches = /listening on \d+\.\d+\.\d+\.\d+:(\d+)/.match(IO.read log_path)
       port = matches[1]
 
       context = OpenStruct.new
