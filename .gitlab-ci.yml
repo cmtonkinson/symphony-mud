@@ -54,4 +54,7 @@ system-tests:
     - docker
   script:
     - system-tests/test.rb
+  artifacts:
+    paths:
+      - system-tests/state
 
