@@ -1,8 +1,8 @@
 image: "ruby:2.5"
 
 stages:
+  - static-analysis
   - test
-  - analyze
 
 before_script:
   - uname -a
@@ -11,6 +11,30 @@ before_script:
   - ruby -v
   - gem install bundler
   - bundle install -j $(nproc)
+
+###############################################################################
+# ANALYZE
+# Static analysis
+###############################################################################
+rubocop:
+  stage: static-analysis
+  tags:
+    - docker
+  script:
+    - rubocop .
+  allow_failure: true
+
+rubycritic:
+  stage: static-analysis
+  tags:
+    - docker
+  script:
+    - OUTPUT=$(rubycritic --format=console)
+    - echo "$OUTPUT"
+    - echo "Searching for less-than-C students..."
+    - echo $OUTPUT | grep --quiet --perl-regexp 'Rating:\s+[^ABC]'
+    - if [[ $? -eq 0 ]]; then echo "Found tests with less than C grade" && exit 1; fi
+  allow_failure: true
 
 ###############################################################################
 # TEST
@@ -24,27 +48,10 @@ rspec:
     - rspec --format=documentation --force-color
   coverage: '/\(\d+.\d+\%\) covered/'
 
-###############################################################################
-# ANALYZE
-# Static analysis
-###############################################################################
-rubocop:
-  stage: analyze
+system-tests:
+  stage: test
   tags:
     - docker
   script:
-    - rubocop .
-  allow_failure: true
-
-rubycritic:
-  stage: analyze
-  tags:
-    - docker
-  script:
-    - OUTPUT=$(rubycritic --format=console)
-    - echo "$OUTPUT"
-    - echo "Searching for less-than-C students..."
-    - echo $OUTPUT | grep --quiet --perl-regexp 'Rating:\s+[^ABC]'
-    - if [[ $? -eq 0 ]]; then echo "Found tests with less than C grade" && exit 1; fi
-  allow_failure: true
+    - system-tests/test.rb
 

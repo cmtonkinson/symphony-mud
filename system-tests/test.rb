@@ -24,3 +24,5 @@ puts "  #{m.num_tests} tests".colorize(:yellow)
 puts "  #{m.num_pass} passed".colorize(:green)
 puts "  #{m.num_fail} failed".colorize(:red)
 
+exit m.num_fail
+
