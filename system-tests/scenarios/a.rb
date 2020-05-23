@@ -12,7 +12,6 @@ module SystemTest
     with "sysadmin"
     test do
       sysadmin.command "summary"
-      raise "simulate an exception"
     end
   end
 
