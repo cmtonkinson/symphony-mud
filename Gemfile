@@ -28,6 +28,7 @@ group :development do
 end
 
 group :test do
+  gem 'colorize'
   gem 'fakefs', require: 'fakefs/safe'
   gem 'fuubar'
   gem 'net-telnet'

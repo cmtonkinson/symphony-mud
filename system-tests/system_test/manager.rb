@@ -1,12 +1,17 @@
 require 'rubytree'
+require 'colorize'
 
 module SystemTest
   class Manager
+    attr_accessor :num_tests, :num_pass, :num_fail
 
     ###########################################################################
     def initialize
       @test_tree = Tree::TreeNode.new :root, nil
       @reg = Configuration.configuration.test_registry
+      @num_tests = 0
+      @num_pass = 0
+      @num_fail = 0
 
       setup
     end
@@ -58,7 +63,29 @@ module SystemTest
       @test_tree.breadth_each do |n|
         next if n.name == :root
         Micromanager.new n
-      end
+
+        @num_tests += 1
+        color = :green
+
+        output = "#{n.name.to_s}: #{n.content.status.to_s}"
+
+        if n.content.status != :pass
+          @num_fail += 1
+          color = :red
+          output += ' -- ' + n.content.result.inspect
+        else
+          @num_pass += 1
+        end
+
+        puts output.gsub(/^/, i(n)).colorize(color)
+       end
+    end
+
+    ###########################################################################
+    # Returns two spaces for every level of depth of the node in the tree.
+    # Used for indenting output.
+    def i(node)
+      "  " * (node.node_depth - 1)
     end
 
   end

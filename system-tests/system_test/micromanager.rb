@@ -27,8 +27,6 @@ module SystemTest
 
     ###########################################################################
     def go
-      puts "Testing #{@test.get_id}"
-
       # Start the server thread.
       server_thread = start_server_thread
  

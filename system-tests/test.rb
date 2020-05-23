@@ -7,6 +7,7 @@ $TELNET_DELAY = 0.1
 
 ###############################################################################
 puts "Bootstrapping system test suite..."
+puts "Seed #{Random.new.seed}"
 
 require_relative 'system_test/init'
 Dir[File.join(__dir__, 'scenarios', '*.rb')].each { |file| require file }
@@ -14,9 +15,12 @@ Dir[File.join(__dir__, 'scenarios', '*.rb')].each { |file| require file }
 m = SystemTest::Manager.new
 
 ###############################################################################
-puts "Running system tests..."
+puts "\n"
 m.start
 
 ###############################################################################
-puts "System testing complete."
+puts "\n\nSystem testing completed."
+puts "  #{m.num_tests} tests".colorize(:yellow)
+puts "  #{m.num_pass} passed".colorize(:green)
+puts "  #{m.num_fail} failed".colorize(:red)
 

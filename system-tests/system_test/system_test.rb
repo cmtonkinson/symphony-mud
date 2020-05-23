@@ -1,5 +1,6 @@
 module SystemTest
   class SystemTest
+    attr_accessor :status, :result
 
     ###########################################################################
     def initialize
@@ -13,6 +14,8 @@ module SystemTest
       @after        = nil
       @test         = nil
       @account_name = nil
+      @status       = :pending
+      @result       = nil
       instance_eval(&block) if block_given?
     end
 
@@ -28,9 +31,10 @@ module SystemTest
         @before.call unless @before.nil?
         @test.call
         @after.call unless @after.nil?
+        @status = :pass
       rescue StandardError => e
-        puts "Test #{get_id} raised -- #{e}"
-        #e.backtrace.each { |line| puts line.sub(Symphony.root.to_s, '') }
+        @status = :fail
+        @result = e
       end
     end
 
