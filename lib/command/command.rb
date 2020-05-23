@@ -63,7 +63,7 @@ module Command
     alias_method :t, :translate
 
     ###########################################################################
-    # This enables us to access anything in the @context Hash with a simple method call inside the
+    # This enables us to access anything in the @context OpenStruct with a simple method call inside the
     # Command exec blocks. Said another way, the only access we allow through method_missing is to
     # return values out of the @context Hash for Command execution.
     def method_missing(meth, *args, &block)

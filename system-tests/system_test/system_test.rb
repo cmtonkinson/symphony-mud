@@ -7,33 +7,75 @@ module SystemTest
 
     ###########################################################################
     def setup(&block)
-      @id         = nil
-      @parent_id  = nil
-      @before     = nil
-      @after      = nil
-      @test       = nil
+      @id           = nil
+      @parent_id    = nil
+      @before       = nil
+      @after        = nil
+      @test         = nil
+      @account_name = nil
       instance_eval(&block) if block_given?
     end
 
     ###########################################################################
-    def conduct_test(port, state_path)
+    def conduct_test(context)
+      @context = context
+
       begin
         raise 'test undefined' if @test.nil?
+
+        login_or_create if @account_name
 
         @before.call unless @before.nil?
         @test.call
         @after.call unless @after.nil?
       rescue StandardError => e
-        Symphony.logger.error "Test #{id} raised -- #{e}"
-        e.backtrace.each { |line| Symphony.logger.error line.sub(Symphony.root.to_s, '') }
+        puts "Test #{get_id} raised -- #{e}"
+        #e.backtrace.each { |line| puts line.sub(Symphony.root.to_s, '') }
       end
     end
 
     ###########################################################################
+    def login_or_create
+      result = @context.client.command @account_name
+      if /confirm/i.match result
+        create
+      else
+        login
+      end
+    end
+
+    def login
+      @context.client.command @context.client.password
+    end
+
+    def create
+      @context.client.command @account_name
+      @context.client.command @context.client.password
+      @context.client.command @context.client.password
+    end
+
+    ###########################################################################
     # rubocop:disable Naming/AccessorMethodName
-    def get_id;         @id;        end
-    def get_parent_id;  @parent_id; end
+    def get_id;           @id;           end
+    def get_parent_id;    @parent_id;    end
+    def get_account_name; @account_name; end
     # rubocop:enable Naming/AccessorMethodName
+
+    ###########################################################################
+    # Automatically proxy messages to the @context Hash, the same way we do
+    # in Command::Command.
+    def method_missing(meth, *args, &block)
+      if @context.respond_to? meth
+        return @context.send meth
+      else
+        begin
+          return super
+        rescue NameError => e
+          raise e if e.name == :execute
+          return nil
+        end
+      end
+    end
 
     private
 
@@ -57,6 +99,11 @@ module SystemTest
     def test(&test)
       @test = test
     end
+
+    def with(account_name)
+      @account_name = account_name
+    end
+
   end
 
   ###########################################################################

@@ -1,5 +1,4 @@
 require 'fileutils'
-require 'net-telnet'
 
 module SystemTest
   class Micromanager
@@ -28,21 +27,16 @@ module SystemTest
 
     ###########################################################################
     def go
-      puts "########################## Testing #{@test.get_id}"
+      puts "Testing #{@test.get_id}"
 
       # Start the server thread.
       server_thread = start_server_thread
  
-      # Start the test thread and wait for it to finish running.
-      # It will join once it's work is complete.
-      test_thread = start_test_client_thread
-      test_thread.join
+      start_test
 
       # Need to stop the server process before joining the thread.
       `kill -s USR1 #{IO.read(data_path.join('pidfile'))}`
       server_thread.join
-
-      puts "########################## done"
     end
 
     ###########################################################################
@@ -71,27 +65,35 @@ module SystemTest
         `#{$SYMPHONY} -p 0 -i 0 -d #{data_path} -o #{log_path} -l trace`
       }
 
-      # Give the server a moment to boot.
-      sleep 1
+      # Busywait for the server to boot.
+      booted = false
+      until booted do
+        sleep 0.01
+        next unless File.exist? log_path
+        booted = !/listening/.match(File.read log_path).nil?
+      end
       return th
     end
 
     ###########################################################################
-    def start_test_client_thread
+    def start_test
       # Get the ephemeral port the server is listening on from the log.
       matches = /listening on 0\.0\.0\.0:(\d+)/.match(File.read log_path)
       port = matches[1]
 
-      client_thread = Thread.new {
-#        @test.conduct_test(port, state_path)
-        client = Client.new(port, state_path, 'foo')
-        client.command 'foo'
-        client.command 'foo'
-        client.command 'foo'
-        client.command 'foo'
-        client.command 'quit'
-        client.close
-      }
+      context = OpenStruct.new
+      context.port = port
+      context.state_path = state_path
+
+      acct = @test.get_account_name
+      if acct
+        client = Client.new port, state_path, acct
+        # Reference the connection by either "client" or the account name.
+        context.client = client
+        context[acct.to_sym] = client
+      end
+
+      @test.conduct_test context
     end
 
   end
