@@ -275,6 +275,15 @@ module Command
   end
 
   ###############################################################################
+  define :practice do
+    usage :ability
+    exec do
+      err_str = being.practice ability
+      being.puts err_str and next if err_str
+    end
+  end
+
+  ###############################################################################
   define :quit do
     usage
     exec do

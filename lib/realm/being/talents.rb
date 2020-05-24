@@ -66,6 +66,19 @@ module Realm
     end
 
     ###########################################################################
+    def practice(name)
+      cost = 1
+
+      return I18n.t('being.talents.err_not_found') unless ability.learned?
+      return I18n.t('being.talents.err_trains') if training_points < 1
+      return I18n.t('being.talents.err_max') if ability.mastery > 69
+
+      @training_points -= cost
+      ability.practice
+      puts I18n.t('being.talents.practiced'), cost, ability.name_s
+    end
+
+    ###########################################################################
     def puts_abilities_list(type = nil, learned = nil)
       abilities
         .select { |a| type.nil? ? true : a.category == type }

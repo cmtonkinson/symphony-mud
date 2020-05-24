@@ -97,6 +97,12 @@ module Talent
     end
 
     ###########################################################################
+    def practice
+      return if @mastery > 69
+      @mastery += 1
+    end
+
+    ###########################################################################
     def improve(context = nil)
       if learned? && !mastered?
         @mastery += 1
