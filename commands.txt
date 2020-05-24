@@ -1,7 +1,7 @@
 ###############################################################################
 # ADMIN
 ###############################################################################
-adminnote bigbrother clone        crash
+adminnote bigbrother crash
 delete   demote     description disable
 dunce     enable            gecho
 incognito
@@ -30,7 +30,7 @@ armortype         attribute        composition
 delete            description      flag
 furniturecapacity furniturelayon   furnituresitat
 furnituresiton    furniturestandon 
-keywords          longname
+longname
 value
 weaponstat       
 
@@ -39,9 +39,8 @@ weaponstat
 # NPC EDIT
 ###############################################################################
 aggressiveness class       description
-gender         information keywords
+gender         information 
 longname    mobility
-race           
 
 ###############################################################################
 # AVATAR EDIT
