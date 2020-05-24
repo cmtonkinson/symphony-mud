@@ -29,7 +29,7 @@ module SystemTest
     def go
       # Start the server thread.
       server_thread = start_server_thread
- 
+
       start_test
 
       # Need to stop the server process before joining the thread.

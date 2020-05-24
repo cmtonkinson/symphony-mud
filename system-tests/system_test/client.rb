@@ -40,9 +40,9 @@ module SystemTest
       retval = nil
       IO.write @log_path, "\n$> #{str}\n", mode: "a"
       @conn.cmd(str) do |c|
-        retval = c
-        @buffer << c
-        IO.write @log_path, ::Base::Terminal.unescape(retval), mode: "a"
+        retval = ::Base::Terminal.unescape(c)
+        @buffer << retval
+        IO.write @log_path, retval, mode: "a"
       end
       return retval
     end

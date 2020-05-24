@@ -67,7 +67,7 @@ module SystemTest
         @num_tests += 1
         color = :green
 
-        output = "#{n.name.to_s}: #{n.content.status.to_s}"
+        output = "#{n.name.to_s}: #{n.content.status.to_s} (in #{n.content.run_time})"
 
         if n.content.status != :pass
           @num_fail += 1
