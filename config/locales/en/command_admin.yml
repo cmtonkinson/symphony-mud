@@ -8,6 +8,10 @@ en:
       err_here": "But you're already here!"
     connections:
       _brief: "Print netorking information on connected players."
+    clone:
+      _brief: "Make a copy of an Item or NPC."
+      err_not_found: "You don't see that here."
+      actor: "You have cloned a new $string."
     destroy:
       _brief: "Remove an object from existance."
       err_no_npc: "Can't find an NPC by that name here."

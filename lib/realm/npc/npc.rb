@@ -62,11 +62,13 @@ module Realm
 
     ###########################################################################
     def auto_move
+      return if mobility == 0
       speak 'moving!'
     end
 
     ###########################################################################
     def auto_attack
+      return if hostility == 0
       speak 'attacking!'
     end
   end

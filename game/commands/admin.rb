@@ -42,6 +42,29 @@ module Command
     end
   end
 
+  #############################################################################
+  define :clone do
+    level Realm::Being::DEMIGOD
+    usage({ target: :id })
+    exec do
+      where = room
+      it = being.items.locate_first(target)
+
+      if it.nil?
+        it = being.room.items.locate_first(target) ||
+             being.room.beings.locate_first(target)
+      else
+        where = being
+      end
+
+      being.puts t 'err_not_found' and next if it.nil?
+
+      cloned = it.clone
+      where.insert cloned
+      being.puts t('actor'), cloned.name
+    end
+  end
+
   ###############################################################################
   define :dashboard do
     level Realm::Being::CREATOR
