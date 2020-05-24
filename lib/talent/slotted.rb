@@ -13,12 +13,9 @@ module Talent
     ###########################################################################
     def get_slots(type_or_name)
       case type_or_name
-      when Symbol
-        slots.select { |s| s.type == type_or_name }
-      when String
-        slots.select { |s| s.name.include? type_or_name }
-      else
-        Util.argerr "expected Symbol or String; got #{type_or_name.class.name}"
+      when Symbol then slots.select { |s| s.type == type_or_name }
+      when String then slots.select { |s| s.name.include? type_or_name }
+      else Util.argerr "expected Symbol or String; got #{type_or_name.class.name}"
       end
     end
 
@@ -33,3 +30,4 @@ module Talent
     end
   end
 end
+

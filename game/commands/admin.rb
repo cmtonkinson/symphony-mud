@@ -61,6 +61,8 @@ module Command
 
       cloned = it.clone
       where.insert cloned
+      cloned.room = where if where == room and cloned.is_a? Realm::Being
+      cloned.run_hook :vivify
       being.puts t('actor'), cloned.name
     end
   end
