@@ -7,7 +7,7 @@ module Realm
     BASE_LEVEL  = 1
     BASE_EXP    = 0
     BASE_TNL    = 100
-    TARGET_TNL  = 100_00
+    TARGET_TNL  = 100_000
     BASE_TRAINS = 5
 
     NEWBIE  = 1
@@ -162,6 +162,11 @@ module Realm
     }
 
     ###########################################################################
+    on_deep_copy ->(original) {
+      @level = original.level
+    }
+
+    ###########################################################################
     vivify -> {
       $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_health
       $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_mana
@@ -268,7 +273,7 @@ module Realm
 
     ###########################################################################
     def reset_tnl
-      level * 10
+      level * 100
     end
 
     ###########################################################################

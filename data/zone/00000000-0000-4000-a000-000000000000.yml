@@ -31,6 +31,24 @@
     :objekt_id: 21d0e69b-c1f4-4113-8444-c27b3894db48
     :number: 1
     :max: 3
+  - :objekt:
+      :class: Realm::Placement
+      :id: b2a05d4e-20be-4315-8f37-af505c53599e
+      :rid: 3
+      :name: ''
+    :klass: Realm::NPC
+    :objekt_id: ec225eb6-6208-4133-8cb4-509a8b065f53
+    :number: 1
+    :max: 1
+  - :objekt:
+      :class: Realm::Placement
+      :id: ece206c7-b85d-46cf-affc-6daaab3d4d92
+      :rid: 4
+      :name: ''
+    :klass: Realm::NPC
+    :objekt_id: 6639b209-9f59-40db-b034-d9faa5c77dfc
+    :number: 1
+    :max: 1
 - :objekt:
     :class: Realm::Room
     :id: 110111df-156f-4532-8615-18ed67b43d04
@@ -152,7 +170,7 @@
     :class: Realm::NPC
     :id: ec225eb6-6208-4133-8cb4-509a8b065f53
     :rid: 2
-    :name: a homeless man
+    :name: homeless man
   :being:
     :klass: 
     :anatomy: human
@@ -162,7 +180,7 @@
     :items: []
   :stats:
     :equipment: {}
-    :level: 150
+    :level: 1
     :exp: 0
     :tnl: 100
     :training_points: 5
@@ -195,7 +213,7 @@
     :class: Realm::NPC
     :id: 6639b209-9f59-40db-b034-d9faa5c77dfc
     :rid: 3
-    :name: a squirrel
+    :name: squirrel
   :being:
     :klass: 
     :anatomy: human
@@ -205,7 +223,7 @@
     :items: []
   :stats:
     :equipment: {}
-    :level: 400
+    :level: 114
     :exp: 0
     :tnl: 100
     :training_points: 5

@@ -72,7 +72,6 @@ module Realm
         rid, name,
         id,
         level, type,
-        %w[].sort.join(', '),
         *(wearable ? ['yes', slot.to_s] : ['no', 'N/A']),
       ]
       if type == :weapon

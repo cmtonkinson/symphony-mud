@@ -64,7 +64,6 @@ module Realm
         name,
         id,
         level,
-        %w[].sort.join(', '),
       ] + summary_plate
     end
 

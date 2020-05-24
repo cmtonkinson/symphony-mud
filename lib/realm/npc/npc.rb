@@ -42,7 +42,6 @@ module Realm
         rid, name,
         id,
         level,
-        %w[].sort.join(', '),
         anatomy.name,
       ]
     end
