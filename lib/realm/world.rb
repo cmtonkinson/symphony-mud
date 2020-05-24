@@ -35,7 +35,7 @@ module Realm
         insert origin
         origin.run_hook :vivify
         # Create the Void Room.
-        void = Realm::Room.new(THE_VOID_ID, { name: 'The Void' })
+        void = Realm::Room.new(THE_VOID_ID, { rid: 0, name: 'The Void' })
         void.zone = origin
         origin.insert void
       end
