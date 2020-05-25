@@ -76,7 +76,7 @@ module SystemTest
         if n.content.status != :pass
           @num_fail += 1
           color = :red
-          output += ' -- ' + n.content.result.inspect
+          output += n.content.result
         else
           @num_pass += 1
         end

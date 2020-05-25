@@ -42,8 +42,12 @@ module SystemTest
       rescue StandardError => e
         @end_time = Time.now
         @status = :fail
-        @result = e
-        puts e.backtrace
+
+        message = ("\n    %s\n    " % e.message) + e.backtrace
+          .reject! { |l| !l.include? $ROOT_DIR.to_s }
+          .each { |l| l.sub!($ROOT_DIR.to_s, '') }
+          .join("\n    ")
+        @result = message
       end
     end
 
@@ -201,12 +205,7 @@ module SystemTest
         end
       # The fallback is the default behavior of method_missing.
       else
-        begin
-          return super
-        rescue NameError => e
-          raise e if e.name == :execute
-          return nil
-        end
+        return super
       end
     end
 

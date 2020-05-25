@@ -42,7 +42,7 @@ module SystemTest
       expect_any sysadmin, 'has returned to the Realm!'
       expect_any sysadmin, /\d+\.\d+\.\d+\.\d+:\d+/
 
-      nexpect_any sysadmin, /\[error\]/ix
+      n_expect_any sysadmin, /\[error\]/ix
     end
   end
 
