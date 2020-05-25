@@ -1,6 +1,6 @@
 module SystemTest
   class SystemTest
-    attr_accessor :status, :result
+    attr_accessor :accounts, :status, :result
 
     ###########################################################################
     def initialize
@@ -13,7 +13,8 @@ module SystemTest
       @before       = nil
       @after        = nil
       @test         = nil
-      @account_name = nil
+      @accounts     = []
+      @last_used_account = nil
       @status       = :pending
       @result       = nil
       @start_time   = nil
@@ -30,7 +31,7 @@ module SystemTest
 
         @start_time = Time.now
 
-        login_or_create if @account_name
+        @accounts.each { |a| login_or_create a }
 
         @before.call unless @before.nil?
         @test.call
@@ -39,21 +40,23 @@ module SystemTest
 
         @end_time = Time.now
       rescue StandardError => e
+        @end_time = Time.now
         @status = :fail
         @result = e
+        puts e.backtrace
       end
     end
 
     ###########################################################################
     def expect(e)
-      raise "SystemTest#expect() called in a test with no 'with' directive" unless @account_name
-      expect_last client, e
+      raise "SystemTest#expect() called without first send a command through the shortcut interface." unless @last_used_account
+      expect_last acm(@last_used_account), e
     end
 
     ###########################################################################
-    def nexpect(e)
-      raise "SystemTest#nexpect() called in a test with no 'with' directive" unless @account_name
-      nexpect_last client, e
+    def n_expect(e)
+      raise "SystemTest#n_expect() called without first send a command through the shortcut interface." unless @last_used_account
+      n_expect_last acm(@last_used_account), e
     end
 
     ###########################################################################
@@ -73,7 +76,7 @@ module SystemTest
     end
 
     ###########################################################################
-    def nexpect_last(client, e)
+    def n_expect_last(client, e)
       if can_find(client, -1, e)
         @status = :fail
         @result = found_error e
@@ -81,7 +84,7 @@ module SystemTest
     end
 
     ###########################################################################
-    def nexpect_any(client, e)
+    def n_expect_any(client, e)
       if can_find(client, nil, e)
         @status = :fail
         @result = found_error e
@@ -140,23 +143,32 @@ module SystemTest
     end
 
     ###########################################################################
-    def login_or_create
-      result = @context.client.command @account_name
+    def account_client_method(account_name)
+      @last_used_account = account_name
+      @context.send((account_name + "_client").to_sym)
+    end
+    alias_method :acm, :account_client_method
+
+    def login_or_create(account_name)
+      client = acm account_name
+      result = client.command account_name
       if /confirm/i.match result
-        create
+        create account_name
       else
-        login
+        login account_name
       end
     end
 
-    def login
-      @context.client.command @context.client.password
+    def login(account_name)
+      client = acm account_name
+      client.command client.password
     end
 
-    def create
-      @context.client.command @account_name
-      @context.client.command @context.client.password
-      @context.client.command @context.client.password
+    def create(account_name)
+      client = acm account_name
+      client.command account_name
+      client.command client.password
+      client.command client.password
     end
 
     ###########################################################################
@@ -167,11 +179,27 @@ module SystemTest
     # rubocop:enable Naming/AccessorMethodName
 
     ###########################################################################
-    # Automatically proxy messages to the @context Hash, the same way we do
-    # in Command::Command.
+    # This convoluted garbage does a few things, all aimed at easing the
+    # convenience of the system test DSL.
     def method_missing(meth, *args, &block)
+      # The first form simply looks to proxy the method directly to the
+      # @context object.
       if @context.respond_to? meth
-        return @context.send meth
+        return @context.send(meth, *args, &block)
+      # The second form assumes that you either want to send a command through
+      # a given connection and you'll reference it by name (e.g. you want
+      # to type `ogre "kill elf"` in your test and have the command "kill elf"
+      # be send through the connection called :ogre
+      # OR
+      # You want to return the Client connection object itself, in which case
+      # you'd call the method with no params (e.g. `ogre`)
+      elsif @accounts.include?(meth.to_s)
+        if args.size == 1 && args[0].is_a?(String)
+          return acm(meth.to_s).command args[0]
+        else
+          return acm(meth.to_s)
+        end
+      # The fallback is the default behavior of method_missing.
       else
         begin
           return super
@@ -206,7 +234,7 @@ module SystemTest
     end
 
     def with(account_name)
-      @account_name = account_name
+      @accounts << account_name
     end
 
   end

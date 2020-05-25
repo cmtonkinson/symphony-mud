@@ -1,17 +1,38 @@
 module SystemTest
 
+  #############################################################################
   define :create_sysadmin do
     with "sysadmin"
     test do
-      sysadmin.command "say Hello, world!"
+      str = "Hello, world!"
+      sysadmin "say #{str}"
+      expect str
     end
   end
 
+  #############################################################################
+  define :promotion do
+    from :create_sysadmin
+    with "sysadmin"
+    with "lowbie"
+
+    before do
+      sysadmin 'promote lowbie 100'
+    end
+
+    test do
+      lowbie 'summary'
+      expect 'you are a hero'
+      expect /level:\s+100\D/
+    end
+  end
+
+  #############################################################################
   define :show_connections do
     from :create_sysadmin
     with "sysadmin"
     test do
-      sysadmin.command "connections"
+      sysadmin "connections"
 
       expect_last sysadmin, 'sysadmin'
       expect_last sysadmin, /localhost/ix
@@ -25,12 +46,13 @@ module SystemTest
     end
   end
 
+  #############################################################################
   define :smoke_test_commands do
     from :create_sysadmin
     with "sysadmin"
     test do
       # List all commands.
-      sysadmin.command "commands"
+      sysadmin "commands"
       available = sysadmin.buffer[-1]
 
       # Parse the output into a list of Strings.
@@ -45,15 +67,11 @@ module SystemTest
       # Run each command in the list - with no parameters - just as a basic
       # smoke test.
       list.each do |c|
-        sysadmin.command c
-        nexpect 'error'
+        sysadmin c
+        n_expect 'error'
       end
     end
   end
 
 end
-
-# chain (to auto depend on test above
-# multiple withs
-# nested definitions (for auto dependency)
 

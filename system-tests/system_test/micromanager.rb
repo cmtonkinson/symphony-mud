@@ -83,12 +83,10 @@ module SystemTest
       context.port = port
       context.state_path = state_path
 
-      acct = @test.get_account_name
-      if acct
-        client = Client.new port, state_path, acct
-        # Reference the connection by either "client" or the account name.
-        context.client = client
-        context[acct.to_sym] = client
+      # For each 'with' account (e.g. "with :larry"), define a variable to
+      # access the Client (e.g. "larry_client").
+      @test.accounts.each do |acct|
+        context[(acct + "_client").to_sym] = Client.new(port, state_path, acct)
       end
 
       @test.conduct_test context
