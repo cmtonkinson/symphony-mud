@@ -25,7 +25,9 @@ module Realm
       hash = hash[:abilities]
 
       hash.each do |name, mastery|
-        get_ability(name).learn mastery
+        a = get_ability name
+        next if a.nil?
+        a.learn mastery
       end
     }
 
