@@ -14,15 +14,14 @@ module SystemTest
       @conn = Net::Telnet::new(
         'Hostname' => 'localhost',
         'Port'     => port,
-        'Prompt'   => / ((name|passphrase):) |
-                        (\[.*hp.*mana.*stamina.*tnl.*\])
-                        /ix,
+        'Prompt'   => /./,
+        'Waittime' => $TELNET_DELAY,
       )
 
       # We need to eat the welcome banner or suffer a fencepost error in the
       # input/output stream processing. I could figure this out and develop
       # a more elegant solution buuuuuuuuut...
-      @conn.waitfor(/Please/)
+      @conn.waitfor(/You have connected to the server/)
     end
 
     ###########################################################################

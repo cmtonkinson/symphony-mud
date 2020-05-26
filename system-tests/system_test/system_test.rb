@@ -1,6 +1,6 @@
 module SystemTest
   class SystemTest
-    attr_accessor :accounts, :status, :result
+    attr_accessor :accounts, :status, :result, :assertions
 
     ###########################################################################
     def initialize
@@ -16,6 +16,7 @@ module SystemTest
       @accounts     = []
       @last_used_account = nil
       @status       = :pending
+      @assertions   = 0
       @result       = nil
       @start_time   = nil
       @end_time     = nil
@@ -97,6 +98,8 @@ module SystemTest
 
     ###########################################################################
     def can_find(client, range, e)
+      @assertions += 1
+
       if range.nil?
         corpus = client.buffer.join "\n"
       else
@@ -143,7 +146,7 @@ module SystemTest
 
     ###########################################################################
     def run_time
-      '%.3fs' % (@end_time.to_f - @start_time.to_f)
+      '%.3fs' % (@end_time - @start_time).to_f
     end
 
     ###########################################################################
@@ -173,6 +176,12 @@ module SystemTest
       client.command account_name
       client.command client.password
       client.command client.password
+      client.command 'human'
+      client.command 'female'
+      client.command 'left'
+      client.command 'average'
+      client.command 'average'
+      client.command 'warrior'
     end
 
     ###########################################################################

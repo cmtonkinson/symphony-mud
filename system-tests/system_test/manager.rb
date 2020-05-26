@@ -18,8 +18,29 @@ module SystemTest
 
     ###########################################################################
     def setup
+      # Construct the full test tree.
       until @reg.empty? do
         analyze @reg[0]
+      end
+
+      if $LEAF_TEST
+        # During a leaf test, we only need the target node and it's ancestors.
+        target = @test_tree.find { |n| n.name == $LEAF_TEST }
+        @test_tree = target.parentage.reverse << target
+      elsif $TREE_TEST
+        # During a tree test, we need the target node and it's ancestors, but
+        # then must also recreate the
+        target = @test_tree.find { |n| n.name == $TREE_TEST }
+        parents = target.parentage.reverse
+        new_tree = Tree::TreeNode.new :root, nil
+        last_node = new_tree.root
+        parents.each do |p|
+          p_copy = p.detached_copy
+          last_node.add p_copy
+          last_node = p_copy
+        end
+        last_node.add target
+        @test_tree = new_tree
       end
     end
 
@@ -60,16 +81,17 @@ module SystemTest
 
     ###########################################################################
     def start
-      @test_tree.breadth_each do |n|
+      @test_tree.each do |n|
         next if n.name == :root
         Micromanager.new n
 
         @num_tests += 1
         color = :green
 
-        output = "%s: %s (in %s)" % [
+        output = "%s: %s (%d assertions in %s) " % [
           n.name.to_s.gsub('-', ' '),
           n.content.status.to_s,
+          n.content.assertions,
           n.content.run_time,
         ]
 
@@ -89,7 +111,10 @@ module SystemTest
     # Returns two spaces for every level of depth of the node in the tree.
     # Used for indenting output.
     def i(node)
-      "  " * (node.node_depth - 1)
+      # I'm not spending the time to figure out why node_depth is off-by-one
+      # (seemingly) when running a tree test.
+      num = $TREE_TEST ? node.node_depth - 2 : node.node_depth - 1
+      "  " * num
     end
 
   end
