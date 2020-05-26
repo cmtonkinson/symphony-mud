@@ -15,6 +15,7 @@ en:
       err_cannot_learn: "Sorry, you don't meet the requirements for that yet."
       err_learned: "But you already know how to do that!"
       err_not_found: "You don't know of an ability like that."
+      err_not_learned: "But you haven't learned that yet!"
       err_trains: "Oof - you don't have enough training points to learn that."
       err_max: "You can only practice an ability so much; you'll have to do it the hard way from here."
       learned: "Congratulations! You spend {B$string{x training points to learn {W$string{x!"

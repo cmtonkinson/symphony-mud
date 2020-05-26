@@ -276,7 +276,7 @@ module Command
 
   ###############################################################################
   define :practice do
-    usage :ability
+    usage({ ability: :string })
     exec do
       err_str = being.practice ability
       being.puts err_str and next if err_str

@@ -4,6 +4,9 @@ module Talent
     # be iterated, processed, etc. (esp. as to allow gods easy path toward
     # learning everything there is to be learned) perhaps with a static
     # Array and using self.inherited
+    
+    MIN_PRACTICE_BOOST = 5
+    MAX_PRACTICE_LEVEL = 70
 
     attr_reader :type, :category, :name
     attr_reader :level, :trains, :difficulty, :stamina, :mana, :success_rate
@@ -97,9 +100,31 @@ module Talent
     end
 
     ###########################################################################
+    # We only want to be able to practice an Ability up to 70%.
+    #
+    # The formula for how much mastery incresaes on each practice is roughly:
+    #   y = 5.75*(6-d)+6
+    # where `d` is the difficulty of the Ability. That means a difficulty 1
+    # Ability increases by about 35 points per practices, whereas a difficulty
+    # 5 Ability increases by about 12. Then we add a smidge of randomness so
+    # it's not super boring.
     def practice
-      return if @mastery > 69
-      @mastery += 1
+      return if mastery >= MAX_PRACTICE_LEVEL
+
+      # The mastery gained on each practice is inversely proportional to the
+      # difficulty. The formula here yields roughly 35 points per practice for
+      # a difficulty 1 ability and about 12 points for a difficulty 5 ability.
+      boost = 5.75 * (6.0 - difficulty) + 6.0
+
+      # Add a 20% fudge factor.
+      adjust = Random.rand(80..120) / 100
+      boost = boost * adjust
+
+      # Make sure they get SOMEthing, yet also don't go over the limit,
+      max_boost = MAX_PRACTICE_LEVEL - mastery
+      boost = Util::Computation.bound(boost, MIN_PRACTICE_BOOST, max_boost)
+
+      @mastery += boost
     end
 
     ###########################################################################

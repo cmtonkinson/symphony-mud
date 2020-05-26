@@ -67,9 +67,12 @@ module Realm
 
     ###########################################################################
     def practice(name)
+      Symphony.logger.error name
+      ability = get_ability name
       cost = 1
 
-      return I18n.t('being.talents.err_not_found') unless ability.learned?
+      return I18n.t('being.talents.err_not_found') if ability.nil?
+      return I18n.t('being.talents.err_not_learned') unless ability.learned?
       return I18n.t('being.talents.err_trains') if training_points < 1
       return I18n.t('being.talents.err_max') if ability.mastery > 69
 

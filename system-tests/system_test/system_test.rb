@@ -133,15 +133,15 @@ module SystemTest
     end
 
     ###########################################################################
-    def pass
+    def pass(str = nil)
       @status = :pass
-      @result = 'Pass method called'
+      @result = str || 'Pass method called'
     end
 
     ###########################################################################
-    def fail
+    def fail(str = nil)
       @status = :fail
-      @result = 'Fail method called'
+      @result = str || 'Fail method called'
     end
 
     ###########################################################################
