@@ -15,9 +15,8 @@ module Talent
       # Defense
       add_ability DuckSkill.new         11,    1,      3,          4,       0,    10
       add_ability BlockSkill.new        16,    1,      3,          3,       0,    20
-      add_ability DodgeSkill.new        25,    1,      3,          4,       0,    10
-      add_ability ParrySkill.new        45,    2,      3,          4,       0,    15
-      add_ability RiposteSkill.new      65,    3,      5,          5,       0,    20
+      add_ability ParrySkill.new        32,    2,      3,          4,       0,    15
+      add_ability RiposteSkill.new      54,    3,      5,          5,       0,    20
 
       # Dependency graph
       add_prerequisite SecondAttackSkill, ThirdAttackSkill
