@@ -86,6 +86,7 @@ module SystemTest
     test do
       lowbie 'practice block'
       lowbie 'practice block'
+      lowbie 'practice block'
       expect /you spend.+to increase your/im
 
       lowbie 'skills'

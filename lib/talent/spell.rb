@@ -23,5 +23,11 @@ module Talent
       @spell_category = nil
       @default_target = nil
     end
+
+    ###########################################################################
+    def aggressive?
+      %i(hex curse harm).include? spell_category
+    end
+
   end
 end

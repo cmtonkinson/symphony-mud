@@ -29,6 +29,9 @@ module Talent
                            exclude: [able_being, target]
 
       target.take_damage dam, able_being
+
+      # NOTE: Put this logic somewhere that isn't stupid!
+      Combat.embattle target, able_being
     end
   end
 end
