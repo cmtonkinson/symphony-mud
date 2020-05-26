@@ -321,6 +321,9 @@ module Realm
     end
 
     ###########################################################################
+    attr_writer :height, :weight
+
+    ###########################################################################
     def modify(modifiers, reverse = false)
       modifiers.each do |stat_name, magnitude|
         stat      = send(stat_name)

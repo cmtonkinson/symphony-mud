@@ -78,8 +78,8 @@ module Realm
         age, creativity.current, slash.current, tnl,
         Display::Format.height(height), charisma.current, pierce.current, training_points,
         Display::Format.weight(weight), luck.current, exotic.current,
-        items.length, 0, 0, 0, 'alignment',
-        0, 0, 0, 'totem'
+        items.length, 0, 0, 0, '',
+        0, 0, 0, ''
       ]
     end
 
