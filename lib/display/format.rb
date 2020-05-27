@@ -7,8 +7,8 @@ module Display
     end
 
     ###########################################################################
-    def self.health(percentage)
-      quantity(percentage, {
+    def self.health(percentage, numeric = false)
+      str = quantity(percentage, {
                  0.98 => 'looks {Gfantastic{x',
                  0.90 => 'is in {Bexcellent{x condition',
                  0.70 => 'is in {Mgreat{x condition',
@@ -20,11 +20,13 @@ module Display
                  0.01 => 'looks {wterrible{x',
                  0.00 => 'is on the {wbrink of death{x',
                })
+      str += " {x[#{(percentage * 100).to_i}%]" if numeric
+      str
     end
 
     ###########################################################################
-    def self.damage(amount)
-      quantity(amount, {
+    def self.damage(amount, numeric = false)
+      str = quantity(amount, {
              10000 => '{wrains calamity upon{x',
               5000 => 'does {?I{?N{?C{?O{?M{?P{?R{?E{?H{?E{?N{?S{?I{?B{?L{?E{x things to',
               2000 => 'does {WSOUL CRUSHING{x things to',
@@ -54,11 +56,13 @@ module Display
                  1 => '{mgrazes{x',
                  0 => 'does nothing to',
                })
+      str += " {x[#{amount}}]" if numeric
+      str
     end
 
     ###########################################################################
-    def self.mastery(percent)
-      quantity(percent, {
+    def self.mastery(percent, numeric = false)
+      str = quantity(percent, {
                  100 => '{Wmasterful{x',
                  95 => '{Gsuperb{x',
                  85 => '{Cexcellent{x',
@@ -69,6 +73,8 @@ module Display
                  15 => '{rpoor{x',
                  0 => '{wbad{x'
                })
+      str += " {x- #{percent}%" if numeric
+      str
     end
 
     ###########################################################################

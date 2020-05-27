@@ -22,8 +22,7 @@ module Combat
       @created_by = created_by
 
       # Execute
-      return if defender.dead?
-
+      return if defender.dead?  
       before
       perform unless avoided
       after
@@ -36,17 +35,16 @@ module Combat
       weapon_bonus = attacker.level
       weapon_bonus = weapon.hitroll if weapon
       dam = 2 * attacker.level + rand(attacker.level) + rand((bonus / 2)..bonus) + rand(weapon_bonus * 2)
-      verb = Display::Format.damage dam
+      verb = Display::Format.damage dam, true
 
-      attacker.indented_puts level, I18n.t('combat.strike.attacker'), self, verb, defender, dam
-      defender.indented_puts level, I18n.t('combat.strike.defender'), attacker, self, verb, dam
+      attacker.indented_puts level, I18n.t('combat.strike.attacker'), self, verb, defender
+      defender.indented_puts level, I18n.t('combat.strike.defender'), attacker, self, verb
       attacker.room.indented_puts level,
                                   I18n.t('combat.strike.room'),
                                   attacker,
                                   self,
                                   verb,
                                   defender,
-                                  dam,
                                   exclude: [attacker, defender]
 
       attacker.stamina.decrease 1

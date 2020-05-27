@@ -309,8 +309,8 @@ module Realm
 
     ###########################################################################
     def announce_status
-      str = "$being #{Display::Format.health(health.percent)}. [$string]"
-      room.puts str, self, self.health.current, exclude: self
+      str = "$being #{Display::Format.health(health.percent, true)}."
+      room.puts str, self, exclude: self
     end
 
     ###########################################################################
