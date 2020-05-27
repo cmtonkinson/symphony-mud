@@ -35,8 +35,8 @@ module Realm
     OFFENSE_BASE = 0
 
     BASE_AGE    = 17
-    BASE_HEIGHT = 1
-    BASE_WEIGHT = 1
+    BASE_HEIGHT = 3
+    BASE_WEIGHT = 3
 
     # Core names can be grouped into five distinct buckets.
     EXPERIENCE = %i(level exp tnl training_points)
@@ -350,6 +350,7 @@ module Realm
     end
 
     ###########################################################################
+    # NOTE: Do we want to modify any stats based on height and weight?
     attr_writer :height, :weight
 
     ###########################################################################

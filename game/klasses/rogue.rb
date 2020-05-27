@@ -13,7 +13,7 @@ module Talent
       # Defense
       add_ability DuckSkill.new         6,     1,      3,          4,       0,    10
       add_ability DodgeSkill.new        19,    1,      3,          4,       0,    10
-      add_ability ParrySkill.new        51,    2,      3,          4,       0,    15
+      add_ability ParrySkill.new        49,    2,      3,          4,       0,    15
 
       setup
     end

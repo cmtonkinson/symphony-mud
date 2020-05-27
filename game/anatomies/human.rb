@@ -40,7 +40,6 @@ module Talent
       {
         intelligence: 2,
         luck: -1,
-        health: -3000,
       }
     end
 
