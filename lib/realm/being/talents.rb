@@ -90,7 +90,7 @@ module Realm
         .select { |a| learned.nil? ? true : learned == a.learned? }
         .sort_by(&:level)
         .each do |a|
-          a_level = '%3d' % a.level
+          a_level = '%2d' % a.level
           a_name  = '%-15s' % a.name_s
 
           if a.learned?
