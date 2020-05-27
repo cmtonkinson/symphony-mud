@@ -285,14 +285,12 @@ module InputSequence
     ###########################################################################
     def new_avatar_setup_from_context(avatar)
       avatar.room = $world.find_room Realm::World::THE_VOID_ID
-      avatar.anatomy = ::Talent.const_get(@context.race.capitalize).new(avatar)
-      avatar.add_enabler avatar.anatomy
+      ::Talent.const_get(@context.race.capitalize).new(avatar)
+      ::Talent.const_get(@context.klass.capitalize).new(avatar)
       avatar.gender = @context.gender
       avatar.hand = @context.hand
       avatar.height = HEIGHT_OPTIONS.index(@context.height) + 1
       avatar.weight = WEIGHT_OPTIONS.index(@context.weight) + 1
-      avatar.klass = ::Talent.const_get(@context.klass.capitalize).new
-      avatar.add_enabler avatar.klass
       avatar.room.insert avatar
       avatar.run_hook :vivify
 

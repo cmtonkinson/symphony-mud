@@ -2,9 +2,9 @@ module Command
   ###############################################################################
   define :iedit do
     level Realm::Being::DEMIGOD
-    usage({ rid: :int })
-    usage :target
     usage 'create'
+    usage :target
+    usage({ rid: :int })
     exec do
       if create == 'create'
         item = Logistics::Builder.create_item room.zone

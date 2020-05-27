@@ -32,6 +32,17 @@ module Talent
       add_slot :ankle, 'left ankle'
       add_slot :ankle, 'right ankle'
       add_slot :feet, 'feet'
+
+      setup
     end
+
+    def modifiers
+      {
+        intelligence: 2,
+        luck: -1,
+        health: -3000,
+      }
+    end
+
   end
 end

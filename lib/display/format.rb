@@ -56,7 +56,7 @@ module Display
                  1 => '{mgrazes{x',
                  0 => 'does nothing to',
                })
-      str += " {x[#{amount}}]" if numeric
+      str += " {x[#{amount}]" if numeric
       str
     end
 

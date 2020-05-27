@@ -9,6 +9,8 @@ module Talent
       add_slot :neck, 'neck'
       add_slot :neck, 'neck'
       add_slot :torso, 'torso'
+
+      setup
     end
   end
 end

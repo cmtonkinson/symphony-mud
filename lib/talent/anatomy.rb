@@ -15,6 +15,13 @@ module Talent
     end
 
     ###########################################################################
+    def setup
+      being.anatomy = self
+      being.add_enabler self
+      being.modify modifiers if respond_to? :modifiers
+    end
+
+    ###########################################################################
     def values
       slots.map(&:occupant).compact
     end

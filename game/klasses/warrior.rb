@@ -1,6 +1,8 @@
 module Talent
   class Warrior < Klass
-    def initialize
+
+    def initialize(being)
+      super
       @name        = 'warrior'
       @health_rate = 4
       @mana_rate   = 0.3
@@ -24,6 +26,20 @@ module Talent
       add_prerequisite BlockSkill,        ParrySkill
       add_prerequisite SecondAttackSkill, RiposteSkill
       add_prerequisite ParrySkill,        RiposteSkill
+
+      setup
     end
+
+    def modifiers
+      {
+        strength: 2,
+        constitution: 2,
+        dexterity: 1,
+        intelligence: -1,
+        creativity: -1,
+      }
+    end
+
   end
 end
+

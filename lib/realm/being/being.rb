@@ -44,15 +44,8 @@ module Realm
     on_dehashify ->hash {
       hash = hash[:being]
 
-      if hash[:klass]
-        @klass = Talent.const_get(hash[:klass].capitalize).new
-        add_enabler @klass
-      end
-
-      if hash[:anatomy]
-        @anatomy = Talent.const_get(hash[:anatomy].capitalize).new self
-        add_enabler @anatomy
-      end
+      ::Talent.const_get(hash[:klass].capitalize).new(self) if hash[:klass]
+      ::Talent.const_get(hash[:anatomy].capitalize).new(self) if hash[:anatomy]
 
       unless is_a? NPC
         @room = $world.find_room hash[:room]
@@ -67,7 +60,8 @@ module Realm
 
     ###########################################################################
     on_deep_copy -> (original) {
-      @anatomy = Talent.const_get(original.anatomy.class.name).new self
+      ::Talent.const_get(original.anatomy.name.capitalize).new(self) if original.anatomy
+      ::Talent.const_get(original.klass.name.capitalize).new(self) if original.klass
     }
 
     ###########################################################################

@@ -1,6 +1,7 @@
 module Talent
   class Cleric < Klass
-    def initialize
+    def initialize(being)
+      super
       @name        = 'cleric'
       @health_rate = 3
       @mana_rate   = 3
@@ -11,7 +12,20 @@ module Talent
 
       # Spells
       add_ability HealSpell.new         5,     2,      3,          3,       5,    90
+
+      setup
     end
+
+    def modifiers
+      {
+        constitution: 1,
+        intelligence: 2,
+        creativity: 1,
+        focus: 1,
+        luck: -1,
+      }
+    end
+
   end
 end
 

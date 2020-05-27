@@ -54,6 +54,9 @@ module Realm
     # Shortcuts!
     FITNESS.each { |name| alias_method :"#{name[0..2]}", :"#{name}" }
 
+    # Random attributes of Being that can include static modifiers.
+    MODIFYING_ATTRS = %w(klass anatomy)
+
     attr_accessor :circumstance
 
     ###########################################################################
@@ -104,6 +107,14 @@ module Realm
         }.compact]
       end
 
+      # NOTE: Same comments as above for equipment, except for the subobjects
+      # defined in MODIFYING_ATTRS.
+      MODIFYING_ATTRS.each do |x|
+        x = send x.to_sym
+        next if x.nil?
+        modify x.modifiers, true if x.respond_to? :modifiers
+      end
+
       EXPERIENCE.each { |name| hash[name] = send name }
 
       WELLNESS.each do |name|
@@ -120,6 +131,9 @@ module Realm
       OFFENSE.each { |name| hash[name] = send(name).baseline }
 
       PHYSICAL.each { |name| hash[name] = send name }
+
+      # Restore Being attribute modifications.
+      restore_static_modifiers
 
       # Restore the equipment back into position.
       saved_eq.each do |slot_name, item|
@@ -159,6 +173,12 @@ module Realm
           @anatomy.change_equipment @anatomy.get_empty_slot(slot_name), Realm::Item.dehashify(h), nil
         end
       end
+
+      # This is an ugly situation where the MODIFYING_ATTRS have already been
+      # set (in the on_dehashify callback defined in being/being.rb), but THIS
+      # on_dehashify overrites the stat values. This means we have to manually
+      # re-apply any of those modifiers.
+      restore_static_modifiers
     }
 
     ###########################################################################
@@ -172,6 +192,15 @@ module Realm
       $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_mana
       $world.schedule Mechanics::RecurringJob.new 0, self, 3, :auto_stamina
     }
+
+    ###########################################################################
+    def restore_static_modifiers
+      MODIFYING_ATTRS.each do |x|
+        x = send x.to_sym
+        next if x.nil?
+        modify x.modifiers if x.respond_to? :modifiers
+      end
+    end
 
     ###########################################################################
     def newbie?
@@ -345,3 +374,4 @@ module Realm
     end
   end
 end
+

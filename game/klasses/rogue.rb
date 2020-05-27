@@ -1,6 +1,7 @@
 module Talent
   class Rogue < Klass
-    def initialize
+    def initialize(being)
+      super
       @name        = 'rogue'
       @health_rate = 2
       @mana_rate   = 0.3
@@ -13,6 +14,19 @@ module Talent
       add_ability DuckSkill.new         6,     1,      3,          4,       0,    10
       add_ability DodgeSkill.new        19,    1,      3,          4,       0,    10
       add_ability ParrySkill.new        51,    2,      3,          4,       0,    15
-     end
+
+      setup
+    end
+
+    def modifiers
+      {
+        strength: 1,
+        dexterity: 3,
+        creativity: -2,
+        luck: 2,
+        constitution: -3,
+      }
+    end
+
   end
 end
