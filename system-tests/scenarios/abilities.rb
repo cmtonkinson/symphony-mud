@@ -6,7 +6,7 @@ module SystemTest
     with :lowbie
 
     before do
-      expect_last admin, 'you have been made the system administrator'
+      expect_any admin, 'you have been made the system administrator'
     end
 
     test do
@@ -24,7 +24,8 @@ module SystemTest
 
     before do
       lowbie 'skills'
-      expect /skills you might learn.+block/im
+      expect 'skills available'
+      expect /block\s+^/i
    end
 
     test do
@@ -32,11 +33,10 @@ module SystemTest
       expect "Sorry, you don't meet the requirements"
 
       lowbie 'learn block'
-      expect /Congratulations.+block/im
+      expect /Congratulations.+block/i
 
       lowbie 'skills'
-      expect /skills you know.+block.+you might learn/im
-      expect /block.+bad/
+      expect /block.+\(bad/i
 
       lowbie 'learn block'
       expect 'But you already know'
@@ -50,8 +50,8 @@ module SystemTest
 
     before do
       lowbie 'skills'
-      expect /skills you might learn.+block/im
-      expect /skills you might learn.+parry/im
+      expect /block\s+^/i
+      expect /parry\s+^/i
      end
 
     test do
