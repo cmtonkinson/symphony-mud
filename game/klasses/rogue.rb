@@ -22,7 +22,7 @@ module Talent
       {
         strength: 1,
         dexterity: 3,
-        creativity: -2,
+        focus: -2,
         luck: 2,
         constitution: -3,
       }

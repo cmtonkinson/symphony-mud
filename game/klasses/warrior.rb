@@ -37,6 +37,7 @@ module Talent
         dexterity: 1,
         intelligence: -1,
         creativity: -1,
+        focus: -3,
       }
     end
 

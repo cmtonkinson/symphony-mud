@@ -19,9 +19,9 @@ module Talent
     def modifiers
       {
         constitution: 1,
-        intelligence: 2,
+        focus: 2,
         creativity: 1,
-        focus: 1,
+        intelligence: 1,
         luck: -1,
       }
     end

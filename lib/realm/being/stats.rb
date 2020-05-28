@@ -4,11 +4,12 @@ module Realm
     BASE_MANA   = 100
     MAX_STAMINA = 100
 
-    BASE_LEVEL  = 1
-    BASE_EXP    = 0
-    BASE_TNL    = 100
-    TARGET_TNL  = 100_000
-    BASE_TRAINS = 5
+    BASE_LEVEL   = 1
+    BASE_EXP     = 0
+    BASE_TNL     = 100
+    TNL_GROWTH   = 1.03
+    TNL_FOR_HERO = 1_000_000
+    BASE_TRAINS  = 5
 
     NEWBIE  = 1
     NOVICE  = 10
@@ -287,12 +288,12 @@ module Realm
 
     ###########################################################################
     def health_gain
-      level
+      level * (constitution.percent ** 2.0)
     end
 
     ###########################################################################
     def mana_gain
-      level
+      level * (focus.percent ** 2.0)
     end
 
     ###########################################################################
@@ -302,7 +303,14 @@ module Realm
 
     ###########################################################################
     def reset_tnl
-      level * 100
+      # Force an insane amount of exp to reach final hero level.
+      # TODO: Is this sound theory? If so, is this implementation reasonable?
+      if level == HERO - 2
+        TNL_FOR_HERO
+      # Otherwise, TNL is an exponential function with respect to level.
+      else
+        level * (TNL_GROWTH ** level) * Random.rand(98..102)
+      end
     end
 
     ###########################################################################
