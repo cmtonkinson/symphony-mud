@@ -4,7 +4,7 @@ module InputSequence
     # Copypasta from authoritative sources of truth elsewhere in the codebase.
     # Really not the best method for exposing this information.
     # TODO - clean this crap up!
-    RACE_OPTIONS   = %w(human)
+    RACE_OPTIONS   = %w(human elf dwarf)
     GENDER_OPTIONS = %w(male female neuter)
     HAND_OPTIONS   = %w(left right)
     HEIGHT_OPTIONS = %w(tiny short average tall huge)
