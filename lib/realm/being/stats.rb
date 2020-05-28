@@ -11,21 +11,18 @@ module Realm
     TNL_FOR_HERO = 1_000_000
     BASE_TRAINS  = 5
 
-    NEWBIE  = 1
-    NOVICE  = 10
-    HERO    = 100
-    LORD    = HERO + 1
-    DUKE    = HERO + 3
-    KING    = HERO + 5
-    DEMIGOD = HERO + 10
-    GOD     = HERO + 15
-    CREATOR = HERO + 20
+    NEWBIE   = 1
+    TRAVELER = 10
+    HERO     = 100
+    DEMIGOD  = HERO + 10
+    GOD      = HERO + 15
+    CREATOR  = HERO + 20
 
-    LEVELS = %w(NEWBIE NOVICE HERO LORD DUKE KING DEMIGOD GOD CREATOR)
+    LEVELS = %w(NEWBIE TRAVELER HERO DEMIGOD GOD CREATOR)
 
     # Many immortal commands (such as 'force' and 'summon') require that in
     # order to perform them, the actor be a sufficiently higher level than the
-    # victim. This is a sort of "chain of command" security measure and this is
+    # victim. This is a sort of "chain of command" security measure and this
     # minimum required level difference is codified as IMMORTAL_SENIORITY.
     IMMORTAL_SENIORITY = 5
 
@@ -205,10 +202,9 @@ module Realm
 
     ###########################################################################
     def newbie?
-      @level < NOVICE
+      @level < TRAVELER
     end
 
-    ###########################################################################
     (LEVELS - %w[NEWBIE]).each do |lvl|
       define_method :"#{lvl.downcase}?", (Proc.new { @level >= Realm::Being.const_get(lvl) })
     end
@@ -282,7 +278,10 @@ module Realm
       puts 'You gain {G%u{x health points.' % health_boost
       puts 'You gain {C%u{x mana points.' % mana_boost
       puts 'You gain {B%u{x training points.' % trains_boost
-      puts 'You have {Y%u{x experience to your next level.' % tnl if (is_a?(Avatar) && hero?)
+
+      if is_a?(Avatar) && !hero?
+        puts 'You have {Y%u{x experience to your next level.' % tnl
+      end
       Symphony.logger.debug '%s has grown to level %u with %u tnl' % [fqid_str, level, tnl]
     end
 
