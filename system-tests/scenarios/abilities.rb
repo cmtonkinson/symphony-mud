@@ -2,8 +2,8 @@ module SystemTest
 
   #############################################################################
   define :promotion do
-    with 'admin'
-    with 'lowbie'
+    with :admin
+    with :lowbie
 
     before do
       expect_last admin, 'you have been made the system administrator'
@@ -20,7 +20,7 @@ module SystemTest
   #############################################################################
   define :learn_independent do
     from :promotion
-    with 'lowbie'
+    with :lowbie
 
     before do
       lowbie 'skills'
@@ -46,7 +46,7 @@ module SystemTest
   #############################################################################
   define :learn_dependent do
     from :promotion
-    with 'lowbie'
+    with :lowbie
 
     before do
       lowbie 'skills'
@@ -75,7 +75,7 @@ module SystemTest
     end
  
     from :learn_independent
-    with 'lowbie'
+    with :lowbie
 
     before do
       lowbie 'skills'

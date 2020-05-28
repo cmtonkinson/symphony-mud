@@ -185,6 +185,10 @@ module SystemTest
       client.command opt[:height]
       client.command opt[:weight]
       client.command opt[:klass]
+
+      # For the sake of log verbosity, always show the summary after creating
+      # a new account.
+      client.command 'summary'
     end
 
     def get_creation_opts(account_name)
