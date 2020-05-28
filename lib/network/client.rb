@@ -43,7 +43,11 @@ module Network
     private
 
     def _send(message)
-      socket.send ::Base::Terminal.colorize(message), 0
+      begin
+        socket.send ::Base::Terminal.colorize(message), 0
+      rescue Errno::EPIPE
+        @should_terminate = true
+      end
     end
   end
 end

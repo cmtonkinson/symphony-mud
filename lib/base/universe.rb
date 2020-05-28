@@ -57,7 +57,7 @@ module Base
         input = client.recv
         next if input.nil?
 
-        # Bang (!) is a shortcut for "run the last input again". We keep input
+        # Bang is a shortcut for "run the last input again". We keep input
         # history in a buffer so either we need to examine the top of that
         # buffer or add to it.
         if input == '!'
@@ -66,7 +66,11 @@ module Base
           client.last_input = input
         end
 
-        client.user.handle input
+        begin
+          client.user.handle input
+        rescue
+          client.should_terminate = true
+        end
       end
     end
 
