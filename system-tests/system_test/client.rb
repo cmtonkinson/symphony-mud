@@ -46,6 +46,19 @@ module SystemTest
       return retval
     end
 
+    ###########################################################################
+    def poll
+      begin
+        @conn.waitfor('Match' => /./, 'Waittime' => $TELNET_DELAY, 'Timeout' => $TELNET_DELAY) do |c|
+          retval = ::Base::Terminal.unescape(c)
+          @buffer << retval
+          IO.write @log_path, retval, mode: "a"
+        end
+      # Assuming the client recieved no new data, eat the timeout exception.
+      rescue Net::ReadTimeout
+      end
+    end
+
   end
 end
 

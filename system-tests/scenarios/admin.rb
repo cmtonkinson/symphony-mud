@@ -2,9 +2,9 @@ module SystemTest
 
   #############################################################################
   define :create_admin do
-    with "admin"
+    with :admin
     test do
-      str = "Hello, world!"
+      str = 'Hello, world!'
       admin "say #{str}"
       expect str
     end
@@ -13,10 +13,10 @@ module SystemTest
   #############################################################################
   define :smoke_test_commands do
     from :create_admin
-    with "admin"
+    with :admin
     test do
       # List all commands.
-      admin "commands"
+      admin 'commands'
       available = admin.buffer[-1]
 
       # Parse the output into a list of Strings.

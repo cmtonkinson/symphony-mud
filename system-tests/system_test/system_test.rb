@@ -225,11 +225,25 @@ module SystemTest
       # You want to return the Client connection object itself, in which case
       # you'd call the method with no params (e.g. `ogre`)
       elsif @accounts.include?(meth.to_s)
+        retval = nil
         if args.size == 1 && args[0].is_a?(String)
-          return acm(meth.to_s).command args[0]
+          retval = acm(meth.to_s).command args[0]
         else
-          return acm(meth.to_s)
+          retval = acm(meth.to_s)
         end
+
+        # The underlying Net::Telnet client won't read new data from the
+        # connection until/unless waitfor() is called. That means if something
+        # done in one connection causes output to another, either we won't
+        # get it at all, or else the sequencing of inputs and outputs in the
+        # client log will be out of order.
+        #
+        # In other words, if we don't poll for new data on every connection
+        # after any connection does anything, the client logs will show
+        # output late, if at all.
+        @accounts.reject { |a| a == meth.to_s }.each { |a| acm(a).poll }
+
+        return retval
       # The fallback is the default behavior of method_missing.
       else
         return super
