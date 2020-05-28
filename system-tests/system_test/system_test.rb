@@ -57,13 +57,13 @@ module SystemTest
     ###########################################################################
     def expect(e, msg = nil)
       raise "SystemTest#expect() called without first send a command through the shortcut interface." unless @last_used_account
-      expect_last acm(@last_used_account), e
+      expect_last acm(@last_used_account), e, msg
     end
 
     ###########################################################################
     def n_expect(e, msg = nil)
       raise "SystemTest#n_expect() called without first send a command through the shortcut interface." unless @last_used_account
-      n_expect_last acm(@last_used_account), e
+      n_expect_last acm(@last_used_account), e, msg
     end
 
     ###########################################################################
@@ -71,7 +71,7 @@ module SystemTest
       if !can_find(client, -1, e)
         @status = :fail
         @result = not_found_error e, msg
-        raise msg if msg
+        raise @result
       end
     end
 
@@ -100,7 +100,7 @@ module SystemTest
     end
 
     ###########################################################################
-    def can_find(client, range, e, msg = nil)
+    def can_find(client, range, e)
       @assertions += 1
 
       if range.nil?
