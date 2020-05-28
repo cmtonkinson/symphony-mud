@@ -84,10 +84,9 @@ module Realm
     end
 
     ###########################################################################
-    def puts_abilities_list(type = nil, learned = nil)
+    def puts_abilities_list(type = nil)
       abilities
         .select { |a| type.nil? ? true : a.category == type }
-        .select { |a| learned.nil? ? true : learned == a.learned? }
         .sort_by(&:level)
         .each do |a|
           a_level = '%2d' % a.level

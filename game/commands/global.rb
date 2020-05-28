@@ -346,10 +346,8 @@ module Command
   define :skills do
     usage
     exec do
-      being.puts t('learned')
-      being.puts_abilities_list :skill, true
-      being.puts t('unlearned')
-      being.puts_abilities_list :skill, false
+      being.puts t('title')
+      being.puts_abilities_list :skill
     end
   end
 
@@ -357,10 +355,8 @@ module Command
   define :spells do
     usage
     exec do
-      being.puts t('learned')
-      being.puts_abilities_list :spell, true
-      being.puts t('unlearned')
-      being.puts_abilities_list :spell, false
+      being.puts t('title')
+      being.puts_abilities_list :spell
     end
   end
 

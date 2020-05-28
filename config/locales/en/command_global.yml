@@ -81,12 +81,10 @@ en:
       title: "The following command shortcuts are available:"
     skills:
       _brief: "Display list of skills."
-      learned: "Here are the skills you know:\n\n"
-      unlearned: "\nHere are other skills you might learn:\n\n"
+      title: "Here are the skills available to you:\n\n"
     spells:
       _brief: "Display spells you currently know."
-      learned: "Here are the spells you know:\n\n"
-      unlearned: "\nHere are other spells you might learn:\n\n"
+      title: "Here are the spells available to you:\n\n"
     summary:
       _brief: "Display information about the current state of your Avatar."
       title: "Your name is $string and you are a $string."
