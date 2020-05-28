@@ -53,6 +53,7 @@ system-tests:
   tags:
     - docker
   script:
+    - ulimit -Sn 50000
     - system-tests/test.rb
   artifacts:
     paths:

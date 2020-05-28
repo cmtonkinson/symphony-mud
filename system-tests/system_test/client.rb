@@ -53,7 +53,7 @@ module SystemTest
     # come.
     def poll
       begin
-        @conn.waitfor('Match' => /./, 'Timeout' => 0.01) do |c|
+        @conn.waitfor('Match' => /./, 'Timeout' => $TELNET_DELAY) do |c|
           retval = ::Base::Terminal.unescape(c)
           @buffer << retval
           IO.write @log_path, retval, mode: "a"

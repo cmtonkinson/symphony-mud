@@ -16,6 +16,7 @@ module SystemTest
       @accounts     = []
       @account_opts = {}
       @last_used_account = nil
+      @output_polling = false
       @status       = :pending
       @assertions   = 0
       @result       = nil
@@ -54,51 +55,52 @@ module SystemTest
     end
 
     ###########################################################################
-    def expect(e)
+    def expect(e, msg = nil)
       raise "SystemTest#expect() called without first send a command through the shortcut interface." unless @last_used_account
       expect_last acm(@last_used_account), e
     end
 
     ###########################################################################
-    def n_expect(e)
+    def n_expect(e, msg = nil)
       raise "SystemTest#n_expect() called without first send a command through the shortcut interface." unless @last_used_account
       n_expect_last acm(@last_used_account), e
     end
 
     ###########################################################################
-    def expect_last(client, e)
+    def expect_last(client, e, msg = nil)
       if !can_find(client, -1, e)
         @status = :fail
-        @result = not_found_error e
+        @result = not_found_error e, msg
+        raise msg if msg
       end
     end
 
     ###########################################################################
-    def expect_any(client, e)
+    def expect_any(client, e, msg = nil)
       if !can_find(client, nil, e)
         @status = :fail
-        @result = not_found_error e
+        @result = not_found_error e, msg
       end
     end
 
     ###########################################################################
-    def n_expect_last(client, e)
+    def n_expect_last(client, e, msg = nil)
       if can_find(client, -1, e)
         @status = :fail
-        @result = found_error e
+        @result = found_error e, msg
       end
     end
 
     ###########################################################################
-    def n_expect_any(client, e)
+    def n_expect_any(client, e, msg = nil)
       if can_find(client, nil, e)
         @status = :fail
-        @result = found_error e
+        @result = found_error e, msg
       end
     end
 
     ###########################################################################
-    def can_find(client, range, e)
+    def can_find(client, range, e, msg = nil)
       @assertions += 1
 
       if range.nil?
@@ -116,16 +118,16 @@ module SystemTest
     end
 
     ###########################################################################
-    def not_found_error(e)
+    def not_found_error(e, msg = nil)
       case e
-      when String then "Did not find substring '#{e}'"
-      when Regexp then "No match found for '#{e}'"
+      when String then "Did not find substring '#{e}'%s" % (msg ? '  ' + msg : '')
+      when Regexp then "No match found for '#{e}'%s" % (msg ? '  ' + msg : '')
       else raise "Bad param"
       end
     end
 
     ###########################################################################
-    def found_error(e)
+    def found_error(e, msg = nil)
       case e
       when String then "Found substring '#{e}'"
       when Regexp then "Matched '#{e}'"
@@ -141,8 +143,7 @@ module SystemTest
 
     ###########################################################################
     def fail(str = nil)
-      @status = :fail
-      @result = str || 'Fail method called'
+      raise str || 'Fail method called'
     end
 
     ###########################################################################
@@ -245,9 +246,11 @@ module SystemTest
         # In other words, if we don't poll for new data on every connection
         # after any connection does anything, the client logs will show
         # output late, if at all.
-        @accounts.reject { |a| a == meth.to_s }.each do |a|
-          # Don't use the acm method or it'll make @last_used_account wrong.
-          @context.send("#{a}_client".to_sym).poll
+        if @output_polling
+          @accounts.reject { |a| a == meth.to_s }.each do |a|
+            # Don't use the acm method or it'll make @last_used_account wrong.
+            @context.send("#{a}_client".to_sym).poll
+          end
         end
 
         return retval
@@ -283,6 +286,10 @@ module SystemTest
     def with(account_name, opts = {})
       @accounts << account_name.to_s
       @account_opts[account_name.to_s] = opts
+    end
+
+    def disable_output_polling
+      @output_polling = false
     end
 
   end
