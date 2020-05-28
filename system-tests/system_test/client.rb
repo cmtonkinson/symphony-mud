@@ -8,7 +8,7 @@ module SystemTest
     ###########################################################################
     def initialize(port, state_path, account_name)
       @buffer = []
-      @account = account_name
+      @account = account_name.to_s
       @log_path = state_path.join("#{account}-log.txt").to_s
 
       @conn = Net::Telnet::new(
@@ -47,9 +47,13 @@ module SystemTest
     end
 
     ###########################################################################
+    # Busywait for input we may have recieved, and log it. Timeout is very low
+    # because (theoretically) this will get called when there is suspicion
+    # that some input either is already waiting for the client, or none will
+    # come.
     def poll
       begin
-        @conn.waitfor('Match' => /./, 'Waittime' => $TELNET_DELAY, 'Timeout' => $TELNET_DELAY) do |c|
+        @conn.waitfor('Match' => /./, 'Timeout' => 0.01) do |c|
           retval = ::Base::Terminal.unescape(c)
           @buffer << retval
           IO.write @log_path, retval, mode: "a"

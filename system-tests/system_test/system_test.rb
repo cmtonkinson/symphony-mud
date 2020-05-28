@@ -152,8 +152,8 @@ module SystemTest
 
     ###########################################################################
     def account_client_method(account_name)
-      @last_used_account = account_name
-      @context.send((account_name + "_client").to_sym)
+      @last_used_account = account_name.to_s
+      @context.send((account_name.to_s + "_client").to_sym)
     end
     alias_method :acm, :account_client_method
 
@@ -192,7 +192,7 @@ module SystemTest
     end
 
     def get_creation_opts(account_name)
-      default_creation_opts.merge @account_opts[account_name.to_sym]
+      default_creation_opts.merge @account_opts[account_name.to_s]
     end
 
     def default_creation_opts
@@ -231,9 +231,9 @@ module SystemTest
       elsif @accounts.include?(meth.to_s)
         retval = nil
         if args.size == 1 && args[0].is_a?(String)
-          retval = acm(meth.to_s).command args[0]
+          retval = acm(meth).command args[0]
         else
-          retval = acm(meth.to_s)
+          retval = acm(meth)
         end
 
         # The underlying Net::Telnet client won't read new data from the
@@ -245,7 +245,10 @@ module SystemTest
         # In other words, if we don't poll for new data on every connection
         # after any connection does anything, the client logs will show
         # output late, if at all.
-        @accounts.reject { |a| a == meth.to_s }.each { |a| acm(a).poll }
+        @accounts.reject { |a| a == meth.to_s }.each do |a|
+          # Don't use the acm method or it'll make @last_used_account wrong.
+          @context.send("#{a}_client".to_sym).poll
+        end
 
         return retval
       # The fallback is the default behavior of method_missing.
@@ -279,7 +282,7 @@ module SystemTest
 
     def with(account_name, opts = {})
       @accounts << account_name.to_s
-      @account_opts[account_name.to_sym] = opts
+      @account_opts[account_name.to_s] = opts
     end
 
   end
