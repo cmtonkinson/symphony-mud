@@ -14,6 +14,7 @@ module SystemTest
       @after        = nil
       @test         = nil
       @accounts     = []
+      @account_opts = {}
       @last_used_account = nil
       @status       = :pending
       @assertions   = 0
@@ -176,12 +177,29 @@ module SystemTest
       client.command account_name
       client.command client.password
       client.command client.password
-      client.command 'human'
-      client.command 'female'
-      client.command 'left'
-      client.command 'average'
-      client.command 'average'
-      client.command 'warrior'
+
+      opt = get_creation_opts account_name
+      client.command opt[:race]
+      client.command opt[:gender]
+      client.command opt[:hand]
+      client.command opt[:height]
+      client.command opt[:weight]
+      client.command opt[:klass]
+    end
+
+    def get_creation_opts(account_name)
+      default_creation_opts.merge @account_opts[account_name.to_sym]
+    end
+
+    def default_creation_opts
+      {
+        race: 'human',
+        gender: 'female',
+        hand: 'right',
+        height: 'average',
+        weight: 'average',
+        klass: 'warrior',
+      }
     end
 
     ###########################################################################
@@ -241,8 +259,9 @@ module SystemTest
       @test = test
     end
 
-    def with(account_name)
-      @accounts << account_name
+    def with(account_name, opts = {})
+      @accounts << account_name.to_s
+      @account_opts[account_name.to_sym] = opts
     end
 
   end
