@@ -78,7 +78,10 @@ module Realm
 
     ###########################################################################
     before_death -> {
-      return false if god?
+      if god?
+        health.increase 1
+        return false
+      end
 
       return true
     }
