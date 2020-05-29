@@ -42,7 +42,7 @@ module InputSequence
 
     #########################################################################
     def log_status_change
-      str = self.class.name
+      str = self.class.name.dup
       str << ' transitioning '
       str << "from '#{aasm.from_state}' " if aasm.from_state != nil
       str << "to '#{aasm.to_state}' "

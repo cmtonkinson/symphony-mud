@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    aasm (5.0.1)
+    aasm (5.0.8)
       concurrent-ruby (~> 1.0)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
@@ -18,7 +18,7 @@ GEM
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     colorize (0.8.1)
-    concurrent-ruby (1.1.4)
+    concurrent-ruby (1.1.6)
     coolline (0.5.0)
       unicode_utils (~> 1.4)
     debug_inspector (0.0.3)
@@ -51,7 +51,7 @@ GEM
     ice_nine (0.11.2)
     interception (0.5)
     jaro_winkler (1.5.1)
-    json (2.1.0)
+    json (2.3.0)
     launchy (2.4.3)
       addressable (~> 2.3)
     method_source (0.9.2)
@@ -172,4 +172,4 @@ DEPENDENCIES
   text
 
 BUNDLED WITH
-   1.16.2
+   2.1.4
