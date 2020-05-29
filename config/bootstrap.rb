@@ -13,7 +13,7 @@ ENV['GEMFILE'] ||= File.expand_path '../../Gemfile', __FILE__
 # of gems.
 ###############################################################################
 # Initialize gems from the Gemfile.
-require 'bundler/setup' if File.exist? ENV['GEMFILE']
+require 'bundler/setup'
 
 # Our application object. If you"re familiar with Rails, this will feel familiar.
 require_relative 'app'
