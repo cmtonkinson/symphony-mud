@@ -109,7 +109,7 @@ module Realm
 
     ###########################################################################
     def fully_qualified_identifier_string
-      I18n.translate 'objekt.identify', self.fully_qualified_identifier
+      I18n.translate 'objekt.identify', **self.fully_qualified_identifier
     end
     alias_method :fqid_str, :fully_qualified_identifier_string
 

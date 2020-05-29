@@ -13,7 +13,7 @@ module Command
         being.redit = true
         being.user.operators.push Operator.new being.user, :edit_room
         being.print t 'edit'
-        being.puts I18n.t('objekt.identify', room.fqid)
+        being.puts I18n.t('objekt.identify', **room.fqid)
         being.puts room.summary
       end
     end
