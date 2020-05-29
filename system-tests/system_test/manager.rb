@@ -81,6 +81,8 @@ module SystemTest
 
     ###########################################################################
     def start
+      FileUtils.rm_rf Dir.glob $ROOT_DIR.join 'system-tests', 'state', '*'
+
       @test_tree.each do |n|
         next if n.name == :root
         Micromanager.new n

@@ -39,9 +39,6 @@ module SystemTest
 
     ###########################################################################
     def start_server_thread
-      # Ensure the data directory is clean.
-      FileUtils.rm_rf state_path
-
       # If this is an independent test, create the data directory.
       if @test.get_parent_id.nil?
         FileUtils.mkdir_p data_path

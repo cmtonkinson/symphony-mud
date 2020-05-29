@@ -3,7 +3,7 @@ require 'optparse'
 
 $ROOT_DIR = Pathname.new(__dir__).join('..')
 $SYMPHONY = $ROOT_DIR.join('symphony.rb')
-$TELNET_DELAY = 0.001
+$TELNET_DELAY = 0.05
 
 $RAND_SEED = Random.new_seed.to_s[0,8]
 

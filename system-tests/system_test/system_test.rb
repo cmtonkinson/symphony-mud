@@ -1,6 +1,6 @@
 module SystemTest
   class SystemTest
-    attr_accessor :accounts, :status, :result, :assertions
+    attr_accessor :accounts, :status, :result, :assertions, :output_polling
 
     ###########################################################################
     def initialize
@@ -8,20 +8,20 @@ module SystemTest
 
     ###########################################################################
     def setup(&block)
-      @id           = nil
-      @parent_id    = nil
-      @before       = nil
-      @after        = nil
-      @test         = nil
-      @accounts     = []
-      @account_opts = {}
+      @id                = nil
+      @parent_id         = nil
+      @before            = nil
+      @after             = nil
+      @test              = nil
+      @accounts          = []
+      @account_opts      = {}
       @last_used_account = nil
-      @output_polling = false
-      @status       = :pending
-      @assertions   = 0
-      @result       = nil
-      @start_time   = nil
-      @end_time     = nil
+      @output_polling    = true
+      @status            = :pending
+      @assertions        = 0
+      @result            = nil
+      @start_time        = nil
+      @end_time          = nil
       instance_eval(&block) if block_given?
     end
 
@@ -71,7 +71,6 @@ module SystemTest
       if !can_find(client, -1, e)
         @status = :fail
         @result = not_found_error e, msg
-        raise @result
       end
     end
 
@@ -143,7 +142,8 @@ module SystemTest
 
     ###########################################################################
     def fail(str = nil)
-      raise str || 'Fail method called'
+      @status = :fail
+      @result = str || 'Fail method called'
     end
 
     ###########################################################################
@@ -154,7 +154,7 @@ module SystemTest
     ###########################################################################
     def account_client_method(account_name)
       @last_used_account = account_name.to_s
-      @context.send((account_name.to_s + "_client").to_sym)
+      @context.send (account_name.to_s + "_client").to_sym
     end
     alias_method :acm, :account_client_method
 
@@ -246,7 +246,7 @@ module SystemTest
         # In other words, if we don't poll for new data on every connection
         # after any connection does anything, the client logs will show
         # output late, if at all.
-        if @output_polling
+        if output_polling
           @accounts.reject { |a| a == meth.to_s }.each do |a|
             # Don't use the acm method or it'll make @last_used_account wrong.
             @context.send("#{a}_client".to_sym).poll
@@ -286,10 +286,6 @@ module SystemTest
     def with(account_name, opts = {})
       @accounts << account_name.to_s
       @account_opts[account_name.to_s] = opts
-    end
-
-    def disable_output_polling
-      @output_polling = false
     end
 
   end
