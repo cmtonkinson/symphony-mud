@@ -284,13 +284,13 @@ module Realm
     ###########################################################################
     def health_gain
       gain = level * (constitution.percent ** 2.0)
-      Util::Computation.bound gain, level, MAX_HEALTH_GAIN
+      Util::Computation.bound gain, 1, MAX_HEALTH_GAIN
     end
 
     ###########################################################################
     def mana_gain
       gain = level * (focus.percent ** 2.0)
-      Util::Computation.bound gain, level, MAX_MANA_GAIN
+      Util::Computation.bound gain, 1, MAX_MANA_GAIN
     end
 
     ###########################################################################
