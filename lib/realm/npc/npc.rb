@@ -33,7 +33,6 @@ module Realm
 
     ###########################################################################
     on_deep_copy ->(original) {
-      Symphony.logger.warn "NPC deep copy"
       while level < original.level
         gain_level
       end
