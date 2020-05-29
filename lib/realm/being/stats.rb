@@ -1,8 +1,10 @@
 module Realm
   class Being
-    BASE_HEALTH = 100
-    BASE_MANA   = 100
-    MAX_STAMINA = 100
+    BASE_HEALTH     = 100
+    MAX_HEALTH_GAIN = 10_000
+    MAX_MANA_GAIN   = 10_000
+    BASE_MANA       = 100
+    MAX_STAMINA     = 100
 
     BASE_LEVEL   = 1
     BASE_EXP     = 0
@@ -180,11 +182,6 @@ module Realm
     }
 
     ###########################################################################
-    on_deep_copy ->(original) {
-      @level = original.level
-    }
-
-    ###########################################################################
     vivify -> {
       $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_health
       $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_mana
@@ -274,25 +271,26 @@ module Realm
       # heal
       heal
       # notify
-      puts "\n\nCONGRATULATIONS! You grow to level {G%u{x!" % level
-      puts 'You gain {G%u{x health points.' % health_boost
-      puts 'You gain {C%u{x mana points.' % mana_boost
-      puts 'You gain {B%u{x training points.' % trains_boost
-
-      if is_a?(Avatar) && !hero?
-        puts 'You have {Y%u{x experience to your next level.' % tnl
+      if is_a? Avatar
+        puts "\n\nCONGRATULATIONS! You grow to level {G%u{x!" % level
+        puts 'You gain {G%u{x health points.' % health_boost
+        puts 'You gain {C%u{x mana points.' % mana_boost
+        puts 'You gain {B%u{x training points.' % trains_boost
+        puts 'You have {Y%u{x experience to your next level.' % tnl if !hero?
+        Symphony.logger.debug '%s has grown to level %u with %u tnl' % [fqid_str, level, tnl]
       end
-      Symphony.logger.debug '%s has grown to level %u with %u tnl' % [fqid_str, level, tnl]
     end
 
     ###########################################################################
     def health_gain
-      level * (constitution.percent ** 2.0)
+      gain = level * (constitution.percent ** 2.0)
+      Util::Computation.bound gain, level, MAX_HEALTH_GAIN
     end
 
     ###########################################################################
     def mana_gain
-      level * (focus.percent ** 2.0)
+      gain = level * (focus.percent ** 2.0)
+      Util::Computation.bound gain, level, MAX_MANA_GAIN
     end
 
     ###########################################################################

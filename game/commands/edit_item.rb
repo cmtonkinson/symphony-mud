@@ -3,8 +3,8 @@ module Command
   define :iedit do
     level Realm::Being::DEMIGOD
     usage 'create'
-    usage :target
     usage({ rid: :int })
+    usage :target
     exec do
       if create == 'create'
         item = Logistics::Builder.create_item room.zone
@@ -20,7 +20,6 @@ module Command
         being.puts I18n.t('objekt.identify', being.iedit.fqid)
         being.puts being.iedit.summary
       else
-        being.puts target.inspect
         item = being.items.locate_first target
         being.puts t 'err_not_holding' and next if item.nil?
 

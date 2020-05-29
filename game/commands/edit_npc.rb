@@ -64,7 +64,9 @@ module Command
     level Realm::Being::DEMIGOD
     usage({ new_level: :int })
     exec do
-      being.nedit.level = new_level
+      while being.nedit.level < new_level do
+        being.nedit.gain_level
+      end
       being.puts t('actor'), being.nedit.level
     end
   end
@@ -78,4 +80,15 @@ module Command
       being.puts t('actor'), being.nedit.name
     end
   end
+
+  ###############################################################################
+  define :race, :edit_npc do
+    level Realm::Being::DEMIGOD
+    usage( {race: %w(human elf dwarf canine)} )
+    exec do
+      being.nedit.anatomy = ::Talent.const_get(race.capitalize).new(being.nedit)
+      being.puts t('actor'), being.nedit.anatomy.name
+    end
+  end
+
 end

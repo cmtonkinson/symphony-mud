@@ -3,5 +3,16 @@
 {w| {xid {y%36s{x                                   {w|
 {w+---------------------------------------------------------------------------+
 {w| {xlevel {y%-10d{x                                                          {w|
-{w| {xanatomy {y%-10s{x                                                        {w|
+{w| {xrace {y%-10s{x                                                           {w|
+{w+---------------------------------------------------------------------------+
+{w| {xstr: {y%4d     {xhealth: {y%5d{x/{y%-5d{w                                         {w|
+{w| {xdex: {y%4d     {xmana:   {y%5d{x/{y%-5d{w                                         {w|
+{w| {xcon: {y%4d     {xstamina {y%5d{x                                               {w|
+{w| {xint: {y%4d     {xhitroll {y%-8d{x                                            {w|
+{w| {xfoc: {y%4d     {xdamroll {y%-8d{x                                            {w|
+{w| {xcre: {y%4d     {xarmor   {y%-4d{x                                                {w|
+{w| {xcha: {y%4d     {xbash    {y%-4d{x                                                {w|
+{w| {xluc: {y%4d     {xslash   {y%-4d{x                                                {w|
+{w|               {xpierce  {y%-4d{x                                                {w|
+{w|               {xexotic  {y%-4d{x                                                {w|
 {w+---------------------------------------------------------------------------+

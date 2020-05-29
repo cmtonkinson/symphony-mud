@@ -32,6 +32,14 @@ module Realm
     }
 
     ###########################################################################
+    on_deep_copy ->(original) {
+      Symphony.logger.warn "NPC deep copy"
+      while level < original.level
+        gain_level
+      end
+    }
+
+    ###########################################################################
     def _interpret_name
       '$being'
     end
@@ -43,6 +51,16 @@ module Realm
         id,
         level,
         anatomy.name,
+        strength.current, health.current, health.max,
+        dexterity.current, mana.current, mana.max,
+        constitution.current, stamina.current,
+        intelligence.current, hit_bonus.current,
+        focus.current, damage_bonus.current,
+        creativity.current, armor.current,
+        charisma.current, bash.current,
+        luck.current, slash.current,
+        pierce.current,
+        exotic.current,
       ]
     end
 
