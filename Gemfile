@@ -18,7 +18,7 @@ group :app do
 end
 
 group :development, :test do
-  gem 'pry'
+  gem 'pry', '~> 0.12.0'
   gem 'pry-rescue'
   gem 'pry-stack_explorer'
   gem 'pry-coolline'
