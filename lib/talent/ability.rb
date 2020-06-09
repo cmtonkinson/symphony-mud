@@ -184,7 +184,7 @@ module Talent
 
     ###########################################################################
     def exec
-      raise StandardError.new 'Talent::Ability#exec not implemented'
+      raise StandardError, 'Talent::Ability#exec not implemented'
     end
   end
 end

@@ -7,7 +7,7 @@ module Realm
       # If we've reached up the object heirarchy all the way to Objekt, then
       # there are no valid containers configured for this klass or any of
       # its ancestors.
-      raise ArgumentError.new "No #{klass.name} container configured on #{self.class.name}" if ancestor == Realm::Objekt
+      raise ArgumentError, "No #{klass.name} container configured on #{self.class.name}" if ancestor == Realm::Objekt
 
       # Construct a container name from the ancestor.
       container_name = ancestor.name.split('::').last.downcase.to_s + 's'

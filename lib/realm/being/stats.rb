@@ -369,7 +369,7 @@ module Realm
         when Mechanics::SimpleStat    then stat.modify amount
         when Mechanics::MaxStat       then stat.max_stat.modify amount
         when Mechanics::ThresholdStat then stat.current_stat.modify amount
-        else raise ArgumentError.new "Being#modify given an unrecognized Stat type (#{send(stat).class.name})"
+        else raise ArgumentError, "Being#modify given an unrecognized Stat type (#{send(stat).class.name})"
         end
       end
     end

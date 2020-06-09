@@ -107,10 +107,10 @@ module Command
         @type  = :literal
         @name  = definition
       else
-        raise ArgumentError.new I18n.t('command.argument.bad_argument_definition', arg: definition.inspect)
+        raise ArgumentError, I18n.t('command.argument.bad_argument_definition', arg: definition.inspect)
       end
 
-      raise ArgumentError.new I18n.t('command.variable_overshadow', name: @name) if DEFAULT_CONTEXT.include? @name
+      raise ArgumentError, I18n.t('command.variable_overshadow', name: @name) if DEFAULT_CONTEXT.include? @name
     end
 
     ###########################################################################
@@ -120,7 +120,7 @@ module Command
         @type = :set
         @value = []
         kind.each do |elt|
-          raise ArgumentError.new I18n.t 'command.argument.bad_array_value', type: elt.class unless elt.is_a? String
+          raise ArgumentError, I18n.t('command.argument.bad_array_value', type: elt.class) unless elt.is_a? String
 
           @value << elt
         end

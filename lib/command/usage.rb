@@ -4,10 +4,10 @@ module Command
     # Add a new Argument. Raise if something goes wrong.
     def push(arg)
       # Don't accept custom data structures.
-      raise ArgumentError.new I18n.t 'command.usage.push_non_argument' unless arg.is_a? Argument
+      raise ArgumentError, I18n.t('command.usage.push_non_argument') unless arg.is_a? Argument
 
       # Argument names must be unique.
-      raise ArgumentError.new I18n.t 'command.usage.duplicate_name', name: arg.name if any? { |a| a.name == arg.name }
+      raise ArgumentError, I18n.t('command.usage.duplicate_name', name: arg.name) if any? { |a| a.name == arg.name }
 
       # Append.
       super

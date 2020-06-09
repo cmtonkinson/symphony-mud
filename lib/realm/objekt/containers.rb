@@ -45,7 +45,7 @@ module Realm
 
     ###########################################################################
     def container_for(obj)
-      raise ArgumentError.new "#{obj.class.name} is not a subclass of Objekt" unless obj.is_a? Objekt
+      raise ArgumentError, "#{obj.class.name} is not a subclass of Objekt" unless obj.is_a? Objekt
 
       container_name = nil
 
@@ -53,7 +53,7 @@ module Realm
         # If we've reached up the object heirarchy all the way to Objekt, then
         # there are no valid containers configured for this obj.class or any of
         # its ancestors.
-        raise ArgumentError.new "No #{obj.class.name} container configured on #{self.class.name}" if klass == Objekt
+        raise ArgumentError, "No #{obj.class.name} container configured on #{self.class.name}" if klass == Objekt
 
         # Construct a container name from the klass.
         container_name = klass.name.split('::').last.downcase.to_s + 's'
