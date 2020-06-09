@@ -6,12 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Lint/DeprecatedOpenSSLConstant:
-  Exclude:
-    - 'lib/base/configuration.rb'
-
 # Offense count: 52
 # Configuration parameters: IgnoredMethods.
 Metrics/AbcSize:
@@ -52,22 +46,6 @@ Metrics/ParameterLists:
 # Configuration parameters: IgnoredMethods.
 Metrics/PerceivedComplexity:
   Max: 12
-
-# Offense count: 13
-# Configuration parameters: MinNameLength, AllowNamesEndingInNumbers, AllowedNames, ForbiddenNames.
-# AllowedNames: io, id, to, by, on, in, at, ip, db, os, pp
-Naming/MethodParameterName:
-  Exclude:
-    - 'lib/realm/being/stats.rb'
-    - 'lib/util/computation.rb'
-    - 'system-tests/system_test/system_test.rb'
-
-# Offense count: 5
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: snake_case, camelCase
-Naming/VariableName:
-  Exclude:
-    - 'lib/realm/being/stats.rb'
 
 # Offense count: 6
 # Cop supports --auto-correct.
@@ -112,16 +90,6 @@ Style/FrozenStringLiteralComment:
 # Configuration parameters: AllowedVariables.
 Style/GlobalVars:
   Enabled: false
-
-# Offense count: 8
-# Configuration parameters: MinBodyLength.
-Style/GuardClause:
-  Exclude:
-    - 'lib/command/argument.rb'
-    - 'lib/realm/being/stats.rb'
-    - 'lib/realm/world.rb'
-    - 'lib/talent/ability.rb'
-    - 'system-tests/system_test/system_test.rb'
 
 # Offense count: 16
 # Cop supports --auto-correct.

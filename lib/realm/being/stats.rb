@@ -272,15 +272,16 @@ module Realm
       mana.max_stat.baseline   += mana_boost
       # heal
       heal
+
+      return unless is_a? Avatar
+
       # notify
-      if is_a? Avatar
-        puts "\n\nCONGRATULATIONS! You grow to level {G%u{x!" % level
-        puts 'You gain {G%u{x health points.' % health_boost
-        puts 'You gain {C%u{x mana points.' % mana_boost
-        puts 'You gain {B%u{x training points.' % trains_boost
-        puts 'You have {Y%u{x experience to your next level.' % tnl unless hero?
-        Symphony.logger.debug '%s has grown to level %u with %u tnl' % [fqid_str, level, tnl]
-      end
+      puts "\n\nCONGRATULATIONS! You grow to level {G%u{x!" % level
+      puts 'You gain {G%u{x health points.' % health_boost
+      puts 'You gain {C%u{x mana points.' % mana_boost
+      puts 'You gain {B%u{x training points.' % trains_boost
+      puts 'You have {Y%u{x experience to your next level.' % tnl unless hero?
+      Symphony.logger.debug '%s has grown to level %u with %u tnl' % [fqid_str, level, tnl]
     end
 
     ###########################################################################
@@ -320,21 +321,21 @@ module Realm
     end
 
     ###########################################################################
-    def take_damage(amount, iDoesDamage)
+    def take_damage(amount, did_the_damage)
       stamina.decrease 1
       health.decrease amount
-      die iDoesDamage if health.current < 1
+      die did_the_damage if health.current < 1
     end
 
     ###########################################################################
-    def die(iDoesDamage)
+    def die(did_the_damage)
       result = run_hook :before_death
       return if result.halted?
 
       run_hook :on_death
 
-      Symphony.logger.info '%s killed %s' % [iDoesDamage.whodunnit, self].map(&:fqid_str) if is_a?(Avatar)
-      puts '%s {RKILLED{x you{x!!!!' % iDoesDamage.whodunnit.name
+      Symphony.logger.info '%s killed %s' % [did_the_damage.whodunnit, self].map(&:fqid_str) if is_a?(Avatar)
+      puts '%s {RKILLED{x you{x!!!!' % did_the_damage.whodunnit.name
       puts 'You {RDIED{x!!!!'
       room.puts '$being is {RDEAD{x!!!!', self, exclude: self
 

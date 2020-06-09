@@ -73,34 +73,34 @@ module SystemTest
 
     ###########################################################################
     def expect_last(client, e, msg = nil)
-      unless can_find(client, -1, e)
-        @status = :fail
-        @result = not_found_error e, msg
-      end
+      return if can_find(client, -1, e)
+
+      @status = :fail
+      @result = not_found_error e, msg
     end
 
     ###########################################################################
     def expect_any(client, e, msg = nil)
-      unless can_find(client, nil, e)
-        @status = :fail
-        @result = not_found_error e, msg
-      end
+      return if can_find(client, nil, e)
+
+      @status = :fail
+      @result = not_found_error e, msg
     end
 
     ###########################################################################
     def n_expect_last(client, e, msg = nil)
-      if can_find(client, -1, e)
-        @status = :fail
-        @result = found_error e, msg
-      end
+      return unless can_find(client, -1, e)
+
+      @status = :fail
+      @result = found_error e, msg
     end
 
     ###########################################################################
     def n_expect_any(client, e, msg = nil)
-      if can_find(client, nil, e)
-        @status = :fail
-        @result = found_error e, msg
-      end
+      return unless can_find(client, nil, e)
+
+      @status = :fail
+      @result = found_error e, msg
     end
 
     ###########################################################################

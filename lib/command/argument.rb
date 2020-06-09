@@ -88,29 +88,29 @@ module Command
 
     ###########################################################################
     def study(definition)
-      unless definition.nil?
-        @empty = false
+      return if definition.nil?
 
-        case definition
-        when Hash
-          study_hash(*definition.first)
-        when Symbol
-          if definition == :rest
-            @type = :rest
-            @name = 'rest'
-          else
-            @type = :id
-            @name = definition.to_s
-          end
-        when String
-          @type  = :literal
-          @name  = definition
+      @empty = false
+
+      case definition
+      when Hash
+        study_hash(*definition.first)
+      when Symbol
+        if definition == :rest
+          @type = :rest
+          @name = 'rest'
         else
-          raise ArgumentError.new I18n.t('command.argument.bad_argument_definition', arg: definition.inspect)
+          @type = :id
+          @name = definition.to_s
         end
-
-        raise ArgumentError.new I18n.t('command.variable_overshadow', name: @name) if DEFAULT_CONTEXT.include? @name
+      when String
+        @type  = :literal
+        @name  = definition
+      else
+        raise ArgumentError.new I18n.t('command.argument.bad_argument_definition', arg: definition.inspect)
       end
+
+      raise ArgumentError.new I18n.t('command.variable_overshadow', name: @name) if DEFAULT_CONTEXT.include? @name
     end
 
     ###########################################################################

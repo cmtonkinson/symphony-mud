@@ -29,17 +29,17 @@ module Realm
         zone.run_hook :vivify
       end
 
+      return unless @zones.empty?
+
       # Seed the universe (e.g. for a fresh install with no prior data).
-      if @zones.empty?
-        # Create the Origin Zone.
-        origin = Realm::Zone.new(ORIGIN_ZONE_ID, { name: 'The Origin' })
-        insert origin
-        origin.run_hook :vivify
-        # Create the Void Room.
-        void = Realm::Room.new(THE_VOID_ID, { rid: 0, name: 'The Void' })
-        void.zone = origin
-        origin.insert void
-      end
+      # Create the Origin Zone.
+      origin = Realm::Zone.new(ORIGIN_ZONE_ID, { name: 'The Origin' })
+      insert origin
+      origin.run_hook :vivify
+      # Create the Void Room.
+      void = Realm::Room.new(THE_VOID_ID, { rid: 0, name: 'The Void' })
+      void.zone = origin
+      origin.insert void
     end
 
     ###########################################################################

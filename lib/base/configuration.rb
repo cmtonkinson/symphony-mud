@@ -12,7 +12,7 @@ module Base
       # For account management
       @hash_salt       = ''
       @hash_iterations = 20_000
-      @hash_digest     = OpenSSL::Digest::SHA512.new
+      @hash_digest     = OpenSSL::Digest.new('SHA512')
 
       # Where to store the reboot fd => Avatar Hash?
       @recovery_file = Symphony.tmp.join 'recovery.yml'
