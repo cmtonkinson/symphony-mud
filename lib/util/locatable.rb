@@ -22,7 +22,7 @@ module Util
       if candidates.empty?
         candidates = values.select do |obj|
           terms = obj.name.downcase.split
-          terms.any? { |term| term.index(id.name).zero? }
+          terms.any? { |term| term.index(id.name)&.zero? }
         end
       end
 
