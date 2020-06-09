@@ -1,6 +1,0 @@
---color
---format=clang
---format=worst
---format=offenses
---fail-level=warning
-
