@@ -36,7 +36,7 @@ module Realm
         # Add the Exit to the Zone's collection.
         @exits.insert exit
 
-        Realm::Exit::DIRECTIONS.keys.each do |dir|
+        Realm::Exit::DIRECTIONS.each_key do |dir|
           # Most links will be nil.
           room = exit.send dir
           next if room.nil?
@@ -70,7 +70,7 @@ module Realm
       layout = Array.new(height * 2) { Array.new(width * 2) { nil } }
 
       # Set a value for each coordinate that is occupied by a Room.
-      @rooms.values.each do |room|
+      @rooms.each_value do |room|
         # Get the X,Y for the Room and set it in the layout.
         adjusted_x = (room.x + x_translation) * 2
         adjusted_y = (room.y + y_translation) * 2

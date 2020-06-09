@@ -3,7 +3,7 @@ module Command
   # TODO: set default aliases (NESWUP, kill, etc.)
 
   ###############################################################################
-  Realm::Exit::DIRECTIONS.keys.each do |direction|
+  Realm::Exit::DIRECTIONS.each_key do |direction|
     define direction do
       shortcut direction[0]
       usage
@@ -333,7 +333,7 @@ module Command
     usage
     exec do
       commands = []
-      ::Command.configuration.command_sets.values.each { |set| commands << set.to_a }
+      ::Command.configuration.command_sets.each_value { |set| commands << set.to_a }
 
       list = commands.flatten
                      .reject { |c| c.get_shortcut.nil? }
@@ -392,7 +392,7 @@ module Command
     usage
     exec do
       being.puts t('title')
-      $world.avatars.values.each do |a|
+      $world.avatars.each_value do |a|
         being.puts '  ' + a.name
       end
     end

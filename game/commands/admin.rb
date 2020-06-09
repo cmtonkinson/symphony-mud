@@ -279,7 +279,7 @@ module Command
     level Realm::Being::GOD
     usage
     exec do
-      room.beings.values.each { |b| b.group.remove_all_opponents }
+      room.beings.each_value { |b| b.group.remove_all_opponents }
       room.puts t('room')
     end
   end
@@ -335,8 +335,8 @@ module Command
     usage
     exec do
       room.puts t('room')
-      room.items.values.each { |i| i.run_hook :enervate }
-      room.beings.values.each { |b| b.run_hook :enervate if b.is_a? Realm::NPC }
+      room.items.each_value { |i| i.run_hook :enervate }
+      room.beings.each_value { |b| b.run_hook :enervate if b.is_a? Realm::NPC }
     end
   end
 

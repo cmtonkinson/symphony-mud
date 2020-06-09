@@ -78,7 +78,7 @@ module Command
         being.puts t('empty_list') and next if room.placements.empty?
 
         being.puts t('list_title'), room
-        room.placements.values.each { |p| being.puts p.summary }
+        room.placements.each_value { |p| being.puts p.summary }
 
       elsif delete == 'delete'
         placement = room.placements.values.find { |p| p.rid == rule }

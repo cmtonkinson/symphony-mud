@@ -6,7 +6,7 @@ module Realm
     attr_accessor :coords
 
     CONTAINERS.each { |cont| attr_accessor cont }
-    Realm::Exit::DIRECTIONS.keys.each { |exit| attr_accessor exit }
+    Realm::Exit::DIRECTIONS.each_key { |exit| attr_accessor exit }
 
     ###########################################################################
     def initialize(id = nil, props = {})
@@ -17,7 +17,7 @@ module Realm
     after_initialize lambda {
       @zone   = nil
       @coords = Vector[0, 0, 0]
-      Realm::Exit::DIRECTIONS.keys.each { |exit| send "#{exit}=", nil }
+      Realm::Exit::DIRECTIONS.each_key { |exit| send "#{exit}=", nil }
       CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     }
 
@@ -44,7 +44,7 @@ module Realm
     }
 
     ###########################################################################
-    Realm::Exit::DIRECTIONS.keys.each do |exit|
+    Realm::Exit::DIRECTIONS.each_key do |exit|
       define_method "#{exit}_room", (proc do
         # Yo dawg, I heard you like to send exit to your send exit.
         send(exit).send(exit)
@@ -62,7 +62,7 @@ module Realm
     ###########################################################################
     def puts(format, *args, **opts)
       message = Util::Linguist.interpret format, *args
-      @beings.values.each do |being|
+      @beings.each_value do |being|
         if opts.key?(:exclude)
           dont_message = opts[:exclude].is_a?(Array) ? opts[:exclude] : [opts[:exclude]]
           next if dont_message.include? being

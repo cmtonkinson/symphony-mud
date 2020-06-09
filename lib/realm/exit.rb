@@ -29,7 +29,7 @@ module Realm
       }
     }
 
-    DIRECTIONS.keys.each { |exit| attr_accessor exit }
+    DIRECTIONS.each_key { |exit| attr_accessor exit }
 
     simple_flag :open, true, :open?, :open!, :closed?, :close!
     simple_flag :lock, false, :locked?, :lock!, :unlocked?, :unlock!
@@ -37,7 +37,7 @@ module Realm
     ###########################################################################
     def initialize(id = nil, props = {})
       super
-      DIRECTIONS.keys.each { |exit| send "#{exit}=", nil }
+      DIRECTIONS.each_key { |exit| send "#{exit}=", nil }
     end
 
     ###########################################################################
@@ -60,7 +60,7 @@ module Realm
       @open = @default_open = hash[:default_open]
       @lock = @default_lock = hash[:default_lock]
 
-      DIRECTIONS.keys.each do |dir|
+      DIRECTIONS.each_key do |dir|
         send "#{dir}=", $world.find(hash[dir])
       end
     }

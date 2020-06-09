@@ -91,17 +91,6 @@ Style/FrozenStringLiteralComment:
 Style/GlobalVars:
   Enabled: false
 
-# Offense count: 16
-# Cop supports --auto-correct.
-Style/HashEachMethods:
-  Exclude:
-    - 'game/commands/admin.rb'
-    - 'game/commands/edit_room.rb'
-    - 'game/commands/global.rb'
-    - 'lib/realm/exit.rb'
-    - 'lib/realm/room.rb'
-    - 'lib/realm/zone.rb'
-
 # Offense count: 22
 Style/MixinUsage:
   Enabled: false
@@ -157,9 +146,3 @@ Style/NumericPredicate:
 # SupportedStyles: compact, exploded
 Style/RaiseArgs:
   EnforcedStyle: compact
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/SlicingWithRange:
-  Exclude:
-    - 'lib/util/linguist.rb'
