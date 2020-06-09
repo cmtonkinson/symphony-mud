@@ -61,7 +61,7 @@ module Command
 
       cloned = it.clone
       where.insert cloned
-      cloned.room = where if where == room and cloned.is_a? Realm::Being
+      cloned.room = where if (where == room) && cloned.is_a?(Realm::Being)
       cloned.run_hook :vivify
       being.puts t('actor'), cloned.name
     end
@@ -102,6 +102,7 @@ module Command
       if item == 'item'
         targets = being.items.locate target
         being.puts t('err_no_item') and next if targets.empty?
+
         targets.each do |item|
           item.run_hook :enervate
           room.puts t('item'), item
@@ -110,8 +111,10 @@ module Command
       elsif npc == 'npc'
         targets = room.beings.locate target
         being.puts t('err_no_npc') and next if targets.empty?
+
         targets.each do |victim|
           being.puts t('err_not_npc') and next unless victim.is_a? Realm::NPC
+
           victim.run_hook :enervate
           room.puts t('npc'), victim
           Symphony.logger.debug '%s destroyed %s' % [being.fqid_str, victim.fqid_str]
@@ -207,8 +210,8 @@ module Command
     usage({ target: :string })
     exec do
       it = being.items.locate_first(target) ||
-        being.room.items.locate_first(target) ||
-        being.room.beings.locate_first(target)
+           being.room.items.locate_first(target) ||
+           being.room.beings.locate_first(target)
       being.puts t 'err_not_found' and next if it.nil?
 
       being.puts it.summary
@@ -263,7 +266,7 @@ module Command
   ###############################################################################
   define :log_level do
     level Realm::Being::CREATOR
-    usage({ new_level: %w(trace debug info warn error fatal) })
+    usage({ new_level: %w[trace debug info warn error fatal] })
     exec do
       Symphony.logger.level = Logger.const_get(new_level.upcase)
       being.puts t('changed'), Symphony.logger.level

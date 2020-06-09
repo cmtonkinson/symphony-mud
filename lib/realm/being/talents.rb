@@ -5,13 +5,13 @@ module Realm
     define_hooks :before_ability_invocation, :after_ability_invocation
 
     ###########################################################################
-    after_initialize -> {
-      @abilities = Array.new
+    after_initialize lambda {
+      @abilities = []
     }
 
     ###########################################################################
-    on_hashify -> {
-      hash = Hash.new
+    on_hashify lambda {
+      hash = {}
 
       abilities.select(&:learned?).map { |a| hash[a.name] = a.mastery }
 
@@ -19,14 +19,15 @@ module Realm
     }
 
     ###########################################################################
-    on_dehashify ->(hash) {
-      return unless hash.has_key? :abilities
+    on_dehashify lambda { |hash|
+      return unless hash.key? :abilities
 
       hash = hash[:abilities]
 
       hash.each do |name, mastery|
         a = get_ability name
         next if a.nil?
+
         a.learn mastery
       end
     }

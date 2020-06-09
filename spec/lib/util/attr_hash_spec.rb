@@ -3,7 +3,6 @@ require 'spec_helper'
 include Util
 
 describe Util::AttrHash do
-
   #############################################################################
   it 'should be a normal Hash' do
     h = AttrHash.new
@@ -22,7 +21,6 @@ describe Util::AttrHash do
 
   #############################################################################
   describe '#initialize' do
-
     it 'should default the key attribute to :id' do
       h = AttrHash.new
       expect(h.attribute).to eq :id
@@ -32,12 +30,10 @@ describe Util::AttrHash do
       h = AttrHash.new :baz
       expect(h.attribute).to eq :baz
     end
-
   end
 
   #############################################################################
   describe '#insert' do
-
     it 'should attempt insertion by the configured attribute' do
       h  = AttrHash.new      :qux
       s1 = OpenStruct.new foo: 'a', bar: 'b'
@@ -51,12 +47,10 @@ describe Util::AttrHash do
       expect(h.keys).to eq ['d']
       expect(h.values).to eq [s2]
     end
-
   end
 
   #############################################################################
   describe '#remove' do
-
     it 'should remove by key of the configured attribute' do
       h = AttrHash.new :foo
       s = OpenStruct.new foo: 'a', bar: 'b'
@@ -67,12 +61,10 @@ describe Util::AttrHash do
       expect { h.delete s }.not_to raise_error
       expect(h.size).to eq 0
     end
-
   end
 
   #############################################################################
   describe '#locate' do
-
     before :each do
       @h = AttrHash.new
       ['sword', 'sword', 'crystal', 'sword', 'mushroom', 'small cup', 'mutton', 'little pink flower'].each_with_index do |name, i|
@@ -81,7 +73,6 @@ describe Util::AttrHash do
     end
 
     describe 'in the positive case' do
-
       it 'should find a single Objekt by exact name' do
         found = @h.locate 'crystal'
         expect(found).to be_an Array
@@ -131,16 +122,14 @@ describe Util::AttrHash do
       end
 
       # TODO: nice to have
-      #it "should find multiple Objekts by multiple names" do
+      # it "should find multiple Objekts by multiple names" do
       #  found = @h.locate "sword mushroom 'small cup'"
       #  expect(found).to have_exactly(3).items
       #  expect(found.map &:name).to contain_exactly ["sward", "mushroom", "small cup"]
-      #end
-
+      # end
     end
 
     describe 'in the negative case' do
-
       it 'should not return more Objekts than are available' do
         found = @h.locate 's*100'
         expect(found).to have_exactly(4).items
@@ -155,9 +144,6 @@ describe Util::AttrHash do
         found = @h.locate 'nadda'
         expect(found).to have_exactly(0).items
       end
-
     end
-
   end
-
 end

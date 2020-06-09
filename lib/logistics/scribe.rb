@@ -13,15 +13,13 @@ module Logistics
     ###########################################################################
     def self.load(klass, objekt_id)
       File.open pathname(klass, objekt_id), 'r' do |fp|
-        begin
-          klass.deserialize fp.read
-        rescue StandardError => e
-          Symphony.logger.error "Error while loading #{klass}:#{objekt_id}"
-          e.backtrace.each do |line|
-            Symphony.logger.debug "  error at #{line}"
-          end
-          return false
+        klass.deserialize fp.read
+      rescue StandardError => e
+        Symphony.logger.error "Error while loading #{klass}:#{objekt_id}"
+        e.backtrace.each do |line|
+          Symphony.logger.debug "  error at #{line}"
         end
+        return false
       end
     end
 

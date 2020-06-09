@@ -39,9 +39,8 @@ module Talent
     def modifiers
       {
         intelligence: 2,
-        luck: -1,
+        luck: -1
       }
     end
-
   end
 end

@@ -36,7 +36,7 @@ module Util
     def display_contents(stack = true)
       values
         .group_by(&:name)
-        .map { |_name, objekts|
+        .map do |_name, objekts|
           pretty_name = Util::Linguist.interpret objekts[0].interpret_name, objekts[0]
           if stack
             if objekts.length > 1
@@ -47,7 +47,7 @@ module Util
           else
             ' %s' % pretty_name
           end
-        }
+        end
         .join("\n")
     end
   end

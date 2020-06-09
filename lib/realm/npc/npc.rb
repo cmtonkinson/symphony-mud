@@ -8,7 +8,7 @@ module Realm
     DEFENSE.each { |name| attr_writer name }
     OFFENSE.each { |name| attr_writer name }
 
-    SETTINGS = %i(mobility hostility)
+    SETTINGS = %i[mobility hostility]
 
     SETTINGS.each { |s| attr_reader s }
 
@@ -19,23 +19,21 @@ module Realm
     end
 
     ###########################################################################
-    on_hashify -> {
-      hash = Hash.new
+    on_hashify lambda {
+      hash = {}
       SETTINGS.each { |s| hash[s] = send s }
       { npc: hash }
     }
 
     ###########################################################################
-    on_dehashify ->(hash) {
+    on_dehashify lambda { |hash|
       npc = hash[:npc]
       SETTINGS.each { |s| instance_variable_set "@#{s}", npc[s] }
     }
 
     ###########################################################################
-    on_deep_copy ->(original) {
-      while level < original.level
-        gain_level
-      end
+    on_deep_copy lambda { |original|
+      gain_level while level < original.level
     }
 
     ###########################################################################
@@ -59,12 +57,12 @@ module Realm
         charisma.current, bash.current,
         luck.current, slash.current,
         pierce.current,
-        exotic.current,
+        exotic.current
       ]
     end
 
     ###########################################################################
-    vivify -> {
+    vivify lambda {
       $world.schedule Mechanics::RecurringJob.new (5..30), self, (5..30), :auto_act
     }
 
@@ -79,12 +77,14 @@ module Realm
     ###########################################################################
     def auto_move
       return if mobility == 0
+
       speak 'moving!'
     end
 
     ###########################################################################
     def auto_attack
       return if hostility == 0
+
       speak 'attacking!'
     end
   end

@@ -39,9 +39,8 @@ module Talent
     def modifiers
       {
         focus: 2,
-        constitution: -1,
+        constitution: -1
       }
     end
-
   end
 end

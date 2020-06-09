@@ -8,11 +8,9 @@ module Talent
       @default_target = :self
     end
 
-    def _learned_by(being)
-    end
+    def _learned_by(being); end
 
-    def _learn
-    end
+    def _learn; end
 
     def _invoke(target)
       health = rand(able_being.level) * 3

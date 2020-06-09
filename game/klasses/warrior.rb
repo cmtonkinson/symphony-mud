@@ -1,6 +1,5 @@
 module Talent
   class Warrior < Klass
-
     def initialize(being)
       super
       @name        = 'warrior'
@@ -37,10 +36,8 @@ module Talent
         dexterity: 1,
         intelligence: -1,
         creativity: -1,
-        focus: -3,
+        focus: -3
       }
     end
-
   end
 end
-

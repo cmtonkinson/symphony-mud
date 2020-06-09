@@ -12,22 +12,22 @@ module Realm
     end
 
     ###########################################################################
-    after_initialize -> {
+    after_initialize lambda {
       CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     }
 
     ###########################################################################
-    on_hashify -> {
+    on_hashify lambda {
       {
         rooms: @rooms.values.map(&:hashify),
         exits: @exits.values.map(&:hashify),
         items: @items.values.map(&:hashify),
-        npcs: @npcs.values.map(&:hashify),
+        npcs: @npcs.values.map(&:hashify)
       }
     }
 
     ###########################################################################
-    on_dehashify ->hash {
+    on_dehashify lambda { |hash|
       hash[:rooms].each { |h| @rooms.insert Realm::Room.dehashify(h) }
 
       hash[:exits].each do |h|
@@ -51,7 +51,7 @@ module Realm
     }
 
     ###########################################################################
-    vivify -> {
+    vivify lambda {
       reset
       $world.schedule Mechanics::RecurringJob.new 90, self, 90, :reset
     }
@@ -67,7 +67,7 @@ module Realm
       height        = y_max - y_min + 1
       y_translation = y_min < 0 ? -y_min : 0
 
-      layout        = Array.new(height * 2) { Array.new(width * 2) { nil } }
+      layout = Array.new(height * 2) { Array.new(width * 2) { nil } }
 
       # Set a value for each coordinate that is occupied by a Room.
       @rooms.values.each do |room|
@@ -100,7 +100,7 @@ module Realm
     ###########################################################################
     def extreme_coords(index)
       room_ary = @rooms.values
-      get_coord = Proc.new { |r| r.coords[index] }
+      get_coord = proc { |r| r.coords[index] }
       [
         room_ary.min_by(&get_coord).coords[index],
         room_ary.max_by(&get_coord).coords[index]
@@ -112,7 +112,7 @@ module Realm
       $templates.zone_summary % [
         rid, name,
         id,
-        @rooms.length, @items.length, @npcs.length,
+        @rooms.length, @items.length, @npcs.length
       ]
     end
 

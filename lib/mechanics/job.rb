@@ -76,9 +76,9 @@ module Mechanics
     def recur!
       @wen = Time.now.to_i + resolve_time(@repeat_every)
       if @repeat_times == 0
-        return nil
+        nil
       else
-        return self
+        self
       end
     end
 
@@ -96,7 +96,7 @@ module Mechanics
     ###########################################################################
     # Execute the callable.
     def fire
-      Symphony.logger.trace 'Firing %s' % self unless IGNORE_TRACE.call(self.to_s)
+      Symphony.logger.trace 'Firing %s' % self unless IGNORE_TRACE.call(to_s)
       @repeat_times -= 1 if @repeat_times > 0
       @what.respond_to?(:call) ? @what.call(@who, *@args) : @who.send(@what.to_sym, *@args)
       kill unless recurring?

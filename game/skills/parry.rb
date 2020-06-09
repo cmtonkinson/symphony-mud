@@ -19,7 +19,7 @@ module Talent
       strike.avoid
       strike.defender.indented_puts strike.level, "You parry $being's $strike!", strike.attacker, strike
       strike.attacker.indented_puts strike.level, '$being parries your $strike!', strike.defender, strike
-      return true
+      true
     end
   end
 end

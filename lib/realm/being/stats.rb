@@ -20,7 +20,7 @@ module Realm
     GOD      = HERO + 15
     CREATOR  = HERO + 20
 
-    LEVELS = %w(NEWBIE TRAVELER HERO DEMIGOD GOD CREATOR)
+    LEVELS = %w[NEWBIE TRAVELER HERO DEMIGOD GOD CREATOR]
 
     # Many immortal commands (such as 'force' and 'summon') require that in
     # order to perform them, the actor be a sufficiently higher level than the
@@ -39,12 +39,12 @@ module Realm
     BASE_WEIGHT = 3
 
     # Core names can be grouped into five distinct buckets.
-    EXPERIENCE = %i(level exp tnl training_points)
-    WELLNESS   = %i(health mana stamina)
-    FITNESS    = %i(strength dexterity constitution intelligence focus creativity charisma luck)
-    DEFENSE    = %i(armor bash slash pierce exotic)
-    OFFENSE    = %i(hit_bonus damage_bonus)
-    PHYSICAL   = %i(age height weight)
+    EXPERIENCE = %i[level exp tnl training_points]
+    WELLNESS   = %i[health mana stamina]
+    FITNESS    = %i[strength dexterity constitution intelligence focus creativity charisma luck]
+    DEFENSE    = %i[armor bash slash pierce exotic]
+    OFFENSE    = %i[hit_bonus damage_bonus]
+    PHYSICAL   = %i[age height weight]
 
     # Discourage direct manipulation of any core names by only defining readers.
     (EXPERIENCE + WELLNESS + FITNESS + DEFENSE + OFFENSE + PHYSICAL).each do |name|
@@ -55,13 +55,13 @@ module Realm
     FITNESS.each { |name| alias_method :"#{name[0..2]}", :"#{name}" }
 
     # Random attributes of Being that can include static modifiers.
-    MODIFYING_ATTRS = %w(klass anatomy)
+    MODIFYING_ATTRS = %w[klass anatomy]
 
     attr_accessor :circumstance
 
     ###########################################################################
     # Set default values for performance attributes.
-    after_initialize -> {
+    after_initialize lambda {
       @level           = BASE_LEVEL
       @exp             = BASE_EXP
       @tnl             = BASE_TNL
@@ -85,8 +85,8 @@ module Realm
     }
 
     ###########################################################################
-    on_hashify -> {
-      hash = Hash.new
+    on_hashify lambda {
+      hash = {}
 
       # NOTE: Must remove (and save) equipment before saving core stats. Not
       # only does this make it easier to prevent and detect errors with save
@@ -98,13 +98,13 @@ module Realm
       # equipment during Being::Stats#on_hashify.
       saved_eq = {}
       if @anatomy
-        hash[:equipment] = Hash[@anatomy.slots.map { |slot|
+        hash[:equipment] = Hash[@anatomy.slots.map do |slot|
           next if slot.empty?
 
           item = slot.set nil
           saved_eq[slot.name] = item
           [slot.name, item.hashify]
-        }.compact]
+        end.compact]
       end
 
       # NOTE: Same comments as above for equipment, except for the subobjects
@@ -112,6 +112,7 @@ module Realm
       MODIFYING_ATTRS.each do |x|
         x = send x.to_sym
         next if x.nil?
+
         modify x.modifiers, true if x.respond_to? :modifiers
       end
 
@@ -144,7 +145,7 @@ module Realm
     }
 
     ###########################################################################
-    on_dehashify ->hash {
+    on_dehashify lambda { |hash|
       hash = hash[:stats]
 
       EXPERIENCE.each { |name| instance_variable_set "@#{name}", hash[name] }
@@ -163,12 +164,12 @@ module Realm
       DEFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(hash[name]) }
       OFFENSE.each { |name| instance_variable_set "@#{name}", Mechanics::SimpleStat.new(hash[name]) }
 
-      PHYSICAL.each { |name| instance_variable_set "@#{name}", hash[name] if hash.has_key? name }
+      PHYSICAL.each { |name| instance_variable_set "@#{name}", hash[name] if hash.key? name }
 
       # Must restore core stats before restoring equipment
       # See comments in on_hashify.
       # TODO: Deduplicate this logic with the [logically] equivalent loop at the end of on_hashify.
-      if @anatomy && hash.has_key?(:equipment)
+      if @anatomy && hash.key?(:equipment)
         hash[:equipment].each do |slot_name, h|
           @anatomy.change_equipment @anatomy.get_empty_slot(slot_name), Realm::Item.dehashify(h), nil
         end
@@ -182,7 +183,7 @@ module Realm
     }
 
     ###########################################################################
-    vivify -> {
+    vivify lambda {
       $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_health
       $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_mana
       $world.schedule Mechanics::RecurringJob.new 0, self, 3, :auto_stamina
@@ -193,6 +194,7 @@ module Realm
       MODIFYING_ATTRS.each do |x|
         x = send x.to_sym
         next if x.nil?
+
         modify x.modifiers if x.respond_to? :modifiers
       end
     end
@@ -203,7 +205,7 @@ module Realm
     end
 
     (LEVELS - %w[NEWBIE]).each do |lvl|
-      define_method :"#{lvl.downcase}?", (Proc.new { @level >= Realm::Being.const_get(lvl) })
+      define_method :"#{lvl.downcase}?", (proc { @level >= Realm::Being.const_get(lvl) })
     end
 
     ###########################################################################
@@ -237,7 +239,7 @@ module Realm
     ###########################################################################
     # NOTE: Avatars stop gaining experience and show 0 tnl once they reach HERO
     def award_experience(exp_gained)
-      return if self.is_a?(Avatar) && level >= HERO
+      return if is_a?(Avatar) && level >= HERO
 
       puts 'You gain {Y%d{x experience points!' % exp_gained
       @exp = exp + exp_gained
@@ -247,9 +249,9 @@ module Realm
           @tnl = tnl - exp_gained
           break
         else
-          exp_gained = exp_gained - tnl
+          exp_gained -= tnl
           gain_level
-          return if self.is_a?(Avatar) && level >= HERO
+          return if is_a?(Avatar) && level >= HERO
         end
       end
     end
@@ -263,8 +265,8 @@ module Realm
       mana_boost     = mana_gain
       trains_boost   = trains_gain
       # Apply gains
-      @level                   = new_level
-      @tnl                     = (is_a?(Avatar) && hero?) ? 0 : new_tnl
+      @level = new_level
+      @tnl = is_a?(Avatar) && hero? ? 0 : new_tnl
       @training_points         += trains_boost
       health.max_stat.baseline += health_boost
       mana.max_stat.baseline   += mana_boost
@@ -276,20 +278,20 @@ module Realm
         puts 'You gain {G%u{x health points.' % health_boost
         puts 'You gain {C%u{x mana points.' % mana_boost
         puts 'You gain {B%u{x training points.' % trains_boost
-        puts 'You have {Y%u{x experience to your next level.' % tnl if !hero?
+        puts 'You have {Y%u{x experience to your next level.' % tnl unless hero?
         Symphony.logger.debug '%s has grown to level %u with %u tnl' % [fqid_str, level, tnl]
       end
     end
 
     ###########################################################################
     def health_gain
-      gain = level * (constitution.percent ** 2.0)
+      gain = level * (constitution.percent**2.0)
       Util::Computation.bound gain, 1, MAX_HEALTH_GAIN
     end
 
     ###########################################################################
     def mana_gain
-      gain = level * (focus.percent ** 2.0)
+      gain = level * (focus.percent**2.0)
       Util::Computation.bound gain, 1, MAX_MANA_GAIN
     end
 
@@ -306,7 +308,7 @@ module Realm
         TNL_FOR_HERO
       # Otherwise, TNL is an exponential function with respect to level.
       else
-        level * (TNL_GROWTH ** level) * Random.rand(98..102)
+        level * (TNL_GROWTH**level) * Random.rand(98..102)
       end
     end
 
@@ -321,24 +323,22 @@ module Realm
     def take_damage(amount, iDoesDamage)
       stamina.decrease 1
       health.decrease amount
-      if health.current < 1
-        die iDoesDamage
-      end
+      die iDoesDamage if health.current < 1
     end
 
     ###########################################################################
     def die(iDoesDamage)
-      result = self.run_hook :before_death
+      result = run_hook :before_death
       return if result.halted?
 
-      self.run_hook :on_death
+      run_hook :on_death
 
-      Symphony.logger.info '%s killed %s' % [iDoesDamage.whodunnit, self].map(&:fqid_str) if self.is_a?(Avatar)
+      Symphony.logger.info '%s killed %s' % [iDoesDamage.whodunnit, self].map(&:fqid_str) if is_a?(Avatar)
       puts '%s {RKILLED{x you{x!!!!' % iDoesDamage.whodunnit.name
       puts 'You {RDIED{x!!!!'
       room.puts '$being is {RDEAD{x!!!!', self, exclude: self
 
-      self.run_hook :after_death
+      run_hook :after_death
     end
 
     ###########################################################################
@@ -380,4 +380,3 @@ module Realm
     end
   end
 end
-

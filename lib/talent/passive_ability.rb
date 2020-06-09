@@ -4,6 +4,6 @@ module Talent::PassiveAbility
   end
 
   def type_s
-    "passive"
+    'passive'
   end
 end

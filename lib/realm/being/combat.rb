@@ -11,7 +11,7 @@ module Realm
     define_hook :after_death
 
     ###########################################################################
-    after_initialize -> {
+    after_initialize lambda {
       @dead = false
       Combat::Group.new self
       @pending_group = nil
@@ -27,8 +27,8 @@ module Realm
       return nil unless group.all_opponent_members
 
       group.all_opponent_members
-           .reject { |b| b.dead? }
-           .reject { |b| b.room != room }
+           .reject(&:dead?)
+           .select { |b| b.room == room }
            .first
     end
 
@@ -64,7 +64,7 @@ module Realm
     before_strike_attack ->(strike) {}
 
     ###########################################################################
-    after_strike_attack ->(strike) {
+    after_strike_attack lambda { |strike|
       # TODO: Leaving this here as a reminder of how to implement e.g. Second Strike
       # return if strike.parent
       # Combat::Strike.new strike.attacker, strike.defender, strike.bout, strike
@@ -77,7 +77,7 @@ module Realm
     after_strike_defense ->(strike) {}
 
     ###########################################################################
-    before_death -> {
+    before_death lambda {
       if god?
         health.increase 1
         return false
@@ -87,7 +87,7 @@ module Realm
     }
 
     ###########################################################################
-    on_death -> {
+    on_death lambda {
       @dead = true
       emit_experience
     }

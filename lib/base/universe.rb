@@ -3,7 +3,7 @@ require 'yaml'
 module Base
   class Universe
     attr_accessor :clients, :server, :should_stop, :quotes, :should_reboot,
-      :should_save
+                  :should_save
 
     ###########################################################################
     def initialize
@@ -17,7 +17,7 @@ module Base
     def do_server
       setup_server
       Symphony.logger.unknown "Server listening on #{@server.ip_port_s}"
-      until should_stop do
+      until should_stop
         welcome server.accept
         $world.handle_jobs
         handle_input
@@ -68,7 +68,7 @@ module Base
 
         begin
           client.user.handle input
-        rescue
+        rescue StandardError
           client.should_terminate = true
         end
       end
@@ -85,7 +85,7 @@ module Base
 
     ###########################################################################
     def handle_disconnections
-      clients.select { |c| c.should_terminate }.each do |c|
+      clients.select(&:should_terminate).each do |c|
         if (avatar = c.user.avatar)
           avatar.run_hook :before_disconnect
           avatar.dispose
@@ -104,41 +104,39 @@ module Base
 
     ###########################################################################
     def begin_reboot
-      begin
-        Symphony.logger.unknown 'Server beginning reboot'
-        broadcast I18n.t('universe.reboot.begin')
-        # Syntax check.
-        Util::Linter.lint_project_source
-        # Save socket -> avatar mapping.
-        save_reboot_map
-        # Begin anew.
-        env, options = reboot_exec_details
-        cli = Symphony.binary.to_s + $command_line_args
-        [env, cli, options].each { |x| Symphony.logger.warn '  ' + x.inspect }
-        Process.exec env, cli, options
-      rescue StandardError => e
-        @should_reboot = false
-        Symphony.logger.unknown 'Reboot failed'
-        e.message.split("\n").each { |error_line| Symphony.logger.debug error_line }
-        broadcast I18n.t('universe.reboot.fail')
-      end
+      Symphony.logger.unknown 'Server beginning reboot'
+      broadcast I18n.t('universe.reboot.begin')
+      # Syntax check.
+      Util::Linter.lint_project_source
+      # Save socket -> avatar mapping.
+      save_reboot_map
+      # Begin anew.
+      env, options = reboot_exec_details
+      cli = Symphony.binary.to_s + $command_line_args
+      [env, cli, options].each { |x| Symphony.logger.warn '  ' + x.inspect }
+      Process.exec env, cli, options
+    rescue StandardError => e
+      @should_reboot = false
+      Symphony.logger.unknown 'Reboot failed'
+      e.message.split("\n").each { |error_line| Symphony.logger.debug error_line }
+      broadcast I18n.t('universe.reboot.fail')
     end
 
     ###########################################################################
     def reboot_exec_details
       # We want to pass all open file descriptors to the new process.
       server_fd  = server.to_i
-      client_fds = clients.map { |c| c.fd }
+      client_fds = clients.map(&:fd)
       env = {
         'SYMPHONY_REBOOT' => 'true',
         'SYMPHONY_SERVER_FD' => server_fd.to_s,
-        'SYMPHONY_CLIENT_FDS' => Marshal.dump(client_fds),
+        'SYMPHONY_CLIENT_FDS' => Marshal.dump(client_fds)
       }
       options = {
-        :in => :in,
-        :out => :out,
-        :err => :err,
-        :close_others => false,
+        in: :in,
+        out: :out,
+        err: :err,
+        close_others: false
       }
       # Add the server socket to the options Hash.
       options[server_fd] = server_fd

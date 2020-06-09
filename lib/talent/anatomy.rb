@@ -40,9 +40,9 @@ module Talent
       #       go in the off-hand. But dual wield isn't written yet.
       if item.slot == :hold
         if item.type == :weapon
-          return change_equipment primary_slot, item, container
+          change_equipment primary_slot, item, container
         else
-          return change_equipment secondary_slot, item, container
+          change_equipment secondary_slot, item, container
         end
       # All other items in all other scenarios follow a generic pattern.
       else
@@ -61,27 +61,27 @@ module Talent
       slot = slots.find { |s| s.occupant == item }
       return I18n.t('anatomy.unworn') if slot.nil?
 
-      return change_equipment slot, nil, container
+      change_equipment slot, nil, container
     end
 
     ###########################################################################
     def change_equipment(slot, item, container)
       if item
         removed = slot.set item, container
-        container.delete item if container
+        container&.delete item
 
         being.modify(item.modifiers)
         being.modify(removed.modifiers, true) if removed
 
         if removed
-          return I18n.t('anatomy.replace'), removed, item
+          [I18n.t('anatomy.replace'), removed, item]
         else
-          return I18n.t('anatomy.wear'), item
+          [I18n.t('anatomy.wear'), item]
         end
       else
         removed = slot.set nil, container
         being.modify(removed.modifiers, true) if removed
-        return I18n.t('anatomy.remove'), removed
+        [I18n.t('anatomy.remove'), removed]
       end
     end
 
@@ -89,7 +89,6 @@ module Talent
     def primary_slot
       case being.anatomy
       when Human then get_slots(being.hand + ' hand').first
-      else nil
       end
     end
 
@@ -97,7 +96,6 @@ module Talent
     def secondary_slot
       case being.anatomy
       when Human then get_slots((being.hand == 'right' ? 'left' : 'right') + ' hand').first
-      else nil
       end
     end
 

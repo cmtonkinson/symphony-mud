@@ -1,5 +1,4 @@
 module SystemTest
-
   #############################################################################
   define :create_admin do
     with :admin
@@ -25,7 +24,7 @@ module SystemTest
       groups.each { |group| list += group.scan(/[a-z_]+/) }
 
       # There are a few we don't want to try.
-      dont_try = %w(pry reboot shutdown test quit log_level)
+      dont_try = %w[pry reboot shutdown test quit log_level]
       list.reject! { |c| dont_try.include? c }
 
       # Run each command in the list - with no parameters - just as a basic
@@ -36,6 +35,4 @@ module SystemTest
       end
     end
   end
-
 end
-

@@ -44,7 +44,7 @@ module InputSequence
     def log_status_change
       str = self.class.name.dup
       str << ' transitioning '
-      str << "from '#{aasm.from_state}' " if aasm.from_state != nil
+      str << "from '#{aasm.from_state}' " unless aasm.from_state.nil?
       str << "to '#{aasm.to_state}' "
       str << "(on '#{aasm.current_event}')"
       Symphony.logger.trace str

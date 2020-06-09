@@ -20,19 +20,13 @@ module Command
       Symphony.logger.trace "Handling '#{input}' in :#{set_name} for #{being.fqid_str}"
 
       # If the input was a single character, is it a shortcut?
-      if cmd_name.length == 1
-        @command = @command_set.find { |c| c.get_shortcut == cmd_name }
-      end
+      @command = @command_set.find { |c| c.get_shortcut == cmd_name } if cmd_name.length == 1
 
       # Try to find by exact name.
-      if @command.nil?
-        @command = @command_set.find { |c| c.get_name == cmd_name }
-      end
+      @command = @command_set.find { |c| c.get_name == cmd_name } if @command.nil?
 
       # Try to find by prefix matches.
-      if @command.nil?
-        @command = @command_set.find { |c| c.get_name.index(cmd_name) === 0 }
-      end
+      @command = @command_set.find { |c| c.get_name.index(cmd_name) === 0 } if @command.nil?
 
       # Couldn't find a Command for this input string.
       return false if @command.nil?
@@ -57,18 +51,16 @@ module Command
 
       Symphony.logger.trace "  performing command '#{@command.get_name}' with arguments '#{rest}' for #{being.fqid_str}"
       @command.perform being, context, rest
-      return true
+      true
     end
 
     ###########################################################################
     def parse(input_string)
       @command.usages.each do |usage|
         context = usage.try_parse input_string
-        return context if !context.nil?
+        return context unless context.nil?
       end
-      return nil
+      nil
     end
-
   end
 end
-

@@ -1,5 +1,4 @@
 module SystemTest
-
   #############################################################################
   define :promotion do
     with :admin
@@ -26,7 +25,7 @@ module SystemTest
       lowbie 'skills'
       expect 'skills available'
       expect(/block\s+^/i)
-   end
+    end
 
     test do
       lowbie 'learn parry'
@@ -40,7 +39,7 @@ module SystemTest
 
       lowbie 'learn block'
       expect 'But you already know'
-   end
+    end
   end
 
   #############################################################################
@@ -52,7 +51,7 @@ module SystemTest
       lowbie 'skills'
       expect(/block\s+^/i)
       expect(/parry\s+^/i)
-     end
+    end
 
     test do
       lowbie 'learn parry'
@@ -71,9 +70,9 @@ module SystemTest
       matches = /trains:\s+(\d+)\D/im.match lowbie_client.buffer[-1]
       trains = matches[1].to_i
       lowbie "say I have #{@trains} training points."
-      return trains
+      trains
     end
- 
+
     from :learn_independent
     with :lowbie
 
@@ -94,9 +93,7 @@ module SystemTest
 
       @updated_trains = get_trains
 
-      fail "Didn't consume any training points" unless @updated_trains < @initial_trains
+      raise "Didn't consume any training points" unless @updated_trains < @initial_trains
     end
   end
-
 end
-

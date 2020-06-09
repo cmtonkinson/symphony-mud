@@ -68,7 +68,7 @@ module Command
     end
   end
 
-  modifiable_properties = (%i(health mana) +
+  modifiable_properties = (%i[health mana] +
                            Realm::Being::FITNESS +
                            Realm::Being::DEFENSE +
                            Realm::Being::OFFENSE
@@ -79,6 +79,7 @@ module Command
     usage({ property: modifiable_properties }, { amount: :int })
     exec do
       being.puts t('err_zero') and next if amount == 0
+
       being.iedit.modifiers[property.to_sym] = amount
       being.puts t('modified'), property, amount
     end
@@ -104,7 +105,7 @@ module Command
         being.iedit.wearable = false
         being.puts t('none')
       else
-        # TODO - validate that the slot type actually exists (requires iterating
+        # TODO: - validate that the slot type actually exists (requires iterating
         # all known Anatomies)
         being.iedit.wearable = true
         being.iedit.slot = slot.to_sym
@@ -114,7 +115,7 @@ module Command
   end
 
   ###############################################################################
-  is_positive = ->(x) { return (x > 0 ? true : false) }
+  is_positive = ->(x) { return (x > 0) }
   is_word     = ->(x) { return !x.match(/\Aa-z+\z/i) }
   in_types    = ->(x) { return Realm::Item::TYPES.include?(x.to_sym) }
 
@@ -128,12 +129,12 @@ module Command
     [:health, :int, :food, is_positive, 'must be 1 or higher', nil],
     [:mana, :int, :food, is_positive, 'must be 1 or higher', nil],
     [:max_occupants, :int, :furniture, is_positive, 'must be 1 or higher', nil],
-    [:opens_type, :string, :key, ->(x) { return %w(room item).include?(x) }, 'must be either room or item', nil],
+    [:opens_type, :string, :key, ->(x) { return %w[room item].include?(x) }, 'must be either room or item', nil],
     [:opens_rid, :int, :key, is_positive, 'must be 1 or higher', nil],
     [:weapon_type, :string, :weapon, is_word, 'must be a word', nil],
     [:damage_type, :string, :weapon, is_word, 'must be a word', nil],
     [:hitroll, :int, :weapon, is_positive, 'must be 1 or higher', nil],
-    [:damroll, :int, :weapon, is_positive, 'must be 1 or higher', nil],
+    [:damroll, :int, :weapon, is_positive, 'must be 1 or higher', nil]
   ].each do |definition|
     name, type, subtype, validation, hint, conversion = *definition
     define name, :edit_item do
@@ -144,8 +145,9 @@ module Command
           being.puts "That property only applies to items that are a #{subtype}." and next
         end
         being.puts "Failed to update #{name} - new value #{hint}." and next unless validation.call(value)
+
         being.iedit.send "#{name}=", (conversion.nil? ? value : conversion.call(value))
-        new_value = being.iedit.send "#{name}"
+        new_value = being.iedit.send name.to_s
         being.puts "Item #{name} changed to #{new_value}"
       end
     end

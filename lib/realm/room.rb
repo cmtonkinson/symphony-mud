@@ -14,7 +14,7 @@ module Realm
     end
 
     ###########################################################################
-    after_initialize -> {
+    after_initialize lambda {
       @zone   = nil
       @coords = Vector[0, 0, 0]
       Realm::Exit::DIRECTIONS.keys.each { |exit| send "#{exit}=", nil }
@@ -22,16 +22,16 @@ module Realm
     }
 
     ###########################################################################
-    on_hashify -> {
+    on_hashify lambda {
       {
         zone: @zone.id,
         coords: @coords.to_a.join(','),
-        placements: @placements.values.map(&:hashify),
+        placements: @placements.values.map(&:hashify)
       }
     }
 
     ###########################################################################
-    on_dehashify ->hash {
+    on_dehashify lambda { |hash|
       @zone   = $world.find hash[:zone]
       @coords = Vector[*hash[:coords].split(',').map(&:to_i)]
       if hash.key? :placements
@@ -45,10 +45,10 @@ module Realm
 
     ###########################################################################
     Realm::Exit::DIRECTIONS.keys.each do |exit|
-      define_method "#{exit}_room", (Proc.new {
+      define_method "#{exit}_room", (proc do
         # Yo dawg, I heard you like to send exit to your send exit.
         send(exit).send(exit)
-      })
+      end)
     end
 
     ###########################################################################
@@ -95,7 +95,7 @@ module Realm
       $templates.room_summary % [
         rid, name,
         id,
-        zone.name,
+        zone.name
       ]
     end
 

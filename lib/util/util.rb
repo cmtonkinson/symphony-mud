@@ -7,4 +7,4 @@ module Util
                                                                   trace.path.sub(Symphony.root.to_s + '/', ''),
                                                                   trace.lineno]
   end
-end 
+end

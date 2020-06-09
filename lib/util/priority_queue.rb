@@ -11,7 +11,7 @@ class PriorityQueue
     @elements << element
     bubble_up(@elements.size - 1)
   end
-  alias_method :<<, :push
+  alias << push
 
   #############################################################################
   def pop

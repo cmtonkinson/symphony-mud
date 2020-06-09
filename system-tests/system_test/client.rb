@@ -11,11 +11,11 @@ module SystemTest
       @account = account_name.to_s
       @log_path = state_path.join("#{account}-log.txt").to_s
 
-      @conn = Net::Telnet::new(
+      @conn = Net::Telnet.new(
         'Hostname' => 'localhost',
-        'Port'     => port,
-        'Prompt'   => /./,
-        'Waittime' => $TELNET_DELAY,
+        'Port' => port,
+        'Prompt' => /./,
+        'Waittime' => $TELNET_DELAY
       )
 
       # We need to eat the welcome banner or suffer a fencepost error in the
@@ -31,19 +31,19 @@ module SystemTest
 
     ###########################################################################
     def password
-      "superSECURE!!!!passphrase123456789"
+      'superSECURE!!!!passphrase123456789'
     end
 
     ###########################################################################
     def command(str)
       retval = nil
-      IO.write @log_path, "\n$> #{str}\n", mode: "a"
+      IO.write @log_path, "\n$> #{str}\n", mode: 'a'
       @conn.cmd(str) do |c|
         retval = ::Base::Terminal.unescape(c)
         @buffer << retval
-        IO.write @log_path, retval, mode: "a"
+        IO.write @log_path, retval, mode: 'a'
       end
-      return retval
+      retval
     end
 
     ###########################################################################
@@ -52,17 +52,13 @@ module SystemTest
     # that some input either is already waiting for the client, or none will
     # come.
     def poll
-      begin
-        @conn.waitfor('Match' => /./, 'Timeout' => $TELNET_DELAY) do |c|
-          retval = ::Base::Terminal.unescape(c)
-          @buffer << retval
-          IO.write @log_path, retval, mode: "a"
-        end
-      # Assuming the client recieved no new data, eat the timeout exception.
-      rescue Net::ReadTimeout
+      @conn.waitfor('Match' => /./, 'Timeout' => $TELNET_DELAY) do |c|
+        retval = ::Base::Terminal.unescape(c)
+        @buffer << retval
+        IO.write @log_path, retval, mode: 'a'
       end
+    # Assuming the client recieved no new data, eat the timeout exception.
+    rescue Net::ReadTimeout
     end
-
   end
 end
-

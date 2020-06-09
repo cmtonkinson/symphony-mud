@@ -3,7 +3,7 @@ module Realm
     attr_reader :cloned_from
 
     ###########################################################################
-    after_initialize -> {
+    after_initialize lambda {
       # When #clone is called on an Objekt, a new Objekt is returned with the
       # exact properties of the original, except two: the new Objekt has its
       # own id, and the cloned_from property will be set to the id of the

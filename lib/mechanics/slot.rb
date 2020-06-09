@@ -20,11 +20,9 @@ module Mechanics
       previous = occupant
       @occupant = new_occupant
 
-      if previous && new_container
-        new_container.insert previous
-      end
+      new_container.insert previous if previous && new_container
 
-      return previous
+      previous
     end
 
     ###########################################################################
@@ -33,4 +31,3 @@ module Mechanics
     end
   end
 end
-

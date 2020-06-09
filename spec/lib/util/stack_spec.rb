@@ -3,13 +3,12 @@ require 'spec_helper'
 include Util
 
 describe Util::Stack do
-
   subject { Util::Stack.new }
 
   #############################################################################
   describe '#push' do
     it 'should return self' do
-      expect(subject.push 1).to be subject
+      expect(subject.push(1)).to be subject
     end
   end
 
@@ -65,5 +64,4 @@ describe Util::Stack do
       end
     end
   end
-
 end

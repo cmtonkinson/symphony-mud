@@ -3,10 +3,8 @@ require 'spec_helper'
 include Mechanics
 
 describe SimpleStat do
-
   #############################################################################
   describe '#current' do
-
     before :each do
       @baseline = 20
       @stat     = SimpleStat.new @baseline
@@ -20,12 +18,10 @@ describe SimpleStat do
       @stat.modify(-100)
       expect(@stat.current).to eq 0
     end
-
   end
 
   #############################################################################
   describe '#modify' do
-
     before :each do
       @baseline = 10
       @stat     = SimpleStat.new @baseline
@@ -36,12 +32,10 @@ describe SimpleStat do
       @stat.modify @amount
       expect(@stat.current).to eq @baseline + @amount
     end
-
   end
 
   #############################################################################
   describe '#unmodify' do
-
     before :each do
       @baseline = 10
       @stat     = SimpleStat.new @baseline
@@ -52,7 +46,5 @@ describe SimpleStat do
       @stat.unmodify @amount
       expect(@stat.current).to eq @baseline - @amount
     end
-
   end
-
 end

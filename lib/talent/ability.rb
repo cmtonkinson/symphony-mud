@@ -1,10 +1,10 @@
 module Talent
   class Ability
-    # TODO - some kind of global registry of available Abilities that can
+    # TODO: - some kind of global registry of available Abilities that can
     # be iterated, processed, etc. (esp. as to allow gods easy path toward
     # learning everything there is to be learned) perhaps with a static
     # Array and using self.inherited
-    
+
     MIN_PRACTICE_BOOST = 5
     MAX_PRACTICE_LEVEL = 70
 
@@ -18,7 +18,7 @@ module Talent
       @type          = nil # active or passive
       @category      = nil # skill, spell, craft, etc.
       @name          = nil
-      @prerequisites = Array.new
+      @prerequisites = []
 
       @level         = level
       @trains        = trains
@@ -81,7 +81,7 @@ module Talent
       return false if prerequisites.any? { |prereq| !prereq.learned? }
 
       # I mean... I *guess* it's okay...
-      return true
+      true
     end
 
     ###########################################################################
@@ -118,7 +118,7 @@ module Talent
 
       # Add a 20% fudge factor.
       adjust = Random.rand(80..120) / 100
-      boost = boost * adjust
+      boost *= adjust
 
       # Make sure they get SOMEthing, yet also don't go over the limit,
       max_boost = MAX_PRACTICE_LEVEL - mastery

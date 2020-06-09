@@ -10,9 +10,9 @@ module Combat
     def initialize(leader)
       @battle    = nil
       @leader    = nil
-      @members   = Array.new
-      @opponents = Array.new
-      @pending   = Array.new
+      @members   = []
+      @opponents = []
+      @pending   = []
 
       add_member leader
       @leader = leader
@@ -22,7 +22,7 @@ module Combat
     def add_member(being)
       raise ArgumentError.new "Cannot add a #{being.class.name} as a Group member" unless being.is_a? Realm::Being
 
-      being.group.remove_member being if being.group
+      being.group&.remove_member being
       @members.push being
       being.group = self
     end
@@ -50,12 +50,12 @@ module Combat
 
     ###########################################################################
     def all_opponent_members
-      @opponents.map { |b| b.members }.reduce(:+)
+      @opponents.map(&:members).reduce(:+)
     end
 
     ###########################################################################
     def remove_all_opponents
-      @opponents = Array.new
+      @opponents = []
     end
 
     ###########################################################################
@@ -85,7 +85,7 @@ module Combat
     def request_join(being)
       return if being.pending_group == self
 
-      being.pending_group.request_withdraw being if !being.pending_group.nil?
+      being.pending_group&.request_withdraw being
 
       @pending.push being
       being.pending_group = self
@@ -128,7 +128,7 @@ module Combat
     # Returns true if there is at least one Group member who can acquire a
     # valid target.
     def acquire_targets
-      members.any? { |m| m.acquire_target }
+      members.any?(&:acquire_target)
     end
 
     ###########################################################################
@@ -136,7 +136,7 @@ module Combat
     # Group is distributed across the members in some interesting way, rather
     # than just dividing it evenly.
     def award_experience(exp_gained, stiff)
-      eligible = members.reject { |m| m.room != stiff.room }.reject { |m| m.dead? }
+      eligible = members.select { |m| m.room == stiff.room }.reject(&:dead?)
       eligible.each { |m| m.award_experience exp_gained / eligible.size }
     end
   end

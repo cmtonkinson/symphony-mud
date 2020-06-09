@@ -5,11 +5,10 @@ $ROOT_DIR = Pathname.new(__dir__).join('..')
 $SYMPHONY = $ROOT_DIR.join('symphony.rb')
 $TELNET_DELAY = 0.05
 
-$RAND_SEED = Random.new_seed.to_s[0,8]
+$RAND_SEED = Random.new_seed.to_s[0, 8]
 
-OptionParser.new { |opts|
-
-  opts.on('-l,' '--leaf TEST', "Only execute TEST") do |value|
+OptionParser.new do |opts|
+  opts.on('-l,' '--leaf TEST', 'Only execute TEST') do |value|
     $LEAF_TEST = value
   end
 
@@ -17,11 +16,10 @@ OptionParser.new { |opts|
     $RAND_SEED = value
   end
 
-  opts.on('-t', '--tree TEST', "Execute TEST and all its descendents") do |value|
+  opts.on('-t', '--tree TEST', 'Execute TEST and all its descendents') do |value|
     $TREE_TEST = value
   end
-
-}.parse!
+end.parse!
 
 if $LEAF_TEST && $TREE_TEST
   puts '--leaf and -tree are mutually exclusive.'
@@ -29,4 +27,3 @@ if $LEAF_TEST && $TREE_TEST
 end
 
 srand $RAND_SEED.to_i
-

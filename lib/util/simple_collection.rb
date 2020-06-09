@@ -14,13 +14,13 @@ module Util
     end
 
     def pop
-      return false if self.empty?
+      return false if empty?
 
       @array.shift
     end
 
     def peek
-      return false if self.empty?
+      return false if empty?
 
       @array[0]
     end

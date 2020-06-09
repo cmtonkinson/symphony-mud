@@ -19,9 +19,7 @@ module SystemTest
     ###########################################################################
     def setup
       # Construct the full test tree.
-      until @reg.empty? do
-        analyze @reg[0]
-      end
+      analyze @reg[0] until @reg.empty?
 
       if $LEAF_TEST
         # During a leaf test, we only need the target node and it's ancestors.
@@ -51,7 +49,7 @@ module SystemTest
 
         # Maybe the parent is already analized and in the tree?
         parent_node = @test_tree.find { |n| n.name == test.get_parent_id }
-        
+
         # If not, maybe the parent is still un-analyzed sitting in @reg?
         if parent_node.nil?
           parent_test = @reg.find { |t| t.get_id == test.get_parent_id }
@@ -64,7 +62,7 @@ module SystemTest
 
       end
 
-      # Create the new Node and remove the test from the registry.      
+      # Create the new Node and remove the test from the registry.
       new_node = Tree::TreeNode.new test.get_id, test
       @reg.delete test
 
@@ -76,7 +74,7 @@ module SystemTest
       end
 
       # Explicitly return the new node, because recursion.
-      return new_node
+      new_node
     end
 
     ###########################################################################
@@ -85,16 +83,17 @@ module SystemTest
 
       @test_tree.each do |n|
         next if n.name == :root
+
         Micromanager.new n
 
         @num_tests += 1
         color = :green
 
-        output = "%s: %s (%d assertions in %s) " % [
+        output = '%s: %s (%d assertions in %s) ' % [
           n.name.to_s.gsub('-', ' '),
           n.content.status.to_s,
           n.content.assertions,
-          n.content.run_time,
+          n.content.run_time
         ]
 
         if n.content.status != :pass
@@ -106,7 +105,7 @@ module SystemTest
         end
 
         puts output.gsub(/^/, i(n)).colorize(color)
-       end
+      end
     end
 
     ###########################################################################
@@ -116,9 +115,7 @@ module SystemTest
       # I'm not spending the time to figure out why node_depth is off-by-one
       # (seemingly) when running a tree test.
       num = $TREE_TEST ? node.node_depth - 2 : node.node_depth - 1
-      "  " * num
+      '  ' * num
     end
-
   end
 end
-

@@ -22,9 +22,8 @@ module Talent
         creativity: 2,
         focus: 1,
         strength: -1,
-        constitution: -1,
+        constitution: -1
       }
     end
-
  end
 end

@@ -1,4 +1,4 @@
-#module SystemTest
+# module SystemTest
 #
 #  define :avatar_creation do
 #    with :admin
@@ -16,7 +16,7 @@
 #            end
 #          end
 #        end
-#      end 
+#      end
 #    end
 #
 #    creation_permutations do |race, gender, hand, klass, height, weight|
@@ -47,5 +47,5 @@
 #    end
 #  end
 #
-#end
+# end
 #

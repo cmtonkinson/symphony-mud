@@ -68,7 +68,7 @@ module Mechanics
         retval = fire!
 
         # Stop processing if there is nothing more to be done.
-        break if retval == nil
+        break if retval.nil?
 
         # Don't count pruning a dead Job as doing actual work.
         next if retval == false
@@ -108,9 +108,7 @@ module Mechanics
         # entered this code section because we were delinquent on the top job.
         # As a safety measure (to make sure we're doing JUST better than
         # treading water), bump the rate slightly.
-        if catch_up_rate < @jobs_per_batch
-          catch_up_rate = (@jobs_per_batch * 1.1).ceil
-        end
+        catch_up_rate = (@jobs_per_batch * 1.1).ceil if catch_up_rate < @jobs_per_batch
 
         # Increase jobs_per_batch.
         Symphony.logger.debug "World#rebalance_job_parameters \

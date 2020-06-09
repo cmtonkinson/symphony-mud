@@ -39,7 +39,7 @@ module Logistics
         quarry.run_hook :after_add
       end
 
-      return nil
+      nil
     end
   end
 

@@ -21,6 +21,7 @@ module Command
         victims = room.beings.locate target
         being.puts t('err_noone') and next if victims.empty?
         being.puts t('err_too_many') and next if victims.length > 1
+
         victim = victims.first
       end
 
@@ -45,6 +46,7 @@ module Command
         targets = room.beings.locate victim
         being.puts t('err_noone') and next if targets.empty?
         being.puts t('err_too_many') and next if targets.length > 1
+
         target = targets.first
       else
         being.puts t('err_no_target') and next

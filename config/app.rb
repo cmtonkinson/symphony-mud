@@ -18,7 +18,7 @@ class App
     data: %i[avatar zone pidfile],
     game: %i[commands anatomies klasses skills spells templates help],
     lib: %i[],
-    tmp: %i[],
+    tmp: %i[]
   }
 
   # Create a reader accessor for each project directory.
@@ -36,7 +36,7 @@ class App
   #############################################################################
   def initialize
     @env           = ENV['SYMPHONY_ENV'].to_sym
-    @root          = Pathname.new File.expand_path '../..', __FILE__
+    @root          = Pathname.new File.expand_path '..', __dir__
     @binary        = @root.join BINARY_NAME
     @logger        = nil
     @configuration = OpenStruct.new
@@ -51,17 +51,15 @@ class App
 
   #############################################################################
   # This method primarily exists to support the hack at the bottom of the
-  # config/configuration.rb script, but is structured in a way that also could 
+  # config/configuration.rb script, but is structured in a way that also could
   # allow for some tricky ops maneuvers such as snapshotting vs overwriting
   # worldsaves.
   def update_data_paths!
     dd = configuration.data_dir
     prefix = dd[0] == '/' ? Pathname.new(dd) : @root.join(dd)
-    instance_variable_set "@data", prefix
+    instance_variable_set '@data', prefix
     DIRECTORIES[:data].each do |subdir|
       instance_variable_set "@#{subdir}", prefix.join(subdir.to_s)
     end
   end
-
 end
-

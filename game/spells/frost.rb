@@ -8,11 +8,9 @@ module Talent
       @default_target = :enemy
     end
 
-    def _learned_by(being)
-    end
+    def _learned_by(being); end
 
-    def _learn
-    end
+    def _learn; end
 
     def _invoke(target)
       dam = rand(able_being.level / 2)
@@ -35,4 +33,3 @@ module Talent
     end
   end
 end
-

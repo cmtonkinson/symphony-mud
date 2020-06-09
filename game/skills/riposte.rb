@@ -11,9 +11,7 @@ module Talent
     def _learn
       skill = self
       able_being.after_ability_invocation do |ability_name, retval|
-        if ability_name == :parry && retval == true
-          skill.invoke
-        end
+        skill.invoke if ability_name == :parry && retval == true
       end
     end
 

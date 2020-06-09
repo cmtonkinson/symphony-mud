@@ -5,7 +5,7 @@ test_start = Time.now
 require_relative 'configure'
 
 ###############################################################################
-puts "Bootstrapping system test suite..."
+puts 'Bootstrapping system test suite...'
 puts "Seed #{$RAND_SEED}"
 
 require_relative 'system_test/init'
@@ -25,4 +25,3 @@ puts "  #{m.num_pass} passed".colorize(:green)
 puts "  #{m.num_fail} failed".colorize(:red)
 
 exit m.num_fail
-

@@ -3,9 +3,7 @@ require 'spec_helper'
 include Command
 
 describe Command::Usage do
-
   describe '#push' do
-
     it 'should reject duplicate Argument names' do
       args = Usage.new
 
@@ -41,9 +39,7 @@ describe Command::Usage do
       arg2 = Argument.new 'bar'
       args.push arg2
 
-      expect(args.map(&:name)).to eq ['foo', 'bar']
+      expect(args.map(&:name)).to eq %w[foo bar]
     end
-
   end
-
 end

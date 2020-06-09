@@ -24,9 +24,8 @@ module Talent
         dexterity: 3,
         focus: -2,
         luck: 2,
-        constitution: -3,
+        constitution: -3
       }
     end
-
   end
 end

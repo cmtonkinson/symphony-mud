@@ -22,10 +22,8 @@ module Talent
         focus: 2,
         creativity: 1,
         intelligence: 1,
-        luck: -1,
+        luck: -1
       }
     end
-
   end
 end
-

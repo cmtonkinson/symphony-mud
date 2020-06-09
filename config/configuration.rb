@@ -26,14 +26,14 @@ CONFIGURATION = [
     placeholder: 'ADDRESS',
     default: '127.0.0.1',
     description: 'Host address on which to listen',
-    callback: Proc.new { |value| Network.configuration.listen_ip = value },
+    callback: proc { |value| Network.configuration.listen_ip = value }
   },
   {
     short: 'c',
     long: 'console',
     default: false,
     description: 'Open an interactive console',
-    callback: Proc.new { |value| Symphony.configuration.console = value },
+    callback: proc { |value| Symphony.configuration.console = value }
   },
   {
     short: 'd',
@@ -41,7 +41,7 @@ CONFIGURATION = [
     placeholder: 'DATA_DIR',
     default: 'data',
     description: 'Top-level directory to use for instance-specific game data.',
-    callback: Proc.new { |value| Symphony.configuration.data_dir = value },
+    callback: proc { |value| Symphony.configuration.data_dir = value }
   },
   {
     short: 'i',
@@ -49,7 +49,7 @@ CONFIGURATION = [
     placeholder: 'SECONDS',
     default: 0.02,
     description: 'Wait time (in seconds) between server loops.',
-    callback: Proc.new { |value| Symphony.configuration.sleep_interval = value.to_f },
+    callback: proc { |value| Symphony.configuration.sleep_interval = value.to_f }
   },
   {
     short: 'l',
@@ -57,7 +57,7 @@ CONFIGURATION = [
     placeholder: 'LEVEL',
     default: 'info',
     description: 'Change the system logging verbosity',
-    callback: Proc.new { |value| Symphony.logger.level = Logger.const_get(value.upcase) },
+    callback: proc { |value| Symphony.logger.level = Logger.const_get(value.upcase) }
   },
   {
     short: 'o',
@@ -65,7 +65,7 @@ CONFIGURATION = [
     placeholder: 'OUTPUT',
     default: 'stdout',
     description: 'Change where log output is sent',
-    callback: Proc.new { |value| Symphony.logger.reopen(value == 'stdout' ? STDOUT : value) },
+    callback: proc { |value| Symphony.logger.reopen(value == 'stdout' ? STDOUT : value) }
   },
   {
     short: 'p',
@@ -73,7 +73,7 @@ CONFIGURATION = [
     placeholder: 'PORT',
     default: 6500,
     description: 'Server port on which to bind',
-    callback: Proc.new { |value| Network.configuration.listen_port = value },
+    callback: proc { |value| Network.configuration.listen_port = value }
   },
   {
     short: 's',
@@ -81,8 +81,8 @@ CONFIGURATION = [
     placeholder: 'FILE',
     default: false,
     description: 'Run a script',
-    callback: Proc.new { |value| Symphony.configuration.script = value },
-  },
+    callback: proc { |value| Symphony.configuration.script = value }
+  }
 ]
 
 ###############################################################################
@@ -99,9 +99,7 @@ if File.readable? config_file
   config_hash = YAML.load File.read config_file
   CONFIGURATION.each do |config|
     yml_var_name = config[:long].tr '-', '_'
-    if config_hash.key? yml_var_name
-      config[:callback].call config_hash[yml_var_name]
-    end
+    config[:callback].call config_hash[yml_var_name] if config_hash.key? yml_var_name
   end
 end
 
@@ -112,9 +110,7 @@ CONFIGURATION.each do |config|
   # Convert the long name to an ENV_STYLE_TOKEN.
   env_var_name = "SYMPHONY_#{config[:long]}".upcase.tr '-', '_'
   # If the ENV var is found, invoke the callback with its value.
-  if ENV.key? env_var_name
-    config[:callback].call ENV[env_var_name]
-  end
+  config[:callback].call ENV[env_var_name] if ENV.key? env_var_name
 end
 
 ###############################################################################
@@ -124,7 +120,7 @@ end
 # the context of another program (e.g. rspec) or this will cause any CLI args
 # intended for that program to be processd here.
 $command_line_args = ARGF.argv.map { |a| ' ' + a }.reduce(:+) || ''
-if /symphony/.match?($0)
+if /symphony/.match?($PROGRAM_NAME)
   OptionParser.new do |opts|
     opts.banner = "Usage: #{BINARY_NAME} [options]"
 
@@ -144,4 +140,3 @@ end
 # to account for possible configuration overrides.
 ###############################################################################
 Symphony.update_data_paths!
-

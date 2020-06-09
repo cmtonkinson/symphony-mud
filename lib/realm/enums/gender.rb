@@ -10,23 +10,23 @@ module Realm
       objective: {
         MALE: I18n.t('linguist.pronoun.objective.male'),
         FEMALE: I18n.t('linguist.pronoun.objective.female'),
-        NEUTER: I18n.t('linguist.pronoun.objective.neuter'),
+        NEUTER: I18n.t('linguist.pronoun.objective.neuter')
       },
       subjective: {
         MALE: I18n.t('linguist.pronoun.subjective.male'),
         FEMALE: I18n.t('linguist.pronoun.subjective.female'),
-        NEUTER: I18n.t('linguist.pronoun.subjective.neuter'),
+        NEUTER: I18n.t('linguist.pronoun.subjective.neuter')
       },
       possessive: {
         MALE: I18n.t('linguist.pronoun.possessive.male'),
         FEMALE: I18n.t('linguist.pronoun.possessive.female'),
-        NEUTER: I18n.t('linguist.pronoun.possessive.neuter'),
+        NEUTER: I18n.t('linguist.pronoun.possessive.neuter')
       },
       reflexive: {
         MALE: I18n.t('linguist.pronoun.reflexive.male'),
         FEMALE: I18n.t('linguist.pronoun.reflexive.female'),
-        NEUTER: I18n.t('linguist.pronoun.reflexive.neuter'),
-      },
+        NEUTER: I18n.t('linguist.pronoun.reflexive.neuter')
+      }
     }
 
     @pronouns.each do |type, defns|
@@ -36,4 +36,3 @@ module Realm
     end
   end
 end
-

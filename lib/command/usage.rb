@@ -4,14 +4,10 @@ module Command
     # Add a new Argument. Raise if something goes wrong.
     def push(arg)
       # Don't accept custom data structures.
-      unless arg.is_a? Argument
-        raise ArgumentError.new I18n.t 'command.usage.push_non_argument'
-      end
+      raise ArgumentError.new I18n.t 'command.usage.push_non_argument' unless arg.is_a? Argument
 
       # Argument names must be unique.
-      if any? { |a| a.name == arg.name }
-        raise ArgumentError.new I18n.t 'command.usage.duplicate_name', name: arg.name
-      end
+      raise ArgumentError.new I18n.t 'command.usage.duplicate_name', name: arg.name if any? { |a| a.name == arg.name }
 
       # Append.
       super
@@ -33,7 +29,7 @@ module Command
         remaining.strip!
       end
 
-      return nil if !remaining.match(/\A\s*\z/)
+      return nil unless remaining.match(/\A\s*\z/)
 
       context
     end

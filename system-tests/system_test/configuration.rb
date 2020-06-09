@@ -20,4 +20,3 @@ module SystemTest
     end
   end
 end
-

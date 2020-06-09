@@ -1,13 +1,13 @@
 module Realm
   class Item < Objekt
-    TYPES = %i(armor clothing container food furniture jewelry key other weapon)
+    TYPES = %i[armor clothing container food furniture jewelry key other weapon]
 
-    ATTRS = %i(level type wearable slot
+    ATTRS = %i[level type wearable slot
                max_items load_factor
                health mana
                max_occupants
                opens_type opens_rid
-               weapon_type damage_type hitroll damroll)
+               weapon_type damage_type hitroll damroll]
 
     ATTRS.each { |name| attr_accessor name }
 
@@ -19,7 +19,7 @@ module Realm
     end
 
     ###########################################################################
-    after_initialize -> {
+    after_initialize lambda {
       @level         = 1
       @type          = :other
       @wearable      = false
@@ -33,11 +33,11 @@ module Realm
       @damage_type   = :bash
       @hitroll       = 0
       @damroll       = 0
-      @modifiers     = Hash.new
+      @modifiers     = {}
     }
 
     ###########################################################################
-    on_hashify -> {
+    on_hashify lambda {
       hash = {}
       ATTRS.each { |name| hash[name] = send name }
       hash[:modifiers] = @modifiers
@@ -45,19 +45,19 @@ module Realm
     }
 
     ###########################################################################
-    on_dehashify ->(hash) {
+    on_dehashify lambda { |hash|
       ATTRS.each { |name| instance_variable_set "@#{name}", hash[name] }
       @modifiers = hash[:modifiers]
     }
 
     ###########################################################################
-    on_deep_copy ->(original) {
+    on_deep_copy lambda { |original|
       ATTRS.each { |name| instance_variable_set "@#{name}", original.send(name) }
       @modifiers = Marshal.load(Marshal.dump(original.modifiers))
     }
 
     ###########################################################################
-    enervate -> {
+    enervate lambda {
       dispose
     }
 
@@ -72,7 +72,7 @@ module Realm
         rid, name,
         id,
         level, type,
-        *(wearable ? ['yes', slot.to_s] : ['no', 'N/A']),
+        *(wearable ? ['yes', slot.to_s] : ['no', 'N/A'])
       ]
       if type == :weapon
         str << $templates.item_weapon_summary % [

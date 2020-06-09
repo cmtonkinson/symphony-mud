@@ -3,7 +3,7 @@
 # text for topic "bar" in category "foo". Categorization is arbitrary and
 # only exists to prevent an unmanageably large single directory of files.
 
-$help = Hash.new
+$help = {}
 
 Dir[Symphony.help.join '*'].each do |help_dir|
   Dir[Pathname.new(help_dir).join '*.txt'].each do |help_file|

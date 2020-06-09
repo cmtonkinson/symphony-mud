@@ -3,13 +3,12 @@ require 'spec_helper'
 include Util
 
 describe Util::Queue do
-
   subject { Util::Queue.new }
 
   #############################################################################
   describe '#push' do
     it 'should return self' do
-      expect(subject.push 1).to be subject
+      expect(subject.push(1)).to be subject
     end
   end
 
@@ -65,5 +64,4 @@ describe Util::Queue do
       end
     end
   end
-
 end

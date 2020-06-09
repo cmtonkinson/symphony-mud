@@ -3,8 +3,7 @@ module SystemTest
     attr_accessor :accounts, :status, :result, :assertions, :output_polling
 
     ###########################################################################
-    def initialize
-    end
+    def initialize; end
 
     ###########################################################################
     def setup(&block)
@@ -36,9 +35,9 @@ module SystemTest
 
         @accounts.each { |a| login_or_create a }
 
-        @before.call unless @before.nil?
+        @before&.call
         @test.call
-        @after.call unless @after.nil?
+        @after&.call
         @status = :pass unless @status == :fail
 
         @end_time = Time.now
@@ -47,28 +46,34 @@ module SystemTest
         @status = :fail
 
         message = ("\n    %s\n    " % e.message) + e.backtrace
-          .reject! { |l| !l.include? $ROOT_DIR.to_s }
-          .each { |l| l.sub!($ROOT_DIR.to_s, '') }
-          .join("\n    ")
+                                                    .select! { |l| l.include? $ROOT_DIR.to_s }
+                                                    .each { |l| l.sub!($ROOT_DIR.to_s, '') }
+                                                    .join("\n    ")
         @result = message
       end
     end
 
     ###########################################################################
     def expect(e, msg = nil)
-      raise "SystemTest#expect() called without first send a command through the shortcut interface." unless @last_used_account
+      unless @last_used_account
+        raise 'SystemTest#expect() called without first send a command through the shortcut interface.'
+      end
+
       expect_last acm(@last_used_account), e, msg
     end
 
     ###########################################################################
     def n_expect(e, msg = nil)
-      raise "SystemTest#n_expect() called without first send a command through the shortcut interface." unless @last_used_account
+      unless @last_used_account
+        raise 'SystemTest#n_expect() called without first send a command through the shortcut interface.'
+      end
+
       n_expect_last acm(@last_used_account), e, msg
     end
 
     ###########################################################################
     def expect_last(client, e, msg = nil)
-      if !can_find(client, -1, e)
+      unless can_find(client, -1, e)
         @status = :fail
         @result = not_found_error e, msg
       end
@@ -76,7 +81,7 @@ module SystemTest
 
     ###########################################################################
     def expect_any(client, e, msg = nil)
-      if !can_find(client, nil, e)
+      unless can_find(client, nil, e)
         @status = :fail
         @result = not_found_error e, msg
       end
@@ -109,10 +114,10 @@ module SystemTest
         corpus = corpus.join("\n") if corpus.is_a? Array
       end
 
-      return case e
+      case e
       when String then corpus.include?(e)
       when Regexp then e.match(corpus)
-      else raise "SystemTest#can_find requires a String or Regexp"
+      else raise 'SystemTest#can_find requires a String or Regexp'
       end
     end
 
@@ -121,7 +126,7 @@ module SystemTest
       case e
       when String then "Did not find substring '#{e}'%s" % (msg ? '  ' + msg : '')
       when Regexp then "No match found for '#{e}'%s" % (msg ? '  ' + msg : '')
-      else raise "Bad param"
+      else raise 'Bad param'
       end
     end
 
@@ -130,7 +135,7 @@ module SystemTest
       case e
       when String then "Found substring '#{e}'"
       when Regexp then "Matched '#{e}'"
-      else raise "Bad param"
+      else raise 'Bad param'
       end
     end
 
@@ -154,9 +159,9 @@ module SystemTest
     ###########################################################################
     def account_client_method(account_name)
       @last_used_account = account_name.to_s
-      @context.send (account_name.to_s + "_client").to_sym
+      @context.send (account_name.to_s + '_client').to_sym
     end
-    alias_method :acm, :account_client_method
+    alias acm account_client_method
 
     def login_or_create(account_name)
       client = acm account_name
@@ -203,15 +208,23 @@ module SystemTest
         hand: 'right',
         height: 'average',
         weight: 'average',
-        klass: 'warrior',
+        klass: 'warrior'
       }
     end
 
     ###########################################################################
     # rubocop:disable Naming/AccessorMethodName
-    def get_id;           @id;           end
-    def get_parent_id;    @parent_id;    end
-    def get_account_name; @account_name; end
+    def get_id
+      @id
+    end
+
+    def get_parent_id
+      @parent_id
+    end
+
+    def get_account_name
+      @account_name
+    end
     # rubocop:enable Naming/AccessorMethodName
 
     ###########################################################################
@@ -221,7 +234,7 @@ module SystemTest
       # The first form simply looks to proxy the method directly to the
       # @context object.
       if @context.respond_to? meth
-        return @context.send(meth, *args, &block)
+        @context.send(meth, *args, &block)
       # The second form assumes that you either want to send a command through
       # a given connection and you'll reference it by name (e.g. you want
       # to type `ogre "kill elf"` in your test and have the command "kill elf"
@@ -231,11 +244,11 @@ module SystemTest
       # you'd call the method with no params (e.g. `ogre`)
       elsif @accounts.include?(meth.to_s)
         retval = nil
-        if args.size == 1 && args[0].is_a?(String)
-          retval = acm(meth).command args[0]
-        else
-          retval = acm(meth)
-        end
+        retval = if args.size == 1 && args[0].is_a?(String)
+                   acm(meth).command args[0]
+                 else
+                   acm(meth)
+                 end
 
         # The underlying Net::Telnet client won't read new data from the
         # connection until/unless waitfor() is called. That means if something
@@ -253,10 +266,10 @@ module SystemTest
           end
         end
 
-        return retval
+        retval
       # The fallback is the default behavior of method_missing.
       else
-        return super
+        super
       end
     end
 
@@ -287,7 +300,6 @@ module SystemTest
       @accounts << account_name.to_s
       @account_opts[account_name.to_s] = opts
     end
-
   end
 
   ###########################################################################
@@ -302,6 +314,4 @@ module SystemTest
     ::SystemTest.const_set class_name, class_definition
     Configuration.configure { |conf| conf.register_test(::SystemTest.const_get(class_name).new) }
   end
-
 end
-

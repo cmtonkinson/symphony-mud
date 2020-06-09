@@ -2,8 +2,8 @@
 Symphony.logger = Logger.new(STDOUT)
 
 Symphony.logger.formatter = proc do |severity, datetime, _progname, msg|
-  dev = Symphony.logger.instance_variable_get("@logdev")
-  
+  dev = Symphony.logger.instance_variable_get('@logdev')
+
   if dev.dev.is_a? File
     dev.write "[%s %d] %s -- %s: %s\n" % [
       datetime,
@@ -19,7 +19,7 @@ Symphony.logger.formatter = proc do |severity, datetime, _progname, msg|
       'INFO' => '{x',
       'WARN' => '{y',
       'ERROR' => '{r',
-      'FATAL' => '{R',
+      'FATAL' => '{R'
     }
 
     dev.write Base::Terminal.colorize("%s[%s %d] %s -- %s: %s{x\n" % [
@@ -28,7 +28,7 @@ Symphony.logger.formatter = proc do |severity, datetime, _progname, msg|
       Process.pid,
       severity,
       BINARY_NAME,
-      Base::Terminal.uncolor(msg.is_a?(String) ? msg.clone : msg.inspect),
+      Base::Terminal.uncolor(msg.is_a?(String) ? msg.clone : msg.inspect)
     ])
   end
 end

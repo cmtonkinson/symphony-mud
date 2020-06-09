@@ -8,8 +8,7 @@ module Talent
       @name     = :kick
     end
 
-    def _learn
-    end
+    def _learn; end
 
     def _invoke(target)
       Combat.embattle able_being, target
@@ -21,7 +20,7 @@ module Talent
                              able_being,
                              target,
                              exclude: [able_being, target]
-        return
+        nil
       else
         Combat::Strike.new able_being, target, nil, nil, name
       end

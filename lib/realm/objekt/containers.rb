@@ -5,7 +5,7 @@ module Realm
     attr_reader :containers
 
     ###########################################################################
-    after_initialize -> {
+    after_initialize lambda {
       # By adding `Util::AttrHash` instance members to your subclasses, you
       # can easily keep collections of Objekts organized. If you decide to
       # use the Objekt methods #insert and #delete as abstractions over these
@@ -17,7 +17,7 @@ module Realm
     }
 
     ###########################################################################
-    enervate -> {
+    enervate lambda {
       # When destroying an Objekt, we want to be sure it's removed from all
       # containers it may be in (which should theoretically only be one at a
       # time, but that may not always be true - hence @containers being an

@@ -29,7 +29,7 @@ module Realm
     DEFAULTS = {
       id: -> { SecureRandom.uuid },
       rid: -> { nil },
-      name: -> { +'[name]' },
+      name: -> { +'[name]' }
     }
 
     attr_reader :id
@@ -82,12 +82,12 @@ module Realm
       @_disposal_check_visits = 0
 
       # Allow subclasses to define custom logic after Objekt initialization.
-      self.run_hook :after_initialize
+      run_hook :after_initialize
     end
 
     ###########################################################################
     def dispose
-      self.run_hook :before_disposal
+      run_hook :before_disposal
       @_disposal_requested = true
     end
 
@@ -102,16 +102,16 @@ module Realm
         klass: self.class.name.split('::').last,
         name: @name,
         id: @id[0..7],
-        rid: @rid,
+        rid: @rid
       }
     end
-    alias_method :fqid, :fully_qualified_identifier
+    alias fqid fully_qualified_identifier
 
     ###########################################################################
     def fully_qualified_identifier_string
-      I18n.translate 'objekt.identify', **self.fully_qualified_identifier
+      I18n.translate 'objekt.identify', **fully_qualified_identifier
     end
-    alias_method :fqid_str, :fully_qualified_identifier_string
+    alias fqid_str fully_qualified_identifier_string
 
     ###########################################################################
     def interpret_name

@@ -1,5 +1,4 @@
 module SystemTest
-
   define :tnl do
     from :create_admin
     with :admin
@@ -19,9 +18,7 @@ module SystemTest
       admin 'promote vork 100'
       vork 'summary'
       expect(/tnl:\s+0\D/im)
-
     end
-
   end
 
   define :default_gains do
@@ -36,24 +33,21 @@ module SystemTest
     end
 
     test do
-      hp_regexp = /\d+\/(\d+)hp/im 
+      hp_regexp = %r{\d+/(\d+)hp}im
       matches = vork_client.buffer[-1].scan hp_regexp
       warrior_hp = matches[-1][0].to_i
 
       matches = zaboo_client.buffer[-1].scan hp_regexp
       mage_hp = matches[-1][0].to_i
-      fail "Warrior should have more health than mage" unless warrior_hp > mage_hp
+      raise 'Warrior should have more health than mage' unless warrior_hp > mage_hp
 
-
-      mana_regexp = /\d+\/(\d+)mana/im 
+      mana_regexp = %r{\d+/(\d+)mana}im
       matches = vork_client.buffer[-1].scan mana_regexp
       warrior_mana = matches[-1][0].to_i
 
       matches = zaboo_client.buffer[-1].scan mana_regexp
       mage_mana = matches[-1][0].to_i
-      fail "Mage should have more mana than warrior" unless mage_mana > warrior_mana
+      raise 'Mage should have more mana than warrior' unless mage_mana > warrior_mana
     end
   end
-
 end
-

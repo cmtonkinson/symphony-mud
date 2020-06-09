@@ -4,6 +4,6 @@ module Talent::ActiveAbility
   end
 
   def type_s
-    "active"
+    'active'
   end
 end

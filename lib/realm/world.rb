@@ -14,7 +14,7 @@ module Realm
     end
 
     ###########################################################################
-    after_initialize -> {
+    after_initialize lambda {
       @schedule = Mechanics::Schedule.new
       CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     }
@@ -24,6 +24,7 @@ module Realm
       Logistics::Scribe.the_story_of_baron_munchausen.each do |zone_id|
         zone = Logistics::Scribe.load(Realm::Zone, zone_id)
         next unless zone
+
         @zones.insert zone
         zone.run_hook :vivify
       end
@@ -54,11 +55,11 @@ module Realm
     def find(objekt_id)
       Util::Registry.lookup objekt_id
     end
-    alias_method :[], :find
+    alias [] find
 
     ###########################################################################
     def find_room(rid_or_uuid)
-      return find THE_VOID_ID if !rid_or_uuid
+      return find THE_VOID_ID unless rid_or_uuid
 
       # It's a RID
       if rid_or_uuid.is_a? Numeric
@@ -108,7 +109,7 @@ module Realm
       {
         length: @schedule.length,
         batch_size: @schedule.jobs_per_batch,
-        up_next: @schedule.take(num),
+        up_next: @schedule.take(num)
       }
     end
 

@@ -1,6 +1,6 @@
 module Realm
   class Being < Objekt
-    CONTAINERS = %w(items)
+    CONTAINERS = %w[items]
 
     attr_accessor :room, :gender, :hand
     attr_accessor :enablers, :klass, :anatomy
@@ -14,7 +14,7 @@ module Realm
       @output_buffer = ''
       @gender        = Gender::NEUTER
       @hand          = nil
-      @enablers      = Array.new
+      @enablers      = []
       @klass         = nil
       @anatomy       = nil
       @hand          = 'right'
@@ -22,26 +22,26 @@ module Realm
     end
 
     ###########################################################################
-    after_initialize -> {
+    after_initialize lambda {
       CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     }
 
     ###########################################################################
-    on_hashify -> {
+    on_hashify lambda {
       hash = {
         klass: @klass&.name,
         anatomy: @anatomy&.name,
         room: @room&.id,
         gender: @gender,
         hand: @hand,
-        items: @items.values.map(&:hashify),
+        items: @items.values.map(&:hashify)
       }
 
       { being: hash }
     }
 
     ###########################################################################
-    on_dehashify ->hash {
+    on_dehashify lambda { |hash|
       hash = hash[:being]
 
       ::Talent.const_get(hash[:klass].capitalize).new(self) if hash[:klass]
@@ -59,26 +59,28 @@ module Realm
     }
 
     ###########################################################################
-    on_deep_copy -> (original) {
+    on_deep_copy lambda { |original|
       ::Talent.const_get(original.anatomy.name.capitalize).new(self) if original.anatomy
       ::Talent.const_get(original.klass.name.capitalize).new(self) if original.klass
     }
 
     ###########################################################################
-    vivify -> {
+    vivify lambda {
       $world.beings.insert self
     }
 
     ###########################################################################
-    enervate -> {
+    enervate lambda {
       $world.beings.delete self
       @room.delete self
 
       items.each { |i| i.run_hook :enervate }
-      anatomy.slots do |slot|
-        i = slot.set nil
-        i.run_hook :enervate if i
-      end if anatomy
+      if anatomy
+        anatomy.slots do |slot|
+          i = slot.set nil
+          i.run_hook :enervate if i
+        end
+      end
 
       dispose
     }
@@ -119,7 +121,7 @@ module Realm
         health.current, health.max,
         mana.current, mana.max,
         stamina.current,
-        tnl,
+        tnl
       ]
     end
 
@@ -137,7 +139,7 @@ module Realm
       @proxy_operator ||= Command::Operator.new OpenStruct.new(avatar: self)
       @proxy_operator.handle command_string
     end
-    alias_method :cmd, :command_proxy
+    alias cmd command_proxy
 
     ###########################################################################
     # Returns true or a String containing an error message.
@@ -168,10 +170,10 @@ module Realm
     def transport(dst)
       src = @room
 
-      self.run_hook :before_room_change, src, dst
+      run_hook :before_room_change, src, dst
       move.from(src.beings).to(dst.beings)
       @room = dst
-      self.run_hook :after_room_change, src, dst
+      run_hook :after_room_change, src, dst
 
       # Look around.
       cmd 'look'
@@ -181,7 +183,6 @@ module Realm
     def other_beings_in_room
       (@room.beings.values.reject { |b| b == self }) || []
     end
-    alias_method :other_beings, :other_beings_in_room
-
+    alias other_beings other_beings_in_room
   end
 end

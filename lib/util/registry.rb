@@ -44,7 +44,7 @@ module Util
       end]
       {
         size: buckets.values.map { |b| b[:size] }.reduce(:+),
-        buckets: buckets,
+        buckets: buckets
       }
     end
 

@@ -3,10 +3,8 @@ require 'spec_helper'
 include Logistics
 
 describe Logistics::Builder do
-
   #############################################################################
   describe '#create_room' do
-
     before :each do
       @zone = Zone.new
       @room = Builder.create_room @zone
@@ -27,12 +25,10 @@ describe Logistics::Builder do
     it 'assign a rid to the Room' do
       expect(@room.rid).to be_a Integer
     end
-
   end
 
   #############################################################################
   describe '#link_existing_rooms' do
-
     before :each do
       @zone   = Zone.new
       @room_a = Builder.create_room @zone
@@ -45,12 +41,10 @@ describe Logistics::Builder do
       expect(@room_a.east_room).to be @room_b
       expect(@room_b.west_room).to be @room_a
     end
-
   end
 
   #############################################################################
   describe '#create_linked_room' do
-
     before :each do
       @zone   = Zone.new
       @room_a = Builder.create_room @zone
@@ -69,12 +63,10 @@ describe Logistics::Builder do
     it 'sets the coordinates of the new Room' do
       expect(@room_b.coords).to eq Vector[1, 0, 0]
     end
-
   end
 
   ###########################################################################
   describe '#create_npc' do
-
     before :each do
       @zone = Zone.new
       @npc  = Builder.create_npc @zone
@@ -95,12 +87,10 @@ describe Logistics::Builder do
     it 'adds the NPC to the Zone' do
       expect(@zone.npcs.values).to include(@npc)
     end
-
   end
 
   #############################################################################
   describe '#create_zone' do
-
     before :each do
       @zone = Builder.create_zone
     end
@@ -114,7 +104,5 @@ describe Logistics::Builder do
       expect(@zone.rid).to be_a Integer
       expect(@zone.rid).to be > 0
     end
-
   end
-
 end

@@ -31,6 +31,5 @@ module Network
     def ip_port_s
       "#{address}:#{port}"
     end
-
   end
 end

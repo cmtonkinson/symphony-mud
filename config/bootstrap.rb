@@ -5,7 +5,7 @@
 ENV['SYMPHONY_ENV'] ||= 'development'
 
 # Standard practice puts the Gemfile at the project root.
-ENV['GEMFILE'] ||= File.expand_path '../../Gemfile', __FILE__
+ENV['GEMFILE'] ||= File.expand_path '../Gemfile', __dir__
 
 ###############################################################################
 # Consume the Gemfile and create our base App object.
@@ -56,8 +56,7 @@ IO.write(Symphony.pidfile, Process.pid.to_s, mode: 'w')
 $universe = Base::Universe.new
 $world    = Realm::World.new
 
-trap('USR1') {
+trap('USR1') do
   $universe.should_save = true
   $universe.should_stop = true
-}
-
+end

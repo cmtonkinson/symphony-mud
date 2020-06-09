@@ -1,7 +1,7 @@
 module Realm
   class Avatar
     ###########################################################################
-    after_death -> {
+    after_death lambda {
       respawn
     }
 

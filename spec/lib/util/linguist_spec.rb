@@ -3,7 +3,6 @@ require 'spec_helper'
 include Util
 
 describe Linguist do
-
   #############################################################################
   describe '#interpret' do
     err = Realm.configuration.error_string
@@ -77,7 +76,7 @@ describe Linguist do
 
       [['$reflexive', chuck],    'himself'],
       [['$reflexive', charlene], 'herself'],
-      [['$reflexive', pat],      'itself'],
+      [['$reflexive', pat],      'itself']
     ]
 
     tests.each do |params|
@@ -86,7 +85,5 @@ describe Linguist do
         expect(Linguist.interpret(*input)).to eq output
       end
     end
-
   end
-
 end

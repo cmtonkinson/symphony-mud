@@ -3,8 +3,7 @@ module Command
     attr_reader :usages
 
     ###########################################################################
-    def initialize
-    end
+    def initialize; end
 
     ###########################################################################
     def <=>(other)
@@ -60,7 +59,7 @@ module Command
     def translate(str, *args)
       I18n.t "#{get_group}.#{get_name}.#{str}", *args
     end
-    alias_method :t, :translate
+    alias t translate
 
     ###########################################################################
     # This enables us to access anything in the @context OpenStruct with a simple method call inside the
@@ -68,27 +67,47 @@ module Command
     # return values out of the @context Hash for Command execution.
     def method_missing(meth, *args, &block)
       if @context.respond_to? meth
-        return @context.send meth
+        @context.send meth
       else
         begin
-          return super
+          super
         rescue NameError => e
           raise e if e.name == :execute
 
-          return nil
+          nil
         end
       end
     end
 
     ###########################################################################
     # rubocop:disable Naming/AccessorMethodName
-    def get_name;       @name;       end
-    def get_shortcut;   @shortcut;   end
-    def get_brief;      @brief;      end
-    def get_level;      @level;      end
-    def get_group;      @group;      end
-    def get_ability;    @ability;    end
-    def get_exec;       @exec;       end
+    def get_name
+      @name
+    end
+
+    def get_shortcut
+      @shortcut
+    end
+
+    def get_brief
+      @brief
+    end
+
+    def get_level
+      @level
+    end
+
+    def get_group
+      @group
+    end
+
+    def get_ability
+      @ability
+    end
+
+    def get_exec
+      @exec
+    end
     # rubocop:enable Naming/AccessorMethodName
 
     private
@@ -131,9 +150,7 @@ module Command
     def usage(*argument_list)
       args = Usage.new
       # Can only have one empty usage.
-      if argument_list.empty? && @usages.any?(&:empty?)
-        raise ArgumentError.new I18n.t 'command.only_one_empty'
-      end
+      raise ArgumentError.new I18n.t 'command.only_one_empty' if argument_list.empty? && @usages.any?(&:empty?)
 
       # Add each Argument to the Usage.
       argument_list.each { |defn| args.push Argument.new defn }

@@ -10,19 +10,19 @@ module Realm
 
     ###########################################################################
     # For testing serialization.
-    on_hashify -> {
+    on_hashify lambda {
       {
         my_num: 456
       }
     }
 
-    on_dehashify -> hash {
+    on_dehashify lambda { |hash|
       @my_num = hash[:my_num]
     }
 
     ###########################################################################
     # For testing deep Objekt copies.
-    on_deep_copy -> other {
+    on_deep_copy lambda { |other|
       @my_num = other.my_num
       @my_nil = other.my_nil
     }

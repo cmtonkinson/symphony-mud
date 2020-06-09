@@ -20,7 +20,5 @@ module Talent
       being.add_enabler self
       being.modify modifiers if respond_to? :modifiers
     end
-
   end
 end
-

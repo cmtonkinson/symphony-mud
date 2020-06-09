@@ -26,8 +26,7 @@ module Talent
 
     ###########################################################################
     def aggressive?
-      %i(hex curse harm).include? spell_category
+      %i[hex curse harm].include? spell_category
     end
-
   end
 end

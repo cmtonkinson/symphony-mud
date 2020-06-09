@@ -19,9 +19,7 @@ module Base
       operators.push Command::Operator.new self
 
       # Assuming this is a new login, Push the LoginSequence.
-      if login
-        operators.push InputSequence::Controller.new self, InputSequence::LoginSequence.new
-      end
+      operators.push InputSequence::Controller.new self, InputSequence::LoginSequence.new if login
     end
 
     ###########################################################################

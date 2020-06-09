@@ -3,20 +3,16 @@ require 'spec_helper'
 include Realm
 
 describe Objekt do
-
   #############################################################################
   describe '#initialize' do
-
     it 'should set a default name' do
       r = Objekt.new
       expect(r.name).to eq Objekt::DEFAULTS[:name].call
     end
-
   end
 
   #############################################################################
   describe '#fully_qualified_indentifier' do
-
     before :each do
       @sut = TestObj.new
       @fqid = @sut.fully_qualified_identifier
@@ -41,12 +37,10 @@ describe Objekt do
       expect(@fqid).to have_key :id
       expect(@fqid[:id]).to eq @sut.id[0..7]
     end
-
   end
 
   #############################################################################
   describe '#insert' do
-
     before :each do
       @bucket = TestBucket.new
       @parent = TestParent.new
@@ -64,12 +58,10 @@ describe Objekt do
     it 'should allow insertion of subclass instances to parent containers' do
       expect { @bucket.insert @child }.not_to raise_error
     end
-
   end
 
   #############################################################################
   describe '#clone' do
-
     before :each do
       @original = TestObj.new nil, my_num: 387, my_nil: nil
       @clone    = @original.clone
@@ -102,12 +94,10 @@ describe Objekt do
         end
       end
     end
-
   end
 
   #############################################################################
   describe '#serialize and #deserialize' do
-
     before :each do
       @original = TestObj.new 42
       @yaml     = @original.serialize
@@ -144,12 +134,10 @@ describe Objekt do
     it 'decodes subclass attributes' do
       expect(@reloaded.my_num).to eq 456
     end
-
   end
 
   #############################################################################
   describe '#simple_flag' do
-
     around :each do |example|
       class FlaggedObjekt < Objekt
         def initialize(id = nil)
@@ -195,7 +183,5 @@ describe Objekt do
       @flagged.off!
       expect(@flagged.off?).to eq true
     end
-
   end
-
 end

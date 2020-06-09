@@ -39,9 +39,8 @@ module Talent
     def modifiers
       {
         constitution: 2,
-        charisma: -1,
+        charisma: -1
       }
     end
-
   end
 end

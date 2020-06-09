@@ -7,7 +7,7 @@ module Base
         Base.configuration.hash_salt,
         Base.configuration.hash_iterations,
         Base.configuration.hash_digest.length,
-        Base.configuration.hash_digest,
+        Base.configuration.hash_digest
       )
       hex = binary.unpack('h*')
       hex.first # unpack returns an Array; in this case only a single element

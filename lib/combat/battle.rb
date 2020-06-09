@@ -7,9 +7,9 @@ module Combat
     attr_reader :groups, :bouts, :job
 
     ###########################################################################
-    after_initialize -> {
-      @groups = Array.new
-      @bouts  = Array.new
+    after_initialize lambda {
+      @groups = []
+      @bouts  = []
       @job    = Mechanics::RecurringJob.new 0, self, 2, :new_bout
 
       $world.schedule @job
@@ -22,14 +22,14 @@ module Combat
 
       @groups.push group
       group.battle = self
-      self.run_hook :after_group_added, group
+      run_hook :after_group_added, group
     end
 
     ###########################################################################
     def delete_group(group)
       @groups.delete group
       group.battle = nil
-      self.run_hook :after_group_deleted, group
+      run_hook :after_group_deleted, group
     end
 
     ###########################################################################
@@ -59,7 +59,7 @@ module Combat
     end
 
     ###########################################################################
-    enervate -> {
+    enervate lambda {
       dispose
     }
 
@@ -67,7 +67,7 @@ module Combat
     after_group_added ->(group) {}
 
     ###########################################################################
-    after_group_deleted ->(_group) {
+    after_group_deleted lambda { |_group|
       # If less than two groups, end the battle
       if @groups.size < 2
         # Remove the remaining Group (if there is one).

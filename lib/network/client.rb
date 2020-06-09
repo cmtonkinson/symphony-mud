@@ -23,31 +23,27 @@ module Network
     end
 
     def recv
-      begin
-        input = socket.recv_nonblock Network.configuration.recv_maxlen
-        return input.strip
-      rescue Errno::EWOULDBLOCK, Errno::EINTR
-        return nil
-      end
+      input = socket.recv_nonblock Network.configuration.recv_maxlen
+      input.strip
+    rescue Errno::EWOULDBLOCK, Errno::EINTR
+      nil
     end
 
     def close
       quote = $universe.quotes.sample
       self.puts "\n\n"
       self.puts quote['body']
-      self.puts "  -#{quote["author"]}\n\n"
+      self.puts "  -#{quote['author']}\n\n"
       Symphony.logger.info "Closing Client on socket #{fd}"
-      self.socket.close
+      socket.close
     end
 
     private
 
     def _send(message)
-      begin
-        socket.send ::Base::Terminal.colorize(message), 0
-      rescue Errno::EPIPE
-        @should_terminate = true
-      end
+      socket.send ::Base::Terminal.colorize(message), 0
+    rescue Errno::EPIPE
+      @should_terminate = true
     end
   end
 end

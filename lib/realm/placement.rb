@@ -9,22 +9,22 @@ module Realm
     end
 
     ###########################################################################
-    after_initialize -> {
+    after_initialize lambda {
       @rid = room.next_placement_rid if room
     }
 
     ###########################################################################
-    on_hashify -> {
+    on_hashify lambda {
       {
         klass: klass,
         objekt_id: objekt_id,
         number: number,
-        max: max,
+        max: max
       }
     }
 
     ###########################################################################
-    on_dehashify ->hash {
+    on_dehashify lambda { |hash|
       @klass     = hash[:klass]
       @objekt_id = hash[:objekt_id]
       @number    = hash[:number]
@@ -44,7 +44,7 @@ module Realm
         target.rid,
         target.name,
         number,
-        max,
+        max
       ]
     end
 

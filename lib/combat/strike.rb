@@ -17,12 +17,13 @@ module Combat
       @defender   = defender
       @bout       = bout
       @parent     = parent
-      @level      = if @parent.nil? then 0 else @parent.level + 2 end
+      @level      = @parent.nil? ? 0 : @parent.level + 2
       @avoided    = false
       @created_by = created_by
 
       # Execute
-      return if defender.dead?  
+      return if defender.dead?
+
       before
       perform unless avoided
       after
@@ -81,7 +82,7 @@ module Combat
     def before
       # During normal autocombat, a Bout will have been created and assigned
       # but for offensive skills that isn't the case.
-      @bout.push self if @bout
+      @bout&.push self
 
       attacker.run_hook :before_strike_attack, self
       defender.run_hook :before_strike_defense, self

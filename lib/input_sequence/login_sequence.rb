@@ -1,15 +1,14 @@
 module InputSequence
   class LoginSequence < InputSequence
-
     # Copypasta from authoritative sources of truth elsewhere in the codebase.
     # Really not the best method for exposing this information.
     # TODO - clean this crap up!
-    RACE_OPTIONS   = %w(human elf dwarf)
-    GENDER_OPTIONS = %w(male female neuter)
-    HAND_OPTIONS   = %w(left right)
-    HEIGHT_OPTIONS = %w(tiny short average tall huge)
-    WEIGHT_OPTIONS = %w(bony thin average heavy obese)
-    KLASS_OPTIONS  = %w(warrior mage cleric rogue)
+    RACE_OPTIONS   = %w[human elf dwarf]
+    GENDER_OPTIONS = %w[male female neuter]
+    HAND_OPTIONS   = %w[left right]
+    HEIGHT_OPTIONS = %w[tiny short average tall huge]
+    WEIGHT_OPTIONS = %w[bony thin average heavy obese]
+    KLASS_OPTIONS  = %w[warrior mage cleric rogue]
 
     ###########################################################################
     def initialize
@@ -215,7 +214,7 @@ module InputSequence
     def confirm_passphrase_handler(input)
       @context.passphrase_confirmation = input
       if ::Base::Account.equal_time_compare @context.new_passphrase, @context.passphrase_confirmation
-       accept_passphrase_confirmation
+        accept_passphrase_confirmation
       else
         reject_passphrase_confirmation
       end
@@ -299,7 +298,5 @@ module InputSequence
       Symphony.logger.info "New account #{avatar.fqid_str}"
       avatar.room.puts I18n.t('universe.room_announce_newbie'), avatar
     end
-
   end
 end
-

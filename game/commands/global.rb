@@ -119,9 +119,11 @@ module Command
 
       if action == 'leave'
         being.puts t('err_your_group') and next if being == leader
+
         group.leave being
       elsif action == 'disband'
         being.puts t('err_not_leader') and next unless being == leader
+
         group.disband
       elsif action
         target = room.beings.locate_first victim
@@ -134,7 +136,7 @@ module Command
         when 'deny' then being.group.request_deny target
         end
       else
-        being.puts t('pending'), being.pending_group.leader if !being.pending_group.nil?
+        being.puts t('pending'), being.pending_group.leader unless being.pending_group.nil?
 
         being.puts t('members'), leader
         group.members.each do |member|
@@ -205,6 +207,7 @@ module Command
       targets = room.beings.locate victim
       being.puts t('err_noone') and next if targets.empty?
       being.puts t('err_too_many') and next if targets.length > 1
+
       target = targets.first
 
       being.puts t('title'), target
@@ -299,6 +302,7 @@ module Command
     exec do
       targets = being.anatomy.locate target
       being.puts t('err_not_found') and next if targets.empty?
+
       targets.each do |item|
         message = being.anatomy.remove item, being
         being.puts(*message)
@@ -334,7 +338,7 @@ module Command
       list = commands.flatten
                      .reject { |c| c.get_shortcut.nil? }
                      .select { |c| being.level >= (c.level || 0) }
-                     .sort_by { |c| c.get_shortcut }
+                     .sort_by(&:get_shortcut)
                      .map { |c| '  %s - %s' % [c.get_shortcut, c.get_name] }
 
       being.puts t('title')

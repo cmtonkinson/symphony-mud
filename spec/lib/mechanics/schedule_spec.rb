@@ -3,7 +3,6 @@ require 'spec_helper'
 include Mechanics
 
 describe Schedule do
-
   before :each do
     @schedule = Schedule.new
     @tester_a = JobTester.new
@@ -20,17 +19,14 @@ describe Schedule do
 
   #############################################################################
   describe '#add' do
-
     it 'should prioritize Jobs needing to occur first' do
       @jobs.each { |j| @schedule.add j }
       expect(@docket.top).to be @job_b
     end
-
   end
 
   #############################################################################
   describe '#fire!' do
-
     it 'should return nil if the queue is empty' do
       expect(@schedule.fire!).to be_nil
     end
@@ -85,7 +81,6 @@ describe Schedule do
     end
 
     context 'with a recurring Job' do
-
       before :each do
         @repeat_tester = JobTester.new
         @repeat_job    = Job.new 0, @repeat_tester, :call_me_maybe
@@ -118,9 +113,7 @@ describe Schedule do
         @repeat_job.recur 0, times
         @schedule.add @repeat_job
 
-        until @schedule.fire!.nil?
-          count += 1
-        end
+        count += 1 until @schedule.fire!.nil?
 
         expect(count).to eq times
       end
@@ -141,9 +134,6 @@ describe Schedule do
 
       it 'should recur the Job after the set delay' do
       end
-
     end
-
   end
-
 end

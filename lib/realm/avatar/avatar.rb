@@ -12,19 +12,19 @@ module Realm
     end
 
     ###########################################################################
-    before_disconnect -> {
+    before_disconnect lambda {
       @room.puts I18n.t('universe.room_announce_exit'), self
       Symphony.logger.info '%s logged out' % fqid_str
       @room.beings.delete self
     }
 
     ###########################################################################
-    vivify -> {
+    vivify lambda {
       $world.avatars.insert self
     }
 
     ###########################################################################
-    enervate -> {
+    enervate lambda {
       @world.avatars.remove self
     }
 
@@ -37,7 +37,7 @@ module Realm
     def test_and_clear_forced_output
       o = @force_output
       @force_output = false
-      return o
+      o
     end
 
     ###########################################################################
@@ -51,10 +51,10 @@ module Realm
 
     ###########################################################################
     # Verify room edit permissions prior to room change.
-    before_room_change ->(from, to) {
+    before_room_change lambda { |from, to|
       if redit && from.zone != to.zone
         self.redit = false
-        self.user.operators.pop
+        user.operators.pop
       end
     }
 
@@ -63,7 +63,7 @@ module Realm
       $templates.avatar_summary % [
         name,
         id,
-        level,
+        level
       ] + summary_plate
     end
 
@@ -82,7 +82,5 @@ module Realm
         0, 0, 0, ''
       ]
     end
-
   end
 end
-

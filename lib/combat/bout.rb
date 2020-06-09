@@ -6,7 +6,7 @@ module Combat
     ###########################################################################
     def initialize(battle)
       @battle  = battle
-      @strikes = Array.new
+      @strikes = []
     end
 
     ###########################################################################
@@ -25,7 +25,7 @@ module Combat
     # of e.g. 'second attack' or 'counter attack' skills) but everybody gets at
     # least one shot in per Bout.
     def make_strikes
-      fighters = battle.groups.map { |b| b.members }.reduce(:+)
+      fighters = battle.groups.map(&:members).reduce(:+)
 
       # Don't start the Bout output on a line with a prompt. It's weird.
       fighters.each { |f| f.puts '' }

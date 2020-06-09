@@ -20,7 +20,7 @@ module Base
       "bright cyan": { code: 'C', escape: "\e[36m#{BOLD}" },
 
       "reset": { code: 'x', escape: RESET },
-      "bracket": { code: '{', escape: '{' },
+      "bracket": { code: '{', escape: '{' }
     }
 
     # The negative lookbehind for % is so that this class' behavior doesn't
@@ -56,4 +56,3 @@ module Base
     end
   end
 end
-
