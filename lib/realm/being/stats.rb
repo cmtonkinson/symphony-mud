@@ -20,7 +20,7 @@ module Realm
     GOD      = HERO + 15
     CREATOR  = HERO + 20
 
-    LEVELS = %w[NEWBIE TRAVELER HERO DEMIGOD GOD CREATOR]
+    LEVELS = %w[NEWBIE TRAVELER HERO DEMIGOD GOD CREATOR].freeze
 
     # Many immortal commands (such as 'force' and 'summon') require that in
     # order to perform them, the actor be a sufficiently higher level than the
@@ -39,12 +39,12 @@ module Realm
     BASE_WEIGHT = 3
 
     # Core names can be grouped into five distinct buckets.
-    EXPERIENCE = %i[level exp tnl training_points]
-    WELLNESS   = %i[health mana stamina]
-    FITNESS    = %i[strength dexterity constitution intelligence focus creativity charisma luck]
-    DEFENSE    = %i[armor bash slash pierce exotic]
-    OFFENSE    = %i[hit_bonus damage_bonus]
-    PHYSICAL   = %i[age height weight]
+    EXPERIENCE = %i[level exp tnl training_points].freeze
+    WELLNESS   = %i[health mana stamina].freeze
+    FITNESS    = %i[strength dexterity constitution intelligence focus creativity charisma luck].freeze
+    DEFENSE    = %i[armor bash slash pierce exotic].freeze
+    OFFENSE    = %i[hit_bonus damage_bonus].freeze
+    PHYSICAL   = %i[age height weight].freeze
 
     # Discourage direct manipulation of any core names by only defining readers.
     (EXPERIENCE + WELLNESS + FITNESS + DEFENSE + OFFENSE + PHYSICAL).each do |name|
@@ -55,7 +55,7 @@ module Realm
     FITNESS.each { |name| alias_method :"#{name[0..2]}", :"#{name}" }
 
     # Random attributes of Being that can include static modifiers.
-    MODIFYING_ATTRS = %w[klass anatomy]
+    MODIFYING_ATTRS = %w[klass anatomy].freeze
 
     attr_accessor :circumstance
 

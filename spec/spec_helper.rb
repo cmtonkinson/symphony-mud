@@ -5,7 +5,7 @@ SimpleCov.start
 ###############################################################################
 # Bootstrap Symphony; this code is the test analogue of the dispatch script.
 ###############################################################################
-BINARY_NAME = '' # stub
+BINARY_NAME = ''.freeze # stub
 ENV['SYMPHONY_ENV'] ||= 'test'
 require File.expand_path 'config/bootstrap'
 
@@ -16,7 +16,7 @@ require File.expand_path 'config/bootstrap'
 ###############################################################################
 Network.configure do |config|
   config.listen_ip   = '127.0.0.1'
-  config.listen_port = 6501
+  config.listen_port = 6502
 end
 
 Symphony.logger = Logger.new('/dev/null')

@@ -1,13 +1,11 @@
 require 'spec_helper'
 
-include Mechanics
-
-describe SimpleStat do
+describe Mechanics::SimpleStat do
   #############################################################################
   describe '#current' do
     before :each do
       @baseline = 20
-      @stat     = SimpleStat.new @baseline
+      @stat     = Mechanics::SimpleStat.new @baseline
     end
 
     it 'shourd return the baseline by default' do
@@ -24,7 +22,7 @@ describe SimpleStat do
   describe '#modify' do
     before :each do
       @baseline = 10
-      @stat     = SimpleStat.new @baseline
+      @stat     = Mechanics::SimpleStat.new @baseline
     end
 
     it 'should increase the current value' do
@@ -38,7 +36,7 @@ describe SimpleStat do
   describe '#unmodify' do
     before :each do
       @baseline = 10
-      @stat     = SimpleStat.new @baseline
+      @stat     = Mechanics::SimpleStat.new @baseline
     end
 
     it 'should decrease the current value' do

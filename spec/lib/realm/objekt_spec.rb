@@ -1,20 +1,18 @@
 require 'spec_helper'
 
-include Realm
-
-describe Objekt do
+describe Realm::Objekt do
   #############################################################################
   describe '#initialize' do
     it 'should set a default name' do
-      r = Objekt.new
-      expect(r.name).to eq Objekt::DEFAULTS[:name].call
+      r = Realm::Objekt.new
+      expect(r.name).to eq Realm::Objekt::DEFAULTS[:name].call
     end
   end
 
   #############################################################################
   describe '#fully_qualified_indentifier' do
     before :each do
-      @sut = TestObj.new
+      @sut = Realm::TestObj.new
       @fqid = @sut.fully_qualified_identifier
     end
 
@@ -42,9 +40,9 @@ describe Objekt do
   #############################################################################
   describe '#insert' do
     before :each do
-      @bucket = TestBucket.new
-      @parent = TestParent.new
-      @child  = TestChild.new
+      @bucket = Realm::TestBucket.new
+      @parent = Realm::TestParent.new
+      @child  = Realm::TestChild.new
     end
 
     it 'should reject invalid object types' do
@@ -63,7 +61,7 @@ describe Objekt do
   #############################################################################
   describe '#clone' do
     before :each do
-      @original = TestObj.new nil, my_num: 387, my_nil: nil
+      @original = Realm::TestObj.new nil, my_num: 387, my_nil: nil
       @clone    = @original.clone
     end
 
@@ -75,7 +73,7 @@ describe Objekt do
       expect(@clone.cloned_from).to eq @original.id
     end
 
-    it 'deep copies base class Objekt attributes' do
+    it 'deep copies base class Realm::Objekt attributes' do
       %i[name].each do |att|
         # The values should be the same.
         expect(@clone.send(att)).to eq @original.send(att)
@@ -99,16 +97,16 @@ describe Objekt do
   #############################################################################
   describe '#serialize and #deserialize' do
     before :each do
-      @original = TestObj.new 42
+      @original = Realm::TestObj.new 42
       @yaml     = @original.serialize
-      @reloaded = TestObj.deserialize @yaml
+      @reloaded = Realm::TestObj.deserialize @yaml
     end
 
     it 'seriailizes to valid YAML' do
       expect { YAML.load @yaml }.not_to raise_error
     end
 
-    it 'encodes base Objekt attributes' do
+    it 'encodes base Realm::Objekt attributes' do
       expect(@yaml).to include 'Realm::TestObj'
       expect(@yaml).to include ':objekt:'
       expect(@yaml).to include "\n  :class:"
@@ -123,12 +121,12 @@ describe Objekt do
     end
 
     it 'deseriailizes YAML' do
-      expect { Objekt.deserialize @yaml }.not_to raise_error
+      expect { Realm::Objekt.deserialize @yaml }.not_to raise_error
     end
 
     it 'decodes base Objekct attributes' do
       expect(@reloaded.id).to eq 42
-      expect(@reloaded.name).to eq Objekt::DEFAULTS[:name].call
+      expect(@reloaded.name).to eq Realm::Objekt::DEFAULTS[:name].call
     end
 
     it 'decodes subclass attributes' do
@@ -139,22 +137,26 @@ describe Objekt do
   #############################################################################
   describe '#simple_flag' do
     around :each do |example|
-      class FlaggedObjekt < Objekt
-        def initialize(id = nil)
-          super
+      module Realm
+        class FlaggedObjekt < Realm::Objekt
+          def initialize(id = nil)
+            super
+          end
         end
       end
-      @unflagged = FlaggedObjekt.new
+      @unflagged = Realm::FlaggedObjekt.new
 
       example.run
 
-      Object.send :remove_const, :FlaggedObjekt
+      Realm.send :remove_const, :FlaggedObjekt
     end
 
     it 'should add an instance variable and ' do
       expect(@unflagged).not_to respond_to :switch
-      class FlaggedObjekt
-        simple_flag :switch, false, :on?, :on!, :off?, :off!
+      module Realm
+        class FlaggedObjekt
+          simple_flag :switch, false, :on?, :on!, :off?, :off!
+        end
       end
       expect(@unflagged).to respond_to :switch
       expect(@unflagged).to respond_to :switch=
@@ -162,10 +164,12 @@ describe Objekt do
 
     it 'should add an instance variable and accessors' do
       expect(@unflagged).not_to respond_to :switch
-      class FlaggedObjekt
-        simple_flag :switch, false, :on?, :on!, :off?, :off!
+      module Realm
+        class FlaggedObjekt
+          simple_flag :switch, false, :on?, :on!, :off?, :off!
+        end
       end
-      @flagged = FlaggedObjekt.new
+      @flagged = Realm::FlaggedObjekt.new
 
       expect(@flagged).to have_attributes(switch: false)
 

@@ -1,13 +1,13 @@
 module Realm
   class Item < Objekt
-    TYPES = %i[armor clothing container food furniture jewelry key other weapon]
+    TYPES = %i[armor clothing container food furniture jewelry key other weapon].freeze
 
     ATTRS = %i[level type wearable slot
                max_items load_factor
                health mana
                max_occupants
                opens_type opens_rid
-               weapon_type damage_type hitroll damroll]
+               weapon_type damage_type hitroll damroll].freeze
 
     ATTRS.each { |name| attr_accessor name }
 

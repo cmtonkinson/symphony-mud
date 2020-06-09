@@ -1,13 +1,11 @@
 require 'spec_helper'
 
-include Mechanics
-
-describe MaxStat do
+describe Mechanics::MaxStat do
   #############################################################################
   describe '#current' do
     before :each do
       @max_val   = 100
-      @stat      = MaxStat.new @max_val
+      @stat      = Mechanics::MaxStat.new @max_val
       @test_vals = [-100, -50, -1, 0, 1, 50, 100]
     end
 
@@ -29,7 +27,7 @@ describe MaxStat do
   #############################################################################
   describe '#max' do
     it 'should return the configured maximum' do
-      stat = MaxStat.new 412
+      stat = Mechanics::MaxStat.new 412
       expect(stat.max).to eq 412
     end
   end
@@ -39,7 +37,7 @@ describe MaxStat do
     it 'should set the current value to the defined max' do
       max = 337
       val = 89
-      stat = MaxStat.new max
+      stat = Mechanics::MaxStat.new max
       stat.current = val
 
       expect(stat.current).to eq val

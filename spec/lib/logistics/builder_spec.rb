@@ -1,17 +1,15 @@
 require 'spec_helper'
 
-include Logistics
-
 describe Logistics::Builder do
   #############################################################################
   describe '#create_room' do
     before :each do
-      @zone = Zone.new
-      @room = Builder.create_room @zone
+      @zone = Realm::Zone.new
+      @room = Logistics::Builder.create_room @zone
     end
 
     it 'returns a new Room' do
-      expect(@room).to be_a Room
+      expect(@room).to be_a Realm::Room
     end
 
     it 'connects the Room to the Zone' do
@@ -30,11 +28,11 @@ describe Logistics::Builder do
   #############################################################################
   describe '#link_existing_rooms' do
     before :each do
-      @zone   = Zone.new
-      @room_a = Builder.create_room @zone
-      @room_b = Builder.create_room @zone
+      @zone   = Realm::Zone.new
+      @room_a = Logistics::Builder.create_room @zone
+      @room_b = Logistics::Builder.create_room @zone
 
-      Builder.link_existing_rooms @room_a, @room_b, 'east'
+      Logistics::Builder.link_existing_rooms @room_a, @room_b, 'east'
     end
 
     it 'sets both exits in opposing directions' do
@@ -46,13 +44,13 @@ describe Logistics::Builder do
   #############################################################################
   describe '#create_linked_room' do
     before :each do
-      @zone   = Zone.new
-      @room_a = Builder.create_room @zone
-      @room_b = Builder.create_linked_room @room_a, 'east'
+      @zone   = Realm::Zone.new
+      @room_a = Logistics::Builder.create_room @zone
+      @room_b = Logistics::Builder.create_linked_room @room_a, 'east'
     end
 
     it 'returns a new Room' do
-      expect(@room_b).to be_a Room
+      expect(@room_b).to be_a Realm::Room
     end
 
     it 'adds the new Room to the Zone' do
@@ -68,14 +66,14 @@ describe Logistics::Builder do
   ###########################################################################
   describe '#create_npc' do
     before :each do
-      @zone = Zone.new
-      @npc  = Builder.create_npc @zone
+      @zone = Realm::Zone.new
+      @npc  = Logistics::Builder.create_npc @zone
     end
 
     it 'returns a new NPC' do
-      expect(@npc).to be_a NPC
-      expect(@npc).to be_a Being
-      expect(@npc).to be_a Objekt
+      expect(@npc).to be_a Realm::NPC
+      expect(@npc).to be_a Realm::Being
+      expect(@npc).to be_a Realm::Objekt
     end
 
     it 'assigns an Integral RID' do
@@ -92,12 +90,12 @@ describe Logistics::Builder do
   #############################################################################
   describe '#create_zone' do
     before :each do
-      @zone = Builder.create_zone
+      @zone = Logistics::Builder.create_zone
     end
 
     it 'returns a new Zone' do
-      expect(@zone).to be_a Zone
-      expect(@zone).to be_a Objekt
+      expect(@zone).to be_a Realm::Zone
+      expect(@zone).to be_a Realm::Objekt
     end
 
     it 'assigns an Integral RID' do

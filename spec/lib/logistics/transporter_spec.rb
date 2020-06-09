@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Logistics::Transporter do
   before :each do
-    @src  = AttrHash.new
-    @dest = AttrHash.new
-    @ob   = TestObj.new
+    @src  = Util::AttrHash.new
+    @dest = Util::AttrHash.new
+    @ob   = Realm::TestObj.new
   end
 
   #############################################################################

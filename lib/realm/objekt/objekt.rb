@@ -30,7 +30,7 @@ module Realm
       id: -> { SecureRandom.uuid },
       rid: -> { nil },
       name: -> { +'[name]' }
-    }
+    }.freeze
 
     attr_reader :id
     attr_accessor :rid, :name

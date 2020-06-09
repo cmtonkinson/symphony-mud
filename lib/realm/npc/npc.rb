@@ -8,7 +8,7 @@ module Realm
     DEFENSE.each { |name| attr_writer name }
     OFFENSE.each { |name| attr_writer name }
 
-    SETTINGS = %i[mobility hostility]
+    SETTINGS = %i[mobility hostility].freeze
 
     SETTINGS.each { |s| attr_reader s }
 

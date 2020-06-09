@@ -65,12 +65,12 @@ module Command
       },
       description: 'any other text on the line (e.g. the remainder of the input)'
     }
-  }
+  }.freeze
 
   # This shitty indirection is just so that we can automate assertions that no one is creating
   # Command formats with variable names (which become context methods) that would overlap default
   # context methods in the `exec` block. See Command#perform as well as Command#usage for more.
-  DEFAULT_CONTEXT = %i[user full_input being room]
+  DEFAULT_CONTEXT = %i[user full_input being room].freeze
 
   class Argument
     attr_reader :name, :type, :value

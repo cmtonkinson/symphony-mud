@@ -1,14 +1,12 @@
 require 'spec_helper'
 
-include Util
-
-describe Linguist do
+describe Util::Linguist do
   #############################################################################
   describe '#interpret' do
     err = Realm.configuration.error_string
 
-    chuck    = Realm::Avatar.new nil, gender: Gender::MALE, name: 'Chuck'
-    charlene = Realm::Avatar.new nil, gender: Gender::FEMALE, name: 'Charlene'
+    chuck    = Realm::Avatar.new nil, gender: Realm::Gender::MALE, name: 'Chuck'
+    charlene = Realm::Avatar.new nil, gender: Realm::Gender::FEMALE, name: 'Charlene'
     pat      = Realm::Avatar.new nil, name: 'Pat'
 
     rat1     = Realm::Being.new nil, name: 'fat rat'
@@ -80,7 +78,7 @@ describe Linguist do
     tests.each do |params|
       it "formats '#{params[0][0]}' with #{params[0].length - 1} arguments correctly" do
         input, output = params
-        expect(Linguist.interpret(*input)).to eq output
+        expect(Util::Linguist.interpret(*input)).to eq output
       end
     end
   end

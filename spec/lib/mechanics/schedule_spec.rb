@@ -1,17 +1,15 @@
 require 'spec_helper'
 
-include Mechanics
-
-describe Schedule do
+describe Mechanics::Schedule do
   before :each do
-    @schedule = Schedule.new
+    @schedule = Mechanics::Schedule.new
     @tester_a = JobTester.new
     @tester_b = JobTester.new
     @tester_c = JobTester.new
 
-    @job_a    = Job.new 2, @tester_a, :call_me_maybe
-    @job_b    = Job.new 1, @tester_b, :call_me_maybe
-    @job_c    = Job.new 3, @tester_c, :call_me_maybe
+    @job_a    = Mechanics::Job.new 2, @tester_a, :call_me_maybe
+    @job_b    = Mechanics::Job.new 1, @tester_b, :call_me_maybe
+    @job_c    = Mechanics::Job.new 3, @tester_c, :call_me_maybe
     @jobs = [@job_a, @job_b, @job_c]
 
     @docket = @schedule.instance_variable_get '@docket'
@@ -83,7 +81,7 @@ describe Schedule do
     context 'with a recurring Job' do
       before :each do
         @repeat_tester = JobTester.new
-        @repeat_job    = Job.new 0, @repeat_tester, :call_me_maybe
+        @repeat_job    = Mechanics::Job.new 0, @repeat_tester, :call_me_maybe
       end
 
       it 'should re-add the Job after firing' do

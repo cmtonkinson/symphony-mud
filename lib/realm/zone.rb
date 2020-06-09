@@ -2,7 +2,7 @@ module Realm
   class Zone < Objekt
     include Realm
 
-    CONTAINERS = %w[rooms exits items npcs]
+    CONTAINERS = %w[rooms exits items npcs].freeze
 
     CONTAINERS.each { |c| attr_accessor c.to_sym }
 

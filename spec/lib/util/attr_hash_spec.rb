@@ -1,11 +1,9 @@
 require 'spec_helper'
 
-include Util
-
 describe Util::AttrHash do
   #############################################################################
   it 'should be a normal Hash' do
-    h = AttrHash.new
+    h = Util::AttrHash.new
 
     expect(h).to be_a Hash
 
@@ -22,12 +20,12 @@ describe Util::AttrHash do
   #############################################################################
   describe '#initialize' do
     it 'should default the key attribute to :id' do
-      h = AttrHash.new
+      h = Util::AttrHash.new
       expect(h.attribute).to eq :id
     end
 
     it 'should allow overwriting the key attribute' do
-      h = AttrHash.new :baz
+      h = Util::AttrHash.new :baz
       expect(h.attribute).to eq :baz
     end
   end
@@ -35,7 +33,7 @@ describe Util::AttrHash do
   #############################################################################
   describe '#insert' do
     it 'should attempt insertion by the configured attribute' do
-      h  = AttrHash.new      :qux
+      h  = Util::AttrHash.new :qux
       s1 = OpenStruct.new foo: 'a', bar: 'b'
       s2 = OpenStruct.new baz: 'c', qux: 'd'
 
@@ -52,7 +50,7 @@ describe Util::AttrHash do
   #############################################################################
   describe '#remove' do
     it 'should remove by key of the configured attribute' do
-      h = AttrHash.new :foo
+      h = Util::AttrHash.new :foo
       s = OpenStruct.new foo: 'a', bar: 'b'
 
       expect(h.size).to eq 0
@@ -66,7 +64,7 @@ describe Util::AttrHash do
   #############################################################################
   describe '#locate' do
     before :each do
-      @h = AttrHash.new
+      @h = Util::AttrHash.new
       ['sword', 'sword', 'crystal', 'sword',
        'mushroom', 'small cup', 'mutton',
        'little pink flower'].each_with_index do |name, i|

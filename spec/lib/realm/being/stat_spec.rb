@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-include Realm
-
 describe Realm::Being do
   describe 'Stat' do
     describe 'level' do
