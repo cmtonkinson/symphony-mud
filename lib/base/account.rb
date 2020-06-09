@@ -30,7 +30,7 @@ module Base
         memo |= byte ^ right_bytes[index]
       end
       # If memo is still zero, the two strings are the same.
-      memo == 0
+      memo.zero?
     end
 
     ###########################################################################

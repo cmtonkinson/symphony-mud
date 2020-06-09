@@ -78,7 +78,7 @@ module Command
     level Realm::Being::DEMIGOD
     usage({ property: modifiable_properties }, { amount: :int })
     exec do
-      being.puts t('err_zero') and next if amount == 0
+      being.puts t('err_zero') and next if amount.zero?
 
       being.iedit.modifiers[property.to_sym] = amount
       being.puts t('modified'), property, amount
@@ -115,7 +115,7 @@ module Command
   end
 
   ###############################################################################
-  is_positive = ->(x) { return (x > 0) }
+  is_positive = ->(x) { return x.positive? }
   is_word     = ->(x) { return !x.match(/\Aa-z+\z/i) }
   in_types    = ->(x) { return Realm::Item::TYPES.include?(x.to_sym) }
 

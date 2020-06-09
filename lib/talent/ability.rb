@@ -69,7 +69,7 @@ module Talent
 
     ###########################################################################
     def learned?
-      mastery > 0
+      mastery.positive?
     end
 
     ###########################################################################
@@ -154,8 +154,8 @@ module Talent
       able_being.puts I18n.t('talent.ability.err_no_mana') and return if able_being.mana.current < mana
 
       # Deduct resources.
-      able_being.stamina.decrease stamina if stamina > 0
-      able_being.mana.decrease mana if mana > 0
+      able_being.stamina.decrease stamina if stamina.positive?
+      able_being.mana.decrease mana if mana.positive?
 
       # There is a random chance any non-mastered ability will fail.
       if Util::Computation.percent_chance(100 - mastery)

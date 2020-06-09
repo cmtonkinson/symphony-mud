@@ -80,8 +80,8 @@ describe Logistics::Builder do
 
     it 'assigns an Integral RID' do
       expect(@npc.rid).to be_a Integer
-      expect(@npc.rid).to be > 0
-      expect(@npc.level).to eq 1
+      expect(@npc.rid).to be.positive?
+      expect(@npc.level).to eq(1)
     end
 
     it 'adds the NPC to the Zone' do
@@ -102,7 +102,7 @@ describe Logistics::Builder do
 
     it 'assigns an Integral RID' do
       expect(@zone.rid).to be_a Integer
-      expect(@zone.rid).to be > 0
+      expect(@zone.rid).to be.positive?
     end
   end
 end

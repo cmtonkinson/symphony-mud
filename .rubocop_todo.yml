@@ -123,21 +123,7 @@ Style/MutableConstant:
 # SupportedStyles: predicate, comparison
 Style/NumericPredicate:
   Exclude:
-    - 'spec/**/*'
-    - 'game/commands/admin.rb'
-    - 'game/commands/edit_item.rb'
-    - 'lib/base/account.rb'
     - 'lib/command/operator.rb'
-    - 'lib/mechanics/job.rb'
-    - 'lib/mechanics/simple_stat.rb'
-    - 'lib/realm/being/stats.rb'
-    - 'lib/realm/exit.rb'
-    - 'lib/realm/item/item.rb'
-    - 'lib/realm/npc/npc.rb'
-    - 'lib/realm/room.rb'
-    - 'lib/realm/zone.rb'
-    - 'lib/talent/ability.rb'
-    - 'lib/util/linter.rb'
     - 'lib/util/locatable.rb'
 
 # Offense count: 23
