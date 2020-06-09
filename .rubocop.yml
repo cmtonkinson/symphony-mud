@@ -1,15 +1,5 @@
-Style/FrozenStringLiteralComment:
-  Enabled: false
+inherit_from: .rubocop_todo.yml
 
-Style/MutableConstant:
-  Enabled: false
-
-Style/FormatString:
-  Enabled: false
-
-Style/RaiseArgs:
-  Enabled: false
-
-Security/YAMLLoad:
-  Enabled: false
+AllCops:
+  NewCops: enable
 

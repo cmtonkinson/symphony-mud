@@ -65,7 +65,7 @@ module Command
     # This enables us to access anything in the @context OpenStruct with a simple method call inside the
     # Command exec blocks. Said another way, the only access we allow through method_missing is to
     # return values out of the @context Hash for Command execution.
-    def method_missing(meth, *args, &block)
+    def method_missing(meth, *args, &block) # rubocop:disable Style/MissingRespondToMissing
       if @context.respond_to? meth
         @context.send meth
       else

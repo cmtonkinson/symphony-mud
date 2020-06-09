@@ -9,10 +9,10 @@ module Command
       usage
       exec do
         msg = being.can_go? direction
-        if msg === true
-          being.go direction
-        else
+        if msg.is_a? String
           being.puts msg
+        else
+          being.go direction
         end
       end
     end

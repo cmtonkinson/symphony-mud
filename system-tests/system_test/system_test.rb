@@ -230,7 +230,7 @@ module SystemTest
     ###########################################################################
     # This convoluted garbage does a few things, all aimed at easing the
     # convenience of the system test DSL.
-    def method_missing(meth, *args, &block)
+    def method_missing(meth, *args, &block) # rubocop:disable Style/MissingRespondToMissing
       # The first form simply looks to proxy the method directly to the
       # @context object.
       if @context.respond_to? meth

@@ -65,7 +65,7 @@ module SystemTest
 
   #############################################################################
   define :practice do
-    def get_trains
+    def lookup_trains
       lowbie 'summary'
       matches = /trains:\s+(\d+)\D/im.match lowbie_client.buffer[-1]
       trains = matches[1].to_i
@@ -79,7 +79,7 @@ module SystemTest
     before do
       lowbie 'skills'
       expect(/block.+bad/im)
-      @initial_trains = get_trains
+      @initial_trains = lookup_trains
     end
 
     test do
@@ -91,7 +91,7 @@ module SystemTest
       lowbie 'skills'
       n_expect(/block.+bad/im)
 
-      @updated_trains = get_trains
+      @updated_trains = lookup_trains
 
       raise "Didn't consume any training points" unless @updated_trains < @initial_trains
     end

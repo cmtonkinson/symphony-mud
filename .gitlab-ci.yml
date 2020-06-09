@@ -21,8 +21,7 @@ rubocop:
   tags:
     - docker
   script:
-    - rubocop
-  allow_failure: true
+    - rubocop -P
 
 rubycritic:
   stage: static-analysis

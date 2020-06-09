@@ -58,7 +58,7 @@ module SystemTest
         IO.write @log_path, retval, mode: 'a'
       end
     # Assuming the client recieved no new data, eat the timeout exception.
-    rescue Net::ReadTimeout
+    rescue Net::ReadTimeout # rubocop:disable Lint/SuppressedException
     end
   end
 end

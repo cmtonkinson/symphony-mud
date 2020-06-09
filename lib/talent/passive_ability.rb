@@ -1,9 +1,11 @@
-module Talent::PassiveAbility
-  def type
-    :passive
-  end
+module Talent
+  module PassiveAbility
+    def type
+      :passive
+    end
 
-  def type_s
-    'passive'
+    def type_s
+      'passive'
+    end
   end
 end

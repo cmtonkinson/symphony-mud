@@ -8,7 +8,7 @@ $TELNET_DELAY = 0.05
 $RAND_SEED = Random.new_seed.to_s[0, 8]
 
 OptionParser.new do |opts|
-  opts.on('-l,' '--leaf TEST', 'Only execute TEST') do |value|
+  opts.on('-l,', '--leaf TEST', 'Only execute TEST') do |value|
     $LEAF_TEST = value
   end
 

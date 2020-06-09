@@ -25,5 +25,5 @@ module Talent
         constitution: -1
       }
     end
- end
+  end
 end
