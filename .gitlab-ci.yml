@@ -21,7 +21,7 @@ rubocop:
   tags:
     - docker
   script:
-    - rubocop .
+    - rubocop
   allow_failure: true
 
 rubycritic:
