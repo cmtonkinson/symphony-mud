@@ -243,7 +243,6 @@ module SystemTest
       # You want to return the Client connection object itself, in which case
       # you'd call the method with no params (e.g. `ogre`)
       elsif @accounts.include?(meth.to_s)
-        retval = nil
         retval = if args.size == 1 && args[0].is_a?(String)
                    acm(meth).command args[0]
                  else

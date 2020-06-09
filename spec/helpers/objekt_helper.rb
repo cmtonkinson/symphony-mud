@@ -39,6 +39,7 @@ module Realm
   # For testing inheritance-friendly containers.
   class TestBucket < Objekt
     attr_accessor :testparents
+
     def initialize(id = nil)
       super
       @testparents = Util::AttrHash.new

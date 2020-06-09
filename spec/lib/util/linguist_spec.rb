@@ -7,8 +7,6 @@ describe Linguist do
   describe '#interpret' do
     err = Realm.configuration.error_string
 
-    room = Realm::Room.new
-
     chuck    = Realm::Avatar.new nil, gender: Gender::MALE, name: 'Chuck'
     charlene = Realm::Avatar.new nil, gender: Gender::FEMALE, name: 'Charlene'
     pat      = Realm::Avatar.new nil, name: 'Pat'

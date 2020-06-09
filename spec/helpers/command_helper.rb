@@ -1,5 +1,5 @@
 module Command
-  class Command_apple < Command
+  class CommandApple < Command
     def initialize
       @name = 'apple'
     end
@@ -7,7 +7,7 @@ module Command
     def execute(client, arguments); end
   end
 
-  class Command_banana < Command
+  class CommandBanana < Command
     def initialize
       @name = 'banana'
     end
@@ -15,7 +15,7 @@ module Command
     def execute(client, arguments); end
   end
 
-  class Command_cherry < Command
+  class CommandCherry < Command
     def initialize
       @name = 'cherry'
     end
@@ -23,7 +23,7 @@ module Command
     def execute(client, arguments); end
   end
 
-  class Command_with_execute < Command
+  class CommandWithExecute < Command
     def initialize
       @name = 'foo'
     end
@@ -31,7 +31,7 @@ module Command
     def execute(client, arguments); end
   end
 
-  class Command_without_execute < Command
+  class CommandWithoutExecute < Command
     def initialize
       @name = 'bar'
     end

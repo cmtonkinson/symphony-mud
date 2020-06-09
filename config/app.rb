@@ -24,6 +24,7 @@ class App
   # Create a reader accessor for each project directory.
   DIRECTORIES.each do |dir, subdirs|
     attr_reader dir
+
     subdirs.each do |subdir|
       attr_reader subdir
     end

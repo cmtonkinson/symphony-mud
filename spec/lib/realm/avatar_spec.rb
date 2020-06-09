@@ -5,7 +5,7 @@ include Realm
 describe Realm::Avatar do
   describe '#' do
     it 'should work' do
-      a = Avatar.new
+      Avatar.new
       expect(true).to eq true
     end
   end
