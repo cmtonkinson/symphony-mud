@@ -11,7 +11,7 @@ module Mechanics
     ###########################################################################
     def current
       true_modified = @baseline + @modifier
-      true_modified < 0 ? 0 : true_modified
+      true_modified.negative? ? 0 : true_modified
     end
 
     ###########################################################################

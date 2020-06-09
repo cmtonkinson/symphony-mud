@@ -244,7 +244,7 @@ module Realm
       puts 'You gain {Y%d{x experience points!' % exp_gained
       @exp = exp + exp_gained
 
-      while exp_gained > 0
+      while exp_gained.positive?
         if exp_gained < tnl
           @tnl = tnl - exp_gained
           break

@@ -303,7 +303,7 @@ module Command
       # to account for the fact that their TNL will stay at 0. So we award normal
       # experience up through HERO, and then we have to directly trigger the
       # level gains.
-      victim.award_experience victim.tnl while victim.tnl > 0 && victim.level < to_level
+      victim.award_experience victim.tnl while victim.tnl.positive? && victim.level < to_level
       victim.gain_level while victim.level < to_level
     end
   end

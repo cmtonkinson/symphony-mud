@@ -21,7 +21,7 @@ module Util
       _lint_stdout, lint_stderr, lint_status = Open3.capture3 lint_command
 
       # Raise a SyntaxError if a syntax error is found.
-      raise SyntaxError.new lint_stderr unless lint_status == 0
+      raise SyntaxError.new lint_stderr unless lint_status.zero?
     end
   end
 end

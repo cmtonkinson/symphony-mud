@@ -61,11 +61,11 @@ module Realm
       # Create a 2D Array that is large enough to hold the shape of the Zone.
       x_min, x_max  = extreme_coords 0
       width         = x_max - x_min + 1
-      x_translation = x_min < 0 ? -x_min : 0
+      x_translation = x_min.negavite? ? -x_min : 0
 
       y_min, y_max  = extreme_coords 1
       height        = y_max - y_min + 1
-      y_translation = y_min < 0 ? -y_min : 0
+      y_translation = y_min.negative? ? -y_min : 0
 
       layout = Array.new(height * 2) { Array.new(width * 2) { nil } }
 
