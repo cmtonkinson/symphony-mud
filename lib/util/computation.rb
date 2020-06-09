@@ -1,5 +1,4 @@
 module Util
-  # rubocop:disable Naming/UncommunicativeMethodParamName
   class Computation
     #############################################################################
     # Ensure a value is no less than min and no greater than max.
@@ -44,5 +43,4 @@ module Util
       Random.rand(1..100) <= percent
     end
   end
-  # rubocop:enable Naming/UncommunicativeMethodParamName
 end

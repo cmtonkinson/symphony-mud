@@ -1,0 +1,15 @@
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/MutableConstant:
+  Enabled: false
+
+Style/FormatString:
+  Enabled: false
+
+Style/RaiseArgs:
+  Enabled: false
+
+Security/YAMLLoad:
+  Enabled: false
+

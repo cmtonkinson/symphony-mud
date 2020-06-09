@@ -11,12 +11,11 @@ module Network
       client = nil
       begin
         client = Network::Client.new accept_nonblock
-      # rubocop:disable Lint/HandleExceptions
       rescue Errno::EWOULDBLOCK, Errno::EINTR
         # These are swallowed on purpose because normal process signals can
         # interrupt the accept syscall and we can't treat them as failures.
       end
-      # rubocop:enable Lint/HandleExceptions
+
       client
     end
 
