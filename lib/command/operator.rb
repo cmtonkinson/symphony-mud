@@ -26,7 +26,7 @@ module Command
       @command = @command_set.find { |c| c.get_name == cmd_name } if @command.nil?
 
       # Try to find by prefix matches.
-      @command = @command_set.find { |c| c.get_name.index(cmd_name).zero? } if @command.nil?
+      @command = @command_set.find { |c| c.get_name.index(cmd_name) == 0 } if @command.nil?
 
       # Couldn't find a Command for this input string.
       return false if @command.nil?

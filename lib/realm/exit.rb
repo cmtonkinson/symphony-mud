@@ -27,7 +27,7 @@ module Realm
         opposite: 'up',
         transform: Vector[0, 0, -1]
       }
-    }
+    }.freeze
 
     DIRECTIONS.each_key { |exit| attr_accessor exit }
 

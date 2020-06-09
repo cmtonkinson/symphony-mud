@@ -1,7 +1,7 @@
 module Base
   class Terminal
-    RESET   = "\e[0m"
-    BOLD    = "\e[1m"
+    RESET   = "\e[0m".freeze
+    BOLD    = "\e[1m".freeze
 
     COLORS = {
       "gray": { code: 'w', escape: "\e[30m#{BOLD}" },
@@ -21,16 +21,16 @@ module Base
 
       "reset": { code: 'x', escape: RESET },
       "bracket": { code: '{', escape: '{' }
-    }
+    }.freeze
 
     # The negative lookbehind for % is so that this class' behavior doesn't
     # interefere with I18n interpolation syntax (which is `%{varname}`)
     # otherwise we could end up accidentally sending a string like `%arname}`
     # to `I18n#t`.
     VALID_CODES    = COLORS.values.map { |defn| defn[:code] }
-    SPECIAL_CODES  = [RESET, '{', '?']
-    CODE_PATTERN   = /(?<!%)\{[#{VALID_CODES.join}]/
-    ESCAPE_PATTERN = /\e\[3\dm|\e\[\dm/
+    SPECIAL_CODES  = [RESET, '{', '?'].freeze
+    CODE_PATTERN   = /(?<!%)\{[#{VALID_CODES.join}]/.freeze
+    ESCAPE_PATTERN = /\e\[3\dm|\e\[\dm/.freeze
 
     def self.escape_map
       @escape_map ||= Hash[COLORS.map do |_k, v|

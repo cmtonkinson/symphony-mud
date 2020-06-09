@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-include Command
-
 describe Command::Operator do
   before :each do
     user = double('User')

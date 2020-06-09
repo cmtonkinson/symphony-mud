@@ -1,9 +1,9 @@
 module Realm
   class World < Objekt
-    ORIGIN_ZONE_ID = '00000000-0000-4000-a000-000000000000'
-    THE_VOID_ID    = '00000000-0000-4000-a000-000000000001'
+    ORIGIN_ZONE_ID = '00000000-0000-4000-a000-000000000000'.freeze
+    THE_VOID_ID    = '00000000-0000-4000-a000-000000000001'.freeze
 
-    CONTAINERS = %w[zones beings avatars]
+    CONTAINERS = %w[zones beings avatars].freeze
 
     CONTAINERS.each { |cont| attr_accessor cont }
 

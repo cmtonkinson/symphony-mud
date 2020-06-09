@@ -3,12 +3,12 @@ module InputSequence
     # Copypasta from authoritative sources of truth elsewhere in the codebase.
     # Really not the best method for exposing this information.
     # TODO - clean this crap up!
-    RACE_OPTIONS   = %w[human elf dwarf]
-    GENDER_OPTIONS = %w[male female neuter]
-    HAND_OPTIONS   = %w[left right]
-    HEIGHT_OPTIONS = %w[tiny short average tall huge]
-    WEIGHT_OPTIONS = %w[bony thin average heavy obese]
-    KLASS_OPTIONS  = %w[warrior mage cleric rogue]
+    RACE_OPTIONS   = %w[human elf dwarf].freeze
+    GENDER_OPTIONS = %w[male female neuter].freeze
+    HAND_OPTIONS   = %w[left right].freeze
+    HEIGHT_OPTIONS = %w[tiny short average tall huge].freeze
+    WEIGHT_OPTIONS = %w[bony thin average heavy obese].freeze
+    KLASS_OPTIONS  = %w[warrior mage cleric rogue].freeze
 
     ###########################################################################
     def initialize

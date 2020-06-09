@@ -1,6 +1,6 @@
 module Realm
   class Being < Objekt
-    CONTAINERS = %w[items]
+    CONTAINERS = %w[items].freeze
 
     attr_accessor :room, :gender, :hand
     attr_accessor :enablers, :klass, :anatomy

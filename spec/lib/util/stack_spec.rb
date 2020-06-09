@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-include Util
-
 describe Util::Stack do
   subject { Util::Stack.new }
 

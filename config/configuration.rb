@@ -83,7 +83,7 @@ CONFIGURATION = [
     description: 'Run a script',
     callback: proc { |value| Symphony.configuration.script = value }
   }
-]
+].freeze
 
 ###############################################################################
 # Set all the defaults.

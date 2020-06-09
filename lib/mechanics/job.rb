@@ -18,11 +18,11 @@ module Mechanics
 
     ###########################################################################
     def initialize(wen, who, callable = nil, *args, &block)
-      raise ArgumentError.new('no method or proc given') if callable.nil? && !block_given?
-      raise ArgumentError.new('both method and proc given') if !callable.nil? && block_given?
+      raise ArgumentError, 'no method or proc given' if callable.nil? && !block_given?
+      raise ArgumentError, 'both method and proc given' if !callable.nil? && block_given?
 
       if !callable.nil? && !callable.respond_to?(:to_sym) && !callable.respond_to?(:call)
-        raise ArgumentError.new('callable does not respond to :to_sym or :call')
+        raise ArgumentError, 'callable does not respond to :to_sym or :call'
       end
 
       # If the value of wen is less than 31,536,000 (in unix time that's
@@ -56,7 +56,7 @@ module Mechanics
       case val
       when Integer then val
       when Range then rand val
-      else raise ArgumentError.new "Job#resolve_time - val unrecognized type #{val.class.name}"
+      else raise ArgumentError, "Job#resolve_time - val unrecognized type #{val.class.name}"
       end
     end
 

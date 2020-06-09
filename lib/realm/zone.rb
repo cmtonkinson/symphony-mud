@@ -2,7 +2,7 @@ module Realm
   class Zone < Objekt
     include Realm
 
-    CONTAINERS = %w[rooms exits items npcs]
+    CONTAINERS = %w[rooms exits items npcs].freeze
 
     CONTAINERS.each { |c| attr_accessor c.to_sym }
 
@@ -61,7 +61,7 @@ module Realm
       # Create a 2D Array that is large enough to hold the shape of the Zone.
       x_min, x_max  = extreme_coords 0
       width         = x_max - x_min + 1
-      x_translation = x_min.negavite? ? -x_min : 0
+      x_translation = x_min.negative? ? -x_min : 0
 
       y_min, y_max  = extreme_coords 1
       height        = y_max - y_min + 1

@@ -17,7 +17,7 @@ module Combat
 
     ###########################################################################
     def add_group(group)
-      raise ArugmentError.new "Cannot add a #{group.class.name} as a Battle group" unless group.is_a? Combat::Group
+      raise ArugmentError, "Cannot add a #{group.class.name} as a Battle group" unless group.is_a? Combat::Group
       return if @groups.include? group
 
       @groups.push group

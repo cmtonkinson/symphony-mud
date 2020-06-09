@@ -19,7 +19,7 @@ class App
     game: %i[commands anatomies klasses skills spells templates help],
     lib: %i[],
     tmp: %i[]
-  }
+  }.freeze
 
   # Create a reader accessor for each project directory.
   DIRECTORIES.each do |dir, subdirs|

@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-include Util
-
 describe Util::Queue do
   subject { Util::Queue.new }
 

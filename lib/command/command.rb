@@ -150,7 +150,7 @@ module Command
     def usage(*argument_list)
       args = Usage.new
       # Can only have one empty usage.
-      raise ArgumentError.new I18n.t 'command.only_one_empty' if argument_list.empty? && @usages.any?(&:empty?)
+      raise ArgumentError, I18n.t('command.only_one_empty') if argument_list.empty? && @usages.any?(&:empty?)
 
       # Add each Argument to the Usage.
       argument_list.each { |defn| args.push Argument.new defn }

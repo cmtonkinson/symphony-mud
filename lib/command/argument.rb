@@ -65,12 +65,12 @@ module Command
       },
       description: 'any other text on the line (e.g. the remainder of the input)'
     }
-  }
+  }.freeze
 
   # This shitty indirection is just so that we can automate assertions that no one is creating
   # Command formats with variable names (which become context methods) that would overlap default
   # context methods in the `exec` block. See Command#perform as well as Command#usage for more.
-  DEFAULT_CONTEXT = %i[user full_input being room]
+  DEFAULT_CONTEXT = %i[user full_input being room].freeze
 
   class Argument
     attr_reader :name, :type, :value
@@ -107,10 +107,10 @@ module Command
         @type  = :literal
         @name  = definition
       else
-        raise ArgumentError.new I18n.t('command.argument.bad_argument_definition', arg: definition.inspect)
+        raise ArgumentError, I18n.t('command.argument.bad_argument_definition', arg: definition.inspect)
       end
 
-      raise ArgumentError.new I18n.t('command.variable_overshadow', name: @name) if DEFAULT_CONTEXT.include? @name
+      raise ArgumentError, I18n.t('command.variable_overshadow', name: @name) if DEFAULT_CONTEXT.include? @name
     end
 
     ###########################################################################
@@ -120,7 +120,7 @@ module Command
         @type = :set
         @value = []
         kind.each do |elt|
-          raise ArgumentError.new I18n.t 'command.argument.bad_array_value', type: elt.class unless elt.is_a? String
+          raise ArgumentError, I18n.t('command.argument.bad_array_value', type: elt.class) unless elt.is_a? String
 
           @value << elt
         end
