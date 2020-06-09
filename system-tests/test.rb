@@ -9,7 +9,7 @@ puts "Bootstrapping system test suite..."
 puts "Seed #{$RAND_SEED}"
 
 require_relative 'system_test/init'
-Dir[File.join(__dir__, 'scenarios', '*.rb')].each { |file| require file }
+Dir[File.join(__dir__, 'scenarios', '*.rb')].sort.each { |file| require file }
 
 m = SystemTest::Manager.new
 

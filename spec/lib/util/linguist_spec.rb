@@ -83,7 +83,7 @@ describe Linguist do
     tests.each do |params|
       it "formats '#{params[0][0]}' with #{params[0].length - 1} arguments correctly" do
         input, output = params
-        expect(Linguist.interpret *input).to eq output
+        expect(Linguist.interpret(*input)).to eq output
       end
     end
 

@@ -17,7 +17,7 @@ describe SimpleStat do
     end
 
     it 'should return no less than 0' do
-      @stat.modify -100
+      @stat.modify(-100)
       expect(@stat.current).to eq 0
     end
 

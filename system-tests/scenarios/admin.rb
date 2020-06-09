@@ -21,7 +21,7 @@ module SystemTest
 
       # Parse the output into a list of Strings.
       list = []
-      groups = available.scan /^[A-Z]+\s+[a-z,_\s]+$/
+      groups = available.scan(/^[A-Z]+\s+[a-z,_\s]+$/)
       groups.each { |group| list += group.scan(/[a-z_]+/) }
 
       # There are a few we don't want to try.

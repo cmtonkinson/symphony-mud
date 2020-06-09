@@ -10,7 +10,7 @@ describe Util::Computation do
   describe '#bound' do
 
     it 'should return the lower bound if the given value is lesser' do
-      expect(subject.bound -6, 1, 10).to eq 1
+      expect(subject.bound(-6, 1, 10)).to eq 1
     end
 
     it 'should return the upper bound if the given value is greater' do
@@ -56,7 +56,7 @@ describe Util::Computation do
     tests.each do |var, values|
       values.each do |inputs, output|
         it "should adjust for changes in #{var} (input #{inputs})" do
-          expect(subject.logistic_curve *inputs).to be_within(TOLERANCE).of output
+          expect(subject.logistic_curve(*inputs)).to be_within(TOLERANCE).of output
         end
       end
     end
@@ -92,7 +92,7 @@ describe Util::Computation do
     tests.each do |var, values|
       values.each do |inputs, output|
         it "should adjust for changes in #{var} (input #{inputs})" do
-          expect(subject.polynomial_curve *inputs).to be_within(TOLERANCE).of output
+          expect(subject.polynomial_curve(*inputs)).to be_within(TOLERANCE).of output
         end
       end
     end

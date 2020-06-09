@@ -59,7 +59,7 @@ class App
     prefix = dd[0] == '/' ? Pathname.new(dd) : @root.join(dd)
     instance_variable_set "@data", prefix
     DIRECTORIES[:data].each do |subdir|
-      instance_variable_set "@#{subdir.to_s}", prefix.join(subdir.to_s)
+      instance_variable_set "@#{subdir}", prefix.join(subdir.to_s)
     end
   end
 

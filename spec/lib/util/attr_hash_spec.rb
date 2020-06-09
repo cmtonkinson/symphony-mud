@@ -97,7 +97,7 @@ describe Util::AttrHash do
       it 'should find all Objekts by exact name' do
         found = @h.locate 'sword*all'
         expect(found).to have_exactly(3).items
-        expect(found.map &:name).to contain_exactly *%w[sword sword sword]
+        expect(found.map(&:name)).to contain_exactly('sword', 'sword', 'sword')
       end
 
       it 'should find an Objekt by name prefix' do
@@ -109,7 +109,7 @@ describe Util::AttrHash do
       it 'should find no more than N Objekts by quantity' do
         found = @h.locate 'sword*2'
         expect(found).to have_exactly(2).items
-        expect(found.map &:name).to contain_exactly *%w[sword sword]
+        expect(found.map(&:name)).to contain_exactly('sword', 'sword')
       end
 
       it 'should find an Objekt by index' do

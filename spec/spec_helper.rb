@@ -24,7 +24,7 @@ Symphony.logger = Logger.new('/dev/null')
 ###############################################################################
 # Load our custom helpers.
 ###############################################################################
-Dir[Symphony.root.join 'spec', 'helpers', '*_helper.rb'].each { |file| require file }
+Dir[Symphony.root.join 'spec', 'helpers', '*_helper.rb'].sort.each { |file| require file }
 
 ###############################################################################
 # Spin up a telnet server for smoke testing.

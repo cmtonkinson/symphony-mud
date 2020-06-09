@@ -8,17 +8,17 @@ module SystemTest
     test do
       # Initial TNL should be 100.
       vork 'summary'
-      expect /tnl:\s+100\D/im
+      expect(/tnl:\s+100\D/im)
 
       # TNL to reach hero should be crazy high.
       admin 'promote vork 99'
       vork 'summary'
-      expect /tnl:\s+1000000\D/im
+      expect(/tnl:\s+1000000\D/im)
 
       # Upon reaching hero, TNL should reset to 0.
       admin 'promote vork 100'
       vork 'summary'
-      expect /tnl:\s+0\D/im
+      expect(/tnl:\s+0\D/im)
 
     end
 

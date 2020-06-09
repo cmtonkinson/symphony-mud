@@ -42,7 +42,7 @@ Dir[Symphony.setup.join '*.rb'].sort.each { |file| require file }
 # Configure the application.
 ###############################################################################
 # Initialization scripts.
-Dir[Symphony.initializers.join '*.rb'].each { |file| require file }
+Dir[Symphony.initializers.join '*.rb'].sort.each { |file| require file }
 
 # Other external configuration.
 require_relative 'configuration'

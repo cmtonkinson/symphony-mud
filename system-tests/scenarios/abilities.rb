@@ -13,7 +13,7 @@ module SystemTest
       admin 'promote lowbie 100'
       lowbie 'summary'
       expect 'you are a hero'
-      expect /level:\s+100\D/im
+      expect(/level:\s+100\D/im)
     end
   end
 
@@ -25,7 +25,7 @@ module SystemTest
     before do
       lowbie 'skills'
       expect 'skills available'
-      expect /block\s+^/i
+      expect(/block\s+^/i)
    end
 
     test do
@@ -33,10 +33,10 @@ module SystemTest
       expect "Sorry, you don't meet the requirements"
 
       lowbie 'learn block'
-      expect /Congratulations.+block/i
+      expect(/Congratulations.+block/i)
 
       lowbie 'skills'
-      expect /block.+\(bad/i
+      expect(/block.+\(bad/i)
 
       lowbie 'learn block'
       expect 'But you already know'
@@ -50,8 +50,8 @@ module SystemTest
 
     before do
       lowbie 'skills'
-      expect /block\s+^/i
-      expect /parry\s+^/i
+      expect(/block\s+^/i)
+      expect(/parry\s+^/i)
      end
 
     test do
@@ -60,7 +60,7 @@ module SystemTest
 
       lowbie 'learn block'
       lowbie 'learn parry'
-      expect /Congratulations.+parry/im
+      expect(/Congratulations.+parry/im)
     end
   end
 
@@ -79,7 +79,7 @@ module SystemTest
 
     before do
       lowbie 'skills'
-      expect /block.+bad/im
+      expect(/block.+bad/im)
       @initial_trains = get_trains
     end
 
@@ -87,10 +87,10 @@ module SystemTest
       lowbie 'practice block'
       lowbie 'practice block'
       lowbie 'practice block'
-      expect /you spend.+to increase your/im
+      expect(/you spend.+to increase your/im)
 
       lowbie 'skills'
-      n_expect /block.+bad/im
+      n_expect(/block.+bad/im)
 
       @updated_trains = get_trains
 

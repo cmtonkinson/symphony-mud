@@ -134,7 +134,7 @@ describe Schedule do
         until count > 20
           expect(@schedule.fire!).to eq true
           expect(@docket.top).to be @repeat_job
-          expect(@repeat_job.repeat_times).to eq -1
+          expect(@repeat_job.repeat_times).to eq(-1)
           count += 1
         end
       end

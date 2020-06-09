@@ -1,7 +1,7 @@
 ####################################################################################################
 # Slurp up all Command definitions.
 ####################################################################################################
-Dir[Symphony.commands.join '*.rb'].each { |file| require file }
+Dir[Symphony.commands.join '*.rb'].sort.each { |file| require file }
 
 ####################################################################################################
 # Command post-processing. First we've got to get a list of unique groups, then we add each command

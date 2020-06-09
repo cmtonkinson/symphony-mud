@@ -126,7 +126,7 @@ module SystemTest
     end
 
     ###########################################################################
-    def found_error(e, msg = nil)
+    def found_error(e, _msg = nil)
       case e
       when String then "Found substring '#{e}'"
       when Regexp then "Matched '#{e}'"
