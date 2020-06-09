@@ -23,18 +23,6 @@ rubocop:
   script:
     - rubocop -P
 
-rubycritic:
-  stage: static-analysis
-  tags:
-    - docker
-  script:
-    - OUTPUT=$(rubycritic --format=console)
-    - echo "$OUTPUT"
-    - echo "Searching for less-than-C students..."
-    - echo $OUTPUT | grep --quiet --perl-regexp 'Rating:\s+[^ABC]'
-    - if [[ $? -eq 0 ]]; then echo "Found tests with less than C grade" && exit 1; fi
-  allow_failure: true
-
 ###############################################################################
 # TEST
 # Logical correctness
