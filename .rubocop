@@ -1,0 +1,10 @@
+--color
+--display-cop-names
+--display-style-guide
+--display-only-fail-level-offenses
+--extra-details
+--parallel
+
+--format clang
+--format worst
+--format offenses
