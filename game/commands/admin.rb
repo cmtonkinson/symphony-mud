@@ -347,7 +347,9 @@ module Command
     exec do
       min = 1
       max = 1000
-      being.puts t('err_range') % [min, max] and next if times < min || times > max
+
+      # Bounds check, unless you are sysadmin.
+      being.puts t('err_range') % [min, max] and next if !being.creator? && (times < min || times > max)
 
       (0..times).each { being.cmd rest }
     end
