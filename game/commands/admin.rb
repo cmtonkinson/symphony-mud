@@ -86,7 +86,7 @@ module Command
 
       # Registry
       report = Util::Registry.report
-      being.puts "\nThere are {C%d{x Objekts in the global registry at the moment." % report.size
+      being.puts "\nThere are {C%d{x Objekts in the global registry at the moment." % report[:size]
       report[:buckets].each do |name, details|
         being.puts "  {c%6d{x %s\n" % [details[:size], name]
       end
