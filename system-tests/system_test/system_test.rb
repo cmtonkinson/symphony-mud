@@ -296,6 +296,8 @@ module SystemTest
     end
 
     def with(account_name, opts = {})
+      raise "You cannot use an account named 'server' in a SystemTest" if account_name == :server
+
       @accounts << account_name.to_s
       @account_opts[account_name.to_s] = opts
     end
