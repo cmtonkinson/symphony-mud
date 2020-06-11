@@ -217,7 +217,7 @@ module Command
 
   ###############################################################################
   define :learn do
-    usage({ ability: :string })
+    usage({ ability: :rest })
     exec do
       err_str = being.learn ability
       being.puts err_str and next if err_str

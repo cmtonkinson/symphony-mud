@@ -1,8 +1,8 @@
 module SystemTest
   #############################################################################
-  define :promotion do
+  define :promote do
     with :admin
-    with :lowbie
+    with :lowbie, klass: 'warrior'
 
     before do
       expect_any admin, 'you have been made the system administrator'
@@ -17,8 +17,8 @@ module SystemTest
   end
 
   #############################################################################
-  define :learn_independent do
-    from :promotion
+  define :learn do
+    from :promote
     with :lowbie
 
     before do
@@ -44,7 +44,7 @@ module SystemTest
 
   #############################################################################
   define :learn_dependent do
-    from :promotion
+    from :promote
     with :lowbie
 
     before do
@@ -73,7 +73,7 @@ module SystemTest
       trains
     end
 
-    from :learn_independent
+    from :learn
     with :lowbie
 
     before do
@@ -96,4 +96,21 @@ module SystemTest
       raise "Didn't consume any training points" unless @updated_trains < @initial_trains
     end
   end
+
+  #############################################################################
+  define :learn_ability_with_spaces_in_name do
+    from :learn
+    with :lowbie
+
+    before do
+      lowbie 'skills'
+      expect(/second attack\s+^/)
+    end
+
+    test do
+      lowbie 'learn second attack'
+      expect(/Congratulations.+second attack/)
+    end
+  end
+
 end

@@ -46,8 +46,12 @@ module Realm
     end
 
     ###########################################################################
+    # Either pass a Symbol, which will be looked up directly against Ability
+    # names, or pass a String, which will be snake_cased and then converted
+    # to a Symbol.
     def get_ability(name)
-      abilities.find { |a| a.name == name.to_sym }
+      name = name.gsub(/\s+/, '_').to_sym if name.is_a?(String)
+      abilities.find { |a| a.name == name }
     end
 
     ###########################################################################
