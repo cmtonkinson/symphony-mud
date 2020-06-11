@@ -1,4 +1,4 @@
-# Symphony [![build status](https://gitlab.tonkinson.net/symphony/engine/badges/master/build.svg)](https://gitlab.tonkinson.net/symphony/engine/commits/master)
+# Symphony [![pipeline status](http://gitlab.tonkinson.net/symphony/engine/badges/master/pipeline.svg)](http://gitlab.tonkinson.net/symphony/engine/-/commits/master) [![coverage report](http://gitlab.tonkinson.net/symphony/engine/badges/master/coverage.svg)](http://gitlab.tonkinson.net/symphony/engine/-/commits/master)
 The harmonius MUD codebase
 
 ---
