@@ -112,5 +112,4 @@ module SystemTest
       expect(/Congratulations.+second attack/)
     end
   end
-
 end

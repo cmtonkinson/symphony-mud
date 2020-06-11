@@ -91,5 +91,4 @@ module SystemTest
       expect(/adjusted.+verbosity/i)
     end
   end
-
 end

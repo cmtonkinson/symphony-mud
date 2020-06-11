@@ -118,7 +118,7 @@ module Mechanics
         catch_up_rate = (@jobs_per_batch * 1.1).ceil if catch_up_rate < @jobs_per_batch
 
         # Increase jobs_per_batch.
-        msg = "World#rebalance_job_parameters - increasing batch size from %d to %d"
+        msg = 'World#rebalance_job_parameters - increasing batch size from %d to %d'
         Symphony.logger.debug msg % [@jobs_per_batch, catch_up_rate]
         @jobs_per_batch = catch_up_rate
       elsif top.ready?
@@ -130,7 +130,7 @@ module Mechanics
         new_rate = (@jobs_per_batch * 0.9).ceil
         return if new_rate < MIN_JOBS_PER_BATCH
 
-        msg = "World#rebalance_job_parameters - decreasing batch size from %d to %d"
+        msg = 'World#rebalance_job_parameters - decreasing batch size from %d to %d'
         Symphony.logger.debug msg % [@jobs_per_batch, new_rate]
         @jobs_per_batch = new_rate
       end
