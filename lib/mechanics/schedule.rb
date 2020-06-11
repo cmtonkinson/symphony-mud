@@ -81,6 +81,10 @@ module Mechanics
     end
 
     ###########################################################################
+    # This method will alter how many jobs are run on each game loop based on
+    # the job queue length and short term schedule. It attemps to reach the
+    # lowest number of jobs per loop that won't result in any jobs firing
+    # later than they're schedule for.
     def rebalance_job_parameters
       # Don't run more than once per second.
       @job_cycle_counter += 1
@@ -104,17 +108,19 @@ module Mechanics
         # over the next second.
         catch_up_rate = (behind_by / @batches_per_second).ceil
 
-        # A decrease probably isn't wise at this point. That being said, we
-        # entered this code section because we were delinquent on the top job.
-        # As a safety measure (to make sure we're doing JUST better than
-        # treading water), bump the rate slightly.
+        # A decrease probably isn't wise at this point, as we entered this code
+        # section because we were delinquent on the top job. As a safety
+        # measure (to make sure we do better than just tread water), increase
+        # the rate by 10%. This almost guarantees frequent rebalancing with a
+        # sufficiently long job queue, but I'd rather make the tradeoff of some
+        # possible lag for being a bit aggressive here, than have core realtime
+        # experience mechanics (e.g. combat) happen too late.
         catch_up_rate = (@jobs_per_batch * 1.1).ceil if catch_up_rate < @jobs_per_batch
 
         # Increase jobs_per_batch.
-        Symphony.logger.debug "World#rebalance_job_parameters \
-          - increasing batch size from #{@jobs_per_batch} to #{catch_up_rate}"
+        msg = "World#rebalance_job_parameters - increasing batch size from %d to %d"
+        Symphony.logger.debug msg % [@jobs_per_batch, catch_up_rate]
         @jobs_per_batch = catch_up_rate
-
       elsif top.ready?
         # If the top job is ready, do nothing.
         # TODO - is this correct?
@@ -124,8 +130,8 @@ module Mechanics
         new_rate = (@jobs_per_batch * 0.9).ceil
         return if new_rate < MIN_JOBS_PER_BATCH
 
-        Symphony.logger.debug "World#rebalance_job_parameters - \
-          decreasing batch size from #{@jobs_per_batch} to #{new_rate}"
+        msg = "World#rebalance_job_parameters - decreasing batch size from %d to %d"
+        Symphony.logger.debug msg % [@jobs_per_batch, new_rate]
         @jobs_per_batch = new_rate
       end
     end
