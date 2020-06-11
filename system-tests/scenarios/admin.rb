@@ -23,7 +23,8 @@ module SystemTest
       groups = available.scan(/^[A-Z]+\s+[a-z,_\s]+$/)
       groups.each { |group| list += group.scan(/[a-z_]+/) }
 
-      # There are a few we don't want to try.
+      # There are a few we either can't try, don't want to, or want to handle
+      # specially (down below).
       dont_try = %w[pry reboot shutdown test quit log_level]
       list.reject! { |c| dont_try.include? c }
 
@@ -35,4 +36,60 @@ module SystemTest
       end
     end
   end
+
+  #############################################################################
+  # This test is a little janky (including 2 hacks) but the alternative is a
+  # possibly significant refactor of the system testing infrastructure to
+  # accommodate just this one stupid test.
+  define :reboot do
+    from :create_admin
+    with :admin
+    test do
+      admin 'reboot'
+
+      # Let the server reboot. If we don't do this, the Micromanager will try
+      # to read the pidfile before it's updated with the new Process Id.
+      sleep 1
+      expect_any admin, 'beginning reboot'
+
+      # Force some command or else the reboot messages won't be in the output
+      # buffer by default.
+      admin 'look'
+      expect_any admin, 'reboot successful'
+    end
+  end
+
+  #############################################################################
+  define :shutdown do
+    from :create_admin
+    with :admin
+    test do
+      admin 'shutdown'
+      expect 'Shutting down'
+    end
+  end
+
+  #############################################################################
+  define :quit do
+    from :create_admin
+    with :admin
+    test do
+      admin 'quit'
+      expect_any admin, 'Logging out'
+    end
+  end
+
+  #############################################################################
+  define :log_level do
+    from :create_admin
+    with :admin
+    test do
+      admin 'log_level qux'
+      expect "doesn't make sense"
+
+      admin 'log_level trace'
+      expect(/adjusted.+verbosity/i)
+    end
+  end
+
 end
