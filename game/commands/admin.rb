@@ -351,7 +351,10 @@ module Command
       # Bounds check, unless you are sysadmin.
       being.puts t('err_range') % [min, max] and next if !being.creator? && (times < min || times > max)
 
-      (0..times).each { being.cmd rest }
+      # Interpret `{#` in the command string as a numerical index substitution.
+      (1..times).each_with_index do |_, idx|
+        being.cmd rest.sub('{#', idx.to_s)
+      end
     end
   end
 

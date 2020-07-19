@@ -91,4 +91,22 @@ module SystemTest
       expect(/adjusted.+verbosity/i)
     end
   end
+
+  #############################################################################
+  define :repeat do
+    from :create_admin
+    with :admin
+    test do
+      admin 'repeat 5 say test-a'
+      expect 'You say, "test-a"'
+
+      admin 'repeat 5 say test-b {#'
+      expect_any admin, 'You say, "test-b 0"'
+      expect_any admin, 'You say, "test-b 1"'
+      expect_any admin, 'You say, "test-b 2"'
+      expect_any admin, 'You say, "test-b 3"'
+      expect_any admin, 'You say, "test-b 4"'
+    end
+  end
+
 end
