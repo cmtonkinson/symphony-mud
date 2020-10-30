@@ -120,6 +120,4 @@ module SystemTest
       expect 'level 1'
     end
   end
-
 end
-

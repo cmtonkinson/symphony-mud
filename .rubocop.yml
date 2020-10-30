@@ -9,3 +9,7 @@ Naming/MethodParameterName:
     - id
     - x
 
+Metrics/ModuleLength:
+  Exclude:
+    - 'game/commands/*'
+
