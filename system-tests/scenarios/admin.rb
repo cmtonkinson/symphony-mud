@@ -109,4 +109,17 @@ module SystemTest
     end
   end
 
+  #############################################################################
+  define :identify do
+    from :create_admin
+    with :admin
+    with :other
+    test do
+      admin 'id other'
+      expect 'name other'
+      expect 'level 1'
+    end
+  end
+
 end
+
