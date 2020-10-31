@@ -77,12 +77,8 @@ module Realm
       clones = (1..number).map { |_| target.clone }
       Symphony.logger.trace '  %d clones of %s' % [clones.length, target.fqid_str]
 
-      # Stitch the Objekt into the Room.
-      clones.each do |clone|
-        clone.add.to room
-        clone.room = room if clone.is_a?(Being)
-        clone.run_hook :vivify
-      end
+      # Stitch
+      clones.each { |clone| Logistics::Integrator.stitch clone, room }
     end
   end
 end

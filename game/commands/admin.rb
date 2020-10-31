@@ -60,9 +60,8 @@ module Command
       being.puts t 'err_not_found' and next if it.nil?
 
       cloned = it.clone
-      where.insert cloned
-      cloned.room = where if (where == room) && cloned.is_a?(Realm::Being)
-      cloned.run_hook :vivify
+      Logistics::Integrator.stitch cloned, where
+
       being.puts t('actor'), cloned.name
     end
   end
@@ -239,26 +238,28 @@ module Command
     level Realm::Being::DEMIGOD
     usage('item', { rid: :int })
     usage('npc', { rid: :int })
+    usage('npc', 'random')
     exec do
       if item == 'item'
         model = being.room.zone.find_by_rid Realm::Item, rid
         being.puts t 'err_nothing' and next if model.nil?
 
         copy = model.clone
-        copy.add.to being
-        copy.run_hook :vivify
+        Logistics::Integrator.stitch copy, being
+
         being.puts t('actor'), copy
         Symphony.logger.debug '%s loaded %s as a clone of %s' % [being.fqid_str, copy.fqid_str, model.fqid_str]
-      elsif npc == 'npc'
+      elsif npc == 'npc' && rid.is_a?(Integer)
         model = being.room.zone.find_by_rid Realm::NPC, rid
         being.puts t 'err_nothing' and next if model.nil?
 
         copy = model.clone
-        copy.add.to room.beings
-        copy.room = room
-        copy.run_hook :vivify
+        Logistits::Integrator.stitch copy, room
+
         being.puts t('actor'), copy
         Symphony.logger.debug '%s loaded %s as a clone of %s' % [being.fqid_str, copy.fqid_str, model.fqid_str]
+      elsif npc == 'npc' && random == 'random'
+
       end
     end
   end

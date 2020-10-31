@@ -1,4 +1,5 @@
 require_relative 'builder'
+require_relative 'integrator'
 require_relative 'pathfinder'
 require_relative 'scribe'
 require_relative 'transporter'

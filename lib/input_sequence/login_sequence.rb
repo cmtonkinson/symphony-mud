@@ -283,15 +283,14 @@ module InputSequence
 
     ###########################################################################
     def new_avatar_setup_from_context(avatar)
-      avatar.room = $world.find_room Realm::World::THE_VOID_ID
       ::Talent.const_get(@context.race.capitalize).new(avatar)
       ::Talent.const_get(@context.klass.capitalize).new(avatar)
       avatar.gender = @context.gender
       avatar.hand = @context.hand
       avatar.height = HEIGHT_OPTIONS.index(@context.height) + 1
       avatar.weight = WEIGHT_OPTIONS.index(@context.weight) + 1
-      avatar.room.insert avatar
-      avatar.run_hook :vivify
+
+      Logistics::Integrator.stitch avatar, $world.find_room(Realm::World::THE_VOID_ID)
 
       ::Base::Account.add @context.name, @context.avatar_id, @context.new_passphrase
       Logistics::Scribe.save avatar
