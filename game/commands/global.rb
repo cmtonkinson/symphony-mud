@@ -365,6 +365,19 @@ module Command
   end
 
   ###############################################################################
+  define :status do
+    usage
+    exec do
+      being.puts t('none') and next if being.effects.empty?
+
+      being.puts t('title')
+      being.effects.each do |effect|
+        being.puts t('line'), effect.name, effect.expires_in
+      end
+    end
+  end
+
+  ###############################################################################
   define :summary do
     usage
     exec do

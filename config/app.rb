@@ -16,7 +16,7 @@ class App
   DIRECTORIES = {
     config: %i[initializers locales setup],
     data: %i[avatar zone pidfile],
-    game: %i[commands anatomies klasses skills spells templates help],
+    game: %i[commands anatomies effects klasses skills spells templates help],
     lib: %i[],
     tmp: %i[]
   }.freeze

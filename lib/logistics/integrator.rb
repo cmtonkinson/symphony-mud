@@ -39,5 +39,16 @@ module Logistics
 
       room.zone = container
     end
+
+    ###########################################################################
+    # This is used to provide an interface between the Effect and the Objekt
+    # it is being applied to that is a clean abstraction for the client code.
+    def self.apply_effect(type, victim, actor = nil)
+      effect = Realm.const_get(type.capitalize).new(nil, {
+        target: victim,
+        originator: actor,
+      })
+      effect.apply
+    end
   end
 end

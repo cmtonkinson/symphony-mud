@@ -1,6 +1,7 @@
 require_relative 'objekt/hooks' # hooks must come first because of the class-level methods used
 
 require_relative 'objekt/cloning'
+require_relative 'objekt/effects'
 require_relative 'objekt/containers'
 require_relative 'objekt/flags'
 require_relative 'objekt/jobs'

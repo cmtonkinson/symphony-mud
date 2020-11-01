@@ -7,6 +7,7 @@ en:
     wear: "You wear $item."
     unworn: "You aren't wearing that."
     default_damage:
-      human: "punch"
       canine: "bite"
-
+      dwarf: "punch"
+      elf: "punch"
+      human: "punch"

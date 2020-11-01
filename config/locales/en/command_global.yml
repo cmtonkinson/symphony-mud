@@ -85,6 +85,11 @@ en:
     spells:
       _brief: "Display spells you currently know."
       title: "Here are the spells available to you:\n\n"
+    status:
+      _brief: "Display all current status effects."
+      none: "You don't currently have any status effects."
+      title: "Here are your current status effects:\n\n"
+      line: "{y$string{x (for another {Y$string{x seconds)"
     summary:
       _brief: "Display information about the current state of your Avatar."
       title: "Your name is $string and you are a $string."

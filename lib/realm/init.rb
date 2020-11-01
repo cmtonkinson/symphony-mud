@@ -7,6 +7,7 @@ require_relative 'configuration'
 require_relative 'objekt'
 
 require_relative 'exit'
+require_relative 'effect'
 require_relative 'room'
 require_relative 'zone'
 require_relative 'being'

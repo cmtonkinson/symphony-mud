@@ -427,6 +427,7 @@ module Command
     level Realm::Being::CREATOR
     usage
     exec do
+      Logistics::Integrator.apply_effect :poison, being
     end
   end
 
