@@ -6,6 +6,7 @@ module Realm
       @announce_apply  = true
       @announce_expire = true
       @duration        = 300
+      @valid_for       = [Realm::Being]
 
       @modifiers = {
         'strength': 1,

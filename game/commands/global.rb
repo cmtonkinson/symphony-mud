@@ -372,7 +372,7 @@ module Command
 
       being.puts t('title')
       being.effects.each do |effect|
-        being.puts t('first_line'), effect.name, effect.duration
+        being.puts t('first_line'), effect.name, effect.expires_in
         being.puts t('second_line'), I18n.t("effect.#{effect.name}.description")
       end
     end

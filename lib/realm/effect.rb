@@ -9,6 +9,7 @@ module Realm
     attr_reader :expiry_job, :execution_jobs
     attr_reader :announce_apply, :announce_expire
     attr_reader :modifiers
+    attr_reader :valid_for
 
     ###########################################################################
     def initialize(id = nil, props = {})
@@ -22,6 +23,7 @@ module Realm
       @announce_apply  = false
       @announce_expire = false
       @modifiers       = {}
+      @valid_for       = []
       super
     end
 
@@ -34,8 +36,23 @@ module Realm
     }
 
     ###########################################################################
-    def apply
+    def validate
       raise 'Effect %s has no target' % [self.class.name] if target.nil?
+
+      # rubocop:disable Style/GuardClause
+      if valid_for.none? { |vf| target.is_a? vf }
+        raise 'Invalid target %s for %s (only accepts %s)' % [
+          target.fqid_str,
+          self.class.name,
+          valid_for.map(&:to_s).join(', ')
+        ]
+      end
+      # rubocop:enable Style/GuardClause
+    end
+
+    ###########################################################################
+    def apply
+      validate
 
       # Link to the target Objekt.
       target.effects.add self

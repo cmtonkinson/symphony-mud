@@ -7,6 +7,7 @@ module Realm
       @announce_expire = true
       @duration        = 300
       @recur_delay     = 15
+      @valid_for       = [Realm::Being]
     end
 
     def _recur
