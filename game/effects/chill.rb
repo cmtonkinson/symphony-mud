@@ -1,5 +1,5 @@
 module Realm
-  class ChillEffect < Effect
+  class Chill < Effect
     def initialize(id = nil, props = {})
       super
       @name            = 'chill'

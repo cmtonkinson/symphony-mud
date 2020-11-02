@@ -44,7 +44,7 @@ module Logistics
     # This is used to provide an interface between the Effect and the Objekt
     # it is being applied to that is a clean abstraction for the client code.
     def self.apply_effect(type, victim, actor = nil)
-      type_sym = "#{type.capitalize}Effect"
+      type_sym = type.capitalize
       effect = Realm.const_get(type_sym).new(nil, {
                                                target: victim,
                                                originator: actor

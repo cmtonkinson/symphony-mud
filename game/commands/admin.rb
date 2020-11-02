@@ -165,7 +165,7 @@ module Command
       being.puts t('err_seniority'), target and next unless being.seniority? target
 
       # Make sure this is really a valid status effect.
-      e = Realm.const_get "#{effect.capitalize}Effect"
+      e = Realm.const_get effect.capitalize
       being.puts t 'err_unknown' and next if e.nil?
 
       e = e.new

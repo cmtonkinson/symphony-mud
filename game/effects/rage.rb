@@ -1,5 +1,5 @@
 module Realm
-  class RageEffect < Effect
+  class Rage < Effect
     def initialize(id = nil, props = {})
       super
       @name            = 'rage'
