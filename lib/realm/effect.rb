@@ -1,5 +1,7 @@
 # TODO: Apply effects to other Objekt types (like adding modifiers to armor)
 # TODO: Effects that wear out with usage, not time (like poisoning a weapon)
+# TODO: Save & restore permanent effects
+# TODO: Prevent duplicate effects (but should we allow stacking?)
 module Realm
   class Effect < Objekt
     attr_reader :name, :originator, :target

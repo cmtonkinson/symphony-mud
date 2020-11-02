@@ -372,7 +372,7 @@ module Command
 
       being.puts t('title')
       being.effects.each do |effect|
-        being.puts t('first_line'), effect.name, effect.expires_in
+        being.puts t('first_line'), effect.name, effect.duration
         being.puts t('second_line'), I18n.t("effect.#{effect.name}.description")
       end
     end
@@ -384,6 +384,7 @@ module Command
     exec do
       being.puts t('title'), being.name, being.level_label
       being.puts being.summary_plate
+      being.puts t('status'), (being.effects.map(&:name).join(', ') || 'nothing')
     end
   end
 
