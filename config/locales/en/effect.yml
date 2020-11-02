@@ -1,5 +1,12 @@
 en:
   effect:
+    chill:
+      description: "cold damage over time"
+      apply_target: "You feel cold."
+      apply_room: "$being looks cold."
+      expire_target: "You feel warmer."
+      expire_room: "$being looks warmer."
+      recur: "You shiver and wince."
     poison:
       description: "damage over time"
       apply_target: "You feel ill."

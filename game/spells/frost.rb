@@ -27,8 +27,11 @@ module Talent
                            exclude: [able_being, target]
 
       target.take_damage dam, able_being
+      Logistics::Integrator.apply_effect :chill, target, able_being
 
       # NOTE: Put this logic somewhere that isn't stupid!
+      # TODO: Maybe specify whether abilities are aggressive and centralize
+      #       the logic for embattling?
       Combat.embattle target, able_being
     end
   end
