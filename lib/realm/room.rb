@@ -79,7 +79,7 @@ module Realm
 
     ###########################################################################
     def find_being(name)
-      beings.values.find { |b| b.name.index(name).zero? }
+      beings.values.find { |b| b.name.index(name)&.zero? }
     end
 
     ###########################################################################

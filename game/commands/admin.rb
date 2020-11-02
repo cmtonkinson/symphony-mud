@@ -156,6 +156,27 @@ module Command
   end
 
   ###############################################################################
+  define :effect do
+    level Realm::Being::GOD
+    usage({ victim: :string }, { effect: :string })
+    exec do
+      target = room.find_being victim
+      being.puts t 'err_nobody' and next if target.nil?
+      being.puts t('err_seniority'), target and next unless being.seniority? target
+
+      # Make sure this is really a valid status effect.
+      e = Realm.const_get "#{effect.capitalize}Effect"
+      being.puts t 'err_unknown' and next if e.nil?
+      e = e.new
+
+      Logistics::Integrator.apply_effect effect, target, being
+
+      being.puts t('actor'), e.name, target
+      target.puts t('victim'), being, e.name
+    end
+  end
+
+  ###############################################################################
   define :force do
     level Realm::Being::GOD
     usage({ victim: :string }, :rest)
@@ -427,7 +448,6 @@ module Command
     level Realm::Being::CREATOR
     usage
     exec do
-      Logistics::Integrator.apply_effect :poison, being
     end
   end
 

@@ -1,8 +1,16 @@
 en:
   effect:
     poison:
+      description: "damage over time"
       apply_target: "You feel ill."
       apply_room: "$being looks ill."
       expire_target: "You feel better."
       expire_room: "$being looks better."
-      hurt: "You suffer in pain."
+      recur: "You suffer in pain."
+    rage:
+      description: "increases offense but lowers defense"
+      apply_target: "You grow angry."
+      apply_room: "$being looks angry."
+      expire_target: "You calm down."
+      expire_room: "$being looks calmer."
+

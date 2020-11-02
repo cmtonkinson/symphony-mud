@@ -89,7 +89,8 @@ en:
       _brief: "Display all current status effects."
       none: "You don't currently have any status effects."
       title: "Here are your current status effects:\n\n"
-      line: "{y$string{x (for another {Y$string{x seconds)"
+      first_line: "{y$string{x for {Y$string{x seconds"
+      second_line: "  ($string)"
     summary:
       _brief: "Display information about the current state of your Avatar."
       title: "Your name is $string and you are a $string."

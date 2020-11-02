@@ -1,8 +1,12 @@
+# TODO: Apply effects to other Objekt types (like adding modifiers to armor)
+# TODO: Effects that wear out with usage, not time (like poisoning a weapon)
 module Realm
   class Effect < Objekt
     attr_reader :name, :originator, :target
-    attr_reader :duration, :expiry_job
+    attr_reader :duration, :recur_delay
+    attr_reader :expiry_job, :execution_jobs
     attr_reader :announce_apply, :announce_expire
+    attr_reader :modifiers
 
     ###########################################################################
     def initialize(id = nil, props = {})
@@ -10,8 +14,12 @@ module Realm
       @originator      = nil
       @target          = nil
       @duration        = 0
+      @recur_delay     = 0
+      @expiry_job      = nil
+      @execution_jobs  = Array.new
       @announce_apply  = false
       @announce_expire = false
+      @modifiers       = Hash.new
       super
     end
 
@@ -31,12 +39,20 @@ module Realm
       target.effects.add self
 
       # Create an expiry job.
-      @expiry_job = Mechanics::Job.new(duration, self, :expire)
+      @expiry_job = Mechanics::Job.new duration, self, :expire
       $world.schedule expiry_job
 
       # Create an execution job, if defined.
+      if respond_to? :_recur
+        j = Mechanics::RecurringJob.new 0, self, recur_delay, :recur
+        $world.schedule j
+        execution_jobs.append j
+      end
 
       # Apply any modifiers, if defined.
+      unless modifiers.empty?
+        target.modify modifiers
+      end
 
       # Run custom code, if defined.
       _apply if respond_to? :_apply
@@ -54,10 +70,15 @@ module Realm
       _expire if respond_to? :_expire
 
       # Remove all defined modifiers.
+      unless modifiers.empty?
+        target.modify modifiers, true
+      end
 
       # Kill execution job, if defined.
+      execution_jobs.each { |j| j.kill }
 
       # Kill expiry job.
+      expiry_job.kill
 
       # Announce, if defined.
       if announce_expire
@@ -71,8 +92,13 @@ module Realm
     end
 
     ###########################################################################
+    def recur
+      _recur
+    end
+ 
+    ###########################################################################
     def expires_in
       @expiry_job.wen - Time.now.to_i
     end
-  end
+ end
 end
