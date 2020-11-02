@@ -167,6 +167,7 @@ module Command
       # Make sure this is really a valid status effect.
       e = Realm.const_get "#{effect.capitalize}Effect"
       being.puts t 'err_unknown' and next if e.nil?
+
       e = e.new
 
       Logistics::Integrator.apply_effect effect, target, being

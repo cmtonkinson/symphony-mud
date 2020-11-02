@@ -7,9 +7,7 @@ module Realm
     }
 
     enervate lambda {
-      until @effects.empty? do
-        @effects.first.expire
-      end
+      @effects.first.expire until @effects.empty?
     }
   end
 end

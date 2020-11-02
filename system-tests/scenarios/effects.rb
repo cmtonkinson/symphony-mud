@@ -1,5 +1,4 @@
 module SystemTest
-
   define :status do
     from :create_admin
     with :admin
@@ -28,7 +27,7 @@ module SystemTest
     test do
       admin 'effect vork poison'
       expect_last vork, 'You feel ill'
-      
+
       vork 'status'
       expect 'poison'
     end
@@ -48,9 +47,9 @@ module SystemTest
     with :vork
 
     before do
-      @str_0 = lookup_attr 'stren'
-      @dex_0 = lookup_attr 'dexte'
-      @con_0 = lookup_attr 'const'
+      @str0 = lookup_attr 'stren'
+      @dex0 = lookup_attr 'dexte'
+      @con0 = lookup_attr 'const'
     end
 
     test do
@@ -60,13 +59,13 @@ module SystemTest
       vork 'status'
       expect 'rage'
 
-      @str_1 = lookup_attr 'stren'
-      @dex_1 = lookup_attr 'dexte'
-      @con_1 = lookup_attr 'const'
+      @str1 = lookup_attr 'stren'
+      @dex1 = lookup_attr 'dexte'
+      @con1 = lookup_attr 'const'
 
-      raise "Strength isn't higher" unless @str_1 > @str_0
-      raise "Dexterity isn't higher" unless @dex_1 > @dex_0
-      raise "Constitution isn't higher" unless @con_1 < @con_0
+      raise "Strength isn't higher" unless @str1 > @str0
+      raise "Dexterity isn't higher" unless @dex1 > @dex0
+      raise "Constitution isn't higher" unless @con1 < @con0
     end
   end
 end

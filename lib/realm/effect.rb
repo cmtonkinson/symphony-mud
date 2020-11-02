@@ -16,10 +16,10 @@ module Realm
       @duration        = 0
       @recur_delay     = 0
       @expiry_job      = nil
-      @execution_jobs  = Array.new
+      @execution_jobs  = []
       @announce_apply  = false
       @announce_expire = false
-      @modifiers       = Hash.new
+      @modifiers       = {}
       super
     end
 
@@ -50,18 +50,16 @@ module Realm
       end
 
       # Apply any modifiers, if defined.
-      unless modifiers.empty?
-        target.modify modifiers
-      end
+      target.modify modifiers unless modifiers.empty?
 
       # Run custom code, if defined.
       _apply if respond_to? :_apply
 
       # Announce, if defined.
-      if announce_apply
-        target.puts I18n.t("effect.#{name}.apply_target")
-        target.room.puts I18n.t("effect.#{name}.apply_room"), target, exclude: target
-      end
+      return unless announce_apply
+
+      target.puts I18n.t("effect.#{name}.apply_target")
+      target.room.puts I18n.t("effect.#{name}.apply_room"), target, exclude: target
     end
 
     ###########################################################################
@@ -70,12 +68,10 @@ module Realm
       _expire if respond_to? :_expire
 
       # Remove all defined modifiers.
-      unless modifiers.empty?
-        target.modify modifiers, true
-      end
+      target.modify modifiers, true unless modifiers.empty?
 
       # Kill execution job, if defined.
-      execution_jobs.each { |j| j.kill }
+      execution_jobs.each(&:kill)
 
       # Kill expiry job.
       expiry_job.kill
@@ -95,10 +91,10 @@ module Realm
     def recur
       _recur
     end
- 
+
     ###########################################################################
     def expires_in
       @expiry_job.wen - Time.now.to_i
     end
- end
+  end
 end

@@ -10,7 +10,7 @@ module Realm
       @modifiers = {
         'strength': 1,
         'dexterity': 1,
-        'constitution': -2,
+        'constitution': -2
       }
     end
   end

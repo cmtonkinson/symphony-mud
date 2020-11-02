@@ -46,9 +46,9 @@ module Logistics
     def self.apply_effect(type, victim, actor = nil)
       type_sym = "#{type.capitalize}Effect"
       effect = Realm.const_get(type_sym).new(nil, {
-        target: victim,
-        originator: actor,
-      })
+                                               target: victim,
+                                               originator: actor
+                                             })
       effect.apply
     end
   end
