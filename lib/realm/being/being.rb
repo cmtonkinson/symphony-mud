@@ -184,5 +184,22 @@ module Realm
       (@room.beings.values.reject { |b| b == self }) || []
     end
     alias other_beings other_beings_in_room
+
+    ###########################################################################
+    # Generic locator wrapper when the target could be anything within sight
+    # of the Being. Returns as soon as it finds results from any location,
+    # which means the order of search is important, from both a UX consistency
+    # and runtime performance standpoint.
+    def locate(str)
+      [items, anatomy, room.beings, room.items].each do |search_space|
+        results = search_space.locate str
+        return results if results.any?
+      end
+    end
+
+    ###########################################################################
+    def locate_first(str)
+      locate(str).first
+    end
   end
 end

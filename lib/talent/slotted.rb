@@ -6,8 +6,8 @@ module Talent
     end
 
     ###########################################################################
-    def add_slot(type, name)
-      slots.push Mechanics::Slot.new(type, name)
+    def add_slot(slotted, type, name)
+      slots.push Mechanics::Slot.new(slotted, type, name)
     end
 
     ###########################################################################

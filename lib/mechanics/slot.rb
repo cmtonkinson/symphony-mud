@@ -1,10 +1,11 @@
 module Mechanics
   class Slot
-    attr_reader :occupant, :type, :name
+    attr_reader :slotted, :occupant, :type, :name
 
     ###########################################################################
-    def initialize(type, name)
+    def initialize(slotted, type, name)
       @occupant = nil
+      @slotted  = slotted
       @type     = type
       @name     = name
     end
@@ -17,11 +18,22 @@ module Mechanics
     # Set occupant to nil to clear the slot (this preserves the behavior as
     # explained above for new_container).
     def set(new_occupant, new_container = nil)
-      previous = occupant
+      # Save a reference to the old occupant and set the new one.
+      previous  = occupant
       @occupant = new_occupant
 
-      new_container.insert previous if previous && new_container
+      # If there is a new occupant, link to to the 'slotted'
+      new_occupant&.slotted_to = slotted
 
+      # If there was an occupant removed...
+      if previous
+        # ... disassociate it with the 'slotted'
+        previous.slotted_to = nil
+        # ... add it to the other container, if provided
+        new_container&.insert previous
+      end
+
+      # Return previous
       previous
     end
 

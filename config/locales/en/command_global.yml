@@ -113,4 +113,3 @@ en:
       _brief: "List the different zones in the Realm."
       line: "[{C$rid{x] {M$zone{x ($string rooms, $string items, $string NPCs)"
       title: "Zones in the realm:\n\n"
-

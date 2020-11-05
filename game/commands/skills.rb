@@ -34,6 +34,23 @@ module Command
   end
 
   ###############################################################################
+  define :hone do
+    usage({ item: :id })
+    exec do
+      target = being.items.locate_first item
+      being.puts t 'err_none' and next if target.nil?
+      being.puts t 'err_not_honable' and next unless target.honable?
+
+      if Logistics::Integrator.apply_effect :sharp, target, being
+        being.puts t('actor'), target
+        being.room.puts t('room'), being, target
+      else
+        being.puts t('failed'), target
+      end
+    end
+  end
+
+  ###############################################################################
   define :kick do
     ability
     usage

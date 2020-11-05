@@ -36,8 +36,9 @@ en:
       err_nobody: "You don't see them here."
       err_seniority: "You aren't powerful enough to do that."
       err_unknown: "That isn't a valid status effect."
-      actor: "You apply the $string status effect to $being."
+      actor: "You apply the $string status effect to $string."
       victim: "$being applies the $string status effect to you."
+      actor_failed: "You couldn't apply the $string status effect to $string."
     force:
       _brief: "Make another being take some action... whether they like it or not."
       actor: "You force $being into action."

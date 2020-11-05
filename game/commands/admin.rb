@@ -158,22 +158,34 @@ module Command
   ###############################################################################
   define :effect do
     level Realm::Being::GOD
-    usage({ victim: :string }, { effect: :string })
+    usage({ target: :string }, { effect: :string })
     exec do
-      target = room.find_being victim
-      being.puts t 'err_nobody' and next if target.nil?
-      being.puts t('err_seniority'), target and next unless being.seniority? target
+      what = being.locate_first target
+      being.puts t 'err_nobody' and next if what.nil?
 
-      # Make sure this is really a valid status effect.
-      e = Realm.const_get effect.capitalize
-      being.puts t 'err_unknown' and next if e.nil?
+      # If we're targeting a Being, do we have permission?
+      if what.is_a?(Realm::Being) && !being.seniority?(what)
+        being.puts t('err_seniority'), what
+        next
+      end
 
-      e = e.new
+      # Ensure this is a valid status effect.
+      begin
+        Realm.const_get effect.capitalize
+      rescue NameError
+        being.puts t 'err_unknown'
+        next
+      end
 
-      Logistics::Integrator.apply_effect effect, target, being
+      # Do it to it.
+      e = Logistics::Integrator.apply_effect effect, what, being
 
-      being.puts t('actor'), e.name, target
-      target.puts t('victim'), being, e.name
+      if e
+        being.puts t('actor'), e.name, what.name
+        what.puts t('victim'), being, e.name if what.is_a?(Realm::Being)
+      else
+        being.puts t('actor_failed'), effect, what.name
+      end
     end
   end
 
@@ -230,9 +242,7 @@ module Command
     level Realm::Being::DEMIGOD
     usage({ target: :string })
     exec do
-      it = being.items.locate_first(target) ||
-           being.room.items.locate_first(target) ||
-           being.room.beings.locate_first(target)
+      it = being.locate_first target
       being.puts t 'err_not_found' and next if it.nil?
 
       being.puts it.summary

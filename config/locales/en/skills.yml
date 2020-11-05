@@ -1,0 +1,9 @@
+en:
+  global:
+    hone:
+      _brief: 'Sharpen a blade'
+      err_none: "You don't have that."
+      err_not_honable: "That isn't honable (must be a pierce or slash weapon)."
+      actor: "You hone $item."
+      room: "$being hones $item."
+      failed: "You couldn't hone $item."

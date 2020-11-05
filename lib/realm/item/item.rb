@@ -11,7 +11,7 @@ module Realm
 
     ATTRS.each { |name| attr_accessor name }
 
-    attr_accessor :modifiers
+    attr_accessor :slotted_to, :modifiers
 
     ###########################################################################
     def initialize(id = nil, props = {})
@@ -67,6 +67,24 @@ module Realm
     end
 
     ###########################################################################
+    def honable?
+      type == :weapon && %w[pierce slash].include?(damage_type)
+    end
+
+    ###########################################################################
+    def modify(mods, reverse = false)
+      mods.each do |stat, magnitude|
+        amount = magnitude * (reverse ? -1 : 1)
+        if modifiers.key? stat
+          modifiers[stat] += amount
+        else
+          modifiers[stat] = amount
+        end
+      end
+      modifiers.delete_if { |_, v| v.zero? }
+    end
+
+    ###########################################################################
     def summary
       str = $templates.item_summary % [
         rid, name,
@@ -79,11 +97,15 @@ module Realm
           weapon_type, damage_type, hitroll, damroll
         ]
       end
-      if wearable && !@modifiers.empty?
+      if wearable && modifiers.any?
         str << "{xModfiers:\n"
-        @modifiers.each do |name, amount|
+        modifiers.each do |name, amount|
           str << "{x %-15s %s%d{x\n" % [name.to_s, amount.positive? ? '{G+' : '{R', amount]
         end
+      end
+      if effects.any?
+        str << "{xEffects:\n  "
+        str << effects.map(&:to_s).join("\n  ")
       end
       str
     end
