@@ -286,7 +286,7 @@ module Command
         being.puts t 'err_nothing' and next if model.nil?
 
         copy = model.clone
-        Logistits::Integrator.stitch copy, room
+        Logistics::Integrator.stitch copy, room
 
         being.puts t('actor'), copy
         Symphony.logger.debug '%s loaded %s as a clone of %s' % [being.fqid_str, copy.fqid_str, model.fqid_str]
