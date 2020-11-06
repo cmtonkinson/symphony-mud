@@ -9,19 +9,8 @@ module SystemTest
     end
   end
 
-  define :effect do
-    from :status
-    with :admin
-    with :vork
-    test do
-      admin 'effect vork poison'
-      expect 'You apply the'
-      expect_last vork, 'admin applies the'
-    end
-  end
-
   define :poison do
-    from :effect
+    from :status
     with :admin
     with :vork
     test do
@@ -30,6 +19,19 @@ module SystemTest
 
       vork 'status'
       expect 'poison'
+    end
+  end
+
+  define :chill do
+    from :status
+    with :admin
+    with :vork
+    test do
+      admin 'effect vork chill'
+      expect_last vork, 'You feel cold'
+
+      vork 'status'
+      expect 'chill'
     end
   end
 
@@ -42,7 +44,7 @@ module SystemTest
       num
     end
 
-    from :effect
+    from :status
     with :admin
     with :vork
 

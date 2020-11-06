@@ -2,13 +2,17 @@
 # TODO: Save & restore permanent effects
 module Realm
   class Effect < Objekt
-    attr_reader :name, :originator, :target
+    attr_accessor :target
+    attr_reader :name, :originator
     attr_reader :duration, :recur_delay
     attr_reader :expiry_job, :execution_jobs
     attr_reader :announce_apply, :announce_expire
     attr_reader :modifiers
     attr_reader :valid_for
     attr_reader :can_stack
+
+    PERSISTENT_ATTRS = %i[name duration recur_delay announce_apply
+                          announce_expire modifiers valid_for can_stack].freeze
 
     ###########################################################################
     def initialize(id = nil, props = {})
@@ -29,10 +33,17 @@ module Realm
 
     ###########################################################################
     on_hashify lambda {
+      hash = {}
+      PERSISTENT_ATTRS.each { |name| hash[name] = send name }
+      hash[:expires_in] = expires_in
+      hash
     }
 
     ###########################################################################
     on_dehashify lambda { |hash|
+      Symphony.logger.warn hash.inspect
+      PERSISTENT_ATTRS.each { |name| instance_variable_set "@#{name}", hash[name] }
+      create_jobs hash[:expires_in]
     }
 
     ###########################################################################
@@ -72,10 +83,18 @@ module Realm
 
     ###########################################################################
     # Create jobs to manage the effect.
-    def create_jobs
+    def create_jobs(expiry_override = 0)
+      expires_at = if expiry_override.positive?
+                     expiry_override
+                   elsif duration.positive?
+                     duration
+                   else
+                     0
+                   end
+
       # Should we create an expiry job?
-      if duration.positive?
-        @expiry_job = Mechanics::Job.new duration, self, :expire
+      if expires_at.positive?
+        @expiry_job = Mechanics::Job.new expires_at, self, :expire
         $world.schedule expiry_job
       end
 
@@ -145,7 +164,7 @@ module Realm
 
     ###########################################################################
     def expires_in
-      @expiry_job.wen - Time.now.to_i
+      expiry_job ? expiry_job.wen - Time.now.to_i : 0
     end
 
     ###########################################################################
