@@ -2,7 +2,7 @@ module Realm
   class Chill < Effect
     def initialize(id = nil, props = {})
       super
-      @name            = 'chill'
+      @name            = :chill
       @announce_apply  = true
       @announce_expire = true
       @duration        = 30

@@ -1,4 +1,3 @@
-# TODO: Effects that wear out with usage, not time (like poisoning a weapon)
 module Realm
   class Effect < Objekt
     attr_accessor :target
@@ -8,10 +7,11 @@ module Realm
     attr_reader :announce_apply, :announce_expire
     attr_reader :modifiers
     attr_reader :valid_for
-    attr_reader :can_stack
+    attr_reader :initial_uses, :remaining_uses
 
     PERSISTENT_ATTRS = %i[name duration recur_delay announce_apply
-                          announce_expire modifiers valid_for can_stack].freeze
+                          announce_expire modifiers valid_for
+                          initial_uses remaining_uses].freeze
 
     ###########################################################################
     def initialize(id = nil, props = {})
@@ -26,7 +26,8 @@ module Realm
       @announce_expire = false
       @modifiers       = {}
       @valid_for       = []
-      @can_stack       = false
+      @initial_uses    = 0
+      @remaining_uses  = 0
       super
     end
 
@@ -54,6 +55,7 @@ module Realm
       modify if modifiers.any?
       _apply if respond_to? :_apply
       announce if announce_apply
+      Symphony.logger.debug "#{self.class.name} applied under #{target.fqid_str}"
       self
     end
 
@@ -69,7 +71,7 @@ module Realm
         ]
       end
 
-      return false if !can_stack && target.effects.any? { |e| e.name == name }
+      return false if target.effects.any? { |e| e.name == name }
 
       true
     end
@@ -112,8 +114,10 @@ module Realm
     def modify
       case target
       when Realm::Being
+        Symphony.logger.debug "#{self.class.name} modifying #{target.fqid_str}"
         target.modify modifiers
       when Realm::Item
+        Symphony.logger.debug "#{self.class.name} modifying #{target.fqid_str}"
         target.modify modifiers
         # If we are adding modifiers to an Item we then have to check if
         # the Item is equipped to a Being, and if so, ensure that those
@@ -122,7 +126,6 @@ module Realm
       else
         Symphony.logger.error '%s cannot modify %s' % [self.class.name, target.class.name]
       end
-      target.modify modifiers unless modifiers.empty?
     end
 
     ###########################################################################
@@ -133,6 +136,8 @@ module Realm
 
     ###########################################################################
     def expire
+      Symphony.logger.debug "#{self.class.name}#expire called under #{target.fqid_str}"
+
       # Run custom code, if defined.
       _expire if respond_to? :_expire
 
@@ -158,6 +163,7 @@ module Realm
 
     ###########################################################################
     def recur
+      Symphony.logger.debug "#{self.class.name}#_recur called under #{target.fqid_str}"
       _recur
     end
 
@@ -167,9 +173,23 @@ module Realm
     end
 
     ###########################################################################
+    def allow_uses(num)
+      @initial_uses   = num
+      @remaining_uses = num
+    end
+
+    ###########################################################################
+    def use(invoker)
+      Symphony.logger.debug "#{self.class.name}#use invoked by #{invoker.class.name} called under #{target.fqid_str}"
+      @remaining_uses -= 1
+      _use(invoker) if respond_to? :_use
+      expire unless remaining_uses.positive?
+    end
+
+    ###########################################################################
     def to_s
       out = ''
-      out << name
+      out << name.to_s
       if modifiers.any?
         out << ' ('
         out << modifiers.map do |k, v|

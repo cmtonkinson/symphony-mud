@@ -2,7 +2,7 @@ module Realm
   class Rage < Effect
     def initialize(id = nil, props = {})
       super
-      @name            = 'rage'
+      @name            = :rage
       @announce_apply  = true
       @announce_expire = true
       @duration        = 300

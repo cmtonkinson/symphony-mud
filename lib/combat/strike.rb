@@ -48,6 +48,7 @@ module Combat
                                   defender,
                                   exclude: [attacker, defender]
 
+      weapon&.trigger_effect :strike, self
       attacker.stamina.decrease 1
       defender.take_damage dam, self
     end

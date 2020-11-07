@@ -2,7 +2,7 @@ module Realm
   class Poison < Effect
     def initialize(id = nil, props = {})
       super
-      @name            = 'poison'
+      @name            = :poison
       @announce_apply  = true
       @announce_expire = true
       @duration        = 300

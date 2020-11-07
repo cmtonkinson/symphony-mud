@@ -361,6 +361,7 @@ module Realm
 
     ###########################################################################
     def modify(modifiers, reverse = false)
+      Symphony.logger.trace "Modifying #{fqid_str} with #{modifiers.inspect} (reverse = #{reverse})"
       modifiers.each do |stat_name, magnitude|
         stat      = send(stat_name)
         amount    = magnitude * (reverse ? -1 : 1)
