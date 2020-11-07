@@ -45,10 +45,10 @@ module Logistics
     # it is being applied to that is a clean abstraction for the client code.
     def self.apply_effect(type, victim, actor = nil)
       type_sym = type.capitalize
-      effect = Realm.const_get(type_sym).new(nil, {
-                                               target: victim,
-                                               originator: actor
-                                             })
+      effect = Realm::Effects.const_get(type_sym).new(nil, {
+                                                        target: victim,
+                                                        originator: actor
+                                                      })
       effect.apply
     end
   end

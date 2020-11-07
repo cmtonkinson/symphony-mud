@@ -171,7 +171,7 @@ module Command
 
       # Ensure this is a valid status effect.
       begin
-        Realm.const_get effect.capitalize
+        Realm::Effects.const_get effect.capitalize
       rescue NameError
         being.puts t 'err_unknown'
         next
