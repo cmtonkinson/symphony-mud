@@ -59,7 +59,13 @@ module SystemTest
         raise 'SystemTest#expect() called without first send a command through the shortcut interface.'
       end
 
-      expect_last acm(@last_used_account), e, msg
+      if e.is_a?(String) || e.is_a?(Regexp)
+        expect_last acm(@last_used_account), e, msg
+      elsif e.is_a?(Array)
+        e.each { |term| expect_last acm(@last_used_account), term, msg }
+      else
+        raise 'SystemTest#expect() only accepts String, Regexp, or Array of same'
+      end
     end
 
     ###########################################################################
@@ -68,7 +74,13 @@ module SystemTest
         raise 'SystemTest#n_expect() called without first send a command through the shortcut interface.'
       end
 
-      n_expect_last acm(@last_used_account), e, msg
+      if e.is_a?(String) || e.is_a?(Regexp)
+        n_expect_last acm(@last_used_account), e, msg
+      elsif e.is_a?(Array)
+        e.each { |term| n_expect_last acm(@last_used_account), term, msg }
+      else
+        raise 'SystemTest#n_expect() only accepts String, Regexp, or Array of same'
+      end
     end
 
     ###########################################################################
