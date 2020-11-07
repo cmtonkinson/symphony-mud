@@ -1,5 +1,4 @@
 # TODO: Effects that wear out with usage, not time (like poisoning a weapon)
-# TODO: Save & restore permanent effects
 module Realm
   class Effect < Objekt
     attr_accessor :target
