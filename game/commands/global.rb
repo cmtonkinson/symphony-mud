@@ -228,21 +228,47 @@ module Command
   define :look do
     shortcut 'l'
     usage
+    usage({ target: :id })
     exec do
-      exits = Realm::Exit::DIRECTIONS
-              .keys
-              .map { |dir| I18n.t("movement.exit.#{dir}") if being.room.send dir }
-              .compact
-              .join ' '
+      if target.nil?
+        exits = Realm::Exit::DIRECTIONS
+                .keys
+                .map { |dir| I18n.t("movement.exit.#{dir}") if being.room.send dir }
+                .compact
+                .join ' '
+        being.puts t('title'), room, room
+        being.puts t('exit_list'), exits
+        being.other_beings.each { |b| being.puts t('here'), b }
+        being.puts t('item_list'), room.items.display_contents if room.items.any?
+      else
+        thing = being.locate_first target
+        being.puts t 'err_not_found' and next if thing.nil?
 
-      being.puts t('title'), room, room
-      being.puts t('exit_list'), exits
-
-      being.other_beings.each { |b| being.puts t('here'), b }
-
-      next if room.items.empty?
-
-      being.puts t('item_list'), room.items.display_contents
+        if thing.is_a? Realm::Being
+          being.puts t('being_description'),
+                     thing,
+                     Display::Format.height(thing.height),
+                     Display::Format.weight(thing.weight),
+                     thing.gender,
+                     thing.anatomy.name
+          thing.anatomy.slots.each do |slot|
+            spaces = ' ' * (14 - slot.name.length)
+            if slot.empty?
+              being.puts t('position_unoccupied'), slot.name, spaces
+            else
+              being.puts t('position_occupied'), slot.name, spaces, slot.occupant
+            end
+          end
+        elsif thing.is_a? Realm::Item
+          being.puts t('item_description'), thing, thing.type
+        else
+          Symphony.logger.error '%s tried looking at %s in %s' % [
+            being.fqid_str,
+            thing.fqid_str,
+            room.fqid_str
+          ]
+        end
+      end
     end
   end
 

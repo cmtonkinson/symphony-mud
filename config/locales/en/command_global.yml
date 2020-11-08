@@ -57,10 +57,15 @@ en:
       _brief: "Learn an available ability."
     look:
       _brief: "Examine your surroundings."
+      err_not_found: "You don't see that here."
       exit_list: "\nExits are: {R$string{x"
       here: "$being is here."
       item_list: "\nYou see:\n$string{x"
       title: "[{C$rid{x] {W$room{x"
+      being_description: "$being is a $string $string $string $string."
+      position_occupied: "$string$string $item"
+      position_unoccupied: "$string$string nothing"
+      item_description: "$item is a $string."
     map:
       _brief: "Display the layout of the current zone."
       title: "Your map of {m$zone{x:"
