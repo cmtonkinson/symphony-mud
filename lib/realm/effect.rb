@@ -16,6 +16,7 @@ module Realm
     ###########################################################################
     def initialize(id = nil, props = {})
       @name            = ''
+      @description     = ''
       @originator      = nil
       @target          = nil
       @duration        = 0

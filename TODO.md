@@ -28,3 +28,11 @@ Planting/growing plants
 Runes (persistent brand w/ possible effects)
 Player log
 Each player gets their own tent/hut/plot to start
+
+
+Mage (arcane)
+Cleric (divine)
+???? (fell)
+Druid (natural)
+Alchemist (chemical)
+

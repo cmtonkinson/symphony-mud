@@ -1,6 +1,6 @@
 module DoesDamage
   extend Interface
 
-  # Should return an Objekt
+  # Must return an Objekt
   method :whodunnit
 end

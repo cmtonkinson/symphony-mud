@@ -6,28 +6,6 @@ module Realm
     BASE_MANA       = 100
     MAX_STAMINA     = 100
 
-    BASE_LEVEL   = 1
-    BASE_EXP     = 0
-    BASE_TNL     = 100
-    TNL_GROWTH   = 1.03
-    TNL_FOR_HERO = 1_000_000
-    BASE_TRAINS  = 5
-
-    NEWBIE   = 1
-    TRAVELER = 10
-    HERO     = 100
-    DEMIGOD  = HERO + 10
-    GOD      = HERO + 15
-    CREATOR  = HERO + 20
-
-    LEVELS = %w[NEWBIE TRAVELER HERO DEMIGOD GOD CREATOR].freeze
-
-    # Many immortal commands (such as 'force' and 'summon') require that in
-    # order to perform them, the actor be a sufficiently higher level than the
-    # victim. This is a sort of "chain of command" security measure and this
-    # minimum required level difference is codified as IMMORTAL_SENIORITY.
-    IMMORTAL_SENIORITY = 5
-
     FITNESS_BASE      = 15
     FITNESS_THRESHOLD = 20
 
@@ -39,7 +17,6 @@ module Realm
     BASE_WEIGHT = 3
 
     # Core names can be grouped into five distinct buckets.
-    EXPERIENCE = %i[level exp tnl training_points].freeze
     WELLNESS   = %i[health mana stamina].freeze
     FITNESS    = %i[strength dexterity constitution intelligence focus creativity charisma luck].freeze
     DEFENSE    = %i[armor bash slash pierce exotic].freeze
@@ -47,7 +24,7 @@ module Realm
     PHYSICAL   = %i[age height weight].freeze
 
     # Discourage direct manipulation of any core names by only defining readers.
-    (EXPERIENCE + WELLNESS + FITNESS + DEFENSE + OFFENSE + PHYSICAL).each do |name|
+    (WELLNESS + FITNESS + DEFENSE + OFFENSE + PHYSICAL).each do |name|
       attr_reader name
     end
 
@@ -62,11 +39,6 @@ module Realm
     ###########################################################################
     # Set default values for performance attributes.
     after_initialize lambda {
-      @level           = BASE_LEVEL
-      @exp             = BASE_EXP
-      @tnl             = BASE_TNL
-      @training_points = BASE_TRAINS
-
       @health  = Mechanics::MaxStat.new BASE_HEALTH
       @mana    = Mechanics::MaxStat.new BASE_MANA
       @stamina = Mechanics::MaxStat.new MAX_STAMINA
@@ -116,8 +88,6 @@ module Realm
         modify x.modifiers, true if x.respond_to? :modifiers
       end
 
-      EXPERIENCE.each { |name| hash[name] = send name }
-
       WELLNESS.each do |name|
         stat = send name
         hash[name] = "#{stat.current}/#{stat.max_stat.baseline}"
@@ -147,8 +117,6 @@ module Realm
     ###########################################################################
     on_dehashify lambda { |hash|
       hash = hash[:stats]
-
-      EXPERIENCE.each { |name| instance_variable_set "@#{name}", hash[name] }
 
       WELLNESS.each do |name|
         cur, max = hash[name].split '/'
@@ -200,25 +168,6 @@ module Realm
     end
 
     ###########################################################################
-    def newbie?
-      @level < TRAVELER
-    end
-
-    (LEVELS - %w[NEWBIE]).each do |lvl|
-      define_method :"#{lvl.downcase}?", (proc { @level >= Realm::Being.const_get(lvl) })
-    end
-
-    ###########################################################################
-    def seniority?(victim)
-      victim.level < @level - IMMORTAL_SENIORITY
-    end
-
-    ###########################################################################
-    def level_label
-      LEVELS.reverse.find { |lvl| @level >= Realm::Being.const_get(lvl) }.downcase
-    end
-
-    ###########################################################################
     def auto_health
       this_heal = Util::Computation.bound health.max / 10, 1, health.current
       health.increase this_heal
@@ -234,83 +183,6 @@ module Realm
     def auto_stamina
       this_heal = Util::Computation.bound level / 5, 1, MAX_STAMINA / 2.5
       stamina.increase this_heal
-    end
-
-    ###########################################################################
-    # NOTE: Avatars stop gaining experience and show 0 tnl once they reach HERO
-    def award_experience(exp_gained)
-      return if is_a?(Avatar) && level >= HERO
-
-      puts 'You gain {Y%d{x experience points!' % exp_gained
-      @exp = exp + exp_gained
-
-      while exp_gained.positive?
-        if exp_gained < tnl
-          @tnl = tnl - exp_gained
-          break
-        else
-          exp_gained -= tnl
-          gain_level
-          return if is_a?(Avatar) && level >= HERO
-        end
-      end
-    end
-
-    ###########################################################################
-    def gain_level
-      # Calculate gains
-      new_level      = level + 1
-      new_tnl        = reset_tnl
-      health_boost   = health_gain
-      mana_boost     = mana_gain
-      trains_boost   = trains_gain
-      # Apply gains
-      @level = new_level
-      @tnl = is_a?(Avatar) && hero? ? 0 : new_tnl
-      @training_points         += trains_boost
-      health.max_stat.baseline += health_boost
-      mana.max_stat.baseline   += mana_boost
-      # heal
-      heal
-
-      return unless is_a? Avatar
-
-      # notify
-      puts "\n\nCONGRATULATIONS! You grow to level {G%u{x!" % level
-      puts 'You gain {G%u{x health points.' % health_boost
-      puts 'You gain {C%u{x mana points.' % mana_boost
-      puts 'You gain {B%u{x training points.' % trains_boost
-      puts 'You have {Y%u{x experience to your next level.' % tnl unless hero?
-      Symphony.logger.debug '%s has grown to level %u with %u tnl' % [fqid_str, level, tnl]
-    end
-
-    ###########################################################################
-    def health_gain
-      gain = level * (constitution.percent**2.0)
-      Util::Computation.bound gain, 1, MAX_HEALTH_GAIN
-    end
-
-    ###########################################################################
-    def mana_gain
-      gain = level * (focus.percent**2.0)
-      Util::Computation.bound gain, 1, MAX_MANA_GAIN
-    end
-
-    ###########################################################################
-    def trains_gain
-      1
-    end
-
-    ###########################################################################
-    def reset_tnl
-      # Force an insane amount of exp to reach final hero level.
-      # TODO: Is this sound theory? If so, is this implementation reasonable?
-      if level == HERO - 2
-        TNL_FOR_HERO
-      # Otherwise, TNL is an exponential function with respect to level.
-      else
-        level * (TNL_GROWTH**level) * Random.rand(98..102)
-      end
     end
 
     ###########################################################################
@@ -379,6 +251,20 @@ module Realm
     def speak(content)
       puts I18n.t('being.speak.actor'), content
       room.puts I18n.t('being.speak.hear'), self, content, exclude: self
+    end
+
+    ###########################################################################
+    def detail_plate
+      $templates.detail_plate % [
+        level, str.current, hit_bonus.current, 'air:', 'normal',
+        health.current, health.max, dex.current, damage_bonus.current, 'fire:', 'normal',
+        mana.current, mana.max, con.current, 'earth:', 'normal',
+        stamina.current, int.current, armor.current, 'water:', 'normal',
+        foc.current, bash.current, 'arcane:', 'normal',
+        exp, cre.current, slash.current, 'divine:', 'normal',
+        tnl, cha.current, pierce.current, 'fell:', 'normal',
+        training_points, luc.current, exotic.current
+      ]
     end
   end
 end

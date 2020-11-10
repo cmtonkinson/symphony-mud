@@ -1,0 +1,10 @@
+{w+---------------------+---------------+----------------+---------------------+
+{w| {xlevel:   {Y%-3u{w        | {xstrength: {C%3d{x {w| {xaccuracy: {R%-4d{w | {x%-7s %-11s {w|
+{w| {xhealth: {G%5u{x/{g%-5u{w | {xdexterit: {C%3d{x {w| {xdamage:   {R%-4d{w | {x%-7s %-11s {w|
+{w| {xmana:   {C%5u{x/{c%-5u{w | {xconstitu: {C%3d{x {w|                | {x%-7s %-11s {w|
+{w| {xstamina: {M%-10u{w | {xintellig: {C%3d{x {w| {xarmor:   {B%-4d{w  | {x%-7s %-11s {w|
+{w|                     | {xfocus:    {C%3d{x {w|  {xbash:   {B%-4d{w  | {x%-7s %-11s {w|
+{w| {xexp:     {Y%-10u{w | {xcreativi: {C%3d{x {w|  {xslash:  {B%-4d{w  | {x%-7s %-11s {w|
+{w| {xtnl:     {Y%-10u{w | {xcharisma: {C%3d{x {w|  {xpierce: {B%-4d{w  | {x%-7s %-11s {w|
+{w| {xtrains:  {B%-4u{w       | {xluck:     {C%3d{x {w|  {xexotic: {B%-4d{w  |                     |
+{w+---------------------+---------------+----------------+---------------------+{x

@@ -28,6 +28,9 @@ en:
       title: "You are currently wearing..."
       position_occupied: "$string$string $item"
       position_unoccupied: "$string$string nothing"
+    details:
+      _brief: "Display vital statistics and attributes."
+      status: "Status effects: $string"
     get:
       _brief: "Retrieve items from the current room into your inventory."
       err_not_found: "You don't see that here."
@@ -99,7 +102,6 @@ en:
     summary:
       _brief: "Display information about the current state of your Avatar."
       title: "Your name is $string and you are a $string."
-      status: "You are currently affected by: $string"
     train:
       _brief: "Consume a training point to increase your mastery of an ability by half."
       train: "You use a training point and your $string ability improves!"
