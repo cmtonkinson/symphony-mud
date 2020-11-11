@@ -169,6 +169,8 @@ module Realm
     ###########################################################################
     def transport(dst)
       src = @room
+      Symphony.logger.error 'nil src in Being#transport for %s' % [fqid_str] and return if src.nil?
+      Symphony.logger.error 'nil dst in Being#transport for %s' % [fqid_str] and return if dst.nil?
 
       run_hook :before_room_change, src, dst
       move.from(src.beings).to(dst.beings)

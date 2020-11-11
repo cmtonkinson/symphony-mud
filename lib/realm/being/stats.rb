@@ -12,6 +12,10 @@ module Realm
     DEFENSE_BASE = 0
     OFFENSE_BASE = 0
 
+    RESIST_NEUTRAL     = 100
+    RESIST_LOWER_BOUND = -100
+    RESIST_UPPER_BOUND = 200
+
     BASE_AGE    = 17
     BASE_HEIGHT = 3
     BASE_WEIGHT = 3
@@ -34,7 +38,7 @@ module Realm
     # Random attributes of Being that can include static modifiers.
     MODIFYING_ATTRS = %w[klass anatomy].freeze
 
-    attr_accessor :circumstance
+    attr_accessor :circumstance, :resistances
 
     ###########################################################################
     # Set default values for performance attributes.
@@ -54,6 +58,12 @@ module Realm
       @weight = BASE_WEIGHT
 
       @circumstance = nil
+      @resistances = {}
+    }
+
+    ###########################################################################
+    enervate lambda {
+      @resistances = nil
     }
 
     ###########################################################################
@@ -67,7 +77,7 @@ module Realm
       # side effects.
       #
       # Unfortunately, this means we have to unload, save, and reload all
-      # equipment during Being::Stats#on_hashify.
+      # equipment during Being#on_hashify.
       saved_eq = {}
       if @anatomy
         hash[:equipment] = Hash[@anatomy.slots.map do |slot|
@@ -234,16 +244,47 @@ module Realm
     ###########################################################################
     def modify(modifiers, reverse = false)
       Symphony.logger.trace "Modifying #{fqid_str} with #{modifiers.inspect} (reverse = #{reverse})"
-      modifiers.each do |stat_name, magnitude|
-        stat      = send(stat_name)
-        amount    = magnitude * (reverse ? -1 : 1)
-
-        case stat
-        when Mechanics::SimpleStat    then stat.modify amount
-        when Mechanics::MaxStat       then stat.max_stat.modify amount
-        when Mechanics::ThresholdStat then stat.current_stat.modify amount
-        else raise ArgumentError, "Being#modify given an unrecognized Stat type (#{send(stat).class.name})"
+      modifiers.each do |name, magnitude|
+        if Realm::ELEMENTS.include? name
+          modify_resistance name, magnitude, reverse
+        else
+          modify_stat name, magnitude, reverse
         end
+      end
+    end
+
+    ###########################################################################
+    def modify_stat(name, magnitude, reverse = false)
+      stat   = send(name)
+      amount = magnitude * (reverse ? -1 : 1)
+
+      case stat
+      when Mechanics::SimpleStat    then stat.modify amount
+      when Mechanics::MaxStat       then stat.max_stat.modify amount
+      when Mechanics::ThresholdStat then stat.current_stat.modify amount
+      else raise ArgumentError, "Being#modify given an unrecognized Stat type (#{send(stat).class.name})"
+      end
+    end
+
+    ###########################################################################
+    def modify_resistance(element, magnitude, reverse = false)
+      amount = magnitude * (reverse ? -1 : 1)
+      resistances[element] ||= RESIST_NEUTRAL
+      resistances[element] += amount
+      resistances.delete_if { |_, val| val == RESIST_NEUTRAL }
+    end
+
+    ###########################################################################
+    def effective_resistance(element)
+      return RESIST_NEUTRAL unless resistances.key? element
+
+      real_value = resistances[element]
+      if real_value > RESIST_UPPER_BOUND
+        RESIST_UPPER_BOUND
+      elsif real_value < RESIST_LOWER_BOUND
+        RESIST_LOWER_BOUND
+      else
+        real_value
       end
     end
 
@@ -254,17 +295,31 @@ module Realm
     end
 
     ###########################################################################
+    # rubocop:disable Metrics/AbcSize
     def detail_plate
+      # This ugly garbage is to try to keep the elemental resistance list in
+      # the output flexible in the face of future changes or additions, without
+      # a bunch of manual labor to maintain the plate template itself.
+      # The first position of each pair is the `element:` label and the second
+      # position is the user-friendly formatted output.
+      r = []
+      Realm::ELEMENTS.each do |el|
+        res  = effective_resistance el
+        pair = ["#{el}:", Display::Format.resistance_label(res)]
+        r << pair
+      end
+
       $templates.detail_plate % [
-        level, str.current, hit_bonus.current, 'air:', 'normal',
-        health.current, health.max, dex.current, damage_bonus.current, 'fire:', 'normal',
-        mana.current, mana.max, con.current, 'earth:', 'normal',
-        stamina.current, int.current, armor.current, 'water:', 'normal',
-        foc.current, bash.current, 'arcane:', 'normal',
-        exp, cre.current, slash.current, 'divine:', 'normal',
-        tnl, cha.current, pierce.current, 'fell:', 'normal',
+        level, str.current, hit_bonus.current, r[0][0], r[0][1],
+        health.current, health.max, dex.current, damage_bonus.current, r[1][0], r[1][1],
+        mana.current, mana.max, con.current, r[2][0], r[2][1],
+        stamina.current, int.current, armor.current, r[3][0], r[3][1],
+        foc.current, bash.current, r[4][0], r[4][1],
+        exp, cre.current, slash.current, r[5][0], r[5][1],
+        tnl, cha.current, pierce.current, r[6][0], r[6][1],
         training_points, luc.current, exotic.current
       ]
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end

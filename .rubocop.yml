@@ -13,3 +13,6 @@ Metrics/ModuleLength:
   Exclude:
     - 'game/commands/*'
 
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'

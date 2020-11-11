@@ -9,13 +9,13 @@ module Combat
     # direct? (e.g. sword slash or magic missle vs AoE or DoT)
 
     TYPES = %i[slash bash pierce exotic].freeze
-    ELEMENTS = %i[wind water ice fire earth].freeze
 
     ###########################################################################
+    # d = Combat::Damage.new(53).slash.fire(20).implement(weapon).from(attacker)
     def initialize(base_amount)
-      @type = nil
-      @alignment = 0.0
       @base_amount = base_amount
+      @type = nil
+      @elements = {}
     end
 
     ###########################################################################
@@ -25,7 +25,16 @@ module Combat
     TYPES.each do |t|
       define_method(t) do
         @type = t
+        self
       end
     end
+
+    ###########################################################################
+    # Realm::ELEMENTS.each do |el|
+    #   define_method(el) do |value|
+    #     @elements[el] = value
+    #     self
+    #   end
+    # end
   end
 end

@@ -48,7 +48,7 @@ module Talent
       else
         empty_slot = get_empty_slot item.slot
         if empty_slot
-          change_equipment empty_slot, item
+          change_equipment empty_slot, item, container
         else
           nonempty = get_slots(item.slot).first
           change_equipment nonempty, item, container

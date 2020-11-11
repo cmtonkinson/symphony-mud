@@ -74,7 +74,6 @@ module Realm
 
     ###########################################################################
     def practice(name)
-      Symphony.logger.error name
       ability = get_ability name
       cost = 1
 

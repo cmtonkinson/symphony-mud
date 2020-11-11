@@ -16,9 +16,7 @@ module Realm
 
     ###########################################################################
     on_hashify lambda {
-      hash = {}
-      hash[:effects] = effects.map(&:hashify)
-      hash
+      { effects: effects.map(&:hashify) }
     }
 
     ###########################################################################

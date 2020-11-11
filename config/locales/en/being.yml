@@ -20,9 +20,9 @@ en:
       err_max: "You can only practice an ability so much; you'll have to do it the hard way from here."
       learned: "Congratulations! You spend {B$string{x training points to learn {W$string{x!"
       practiced: "You spend {B$string{x training points to increase your {W$string{x!"
-      list_can_learn: "  [{Y$string{x] {W$string$string{x"
-      list_cannot_learn: "  [{y$string{x] {w$string$string{x"
-      list_learned: "  [{Y$string{x] $string ($string){x"
+      list_can_learn: "     [{Y$string{x] {W$string$string{x"
+      list_cannot_learn: " {x[{RX{x] [{y$string{x] {w$string$string{x"
+      list_learned: "     [{Y$string{x] $string ($string){x"
     speak:
       actor: "You say, \"{G$string{x\""
       hear: "$being says, \"{G$string{x\""

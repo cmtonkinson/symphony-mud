@@ -106,6 +106,7 @@ module Realm
       if effects.any?
         str << "{xEffects:\n  "
         str << effects.map(&:to_s).join("\n  ")
+        str << "\n"
       end
       str
     end

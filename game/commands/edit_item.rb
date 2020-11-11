@@ -68,12 +68,14 @@ module Command
     end
   end
 
+  #############################################################################
   modifiable_properties = (%i[health mana] +
                            Realm::Being::FITNESS +
                            Realm::Being::DEFENSE +
-                           Realm::Being::OFFENSE
+                           Realm::Being::OFFENSE +
+                           Realm::ELEMENTS.map(&:to_s)
                           ).map(&:to_s)
-  ###############################################################################
+
   define :modify, :edit_item do
     level Realm::Being::DEMIGOD
     usage({ property: modifiable_properties }, { amount: :int })
@@ -85,7 +87,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :unmodify, :edit_item do
     level Realm::Being::DEMIGOD
     usage({ property: modifiable_properties })

@@ -38,11 +38,12 @@ module Realm
     on_hashify lambda {
       hash = {}
       EXPERIENCE.each { |name| hash[name] = send name }
-      hash
+      { level: hash }
     }
 
     ###########################################################################
     on_dehashify lambda { |hash|
+      hash = hash[:level]
       EXPERIENCE.each { |name| instance_variable_set "@#{name}", hash[name] }
     }
 

@@ -98,5 +98,36 @@ module Display
                  1 => 'bony'
                })
     end
+
+    ###########################################################################
+    def self.resistance_word(number)
+      quantity(number, {
+                 101 => 'weak',
+                 100 => 'normal',
+                 0 => 'resist',
+                 -100 => 'absorb'
+               })
+    end
+
+    def self.resistance_number(number)
+      if number > 100
+        number - 100
+      elsif number == 100
+        100
+      elsif number >= 0
+        100 - number
+      else # number < 0
+        number.abs
+      end
+    end
+
+    def self.resistance_label(number)
+      word = resistance_word number
+      if number == 100
+        word
+      else
+        '%s%% %s' % [resistance_number(number), word]
+      end
+    end
   end
 end
