@@ -4,13 +4,20 @@ Symphony.logger = Logger.new(STDOUT)
 Symphony.logger.formatter = proc do |severity, datetime, _progname, msg|
   dev = Symphony.logger.instance_variable_get('@logdev')
 
+  raw_msg = case msg
+            when String then msg.clone
+            when Exception then ([msg.class.name, msg.message] + msg.backtrace).join("\n  ")
+            else msg.inspect
+            end
+  formatted_msg = Base::Terminal.uncolor raw_msg
+
   if dev.dev.is_a? File
     dev.write "[%s %d] %s -- %s: %s\n" % [
       datetime,
       Process.pid,
       severity,
       BINARY_NAME,
-      msg.is_a?(String) ? Base::Terminal.uncolor(msg) : msg.inspect
+      formatted_msg
     ]
   else
     colors = {
@@ -28,7 +35,7 @@ Symphony.logger.formatter = proc do |severity, datetime, _progname, msg|
       Process.pid,
       severity,
       BINARY_NAME,
-      Base::Terminal.uncolor(msg.is_a?(String) ? msg.clone : msg.inspect)
+      formatted_msg
     ])
   end
 

@@ -39,9 +39,9 @@ module Base
     ###########################################################################
     def handle(input)
       handled = false
+
       # If the user just hits Enter (with or without whitespace), send them
-      # a new prompt. This is useful if they're just waiting on their stats
-      # to heal.
+      # a new prompt.
       if /\A\s*\z/.match?(input)
         @avatar.force_output!
         return false
