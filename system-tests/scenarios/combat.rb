@@ -17,8 +17,7 @@ module SystemTest
       admin 'damage_type slash'
       admin 'hitroll 100'
       admin 'damroll 100'
-      # TODO: allow assignment of weapon (Item?) element
-      admin 'say do stuff from TODO above'
+      admin 'element fire 100'
       admin 'information'
       admin 'exit'
 
@@ -27,7 +26,7 @@ module SystemTest
       admin 'name fire pendant'
       admin 'wearable neck'
       admin 'type jewelry'
-      admin 'modify fire -150'
+      admin 'modify fire -200'
       admin 'information'
       admin 'exit'
     end
@@ -73,7 +72,7 @@ module SystemTest
 
       zaboo 'equipment'
       zaboo 'details'
-      expect(/fire:\s+50% absorb/i)
+      expect(/fire:\s+100% absorb/i)
 
       vork 'kill zaboo'
       sleep 2
@@ -82,6 +81,9 @@ module SystemTest
       # Without fire absorption, a level 1 Avatar being hit by a weapon with
       # hit/dam of 100/100 should be an insta-kill.
       n_expect_any zaboo, /DIED|KILLED/
+
+      # With fire absorbtion, we should see negative modifiers to damage.
+      expect_any zaboo, /\[\d+ E-\d+\]/
     end
   end
 end

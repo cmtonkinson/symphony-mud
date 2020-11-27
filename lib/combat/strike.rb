@@ -38,6 +38,8 @@ module Combat
       base_damage = 2 * attacker.level + rand(attacker.level) + rand((bonus / 2)..bonus) + rand(weapon_bonus * 2)
       dam = Damage.new base_damage
       dam.source = attacker
+      dam.send weapon.element_type.to_sym, weapon.element_ratio if weapon&.element_type
+      dam.send weapon.damage_type.to_sym if weapon&.damage_type
       defender.calculate_damage dam
 
       attacker.indented_puts level, I18n.t('combat.strike.attacker'), self, dam, defender

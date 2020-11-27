@@ -44,9 +44,9 @@ module Realm
       # Armor modification is relatively simple compared to elemental. We
       # deduct the total armor value, and then deduct (if applicable) any
       # damage-type-specific armor (e.g. bash) value.
-      armor_adjustment = armor.current
-      armor_adjustment += send(dam.type).current unless dam.type.nil?
-      actual -= armor_adjustment
+      dam.armor_adjustment = armor.current
+      dam.armor_adjustment += send(dam.type).current unless dam.type.nil?
+      actual -= dam.armor_adjustment
 
       # Elemental modification is a formula representing a straight
       # multiplication of the base damage (b), the elemental ratio of the
@@ -55,11 +55,11 @@ module Realm
       #   A(b,e,r) = b * (e/100) * (r/100)
       # which can be simplified to:
       #   A(b,e,r) = ber/10000
-      elemental_adjustment = 0
+      dam.elemental_adjustment = 0
       dam.elements.each do |el, val|
-        elemental_adjustment += dam.base_amount * val * effective_resistance(el) / 10_000
+        dam.elemental_adjustment += dam.base_amount * val * effective_resistance(el) / 10_000
       end
-      actual += elemental_adjustment
+      actual += dam.elemental_adjustment
 
       dam.actual = actual
       actual

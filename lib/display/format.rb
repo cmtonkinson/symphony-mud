@@ -25,8 +25,9 @@ module Display
     end
 
     ###########################################################################
-    def self.damage(amount, target)
-      str = quantity(amount, {
+    # rubocop:disable Metrics/MethodLength
+    def self.damage(damage, target)
+      str = quantity(damage.actual, {
                        10_000 => '{wrains calamity upon{x',
                        5000 => 'does {?I{?N{?C{?O{?M{?P{?R{?E{?H{?E{?N{?S{?I{?B{?L{?E{x things to',
                        2000 => 'does {WSOUL CRUSHING{x things to',
@@ -56,9 +57,15 @@ module Display
                        1 => '{mgrazes{x',
                        0 => 'does nothing to'
                      })
-      str += " {x[#{amount}]" if target.respond_to?(:pref_show_numeric?) && target.pref_show_numeric?
+      if target.respond_to?(:pref_show_numeric?) && target.pref_show_numeric?
+        str += "{x [#{damage.actual}"
+        str += " {WA{x#{damage.armor_adjustment}" unless damage.armor_adjustment.zero?
+        str += " {RE{x#{damage.elemental_adjustment}" unless damage.elemental_adjustment.zero?
+        str += '{x]'
+      end
       str
     end
+    # rubocop:enable Metrics/MethodLength
 
     ###########################################################################
     def self.mastery(percent, numeric = false)

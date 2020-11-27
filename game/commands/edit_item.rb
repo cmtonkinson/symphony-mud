@@ -153,4 +153,20 @@ module Command
       end
     end
   end
+
+  define :element, :edit_item do
+    level Realm::Being::DEMIGOD
+    usage 'clear'
+    usage({ element: Konst::ELEMENTS.map(&:to_s) }, { ratio: :int })
+    exec do
+      if clear == 'clear'
+        being.puts 'clear'
+        being.iedit.set_element
+        being.puts t('clear')
+      else
+        being.iedit.set_element element.to_sym, ratio
+        being.puts t('set'), being.iedit, being.iedit.element_ratio, being.iedit.element_type.to_s
+      end
+    end
+  end
 end

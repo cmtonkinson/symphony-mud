@@ -21,6 +21,8 @@ module Realm
       @opens_rid     = 0
       @weapon_type   = :club
       @damage_type   = :bash
+      @element_type  = nil
+      @element_ratio = 0
       @hitroll       = 0
       @damroll       = 0
       @modifiers     = {}
@@ -62,6 +64,19 @@ module Realm
     end
 
     ###########################################################################
+    def set_element(type = nil, ratio = 0)
+      @element_type = type
+      @element_ratio = Util::Computation.bound (type.nil? ? 0 : ratio),
+                                               Konst::ITEM_ELEMENT_MIN,
+                                               Konst::ITEM_ELEMENT_MAX
+    end
+
+    ###########################################################################
+    def element_str
+      element_type ? ('%s %d%%' % [element_type, element_ratio]) : ''
+    end
+
+    ###########################################################################
     def modify(mods, reverse = false)
       mods.each do |stat, magnitude|
         amount = magnitude * (reverse ? -1 : 1)
@@ -80,7 +95,8 @@ module Realm
         rid, name,
         id,
         level, type,
-        *(wearable ? ['yes', slot.to_s] : ['no', 'N/A'])
+        *(wearable ? ['yes', slot.to_s] : ['no', 'N/A']),
+        (element_str == '' ? 'N/A' : element_str)
       ]
       if type == :weapon
         str << $templates.item_weapon_summary % [

@@ -109,7 +109,7 @@ module Util
 
     ###########################################################################
     def self.interpret_damage(target, arg)
-      Display::Format.damage arg.actual, target
+      Display::Format.damage arg, target
     end
 
     ###########################################################################

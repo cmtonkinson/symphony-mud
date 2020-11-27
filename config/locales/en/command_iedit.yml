@@ -28,3 +28,7 @@ en:
       _brief: "Set (or clear) the wearable slot for the item."
       none: "Item set to non-wearable."
       set: "Item made wearable at slot '{y$string{x'."
+    element:
+      _brief: "Set (or clear) the elemental attribute of the item."
+      clear: "Elemental affiliation removed."
+      set: "$item is now set to {y$string% {xof {y$string{x."
