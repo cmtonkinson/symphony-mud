@@ -27,6 +27,10 @@ module Network
       input.strip
     rescue Errno::EWOULDBLOCK, Errno::EINTR
       nil
+    rescue Errno::ECONNRESET => e
+      Symphony.logger.fatal e
+      Symphony.logger.error 'Forcing termination of client on socket %d' % [fd]
+      @should_terminate = true
     end
 
     def close
