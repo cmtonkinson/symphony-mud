@@ -73,7 +73,7 @@ module Command
                            Realm::Being::FITNESS +
                            Realm::Being::DEFENSE +
                            Realm::Being::OFFENSE +
-                           Realm::ELEMENTS.map(&:to_s)
+                           Konst::ELEMENTS
                           ).map(&:to_s)
 
   define :modify, :edit_item do
@@ -118,12 +118,12 @@ module Command
   ###############################################################################
   is_positive = ->(x) { return x.positive? }
   is_word     = ->(x) { return !x.match(/\Aa-z+\z/i) }
-  in_types    = ->(x) { return Realm::Item::TYPES.include?(x.to_sym) }
+  in_types    = ->(x) { return Konst::ITEM_TYPES.include?(x.to_sym) }
 
   [
     [:name, :rest, nil, ->(x) { !x.empty? }, 'cannot be blank', nil],
     [:level, :int, nil, is_positive, 'must be 1 or higher', nil],
-    [:type, :string, nil, in_types, "must be one of: #{Realm::Item::TYPES.join(', ')}", ->(x) { return x.to_sym }],
+    [:type, :string, nil, in_types, "must be one of: #{Konst::ITEM_TYPES.join(', ')}", ->(x) { return x.to_sym }],
     [:slot, :string, nil, is_word, 'must be a word', ->(x) { return x.to_sym }],
     [:max_items, :int, :container, is_positive, 'must be 1 or higher', nil],
     [:load_factor, :int, :container, is_positive, 'must be 1 or higher', nil],

@@ -72,16 +72,9 @@ en:
     map:
       _brief: "Display the layout of the current zone."
       title: "Your map of {m$zone{x:"
-    quit:
-      _brief: "Save your Avatar and disconnect from the server."
-      actor: "Logging out. Goodbye."
     remove:
       _brief: "Unequip an item."
       err_not_found: "You aren't wearing that."
-    save:
-      _brief: "Store up-to-date information about your Avatar on the server."
-      start: "Saving your profile..."
-      success: " done!"
     say:
       _brief: "Talk to others in the room. This is an in-character channel."
     shortcuts:
@@ -113,9 +106,6 @@ en:
     who:
       _brief: "Display a list of players online."
       title: "Currently online:\n\n"
-    whoami:
-      _brief: "Display your current profile name."
-      actor: "Your name is {W$being{x"
     zones:
       _brief: "List the different zones in the Realm."
       line: "[{C$rid{x] {M$zone{x ($string rooms, $string items, $string NPCs)"

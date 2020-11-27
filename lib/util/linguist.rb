@@ -1,102 +1,115 @@
 module Util
   class Linguist
+    ERR_TMPL = "Linguist#interpret with format '%s' - %s".freeze
+
     ###########################################################################
-    def self.interpret(format, *args)
+    def self.interpret(target, format, *args)
       message = format.gsub(/\$[a-z]+/i) do |interpreter|
         if args.empty?
-          Symphony.logger.error "Room#interpret with format '#{format}' - \
-            no args left to interpret '#{interpreter}'"
+          Symphony.logger.error ERR_TMPL % [
+            format,
+            "no args left to interpret #{interpreter}"
+          ]
           next Realm.configuration.error_string
         end
 
         arg = args.shift
 
         begin
-          send 'interpret_' + interpreter[1..], arg
+          send 'interpret_' + interpreter[1..], target, arg
         rescue NoMethodError
-          Symphony.logger.error "Room#interpret with format '#{format}' - \
-            no interpreter for '#{interpreter}' (arg is a #{arg.class.name})"
-          Realm.configuration.error_string
+          Symphony.logger.error ERR_TMPL % [
+            format,
+            "no interpreter for #{interpreter} (arg is a #{arg.class.name})"
+          ]
+          next Realm.configuration.error_string
         end
       end
 
       unless args.empty?
-        Symphony.logger.error "Room#interpret with format '#{format}' - \
-          args leftover after interpreters exhausted (remaining: [#{args.join ', '}])"
+        Symphony.logger.error ERR_TMPL % [
+          format,
+          "args leftover after interpreters exhausted (remaining: [#{args.join ','}]"
+        ]
       end
 
       message
     end
 
     ###########################################################################
-    def self.interpret_string(arg)
+    def self.interpret_string(_, arg)
       arg
     end
 
     ###########################################################################
-    def self.interpret_rid(arg)
+    def self.interpret_rid(_, arg)
       arg.rid
     end
 
     ###########################################################################
-    def self.interpret_being(arg)
+    def self.interpret_being(_, arg)
       prepend_article arg
     end
 
     ###########################################################################
-    def self.interpret_room(arg)
+    def self.interpret_room(_, arg)
       prepend_article arg
     end
 
     ###########################################################################
-    def self.interpret_zone(arg)
+    def self.interpret_zone(_, arg)
       arg.name
     end
 
     ###########################################################################
-    def self.interpret_item(arg)
+    def self.interpret_item(_, arg)
       prepend_article arg
     end
 
     ###########################################################################
-    def self.interpret_exit(arg)
+    def self.interpret_exit(_, arg)
       I18n.t "movement.exit_from.#{arg}"
     end
 
     ###########################################################################
-    def self.interpret_opposite(arg)
+    def self.interpret_opposite(_, arg)
       opposite = Realm::Exit::DIRECTIONS[arg][:opposite]
       I18n.t "movement.exit_from.#{opposite}"
     end
 
     ###########################################################################
-    def self.interpret_strike(arg)
+    def self.interpret_strike(_, arg)
       arg.action
     end
 
     ###########################################################################
-    def self.interpret_ability(arg)
+    def self.interpret_ability(_, arg)
       arg.name
     end
 
     ###########################################################################
-    def self.interpret_subjective(arg)
+    def self.interpret_subjective(_, arg)
       Realm::Gender.subjective_pronoun arg.gender
     end
 
     ###########################################################################
-    def self.interpret_objective(arg)
+    def self.interpret_objective(_, arg)
       Realm::Gender.objective_pronoun arg.gender
     end
 
     ###########################################################################
-    def self.interpret_possessive(arg)
+    def self.interpret_possessive(_, arg)
       Realm::Gender.possessive_pronoun arg.gender
     end
 
     ###########################################################################
-    def self.interpret_reflexive(arg)
+    def self.interpret_reflexive(_, arg)
       Realm::Gender.reflexive_pronoun arg.gender
+    end
+
+    ###########################################################################
+    def self.interpret_damage(target, arg)
+      Display::Format.damage arg.actual, target
     end
 
     ###########################################################################

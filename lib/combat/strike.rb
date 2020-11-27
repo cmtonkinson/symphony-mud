@@ -35,22 +35,23 @@ module Combat
       weapon = attacker.anatomy.primary_weapon
       weapon_bonus = attacker.level
       weapon_bonus = weapon.hitroll if weapon
-      dam = 2 * attacker.level + rand(attacker.level) + rand((bonus / 2)..bonus) + rand(weapon_bonus * 2)
-      verb = Display::Format.damage dam, true
+      base_damage = 2 * attacker.level + rand(attacker.level) + rand((bonus / 2)..bonus) + rand(weapon_bonus * 2)
+      dam = Damage.new base_damage
+      dam.source = attacker
+      defender.calculate_damage dam
 
-      attacker.indented_puts level, I18n.t('combat.strike.attacker'), self, verb, defender
-      defender.indented_puts level, I18n.t('combat.strike.defender'), attacker, self, verb
+      attacker.indented_puts level, I18n.t('combat.strike.attacker'), self, dam, defender
+      defender.indented_puts level, I18n.t('combat.strike.defender'), attacker, self, dam
       attacker.room.indented_puts level,
                                   I18n.t('combat.strike.room'),
                                   attacker,
                                   self,
-                                  verb,
+                                  dam,
                                   defender,
                                   exclude: [attacker, defender]
 
       weapon&.trigger_effect :strike, self
-      attacker.stamina.decrease 1
-      defender.take_damage dam, self
+      defender.take_damage dam
     end
 
     ###########################################################################

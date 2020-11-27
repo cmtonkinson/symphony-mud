@@ -32,6 +32,8 @@ I18n.default_locale = :en
 ###############################################################################
 # Application autoload/autoconfig heavy lifting.
 ###############################################################################
+require Symphony.game.join(App::KONSTANTS)
+
 # Autoload core modules.
 Dir[Symphony.lib.join '*'].sort.each { |mod| require "#{mod}/init" }
 

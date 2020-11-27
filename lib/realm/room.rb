@@ -61,13 +61,15 @@ module Realm
 
     ###########################################################################
     def puts(format, *args, **opts)
-      message = Util::Linguist.interpret format, *args
-      @beings.each_value do |being|
-        if opts.key?(:exclude)
-          dont_message = opts[:exclude].is_a?(Array) ? opts[:exclude] : [opts[:exclude]]
-          next if dont_message.include? being
-        end
-        being.puts message
+      dont_message = if opts.key?(:exclude)
+                       opts[:exclude].is_a?(Array) ? opts[:exclude] : [opts[:exclude]]
+                     else
+                       []
+                     end
+
+      send_to = @beings.values - dont_message
+      send_to.each do |being|
+        being.puts Util::Linguist.interpret being, format, *args
       end
     end
 

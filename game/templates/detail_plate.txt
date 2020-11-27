@@ -6,5 +6,5 @@
 {w|                     | {xfocus:    {C%3d{x {w|  {xbash:   {B%-4d{w  | {x%-7s %-11s {w|
 {w| {xexp:     {Y%-10u{w | {xcreativi: {C%3d{x {w|  {xslash:  {B%-4d{w  | {x%-7s %-11s {w|
 {w| {xtnl:     {Y%-10u{w | {xcharisma: {C%3d{x {w|  {xpierce: {B%-4d{w  | {x%-7s %-11s {w|
-{w| {xtrains:  {B%-4u{w       | {xluck:     {C%3d{x {w|  {xexotic: {B%-4d{w  |                     |
+{w| {xtrains:  {B%-4u{w       | {xluck:     {C%3d{x {w|  {xexotic: {B%-4d{w  | {x%-7s %-11s {w|
 {w+---------------------+---------------+----------------+---------------------+{x

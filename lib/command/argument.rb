@@ -13,9 +13,9 @@ module Command
       examples: [3.14, 1.618, +4.2, 0.0, -5.0]
     },
     bool: {
-      pattern: / t(?:rue)? | f(?:alse)? | y(?:es)? | n(?:o)? | 1 | 0 /ix,
+      pattern: / t(?:rue)? | f(?:alse)? | y(?:es)? | n(?:o)? |on | off | 1 | 0 /ix,
       cast_func: lambda { |b|
-        return !/t(?:rue)|y(?:es)|1/.match(b).nil?
+        return !/t(?:rue)?|y(?:es)?|on|1/i.match(b).nil?
       },
       description: 'a true or false value',
       examples: ['t', 'true', 'f', 'false', 'y', 'yes', 'n', 'no', 0, 1]

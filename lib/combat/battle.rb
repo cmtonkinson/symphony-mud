@@ -41,7 +41,10 @@ module Combat
     # two opposing Groups a new Bout is created whereupon each eligible
     # combatant gets a turn to attack one defender.
     def new_bout
-      @groups.each { |g| delete_group g unless g.acquire_targets }
+      @groups.each do |g|
+        Symphony.logger.trace '%s #new_bout with %s' % [fqid_str, g.members.map(&:fqid_str).join(',')]
+        delete_group g unless g.acquire_targets
+      end
 
       if @groups.empty?
         cease

@@ -68,7 +68,7 @@ module Base
 
         begin
           client.user.handle input
-        rescue Exception => e
+        rescue StandardError => e
           Symphony.logger.fatal e
           Symphony.logger.error 'Forcing termination of client on socket %d' % [client.fd]
           client.should_terminate = true

@@ -1,7 +1,7 @@
 en:
   combat:
     strike:
-      attacker: 'Your $strike $string $being!'
-      defender: "$being's $strike $string you!"
-      room: '$being $strike $string $being!'
+      attacker: "Your $strike $damage $being!"
+      defender: "$being's $strike $damage you!"
+      room: "$being's $strike $damage $being!"
 

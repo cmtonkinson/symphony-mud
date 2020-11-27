@@ -203,28 +203,6 @@ module Realm
     end
 
     ###########################################################################
-    def take_damage(amount, did_the_damage)
-      stamina.decrease 1
-      health.decrease amount
-      die did_the_damage if health.current < 1
-    end
-
-    ###########################################################################
-    def die(did_the_damage)
-      result = run_hook :before_death
-      return if result.halted?
-
-      run_hook :on_death
-
-      Symphony.logger.info '%s killed %s' % [did_the_damage.whodunnit, self].map(&:fqid_str) if is_a?(Avatar)
-      puts '%s {RKILLED{x you{x!!!!' % did_the_damage.whodunnit.name
-      puts 'You {RDIED{x!!!!'
-      room.puts '$being is {RDEAD{x!!!!', self, exclude: self
-
-      run_hook :after_death
-    end
-
-    ###########################################################################
     def announce_status
       str = "$being #{Display::Format.health(health.percent, true)}."
       room.puts str, self, exclude: self
@@ -245,7 +223,7 @@ module Realm
     def modify(modifiers, reverse = false)
       Symphony.logger.trace "Modifying #{fqid_str} with #{modifiers.inspect} (reverse = #{reverse})"
       modifiers.each do |name, magnitude|
-        if Realm::ELEMENTS.include? name
+        if Konst::ELEMENTS.include? name
           modify_resistance name, magnitude, reverse
         else
           modify_stat name, magnitude, reverse
@@ -278,14 +256,7 @@ module Realm
     def effective_resistance(element)
       return RESIST_NEUTRAL unless resistances.key? element
 
-      real_value = resistances[element]
-      if real_value > RESIST_UPPER_BOUND
-        RESIST_UPPER_BOUND
-      elsif real_value < RESIST_LOWER_BOUND
-        RESIST_LOWER_BOUND
-      else
-        real_value
-      end
+      Util::Computation.bound(resistances[element], RESIST_LOWER_BOUND, RESIST_UPPER_BOUND)
     end
 
     ###########################################################################
@@ -303,7 +274,7 @@ module Realm
       # The first position of each pair is the `element:` label and the second
       # position is the user-friendly formatted output.
       r = []
-      Realm::ELEMENTS.each do |el|
+      Konst::ELEMENTS.each do |el|
         res  = effective_resistance el
         pair = ["#{el}:", Display::Format.resistance_label(res)]
         r << pair
@@ -317,7 +288,7 @@ module Realm
         foc.current, bash.current, r[4][0], r[4][1],
         exp, cre.current, slash.current, r[5][0], r[5][1],
         tnl, cha.current, pierce.current, r[6][0], r[6][1],
-        training_points, luc.current, exotic.current
+        training_points, luc.current, exotic.current, r[7][0], r[7][1]
       ]
     end
     # rubocop:enable Metrics/AbcSize

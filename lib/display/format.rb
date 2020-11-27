@@ -25,7 +25,7 @@ module Display
     end
 
     ###########################################################################
-    def self.damage(amount, numeric = false)
+    def self.damage(amount, target)
       str = quantity(amount, {
                        10_000 => '{wrains calamity upon{x',
                        5000 => 'does {?I{?N{?C{?O{?M{?P{?R{?E{?H{?E{?N{?S{?I{?B{?L{?E{x things to',
@@ -56,7 +56,7 @@ module Display
                        1 => '{mgrazes{x',
                        0 => 'does nothing to'
                      })
-      str += " {x[#{amount}]" if numeric
+      str += " {x[#{amount}]" if target.respond_to?(:pref_show_numeric?) && target.pref_show_numeric?
       str
     end
 

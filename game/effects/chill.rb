@@ -13,8 +13,10 @@ module Realm
 
       def _recur
         target.puts I18n.t('effect.chill.recur')
-        amount = target.health.current * 0.01
-        target.take_damage amount, originator
+        dam = Combat::Damage.new target.health.current * 0.01
+        dam.source = originator
+        dam.ice 100
+        target.take_damage dam
       end
     end
   end

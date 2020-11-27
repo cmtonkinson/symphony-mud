@@ -13,6 +13,8 @@ require 'ostruct'
 # This class is designed to be a globally-available singleton.
 ###############################################################################
 class App
+  KONSTANTS = 'konst.rb'.freeze
+
   DIRECTORIES = {
     config: %i[initializers locales setup],
     data: %i[avatar zone pidfile],

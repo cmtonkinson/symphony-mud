@@ -41,8 +41,14 @@ module Network
     private
 
     def _send(message)
-      socket.send ::Base::Terminal.colorize(message), 0
-    rescue Errno::EPIPE
+      if user&.avatar&.pref_show_color?
+        socket.send ::Base::Terminal.colorize(message), 0
+      else
+        socket.send ::Base::Terminal.uncolor(message), 0
+      end
+    rescue Errno::EPIPE => e
+      Symphony.logger.fatal e
+      Symphony.logger.error 'Forcing termination of client on socket %d' % [fd]
       @should_terminate = true
     end
   end

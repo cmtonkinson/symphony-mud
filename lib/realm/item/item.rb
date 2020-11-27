@@ -1,16 +1,6 @@
 module Realm
   class Item < Objekt
-    TYPES = %i[armor clothing container food furniture jewelry key other weapon].freeze
-
-    ATTRS = %i[level type wearable slot
-               max_items load_factor
-               health mana
-               max_occupants
-               opens_type opens_rid
-               weapon_type damage_type hitroll damroll].freeze
-
-    ATTRS.each { |name| attr_accessor name }
-
+    Konst::ITEM_ATTRS.each { |name| attr_accessor name }
     attr_accessor :slotted_to, :modifiers
 
     ###########################################################################
@@ -39,20 +29,20 @@ module Realm
     ###########################################################################
     on_hashify lambda {
       hash = {}
-      ATTRS.each { |name| hash[name] = send name }
+      Konst::ITEM_ATTRS.each { |name| hash[name] = send name }
       hash[:modifiers] = @modifiers
       hash
     }
 
     ###########################################################################
     on_dehashify lambda { |hash|
-      ATTRS.each { |name| instance_variable_set "@#{name}", hash[name] }
+      Konst::ITEM_ATTRS.each { |name| instance_variable_set "@#{name}", hash[name] }
       @modifiers = hash[:modifiers]
     }
 
     ###########################################################################
     on_deep_copy lambda { |original|
-      ATTRS.each { |name| instance_variable_set "@#{name}", original.send(name) }
+      Konst::ITEM_ATTRS.each { |name| instance_variable_set "@#{name}", original.send(name) }
       @modifiers = Marshal.load(Marshal.dump(original.modifiers))
     }
 

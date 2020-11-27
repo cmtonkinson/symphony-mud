@@ -87,7 +87,7 @@ module Realm
 
     ###########################################################################
     def print(format, *args)
-      @output_buffer << Util::Linguist.interpret(format, *args)
+      @output_buffer << Util::Linguist.interpret(self, format, *args)
     end
 
     ###########################################################################

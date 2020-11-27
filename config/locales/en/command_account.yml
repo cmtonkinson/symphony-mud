@@ -1,0 +1,21 @@
+en:
+  #############################################################################
+  # Account-related commands
+  global:
+    preferences:
+      _brief: "Display or change user account preferences."
+      title: "Your current preferences are:"
+      color: "Show terminal colors: $string"
+      numeric: "Show damage numbers: $string"
+      changed_bool: "Your '$string' preference is now set to $string."
+      error: "That isn't a recognized preference setting."
+    quit:
+      _brief: "Save your Avatar and disconnect from the server."
+      actor: "Logging out. Goodbye."
+    save:
+      _brief: "Store up-to-date information about your Avatar on the server."
+      start: "Saving your profile..."
+      success: " done!"
+    whoami:
+      _brief: "Display your current profile name."
+      actor: "Your name is {W$being{x"

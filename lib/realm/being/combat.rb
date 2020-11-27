@@ -38,6 +38,68 @@ module Realm
     end
 
     ###########################################################################
+    def calculate_damage(dam)
+      actual = dam.base_amount
+
+      # Armor modification is relatively simple compared to elemental. We
+      # deduct the total armor value, and then deduct (if applicable) any
+      # damage-type-specific armor (e.g. bash) value.
+      armor_adjustment = armor.current
+      armor_adjustment += send(dam.type).current unless dam.type.nil?
+      actual -= armor_adjustment
+
+      # Elemental modification is a formula representing a straight
+      # multiplication of the base damage (b), the elemental ratio of the
+      # damage (e), and the resistance factor to that element (r), to yield the
+      # final elemental adjustment (A) as follows:
+      #   A(b,e,r) = b * (e/100) * (r/100)
+      # which can be simplified to:
+      #   A(b,e,r) = ber/10000
+      elemental_adjustment = 0
+      dam.elements.each do |el, val|
+        elemental_adjustment += dam.base_amount * val * effective_resistance(el) / 10_000
+      end
+      actual += elemental_adjustment
+
+      dam.actual = actual
+      actual
+    end
+
+    ###########################################################################
+    def take_damage(dam)
+      # In some cases (such as Combat::Strike#perform) we need to know how much
+      # real damage we're doing before we do it. In other cases (such as
+      # Realm::Effects::Chill#_recur) we may not care. Here we offer a shortcut
+      # for those cases when we don't really care - the calling method can
+      # invoke #take_damage() without first calling #calculate_damage().
+      calculate_damage dam if dam.actual.nil?
+
+      # Stamina loss due to damage taken is a linear function of the ratio of
+      # health lost. Damage for 100% of total health value would yield the
+      # maximum stamina penalty of 20.
+      stam = Konst::DAMAGE_MAX_STAMINA_LOSS * (dam.actual / health.current)
+      stamina.decrease stam
+
+      health.decrease dam.actual
+      die dam.source if health.current < 1
+    end
+
+    ###########################################################################
+    def die(did_the_damage)
+      result = run_hook :before_death
+      return if result.halted?
+
+      run_hook :on_death
+
+      Symphony.logger.info '%s killed %s' % [did_the_damage, self].map(&:fqid_str) if is_a?(Avatar)
+      puts '%s {RKILLED{x you{x!!!!' % did_the_damage.name
+      puts 'You {RDIED{x!!!!'
+      room.puts '$being is {RDEAD{x!!!!', self, exclude: self
+
+      run_hook :after_death
+    end
+
+    ###########################################################################
     def emit_experience
       # Short circuit if the Being didn't die in combat.
       return unless group.battle

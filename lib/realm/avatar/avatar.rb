@@ -5,6 +5,9 @@ module Realm
 
     define_hooks :before_disconnect
 
+    simple_flag :pref_numeric, false, :pref_show_numeric?, :pref_show_numeric!, nil, :pref_hide_numeric!
+    simple_flag :pref_color, true, :pref_show_color?, :pref_show_color!, nil, :pref_hide_color!
+
     ###########################################################################
     def initialize(id = nil, props = {})
       super

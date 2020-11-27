@@ -322,16 +322,6 @@ module Command
   end
 
   ###############################################################################
-  define :quit do
-    usage
-    exec do
-      being.cmd 'save'
-      being.puts t('actor')
-      being.user.client.should_terminate = true
-    end
-  end
-
-  ###############################################################################
   define :remove do
     usage :target
     exec do
@@ -342,16 +332,6 @@ module Command
         message = being.anatomy.remove item, being
         being.puts(*message)
       end
-    end
-  end
-
-  ###############################################################################
-  define :save do
-    usage
-    exec do
-      being.print t('start')
-      Logistics::Scribe.save being
-      being.puts t('success')
     end
   end
 
@@ -444,14 +424,6 @@ module Command
       $world.avatars.each_value do |a|
         being.puts '  ' + a.name
       end
-    end
-  end
-
-  ###############################################################################
-  define :whoami do
-    usage
-    exec do
-      being.puts t('actor'), being
     end
   end
 
