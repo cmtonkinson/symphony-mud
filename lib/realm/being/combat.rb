@@ -57,7 +57,8 @@ module Realm
       #   A(b,e,r) = ber/10000
       dam.elemental_adjustment = 0
       dam.elements.each do |el, val|
-        dam.elemental_adjustment += dam.base_amount * val * effective_resistance(el) / 10_000
+        ef = effective_resistance(el)
+        dam.elemental_adjustment += dam.base_amount * val * ef / 10_000 unless ef == Konst::BEING_RESIST_NEUTRAL
       end
       actual += dam.elemental_adjustment
 

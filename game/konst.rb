@@ -1,6 +1,10 @@
 module Konst
   AVATAR_PREFS = %w[color numeric].freeze
 
+  BEING_RESIST_NEUTRAL = 100
+  BEING_RESIST_MIN     = -100
+  BEING_RESIST_MAX     = 200
+
   DAMAGE_TYPES = %i[bash slash pierce exotic].freeze
   DAMAGE_MIN_STAMINA_LOSS = 1
   DAMAGE_MAX_STAMINA_LOSS = 20

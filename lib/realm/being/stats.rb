@@ -12,10 +12,6 @@ module Realm
     DEFENSE_BASE = 0
     OFFENSE_BASE = 0
 
-    RESIST_NEUTRAL     = 100
-    RESIST_LOWER_BOUND = -100
-    RESIST_UPPER_BOUND = 200
-
     BASE_AGE    = 17
     BASE_HEIGHT = 3
     BASE_WEIGHT = 3
@@ -247,16 +243,16 @@ module Realm
     ###########################################################################
     def modify_resistance(element, magnitude, reverse = false)
       amount = magnitude * (reverse ? -1 : 1)
-      resistances[element] ||= RESIST_NEUTRAL
+      resistances[element] ||= Konst::BEING_RESIST_NEUTRAL
       resistances[element] += amount
-      resistances.delete_if { |_, val| val == RESIST_NEUTRAL }
+      resistances.delete_if { |_, val| val == Konst::BEING_RESIST_NEUTRAL }
     end
 
     ###########################################################################
     def effective_resistance(element)
-      return RESIST_NEUTRAL unless resistances.key? element
+      return Konst::BEING_RESIST_NEUTRAL unless resistances.key? element
 
-      Util::Computation.bound(resistances[element], RESIST_LOWER_BOUND, RESIST_UPPER_BOUND)
+      Util::Computation.bound(resistances[element], Konst::BEING_RESIST_MIN, Konst::BEING_RESIST_MAX)
     end
 
     ###########################################################################
