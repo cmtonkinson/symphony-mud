@@ -116,7 +116,7 @@ module Realm
 
     ###########################################################################
     def prompt
-      "\n%s[{G%d{x/{g%d{xhp {C%d{x/{c%d{xmana {M%d{xstamina {y%d{xtnl] " % [
+      "\n%s[{G%d{x/{g%d{xhp {C%d{x/{c%d{xmana {M%d{xstamina {y%d{xtnl]\n" % [
         prompt_prefix,
         health.current, health.max,
         mana.current, mana.max,
