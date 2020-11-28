@@ -46,7 +46,7 @@ module Realm
     def trigger_effect(trigger_name, invoker)
       return unless effect_triggers.key? trigger_name
 
-      effect_triggers[trigger_name].each { |e| e.use invoker }
+      effect_triggers[trigger_name].each { |e| e.exec invoker }
     end
   end
 end

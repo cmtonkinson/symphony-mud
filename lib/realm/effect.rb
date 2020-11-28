@@ -180,10 +180,15 @@ module Realm
     end
 
     ###########################################################################
-    def use(invoker)
-      Symphony.logger.debug "#{self.class.name}#use invoked by #{invoker.class.name} called under #{target.fqid_str}"
+    def exec(invoker)
+      Symphony.logger.debug '%s#exec invoked by %s called under %s (%d remaining)' % [
+        self.class.name,
+        invoker.class.name,
+        target.fqid_str,
+        @remaining_uses
+      ]
       @remaining_uses -= 1
-      _use(invoker) if respond_to? :_use
+      _exec(invoker) if respond_to? :_exec
       expire unless remaining_uses.positive?
     end
 
