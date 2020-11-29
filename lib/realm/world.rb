@@ -32,10 +32,10 @@ module Realm
 
       # Seed the universe (e.g. for a fresh install with no prior data).
       # Create the Origin Zone.
-      origin = Realm::Zone.new(ORIGIN_ZONE_ID, { name: 'The Origin' })
+      origin = Realm::Zone.new(ORIGIN_ZONE_ID, { rid: 1, name: 'The Origin' })
       Logistics::Integrator.stitch origin, self
       # Create the Void Room.
-      void = Realm::Room.new(THE_VOID_ID, { rid: 0, name: 'The Void' })
+      void = Realm::Room.new(THE_VOID_ID, { rid: 1, name: 'The Void' })
       Logistics::Integrator.stitch void, origin
     end
 
