@@ -91,7 +91,6 @@ module Mechanics
       return unless @job_cycle_counter > @batches_per_second
 
       # Reset counters.
-      Symphony.logger.trace 'World#rebalance_job_parameters'
       @job_cycle_counter = 0
       @jobs_this_cycle   = 0
 
@@ -118,7 +117,7 @@ module Mechanics
         catch_up_rate = (@jobs_per_batch * 1.1).ceil if catch_up_rate < @jobs_per_batch
 
         # Increase jobs_per_batch.
-        msg = 'World#rebalance_job_parameters - increasing batch size from %d to %d'
+        msg = 'Schedule#rebalance_job_parameters - increasing batch size from %d to %d'
         Symphony.logger.debug msg % [@jobs_per_batch, catch_up_rate]
         @jobs_per_batch = catch_up_rate
       elsif top.ready?

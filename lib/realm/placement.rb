@@ -50,7 +50,6 @@ module Realm
 
     ###########################################################################
     def place
-      Symphony.logger.debug 'Placing %s' % fqid_str
       raise 'Placement Room reference is nil' if room.nil?
       raise 'Could not find Placement target' if target.nil?
 
@@ -61,7 +60,7 @@ module Realm
                        else raise 'Objekt type not configured for Placement'
                        end
 
-      Symphony.logger.trace '  into %s' % room.fqid_str
+      Symphony.logger.trace 'Placing %s into %s' % [fqid_str, room.fqid_str]
 
       # Find out how many clones of this Item are already on the ground in
       # this Zone.
