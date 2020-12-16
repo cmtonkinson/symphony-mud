@@ -1,0 +1,148 @@
+module Realm
+  class Spy < Objekt
+    attr_accessor :task, :name, :trigger, :params, :active, :status
+
+    ###########################################################################
+    def initialize(id = nil, props = {})
+      @task    = nil
+      @name    = nil
+      @trigger = nil
+      @params  = nil
+      @active  = false
+      @status  = nil # :completed or :failed
+      @state   = {} # instance-specific data
+      super
+    end
+
+    ###########################################################################
+    after_initialize lambda {
+    }
+
+    ###########################################################################
+    on_hashify lambda {
+    }
+
+    ###########################################################################
+    on_dehashify lambda { |hash|
+    }
+
+    ###########################################################################
+    on_deep_copy lambda { |original|
+    }
+
+    ###########################################################################
+    enervate lambda {
+      dispose
+    }
+
+    ###########################################################################
+    def activate
+      Symphony.logger.trace 'Spy %s (%s) #activate for %s' % [fqid_str, task.fqid_str, name]
+      @active = true
+      task.tasked.register_effect trigger, self if trigger
+
+      activate_meth = "activate_#{name}".to_sym
+      send activate_meth if respond_to? activate_meth
+    end
+
+    ###########################################################################
+    def deactivate
+      Symphony.logger.trace 'Spy %s (%s) #deactivate for %s' % [fqid_str, task.fqid_str, name]
+      @active = false
+      task.tasked.unregister_effect trigger, self if trigger
+
+      deactivate_meth = "deactivate_#{name}".to_sym
+      send deactivate_meth if respond_to? deactivate_meth
+    end
+
+    ###########################################################################
+    def complete!
+      Symphony.logger.trace 'Spy %s (%s) #complete! for %s' % [fqid_str, task.fqid_str, name]
+      @status = :complete
+      task.run_hook :spy_completed
+    end
+
+    ###########################################################################
+    def fail!
+      Symphony.logger.trace 'Spy %s (%s) #fail! for %s' % [fqid_str, task.fqid_str, name]
+      @status = :failed
+      task.run_hook :spy_failed
+    end
+
+    ###########################################################################
+    def update!
+      Symphony.logger.trace 'Spy %s (%s) #update!() for %s' % [fqid_str, task.fqid_str, name]
+      task.run_hook :spy_updated
+    end
+
+    ###########################################################################
+    def active?
+      @active == true
+    end
+
+    ###########################################################################
+    def complete?
+      @status == :complete
+    end
+
+    ###########################################################################
+    def failed?
+      @status == :failed
+    end
+
+    ###########################################################################
+    def validate_name(name)
+      return true if valid_symbols.include? name
+
+      Symphony.logger.error 'Spy %s from %s - bad name (%s) from %s' % [
+        fqid_str,
+        task.fqid_str,
+        name.to_s,
+        caller_locations(1, 1)[0].label
+      ]
+      false
+    end
+
+    ###########################################################################
+    def setup(name, args = nil)
+      return false unless validate_name name
+
+      case self
+      when Objective
+        @trigger = name
+      when Parameter
+        trig = Konst::SPY_PARAMETERS[name]
+        if !trig.nil? && !Konst::SPY_TRIGGERS.include?(trig)
+          Symphony.logger.error 'Spy %s from %s - bad trigger (%s) for parameter %s' % [
+            fqid_str,
+            task.fqid_str,
+            trig,
+            name
+          ]
+          return
+        end
+        @trigger = trig
+      else
+        raise 'You cannot #setup Realm::Spy directly - you need to use a subclass'
+      end
+
+      @name = name
+      setup_meth = "setup_#{name}".to_sym
+      send setup_meth, *args if respond_to? setup_meth
+    end
+
+    ###########################################################################
+    def exec(arg = nil)
+      return false unless validate_name name
+
+      callback_method = "exec_#{name}".to_sym
+      callback_retval = send callback_method.to_sym, arg
+
+      case callback_retval
+      when :complete then complete!
+      when :fail then fail!
+      when :update then update!
+      end
+    end
+  end
+end

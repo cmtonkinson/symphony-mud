@@ -18,4 +18,25 @@ module Konst
                   weapon].freeze
   ITEM_ELEMENT_MIN = 0
   ITEM_ELEMENT_MAX = 100
+
+  # Triggers available for configuration in Objectives and Parameters.
+  SPY_TRIGGERS = %i[
+    die
+    enter_combat
+    explore_zone
+    kill_npc
+    obtain_item
+    say_at
+    say_to
+    visit_room
+    wear_item
+  ].freeze
+
+  # Parameters have different types that map into triggers above. Note that
+  # only triggers defined above in SPY_TRIGGERS are valid keys for this Hash.
+  SPY_PARAMETERS = {
+    no_dying: :die,
+    no_fighting: :enter_combat,
+    time_limit: nil
+  }.freeze
 end
