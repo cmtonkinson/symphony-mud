@@ -5,9 +5,12 @@ SimpleCov.start
 ###############################################################################
 # Bootstrap Symphony; this code is the test analogue of the dispatch script.
 ###############################################################################
-BINARY_NAME = ''.freeze # stub
-ENV['SYMPHONY_ENV'] ||= 'test'
-require File.expand_path 'config/bootstrap'
+BINARY_NAME = ''.freeze
+require 'bundler/setup'
+Bundler.require :test
+
+require File.expand_path 'core/app'
+require File.expand_path 'boot/bootstrap'
 
 ###############################################################################
 # Override initializers, as necessary.

@@ -1,0 +1,2 @@
+module Konst
+end

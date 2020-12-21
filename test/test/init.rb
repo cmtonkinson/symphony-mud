@@ -1,0 +1,5 @@
+require_relative 'configuration'
+require_relative 'test'
+require_relative 'manager'
+require_relative 'micromanager'
+require_relative 'client'

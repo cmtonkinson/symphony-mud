@@ -4,10 +4,15 @@
 /config.yml
 /coverage
 /data
+/game
+!/game/lib/.keep
+!/game/locales/.keep
+!/game/setup/.keep
+!/game/templates/.keep
 /scripts/*
 !/scripts/.keep
-/system-tests/state/*
-!/system-tests/state/.keep
+/test/state/*
+!/test/state/.keep
 /tmp/*
 !/tmp/.keep
 /TAGS

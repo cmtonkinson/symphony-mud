@@ -51,16 +51,16 @@ Metrics/PerceivedComplexity:
 # Cop supports --auto-correct.
 Security/YAMLLoad:
   Exclude:
-    - 'config/configuration.rb'
-    - 'lib/base/account.rb'
-    - 'lib/base/universe.rb'
-    - 'lib/realm/objekt/serializing.rb'
-    - 'spec/lib/realm/objekt_spec.rb'
+    - 'boot/configuration.rb'
+    - 'core/base/account.rb'
+    - 'core/base/universe.rb'
+    - 'core/realm/objekt/serializing.rb'
+    - 'spec/core/realm/objekt_spec.rb'
 
 # Offense count: 1
 Style/ClassVars:
   Exclude:
-    - 'lib/util/registry.rb'
+    - 'core/util/registry.rb'
 
 # Offense count: 123
 Style/Documentation:
@@ -98,4 +98,5 @@ Style/GlobalVars:
 Style/NumericPredicate:
   Exclude:
     - 'spec/**/*'
-    - 'lib/command/operator.rb'
+    - 'core/command/operator.rb'
+

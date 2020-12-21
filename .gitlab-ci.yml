@@ -41,8 +41,8 @@ system-tests:
     - docker
   script:
     - ulimit -Sn 50000
-    - system-tests/test.rb
+    - test/test.rb
   artifacts:
     paths:
-      - system-tests/state
+      - test/state
 

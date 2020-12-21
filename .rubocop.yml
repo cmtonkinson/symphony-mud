@@ -11,7 +11,7 @@ Naming/MethodParameterName:
 
 Metrics/ModuleLength:
   Exclude:
-    - 'game/commands/*'
+    - 'commands/*'
 
 Metrics/BlockLength:
   Exclude:
