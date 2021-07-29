@@ -69,9 +69,6 @@ Dir[Symphony.root.join 'game', 'setup', '*.rb']
 # Other external configuration.
 require_relative 'configuration'
 
-# Write the pid to a file.
-IO.write(Symphony.pidfile, Process.pid.to_s, mode: 'w')
-
 ###############################################################################
 # Big Bang.
 ###############################################################################
@@ -82,3 +79,6 @@ trap('USR1') do
   $universe.should_save = true
   $universe.should_stop = true
 end
+
+# Write the pid to a file.
+IO.write(Symphony.pidfile, Process.pid.to_s, mode: 'w')
