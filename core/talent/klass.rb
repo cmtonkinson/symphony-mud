@@ -15,6 +15,11 @@ module Talent
     end
 
     ###########################################################################
+    def self.klasses
+      ObjectSpace.each_object(::Class).select { |c| c < self }
+    end
+
+    ###########################################################################
     def setup
       being.klass = self
       being.add_enabler self

@@ -1,19 +1,61 @@
 module InputSequence
   class LoginSequence < InputSequence
-    # Copypasta from authoritative sources of truth elsewhere in the codebase.
-    # Really not the best method for exposing this information.
-    # TODO - clean this crap up!
-    RACE_OPTIONS   = %w[human elf dwarf].freeze
-    GENDER_OPTIONS = %w[male female neuter].freeze
-    HAND_OPTIONS   = %w[left right].freeze
-    HEIGHT_OPTIONS = %w[tiny short average tall huge].freeze
-    WEIGHT_OPTIONS = %w[bony thin average heavy obese].freeze
-    KLASS_OPTIONS  = %w[warrior mage cleric rogue].freeze
+    FIRST_QUESTION = :race
+    SETUP = {
+      race: {
+        options: -> { ::Talent::Anatomy.anatomies.map { |a| a::NAME }.sort },
+        prompt: 'What is your race? Options are %: '.freeze,
+        reject: 'Horror! You would be unrecognizable! Options are %: '.freeze,
+        accept: 'Excellent! And a heroic % you shall be!'.freeze,
+        to: :gender
+      },
+      gender: {
+        options: -> { ::Realm::Gender.genders.sort },
+        prompt: 'What is your gender? Options are %: '.freeze,
+        reject: 'Let us clear up that confusion... your options are %: '.freeze,
+        accept: '% and proud!'.freeze,
+        to: :hand
+      },
+      hand: {
+        options: -> { %w[left right] },
+        prompt: 'Please choose a dominant hand (%): '.freeze,
+        reject: 'Unfortunately you will have to choose (%): '.freeze,
+        accept: 'Henceforth, you shall be %-handed.'.freeze,
+        to: :height
+      },
+      height: {
+        options: -> { %w[tiny short average tall huge] },
+        prompt: 'And how tall are you? (%): '.freeze,
+        reject: 'This is important, please choose from among %: '.freeze,
+        accept: 'A hero of % stature! Of course!.'.freeze,
+        to: :weight
+      },
+      weight: {
+        options: -> { %w[bony thin average heavy obese] },
+        prompt: 'What is your weight? (%): '.freeze,
+        reject: 'Unless you are a ghost, you have mass. Please choose %: '.freeze,
+        accept: 'A % traveler of the realm, then!'.freeze,
+        to: :klass
+      },
+      klass: {
+        options: -> { ::Talent::Klass.klasses.map { |k| k::NAME }.sort },
+        prompt: 'Select carefully your class (%): '.freeze,
+        reject: 'Let us be serious. Your options are (%): '.freeze,
+        accept: 'The mightiest % of the epoch!'.freeze,
+        to: :finished
+      }
+    }.freeze
 
     ###########################################################################
     def initialize
       super
       @name = 'login'
+    end
+
+    ###########################################################################
+    def interp(key, str, val = nil)
+      replacement = val || SETUP[key][:options].call.join(', ')
+      SETUP[key][str].sub '%', replacement
     end
 
     ###########################################################################
@@ -26,12 +68,18 @@ module InputSequence
       state :confirm_name
       state :set_passphrase
       state :confirm_passphrase
-      state :get_race
-      state :get_gender
-      state :get_hand
-      state :get_height
-      state :get_weight
-      state :get_klass
+
+      # rubocop:disable Security/Eval
+      # rubocop:disable Style/EvalWithLocation
+      SETUP.each_key { |key| eval("state :get_#{key}") }
+      # rubocop:enable Security/Eval
+      # rubocop:enable Style/EvalWithLocation
+
+      # Yes 'get_finished' is a stupd state name, but it makes the metaprogramming
+      # look cleaner if we don't have to break the pattern of state/handler names
+      # during the final part of the configurable sequence.
+      state :get_finished
+
       # Final states.
       state :login
       state :disconnect
@@ -77,9 +125,9 @@ module InputSequence
       end
 
       event :accept_passphrase_confirmation do
-        transitions from: :confirm_passphrase, to: :get_race
+        transitions from: :confirm_passphrase, to: :"get_#{FIRST_QUESTION}"
         after do
-          user.print "What is your race? Options are [#{RACE_OPTIONS.join ', '}]: "
+          user.print interp(FIRST_QUESTION, :prompt)
         end
       end
 
@@ -90,39 +138,37 @@ module InputSequence
         end
       end
 
-      event :accept_race do
-        transitions from: :get_race, to: :get_gender
-        after do
-          user.print "What is your gender? Options are [#{GENDER_OPTIONS.join ', '}]: "
-        end
+      ###########################################################################
+      # Configure event handlers of the generic form:
+      #
+      # event :accept_gender do
+      #   transitions from: :get_gender, to: :get_hand
+      #   after do
+      #     user.print interp(:hand, :prompt)
+      #   end
+      # end
+      SETUP.each do |key, opts|
+        accept_event = "
+          event :accept_#{key} do
+            transitions from: :get_#{key}, to: :get_#{opts[:to]}
+            after do
+              if SETUP.key?(:#{opts[:to]})
+                user.print interp(:#{opts[:to]}, :prompt)
+              else
+                @context.account_type = :new
+                complete
+              end
+            end
+          end"
+        # puts accept_event # for debugging
+
+        # rubocop:disable Security/Eval
+        eval(accept_event)
+        # rubocop:enable Security/Eval
       end
 
-      event :accept_gender do
-        transitions from: :get_gender, to: :get_hand
-        after do
-          user.print "Which is your dominant hand? Options are [#{HAND_OPTIONS.join ', '}]: "
-        end
-      end
-
-      event :accept_hand do
-        transitions from: :get_hand, to: :get_height
-        after do
-          user.print "How tall are you? Options are [#{HEIGHT_OPTIONS.join ', '}]: "
-        end
-      end
-
-      event :accept_height do
-        transitions from: :get_height, to: :get_weight
-        after do
-          user.print "How heavy are you? Options are [#{WEIGHT_OPTIONS.join ', '}]: "
-        end
-      end
-
-      event :accept_weight do
-        transitions from: :get_weight, to: :get_klass
-        after do
-          user.print "What is your class? Options are [#{KLASS_OPTIONS.join ', '}]: "
-        end
+      event :accept_finished do
+        transitions from: :"get_#{SETUP.find { |_, v| v[:to] == :finished }[0]}", to: :get_finished
       end
 
       event :complete do
@@ -221,63 +267,25 @@ module InputSequence
     end
 
     ###########################################################################
-    def get_race_handler(input)
-      @context.race = input
-      if RACE_OPTIONS.include? @context.race
-        accept_race
-      else
-        puts "That's not a valid choice."
-      end
-    end
-
-    ###########################################################################
-    def get_gender_handler(input)
-      @context.gender = input
-      if GENDER_OPTIONS.include? @context.gender
-        accept_gender
-      else
-        puts "That's not a valid choice."
-      end
-    end
-
-    ###########################################################################
-    def get_hand_handler(input)
-      @context.hand = input
-      if HAND_OPTIONS.include? @context.hand
-        accept_hand
-      else
-        puts "That's not a valid choice."
-      end
-    end
-
-    ###########################################################################
-    def get_height_handler(input)
-      @context.height = input
-      if HEIGHT_OPTIONS.include? @context.height
-        accept_height
-      else
-        puts "That's not a valid choice."
-      end
-    end
-
-    ###########################################################################
-    def get_weight_handler(input)
-      @context.weight = input
-      if WEIGHT_OPTIONS.include? @context.weight
-        accept_weight
-      else
-        puts "That's not a valid choice."
-      end
-    end
-
-    ###########################################################################
-    def get_klass_handler(input)
-      @context.klass = input
-      if KLASS_OPTIONS.include? @context.klass
-        @context.account_type = :new
-        complete
-      else
-        puts "That's not a valid choice."
+    # Configure methods of the form:
+    #
+    # def get_height_handler(input)
+    #   @context.height = input
+    #   if %w[tiny short average tall huge].include? @context.height
+    #     accept_height
+    #   else
+    #     puts "Not a valid height"
+    #   end
+    # end
+    SETUP.each do |key, opts|
+      define_method :"get_#{key}_handler" do |input|
+        @context.public_send :"#{key}=", input.downcase
+        if opts[:options].call.map(&:downcase).include? @context.public_send key
+          user.puts interp(key, :accept, @context.public_send(key))
+          public_send :"accept_#{key}"
+        else
+          user.puts interp(key, :reject)
+        end
       end
     end
 
@@ -287,8 +295,8 @@ module InputSequence
       ::Talent.const_get(@context.klass.capitalize).new(avatar)
       avatar.gender = @context.gender
       avatar.hand = @context.hand
-      avatar.height = HEIGHT_OPTIONS.index(@context.height) + 1
-      avatar.weight = WEIGHT_OPTIONS.index(@context.weight) + 1
+      avatar.height = SETUP[:height][:options].call.index(@context.height) + 1
+      avatar.weight = SETUP[:weight][:options].call.index(@context.weight) + 1
 
       Logistics::Integrator.stitch avatar, $world.find_room(Realm::World::THE_VOID_ID)
 

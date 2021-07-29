@@ -13,6 +13,10 @@ Metrics/ModuleLength:
   Exclude:
     - 'commands/*'
 
+Metrics/ClassLength:
+  Exclude:
+    - 'core/sequences/login_sequence.rb'
+
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'

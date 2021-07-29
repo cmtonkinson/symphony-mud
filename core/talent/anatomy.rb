@@ -15,6 +15,11 @@ module Talent
     end
 
     ###########################################################################
+    def self.anatomies
+      ObjectSpace.each_object(::Class).select { |c| c < self }
+    end
+
+    ###########################################################################
     def setup
       being.anatomy = self
       being.add_enabler self

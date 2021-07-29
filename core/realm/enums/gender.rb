@@ -34,5 +34,9 @@ module Realm
         defns[key gender]
       end
     end
+
+    def self.genders
+      [MALE, FEMALE, NEUTER]
+    end
   end
 end

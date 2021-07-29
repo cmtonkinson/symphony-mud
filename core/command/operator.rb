@@ -17,6 +17,8 @@ module Command
       being             = @user.avatar
       cmd_name, _, rest = input.partition ' '
 
+      return true if being.nil?
+
       Symphony.logger.trace "Handling '#{input}' in :#{set_name} for #{being.fqid_str}"
 
       # If the input was a single character, is it a shortcut?
