@@ -13,7 +13,7 @@ module Test
 
     ###########################################################################
     def state_path
-      @state_path ||= $ROOT_DIR.join('system-tests', 'state', @id)
+      @state_path ||= $ROOT_DIR.join('test', 'state', @id)
     end
 
     def data_path
@@ -43,7 +43,7 @@ module Test
         FileUtils.mkdir_p data_path
       # Otherwise, copy the parent data to start with.
       else
-        parent_data = $ROOT_DIR.join 'system-tests', 'state', @test.get_parent_id
+        parent_data = $ROOT_DIR.join 'test', 'state', @test.get_parent_id
         FileUtils.cp_r parent_data, state_path
         # Truncate any logs.
         FileUtils.rm_rf Dir.glob(state_path.to_s + '/*-log.txt')

@@ -79,7 +79,7 @@ module Test
 
     ###########################################################################
     def start
-      FileUtils.rm_rf Dir.glob $ROOT_DIR.join 'system-tests', 'state', '*'
+      FileUtils.rm_rf Dir.glob $ROOT_DIR.join 'test', 'state', '*'
 
       @test_tree.each do |n|
         next if n.name == :root
