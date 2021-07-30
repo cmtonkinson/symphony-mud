@@ -8,7 +8,7 @@ before_script:
   - uname -a
   - cat /etc/os-release
   - apt update && apt install -y lua5.1 liblua5.1-dev
-  - bundle exec ruby -v
+  - ruby -v
   - gem install bundler
   - bundle install -j $(nproc)
 
@@ -21,7 +21,7 @@ rubocop:
   tags:
     - docker
   script:
-    - bundle exec rubocop -P
+    - rubocop -P
 
 ###############################################################################
 # TEST
@@ -32,7 +32,7 @@ rspec:
   tags:
     - docker
   script:
-    - bundle exec rspec --format=documentation --force-color
+    - rspec --format=documentation --force-color
   coverage: '/\(\d+.\d+\%\) covered/'
 
 system-tests:
@@ -41,7 +41,7 @@ system-tests:
     - docker
   script:
     - ulimit -Sn 50000
-    - bundle exec test/test.rb
+    - test/test.rb
   artifacts:
     paths:
       - test/state
