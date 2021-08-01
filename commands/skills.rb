@@ -32,44 +32,4 @@ module Command
       being.cast_spell ability, victim
     end
   end
-
-  ###############################################################################
-  define :hone do
-    usage({ item: :id })
-    exec do
-      target = being.items.locate_first item
-      being.puts t 'err_none' and next if target.nil?
-      being.puts t 'err_not_honable' and next unless target.honable?
-
-      if Logistics::Integrator.apply_effect :sharp, target, being
-        being.puts t('actor'), target
-        being.room.puts t('room'), being, target
-      else
-        being.puts t('failed'), target
-      end
-    end
-  end
-
-  ###############################################################################
-  define :kick do
-    ability
-    usage
-    usage({ victim: :id })
-    exec do
-      if being.battle
-        target = being.acquire_target
-        being.puts t('err_noone') and next if target.nil?
-      elsif victim
-        targets = room.beings.locate victim
-        being.puts t('err_noone') and next if targets.empty?
-        being.puts t('err_too_many') and next if targets.length > 1
-
-        target = targets.first
-      else
-        being.puts t('err_no_target') and next
-      end
-      ability = being.get_ability :kick
-      ability.invoke target
-    end
-  end
 end

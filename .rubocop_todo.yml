@@ -55,7 +55,7 @@ Security/YAMLLoad:
     - 'lib/base/account.rb'
     - 'lib/base/universe.rb'
     - 'lib/realm/objekt/serializing.rb'
-    - 'spec/core/realm/objekt_spec.rb'
+    - 'spec/lib/realm/objekt_spec.rb'
 
 # Offense count: 1
 Style/ClassVars:
