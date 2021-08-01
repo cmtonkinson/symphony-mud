@@ -9,7 +9,7 @@ BINARY_NAME = ''.freeze
 require 'bundler/setup'
 Bundler.require :test
 
-require File.expand_path 'core/app'
+require File.expand_path 'lib/app'
 require File.expand_path 'boot/bootstrap'
 
 ###############################################################################

@@ -1,4 +1,4 @@
-require_relative '../../core/base/terminal'
+require_relative '../../lib/base/terminal'
 require 'net-telnet'
 
 module Test

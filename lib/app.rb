@@ -14,7 +14,7 @@ class App
   DIRECTORIES = {
     boot: %i[setup],
     commands: %i[],
-    core: %i[],
+    lib: %i[],
     data: %i[avatar pidfile zone],
     game: %i[],
     help: %i[],

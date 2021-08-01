@@ -5,10 +5,6 @@
 /coverage
 /data
 /game
-!/game/lib/.keep
-!/game/locales/.keep
-!/game/setup/.keep
-!/game/templates/.keep
 /scripts/*
 !/scripts/.keep
 /test/state/*

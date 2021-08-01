@@ -22,14 +22,14 @@ I18n.load_path += Dir[Symphony.game.join 'locales', '**', '*.yml']
 # Load the Core engine and game components.
 ###############################################################################
 # Definitions first.
-require Symphony.root.join 'core', 'konst.rb'
+require Symphony.root.join 'lib', 'konst.rb'
 
 # Are there game-level definition overrides?
 game_konst = Symphony.root.join 'game', 'konst.rb'
 require game_konst if File.file? game_konst
 
 # Autoload core modules.
-Dir[Symphony.root.join 'core', '*']
+Dir[Symphony.root.join 'lib', '*']
   .reject { |file| File.file? file }
   .sort
   .each { |mod| require "#{mod}/_init" }
