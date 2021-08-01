@@ -2,5 +2,5 @@
 
 bundle exec rubocop -P \
   && bundle exec rspec --force-color \
-  && test/test.rb
+  && bundle exec test/test.rb
 
