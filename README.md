@@ -108,9 +108,13 @@ game/setup/*
 Generally speaking, the content in the top level `setup`, `locales`, `help`, `commands`, `lib`, and `templates` directories can be extended, supplemented, or overshadowed by creating a matching folder/file under `game`.
 
 ## Detailed Installation
+todo
 
 ## Philosophy
+todo
 
 ## Architecture
+todo
 
 ## TODO
+creatively enough, todo ;) (but seriously, check issues in GitLab)
