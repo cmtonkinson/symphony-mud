@@ -52,15 +52,15 @@ Metrics/PerceivedComplexity:
 Security/YAMLLoad:
   Exclude:
     - 'boot/configuration.rb'
-    - 'core/base/account.rb'
-    - 'core/base/universe.rb'
-    - 'core/realm/objekt/serializing.rb'
+    - 'lib/base/account.rb'
+    - 'lib/base/universe.rb'
+    - 'lib/realm/objekt/serializing.rb'
     - 'spec/core/realm/objekt_spec.rb'
 
 # Offense count: 1
 Style/ClassVars:
   Exclude:
-    - 'core/util/registry.rb'
+    - 'lib/util/registry.rb'
 
 # Offense count: 123
 Style/Documentation:
@@ -98,5 +98,5 @@ Style/GlobalVars:
 Style/NumericPredicate:
   Exclude:
     - 'spec/**/*'
-    - 'core/command/operator.rb'
+    - 'lib/command/operator.rb'
 
