@@ -77,7 +77,7 @@ module Realm
 
     ###########################################################################
     def update!
-      Symphony.logger.trace 'Spy %s (%s) #update!() for %s' % [fqid_str, task.fqid_str, name]
+      Symphony.logger.trace 'Spy %s (%s) #update! for %s' % [fqid_str, task.fqid_str, name]
       task.run_hook :spy_updated
     end
 

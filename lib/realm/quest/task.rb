@@ -111,7 +111,15 @@ module Realm
     # Each time a Spy is updated, we need to recheck the state of all of them
     # to figure out if the Task is complete.
     def evaluate_spies
-      finish if complete?
+      if complete?
+        tasked.run_hook :task_completed, self
+        finish
+      elsif failed?
+        tasked.run_hook :task_failed, self
+        finish
+      else
+        tasked.run_hook :task_updated, self
+      end
     end
 
     ###########################################################################
@@ -139,6 +147,11 @@ module Realm
     # requirements (Parameters) have been violated.
     def complete?
       objective.complete? && parameters.none?(&:failed?)
+    end
+
+    ###########################################################################
+    def failed?
+      parameters.any?(&:failed?)
     end
 
     ###########################################################################

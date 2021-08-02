@@ -6,6 +6,18 @@ module Realm
     # TODO: Accept, decline, abandon a quest
     # TODO: List quests (w/ filters, incl. available and completed)
 
+    task_completed lambda { |task|
+      puts "you completed #{task.name}"
+    }
+
+    task_failed lambda { |task|
+      puts "you failed #{task.name}"
+    }
+
+    task_updated lambda { |task|
+      puts "task #{task.name} updated"
+    }
+
     ###########################################################################
     def accept_task(task)
       # register callback for objective

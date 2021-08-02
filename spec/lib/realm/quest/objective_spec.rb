@@ -5,8 +5,10 @@ require 'spec_helper'
 describe Realm::Objective do
   describe '#setup' do
     before :each do
-      @t = Realm::Task.new nil, { tasked: Realm::Objekt.new }
-      @o = Realm::Objective.new nil, { task: @t }
+      @t = Realm::Task.new
+      @t.tasked = Realm::Objekt.new
+      @o = Realm::Objective.new
+      @o.task = @t
       @t.objective = @o
     end
 
