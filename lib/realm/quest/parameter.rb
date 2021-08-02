@@ -1,3 +1,11 @@
+# Parameters exist to monitor the tasked Object for additional requirements on
+# top of the primary Objective. Usually these are negative in nature (e.g. the
+# Task may require that you must complete the Objective without dying, or
+# without getting into a fight, etc.) although that's not axiomatic.
+#
+# Each Parameter type (see Konst::SPY_PARAMETERS) may define setup*, exec*,
+# activate*, and deactivate* methods.
+
 module Realm
   class Parameter < Spy
     ###########################################################################

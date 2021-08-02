@@ -1,3 +1,7 @@
+# Spy is meant as an abstract base class for Objective and Parameter, which
+# share a lot of conceptual functionality since both are ultimately just
+# monitoring hooks on the tasked Objekt.
+
 module Realm
   class Spy < Objekt
     attr_accessor :task, :name, :trigger, :params, :active, :status
@@ -36,6 +40,8 @@ module Realm
     }
 
     ###########################################################################
+    # Activating the Spy will cause it to monitor the underlying Objekt (the
+    # 'tasked') for relevant events.
     def activate
       Symphony.logger.trace 'Spy %s (%s) #activate for %s' % [fqid_str, task.fqid_str, name]
       @active = true
@@ -76,6 +82,8 @@ module Realm
     end
 
     ###########################################################################
+    # A Spy can be configured and 'ready to go' but not activated. Take the
+    # example of a player who has a quest available, but hasn't accepted it.
     def active?
       @active == true
     end
@@ -91,6 +99,8 @@ module Realm
     end
 
     ###########################################################################
+    # Subclasses define the #valid_symbols method as appropriate for their use
+    # and it returns an array of symbols.
     def validate_name(name)
       return true if valid_symbols.include? name
 
@@ -104,6 +114,8 @@ module Realm
     end
 
     ###########################################################################
+    # The #setup method must be called before #activate and will invoke the
+    # appropriate matching subclass setup_* method.
     def setup(name, args = nil)
       return false unless validate_name name
 
@@ -132,6 +144,8 @@ module Realm
     end
 
     ###########################################################################
+    # This is the public entry method for invoking whatever subclass- and type-
+    # specific logic needs to be run to evaluate Spy state.
     def exec(arg = nil)
       return false unless validate_name name
 

@@ -179,6 +179,14 @@ module Realm
 
       # Look around.
       cmd 'look'
+
+      # TODO: This is not the right place or way to do this. We have both the
+      # underlying hook mechanic as well as the higher level trigger mechanic
+      # both signaling a room change. It seems perhaps these can/should be
+      # consolidated for cases like this. It's also likely this is not the last
+      # time such overlap will be present, though at the time of writing it is
+      # the first.
+      trigger_effect :visit_room, self
     end
 
     ###########################################################################

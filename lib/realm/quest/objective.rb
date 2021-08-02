@@ -1,3 +1,7 @@
+# Objective is meant to monitor the tasked Objekt for a success event. Each
+# different kind of objective (see Konst::SPY_TRIGGERS) will have a setup* and
+# an exec* method defined below.
+
 module Realm
   class Objective < Spy
     ###########################################################################
@@ -18,7 +22,7 @@ module Realm
     end
 
     def exec_visit_room(being)
-      return nil unless being.room.rid == trigger_params
+      return nil unless being.room.rid == params
 
       Symphony.logger.trace '%s completed %s by visiting %s' % [
         task.tasked.fqid_str,

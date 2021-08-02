@@ -459,6 +459,12 @@ module Command
     level Realm::Being::CREATOR
     usage
     exec do
+      t = Realm::Task.new
+      t.name = 'test task'
+      t.description = 'task description'
+      t.tasked = being
+      t.set_objective :visit_room, 4
+      t.activate
     end
   end
 

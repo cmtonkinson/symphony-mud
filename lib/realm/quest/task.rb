@@ -1,7 +1,11 @@
+# Task is the "main" workhorse class of the questing system. It encapsulates
+# the objective, requirements, and rewards of a particular quest segment and
+# keeps the tasked Objekt coordinated with those details.
+
 module Realm
   class Task < Objekt
     attr_accessor :name, :description # player-friendly
-    attr_accessor :tasked # what Objekt is burneded to complete this?
+    attr_accessor :tasked # what Objekt is burdened to complete this?
     attr_accessor :objective # what's the thing that has to be done?
     attr_accessor :parameters # are there restrictions on achieving the objective?
 
@@ -88,45 +92,68 @@ module Realm
     ###########################################################################
     spy_completed lambda {
       Symphony.logger.debug '%s :spy_completed for %s' % [fqid_str, tasked.fqid_str]
-      finish
+      evaluate_spies
     }
 
     ###########################################################################
     spy_failed lambda {
       Symphony.logger.debug '%s :spy_failed for %s' % [fqid_str, tasked.fqid_str]
-      finish
+      evaluate_spies
     }
 
     ###########################################################################
     spy_updated lambda {
-      Symphony.logger.debug '%s :spy_updated for %s' % [fqid_str, tasked.fqid_str]
+      Symphony.logger.trace '%s :spy_updated for %s' % [fqid_str, tasked.fqid_str]
+      evaluate_spies
     }
 
     ###########################################################################
+    # Each time a Spy is updated, we need to recheck the state of all of them
+    # to figure out if the Task is complete.
+    def evaluate_spies
+      finish if complete?
+    end
+
+    ###########################################################################
+    # Finishing the Task will cause deactivation.
     def finish
       Symphony.logger.trace '%s #finish for %s' % [fqid_str, tasked.fqid_str]
+      deactivate
+    end
+
+    ###########################################################################
+    # Spies don't automatically listen for events - they need to be activated
+    def activate
+      objective.activate
+      parameters.each(&:activate)
+    end
+
+    ###########################################################################
+    def deactivate
       objective.deactivate
       parameters.each(&:deactivate)
     end
 
     ###########################################################################
+    # Tests whether the Objective has been met and none of the auxillary
+    # requirements (Parameters) have been violated.
     def complete?
-      objective.complete? && parameters.none(&:failed?)
+      objective.complete? && parameters.none?(&:failed?)
     end
 
     ###########################################################################
     def set_objective(name, args = nil)
-      @objective = Objective.new.setup(name, args)
-    end
-
-    ###########################################################################
-    def remove_objective
-      @objective = nil
+      @objective = Objective.new
+      @objective.task = self
+      @objective.setup(name, args)
     end
 
     ###########################################################################
     def add_parameter(name, args = nil)
-      @parameters << Parameter.new.setup(name, args)
+      p = Parameter.new
+      p.task = self
+      p.setup(name, args)
+      @parameters << p
     end
   end
 end

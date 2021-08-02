@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+# This is as much an exercise of the Spy class as it is of Objective itself
+
 describe Realm::Objective do
   describe '#setup' do
     before :each do
