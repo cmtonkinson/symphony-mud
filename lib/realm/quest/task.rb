@@ -8,6 +8,7 @@ module Realm
     attr_accessor :tasked # what Objekt is burdened to complete this?
     attr_accessor :objective # what's the thing that has to be done?
     attr_accessor :parameters # are there restrictions on achieving the objective?
+    attr_accessor :rewards
 
     define_hooks :spy_completed, :spy_failed, :spy_updated
 
@@ -42,6 +43,7 @@ module Realm
       @tasked      = nil
       @objective   = nil
       @parameters  = []
+      @rewards     = []
       super
     end
 
@@ -55,7 +57,8 @@ module Realm
         name: name,
         description: description,
         objective: objective.hashify,
-        parameters: parameters.map(&:hashify)
+        parameters: parameters.map(&:hashify),
+        rewards: rewards.map(&:hashify)
       }
       { task: hash }
     }
@@ -70,6 +73,9 @@ module Realm
 
       @parameters = []
       hash[:parameters].each { |param| @parameters << Realm::Parameter.dehashify(param) }
+
+      @rewards = []
+      hash[:rewards].each { |reward| @rewards << Realm::Reward.dehashify(reward) }
     }
 
     ###########################################################################
@@ -80,12 +86,16 @@ module Realm
 
       @parameters = []
       @parameters.each { |param| @parameters << param.clone }
+
+      @rewards = []
+      @rewards.each { |reward| @rewards << reward.clone }
     }
 
     ###########################################################################
     enervate lambda {
       @objective.run_hook :enervate
       @parameters.each { |p| p.run_hook :enervate }
+      @rewards.each { |r| r.run_hook :enervate }
       dispose
     }
 

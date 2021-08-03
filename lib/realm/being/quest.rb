@@ -8,6 +8,12 @@ module Realm
 
     task_completed lambda { |task|
       puts "you completed #{task.name}"
+
+      task.rewards.each do |reward|
+        reward.to_str_array.each do |str|
+          puts "  you receive #{str}"
+        end
+      end
     }
 
     task_failed lambda { |task|

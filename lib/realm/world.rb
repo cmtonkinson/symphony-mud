@@ -54,6 +54,17 @@ module Realm
     end
     alias [] find
 
+    def search(zone, klass, rid_or_uuid)
+      retval = if rid_or_uuid.is_a? Numeric
+                 zone.find_by_rid klass, rid_or_uuid
+               else
+                 find rid_or_uuid
+               end
+
+      Symphony.logger.warn "World#search - #{klass} #{rid_or_uuid} not found (zone #{zone.fqid_str}" if retval.nil?
+      retval
+    end
+
     ###########################################################################
     def find_room(rid_or_uuid)
       return find THE_VOID_ID unless rid_or_uuid
@@ -76,11 +87,11 @@ module Realm
     end
 
     ###########################################################################
-    def find_zone(rid_or_uuid = ZONE_ORIGIN_ID)
+    def find_zone(rid_or_uuid = ORIGIN_ZONE_ID)
       if rid_or_uuid.is_a? Numeric
         @zones.values.find { |z| z.rid == rid_or_uuid }
       elsif /\h{8}-?\h{4}-?\h{4}-?\h{4}-?\h{12}/i.match?(rid_or_uuid)
-        (zone = find rid_or_uuid) ? zone : find(ZONE_ORIGIN_ID)
+        (zone = find rid_or_uuid) ? zone : find(ORIGIN_ZONE_ID)
       end
     end
 
