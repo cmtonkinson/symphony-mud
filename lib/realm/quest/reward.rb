@@ -51,6 +51,42 @@ module Realm
       dispose
     }
 
+    def empty?
+      silver.zero? && gold.zero? && exp.zero? && item_ids.empty?
+    end
+
+    def ==(other)
+      zone == other.zone &&
+        silver == other.silver &&
+        gold == other.gold &&
+        exp == other.exp &&
+        item_ids == other.item_ids
+    end
+
+    def +(other)
+      res = Reward.new
+
+      res.zone = zone
+      res.silver = silver + other.silver
+      res.gold = gold + other.gold
+      res.exp = exp + other.exp
+
+      res.item_ids = item_ids
+      if zone == other.zone
+        res.item_ids += other.item_ids
+      else
+        other.item_ids.each do |item_id|
+          res.item_ids += if item_id.is_a? Numeric
+                            $world.convert_rid_to_uuid(item_id)
+                          else
+                            item_id
+                          end
+        end
+      end
+
+      res
+    end
+
     def to_str_array
       output = []
 

@@ -60,6 +60,16 @@ module Realm
       retval
     end
 
+    def convert_rid_to_uuid(zone, klass, rid)
+      obj = zone.find_by_rid klass, rid
+      if obj.nil?
+        Symphony.logger.warn "World#convert_rid_to_uuid - #{klass} #{rid} not found (zone #{zone.fqid_str}"
+        return nil
+      end
+
+      obj.id
+    end
+
     def find_room(rid_or_uuid)
       return find THE_VOID_ID unless rid_or_uuid
 

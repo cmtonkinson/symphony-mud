@@ -4,7 +4,7 @@
 
 module Realm
   class Task < Objekt
-    attr_accessor :name, :description # player-friendly
+    attr_accessor :description # player-friendly
     attr_accessor :tasked # what Objekt is burdened to complete this?
     attr_accessor :objective # what's the thing that has to be done?
     attr_accessor :parameters # are there restrictions on achieving the objective?
@@ -37,7 +37,6 @@ module Realm
     #  must be serializable (to save/load)
 
     def initialize(id = nil, props = {})
-      @name        = ''
       @description = ''
       @tasked      = nil
       @objective   = nil
@@ -46,12 +45,8 @@ module Realm
       super
     end
 
-    after_initialize lambda {
-    }
-
     on_hashify lambda {
       hash = {
-        name: name,
         description: description,
         objective: objective.hashify,
         parameters: parameters.map(&:hashify),
@@ -63,7 +58,6 @@ module Realm
     on_dehashify lambda { |hash|
       hash = hash[:task]
 
-      @name = hash[:name]
       @description = hash[:description]
       @objective = Realm::Objective.dehashify(hash[:objective])
 
@@ -75,15 +69,14 @@ module Realm
     }
 
     on_deep_copy lambda { |original|
-      @name = original.name
       @description = original.description
       @objective = original.objective.clone
 
       @parameters = []
-      @parameters.each { |param| @parameters << param.clone }
+      original.parameters.each { |param| @parameters << param.clone }
 
       @rewards = []
-      @rewards.each { |reward| @rewards << reward.clone }
+      original.rewards.each { |reward| @rewards << reward.clone }
     }
 
     enervate lambda {

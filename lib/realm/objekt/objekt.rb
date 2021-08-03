@@ -27,7 +27,7 @@ module Realm
     DEFAULTS = {
       id: -> { SecureRandom.uuid },
       rid: -> { nil },
-      name: -> { +'[name]' }
+      name: -> { '[name]' }
     }.freeze
 
     attr_reader :id
