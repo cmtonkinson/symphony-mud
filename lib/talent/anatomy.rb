@@ -116,7 +116,7 @@ module Talent
 
     ###########################################################################
     def default_damage
-      I18n.t("anatomy.default_damage.#{@name}")
+      I18n.t("anatomy.default_damage.#{@name.downcase}")
     end
   end
 end
