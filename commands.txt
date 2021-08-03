@@ -1,6 +1,4 @@
-###############################################################################
 # ADMIN
-###############################################################################
 adminnote bigbrother crash
 delete   demote     description disable
 dunce     enable            gecho
@@ -10,9 +8,7 @@ pedit    poofin      poofout
 redit      sedit
      test             
 
-###############################################################################
 # USER
-###############################################################################
 affinity  afk       boards    bored     busy      
 channels  close           
 give      
@@ -23,9 +19,7 @@ ooc       open      put             reply
 stand        tell      time      title     train
 unlock    
 
-###############################################################################
 # ITEM EDIT
-###############################################################################
 armortype         attribute        composition
 delete            description      flag
 furniturecapacity furniturelayon   furnituresitat
@@ -35,45 +29,33 @@ value
 weaponstat       
 
 
-###############################################################################
 # NPC EDIT
-###############################################################################
 aggressiveness class       description
 gender         information 
 longname    mobility
 
-###############################################################################
 # AVATAR EDIT
-###############################################################################
 color     headbuilder
 
-###############################################################################
 # ROOM EDIT
-###############################################################################
 delete   description
 exitflag flag
 key      
 smell    sound
 terrain     unlink
 
-###############################################################################
 # SOCIAL EDIT
-###############################################################################
 audible      delete     information
 tactile      targetnone targetself
 targetvictim noneactor  noneroom
 selfactor    selfroom   victimactor
 victimvictim victimroom
 
-###############################################################################
 # TEXT EDIT
-###############################################################################
 append cancel clear
 delete insert replace
 send   show
 
-###############################################################################
 # ZONE EDIT
-###############################################################################
 delete     
 permission terrain

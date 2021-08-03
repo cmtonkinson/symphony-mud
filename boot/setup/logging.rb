@@ -1,4 +1,3 @@
-###############################################################################
 # Monkeypatch the STDLIB Logger class with an additional verbosity
 # level under DEBUG called TRACE.
 require 'logger'
@@ -28,7 +27,6 @@ class Logger
   end
 end
 
-###############################################################################
 ## Set this to STDOUT by default - it may change later.
 Symphony.logger = Logger.new(STDOUT)
 

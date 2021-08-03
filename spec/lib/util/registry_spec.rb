@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Util::Registry do
-  #############################################################################
   describe '::register' do
     before :each do
       Util::Registry.hash.clear
@@ -19,7 +18,6 @@ describe Util::Registry do
     end
   end
 
-  #############################################################################
   describe '::unregister' do
     before :each do
       Util::Registry.hash.clear
@@ -40,7 +38,6 @@ describe Util::Registry do
     end
   end
 
-  #############################################################################
   describe '::lookup' do
     before :each do
       Util::Registry.hash.clear
@@ -56,7 +53,6 @@ describe Util::Registry do
     end
   end
 
-  #############################################################################
   describe '::report' do
     before :each do
       Util::Registry.hash.clear

@@ -13,7 +13,6 @@ module Realm
                           announce_expire modifiers valid_for
                           initial_uses remaining_uses].freeze
 
-    ###########################################################################
     def initialize(id = nil, props = {})
       @name            = ''
       @description     = ''
@@ -32,7 +31,6 @@ module Realm
       super
     end
 
-    ###########################################################################
     on_hashify lambda {
       hash = {}
       PERSISTENT_ATTRS.each { |name| hash[name] = send name }
@@ -40,14 +38,12 @@ module Realm
       hash
     }
 
-    ###########################################################################
     on_dehashify lambda { |hash|
       Symphony.logger.warn hash.inspect
       PERSISTENT_ATTRS.each { |name| instance_variable_set "@#{name}", hash[name] }
       create_jobs hash[:expires_in]
     }
 
-    ###########################################################################
     def apply
       return nil unless validate
 
@@ -60,7 +56,6 @@ module Realm
       self
     end
 
-    ###########################################################################
     def validate
       raise 'Effect %s has no target' % [self.class.name] if target.nil?
 
@@ -77,13 +72,11 @@ module Realm
       true
     end
 
-    ###########################################################################
     # Link to the target Objekt.
     def link_effect
       target.effects.add self
     end
 
-    ###########################################################################
     # Create jobs to manage the effect.
     def create_jobs(expiry_override = 0)
       expires_at = if expiry_override.positive?
@@ -110,7 +103,6 @@ module Realm
       true
     end
 
-    ###########################################################################
     # Apply any modifiers, if defined.
     def modify
       case target
@@ -129,13 +121,11 @@ module Realm
       end
     end
 
-    ###########################################################################
     def announce
       target.puts I18n.t("effect.#{name}.apply_target")
       target.room.puts I18n.t("effect.#{name}.apply_room"), target, exclude: target
     end
 
-    ###########################################################################
     def expire
       Symphony.logger.debug "#{self.class.name}#expire called under #{target.fqid_str}"
 
@@ -162,24 +152,20 @@ module Realm
       dispose
     end
 
-    ###########################################################################
     def recur
       Symphony.logger.debug "#{self.class.name}#_recur called under #{target.fqid_str}"
       _recur
     end
 
-    ###########################################################################
     def expires_in
       expiry_job ? expiry_job.wen - Time.now.to_i : 0
     end
 
-    ###########################################################################
     def allow_uses(num)
       @initial_uses   = num
       @remaining_uses = num
     end
 
-    ###########################################################################
     def exec(invoker)
       Symphony.logger.debug '%s#exec invoked by %s called under %s (%d remaining)' % [
         self.class.name,
@@ -192,7 +178,6 @@ module Realm
       expire unless remaining_uses.positive?
     end
 
-    ###########################################################################
     def to_s
       out = ''
       out << name.to_s

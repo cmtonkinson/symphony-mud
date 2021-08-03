@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Mechanics::Job do
-  #############################################################################
   describe '#initialize' do
     it 'should require either a method name or a Proc' do
       expect { Mechanics::Job.new(1, OpenStruct.new) }.to raise_error(ArgumentError, /method or proc/)
@@ -28,7 +27,6 @@ describe Mechanics::Job do
     end
   end
 
-  #############################################################################
   describe '#ready?' do
     before :each do
       @job = Mechanics::Job.new 1, OpenStruct.new, :method
@@ -50,7 +48,6 @@ describe Mechanics::Job do
     end
   end
 
-  #############################################################################
   describe '#fire' do
     before :each do
       @job_tester = JobTester.new
@@ -83,7 +80,6 @@ describe Mechanics::Job do
     end
   end
 
-  #############################################################################
   describe '#kill' do
     it 'should mark the Job as dead' do
       job = Mechanics::Job.new 0, OpenStruct.new, :meth

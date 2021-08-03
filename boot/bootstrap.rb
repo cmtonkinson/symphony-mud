@@ -1,6 +1,4 @@
-###############################################################################
 # Load gems and create the App object.
-###############################################################################
 # Standard practice puts the Gemfile at the project root.
 ENV['GEMFILE'] ||= File.expand_path '../Gemfile', __dir__
 require 'bundler/setup'
@@ -9,18 +7,14 @@ Bundler.require :default, :symphony
 # Our application object, designed to be a global singleton.
 Symphony = App.new
 
-###############################################################################
 # I18n needs to come in before we start autoloading.
-###############################################################################
 I18n.enforce_available_locales = true
 I18n.default_locale = :en
 
 I18n.load_path += Dir[Symphony.root.join 'locales', '**', '*.yml']
 I18n.load_path += Dir[Symphony.game.join 'locales', '**', '*.yml']
 
-###############################################################################
 # Load the Core engine and game components.
-###############################################################################
 # Definitions first.
 require Symphony.root.join 'lib', 'konst.rb'
 
@@ -44,9 +38,7 @@ else
     .each { |file| require file }
 end
 
-###############################################################################
 # Load command definitions.
-###############################################################################
 Dir[Symphony.root.join 'commands', '**', '*.rb']
   .sort
   .each { |file| require file }
@@ -55,9 +47,7 @@ Dir[Symphony.root.join 'game', 'commands', '**', '*.rb']
   .sort
   .each { |file| require file }
 
-###############################################################################
 # Configure the application.
-###############################################################################
 Dir[Symphony.root.join 'boot', 'setup', '*.rb']
   .sort
   .each { |file| require file }
@@ -69,9 +59,7 @@ Dir[Symphony.root.join 'game', 'setup', '*.rb']
 # Other external configuration.
 require_relative 'configuration'
 
-###############################################################################
 # Big Bang.
-###############################################################################
 $universe = Base::Universe.new
 $world    = Realm::World.new
 

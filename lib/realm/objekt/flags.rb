@@ -1,6 +1,5 @@
 module Realm
   class Objekt
-    ###########################################################################
     def self.simple_flag(flag_name, default, test_true = nil, set = nil, test_false = nil, clear = nil)
       ivar = "@#{flag_name}"
 

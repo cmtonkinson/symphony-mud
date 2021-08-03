@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Logistics::Builder do
-  #############################################################################
   describe '#create_room' do
     before :each do
       @zone = Realm::Zone.new
@@ -25,7 +24,6 @@ describe Logistics::Builder do
     end
   end
 
-  #############################################################################
   describe '#link_existing_rooms' do
     before :each do
       @zone   = Realm::Zone.new
@@ -41,7 +39,6 @@ describe Logistics::Builder do
     end
   end
 
-  #############################################################################
   describe '#create_linked_room' do
     before :each do
       @zone   = Realm::Zone.new
@@ -63,7 +60,6 @@ describe Logistics::Builder do
     end
   end
 
-  ###########################################################################
   describe '#create_npc' do
     before :each do
       @zone = Realm::Zone.new
@@ -87,7 +83,6 @@ describe Logistics::Builder do
     end
   end
 
-  #############################################################################
   describe '#create_zone' do
     before :each do
       @zone = Logistics::Builder.create_zone

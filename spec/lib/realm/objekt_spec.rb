@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Realm::Objekt do
-  #############################################################################
   describe '#initialize' do
     it 'should set a default name' do
       r = Realm::Objekt.new
@@ -9,7 +8,6 @@ describe Realm::Objekt do
     end
   end
 
-  #############################################################################
   describe '#fully_qualified_indentifier' do
     before :each do
       @sut = Realm::TestObj.new
@@ -37,7 +35,6 @@ describe Realm::Objekt do
     end
   end
 
-  #############################################################################
   describe '#insert' do
     before :each do
       @bucket = Realm::TestBucket.new
@@ -58,7 +55,6 @@ describe Realm::Objekt do
     end
   end
 
-  #############################################################################
   describe '#clone' do
     before :each do
       @original = Realm::TestObj.new nil, my_num: 387, my_nil: nil
@@ -94,7 +90,6 @@ describe Realm::Objekt do
     end
   end
 
-  #############################################################################
   describe '#serialize and #deserialize' do
     before :each do
       @original = Realm::TestObj.new 42
@@ -134,7 +129,6 @@ describe Realm::Objekt do
     end
   end
 
-  #############################################################################
   describe '#simple_flag' do
     around :each do |example|
       module Realm

@@ -8,42 +8,35 @@ module Realm
     simple_flag :pref_numeric, false, :pref_show_numeric?, :pref_show_numeric!, nil, :pref_hide_numeric!
     simple_flag :pref_color, true, :pref_show_color?, :pref_show_color!, nil, :pref_hide_color!
 
-    ###########################################################################
     def initialize(id = nil, props = {})
       super
       @force_output = false
     end
 
-    ###########################################################################
     before_disconnect lambda {
       @room.puts I18n.t('universe.room_announce_exit'), self
       Symphony.logger.info '%s logged out' % fqid_str
       @room.beings.delete self
     }
 
-    ###########################################################################
     vivify lambda {
       $world.avatars.insert self
     }
 
-    ###########################################################################
     enervate lambda {
       @world.avatars.remove self
     }
 
-    ###########################################################################
     def force_output!
       @force_output = true
     end
 
-    ###########################################################################
     def test_and_clear_forced_output
       o = @force_output
       @force_output = false
       o
     end
 
-    ###########################################################################
     def _prompt_prefix
       if redit
         '{RREDIT{x {Y%d{x ' % room.rid
@@ -52,7 +45,6 @@ module Realm
       end
     end
 
-    ###########################################################################
     # Verify room edit permissions prior to room change.
     before_room_change lambda { |from, to|
       if redit && from.zone != to.zone
@@ -61,7 +53,6 @@ module Realm
       end
     }
 
-    ###########################################################################
     def summary
       $templates.avatar_summary % [
         name,
@@ -70,7 +61,6 @@ module Realm
       ] + summary_plate
     end
 
-    ###########################################################################
     def summary_plate
       $templates.summary_plate % [
         anatomy&.name, strength.current, hit_bonus.current, level,

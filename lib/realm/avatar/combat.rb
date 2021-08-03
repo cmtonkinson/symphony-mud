@@ -1,11 +1,9 @@
 module Realm
   class Avatar
-    ###########################################################################
     after_death lambda {
       respawn
     }
 
-    ###########################################################################
     def respawn
       puts 'You have respawned.'
 

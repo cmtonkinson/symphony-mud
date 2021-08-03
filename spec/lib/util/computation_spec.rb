@@ -5,7 +5,6 @@ TOLERANCE = 0.001
 describe Util::Computation do
   subject { Util::Computation }
 
-  #############################################################################
   describe '#bound' do
     it 'should return the lower bound if the given value is lesser' do
       expect(subject.bound(-6, 1, 10)).to eq 1
@@ -20,7 +19,6 @@ describe Util::Computation do
     end
   end
 
-  #############################################################################
   describe '#logistic_curve' do
     tests = {
       x: [
@@ -58,7 +56,6 @@ describe Util::Computation do
     end
   end
 
-  #############################################################################
   describe '#polynomial_curve' do
     tests = {
       x: [

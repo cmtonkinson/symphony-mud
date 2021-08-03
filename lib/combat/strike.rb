@@ -8,7 +8,6 @@ module Combat
     attr_reader :avoided # is this Strike going to be prevented in some way? (bool)
     attr_reader :created_by # through what mechanism was this attack made?
 
-    ###########################################################################
     # Strike objects execute immediately upon construction and don't outlive
     # the Battle.
     def initialize(attacker, defender, bout = nil, parent = nil, created_by = :bout)
@@ -29,7 +28,6 @@ module Combat
       after
     end
 
-    ###########################################################################
     def perform
       bonus = attacker.damage_bonus.current
       weapon = attacker.anatomy.primary_weapon
@@ -56,12 +54,10 @@ module Combat
       defender.take_damage dam
     end
 
-    ###########################################################################
     def whodunnit
       attacker
     end
 
-    ###########################################################################
     def action
       item = attacker.anatomy.primary_weapon
       verb = item ? item.damage_type : attacker.anatomy.default_damage
@@ -77,12 +73,10 @@ module Combat
       @action
     end
 
-    ###########################################################################
     def avoid
       @avoided = true
     end
 
-    ###########################################################################
     def before
       # During normal autocombat, a Bout will have been created and assigned
       # but for offensive skills that isn't the case.
@@ -92,7 +86,6 @@ module Combat
       defender.run_hook :before_strike_defense, self
     end
 
-    ###########################################################################
     def after
       attacker.run_hook :after_strike_attack, self
       defender.run_hook :after_strike_defense, self

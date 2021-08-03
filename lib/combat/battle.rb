@@ -6,7 +6,6 @@ module Combat
 
     attr_reader :groups, :bouts, :job
 
-    ###########################################################################
     after_initialize lambda {
       @groups = []
       @bouts  = []
@@ -15,7 +14,6 @@ module Combat
       $world.schedule @job
     }
 
-    ###########################################################################
     def add_group(group)
       raise ArugmentError, "Cannot add a #{group.class.name} as a Battle group" unless group.is_a? Combat::Group
       return if @groups.include? group
@@ -25,14 +23,12 @@ module Combat
       run_hook :after_group_added, group
     end
 
-    ###########################################################################
     def delete_group(group)
       @groups.delete group
       group.battle = nil
       run_hook :after_group_deleted, group
     end
 
-    ###########################################################################
     # Initiate a new "bout" or "round" of combat.
     #
     # First verifies that there are remaining eligible combatants. If a Group
@@ -55,21 +51,17 @@ module Combat
       end
     end
 
-    ###########################################################################
     def cease
       Symphony.logger.debug 'Battle ceasing'
       run_hook :enervate
     end
 
-    ###########################################################################
     enervate lambda {
       dispose
     }
 
-    ###########################################################################
     after_group_added ->(group) {}
 
-    ###########################################################################
     after_group_deleted lambda { |_group|
       # If less than two groups, end the battle
       if @groups.size < 2

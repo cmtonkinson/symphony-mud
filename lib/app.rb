@@ -1,13 +1,11 @@
 require 'ostruct'
 
-###############################################################################
 # If you're familiar with Rails, a lot of the patterns for this App class will
 # be familiar to you.
 #
 # @root is a Pathname to the root project directory.
 #
 # This class is designed to be a globally-available singleton.
-###############################################################################
 class App
   KONSTANTS = 'konst.rb'.freeze
 
@@ -36,7 +34,6 @@ class App
   attr_reader :root, :accounts, :binary, :configuration
   attr_accessor :logger
 
-  #############################################################################
   def initialize
     @root          = Pathname.new File.expand_path '..', __dir__
     @binary        = @root.join BINARY_NAME
@@ -51,7 +48,6 @@ class App
     end
   end
 
-  #############################################################################
   # This method primarily exists to support the hack at the bottom of the
   # config/configuration.rb script, but is structured in a way that also could
   # allow for some tricky ops maneuvers such as snapshotting vs overwriting

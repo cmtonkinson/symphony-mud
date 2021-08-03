@@ -1,5 +1,4 @@
 module Command
-  ###############################################################################
   define :nedit do
     level Realm::Being::DEMIGOD
     usage 'create'
@@ -23,7 +22,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :npcs do
     level Realm::Being::DEMIGOD
     usage
@@ -39,7 +37,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :information, :edit_npc do
     level Realm::Being::DEMIGOD
     usage
@@ -48,7 +45,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :exit, :edit_npc do
     level Realm::Being::DEMIGOD
     usage
@@ -59,7 +55,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :level, :edit_npc do
     level Realm::Being::DEMIGOD
     usage({ new_level: :int })
@@ -69,7 +64,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :name, :edit_npc do
     level Realm::Being::DEMIGOD
     usage :rest
@@ -79,7 +73,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :race, :edit_npc do
     level Realm::Being::DEMIGOD
     usage({ race: %w[human elf dwarf canine] })

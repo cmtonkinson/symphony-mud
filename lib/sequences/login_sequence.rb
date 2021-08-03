@@ -46,19 +46,16 @@ module InputSequence
       }
     }.freeze
 
-    ###########################################################################
     def initialize
       super
       @name = 'login'
     end
 
-    ###########################################################################
     def interp(key, str, val = nil)
       replacement = val || SETUP[key][:options].call.join(', ')
       SETUP[key][str].sub '%', replacement
     end
 
-    ###########################################################################
     aasm do
       # Initial state.
       state :get_name
@@ -138,7 +135,6 @@ module InputSequence
         end
       end
 
-      ###########################################################################
       # Configure event handlers of the generic form:
       #
       # event :accept_gender do
@@ -214,7 +210,6 @@ module InputSequence
       end
     end
 
-    ###########################################################################
     def get_name_handler(input)
       @context.name = input
       if ::Base::Account.exists? @context.name
@@ -226,7 +221,6 @@ module InputSequence
       end
     end
 
-    ###########################################################################
     def get_passphrase_handler(input)
       @context.passphrase = input
       if (@context.avatar_id = ::Base::Account.authenticate(@context.name, @context.passphrase))
@@ -237,7 +231,6 @@ module InputSequence
       end
     end
 
-    ###########################################################################
     def confirm_name_handler(input)
       @context.name_confirmation = input
       if @context.name == @context.name_confirmation
@@ -248,7 +241,6 @@ module InputSequence
       end
     end
 
-    ###########################################################################
     # rubocop:disable Naming/AccessorMethodName
     def set_passphrase_handler(input)
       @context.new_passphrase = input
@@ -256,7 +248,6 @@ module InputSequence
     end
     # rubocop:enable Naming/AccessorMethodName
 
-    ###########################################################################
     def confirm_passphrase_handler(input)
       @context.passphrase_confirmation = input
       if ::Base::Account.equal_time_compare @context.new_passphrase, @context.passphrase_confirmation
@@ -266,7 +257,6 @@ module InputSequence
       end
     end
 
-    ###########################################################################
     # Configure methods of the form:
     #
     # def get_height_handler(input)
@@ -289,7 +279,6 @@ module InputSequence
       end
     end
 
-    ###########################################################################
     def new_avatar_setup_from_context(avatar)
       ::Talent.const_get(@context.race.capitalize).new(avatar)
       ::Talent.const_get(@context.klass.capitalize).new(avatar)

@@ -7,7 +7,6 @@ describe Logistics::Transporter do
     @ob   = Realm::TestObj.new
   end
 
-  #############################################################################
   describe '#add#to' do
     it 'inserts the Objekt into the target container' do
       expect(@dest.length).to eq 0

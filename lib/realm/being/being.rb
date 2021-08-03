@@ -9,7 +9,6 @@ module Realm
 
     define_hooks :before_room_change, :after_room_change
 
-    ###########################################################################
     def initialize(id = nil, props = {})
       @output_buffer = ''
       @gender        = Gender::NEUTER
@@ -21,12 +20,10 @@ module Realm
       super
     end
 
-    ###########################################################################
     after_initialize lambda {
       CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     }
 
-    ###########################################################################
     on_hashify lambda {
       hash = {
         klass: @klass&.name,
@@ -40,7 +37,6 @@ module Realm
       { being: hash }
     }
 
-    ###########################################################################
     on_dehashify lambda { |hash|
       hash = hash[:being]
 
@@ -58,18 +54,15 @@ module Realm
       hash[:items].each { |h| insert Realm::Item.dehashify(h) }
     }
 
-    ###########################################################################
     on_deep_copy lambda { |original|
       ::Talent.const_get(original.anatomy.name.capitalize).new(self) if original.anatomy
       ::Talent.const_get(original.klass.name.capitalize).new(self) if original.klass
     }
 
-    ###########################################################################
     vivify lambda {
       $world.beings.insert self
     }
 
-    ###########################################################################
     enervate lambda {
       $world.beings.delete self
       @room.delete self
@@ -85,36 +78,30 @@ module Realm
       dispose
     }
 
-    ###########################################################################
     def print(format, *args)
       @output_buffer << Util::Linguist.interpret(self, format, *args)
     end
 
-    ###########################################################################
     def puts(format, *args)
       print format, *args
       @output_buffer << "\n" unless @output_buffer[-1] == "\n"
     end
 
-    ###########################################################################
     def indented_puts(spaces, format, *args)
       indented_format = (' ' * spaces) + format
       puts indented_format, *args
     end
 
-    ###########################################################################
     def output?
       !@output_buffer.empty?
     end
 
-    ###########################################################################
     def output!
       buf = @output_buffer.dup + prompt
       @output_buffer = ''
       buf
     end
 
-    ###########################################################################
     def prompt
       "\n%s[{G%d{x/{g%d{xhp {C%d{x/{c%d{xmana {M%d{xstamina {y%d{xtnl]\n" % [
         prompt_prefix,
@@ -125,12 +112,10 @@ module Realm
       ]
     end
 
-    ###########################################################################
     def prompt_prefix
       _prompt_prefix
     end
 
-    ###########################################################################
     # NOTE Command::Operator has a dependency on the interface of Base::User.
     # This method will work as long as that dependency is limited to a single
     # property called `avatar`, since we're basically passing a Stub object
@@ -141,7 +126,6 @@ module Realm
     end
     alias cmd command_proxy
 
-    ###########################################################################
     # Returns true or a String containing an error message.
     def can_go?(direction)
       exit = @room.send direction
@@ -151,7 +135,6 @@ module Realm
       true
     end
 
-    ###########################################################################
     def go(direction)
       src  = @room
       exit = @room.send direction
@@ -166,7 +149,6 @@ module Realm
       transport dst
     end
 
-    ###########################################################################
     def transport(dst)
       src = @room
       Symphony.logger.error 'nil src in Being#transport for %s' % [fqid_str] and return if src.nil?
@@ -189,13 +171,11 @@ module Realm
       trigger_effect :visit_room, self
     end
 
-    ###########################################################################
     def other_beings_in_room
       (@room.beings.values.reject { |b| b == self }) || []
     end
     alias other_beings other_beings_in_room
 
-    ###########################################################################
     # Generic locator wrapper when the target could be anything within sight
     # of the Being. Returns as soon as it finds results from any location,
     # which means the order of search is important, from both a UX consistency
@@ -207,7 +187,6 @@ module Realm
       end
     end
 
-    ###########################################################################
     def locate_first(str)
       locate(str).first
     end

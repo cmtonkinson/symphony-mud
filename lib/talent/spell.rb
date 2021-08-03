@@ -16,7 +16,6 @@ module Talent
     # :enemy
     attr_reader :default_target
 
-    ###########################################################################
     def initialize(*args)
       super(*args)
 
@@ -24,7 +23,6 @@ module Talent
       @default_target = nil
     end
 
-    ###########################################################################
     def aggressive?
       %i[hex curse harm].include? spell_category
     end

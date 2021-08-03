@@ -26,7 +26,6 @@ module Realm
 
     EXPERIENCE.each { |name| attr_reader name }
 
-    ###########################################################################
     after_initialize lambda {
       @level           = BASE_LEVEL
       @exp             = BASE_EXP
@@ -34,20 +33,17 @@ module Realm
       @training_points = BASE_TRAINS
     }
 
-    ###########################################################################
     on_hashify lambda {
       hash = {}
       EXPERIENCE.each { |name| hash[name] = send name }
       { level: hash }
     }
 
-    ###########################################################################
     on_dehashify lambda { |hash|
       hash = hash[:level]
       EXPERIENCE.each { |name| instance_variable_set "@#{name}", hash[name] }
     }
 
-    ###########################################################################
     def newbie?
       @level < TRAVELER
     end
@@ -56,17 +52,14 @@ module Realm
       define_method :"#{lvl.downcase}?", (proc { @level >= Realm::Being.const_get(lvl) })
     end
 
-    ###########################################################################
     def seniority?(victim)
       victim.level < @level - IMMORTAL_SENIORITY
     end
 
-    ###########################################################################
     def level_label
       LEVELS.reverse.find { |lvl| @level >= Realm::Being.const_get(lvl) }.downcase
     end
 
-    ###########################################################################
     # NOTE: Avatars stop gaining experience and show 0 tnl once they reach HERO
     def award_experience(exp_gained)
       return if is_a?(Avatar) && level >= HERO
@@ -86,7 +79,6 @@ module Realm
       end
     end
 
-    ###########################################################################
     def gain_level
       # Calculate gains
       new_level      = level + 1
@@ -114,24 +106,20 @@ module Realm
       Symphony.logger.debug '%s has grown to level %u with %u tnl' % [fqid_str, level, tnl]
     end
 
-    ###########################################################################
     def health_gain
       gain = level * (constitution.percent**2.0)
       Util::Computation.bound gain, 1, MAX_HEALTH_GAIN
     end
 
-    ###########################################################################
     def mana_gain
       gain = level * (focus.percent**2.0)
       Util::Computation.bound gain, 1, MAX_MANA_GAIN
     end
 
-    ###########################################################################
     def trains_gain
       1
     end
 
-    ###########################################################################
     def reset_tnl
       # Force an insane amount of exp to reach final hero level.
       # TODO: Is this sound theory? If so, is this implementation reasonable?

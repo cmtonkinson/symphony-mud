@@ -1,6 +1,5 @@
 en:
   global:
-    ###########################################################################
     # Administrative commands
     at:
       _brief: "Execute a command as if in a different place"

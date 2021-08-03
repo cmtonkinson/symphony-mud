@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Util::Linguist do
-  #############################################################################
   describe '#interpret' do
     err = Realm.configuration.error_string
 
@@ -18,31 +17,24 @@ describe Util::Linguist do
     sword3 = Realm::Item.new nil, name: 'Litch Hammer'
 
     tests = [
-      #######################################################################
       # No interpretation.
       [['a b c'], 'a b c'],
-      #######################################################################
       # Not enough arguments
       [['$string $string', 'a'], "a #{err}"],
       # Too many arguments
       [['$string', 'a', 'b'], 'a'],
-      #######################################################################
       # Generic strings
       [['$string $string', 'a', 'b'], 'a b'],
-      #######################################################################
       # Avatars
       [['$being', chuck], 'Chuck'],
-      #######################################################################
       # Beings
       [['$being', rat1],  'a fat rat'],
       [['$being', rat2],  'an obese rat'],
       [['$being', rat3],  'King Rat'],
-      #######################################################################
       # Items
       [['$item', sword1], 'a sword'],
       [['$item', sword2], 'an auger'],
       [['$item', sword3], 'Litch Hammer'],
-      #######################################################################
       # Exits
       [['$exit', 'north'], 'the north'],
       [['$exit', 'east'],  'the east'],
@@ -56,7 +48,6 @@ describe Util::Linguist do
       [['$opposite', 'west'],  'the east'],
       [['$opposite', 'up'],    'below'],
       [['$opposite', 'down'],  'above'],
-      #######################################################################
       # Pronouns.
       [['$subjective', chuck],    'he'],
       [['$subjective', charlene], 'she'],

@@ -1,5 +1,4 @@
 module Command
-  ###############################################################################
   define :redit do
     level Realm::Being::DEMIGOD
     usage
@@ -19,7 +18,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :information, :edit_room do
     level Realm::Being::DEMIGOD
     usage
@@ -28,7 +26,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :exit, :edit_room do
     level Realm::Being::DEMIGOD
     usage
@@ -39,7 +36,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :link, :edit_room do
     level Realm::Being::DEMIGOD
     usage({ direction: :string }, { room_rid: :int })
@@ -56,7 +52,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :name, :edit_room do
     level Realm::Being::DEMIGOD
     usage :rest
@@ -66,7 +61,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :placement, :edit_room do
     level Realm::Being::DEMIGOD
     usage 'list'

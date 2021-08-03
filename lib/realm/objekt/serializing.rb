@@ -2,12 +2,10 @@ require 'yaml'
 
 module Realm
   class Objekt
-    ###########################################################################
     def serialize
       YAML.dump hashify
     end
 
-    ###########################################################################
     def hashify
       # Create a base Hash.
       hash = {
@@ -26,12 +24,10 @@ module Realm
       hash
     end
 
-    ###########################################################################
     def self.deserialize(yaml)
       dehashify YAML.load yaml
     end
 
-    ###########################################################################
     def self.dehashify(hash)
       o_hash = hash[:objekt]
 

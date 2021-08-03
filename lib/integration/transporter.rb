@@ -2,7 +2,6 @@ module Logistics
   class Transporter
     attr_reader :quarry, :source, :destination, :operation
 
-    ###########################################################################
     def initialize(objekt, operation)
       @quarry      = objekt
       @source      = nil
@@ -10,19 +9,16 @@ module Logistics
       @operation   = operation
     end
 
-    ###########################################################################
     def to(target)
       @destination = target
       resolve
     end
 
-    ###########################################################################
     def from(target)
       @source = target
       resolve
     end
 
-    ###########################################################################
     def resolve
       return self if operation != :add && source.nil?
       return self if operation != :remove && destination.nil?

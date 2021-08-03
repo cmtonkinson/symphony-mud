@@ -1,12 +1,10 @@
 module Display
   class Format
-    ###########################################################################
     def self.quantity(value, hash)
       found = hash.find { |x, _y| value >= x }
       found ? found[1] : "[{RERROR{x - value (#{value}) outside of range for Display::Format::quantity]"
     end
 
-    ###########################################################################
     def self.health(percentage, numeric = false)
       str = quantity(percentage, {
                        0.98 => 'looks {Gfantastic{x',
@@ -24,7 +22,6 @@ module Display
       str
     end
 
-    ###########################################################################
     # rubocop:disable Metrics/MethodLength
     def self.damage(damage, target)
       str = quantity(damage.actual, {
@@ -67,7 +64,6 @@ module Display
     end
     # rubocop:enable Metrics/MethodLength
 
-    ###########################################################################
     def self.mastery(percent, numeric = false)
       str = quantity(percent, {
                        100 => '{Wmasterful{x',
@@ -84,7 +80,6 @@ module Display
       str
     end
 
-    ###########################################################################
     def self.height(number)
       quantity(number, {
                  5 => 'huge',
@@ -95,7 +90,6 @@ module Display
                })
     end
 
-    ###########################################################################
     def self.weight(number)
       quantity(number, {
                  5 => 'obese',
@@ -106,7 +100,6 @@ module Display
                })
     end
 
-    ###########################################################################
     def self.resistance_word(number)
       quantity(number, {
                  101 => 'weak',

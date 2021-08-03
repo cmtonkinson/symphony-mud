@@ -1,6 +1,5 @@
 module Logistics
   class Integrator
-    ###########################################################################
     # Stitching is the process of placing a newly created Objekt into the game.
     #
     # Used, for example, when spawing NPCs and Items, to take the freshly
@@ -22,7 +21,6 @@ module Logistics
       objekt.run_hook :vivify
     end
 
-    ###########################################################################
     def self.being_stitch(being, container)
       unless container.is_a? Realm::Room
         raise 'Can only stitch a Being into a Room (being = %s, container = %s)' % [being.fqid_str, container.fqid_str]
@@ -31,7 +29,6 @@ module Logistics
       being.room = container
     end
 
-    ###########################################################################
     def self.room_stitch(room, container)
       unless container.is_a? Realm::Zone
         raise 'Can only stitch a Room into a Zone (room = %s, container = %s)' % [room.fqid_str, container.fqid_str]
@@ -40,7 +37,6 @@ module Logistics
       room.zone = container
     end
 
-    ###########################################################################
     # This is used to provide an interface between the Effect and the Objekt
     # it is being applied to that is a clean abstraction for the client code.
     def self.apply_effect(type, victim, actor = nil)

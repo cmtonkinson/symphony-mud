@@ -2,10 +2,8 @@ module Test
   class Test
     attr_accessor :accounts, :status, :result, :assertions, :output_polling
 
-    ###########################################################################
     def initialize; end
 
-    ###########################################################################
     def setup(&block)
       @id                = nil
       @parent_id         = nil
@@ -24,7 +22,6 @@ module Test
       instance_eval(&block) if block_given?
     end
 
-    ###########################################################################
     def conduct_test(context)
       @context = context
 
@@ -53,7 +50,6 @@ module Test
       end
     end
 
-    ###########################################################################
     def expect(e, msg = nil)
       unless @last_used_account
         raise 'SystemTest#expect() called without first send a command through the shortcut interface.'
@@ -68,7 +64,6 @@ module Test
       end
     end
 
-    ###########################################################################
     def n_expect(e, msg = nil)
       unless @last_used_account
         raise 'SystemTest#n_expect() called without first send a command through the shortcut interface.'
@@ -83,7 +78,6 @@ module Test
       end
     end
 
-    ###########################################################################
     def expect_last(client, e, msg = nil)
       return if can_find(client, -1, e)
 
@@ -91,7 +85,6 @@ module Test
       @result = not_found_error e, msg
     end
 
-    ###########################################################################
     def expect_any(client, e, msg = nil)
       return if can_find(client, nil, e)
 
@@ -99,7 +92,6 @@ module Test
       @result = not_found_error e, msg
     end
 
-    ###########################################################################
     def n_expect_last(client, e, msg = nil)
       return unless can_find(client, -1, e)
 
@@ -107,7 +99,6 @@ module Test
       @result = found_error e, msg
     end
 
-    ###########################################################################
     def n_expect_any(client, e, msg = nil)
       return unless can_find(client, nil, e)
 
@@ -115,7 +106,6 @@ module Test
       @result = found_error e, msg
     end
 
-    ###########################################################################
     def can_find(client, range, e)
       @assertions += 1
 
@@ -133,7 +123,6 @@ module Test
       end
     end
 
-    ###########################################################################
     def not_found_error(e, msg = nil)
       case e
       when String then "Did not find substring '#{e}'%s" % (msg ? '  ' + msg : '')
@@ -142,7 +131,6 @@ module Test
       end
     end
 
-    ###########################################################################
     def found_error(e, _msg = nil)
       case e
       when String then "Found substring '#{e}'"
@@ -151,24 +139,20 @@ module Test
       end
     end
 
-    ###########################################################################
     def pass(str = nil)
       @status = :pass
       @result = str || 'Pass method called'
     end
 
-    ###########################################################################
     def fail(str = nil)
       @status = :fail
       @result = str || 'Fail method called'
     end
 
-    ###########################################################################
     def run_time
       '%.3fs' % (@end_time - @start_time).to_f
     end
 
-    ###########################################################################
     def account_client_method(account_name)
       @last_used_account = account_name.to_s
       @context.send (account_name.to_s + '_client').to_sym
@@ -224,7 +208,6 @@ module Test
       }
     end
 
-    ###########################################################################
     # rubocop:disable Naming/AccessorMethodName
     def get_id
       @id
@@ -239,7 +222,6 @@ module Test
     end
     # rubocop:enable Naming/AccessorMethodName
 
-    ###########################################################################
     # This convoluted garbage does a few things, all aimed at easing the
     # convenience of the system test DSL.
     def method_missing(meth, *args, &block) # rubocop:disable Style/MissingRespondToMissing
@@ -286,7 +268,6 @@ module Test
 
     private
 
-    ###########################################################################
     def id(id)
       @id = id.to_s
     end
@@ -315,7 +296,6 @@ module Test
     end
   end
 
-  ###########################################################################
   def self.define(test_id, &init_block)
     class_name = "SystemTest_#{test_id}"
     class_definition = Class.new(Test) do

@@ -7,19 +7,16 @@ module InputSequence
     attr_reader   :name, :context
     attr_accessor :user
 
-    ###########################################################################
     def initialize
       @name    = nil
       @context = OpenStruct.new
     end
 
-    ###########################################################################
     def handle(input)
       Symphony.logger.trace "#{self.class.name} in state '#{aasm.current_state}' handling '#{input}'"
       send "#{aasm.current_state}_handler", input
     end
 
-    #########################################################################
     aasm do
       after_all_transitions :log_status_change
       state :_pending, initial: true
@@ -40,7 +37,6 @@ module InputSequence
       end
     end
 
-    #########################################################################
     def log_status_change
       str = self.class.name.dup
       str << ' transitioning '

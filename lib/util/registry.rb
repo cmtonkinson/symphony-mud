@@ -2,26 +2,22 @@ module Util
   class Registry
     @@hash = {}
 
-    ###########################################################################
     def self.hash
       @@hash
     end
 
-    ###########################################################################
     def self.register(objekt)
       hash[objekt.class] ||= {}
       hash[objekt.class][objekt.id] = objekt
     end
     singleton_class.send :alias_method, :<<, :register
 
-    ###########################################################################
     def self.unregister(objekt)
       hash[objekt.class].delete objekt.id
       hash.delete_if { |_klass, bucket| bucket.empty? }
     end
     singleton_class.send :alias_method, :-, :unregister
 
-    ###########################################################################
     def self.lookup(objekt_id)
       objekt = nil
       if (bucket = hash.values.find { |buck| buck.key? objekt_id })
@@ -35,7 +31,6 @@ module Util
     end
     singleton_class.send :alias_method, :[], :lookup
 
-    ###########################################################################
     def self.report
       buckets = Hash[hash.map do |klass, bucket|
         [klass.name, {
@@ -48,7 +43,6 @@ module Util
       }
     end
 
-    ###########################################################################
     # Remove any disposed Objekts from the Registry. If all went well, the
     # registry should be the last reference to anything marked for disposal,
     # so after this the Ruby GC can actually reap them.

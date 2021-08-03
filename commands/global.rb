@@ -2,7 +2,6 @@ module Command
   # TODO: support aliases (esp. for command shortcuts like NESWUD)
   # TODO: set default aliases (NESWUP, kill, etc.)
 
-  ###############################################################################
   Realm::Exit::DIRECTIONS.each_key do |direction|
     define direction do
       shortcut direction[0]
@@ -18,7 +17,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :colors do
     usage
     exec do
@@ -33,7 +31,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :commands do
     usage
     exec do
@@ -54,7 +51,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :details do
     usage
     exec do
@@ -63,7 +59,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :drop do
     usage(items: :id)
     exec do
@@ -78,7 +73,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :emote do
     usage :rest
     exec do
@@ -86,7 +80,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :equipment do
     usage
     exec do
@@ -102,7 +95,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :get do
     usage items: :id
     exec do
@@ -117,7 +109,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :group do
     usage
     usage({ action: %w[leave disband] })
@@ -174,7 +165,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :help do
     usage :command
     exec do
@@ -199,7 +189,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :inventory do
     shortcut 'i'
     usage
@@ -208,7 +197,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :kill do
     shortcut 'k'
     usage({ victim: :id })
@@ -224,7 +212,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :learn do
     usage({ ability: :rest })
     exec do
@@ -233,7 +220,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :look do
     shortcut 'l'
     usage
@@ -281,8 +267,7 @@ module Command
     end
   end
 
-  ###############################################################################
-  # TODO implement "exploration" where players don't see Rooms mapped until they
+  # TODO: implement "exploration" where players don't see Rooms mapped until they
   # have visited them. Could link up to achievements, exp bonuses, show up on
   # the summary page, etc.
   define :map do
@@ -312,7 +297,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :practice do
     usage({ ability: :string })
     exec do
@@ -321,7 +305,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :remove do
     usage :target
     exec do
@@ -335,7 +318,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :say do
     usage :rest
     exec do
@@ -343,7 +325,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :shortcuts do
     usage
     exec do
@@ -361,7 +342,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :skills do
     usage
     exec do
@@ -370,7 +350,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :spells do
     usage
     exec do
@@ -379,7 +358,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :status do
     usage
     exec do
@@ -393,7 +371,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :summary do
     usage
     exec do
@@ -402,7 +379,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :wear do
     usage :target
     exec do
@@ -416,7 +392,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :who do
     usage
     exec do
@@ -427,7 +402,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :zones do
     usage
     exec do

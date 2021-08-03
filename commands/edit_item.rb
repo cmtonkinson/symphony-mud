@@ -1,5 +1,4 @@
 module Command
-  ###############################################################################
   define :iedit do
     level Realm::Being::DEMIGOD
     usage 'create'
@@ -32,7 +31,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :items do
     level Realm::Being::DEMIGOD
     usage
@@ -48,7 +46,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :information, :edit_item do
     level Realm::Being::DEMIGOD
     usage
@@ -57,7 +54,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :exit, :edit_item do
     level Realm::Being::DEMIGOD
     usage
@@ -68,7 +64,6 @@ module Command
     end
   end
 
-  #############################################################################
   modifiable_properties = (%i[health mana] +
                            Realm::Being::FITNESS +
                            Realm::Being::DEFENSE +
@@ -96,7 +91,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :wearable, :edit_item do
     level Realm::Being::DEMIGOD
     usage 'none'
@@ -115,7 +109,6 @@ module Command
     end
   end
 
-  ###############################################################################
   is_positive = ->(x) { return x.positive? }
   is_word     = ->(x) { return !x.match(/\Aa-z+\z/i) }
   in_types    = ->(x) { return Konst::ITEM_TYPES.include?(x.to_sym) }

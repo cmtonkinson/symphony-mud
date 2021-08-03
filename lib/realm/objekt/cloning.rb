@@ -2,7 +2,6 @@ module Realm
   class Objekt
     attr_reader :cloned_from
 
-    ###########################################################################
     after_initialize lambda {
       # When #clone is called on an Objekt, a new Objekt is returned with the
       # exact properties of the original, except two: the new Objekt has its
@@ -11,7 +10,6 @@ module Realm
       @cloned_from = nil
     }
 
-    ###########################################################################
     def clone
       # Generate a new subclass-type Objekt, setting the cloned_from id.
       dolly = self.class.new

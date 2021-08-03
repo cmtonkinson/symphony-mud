@@ -2,7 +2,6 @@ module Command
   class Operator
     attr_reader :command_set, :set_name
 
-    ###########################################################################
     def initialize(user, command_set_name = :global)
       @last_input  = '' # TODO: implement this
       @user        = user
@@ -11,7 +10,6 @@ module Command
       @command_set = ::Command.configuration.command_sets[@set_name]
     end
 
-    ###########################################################################
     def handle(input)
       @command          = nil
       being             = @user.avatar
@@ -56,7 +54,6 @@ module Command
       true
     end
 
-    ###########################################################################
     def parse(input_string)
       @command.usages.each do |usage|
         context = usage.try_parse input_string

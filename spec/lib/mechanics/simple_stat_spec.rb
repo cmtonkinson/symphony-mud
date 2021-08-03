@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Mechanics::SimpleStat do
-  #############################################################################
   describe '#current' do
     before :each do
       @baseline = 20
@@ -18,7 +17,6 @@ describe Mechanics::SimpleStat do
     end
   end
 
-  #############################################################################
   describe '#modify' do
     before :each do
       @baseline = 10
@@ -32,7 +30,6 @@ describe Mechanics::SimpleStat do
     end
   end
 
-  #############################################################################
   describe '#unmodify' do
     before :each do
       @baseline = 10

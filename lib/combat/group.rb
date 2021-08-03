@@ -6,7 +6,6 @@ module Combat
     attr_reader :pending
     attr_reader :opponents
 
-    ###########################################################################
     def initialize(leader)
       @battle    = nil
       @leader    = nil
@@ -18,7 +17,6 @@ module Combat
       @leader = leader
     end
 
-    ###########################################################################
     def add_member(being)
       raise ArgumentError, "Cannot add a #{being.class.name} as a Group member" unless being.is_a? Realm::Being
 
@@ -27,7 +25,6 @@ module Combat
       being.group = self
     end
 
-    ###########################################################################
     def remove_member(being, replace = true)
       @members.delete being
       @opponents.clear if @members.empty?
@@ -36,41 +33,34 @@ module Combat
       Combat::Group.new being if replace
     end
 
-    ###########################################################################
     def add_opponent(group)
       raise ArgumentError, "Cannot add a #{group.class.name} as a Group opponent" unless group.is_a? Group
 
       @opponents.push group
     end
 
-    ###########################################################################
     def remove_opponent(group)
       @opponents.delete group
     end
 
-    ###########################################################################
     def all_opponent_members
       @opponents.map(&:members).reduce(:+)
     end
 
-    ###########################################################################
     def remove_all_opponents
       @opponents = []
     end
 
-    ###########################################################################
     def puts(format, *args)
       @members.each { |m| m.puts(format, *args) }
     end
 
-    ###########################################################################
     def leave(being)
       remove_member being
       being.puts 'You have left the group led by $being.', leader
       puts '$being has left the group.', being
     end
 
-    ###########################################################################
     def disband
       puts 'The group has been disbanded.'
       @members.each { |m| remove_member m }
@@ -81,7 +71,6 @@ module Combat
       @leader    = nil
     end
 
-    ###########################################################################
     def request_join(being)
       return if being.pending_group == self
 
@@ -93,7 +82,6 @@ module Combat
       being.puts 'You have requested to join the group led by $being.', leader
     end
 
-    ###########################################################################
     def request_withdraw(being)
       return unless @pending.include? being
 
@@ -103,7 +91,6 @@ module Combat
       leader.puts '$being has withdrawn $possessive group membership request.', being, being
     end
 
-    ###########################################################################
     def request_accept(being)
       return unless @pending.include? being
 
@@ -114,7 +101,6 @@ module Combat
       add_member being
     end
 
-    ###########################################################################
     def request_deny(being)
       return unless @pending.include? being
 
@@ -124,14 +110,12 @@ module Combat
       leader.puts 'You have denied $being membership into your group.', being
     end
 
-    ###########################################################################
     # Returns true if there is at least one Group member who can acquire a
     # valid target.
     def acquire_targets
       members.any?(&:acquire_target)
     end
 
-    ###########################################################################
     # NOTE: This needs to be changed so that the experience awarded to the
     # Group is distributed across the members in some interesting way, rather
     # than just dividing it evenly.

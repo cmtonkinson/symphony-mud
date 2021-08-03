@@ -1,5 +1,4 @@
 module Test
-  #############################################################################
   define :promote do
     with :admin
     with :lowbie, klass: 'warrior'
@@ -16,7 +15,6 @@ module Test
     end
   end
 
-  #############################################################################
   define :learn do
     from :promote
     with :lowbie
@@ -42,7 +40,6 @@ module Test
     end
   end
 
-  #############################################################################
   define :learn_dependent do
     from :promote
     with :lowbie
@@ -63,7 +60,6 @@ module Test
     end
   end
 
-  #############################################################################
   define :practice do
     def lookup_trains
       lowbie 'summary'
@@ -97,7 +93,6 @@ module Test
     end
   end
 
-  #############################################################################
   define :learn_ability_with_spaces_in_name do
     from :learn
     with :lowbie

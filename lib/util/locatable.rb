@@ -3,7 +3,6 @@
 
 module Util
   module Locatable
-    ###########################################################################
     # Find Objekts by name in the values Array.
     # Returns an Array of Objekts on success; or an empty Array on any failure.
     def locate(input)
@@ -47,7 +46,6 @@ module Util
       end
     end
 
-    ###########################################################################
     def locate_first(input)
       matches = locate input
       return nil if matches.empty?

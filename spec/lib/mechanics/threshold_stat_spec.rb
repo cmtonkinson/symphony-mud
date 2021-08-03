@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Mechanics::ThresholdStat do
-  #############################################################################
   describe '#percent' do
     it 'should return the ratio of the current value to the threshold' do
       stat = Mechanics::ThresholdStat.new 15, 20

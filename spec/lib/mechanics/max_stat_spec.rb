@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Mechanics::MaxStat do
-  #############################################################################
   describe '#current' do
     before :each do
       @max_val   = 100
@@ -24,7 +23,6 @@ describe Mechanics::MaxStat do
     end
   end
 
-  #############################################################################
   describe '#max' do
     it 'should return the configured maximum' do
       stat = Mechanics::MaxStat.new 412
@@ -32,7 +30,6 @@ describe Mechanics::MaxStat do
     end
   end
 
-  #############################################################################
   describe '#restore' do
     it 'should set the current value to the defined max' do
       max = 337

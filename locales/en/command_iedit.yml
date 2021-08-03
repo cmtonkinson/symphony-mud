@@ -11,7 +11,6 @@ en:
       title: "Items in {m$zone{x:\n\n"
       line: "[{C$rid{x] {M$item{x"
 
-  #############################################################################
   # Item Edit mode
   edit_item:
     exit:

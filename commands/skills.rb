@@ -1,5 +1,4 @@
 module Command
-  ###############################################################################
   define :cast do
     usage({ spell: :string })
     usage({ spell: :string }, { target: :id })

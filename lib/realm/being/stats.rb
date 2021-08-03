@@ -36,7 +36,6 @@ module Realm
 
     attr_accessor :circumstance, :resistances
 
-    ###########################################################################
     # Set default values for performance attributes.
     after_initialize lambda {
       @health  = Mechanics::MaxStat.new BASE_HEALTH
@@ -57,12 +56,10 @@ module Realm
       @resistances = {}
     }
 
-    ###########################################################################
     enervate lambda {
       @resistances = nil
     }
 
-    ###########################################################################
     on_hashify lambda {
       hash = {}
 
@@ -120,7 +117,6 @@ module Realm
       { stats: hash }
     }
 
-    ###########################################################################
     on_dehashify lambda { |hash|
       hash = hash[:stats]
 
@@ -156,14 +152,12 @@ module Realm
       restore_static_modifiers
     }
 
-    ###########################################################################
     vivify lambda {
       $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_health
       $world.schedule Mechanics::RecurringJob.new 0, self, 60, :auto_mana
       $world.schedule Mechanics::RecurringJob.new 0, self, 3, :auto_stamina
     }
 
-    ###########################################################################
     def restore_static_modifiers
       MODIFYING_ATTRS.each do |x|
         x = send x.to_sym
@@ -173,49 +167,41 @@ module Realm
       end
     end
 
-    ###########################################################################
     def auto_health
       this_heal = Util::Computation.bound health.max / 10, 1, health.current
       health.increase this_heal
     end
 
-    ###########################################################################
     def auto_mana
       this_heal = Util::Computation.bound mana.max / 10, 1, mana.current
       mana.increase this_heal
     end
 
-    ###########################################################################
     def auto_stamina
       this_heal = Util::Computation.bound level / 5, 1, MAX_STAMINA / 2.5
       stamina.increase this_heal
     end
 
-    ###########################################################################
     def heal
       health.restore
       mana.restore
       stamina.restore
     end
 
-    ###########################################################################
     def announce_status
       str = "$being #{Display::Format.health(health.percent, true)}."
       room.puts str, self, exclude: self
     end
 
-    ###########################################################################
     def circumstance_name
       if battle then 'battle'
       else 'normal'
       end
     end
 
-    ###########################################################################
     # NOTE: Do we want to modify any stats based on height and weight?
     attr_writer :height, :weight
 
-    ###########################################################################
     def modify(modifiers, reverse = false)
       Symphony.logger.trace "Modifying #{fqid_str} with #{modifiers.inspect} (reverse = #{reverse})"
       modifiers.each do |name, magnitude|
@@ -227,7 +213,6 @@ module Realm
       end
     end
 
-    ###########################################################################
     def modify_stat(name, magnitude, reverse = false)
       stat   = send(name)
       amount = magnitude * (reverse ? -1 : 1)
@@ -240,7 +225,6 @@ module Realm
       end
     end
 
-    ###########################################################################
     def modify_resistance(element, magnitude, reverse = false)
       amount = magnitude * (reverse ? -1 : 1)
       resistances[element] ||= Konst::BEING_RESIST_NEUTRAL
@@ -248,20 +232,17 @@ module Realm
       resistances.delete_if { |_, val| val == Konst::BEING_RESIST_NEUTRAL }
     end
 
-    ###########################################################################
     def effective_resistance(element)
       return Konst::BEING_RESIST_NEUTRAL unless resistances.key? element
 
       Util::Computation.bound(resistances[element], Konst::BEING_RESIST_MIN, Konst::BEING_RESIST_MAX)
     end
 
-    ###########################################################################
     def speak(content)
       puts I18n.t('being.speak.actor'), content
       room.puts I18n.t('being.speak.hear'), self, content, exclude: self
     end
 
-    ###########################################################################
     # rubocop:disable Metrics/AbcSize
     def detail_plate
       # This ugly garbage is to try to keep the elemental resistance list in

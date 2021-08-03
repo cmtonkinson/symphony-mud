@@ -15,7 +15,6 @@ describe Mechanics::Schedule do
     @docket = @schedule.instance_variable_get '@docket'
   end
 
-  #############################################################################
   describe '#add' do
     it 'should prioritize Jobs needing to occur first' do
       @jobs.each { |j| @schedule.add j }
@@ -23,7 +22,6 @@ describe Mechanics::Schedule do
     end
   end
 
-  #############################################################################
   describe '#fire!' do
     it 'should return nil if the queue is empty' do
       expect(@schedule.fire!).to be_nil

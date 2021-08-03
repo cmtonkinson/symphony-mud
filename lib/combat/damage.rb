@@ -4,7 +4,6 @@ module Combat
     attr_accessor :actual, :source, :implement
     attr_accessor :armor_adjustment, :elemental_adjustment
 
-    ###########################################################################
     # d = Combat::Damage.new(53).slash.fire(20).implement(weapon).from(attacker)
     def initialize(base_amount)
       @base_amount = base_amount
@@ -15,14 +14,12 @@ module Combat
       @elements    = {}
     end
 
-    ###########################################################################
     Konst::DAMAGE_TYPES.each do |t|
       define_method(t) do
         @type = t
       end
     end
 
-    ###########################################################################
     Konst::ELEMENTS.each do |el|
       define_method(el) do |value|
         if value.zero?

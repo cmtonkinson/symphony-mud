@@ -1,6 +1,5 @@
 module Command
   class Usage < Array
-    ###########################################################################
     # Add a new Argument. Raise if something goes wrong.
     def push(arg)
       # Don't accept custom data structures.
@@ -13,7 +12,6 @@ module Command
       super
     end
 
-    ###########################################################################
     def try_parse(input)
       remaining = input.dup
       context   = OpenStruct.new
@@ -34,7 +32,6 @@ module Command
       context
     end
 
-    ###########################################################################
     # This makes sure that Usages are sorted by the number of Arguments they
     # contain, descending. The exception is that a Usage defined with only a
     # :rest and nothing else should always appear at the end of the list so as
@@ -43,7 +40,6 @@ module Command
       length == 1 && first.type == :rest ? 999 : -length
     end
 
-    ###########################################################################
     def to_s
       "Usage<#{length}:#{map(&:to_s).join(',')}>"
     end

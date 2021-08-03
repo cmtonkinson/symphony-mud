@@ -1,5 +1,4 @@
 module Test
-  #############################################################################
   define :combat_setup do
     with :admin
     with :vork, { klass: 'warrior', gender: 'male', height: 'tall', weight: 'thin' }
@@ -32,7 +31,6 @@ module Test
     end
   end
 
-  #############################################################################
   define :test_kill do
     from :combat_setup
     with :admin
@@ -45,7 +43,6 @@ module Test
     end
   end
 
-  #############################################################################
   define :elemental_absorb do
     from :combat_setup
     with :admin

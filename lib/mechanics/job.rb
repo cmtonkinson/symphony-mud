@@ -16,7 +16,6 @@ module Mechanics
     # squelch them from even the most verbose logging output.
     IGNORE_TRACE = ->(str) { str.match?(/Dead Job|auto_(health|mana|stamina)/) }
 
-    ###########################################################################
     def initialize(wen, who, callable = nil, *args, &block)
       raise ArgumentError, 'no method or proc given' if callable.nil? && !block_given?
       raise ArgumentError, 'both method and proc given' if !callable.nil? && block_given?
@@ -51,7 +50,6 @@ module Mechanics
       @repeat_times = 0
     end
 
-    ###########################################################################
     def resolve_time(val)
       case val
       when Integer then val
@@ -60,19 +58,16 @@ module Mechanics
       end
     end
 
-    ###########################################################################
     def recurring?
       @recurring
     end
 
-    ###########################################################################
     def recur(every = 60, times = -1)
       @recurring    = true
       @repeat_every = every
       @repeat_times = times
     end
 
-    ###########################################################################
     def recur!
       @wen = Time.now.to_i + resolve_time(@repeat_every)
       if @repeat_times.zero?
@@ -82,18 +77,15 @@ module Mechanics
       end
     end
 
-    ###########################################################################
     # Is it time for the Job to fire?
     def ready?(now = Time.now.to_i)
       now >= @wen
     end
 
-    ###########################################################################
     def overdue?(now = Time.now.to_i)
       now > @wen
     end
 
-    ###########################################################################
     # Execute the callable.
     def fire
       Symphony.logger.trace 'Firing %s' % self unless IGNORE_TRACE.call(to_s)
@@ -102,7 +94,6 @@ module Mechanics
       kill unless recurring?
     end
 
-    ###########################################################################
     # Render the Job functionally useless. We make a time-space tradeoff here
     # by marking the Job dead rather than immediately removing it from the
     # Schedule's priority queue because skipping over a dead Job during
@@ -121,28 +112,23 @@ module Mechanics
       @dead = true
     end
 
-    ###########################################################################
     # Has the Job been killed?
     def dead?
       @dead
     end
 
-    ###########################################################################
     def ready_in
       @wen - Time.now.to_i
     end
 
-    ###########################################################################
     def to_s
       dead? ? '<Dead Job>' : '<Job %s %s %s %s>' % [wen_to_s, who_to_s, what_to_s, args_to_s]
     end
 
-    #############################################################################
     def wen_to_s
       'in %ds' % [ready_in]
     end
 
-    #############################################################################
     def who_to_s
       if @who.is_a? Realm::Objekt
         @who.fqid_str
@@ -153,7 +139,6 @@ module Mechanics
       end
     end
 
-    #############################################################################
     def what_to_s
       if @what.respond_to? :to_sym
         ':' + @what.to_sym.to_s
@@ -163,7 +148,6 @@ module Mechanics
       end
     end
 
-    #############################################################################
     def args_to_s
       if @args.length
         '(%s)' % @args.map do |arg|

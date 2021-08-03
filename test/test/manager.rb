@@ -5,7 +5,6 @@ module Test
   class Manager
     attr_accessor :num_tests, :num_pass, :num_fail
 
-    ###########################################################################
     def initialize
       @test_tree = Tree::TreeNode.new :root, nil
       @reg = Configuration.configuration.test_registry
@@ -16,7 +15,6 @@ module Test
       setup
     end
 
-    ###########################################################################
     def setup
       # Construct the full test tree.
       analyze @reg[0] until @reg.empty?
@@ -42,7 +40,6 @@ module Test
       end
     end
 
-    ###########################################################################
     def analyze(test)
       # If the test has a parent_id, we need to resolve the dependency.
       if test.get_parent_id
@@ -77,7 +74,6 @@ module Test
       new_node
     end
 
-    ###########################################################################
     def start
       FileUtils.rm_rf Dir.glob $ROOT_DIR.join 'test', 'state', '*'
 
@@ -108,7 +104,6 @@ module Test
       end
     end
 
-    ###########################################################################
     # Returns two spaces for every level of depth of the node in the tree.
     # Used for indenting output.
     def i(node)

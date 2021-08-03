@@ -2,7 +2,6 @@ module Mechanics
   class Slot
     attr_reader :slotted, :occupant, :type, :name
 
-    ###########################################################################
     def initialize(slotted, type, name)
       @occupant = nil
       @slotted  = slotted
@@ -10,7 +9,6 @@ module Mechanics
       @name     = name
     end
 
-    ###########################################################################
     # Track the given occupant as inhabiting this slot. If new_container is
     # given, insert the old occupant (if there was one) into it. Either way,
     # return the old occupant or nil.
@@ -37,7 +35,6 @@ module Mechanics
       previous
     end
 
-    ###########################################################################
     def empty?
       occupant.nil?
     end

@@ -5,7 +5,6 @@ en:
       edit: "You're now editing zone "
       err_nothing: "No zone by that id in this zone."
 
-  #############################################################################
   # Zone Edit mode
   edit_zone:
     exit:

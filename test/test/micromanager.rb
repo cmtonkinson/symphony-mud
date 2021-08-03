@@ -2,7 +2,6 @@ require 'fileutils'
 
 module Test
   class Micromanager
-    ###########################################################################
     def initialize(test_node)
       @node = test_node
       @test = @node.content
@@ -11,7 +10,6 @@ module Test
       go
     end
 
-    ###########################################################################
     def state_path
       @state_path ||= $ROOT_DIR.join('test', 'state', @id)
     end
@@ -24,7 +22,6 @@ module Test
       @log_path ||= state_path.join('server-log.txt')
     end
 
-    ###########################################################################
     def go
       # Start the server thread.
       server_thread = start_server_thread
@@ -36,7 +33,6 @@ module Test
       server_thread.join
     end
 
-    ###########################################################################
     def start_server_thread
       # If this is an independent test, create the data directory.
       if @test.get_parent_id.nil?
@@ -70,7 +66,6 @@ module Test
       th
     end
 
-    ###########################################################################
     def start_test
       # Get the ephemeral port the server is listening on from the log.
       matches = /listening on \d+\.\d+\.\d+\.\d+:(\d+)/.match(IO.read(log_path))

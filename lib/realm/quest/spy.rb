@@ -6,7 +6,6 @@ module Realm
   class Spy < Objekt
     attr_accessor :task, :name, :trigger, :params, :active, :status
 
-    ###########################################################################
     def initialize(id = nil, props = {})
       @task    = nil
       @name    = nil
@@ -18,28 +17,22 @@ module Realm
       super
     end
 
-    ###########################################################################
     after_initialize lambda {
     }
 
-    ###########################################################################
     on_hashify lambda {
     }
 
-    ###########################################################################
     on_dehashify lambda { |hash|
     }
 
-    ###########################################################################
     on_deep_copy lambda { |original|
     }
 
-    ###########################################################################
     enervate lambda {
       dispose
     }
 
-    ###########################################################################
     # Activating the Spy will cause it to monitor the underlying Objekt (the
     # 'tasked') for relevant events.
     def activate
@@ -51,7 +44,6 @@ module Realm
       send activate_meth if respond_to? activate_meth
     end
 
-    ###########################################################################
     def deactivate
       Symphony.logger.trace 'Spy %s (%s) #deactivate for %s' % [fqid_str, task.fqid_str, name]
       @active = false
@@ -61,44 +53,37 @@ module Realm
       send deactivate_meth if respond_to? deactivate_meth
     end
 
-    ###########################################################################
     def complete!
       Symphony.logger.trace 'Spy %s (%s) #complete! for %s' % [fqid_str, task.fqid_str, name]
       @status = :complete
       task.run_hook :spy_completed
     end
 
-    ###########################################################################
     def fail!
       Symphony.logger.trace 'Spy %s (%s) #fail! for %s' % [fqid_str, task.fqid_str, name]
       @status = :failed
       task.run_hook :spy_failed
     end
 
-    ###########################################################################
     def update!
       Symphony.logger.trace 'Spy %s (%s) #update! for %s' % [fqid_str, task.fqid_str, name]
       task.run_hook :spy_updated
     end
 
-    ###########################################################################
     # A Spy can be configured and 'ready to go' but not activated. Take the
     # example of a player who has a quest available, but hasn't accepted it.
     def active?
       @active == true
     end
 
-    ###########################################################################
     def complete?
       @status == :complete
     end
 
-    ###########################################################################
     def failed?
       @status == :failed
     end
 
-    ###########################################################################
     # Subclasses define the #valid_symbols method as appropriate for their use
     # and it returns an array of symbols.
     def validate_name(name)
@@ -113,7 +98,6 @@ module Realm
       false
     end
 
-    ###########################################################################
     # The #setup method must be called before #activate and will invoke the
     # appropriate matching subclass setup_* method.
     def setup(name, args = nil)
@@ -143,7 +127,6 @@ module Realm
       send setup_meth, *args if respond_to? setup_meth
     end
 
-    ###########################################################################
     # This is the public entry method for invoking whatever subclass- and type-
     # specific logic needs to be run to evaluate Spy state.
     def exec(arg = nil)

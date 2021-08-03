@@ -2,18 +2,15 @@ module Realm
   class Placement < Objekt
     attr_accessor :room, :klass, :objekt_id, :number, :max
 
-    ###########################################################################
     def initialize(id = nil, props = {})
       super
       @name = ''
     end
 
-    ###########################################################################
     after_initialize lambda {
       @rid = room.next_placement_rid if room
     }
 
-    ###########################################################################
     on_hashify lambda {
       {
         klass: klass,
@@ -23,7 +20,6 @@ module Realm
       }
     }
 
-    ###########################################################################
     on_dehashify lambda { |hash|
       @klass     = hash[:klass]
       @objekt_id = hash[:objekt_id]
@@ -31,12 +27,10 @@ module Realm
       @max       = hash[:max]
     }
 
-    ###########################################################################
     def target
       @target ||= $world.find(objekt_id)
     end
 
-    ###########################################################################
     def summary
       $templates.placement_summary % [
         rid,
@@ -48,7 +42,6 @@ module Realm
       ]
     end
 
-    ###########################################################################
     def place
       raise 'Placement Room reference is nil' if room.nil?
       raise 'Could not find Placement target' if target.nil?

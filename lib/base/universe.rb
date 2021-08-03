@@ -5,7 +5,6 @@ module Base
     attr_accessor :clients, :server, :should_stop, :quotes, :should_reboot,
                   :should_save
 
-    ###########################################################################
     def initialize
       @clients     = []
       @quotes      = []
@@ -13,7 +12,6 @@ module Base
       @should_stop = false
     end
 
-    ###########################################################################
     def do_server
       setup_server
       Symphony.logger.unknown "Server listening on #{@server.ip_port_s}"
@@ -31,7 +29,6 @@ module Base
       Symphony.logger.unknown 'Server shutting down.'
     end
 
-    ###########################################################################
     def setup_server
       if ENV['SYMPHONY_REBOOT'] == 'true'
         recover_from_reboot
@@ -41,7 +38,6 @@ module Base
       @quotes = YAML.load IO.read Symphony.root.join 'data', 'quotes.yml'
     end
 
-    ###########################################################################
     def welcome(client)
       return if client.nil?
 
@@ -51,7 +47,6 @@ module Base
       clients << client
     end
 
-    ###########################################################################
     def handle_input
       clients.each do |client|
         input = client.recv
@@ -76,7 +71,6 @@ module Base
       end
     end
 
-    ###########################################################################
     def handle_output
       clients.each do |client|
         user   = client.user
@@ -85,7 +79,6 @@ module Base
       end
     end
 
-    ###########################################################################
     def handle_disconnections
       clients.select(&:should_terminate).each do |c|
         if (avatar = c.user.avatar)
@@ -97,14 +90,12 @@ module Base
       end
     end
 
-    ###########################################################################
     def broadcast(message)
       formatted = message.prepend I18n.t('universe.broadcast')
       Symphony.logger.debug formatted
       @clients.each { |client| client.puts formatted }
     end
 
-    ###########################################################################
     def begin_reboot
       Symphony.logger.unknown 'Server beginning reboot'
       broadcast I18n.t('universe.reboot.begin')
@@ -124,7 +115,6 @@ module Base
       broadcast I18n.t('universe.reboot.fail')
     end
 
-    ###########################################################################
     def reboot_exec_details
       # We want to pass all open file descriptors to the new process.
       server_fd  = server.to_i
@@ -148,7 +138,6 @@ module Base
       [env, options]
     end
 
-    ###########################################################################
     def recover_from_reboot
       # Restart the server.
       @server = Network::Server.for_fd ENV['SYMPHONY_SERVER_FD'].to_i
@@ -165,14 +154,12 @@ module Base
       @clients.map(&:user).map(&:avatar).each { |a| a.cmd 'look' }
     end
 
-    ###########################################################################
     # Store to disk a mapping of client socket descriptors to Avatar ids.
     def save_reboot_map
       recovery_map = Hash[@clients.map { |c| [c.fd, c.user.avatar.id] }]
       File.write Base.configuration.recovery_file, YAML.dump(recovery_map)
     end
 
-    ###########################################################################
     # Reconnect all Avatars back to their corresponding descriptors.
     def load_reboot_map
       # Read the recovery Hash.
@@ -190,7 +177,6 @@ module Base
       # rubocop:enable Security/MarshalLoad
     end
 
-    ###########################################################################
     # Laughably simplistic REPL, but gets the job done for now.
     def do_console
       context = binding
@@ -206,7 +192,6 @@ module Base
       end
     end
 
-    ###########################################################################
     def do_script
       context = binding
       content = File.read Symphony.configuration.script

@@ -7,7 +7,6 @@ module Mechanics
 
     MIN_JOBS_PER_BATCH = 25
 
-    ###########################################################################
     def initialize
       @docket             = PQueue.new { |a, b| a.wen < b.wen }
       @recurring          = {}
@@ -18,14 +17,12 @@ module Mechanics
       @batches_per_second = 1 / Base.configuration.sleep_interval
     end
 
-    ###########################################################################
     # Insert the Job into the priority queue.
     def add(job)
       @docket.push job
       Symphony.logger.trace 'Scheduling %s' % job unless Mechanics::Job::IGNORE_TRACE.call(job.to_s)
     end
 
-    ###########################################################################
     # Execute the next valid Job.
     #
     # Returns true if a Job was fired.
@@ -59,7 +56,6 @@ module Mechanics
       true
     end
 
-    ###########################################################################
     # Execute JOBS_PER_BATCH Jobs' worth of actual useful work.
     def fire_batch
       ctr = 0
@@ -80,7 +76,6 @@ module Mechanics
       rebalance_job_parameters
     end
 
-    ###########################################################################
     # This method will alter how many jobs are run on each game loop based on
     # the job queue length and short term schedule. It attemps to reach the
     # lowest number of jobs per loop that won't result in any jobs firing
@@ -135,12 +130,10 @@ module Mechanics
       end
     end
 
-    ###########################################################################
     def length
       @docket.length
     end
 
-    ###########################################################################
     def take(num)
       @docket.to_a.reverse.take num
     end

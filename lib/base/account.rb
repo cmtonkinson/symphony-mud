@@ -1,6 +1,5 @@
 module Base
   class Account
-    ###########################################################################
     def self.hash(message)
       binary = OpenSSL::PKCS5.pbkdf2_hmac(
         message,
@@ -13,7 +12,6 @@ module Base
       hex.first # unpack returns an Array; in this case only a single element
     end
 
-    ###########################################################################
     # Whew, didn't even have to work for it! Graciously accepted from the
     # precious armory of ruby-doc.org (OpenSSL::PKCS5 module docs)
     def self.equal_time_compare(left, right)
@@ -33,7 +31,6 @@ module Base
       memo.zero?
     end
 
-    ###########################################################################
     def self.add(name, id, given_passphrase)
       user_map[name] = {
         id: id,
@@ -42,18 +39,15 @@ module Base
       update_user_map!
     end
 
-    ###########################################################################
     def self.remove(name)
       user_map.delete name
       update_user_map!
     end
 
-    ###########################################################################
     def self.exists?(name)
       user_map.key? name
     end
 
-    ###########################################################################
     def self.authenticate(name, given_passphrase)
       if equal_time_compare user_map[name][:passphrase], hash(given_passphrase)
         user_map[name][:id]
@@ -62,12 +56,10 @@ module Base
       end
     end
 
-    ###########################################################################
     def self.file_path
       Symphony.data.join 'accounts.yml'
     end
 
-    ###########################################################################
     def self.user_map
       # Cache the file contents.
       begin
@@ -79,7 +71,6 @@ module Base
       @user_map
     end
 
-    ###########################################################################
     def self.update_user_map!
       # Don't kill the file.
       raise ArgumentError, 'user_map is nil' if user_map.nil?

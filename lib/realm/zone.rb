@@ -6,17 +6,14 @@ module Realm
 
     CONTAINERS.each { |c| attr_accessor c.to_sym }
 
-    ###########################################################################
     def initialize(id = nil, props = {})
       super
     end
 
-    ###########################################################################
     after_initialize lambda {
       CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     }
 
-    ###########################################################################
     on_hashify lambda {
       {
         rooms: @rooms.values.map(&:hashify),
@@ -26,7 +23,6 @@ module Realm
       }
     }
 
-    ###########################################################################
     on_dehashify lambda { |hash|
       hash[:rooms].each { |h| @rooms.insert Realm::Room.dehashify(h) }
 
@@ -50,13 +46,11 @@ module Realm
       hash[:npcs].each { |h| @npcs.insert Realm::NPC.dehashify(h) }
     }
 
-    ###########################################################################
     vivify lambda {
       reset
       $world.schedule Mechanics::RecurringJob.new 90, self, 90, :reset
     }
 
-    ###########################################################################
     def layout
       # Create a 2D Array that is large enough to hold the shape of the Zone.
       x_min, x_max  = extreme_coords 0
@@ -97,7 +91,6 @@ module Realm
       layout
     end
 
-    ###########################################################################
     def extreme_coords(index)
       room_ary = @rooms.values
       get_coord = proc { |r| r.coords[index] }
@@ -107,7 +100,6 @@ module Realm
       ]
     end
 
-    ###########################################################################
     def summary
       $templates.zone_summary % [
         rid, name,
@@ -116,7 +108,6 @@ module Realm
       ]
     end
 
-    ###########################################################################
     def reset
       Symphony.logger.debug 'Zone reset: %s' % fqid_str
       @rooms.values.each(&:reset)

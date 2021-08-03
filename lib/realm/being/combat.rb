@@ -10,19 +10,16 @@ module Realm
     define_hook :on_death
     define_hook :after_death
 
-    ###########################################################################
     after_initialize lambda {
       @dead = false
       Combat::Group.new self
       @pending_group = nil
     }
 
-    ###########################################################################
     def battle
       group.battle
     end
 
-    ###########################################################################
     def acquire_target
       return nil unless group.all_opponent_members
 
@@ -32,12 +29,10 @@ module Realm
            .first
     end
 
-    ###########################################################################
     def dead?
       @dead
     end
 
-    ###########################################################################
     def calculate_damage(dam)
       actual = dam.base_amount
 
@@ -66,7 +61,6 @@ module Realm
       actual
     end
 
-    ###########################################################################
     def take_damage(dam)
       # In some cases (such as Combat::Strike#perform) we need to know how much
       # real damage we're doing before we do it. In other cases (such as
@@ -85,7 +79,6 @@ module Realm
       die dam.source if health.current < 1
     end
 
-    ###########################################################################
     def die(did_the_damage)
       result = run_hook :before_death
       return if result.halted?
@@ -100,7 +93,6 @@ module Realm
       run_hook :after_death
     end
 
-    ###########################################################################
     def emit_experience
       # Short circuit if the Being didn't die in combat.
       return unless group.battle
@@ -116,30 +108,24 @@ module Realm
       cui_bono.each { |g| g.award_experience experience_given, self }
     end
 
-    ###########################################################################
     def cast_spell(ability, target)
       puts "You intone the '{c$ability{x' spell.", ability
       room.puts '$being mutters something strange.', self, exclude: [self]
       ability.invoke target
     end
 
-    ###########################################################################
     before_strike_attack ->(strike) {}
 
-    ###########################################################################
     after_strike_attack lambda { |strike|
       # TODO: Leaving this here as a reminder of how to implement e.g. Second Strike
       # return if strike.parent
       # Combat::Strike.new strike.attacker, strike.defender, strike.bout, strike
     }
 
-    ###########################################################################
     before_strike_defense ->(strike) {}
 
-    ###########################################################################
     after_strike_defense ->(strike) {}
 
-    ###########################################################################
     before_death lambda {
       if god?
         health.increase 1
@@ -149,7 +135,6 @@ module Realm
       return true
     }
 
-    ###########################################################################
     on_death lambda {
       @dead = true
       emit_experience

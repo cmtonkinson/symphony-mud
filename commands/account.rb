@@ -1,5 +1,4 @@
 module Command
-  ###############################################################################
   define :preferences do
     usage
     usage({ preference: %w[color numeric] }, { toggle: :bool })
@@ -29,7 +28,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :quit do
     usage
     exec do
@@ -39,7 +37,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :save do
     usage
     exec do
@@ -49,7 +46,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :whoami do
     usage
     exec do

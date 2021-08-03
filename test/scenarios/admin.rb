@@ -1,5 +1,4 @@
 module Test
-  #############################################################################
   define :create_admin do
     with :admin
     test do
@@ -9,7 +8,6 @@ module Test
     end
   end
 
-  #############################################################################
   define :smoke_test_commands do
     from :create_admin
     with :admin
@@ -37,7 +35,6 @@ module Test
     end
   end
 
-  #############################################################################
   # This test is a little janky (including 2 hacks) but the alternative is a
   # possibly significant refactor of the system testing infrastructure to
   # accommodate just this one stupid test.
@@ -59,7 +56,6 @@ module Test
     end
   end
 
-  #############################################################################
   define :shutdown do
     from :create_admin
     with :admin
@@ -69,7 +65,6 @@ module Test
     end
   end
 
-  #############################################################################
   define :quit do
     from :create_admin
     with :admin
@@ -79,7 +74,6 @@ module Test
     end
   end
 
-  #############################################################################
   define :log_level do
     from :create_admin
     with :admin
@@ -92,7 +86,6 @@ module Test
     end
   end
 
-  #############################################################################
   define :repeat do
     from :create_admin
     with :admin
@@ -109,7 +102,6 @@ module Test
     end
   end
 
-  #############################################################################
   define :identify do
     from :create_admin
     with :admin

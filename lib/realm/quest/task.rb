@@ -36,7 +36,6 @@ module Realm
     # status...
     #  must be serializable (to save/load)
 
-    ###########################################################################
     def initialize(id = nil, props = {})
       @name        = ''
       @description = ''
@@ -47,11 +46,9 @@ module Realm
       super
     end
 
-    ###########################################################################
     after_initialize lambda {
     }
 
-    ###########################################################################
     on_hashify lambda {
       hash = {
         name: name,
@@ -63,7 +60,6 @@ module Realm
       { task: hash }
     }
 
-    ###########################################################################
     on_dehashify lambda { |hash|
       hash = hash[:task]
 
@@ -78,7 +74,6 @@ module Realm
       hash[:rewards].each { |reward| @rewards << Realm::Reward.dehashify(reward) }
     }
 
-    ###########################################################################
     on_deep_copy lambda { |original|
       @name = original.name
       @description = original.description
@@ -91,7 +86,6 @@ module Realm
       @rewards.each { |reward| @rewards << reward.clone }
     }
 
-    ###########################################################################
     enervate lambda {
       @objective.run_hook :enervate
       @parameters.each { |p| p.run_hook :enervate }
@@ -99,25 +93,21 @@ module Realm
       dispose
     }
 
-    ###########################################################################
     spy_completed lambda {
       Symphony.logger.debug '%s :spy_completed for %s' % [fqid_str, tasked.fqid_str]
       evaluate_spies
     }
 
-    ###########################################################################
     spy_failed lambda {
       Symphony.logger.debug '%s :spy_failed for %s' % [fqid_str, tasked.fqid_str]
       evaluate_spies
     }
 
-    ###########################################################################
     spy_updated lambda {
       Symphony.logger.trace '%s :spy_updated for %s' % [fqid_str, tasked.fqid_str]
       evaluate_spies
     }
 
-    ###########################################################################
     # Each time a Spy is updated, we need to recheck the state of all of them
     # to figure out if the Task is complete.
     def evaluate_spies
@@ -132,46 +122,39 @@ module Realm
       end
     end
 
-    ###########################################################################
     # Finishing the Task will cause deactivation.
     def finish
       Symphony.logger.trace '%s #finish for %s' % [fqid_str, tasked.fqid_str]
       deactivate
     end
 
-    ###########################################################################
     # Spies don't automatically listen for events - they need to be activated
     def activate
       objective.activate
       parameters.each(&:activate)
     end
 
-    ###########################################################################
     def deactivate
       objective.deactivate
       parameters.each(&:deactivate)
     end
 
-    ###########################################################################
     # Tests whether the Objective has been met and none of the auxillary
     # requirements (Parameters) have been violated.
     def complete?
       objective.complete? && parameters.none?(&:failed?)
     end
 
-    ###########################################################################
     def failed?
       parameters.any?(&:failed?)
     end
 
-    ###########################################################################
     def set_objective(name, args = nil)
       @objective = Objective.new
       @objective.task = self
       @objective.setup(name, args)
     end
 
-    ###########################################################################
     def add_parameter(name, args = nil)
       p = Parameter.new
       p.task = self

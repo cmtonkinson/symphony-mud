@@ -1,6 +1,5 @@
 require 'optparse'
 
-###############################################################################
 # Configuration configuration, with default configurations. It's turtles all
 # the way down. Seriously though: this Array defines all of the settings
 # available for the application. There is a strict order of precedence, from
@@ -12,7 +11,6 @@ require 'optparse'
 #   4. Command line options (e.g. --log-level)
 #
 # Note that initializer scripts run BEFORE any of these are processed.
-###############################################################################
 CONFIGURATION = [
   # short: The single-character abbreviation to use on the command line
   # long: The long form command line name, used also for the environment variable
@@ -85,14 +83,10 @@ CONFIGURATION = [
   }
 ].freeze
 
-###############################################################################
 # Set all the defaults.
-###############################################################################
 CONFIGURATION.each { |config| config[:callback].call config[:default] }
 
-###############################################################################
 # Check for a configuration file.
-###############################################################################
 config_file = Symphony.root.join 'config.yml'
 
 if File.readable? config_file
@@ -103,9 +97,7 @@ if File.readable? config_file
   end
 end
 
-###############################################################################
 # Check the environment for configuration settings.
-###############################################################################
 CONFIGURATION.each do |config|
   # Convert the long name to an ENV_STYLE_TOKEN.
   env_var_name = "SYMPHONY_#{config[:long]}".upcase.tr '-', '_'
@@ -113,9 +105,7 @@ CONFIGURATION.each do |config|
   config[:callback].call ENV[env_var_name] if ENV.key? env_var_name
 end
 
-###############################################################################
 # Check the command line for configuration settings.
-###############################################################################
 # We want to skip over the OptionParser if the application is being loaded in
 # the context of another program (e.g. rspec) or this will cause any CLI args
 # intended for that program to be processd here.
@@ -134,9 +124,7 @@ if /symphony/.match?($PROGRAM_NAME)
   end.parse!
 end
 
-###############################################################################
 # Hack to correct data paths - App.new gets called in bootstrap, prior to the
 # options parsing in this file so we have to go back and replace data paths
 # to account for possible configuration overrides.
-###############################################################################
 Symphony.update_data_paths!

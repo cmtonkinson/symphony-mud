@@ -4,7 +4,6 @@ module Realm
   class Objekt
     attr_reader :containers
 
-    ###########################################################################
     after_initialize lambda {
       # By adding `Util::AttrHash` instance members to your subclasses, you
       # can easily keep collections of Objekts organized. If you decide to
@@ -16,7 +15,6 @@ module Realm
       @containers = Set.new
     }
 
-    ###########################################################################
     enervate lambda {
       # When destroying an Objekt, we want to be sure it's removed from all
       # containers it may be in (which should theoretically only be one at a
@@ -25,7 +23,6 @@ module Realm
       @containers.each { |container| container.delete self }
     }
 
-    ###########################################################################
     # Given an obj of type Thing
     # Attempts to call `@things.insert obj`
     def insert(objekt)
@@ -34,7 +31,6 @@ module Realm
       objekt.containers.add self
     end
 
-    ###########################################################################
     # Given an obj of type Thing
     # Attempts to call `@things.remove obj`
     def delete(objekt)
@@ -43,7 +39,6 @@ module Realm
       objekt.containers.delete self
     end
 
-    ###########################################################################
     def container_for(obj)
       raise ArgumentError, "#{obj.class.name} is not a subclass of Objekt" unless obj.is_a? Objekt
 

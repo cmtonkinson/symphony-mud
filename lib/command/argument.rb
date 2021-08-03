@@ -75,18 +75,15 @@ module Command
   class Argument
     attr_reader :name, :type, :value
 
-    ###########################################################################
     def initialize(definition = nil)
       @empty = true
       study definition
     end
 
-    ###########################################################################
     def empty?
       @empty
     end
 
-    ###########################################################################
     def study(definition)
       return if definition.nil?
 
@@ -113,7 +110,6 @@ module Command
       raise ArgumentError, I18n.t('command.variable_overshadow', name: @name) if DEFAULT_CONTEXT.include? @name
     end
 
-    ###########################################################################
     def study_hash(name, kind)
       @name = name.to_s
       if kind.is_a? Array
@@ -129,7 +125,6 @@ module Command
       end
     end
 
-    ###########################################################################
     def scan(input)
       case @type
       when :set then scan_for_set input
@@ -137,7 +132,6 @@ module Command
       end
     end
 
-    ###########################################################################
     def scan_for_set(input)
       next_token = input.partition(' ').first
       if @value.include? next_token
@@ -147,7 +141,6 @@ module Command
       end
     end
 
-    ###########################################################################
     def scan_for_other(input)
       pattern = if @type == :rest
                   /\A.+/ix
@@ -168,7 +161,6 @@ module Command
       match[0]
     end
 
-    ###########################################################################
     def cast(src)
       # Use the String casting method when the Argument type is :rest
       return ARGUMENT_TYPES[:string][:cast_func].call src if type == :rest
@@ -187,7 +179,6 @@ module Command
       end
     end
 
-    ###########################################################################
     def to_s
       dest = 'Argument<'
 
@@ -203,7 +194,6 @@ module Command
       dest
     end
 
-    ###########################################################################
     def help_name
       case @type
       when :literal then @name
@@ -213,7 +203,6 @@ module Command
       end
     end
 
-    ###########################################################################
     def help_description
       defn = ARGUMENT_TYPES[@type][:description]
       case defn

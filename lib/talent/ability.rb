@@ -13,7 +13,6 @@ module Talent
     attr_reader :prerequisites
     attr_reader :able_being, :mastery
 
-    ###########################################################################
     def initialize(level, trains, difficulty, stamina, mana, success_rate)
       @type          = nil # active or passive
       @category      = nil # skill, spell, craft, etc.
@@ -31,48 +30,39 @@ module Talent
       @mastery       = 0 # 0 means unlearned
     end
 
-    ###########################################################################
     def add_prerequisite(prereq)
       @prerequisites.push prereq
     end
 
-    ###########################################################################
     def category_s
       category.to_s.tr '_', ' '
     end
 
-    ###########################################################################
     def name_s
       name.to_s.tr '_', ' '
     end
 
-    ###########################################################################
     def passive?
       type == :passive
     end
 
-    ###########################################################################
     def active?
       type == :active
     end
 
-    ###########################################################################
     def added_to(being)
       @able_being = being
     end
 
-    ###########################################################################
     def learn(default_mastery = 1)
       @mastery = default_mastery
       _learn
     end
 
-    ###########################################################################
     def learned?
       mastery.positive?
     end
 
-    ###########################################################################
     def can_learn?
       # You need to be a high enough level.
       return false if level > able_being.level
@@ -84,22 +74,18 @@ module Talent
       true
     end
 
-    ###########################################################################
     def prereq_string
       prerequisites.map(&:name_s).join(', ')
     end
 
-    ###########################################################################
     def mastered?
       mastery == 100
     end
 
-    ###########################################################################
     def master
       @mastery = 100
     end
 
-    ###########################################################################
     # We only want to be able to practice an Ability up to 70%.
     #
     # The formula for how much mastery incresaes on each practice is roughly:
@@ -127,7 +113,6 @@ module Talent
       @mastery += boost
     end
 
-    ###########################################################################
     def improve(context = nil)
       return unless learned? && !mastered?
 
@@ -141,13 +126,11 @@ module Talent
       able_being.puts I18n.t("talent.ability.#{which}"), name_s
     end
 
-    ###########################################################################
     # Conditionally improves on the Ability, based inversely on the difficulty.
     def randomly_improve(context = nil)
       improve context if Util::Computation.percent_chance 90 / difficulty
     end
 
-    ###########################################################################
     def invoke(*args)
       # Do they have the resources to perform?
       able_being.puts I18n.t('talent.ability.err_no_stamina') and return if able_being.stamina.current < stamina
@@ -182,7 +165,6 @@ module Talent
       retval
     end
 
-    ###########################################################################
     def exec
       raise StandardError, 'Talent::Ability#exec not implemented'
     end

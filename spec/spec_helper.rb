@@ -2,9 +2,7 @@ require 'rspec/collection_matchers'
 require 'simplecov'
 SimpleCov.start
 
-###############################################################################
 # Bootstrap Symphony; this code is the test analogue of the dispatch script.
-###############################################################################
 BINARY_NAME = ''.freeze
 require 'bundler/setup'
 Bundler.require :test
@@ -12,11 +10,9 @@ Bundler.require :test
 require File.expand_path 'lib/app'
 require File.expand_path 'boot/bootstrap'
 
-###############################################################################
 # Override initializers, as necessary.
 # TODO: Should these be broken out into a subfolder to more closely mirror
 # the structure of config/initializers?
-###############################################################################
 Network.configure do |config|
   config.listen_ip   = '127.0.0.1'
   config.listen_port = 6502
@@ -24,19 +20,13 @@ end
 
 Symphony.logger = Logger.new('/dev/null')
 
-###############################################################################
 # Load our custom helpers.
-###############################################################################
 Dir[Symphony.root.join 'spec', 'helpers', '*_helper.rb'].sort.each { |file| require file }
 
-###############################################################################
 # Spin up a telnet server for smoke testing.
-###############################################################################
 $universe.setup_server
 
-###############################################################################
 # Configuration blocks for testing utilities.
-###############################################################################
 RSpec.configure do |config|
   # config.treat_symbols_as_metadata_keys_with_true_values = true
   config.run_all_when_everything_filtered = true

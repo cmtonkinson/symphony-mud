@@ -1,4 +1,3 @@
-###############################################################################
 # To fully subclass Objekt and take advantage of all its functionality, you
 # SHOULD do the following:
 #
@@ -19,7 +18,6 @@
 # 4. To enable the Lingust class to smartly print an Objekt, you need to
 #    supply the correct formatting hint by implementing a subclass method
 #    called _interpret_name and returning a String (e.g. "$item").
-###############################################################################
 require 'securerandom'
 
 module Realm
@@ -36,7 +34,6 @@ module Realm
     attr_accessor :rid, :name
     attr_accessor :_disposal_requested, :_disposal_check_visits
 
-    ###########################################################################
     def initialize(id = nil, props = {})
       # Each Objekt must have a globally unique identifier. By default, a UUID
       # (version 4) is generated automatically, but an id can be explicitly
@@ -85,18 +82,15 @@ module Realm
       run_hook :after_initialize
     end
 
-    ###########################################################################
     def dispose
       run_hook :before_disposal
       @_disposal_requested = true
     end
 
-    ###########################################################################
     def disposed?
       @_disposal_requested
     end
 
-    ###########################################################################
     def fully_qualified_identifier
       {
         klass: self.class.name.split('::').last,
@@ -107,13 +101,11 @@ module Realm
     end
     alias fqid fully_qualified_identifier
 
-    ###########################################################################
     def fully_qualified_identifier_string
       I18n.translate 'objekt.identify', **fully_qualified_identifier
     end
     alias fqid_str fully_qualified_identifier_string
 
-    ###########################################################################
     def interpret_name
       _interpret_name
     end

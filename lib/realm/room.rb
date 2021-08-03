@@ -8,12 +8,10 @@ module Realm
     CONTAINERS.each { |cont| attr_accessor cont }
     Realm::Exit::DIRECTIONS.each_key { |exit| attr_accessor exit }
 
-    ###########################################################################
     def initialize(id = nil, props = {})
       super
     end
 
-    ###########################################################################
     after_initialize lambda {
       @zone   = nil
       @coords = Vector[0, 0, 0]
@@ -21,7 +19,6 @@ module Realm
       CONTAINERS.each { |c| instance_variable_set "@#{c}", Util::AttrHash.new }
     }
 
-    ###########################################################################
     on_hashify lambda {
       {
         zone: @zone.id,
@@ -30,7 +27,6 @@ module Realm
       }
     }
 
-    ###########################################################################
     on_dehashify lambda { |hash|
       @zone   = $world.find hash[:zone]
       @coords = Vector[*hash[:coords].split(',').map(&:to_i)]
@@ -43,7 +39,6 @@ module Realm
       end
     }
 
-    ###########################################################################
     Realm::Exit::DIRECTIONS.each_key do |exit|
       define_method "#{exit}_room", (proc do
         # Yo dawg, I heard you like to send exit to your send exit.
@@ -51,7 +46,6 @@ module Realm
       end)
     end
 
-    ###########################################################################
     %w[x y z].each_with_index do |coord_name, coord_index|
       define_method "#{coord_name}_coordinate" do
         @coords[coord_index]
@@ -59,7 +53,6 @@ module Realm
       alias_method :"#{coord_name}", :"#{coord_name}_coordinate"
     end
 
-    ###########################################################################
     def puts(format, *args, **opts)
       dont_message = if opts.key?(:exclude)
                        opts[:exclude].is_a?(Array) ? opts[:exclude] : [opts[:exclude]]
@@ -73,18 +66,15 @@ module Realm
       end
     end
 
-    ###########################################################################
     def indented_puts(spaces, format, *args, **opts)
       indented_format = (' ' * spaces) + format
       puts indented_format, *args, **opts
     end
 
-    ###########################################################################
     def find_being(name)
       beings.values.find { |b| b.name.index(name)&.zero? }
     end
 
-    ###########################################################################
     def next_placement_rid
       rids = placements.values.map(&:rid)
       return 1 if rids.empty?
@@ -92,7 +82,6 @@ module Realm
       rids.max + 1
     end
 
-    ###########################################################################
     def summary
       $templates.room_summary % [
         rid, name,
@@ -101,7 +90,6 @@ module Realm
       ]
     end
 
-    ###########################################################################
     def reset
       @placements.values.each(&:place)
     end

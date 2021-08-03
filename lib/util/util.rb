@@ -1,5 +1,4 @@
 module Util
-  #############################################################################
   def self.argerr(message)
     trace = caller_locations(1, 1)[0]
     raise ArgumentError, 'ArgumentError: %s in %s at %s:%d' % [message,

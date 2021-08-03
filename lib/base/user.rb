@@ -2,14 +2,12 @@ module Base
   class User
     attr_accessor :client, :avatar, :operators
 
-    ###########################################################################
     def initialize
       @client    = nil
       @avatar    = nil
       @operators = Util::Stack.new
     end
 
-    ###########################################################################
     def bind_client(client, login = true)
       # Cross-reference the User and Client.
       @client      = client
@@ -22,13 +20,11 @@ module Base
       operators.push InputSequence::Controller.new self, InputSequence::LoginSequence.new if login
     end
 
-    ###########################################################################
     def bind_avatar(avatar)
       @avatar      = avatar
       @avatar.user = self
     end
 
-    ###########################################################################
     # Proxy Client methods.
     %i[print puts].each do |meth|
       define_method meth do |message|
@@ -36,7 +32,6 @@ module Base
       end
     end
 
-    ###########################################################################
     def handle(input)
       handled = false
 

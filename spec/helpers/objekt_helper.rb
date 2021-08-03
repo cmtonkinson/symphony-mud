@@ -8,7 +8,6 @@ module Realm
       super
     end
 
-    ###########################################################################
     # For testing serialization.
     on_hashify lambda {
       {
@@ -20,14 +19,12 @@ module Realm
       @my_num = hash[:my_num]
     }
 
-    ###########################################################################
     # For testing deep Objekt copies.
     on_deep_copy lambda { |other|
       @my_num = other.my_num
       @my_nil = other.my_nil
     }
 
-    ###########################################################################
     # For testing add/remove hooks
     before_remove -> { @before_remove_ran = true }
     after_remove  -> { @after_remove_ran  = true }
@@ -35,7 +32,6 @@ module Realm
     after_add     -> { @after_add_ran     = true }
   end
 
-  ###########################################################################
   # For testing inheritance-friendly containers.
   class TestBucket < Objekt
     attr_accessor :testparents

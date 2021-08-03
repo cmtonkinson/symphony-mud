@@ -3,12 +3,10 @@ module Realm
     Konst::ITEM_ATTRS.each { |name| attr_accessor name }
     attr_accessor :slotted_to, :modifiers
 
-    ###########################################################################
     def initialize(id = nil, props = {})
       super
     end
 
-    ###########################################################################
     after_initialize lambda {
       @level         = 1
       @type          = :other
@@ -28,7 +26,6 @@ module Realm
       @modifiers     = {}
     }
 
-    ###########################################################################
     on_hashify lambda {
       hash = {}
       Konst::ITEM_ATTRS.each { |name| hash[name] = send name }
@@ -36,34 +33,28 @@ module Realm
       hash
     }
 
-    ###########################################################################
     on_dehashify lambda { |hash|
       Konst::ITEM_ATTRS.each { |name| instance_variable_set "@#{name}", hash[name] }
       @modifiers = hash[:modifiers]
     }
 
-    ###########################################################################
     on_deep_copy lambda { |original|
       Konst::ITEM_ATTRS.each { |name| instance_variable_set "@#{name}", original.send(name) }
       @modifiers = Marshal.load(Marshal.dump(original.modifiers))
     }
 
-    ###########################################################################
     enervate lambda {
       dispose
     }
 
-    ###########################################################################
     def _interpret_name
       '$item'
     end
 
-    ###########################################################################
     def honable?
       type == :weapon && %w[pierce slash].include?(damage_type)
     end
 
-    ###########################################################################
     def set_element(type = nil, ratio = 0)
       @element_type = type
       @element_ratio = Util::Computation.bound (type.nil? ? 0 : ratio),
@@ -71,12 +62,10 @@ module Realm
                                                Konst::ITEM_ELEMENT_MAX
     end
 
-    ###########################################################################
     def element_str
       element_type ? ('%s %d%%' % [element_type, element_ratio]) : ''
     end
 
-    ###########################################################################
     def modify(mods, reverse = false)
       mods.each do |stat, magnitude|
         amount = magnitude * (reverse ? -1 : 1)
@@ -89,7 +78,6 @@ module Realm
       modifiers.delete_if { |_, v| v.zero? }
     end
 
-    ###########################################################################
     def summary
       str = $templates.item_summary % [
         rid, name,

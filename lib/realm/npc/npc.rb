@@ -12,36 +12,30 @@ module Realm
 
     SETTINGS.each { |s| attr_reader s }
 
-    ###########################################################################
     def initialize(id = nil, props = {})
       super
       SETTINGS.each { |s| instance_variable_set "@#{s}", 0 }
     end
 
-    ###########################################################################
     on_hashify lambda {
       hash = {}
       SETTINGS.each { |s| hash[s] = send s }
       { npc: hash }
     }
 
-    ###########################################################################
     on_dehashify lambda { |hash|
       npc = hash[:npc]
       SETTINGS.each { |s| instance_variable_set "@#{s}", npc[s] }
     }
 
-    ###########################################################################
     on_deep_copy lambda { |original|
       gain_level while level < original.level
     }
 
-    ###########################################################################
     def _interpret_name
       '$being'
     end
 
-    ###########################################################################
     def summary
       $templates.npc_summary % [
         rid, name,
@@ -61,12 +55,10 @@ module Realm
       ]
     end
 
-    ###########################################################################
     vivify lambda {
       $world.schedule Mechanics::RecurringJob.new (5..30), self, (5..30), :auto_act
     }
 
-    ###########################################################################
     def auto_act
       case rand(1..2)
       when 1 then auto_move
@@ -74,14 +66,12 @@ module Realm
       end
     end
 
-    ###########################################################################
     def auto_move
       return if mobility.zero?
 
       speak 'moving!'
     end
 
-    ###########################################################################
     def auto_attack
       return if hostility.zero?
 

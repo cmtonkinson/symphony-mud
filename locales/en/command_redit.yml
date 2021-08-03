@@ -5,7 +5,6 @@ en:
       edit: "You're now editing room "
       err_nothing: "No room by that id in this zone."
 
-  #############################################################################
   # Room Edit mode
   edit_room:
     exit:

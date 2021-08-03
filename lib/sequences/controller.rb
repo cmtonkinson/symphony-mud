@@ -2,7 +2,6 @@ module InputSequence
   class Controller
     attr_reader :user, :sequence
 
-    ###########################################################################
     def initialize(user, sequence)
       @user     = user
       @sequence = sequence
@@ -11,7 +10,6 @@ module InputSequence
       sequence._start
     end
 
-    ###########################################################################
     def handle(input)
       @sequence.handle input
     end

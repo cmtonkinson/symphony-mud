@@ -1,7 +1,6 @@
 require 'resolv'
 
 module Command
-  ###############################################################################
   define :at do
     level Realm::Being::DEMIGOD
     usage({ room_rid: :int }, :rest)
@@ -20,7 +19,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :connections do
     level Realm::Being::GOD
     usage
@@ -42,7 +40,6 @@ module Command
     end
   end
 
-  #############################################################################
   define :clone do
     level Realm::Being::DEMIGOD
     usage({ target: :id })
@@ -66,7 +63,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :dashboard do
     level Realm::Being::CREATOR
     usage
@@ -92,7 +88,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :destroy do
     level Realm::Being::DEMIGOD
     usage('item', target: :id)
@@ -122,7 +117,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :dig do
     level Realm::Being::DEMIGOD
     usage direction: :string
@@ -139,7 +133,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :disconnect do
     level Realm::Being::GOD
     usage({ victim: :string })
@@ -155,7 +148,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :effect do
     level Realm::Being::GOD
     usage({ target: :string }, { effect: :string })
@@ -189,7 +181,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :force do
     level Realm::Being::GOD
     usage({ victim: :string }, :rest)
@@ -205,7 +196,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :goto do
     level Realm::Being::DEMIGOD
     usage({ room_id: :int })
@@ -221,7 +211,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :heal do
     level Realm::Being::GOD
     usage({ victim: :id })
@@ -237,7 +226,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :identify do
     level Realm::Being::DEMIGOD
     usage({ target: :string })
@@ -249,7 +237,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :jobs do
     level Realm::Being::CREATOR
     usage
@@ -265,7 +252,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :load do
     level Realm::Being::DEMIGOD
     usage('item', { rid: :int })
@@ -296,7 +282,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :log_level do
     level Realm::Being::CREATOR
     usage({ new_level: %w[trace debug info warn error fatal] })
@@ -307,7 +292,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :peace do
     level Realm::Being::GOD
     usage
@@ -317,7 +301,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :promote do
     level Realm::Being::GOD
     usage({ target: :id }, { to_level: :int })
@@ -341,7 +324,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :pry do
     level Realm::Being::CREATOR
     usage
@@ -352,7 +334,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :reboot do
     level Realm::Being::CREATOR
     usage
@@ -362,7 +343,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :purge do
     level Realm::Being::GOD
     usage
@@ -373,7 +353,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :repeat do
     level Realm::Being::CREATOR
     usage({ times: :int }, :rest)
@@ -391,7 +370,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :reset do
     level Realm::Being::GOD
     usage
@@ -407,7 +385,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :rooms do
     level Realm::Being::DEMIGOD
     usage
@@ -423,7 +400,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :shutdown do
     level Realm::Being::CREATOR
     usage
@@ -433,7 +409,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :summon do
     level Realm::Being::GOD
     usage({ victim: :string })
@@ -452,7 +427,6 @@ module Command
     end
   end
 
-  ###############################################################################
   # NOTE: This method is designed to be used for R&D. See the O'RLY Essentials
   #       book, "Changing Stuff and Seeing What Happens" (aka "The Kitten Book")
   define :test do
@@ -468,7 +442,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :tutor do
     level Realm::Being::CREATOR
     usage({ target: :id })
@@ -482,7 +455,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :worldsave do
     level Realm::Being::CREATOR
     usage

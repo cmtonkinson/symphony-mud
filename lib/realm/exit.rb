@@ -34,13 +34,11 @@ module Realm
     simple_flag :open, true, :open?, :open!, :closed?, :close!
     simple_flag :lock, false, :locked?, :lock!, :unlocked?, :unlock!
 
-    ###########################################################################
     def initialize(id = nil, props = {})
       super
       DIRECTIONS.each_key { |exit| send "#{exit}=", nil }
     end
 
-    ###########################################################################
     on_hashify lambda {
       # We want a Hash mapping each direction to the id of the Room to which
       # it points, or nil.
@@ -55,7 +53,6 @@ module Realm
       }.merge! exit_room_ids
     }
 
-    ###########################################################################
     on_dehashify lambda { |hash|
       @open = @default_open = hash[:default_open]
       @lock = @default_lock = hash[:default_lock]
@@ -65,7 +62,6 @@ module Realm
       end
     }
 
-    ###########################################################################
     # If the given string matches the prefix of a defined direction, return
     # the full string name of that direction. Otherwise, return nil.
     def self.direction?(str)

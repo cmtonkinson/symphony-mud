@@ -1,5 +1,4 @@
 module Realm
-  #############################################################################
   def container_for_klass(klass)
     container_name = nil
 
@@ -20,7 +19,6 @@ module Realm
     send container_name
   end
 
-  #############################################################################
   def next_objekt_rid(klass)
     container = container_for_klass klass
     return 1 if container.empty?
@@ -28,7 +26,6 @@ module Realm
     container.values.max_by(&:rid).rid + 1
   end
 
-  #############################################################################
   def find_by_rid(klass, rid)
     container = container_for_klass klass
     return nil if container.empty?

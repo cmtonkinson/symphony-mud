@@ -8,17 +8,14 @@
 
 module Realm
   class Parameter < Spy
-    ###########################################################################
     def initialize(id = nil, props = {})
       super
     end
 
-    ###########################################################################
     def valid_symbols
       Konst::SPY_PARAMETERS.keys
     end
 
-    ###########################################################################
     def setup_time_limit(wen)
       @state[:wen] = wen
     end
@@ -37,13 +34,11 @@ module Realm
       :fail
     end
 
-    ###########################################################################
     def exec_no_dying
       Symphony.logger.trace '%s death detected for %s' % [fqid_str, task.fqid_str]
       :fail
     end
 
-    ###########################################################################
     def exec_no_fighting
       Symphony.logger.trace '%s fighting detected for %s' % [fqid_str, task.fqid_str]
       :fail

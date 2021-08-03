@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Util::AttrHash do
-  #############################################################################
   it 'should be a normal Hash' do
     h = Util::AttrHash.new
 
@@ -17,7 +16,6 @@ describe Util::AttrHash do
     expect(h.values).to eq [5]
   end
 
-  #############################################################################
   describe '#initialize' do
     it 'should default the key attribute to :id' do
       h = Util::AttrHash.new
@@ -30,7 +28,6 @@ describe Util::AttrHash do
     end
   end
 
-  #############################################################################
   describe '#insert' do
     it 'should attempt insertion by the configured attribute' do
       h  = Util::AttrHash.new :qux
@@ -47,7 +44,6 @@ describe Util::AttrHash do
     end
   end
 
-  #############################################################################
   describe '#remove' do
     it 'should remove by key of the configured attribute' do
       h = Util::AttrHash.new :foo
@@ -61,7 +57,6 @@ describe Util::AttrHash do
     end
   end
 
-  #############################################################################
   describe '#locate' do
     before :each do
       @h = Util::AttrHash.new

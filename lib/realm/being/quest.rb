@@ -24,7 +24,6 @@ module Realm
       puts "task #{task.name} updated"
     }
 
-    ###########################################################################
     def accept_task(task)
       # register callback for objective
       #   - this means the objective needs to be phrased in terms of callbacks

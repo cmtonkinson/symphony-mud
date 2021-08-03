@@ -1,5 +1,4 @@
 module Stat
-  #############################################################################
   # Returns a gain for a stat based on a deterministic logistic function.
   #
   # level - The level of the Being (in the context of a level up, this is the NEW level).

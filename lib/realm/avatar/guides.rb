@@ -5,7 +5,6 @@ module Realm
     define_hooks :on_first_login
     define_hooks :on_login
 
-    ###########################################################################
     on_hashify lambda {
       hash = {
         num_logins: @num_logins
@@ -14,12 +13,10 @@ module Realm
       { guides: hash }
     }
 
-    ###########################################################################
     on_dehashify lambda { |hash|
       @num_logins = hash[:num_logins]
     }
 
-    ###########################################################################
     # Promote the first avatar in the system to CREATOR.
     on_first_login lambda {
       # Only run for the first account.

@@ -1,5 +1,4 @@
 module Command
-  ###############################################################################
   define :zedit do
     level Realm::Being::DEMIGOD
     usage 'create'
@@ -23,7 +22,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :information, :edit_zone do
     level Realm::Being::DEMIGOD
     usage
@@ -32,7 +30,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :exit, :edit_zone do
     level Realm::Being::DEMIGOD
     usage
@@ -43,7 +40,6 @@ module Command
     end
   end
 
-  ###############################################################################
   define :name, :edit_zone do
     level Realm::Being::DEMIGOD
     usage :rest

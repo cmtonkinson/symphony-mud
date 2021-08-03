@@ -1,6 +1,5 @@
 module Logistics
   class Scribe
-    ###########################################################################
     def self.save(objekt)
       path    = pathname objekt.class, objekt.id
       content = objekt.serialize
@@ -10,7 +9,6 @@ module Logistics
       File.open(path, 'w') { |fp| fp.write content }
     end
 
-    ###########################################################################
     def self.load(klass, objekt_id)
       File.open pathname(klass, objekt_id), 'r' do |fp|
         klass.deserialize fp.read
@@ -23,17 +21,14 @@ module Logistics
       end
     end
 
-    ###########################################################################
     def self.pathname(klass, objekt_id)
       dirname(klass).join "#{objekt_id}.yml"
     end
 
-    ###########################################################################
     def self.dirname(klass)
       Symphony.data.join klass.name.split('::').last.downcase
     end
 
-    ###########################################################################
     # Returns all zone ids found in the data directory.
     def self.the_story_of_baron_munchausen
       Dir[Symphony.zone.join '*.yml'].map do |zonefile|

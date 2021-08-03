@@ -1,10 +1,8 @@
 class PriorityQueue
-  #############################################################################
   def initialize
     @elements = [nil]
   end
 
-  #############################################################################
   def push(element)
     raise 'element does not respond to :<=>' unless element.responds_to? :<=>
 
@@ -13,7 +11,6 @@ class PriorityQueue
   end
   alias << push
 
-  #############################################################################
   def pop
     # exchange the root with the last element
     exchange(1, @elements.size - 1)
@@ -26,7 +23,6 @@ class PriorityQueue
     max
   end
 
-  #############################################################################
   def bubble_up(index)
     parent_index = (index / 2)
 
@@ -43,7 +39,6 @@ class PriorityQueue
     bubble_up(parent_index)
   end
 
-  #############################################################################
   def bubble_down(index)
     child_index = (index * 2)
 
@@ -67,7 +62,6 @@ class PriorityQueue
     bubble_down(child_index)
   end
 
-  #############################################################################
   def exchange(source, target)
     @elements[source], @elements[target] = @elements[target], @elements[source]
   end

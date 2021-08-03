@@ -8,30 +8,25 @@ module Talent
 
     attr_reader :being
 
-    ###########################################################################
     def initialize(being)
       @name  = ''
       @being = being
     end
 
-    ###########################################################################
     def self.anatomies
       ObjectSpace.each_object(::Class).select { |c| c < self }
     end
 
-    ###########################################################################
     def setup
       being.anatomy = self
       being.add_enabler self
       being.modify modifiers if respond_to? :modifiers
     end
 
-    ###########################################################################
     def values
       slots.map(&:occupant).compact
     end
 
-    ###########################################################################
     def wear(item, container = nil)
       return I18n.t('anatomy.unwearable') unless item.wearable
       return I18n.t('anatomy.incompatible') unless get_slots(item.slot)
@@ -61,7 +56,6 @@ module Talent
       end
     end
 
-    ###########################################################################
     def remove(item, container = nil)
       slot = slots.find { |s| s.occupant == item }
       return I18n.t('anatomy.unworn') if slot.nil?
@@ -69,7 +63,6 @@ module Talent
       change_equipment slot, nil, container
     end
 
-    ###########################################################################
     def change_equipment(slot, item, container)
       if item
         removed = slot.set item, container
@@ -90,31 +83,26 @@ module Talent
       end
     end
 
-    ###########################################################################
     def primary_slot
       case being.anatomy
       when Human then get_slots(being.hand + ' hand').first
       end
     end
 
-    ###########################################################################
     def secondary_slot
       case being.anatomy
       when Human then get_slots((being.hand == 'right' ? 'left' : 'right') + ' hand').first
       end
     end
 
-    ###########################################################################
     def primary_weapon
       primary_slot&.occupant
     end
 
-    ###########################################################################
     def secondary_weapon
       secondary_slot&.occupant
     end
 
-    ###########################################################################
     def default_damage
       I18n.t("anatomy.default_damage.#{@name.downcase}")
     end

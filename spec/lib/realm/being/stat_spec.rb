@@ -21,7 +21,6 @@ describe Realm::Being do
       end
     end
 
-    ###########################################################################
     describe 'resistance' do
       describe '#modify' do
         before :each do

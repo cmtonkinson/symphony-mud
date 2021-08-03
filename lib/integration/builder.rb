@@ -1,6 +1,5 @@
 module Logistics
   class Builder
-    ###########################################################################
     # Generate a new Room within the given `zone`.
     def self.create_room(zone)
       new_room = Realm::Room.new nil, rid: $world.next_room_rid
@@ -9,7 +8,6 @@ module Logistics
       new_room
     end
 
-    ###########################################################################
     # Create a pathway between two existing Rooms. The new Exit will exist as
     # `direction` from Room a, and the opposite from b.
     # Example:
@@ -33,7 +31,6 @@ module Logistics
       (one.zone == two.zone ? one.zone : $world).insert exit
     end
 
-    ###########################################################################
     # Generate a new Room, within the Zone of the `existing_room`, and create
     # a bidirectional exit between the two rooms, where the exit from the
     # `existing_room` to the new Room is in `direction` and the exit from the
@@ -48,21 +45,18 @@ module Logistics
       new_room
     end
 
-    ###########################################################################
     def self.create_item(zone)
       new_item = Realm::Item.new nil, rid: zone.next_objekt_rid(Realm::Item)
       zone.insert new_item
       new_item
     end
 
-    ###########################################################################
     def self.create_npc(zone)
       new_npc = Realm::NPC.new nil, rid: zone.next_objekt_rid(Realm::NPC)
       zone.insert new_npc
       new_npc
     end
 
-    ###########################################################################
     def self.create_zone
       new_zone = Realm::Zone.new nil, rid: $world.next_zone_rid
       $world.zones.insert new_zone

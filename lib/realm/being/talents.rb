@@ -4,12 +4,10 @@ module Realm
 
     define_hooks :before_ability_invocation, :after_ability_invocation
 
-    ###########################################################################
     after_initialize lambda {
       @abilities = []
     }
 
-    ###########################################################################
     on_hashify lambda {
       hash = {}
 
@@ -18,7 +16,6 @@ module Realm
       { abilities: hash }
     }
 
-    ###########################################################################
     on_dehashify lambda { |hash|
       return unless hash.key? :abilities
 
@@ -32,20 +29,17 @@ module Realm
       end
     }
 
-    ###########################################################################
     def add_enabler(enabler)
       @enablers.push enabler
       enabler.abilities.each { |a| add_ability a }
     end
 
-    ###########################################################################
     def add_ability(ability)
       @abilities.push ability
       ability.added_to self
       ability
     end
 
-    ###########################################################################
     # Either pass a Symbol, which will be looked up directly against Ability
     # names, or pass a String, which will be snake_cased and then converted
     # to a Symbol.
@@ -54,7 +48,6 @@ module Realm
       abilities.find { |a| a.name == name }
     end
 
-    ###########################################################################
     # Either learn the Ability successfully, or return a String indicating why
     # that couldn't be done.
     def learn(name)
@@ -72,7 +65,6 @@ module Realm
       nil
     end
 
-    ###########################################################################
     def practice(name)
       ability = get_ability name
       cost = 1
@@ -87,7 +79,6 @@ module Realm
       puts I18n.t('being.talents.practiced'), cost, ability.name_s
     end
 
-    ###########################################################################
     def puts_abilities_list(type = nil)
       abilities
         .select { |a| type.nil? ? true : a.category == type }

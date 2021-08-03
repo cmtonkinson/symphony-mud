@@ -10,7 +10,6 @@ en:
       title: "NPCs in {m$zone{x:\n\n"
       line: "[{C$rid{x] {M$being{x"
 
-  #############################################################################
   # NPC Edit mode
   edit_npc:
     exit:

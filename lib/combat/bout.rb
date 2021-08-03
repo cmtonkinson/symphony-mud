@@ -3,23 +3,19 @@ module Combat
     attr_reader :battle
     attr_reader :strikes
 
-    ###########################################################################
     def initialize(battle)
       @battle  = battle
       @strikes = []
     end
 
-    ###########################################################################
     def start
       make_strikes
     end
 
-    ###########################################################################
     def push(strike)
       @strikes.push strike
     end
 
-    ###########################################################################
     # During each Bout, each group group member attacks one defender.
     # That attack could be the first of of an entire back-and-forth (in light
     # of e.g. 'second attack' or 'counter attack' skills) but everybody gets at

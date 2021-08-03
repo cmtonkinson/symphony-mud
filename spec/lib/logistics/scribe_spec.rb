@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Logistics::Scribe do
-  #############################################################################
   describe '#save' do
     around :each do |example|
       @id = SecureRandom.uuid

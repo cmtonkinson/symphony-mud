@@ -2,7 +2,6 @@ require 'open3'
 
 module Util
   class Linter
-    ###########################################################################
     # This method can search the entire project source code for any syntax
     # errors as would be reported by the Ruby interpreter. It's used as a pre-
     # flight check when rebooting the system.
