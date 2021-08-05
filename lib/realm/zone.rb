@@ -2,7 +2,7 @@ module Realm
   class Zone < Objekt
     include Realm
 
-    CONTAINERS = %w[rooms exits items npcs].freeze
+    CONTAINERS = %w[rooms exits items npcs quests].freeze
 
     CONTAINERS.each { |c| attr_accessor c.to_sym }
 
@@ -19,7 +19,8 @@ module Realm
         rooms: @rooms.values.map(&:hashify),
         exits: @exits.values.map(&:hashify),
         items: @items.values.map(&:hashify),
-        npcs: @npcs.values.map(&:hashify)
+        npcs: @npcs.values.map(&:hashify),
+        quests: @quests.values.map(&:hashify)
       }
     }
 
@@ -44,6 +45,7 @@ module Realm
 
       hash[:items].each { |h| @items.insert Realm::Item.dehashify(h) }
       hash[:npcs].each { |h| @npcs.insert Realm::NPC.dehashify(h) }
+      hash[:quests].each { |h| @quests.insert Realm::Quest.dehashify(h) }
     }
 
     vivify lambda {

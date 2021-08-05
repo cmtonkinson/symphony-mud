@@ -9,6 +9,7 @@ module Realm
     attr_accessor :objective # what's the thing that has to be done?
     attr_accessor :parameters # are there restrictions on achieving the objective?
     attr_accessor :rewards
+    attr_accessor :parent, :children
 
     define_hooks :spy_completed, :spy_failed, :spy_updated
 
@@ -42,15 +43,28 @@ module Realm
       @objective   = nil
       @parameters  = []
       @rewards     = []
+      @parent      = nil
+      @children    = []
       super
+    end
+
+    # We use title as the public API, but it's the Objekt built-in 'name'
+    # property that is actually used under the hood.
+    def title=(title)
+      @name = title
+    end
+
+    def title
+      @name
     end
 
     on_hashify lambda {
       hash = {
         description: description,
-        objective: objective.hashify,
-        parameters: parameters.map(&:hashify),
-        rewards: rewards.map(&:hashify)
+        objective: objective&.hashify,
+        parameters: parameters&.map(&:hashify),
+        rewards: rewards.map(&:hashify),
+        children: children.map(&:hashify)
       }
       { task: hash }
     }
@@ -59,30 +73,39 @@ module Realm
       hash = hash[:task]
 
       @description = hash[:description]
-      @objective = Realm::Objective.dehashify(hash[:objective])
+      @objective = Realm::Objective.dehashify(hash[:objective]) if hash[:objective]
 
-      @parameters = []
       hash[:parameters].each { |param| @parameters << Realm::Parameter.dehashify(param) }
 
-      @rewards = []
       hash[:rewards].each { |reward| @rewards << Realm::Reward.dehashify(reward) }
+
+      hash[:children].each do |c|
+        c = Realm::Task.dehashify(c)
+        c.parent = self
+        @children << c
+      end
     }
 
     on_deep_copy lambda { |original|
       @description = original.description
       @objective = original.objective.clone
 
-      @parameters = []
       original.parameters.each { |param| @parameters << param.clone }
 
-      @rewards = []
       original.rewards.each { |reward| @rewards << reward.clone }
+
+      original.children.each do |c|
+        child = c.clone
+        child.parent = self
+        @children << child
+      end
     }
 
     enervate lambda {
       @objective.run_hook :enervate
       @parameters.each { |p| p.run_hook :enervate }
       @rewards.each { |r| r.run_hook :enervate }
+      @children.each { |c| c.run_hook :enervate }
       dispose
     }
 
@@ -153,6 +176,14 @@ module Realm
       p.task = self
       p.setup(name, args)
       @parameters << p
+    end
+
+    # Recursive method to return a flat array of this Task, and all descendent
+    # Tasks.
+    def flat_tree
+      array = [self]
+      children.each { |c| array += c.flat_tree }
+      array
     end
   end
 end

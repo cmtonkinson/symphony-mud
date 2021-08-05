@@ -1,7 +1,7 @@
 module Realm
   class Avatar < Being
     attr_accessor :user
-    attr_accessor :iedit, :nedit, :zedit, :redit
+    attr_accessor :iedit, :nedit, :zedit, :redit, :qedit
 
     define_hooks :before_disconnect
 
@@ -40,6 +40,8 @@ module Realm
     def _prompt_prefix
       if redit
         '{RREDIT{x {Y%d{x ' % room.rid
+      elsif qedit
+        '{RQEDIT{x {Y%d{x ' % qedit.rid
       else
         ''
       end

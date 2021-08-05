@@ -101,6 +101,20 @@ module Command
           @name = definition.to_s
         end
       when String
+        # Allowing literal tokens as arguments has one downside - there are a
+        # few tokens we can't allow because they will already be in scope as
+        # methods which the Command object repsonds to. For that reason, we
+        # need to try to avoid any overlap, so there are restrictions on what
+        # literals can be used as command arguments.
+        illegal_literals = %w[name shortcut brief level group ability exec]
+        if illegal_literals.include? definition
+          str = "Cannot define literal argument '#{definition}' in a command usage"
+          line = caller_locations.find { |l| l.to_s.match 'block in <module:Command>' }.to_s
+          file = line.sub(/^# /, '').sub(/:in `.+/, '')
+          str << " (definition possibly at #{file}) because this would overshadow a built-in method name"
+          raise ArgumentError, str
+        end
+
         @type  = :literal
         @name  = definition
       else

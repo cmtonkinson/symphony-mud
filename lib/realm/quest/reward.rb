@@ -66,11 +66,24 @@ module Realm
     def +(other)
       res = Reward.new
 
+      # Use the Zone from the left-hand side.
       res.zone = zone
+
+      # Straight up addition for any numeric reward value.
       res.silver = silver + other.silver
       res.gold = gold + other.gold
       res.exp = exp + other.exp
 
+      # For Items, we start with the left-hand-side array. Because we used the
+      # self.zone, however, we need to be careful with the IDs in other.item_ids
+      # because they can contain either RIDs or UUIDs.
+      #
+      # If both Zones are the same, there's no problem, because the RIDs are
+      # all relative to the same Zone.
+      #
+      # But if the Zones are not the same, then any RIDs in other.item_ids need
+      # to be transformed to UUIDs since at lookup time they will be considered
+      # relative to self.zone and so must use an absolute identifier.
       res.item_ids = item_ids
       if zone == other.zone
         res.item_ids += other.item_ids

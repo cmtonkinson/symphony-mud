@@ -62,5 +62,11 @@ module Logistics
       $world.zones.insert new_zone
       new_zone
     end
+
+    def self.create_quest(zone)
+      new_quest = Realm::Quest.new nil, rid: zone.next_objekt_rid(Realm::Quest)
+      zone.insert new_quest
+      new_quest
+    end
   end
 end

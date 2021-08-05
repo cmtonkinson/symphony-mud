@@ -13,7 +13,7 @@ module Logistics
       File.open pathname(klass, objekt_id), 'r' do |fp|
         klass.deserialize fp.read
       rescue StandardError => e
-        Symphony.logger.error "Error while loading #{klass}:#{objekt_id}"
+        Symphony.logger.error "Error while loading #{klass}:#{objekt_id} - #{e.message}"
         e.backtrace.each do |line|
           Symphony.logger.debug "  error at #{line}"
         end
