@@ -8,7 +8,7 @@ module Realm
     attr_accessor :tasked # what Objekt is burdened to complete this?
     attr_accessor :objective # what's the thing that has to be done?
     attr_accessor :parameters # are there restrictions on achieving the objective?
-    attr_accessor :rewards
+    attr_accessor :reward
     attr_accessor :parent, :children
 
     define_hooks :spy_completed, :spy_failed, :spy_updated
@@ -42,7 +42,7 @@ module Realm
       @tasked      = nil
       @objective   = nil
       @parameters  = []
-      @rewards     = []
+      @reward      = nil
       @parent      = nil
       @children    = []
       super
@@ -63,7 +63,7 @@ module Realm
         description: description,
         objective: objective&.hashify,
         parameters: parameters&.map(&:hashify),
-        rewards: rewards.map(&:hashify),
+        reward: reward&.hashify,
         children: children.map(&:hashify)
       }
       { task: hash }
@@ -77,7 +77,7 @@ module Realm
 
       hash[:parameters].each { |param| @parameters << Realm::Parameter.dehashify(param) }
 
-      hash[:rewards].each { |reward| @rewards << Realm::Reward.dehashify(reward) }
+      @reward = Realm::Reward.dehashify(hash[:reward]) if hash[:reward]
 
       hash[:children].each do |c|
         c = Realm::Task.dehashify(c)
@@ -92,7 +92,7 @@ module Realm
 
       original.parameters.each { |param| @parameters << param.clone }
 
-      original.rewards.each { |reward| @rewards << reward.clone }
+      @reward = original.reward.clone
 
       original.children.each do |c|
         child = c.clone
@@ -104,7 +104,7 @@ module Realm
     enervate lambda {
       @objective.run_hook :enervate
       @parameters.each { |p| p.run_hook :enervate }
-      @rewards.each { |r| r.run_hook :enervate }
+      @reward.run_hook :enervate
       @children.each { |c| c.run_hook :enervate }
       dispose
     }
@@ -176,6 +176,22 @@ module Realm
       p.task = self
       p.setup(name, args)
       @parameters << p
+    end
+
+    def change_reward_value(kind, value)
+      @reward = Realm::Reward.new if @reward.nil? && value.positive?
+      @reward.send "#{kind}=", value if %w[silver gold exp].include? kind
+      @reward = nil if @reward.empty?
+    end
+
+    def add_reward_item(item_id)
+      @reward ||= Realm::Reward.new
+      @reward.item_ids << item_id
+    end
+
+    def remove_reward_item(item_id)
+      @reward.item_ids.delete item_id
+      @reward = nil if @reward.empty?
     end
 
     # Recursive method to return a flat array of this Task, and all descendent

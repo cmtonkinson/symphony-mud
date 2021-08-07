@@ -33,8 +33,8 @@ module Test
     with :admin
     test do
       admin 'qedit 1'
-      admin 'task 1 delete'
-      expect '1 deleted'
+      admin 'task 1 remove'
+      expect '1 removed'
 
       admin 'info'
       n_expect 'TaskA'
@@ -60,6 +60,40 @@ module Test
       admin 'qedit 1'
       admin 'task 1 title NewName'
       expect 'NewName'
+
+      admin 'info'
+    end
+  end
+
+  define :set_task_objective do
+    from :add_task
+    with :admin
+    test do
+      admin 'qedit 1'
+      admin 'task 1 objective visit_room 2'
+      expect 'room'
+
+      admin 'info'
+    end
+  end
+
+  define :set_task_rewards do
+    from :add_task
+    with :admin
+    test do
+      admin 'qedit 1'
+
+      %w[silver gold exp].each do |kind|
+        admin "task 1 reward #{kind} 10"
+        expect "10 #{kind}"
+        admin 'info'
+        expect "10 #{kind}"
+
+        admin "task 1 reward #{kind} 0"
+        expect "0 #{kind}"
+        admin 'info'
+        n_expect kind
+      end
 
       admin 'info'
     end

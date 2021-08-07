@@ -17,13 +17,27 @@ module Realm
       super
     end
 
-    after_initialize lambda {
-    }
-
     on_hashify lambda {
+      hash = {
+        name: @name,
+        trigger: @trigger,
+        params: @params,
+        active: @active,
+        status: @status,
+        state: @state
+      }
+      { spy: hash }
     }
 
     on_dehashify lambda { |hash|
+      hash = hash[:spy]
+
+      @name = hash[:name]
+      @trigger = hash[:trigger]
+      @params = hash[:params]
+      @active = hash[:active]
+      @status = hash[:status]
+      @state = hash[:state]
     }
 
     on_deep_copy lambda { |original|

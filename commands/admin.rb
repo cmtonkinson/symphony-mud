@@ -433,12 +433,9 @@ module Command
     level Realm::Being::CREATOR
     usage
     exec do
-      t = Realm::Task.new nil, name: 'test task', description: 'task description'
-      r = Realm::Reward.new nil, zone: $world.find_zone, gold: 1, silver: 10, exp: 100, item_ids: [1]
-      t.tasked = being
-      t.set_objective :visit_room, 4
-      t.rewards << r
-      t.activate
+      q = room.zone.find_by_rid Realm::Quest, 1
+      qc = q.clone
+      being.assign qc
     end
   end
 

@@ -12,11 +12,15 @@ en:
       actor: "You have left quest editing mode."
     name:
       _brief: "Change the name of the quest."
-      changed: "Quest now named {C$string{x."
+      actor: "Quest now named {C$string{x."
     task:
       _brief: "Manipulate tasks within the quest."
       err_nothing: "There is no task by that id in this quest."
       add: "Task {y$string{x added with name {C$string{x"
-      deleted: "Task {y$string{x deleted."
       description: "Task {y$string{x description changed to {C$string{x"
+      visit_room: "Task {y$string{x objective set to {Cvisit room $string{x"
+      removed: "Task {y$string{x removed."
+      reward_amount: "Task {y$string{x reward change to {C$string $string{x"
+      reward_item_add: "Task {y$string{x reward; added item {C$string{x"
+      reward_item_remove: "Task {y$string{x reward: removed item {C$string{x"
       title: "Task {y$string{x name changed to {C$string{x"

@@ -13,13 +13,13 @@ module Realm
     end
 
     def setup_visit_room(room)
-      # TODO: validate this is a valid room reference (UUID, rid, etc.) and
-      # convert it into the corresponding rid
+      # TODO: validate this is a valid room reference (UUID, rid, etc.)
       @params = room
     end
 
     def exec_visit_room(being)
-      return nil unless being.room.rid == params
+      # Check for both RID and UUID
+      return nil unless being.room.rid == params || being.room.id == params
 
       Symphony.logger.trace '%s completed %s by visiting %s' % [
         task.tasked.fqid_str,

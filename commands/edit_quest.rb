@@ -28,22 +28,33 @@ module Command
     end
   end
 
+  define :exit, :edit_quest do
+    level Realm::Being::DEMIGOD
+    usage
+    exec do
+      being.puts t('actor')
+      being.qedit = false
+      being.user.operators.pop
+    end
+  end
+
   define :task, :edit_quest do
     level Realm::Being::DEMIGOD
     usage('add', :rest)
-    usage({ rid: :int }, 'delete')
     usage({ rid: :int }, 'description', :rest)
-    usage({ rid: :int }, 'objective', { type: :string })
+    usage({ rid: :int }, 'objective', 'visit_room', room_id: :string)
     usage({ rid: :int }, 'parameter', 'add', { type: :string }, :rest)
-    usage({ rid: :int }, 'parameter', 'delete', { type: :string })
+    usage({ rid: :int }, 'parameter', 'remove', { type: :string })
     usage({ rid: :int }, 'parent', { parent_rid: :int })
-    usage({ rid: :int }, 'reward', 'add', { type: :string }, :rest)
-    usage({ rid: :int }, 'reward', 'delete', { type: :string })
+    usage({ rid: :int }, 'remove')
+    usage({ rid: :int }, 'reward', 'item', { action: %w[add remove] }, :item_id)
+    usage({ rid: :int }, 'reward', { kind: %w[silver gold exp] }, { amount: :int })
     usage({ rid: :int }, 'title', :rest)
+    # rubocop:disable Metrics/BlockNesting
     exec do
       ####################
       # add
-      if add == 'add'
+      if add
         task = Realm::Task.new nil, rid: being.qedit.next_task_rid, name: rest
         being.qedit.tasks << task
         being.puts t('add'), task.rid, task.name
@@ -53,8 +64,22 @@ module Command
         being.puts t('err_nothing') and next if task.nil?
 
         ####################
-        # delete
-        if delete == 'delete'
+        # description
+        if description
+          task.description = rest
+          being.puts t('description'), task.rid, task.description
+
+        ####################
+        # objective
+        elsif objective
+          if visit_room
+            task.set_objective :visit_room, room_id
+            being.puts t('visit_room'), task.rid, room_id
+          end
+
+        ####################
+        # remove
+        elsif remove
           parent = task.parent
           children = task.children
 
@@ -76,26 +101,39 @@ module Command
             end
           end
 
-          being.puts t('deleted'), task.rid
+          being.puts t('removed'), task.rid
 
         ####################
-        # description
-        elsif description == 'description'
-          task.description = rest
-          being.puts t('description'), task.rid, task.description
+        # reward
+        elsif reward
+          if kind
+            task.change_reward_value kind, amount
+            being.puts t('reward_amount'), task.rid, amount, kind
+          elsif item
+            case action
+            when 'add'
+              task.add_reward_item item_id
+              being.puts t('reward_item_add'), task.rid, item_id
+            when 'remove'
+              task.remove_reward_item item_id
+              being.puts t('reward_item_remove'), task.rid, item_id
+            else Symphony.logger.error "qedit task reward: bad action (#{action})"
+            end
+          end
 
         ####################
         # title
-        elsif title == 'title'
+        elsif title
           task.title = rest
           being.puts t('title'), task.rid, task.title
 
         ####################
         # error
         else
-          Symphony.logger.error "qedit task: bad action (#{action})"
+          Symphony.logger.error 'qedit task: bad subcommand'
         end
       end
     end
+    # rubocop:enable Metrics/BlockNesting
   end
 end

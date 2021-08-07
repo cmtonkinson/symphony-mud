@@ -54,11 +54,7 @@ module Realm
       str = "#{i}Task #{task.rid}: #{task.name}"
       str << "#{i}  objective: #{task.objective.name} / #{task.objective.params}" if task.objective
       task.parameters.each { |p| str << "#{i}  parameter: #{p.name} / #{p.params}" }
-      task.rewards.each do |reward|
-        reward.to_str_array.each do |s|
-          str << "#{i}  reward: #{s}"
-        end
-      end
+      task&.reward&.to_str_array&.each { |s| str << "#{i}  reward: #{s}" }
       task.children.each { |c| str << c.task_summary(c, indent + 1) }
       str
     end

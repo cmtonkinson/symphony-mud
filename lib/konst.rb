@@ -21,11 +21,16 @@ module Konst
 
   # Triggers available for configuration in Objectives and Parameters.
   SPY_TRIGGERS = %i[
+    consume_item
     die
+    drop_item_at
     enter_combat
     explore_zone
+    give_item_to
     kill_npc
     obtain_item
+    obtain_item
+    put_item_in
     say_at
     say_to
     visit_room
