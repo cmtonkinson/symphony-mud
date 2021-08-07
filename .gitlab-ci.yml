@@ -39,6 +39,7 @@ system-tests:
     - ulimit -Sn 50000
     - bundle exec test/test.rb
   artifacts:
+    when: always
     paths:
       - test/state
 
