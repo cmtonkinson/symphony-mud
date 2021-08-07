@@ -37,7 +37,7 @@ system-tests:
     - docker
   script:
     - ulimit -Sn 50000
-    - cp sample game
+    - cp -r sample game
     - bundle exec test/test.rb
   artifacts:
     when: always
