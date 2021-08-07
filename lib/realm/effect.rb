@@ -1,13 +1,8 @@
 module Realm
   class Effect < Objekt
     attr_accessor :target
-    attr_reader :name, :originator
-    attr_reader :duration, :recur_delay
-    attr_reader :expiry_job, :execution_jobs
-    attr_reader :announce_apply, :announce_expire
-    attr_reader :modifiers
-    attr_reader :valid_for
-    attr_reader :initial_uses, :remaining_uses
+    attr_reader :name, :originator, :duration, :recur_delay, :expiry_job, :execution_jobs, :announce_apply,
+                :announce_expire, :modifiers, :valid_for, :initial_uses, :remaining_uses
 
     PERSISTENT_ATTRS = %i[name duration recur_delay announce_apply
                           announce_expire modifiers valid_for

@@ -73,13 +73,13 @@ module Realm
       # equipment during Being#on_hashify.
       saved_eq = {}
       if @anatomy
-        hash[:equipment] = Hash[@anatomy.slots.map do |slot|
+        hash[:equipment] = @anatomy.slots.map do |slot|
           next if slot.empty?
 
           item = slot.set nil
           saved_eq[slot.name] = item
           [slot.name, item.hashify]
-        end.compact]
+        end.compact.to_h
       end
 
       # NOTE: Same comments as above for equipment, except for the subobjects

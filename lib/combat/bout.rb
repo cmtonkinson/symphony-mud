@@ -1,7 +1,6 @@
 module Combat
   class Bout
-    attr_reader :battle
-    attr_reader :strikes
+    attr_reader :battle, :strikes
 
     def initialize(battle)
       @battle  = battle

@@ -26,13 +26,12 @@ module Realm
     # certain meta-operations easier, such as for testing.
     DEFAULTS = {
       id: -> { SecureRandom.uuid },
-      rid: -> { nil },
+      rid: -> {},
       name: -> { '[name]' }
     }.freeze
 
     attr_reader :id
-    attr_accessor :rid, :name
-    attr_accessor :_disposal_requested, :_disposal_check_visits
+    attr_accessor :rid, :name, :_disposal_requested, :_disposal_check_visits
 
     def initialize(id = nil, props = {})
       # Each Objekt must have a globally unique identifier. By default, a UUID

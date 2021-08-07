@@ -8,10 +8,8 @@ module Talent
     MIN_PRACTICE_BOOST = 5
     MAX_PRACTICE_LEVEL = 70
 
-    attr_reader :type, :category, :name
-    attr_reader :level, :trains, :difficulty, :stamina, :mana, :success_rate
-    attr_reader :prerequisites
-    attr_reader :able_being, :mastery
+    attr_reader :type, :category, :name, :level, :trains, :difficulty, :stamina, :mana, :success_rate, :prerequisites,
+                :able_being, :mastery
 
     def initialize(level, trains, difficulty, stamina, mana, success_rate)
       @type          = nil # active or passive

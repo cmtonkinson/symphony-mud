@@ -2,9 +2,7 @@ module Talent
   class Klass
     include Talent::Enabler
 
-    attr_reader :being
-    attr_reader :health_rate
-    attr_reader :mana_rate
+    attr_reader :being, :health_rate, :mana_rate
 
     def initialize(being)
       @name        = ''

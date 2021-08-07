@@ -2,8 +2,7 @@ require 'openssl'
 
 module Base
   class Configuration
-    attr_accessor :sleep_interval, :recovery_file
-    attr_accessor :hash_salt, :hash_iterations, :hash_digest
+    attr_accessor :sleep_interval, :recovery_file, :hash_salt, :hash_iterations, :hash_digest
 
     def initialize
       # Wait time (in seconds) between iterations of the primary server loop.

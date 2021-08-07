@@ -2,8 +2,7 @@ module Realm
   class Being < Objekt
     CONTAINERS = %w[items].freeze
 
-    attr_accessor :room, :gender, :hand
-    attr_accessor :enablers, :klass, :anatomy
+    attr_accessor :room, :gender, :hand, :enablers, :klass, :anatomy
 
     CONTAINERS.each { |cont| attr_accessor cont }
 
@@ -116,7 +115,7 @@ module Realm
       _prompt_prefix
     end
 
-    # NOTE Command::Operator has a dependency on the interface of Base::User.
+    # NOTE: Command::Operator has a dependency on the interface of Base::User.
     # This method will work as long as that dependency is limited to a single
     # property called `avatar`, since we're basically passing a Stub object
     # in the form of an OpenStruct.

@@ -4,12 +4,7 @@
 
 module Realm
   class Task < Objekt
-    attr_accessor :description # player-friendly
-    attr_accessor :tasked # what Objekt is burdened to complete this?
-    attr_accessor :objective # what's the thing that has to be done?
-    attr_accessor :parameters # are there restrictions on achieving the objective?
-    attr_accessor :reward
-    attr_accessor :parent, :children
+    attr_accessor :description, :tasked, :objective, :parameters, :reward, :parent, :children # player-friendly # what Objekt is burdened to complete this? # what's the thing that has to be done? # are there restrictions on achieving the objective?
 
     define_hooks :spy_completed, :spy_failed, :spy_updated
 

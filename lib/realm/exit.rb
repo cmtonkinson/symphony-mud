@@ -42,10 +42,10 @@ module Realm
     on_hashify lambda {
       # We want a Hash mapping each direction to the id of the Room to which
       # it points, or nil.
-      exit_room_ids = Hash[DIRECTIONS.keys.map do |dir|
+      exit_room_ids = DIRECTIONS.keys.map do |dir|
         target_room = send dir
         [dir, target_room ? target_room.id : nil]
-      end]
+      end.to_h
 
       {
         default_open: default_open,

@@ -92,12 +92,12 @@ module Test
           n.content.run_time
         ]
 
-        if n.content.status != :pass
+        if n.content.status == :pass
+          @num_pass += 1
+        else
           @num_fail += 1
           color = :red
           output += n.content.result
-        else
-          @num_pass += 1
         end
 
         puts output.gsub(/^/, i(n)).colorize(color)

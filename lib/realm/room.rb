@@ -2,8 +2,7 @@ module Realm
   class Room < Objekt
     CONTAINERS = %w[beings items placements].freeze
 
-    attr_accessor :zone
-    attr_accessor :coords
+    attr_accessor :zone, :coords
 
     CONTAINERS.each { |cont| attr_accessor cont }
     Realm::Exit::DIRECTIONS.each_key { |exit| attr_accessor exit }

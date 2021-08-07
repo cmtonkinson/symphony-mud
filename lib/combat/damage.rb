@@ -1,8 +1,7 @@
 module Combat
   class Damage
     attr_reader :base_amount, :type, :elements
-    attr_accessor :actual, :source, :implement
-    attr_accessor :armor_adjustment, :elemental_adjustment
+    attr_accessor :actual, :source, :implement, :armor_adjustment, :elemental_adjustment
 
     # d = Combat::Damage.new(53).slash.fire(20).implement(weapon).from(attacker)
     def initialize(base_amount)

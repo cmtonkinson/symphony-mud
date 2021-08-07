@@ -156,7 +156,7 @@ module Base
 
     # Store to disk a mapping of client socket descriptors to Avatar ids.
     def save_reboot_map
-      recovery_map = Hash[@clients.map { |c| [c.fd, c.user.avatar.id] }]
+      recovery_map = @clients.map { |c| [c.fd, c.user.avatar.id] }.to_h
       File.write Base.configuration.recovery_file, YAML.dump(recovery_map)
     end
 

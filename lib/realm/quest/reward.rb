@@ -1,7 +1,6 @@
 module Realm
   class Reward < Objekt
-    attr_accessor :silver, :gold, :exp
-    attr_accessor :item_ids
+    attr_accessor :silver, :gold, :exp, :item_ids
 
     # TODO: modifiers, effects, npcs (enemies or pets), jobs, scenes, etc.
 

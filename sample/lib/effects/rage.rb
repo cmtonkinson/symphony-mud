@@ -10,9 +10,9 @@ module Realm
         @valid_for       = [Realm::Being]
 
         @modifiers = {
-          'strength': 1,
-          'dexterity': 1,
-          'constitution': -2
+          strength: 1,
+          dexterity: 1,
+          constitution: -2
         }
       end
     end

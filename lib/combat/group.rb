@@ -1,10 +1,7 @@
 module Combat
   class Group
     attr_accessor :battle
-    attr_reader :leader
-    attr_reader :members
-    attr_reader :pending
-    attr_reader :opponents
+    attr_reader :leader, :members, :pending, :opponents
 
     def initialize(leader)
       @battle    = nil

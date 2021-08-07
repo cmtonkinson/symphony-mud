@@ -8,8 +8,8 @@ module Realm
         allow_uses 10
 
         @modifiers = {
-          'hit_bonus': 1,
-          'damage_bonus': 1
+          hit_bonus: 1,
+          damage_bonus: 1
         }
       end
 

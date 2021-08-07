@@ -32,11 +32,11 @@ module Util
     singleton_class.send :alias_method, :[], :lookup
 
     def self.report
-      buckets = Hash[hash.map do |klass, bucket|
+      buckets = hash.map do |klass, bucket|
         [klass.name, {
           size: bucket.length
         }]
-      end]
+      end.to_h
       {
         size: buckets.values.map { |b| b[:size] }.reduce(:+),
         buckets: buckets
