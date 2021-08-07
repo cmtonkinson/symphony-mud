@@ -19,7 +19,7 @@ rubocop:
   tags:
     - docker
   script:
-    - rubocop -P
+    - bundle exec rubocop -P
 
 # TEST
 # Logical correctness
@@ -28,7 +28,7 @@ rspec:
   tags:
     - docker
   script:
-    - rspec --format=documentation --force-color
+    - bundle exec rspec --format=documentation --force-color
   coverage: '/\(\d+.\d+\%\) covered/'
 
 system-tests:
@@ -37,7 +37,7 @@ system-tests:
     - docker
   script:
     - ulimit -Sn 50000
-    - test/test.rb
+    - bundle exec test/test.rb
   artifacts:
     paths:
       - test/state
