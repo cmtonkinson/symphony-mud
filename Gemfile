@@ -10,7 +10,7 @@ group :symphony do
   gem 'i18n'
   gem 'pqueue'
   gem 'ruby-enum'
-  gem 'rubytree'
+  gem 'rubytree', git: 'https://github.com/cmtonkinson/RubyTree.git', ref: 'fix-syntax-warning'
   gem 'rufus-lua'
   gem 'text'
 end
