@@ -1,8 +1,10 @@
 module Talent
   class Canine < Anatomy
+    NAME = 'Canine'.freeze
+
     def initialize(being)
       super
-      @name = 'canine'
+      @name = NAME
 
       add_slot :head, 'head'
       add_slot :neck, 'neck'

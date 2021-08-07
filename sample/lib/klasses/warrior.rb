@@ -1,8 +1,10 @@
 module Talent
   class Warrior < Klass
+    NAME = 'Warrior'.freeze
+
     def initialize(being)
       super
-      @name        = 'warrior'
+      @name        = NAME
       @health_rate = 4
       @mana_rate   = 0.3
 
