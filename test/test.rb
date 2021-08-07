@@ -9,6 +9,7 @@ puts "Seed #{$RAND_SEED}"
 
 require_relative 'test/init'
 Dir[File.join(__dir__, 'scenarios', '*.rb')].sort.each { |file| require file }
+Dir[File.join('../game/scenarios', '*.rb')].sort.each { |file| require file }
 
 m = Test::Manager.new
 

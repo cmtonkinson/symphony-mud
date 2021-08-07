@@ -70,38 +70,4 @@ module Test
       raise "Constitution isn't higher" unless @con1 < @con0
     end
   end
-
-  define :create_weapon do
-    from :status
-    with :admin
-    before do
-      admin 'iedit create'
-      admin 'name sword'
-      admin 'wearable hold'
-      admin 'type weapon'
-      admin 'weapon_type sword'
-      admin 'damage_type slash'
-      admin 'hitroll 10'
-      admin 'damroll 10'
-      admin 'exit'
-    end
-
-    test do
-      admin 'load item 1'
-      expect 'create a sword'
-      admin 'id sword'
-      n_expect %w[Effects sharp hit_bonus damage_bonus]
-    end
-  end
-
-  define :hone do
-    from :create_weapon
-    with :admin
-    test do
-      admin 'hone sword'
-      expect 'You hone a sword'
-      admin 'id sword'
-      expect %w[Effects sharp hit_bonus damage_bonus]
-    end
-  end
 end
