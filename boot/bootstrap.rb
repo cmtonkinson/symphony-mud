@@ -33,28 +33,18 @@ game_loader = Symphony.root.join 'game', 'load'
 if File.file? game_loader
   require game_loader
 else
-  Dir[Symphony.root.join 'game', 'lib', '**', '*.rb']
-    .sort
-    .each { |file| require file }
+  Dir[Symphony.root.join 'game', 'lib', '**', '*.rb'].each { |file| require file }
 end
 
 # Load command definitions.
-Dir[Symphony.root.join 'commands', '**', '*.rb']
-  .sort
-  .each { |file| require file }
+Dir[Symphony.root.join 'commands', '**', '*.rb'].each { |file| require file }
 
-Dir[Symphony.root.join 'game', 'commands', '**', '*.rb']
-  .sort
-  .each { |file| require file }
+Dir[Symphony.root.join 'game', 'commands', '**', '*.rb'].each { |file| require file }
 
 # Configure the application.
-Dir[Symphony.root.join 'boot', 'setup', '*.rb']
-  .sort
-  .each { |file| require file }
+Dir[Symphony.root.join 'boot', 'setup', '*.rb'].each { |file| require file }
 
-Dir[Symphony.root.join 'game', 'setup', '*.rb']
-  .sort
-  .each { |file| require file }
+Dir[Symphony.root.join 'game', 'setup', '*.rb'].each { |file| require file }
 
 # Other external configuration.
 require_relative 'configuration'

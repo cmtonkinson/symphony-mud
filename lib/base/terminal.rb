@@ -29,8 +29,8 @@ module Base
     # to `I18n#t`.
     VALID_CODES    = COLORS.values.map { |defn| defn[:code] }
     SPECIAL_CODES  = [RESET, '{', '?'].freeze
-    CODE_PATTERN   = /(?<!%)\{[#{VALID_CODES.join}]/.freeze
-    ESCAPE_PATTERN = /\e\[3\dm|\e\[\dm/.freeze
+    CODE_PATTERN   = /(?<!%)\{[#{VALID_CODES.join}]/
+    ESCAPE_PATTERN = /\e\[3\dm|\e\[\dm/
 
     def self.escape_map
       @escape_map ||= COLORS.map do |_k, v|

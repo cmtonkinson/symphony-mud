@@ -12,6 +12,7 @@ group :symphony do
   gem 'ruby-enum'
   gem 'rubytree', git: 'https://github.com/cmtonkinson/RubyTree.git', ref: 'fix-syntax-warning'
   gem 'rufus-lua'
+  gem 'sorted_set'
   gem 'text'
 end
 
