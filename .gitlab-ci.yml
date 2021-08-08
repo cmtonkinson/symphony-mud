@@ -19,7 +19,7 @@ rubocop:
   tags:
     - docker
   script:
-    - bundle exec rubocop -P
+    - bundle exec rubocop --parallel
 
 # TEST
 # Logical correctness
