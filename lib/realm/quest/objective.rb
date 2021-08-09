@@ -1,7 +1,6 @@
 # Objective is meant to monitor the tasked Objekt for a success event. Each
 # different kind of objective (see Konst::SPY_TRIGGERS) will have a setup* and
 # an exec* method defined below.
-
 module Realm
   class Objective < Spy
     def initialize(id = nil, props = {})

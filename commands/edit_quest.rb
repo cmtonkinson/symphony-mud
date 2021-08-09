@@ -20,11 +20,13 @@ module Command
     end
   end
 
-  define :information, :edit_quest do
+  define :activation, :edit_quest do
     level Realm::Being::DEMIGOD
-    usage
+    usage('enter_room', { room_id: :string })
     exec do
-      being.puts being.qedit.summary
+      a = Realm::Activation.new nil, { quest: being.qedit, trigger: :enter_room, params: room_id }
+      being.qedit.activation = a
+      being.puts t('actor'), being.qedit.activation.trigger, being.qedit.activation.params
     end
   end
 
@@ -35,6 +37,14 @@ module Command
       being.puts t('actor')
       being.qedit = false
       being.user.operators.pop
+    end
+  end
+
+  define :information, :edit_quest do
+    level Realm::Being::DEMIGOD
+    usage
+    exec do
+      being.puts being.qedit.summary
     end
   end
 

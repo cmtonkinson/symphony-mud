@@ -167,6 +167,7 @@ module Realm
       # consolidated for cases like this. It's also likely this is not the last
       # time such overlap will be present, though at the time of writing it is
       # the first.
+      @room.trigger_effect :enter_room, self
       trigger_effect :visit_room, self
     end
 

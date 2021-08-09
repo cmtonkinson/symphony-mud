@@ -6,7 +6,7 @@ describe Realm::Objective do
   describe '#setup' do
     before :each do
       @t = Realm::Task.new
-      @t.tasked = Realm::Objekt.new
+      @t.hero = Realm::Objekt.new
       @o = Realm::Objective.new
       @o.task = @t
       @t.objective = @o

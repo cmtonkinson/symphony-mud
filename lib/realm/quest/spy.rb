@@ -40,13 +40,6 @@ module Realm
       @state = hash[:state]
     }
 
-    on_deep_copy lambda { |original|
-    }
-
-    enervate lambda {
-      dispose
-    }
-
     # Activating the Spy will cause it to monitor the underlying Objekt (the
     # 'tasked') for relevant events.
     def activate
@@ -147,7 +140,7 @@ module Realm
       return false unless validate_name name
 
       callback_method = "exec_#{name}".to_sym
-      callback_retval = send callback_method.to_sym, arg
+      callback_retval = send callback_method, arg
 
       case callback_retval
       when :complete then complete!

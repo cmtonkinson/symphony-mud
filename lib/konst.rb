@@ -19,6 +19,10 @@ module Konst
   ITEM_ELEMENT_MIN = 0
   ITEM_ELEMENT_MAX = 100
 
+  ACTIVATION_TRIGGERS = %i[
+    enter_room
+  ].freeze
+
   # Triggers available for configuration in Objectives and Parameters.
   SPY_TRIGGERS = %i[
     consume_item

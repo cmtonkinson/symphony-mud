@@ -1,36 +1,53 @@
 # Quest is the top-level object in the questing system. It encapsulates
 # a list of Tasks along with associated metadata and is designed with an
 # interface to be manipulated directly by users and builders alike.
-
 module Realm
   class Quest < Objekt
-    attr_accessor :tasks
+    attr_accessor :tasks, :hero, :activation
 
     def initialize(id = nil, props = {})
-      @tasks = []
+      @tasks = []       # Tasks to be completed
+      @hero  = nil      # Objekt burdened with the Glorious Purpose(tm) of this Quest
+      @activation = nil # Conditions under which this Quest is made available to the hero
       super
     end
 
     on_hashify lambda {
-      hash = {
-        tasks: tasks.map(&:hashify)
-      }
-      { quest: hash }
+      h = {}
+
+      h[:tasks] = @tasks.map(&:hashify)
+      h[:activation] = @activation.hashify if @activation
+
+      { quest: h }
     }
 
     on_dehashify lambda { |hash|
-      hash = hash[:quest]
+      h = hash[:quest]
+
       @tasks = []
-      hash[:tasks].each { |h| @tasks << Realm::Task.dehashify(h) }
+      h[:tasks].each { |t| @tasks << Realm::Task.dehashify(t) } if h[:tasks]
+
+      if h[:activation]
+        @activation = Realm::Activation.dehashify(h[:activation])
+        @activation.quest = self
+      end
     }
 
     on_deep_copy lambda { |original|
       @tasks = []
       original.tasks.each { |t| @tasks << t.clone }
+
+      @activation = original.activation.clone
+      @activation.quest = self
+    }
+
+    vivify lambda {
+      @activation.run_hook :vivify
     }
 
     enervate lambda {
       @tasks.each { |t| t.run_hook :enervate }
+      @activation.run_hook :enervate
     }
 
     def task_by_rid(rid)
@@ -45,6 +62,7 @@ module Realm
 
     def summary
       str = "Quest #{name} / #{rid} / #{id}"
+      str << "\n  activation: #{@activation.trigger} (#{@activation.params.to_json})" if @activation
       tasks.each { |t| str << task_summary(t) }
       str
     end

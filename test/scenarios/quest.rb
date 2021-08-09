@@ -98,4 +98,17 @@ module Test
       admin 'info'
     end
   end
+
+  define :set_activation do
+    from :create_quest
+    with :admin
+    test do
+      admin 'qedit 1'
+
+      admin 'activation enter_room 2'
+      expect 'enter_room -- 2'
+
+      admin 'info'
+    end
+  end
 end

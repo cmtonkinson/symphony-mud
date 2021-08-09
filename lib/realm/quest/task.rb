@@ -1,10 +1,9 @@
 # Task is the "main" workhorse class of the questing system. It encapsulates
 # the objective, requirements, and rewards of a particular quest segment and
-# keeps the tasked Objekt coordinated with those details.
-
+# keeps the hero Objekt coordinated with those details.
 module Realm
   class Task < Objekt
-    attr_accessor :description, :tasked, :objective, :parameters, :reward, :parent, :children # player-friendly # what Objekt is burdened to complete this? # what's the thing that has to be done? # are there restrictions on achieving the objective?
+    attr_accessor :description, :hero, :objective, :parameters, :reward, :parent, :children
 
     define_hooks :spy_completed, :spy_failed, :spy_updated
 
@@ -34,7 +33,7 @@ module Realm
 
     def initialize(id = nil, props = {})
       @description = ''
-      @tasked      = nil
+      @hero        = nil
       @objective   = nil
       @parameters  = []
       @reward      = nil
@@ -105,17 +104,17 @@ module Realm
     }
 
     spy_completed lambda {
-      Symphony.logger.debug '%s :spy_completed for %s' % [fqid_str, tasked.fqid_str]
+      Symphony.logger.debug '%s :spy_completed for %s' % [fqid_str, hero.fqid_str]
       evaluate_spies
     }
 
     spy_failed lambda {
-      Symphony.logger.debug '%s :spy_failed for %s' % [fqid_str, tasked.fqid_str]
+      Symphony.logger.debug '%s :spy_failed for %s' % [fqid_str, hero.fqid_str]
       evaluate_spies
     }
 
     spy_updated lambda {
-      Symphony.logger.trace '%s :spy_updated for %s' % [fqid_str, tasked.fqid_str]
+      Symphony.logger.trace '%s :spy_updated for %s' % [fqid_str, hero.fqid_str]
       evaluate_spies
     }
 
@@ -123,19 +122,19 @@ module Realm
     # to figure out if the Task is complete.
     def evaluate_spies
       if complete?
-        tasked.run_hook :task_completed, self
+        hero.run_hook :task_completed, self
         finish
       elsif failed?
-        tasked.run_hook :task_failed, self
+        hero.run_hook :task_failed, self
         finish
       else
-        tasked.run_hook :task_updated, self
+        hero.run_hook :task_updated, self
       end
     end
 
     # Finishing the Task will cause deactivation.
     def finish
-      Symphony.logger.trace '%s #finish for %s' % [fqid_str, tasked.fqid_str]
+      Symphony.logger.trace '%s #finish for %s' % [fqid_str, hero.fqid_str]
       deactivate
     end
 

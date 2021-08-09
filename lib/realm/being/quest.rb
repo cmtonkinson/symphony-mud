@@ -5,6 +5,27 @@ module Realm
     # TODO: OLE for Quests
     # TODO: Accept, decline, abandon a quest
     # TODO: List quests (w/ filters, incl. available and completed)
+    attr_accessor :quests
+
+    after_initialize lambda {
+      @quests = []
+    }
+
+    on_hashify lambda {
+      {
+        quests: @quests.map(&:hashify)
+      }
+    }
+
+    on_dehashify lambda { |hash|
+      return unless hash[:quests]
+
+      @quests = []
+      hash[:quests].each do |h|
+        @quests << Realm::Quest.dehashify(h)
+        # TODO: 'link' each Quest to the Being (activate effect triggers, etc)
+      end
+    }
 
     task_completed lambda { |task|
       puts "you completed #{task.name}"
