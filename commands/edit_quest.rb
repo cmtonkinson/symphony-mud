@@ -146,4 +146,13 @@ module Command
     end
     # rubocop:enable Metrics/BlockNesting
   end
+
+  define :title, :edit_quest do
+    level Realm::Being::DEMIGOD
+    usage(:rest)
+    exec do
+      being.qedit.name = rest
+      being.puts t('actor'), being.qedit, being.qedit.name
+    end
+  end
 end

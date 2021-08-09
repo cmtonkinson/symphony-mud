@@ -42,7 +42,7 @@ module Realm
     }
 
     vivify lambda {
-      @activation.run_hook :vivify
+      @activation.run_hook :vivify if @activation
     }
 
     enervate lambda {
@@ -62,7 +62,7 @@ module Realm
 
     def summary
       str = "Quest #{name} / #{rid} / #{id}"
-      str << "\n  activation: #{@activation.trigger} (#{@activation.params.to_json})" if @activation
+      str << "\nActivation: #{@activation.trigger} (#{@activation.params.to_json})" if @activation
       tasks.each { |t| str << task_summary(t) }
       str
     end
@@ -70,9 +70,9 @@ module Realm
     def task_summary(task, indent = 0)
       i = "\n" + ('  ' * indent)
       str = "#{i}Task #{task.rid}: #{task.name}"
-      str << "#{i}  objective: #{task.objective.name} / #{task.objective.params}" if task.objective
-      task.parameters.each { |p| str << "#{i}  parameter: #{p.name} / #{p.params}" }
-      task&.reward&.to_str_array&.each { |s| str << "#{i}  reward: #{s}" }
+      str << "#{i}  - objective: #{task.objective.name} (#{task.objective.params.to_json})" if task.objective
+      task.parameters.each { |p| str << "#{i}  - parameter: #{p.name} (#{p.params.to_json})" }
+      task&.reward&.to_str_array&.each { |s| str << "#{i}  - reward: #{s}" }
       task.children.each { |c| str << c.task_summary(c, indent + 1) }
       str
     end

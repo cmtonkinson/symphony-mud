@@ -30,7 +30,7 @@ module Realm
     on_dehashify lambda { |hash|
       h = hash[:activation]
       @trigger = h[:trigger]
-      @params  = h[:trigger]
+      @params  = h[:params]
     }
 
     vivify lambda {
@@ -38,13 +38,13 @@ module Realm
       when :enter_room
         r = $world.find_room @params
         if r.rid == 1
-          Symphony.error 'Activated %s on %s (looked for %s)' % [quest.fqid_str, r.fqid_str, @params] if r.rid == 1
+          Symphony.logger.error 'Activated %s on %s (looked for %s)' % [quest.fqid_str, r.fqid_str, @params] if r.rid == 1
         else
           setup :enter_room, r
-          Symphony.trace 'Activated %s on %s for %s' % [quest.fqid_str, r.fqid_str, 'enter_room']
+          Symphony.logger.trace 'Activated %s on %s for %s' % [quest.fqid_str, r.fqid_str, 'enter_room']
         end
       else
-        Symphony.error 'Cannot vivify %s for %s (trigger %s/%s)' % [fqid_stR, quest.fqid_str, @trigger, @params]
+        Symphony.logger.error 'Cannot vivify %s for %s (trigger %s/%s)' % [fqid_stR, quest.fqid_str, @trigger, @params]
       end
     }
 

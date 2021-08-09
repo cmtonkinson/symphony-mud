@@ -63,6 +63,10 @@ module Util
       I18n.t "movement.exit_from.#{arg}"
     end
 
+    def self.interpret_quest(_, arg)
+      arg.name
+    end
+
     def self.interpret_opposite(_, arg)
       opposite = Realm::Exit::DIRECTIONS[arg][:opposite]
       I18n.t "movement.exit_from.#{opposite}"

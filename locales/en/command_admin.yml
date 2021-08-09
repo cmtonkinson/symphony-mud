@@ -87,6 +87,11 @@ en:
       room: "A deep and penetrating blackness permeates the air. As it subsides, things look slightly different..."
     pry:
       _brief: "Blocks the server process by executing `binding.pry` for live debugging"
+    quests:
+      _breif: "Display all quests in the current Zone."
+      none: "There are no Quests in this Zone."
+      title: "Quests in {m$zone{x:\n\n"
+      line: "[{C$rid{x] {M$quest{x"
     reboot:
       _brief: "Save the World state, reload the server process, and restore connections."
       actor: "Hold on to your butts..."

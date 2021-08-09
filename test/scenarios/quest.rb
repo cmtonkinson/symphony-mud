@@ -48,7 +48,6 @@ module Test
       admin 'qedit 1'
       admin 'task 1 description foobar'
       expect 'foobar'
-
       admin 'info'
     end
   end
@@ -60,7 +59,6 @@ module Test
       admin 'qedit 1'
       admin 'task 1 title NewName'
       expect 'NewName'
-
       admin 'info'
     end
   end
@@ -72,7 +70,6 @@ module Test
       admin 'qedit 1'
       admin 'task 1 objective visit_room 2'
       expect 'room'
-
       admin 'info'
     end
   end
@@ -104,10 +101,19 @@ module Test
     with :admin
     test do
       admin 'qedit 1'
-
       admin 'activation enter_room 2'
       expect 'enter_room -- 2'
+      admin 'info'
+    end
+  end
 
+  define :set_title do
+    from :create_quest
+    with :admin
+    test do
+      admin 'qedit 1'
+      admin 'title A Test Quest in Jest'
+      expect 'A Test Quest in Jest'
       admin 'info'
     end
   end

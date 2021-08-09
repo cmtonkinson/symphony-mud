@@ -13,9 +13,9 @@ en:
     exit:
       _brief: "Leave quest editing mode."
       actor: "You have left quest editing mode."
-    name:
-      _brief: "Change the name of the quest."
-      actor: "Quest now named {C$string{x."
+    title:
+      _brief: "Change the title of the quest."
+      actor: "Quest [{C$rid{x] is retitled {C$string{x."
     task:
       _brief: "Manipulate tasks within the quest."
       err_nothing: "There is no task by that id in this quest."

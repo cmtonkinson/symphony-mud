@@ -334,6 +334,21 @@ module Command
     end
   end
 
+  define :quests do
+    level Realm::Being::DEMIGOD
+    usage
+    exec do
+      z = being.room.zone
+      list = z.quests
+      if list.empty?
+        being.puts t('none')
+      else
+        being.puts t('title'), z
+        list.each { |_,q| being.puts t('line'), q, q }
+      end
+    end
+  end
+
   define :reboot do
     level Realm::Being::CREATOR
     usage
