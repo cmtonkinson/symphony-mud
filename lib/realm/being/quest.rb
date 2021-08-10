@@ -45,6 +45,48 @@ module Realm
       puts "task #{task.name} updated"
     }
 
+    # Add the given Quest to the players list of quests and notify them that it
+    # has become available to them.
+    def assign_quest(quest)
+      q = quest.clone
+      q.rid = next_quest_rid
+      q.hero = self
+      q.assign!
+      @quests << q
+
+      puts "\nYou have a new quest available!"
+      puts '  [{C$rid{x] {Y$quest{x', q, q
+    end
+
+    # Enable Tasks and Spys for this Quest.
+    def accept_quest(quest)
+      return unless @quests.include? quest
+      return unless quest.assigned?
+
+      quest.accept!
+      puts "\nYou have accepted {Y$quest{x. First up:", quest
+      quest.tasks.each do |t|
+        t.activate self
+        puts "\n  {W$task{x", t
+      end
+    end
+
+    # Forget all about this Quest.
+    def abandon_quest(quest)
+      return unless @quests.include? quest
+
+      # TODO: ensure there are no further cleanup tasks needed here
+      @quests.delete quest
+      quest.run_hook :enervate
+    end
+
+    # for Quests, RIDs are meant to act like an auto-increment number from 1
+    def next_quest_rid
+      return 1 if @quests.empty?
+
+      @quests.map(&:rid).max + 1
+    end
+
     def accept_task(task)
       # register callback for objective
       #   - this means the objective needs to be phrased in terms of callbacks

@@ -1,4 +1,4 @@
-# Objective is meant to monitor the tasked Objekt for a success event. Each
+# Objective is meant to monitor the hero Objekt for a success event. Each
 # different kind of objective (see Konst::SPY_TRIGGERS) will have a setup* and
 # an exec* method defined below.
 module Realm
@@ -21,7 +21,7 @@ module Realm
       return nil unless being.room.rid == params || being.room.id == params
 
       Symphony.logger.trace '%s completed %s by visiting %s' % [
-        task.tasked.fqid_str,
+        task.hero.fqid_str,
         fqid_str,
         being.room.fqid_str
       ]

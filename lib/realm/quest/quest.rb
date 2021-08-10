@@ -1,22 +1,36 @@
 # Quest is the top-level object in the questing system. It encapsulates
 # a list of Tasks along with associated metadata and is designed with an
 # interface to be manipulated directly by users and builders alike.
+#
+# Valid statuses:
+#   - template (only used for the master copy in the Zone list)
+#   - assigned
+#   - accepted
+#   - complete
+#   - failed
 module Realm
   class Quest < Objekt
-    attr_accessor :tasks, :hero, :activation
+    attr_accessor :tasks, :hero, :activation, :status, :hidden
 
     def initialize(id = nil, props = {})
-      @tasks = []       # Tasks to be completed
-      @hero  = nil      # Objekt burdened with the Glorious Purpose(tm) of this Quest
+      @tasks      = [] # Tasks to be completed
+      @hero       = nil # Objekt burdened with the Glorious Purpose(tm) of this Quest
       @activation = nil # Conditions under which this Quest is made available to the hero
+      @status     = :template # As seen by the player
+      @hidden     = false
       super
     end
+
+    # TODO: implement status based on tasks
+    # TODO: new rid per player when activated
 
     on_hashify lambda {
       h = {}
 
       h[:tasks] = @tasks.map(&:hashify)
       h[:activation] = @activation.hashify if @activation
+      h[:status] = @status
+      h[:hidden] = @hidden
 
       { quest: h }
     }
@@ -31,6 +45,9 @@ module Realm
         @activation = Realm::Activation.dehashify(h[:activation])
         @activation.quest = self
       end
+
+      @status = h[:status]
+      @hidden = h[:hidden]
     }
 
     on_deep_copy lambda { |original|
@@ -39,6 +56,9 @@ module Realm
 
       @activation = original.activation.clone
       @activation.quest = self
+
+      @status = original.status
+      @hidden = original.hidden
     }
 
     vivify lambda {
@@ -46,6 +66,7 @@ module Realm
     }
 
     enervate lambda {
+      @hero&.quests&.delete self if @hero
       @tasks.each { |t| t.run_hook :enervate }
       @activation.run_hook :enervate
     }
@@ -55,9 +76,51 @@ module Realm
     end
 
     def next_task_rid
-      return 1 if @tasks.empty?
+      @tasks.empty? ? 1 : (@tasks.flat_map(&:flat_tree).max(&:rid).rid + 1)
+    end
 
-      @tasks.flat_map(&:flat_tree).max(&:rid).rid + 1
+    def assigned?
+      @status == :available
+    end
+
+    def assign!
+      @status = :available
+    end
+
+    def accepted?
+      @status == :accepted
+    end
+
+    def accept!
+      @status = :accepted
+    end
+
+    def complete?
+      @status == :complete
+    end
+
+    def complete!
+      @status = :complete
+    end
+
+    def failed?
+      @status == :failed
+    end
+
+    def failed!
+      @status = :failed
+    end
+
+    def hidden?
+      @hidden
+    end
+
+    def hide!
+      @hidden = true
+    end
+
+    def unhide!
+      @hidden = false
     end
 
     def summary

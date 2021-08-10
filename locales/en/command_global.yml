@@ -71,6 +71,20 @@ en:
     map:
       _brief: "Display the layout of the current zone."
       title: "Your map of {m$zone{x:"
+    quest:
+      _brief: "Show are manipulate your quests."
+      err_none: "Can't find that quest, sorry."
+      empty: "You don't have any quests available right now."
+      title: "Here are your quests:"
+      line: "[{C$rid{x] {W$string{x - {Y$quest{x"
+      accepted: "You have accepted {Y$quest{x!"
+      cant_accept: "Sorry, you can't accept that again."
+      abandoned: "You have abandoned {Y$quest{x..."
+      cant_abandon: "Can't abandon it now..."
+      already_hidden: "What are you going to do, hide it twice?"
+      hidden: "You hide {Y$quest{x."
+      unhidden: "You unhide {Y$quest{x."
+      not_hidden: "That isn't hidden."
     remove:
       _brief: "Unequip an item."
       err_not_found: "You aren't wearing that."

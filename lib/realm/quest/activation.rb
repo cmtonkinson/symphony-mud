@@ -36,9 +36,9 @@ module Realm
     vivify lambda {
       case @trigger
       when :enter_room
-        r = $world.find_room @params
+        r = $world.find_room @params.to_i
         if r.rid == 1
-          Symphony.logger.error 'Activated %s on %s (looked for %s)' % [quest.fqid_str, r.fqid_str, @params] if r.rid == 1
+          Symphony.logger.error 'Activation of %s failed (searched rid %s)' % [quest.fqid_str, @params] if r.rid == 1
         else
           setup :enter_room, r
           Symphony.logger.trace 'Activated %s on %s for %s' % [quest.fqid_str, r.fqid_str, 'enter_room']
@@ -53,7 +53,7 @@ module Realm
 
     # Used to link the `trigger` effect on the `@target`.
     def setup(trigger, target)
-      unless Konst::ACTIVATION_TRIGGERS.include?
+      unless Konst::ACTIVATION_TRIGGERS.include? trigger
         Symphony.logger.error '%s is not a valid activation trigger for %s (%s)' % [trigger, target.fqid_str, quest]
         return false
       end
@@ -73,7 +73,7 @@ module Realm
     # are met, the Objekt will be given the Quest and exec() returns true.
     def exec(subject)
       # Don't allow multiple instances of the same Quest.
-      return false if subject.quests.any? { |q| q.cloned_from == id }
+      return false if subject.quests.any? { |q| q.cloned_from == @quest.id }
 
       # Should we activate the Quest?
       test_meth = "test_#{trigger}".to_sym
@@ -83,9 +83,7 @@ module Realm
       # Activate the Quest.
       Symphony.logger.trace '%s activated via %s by %s' % [fqid_str, trigger, subject.fqid_str]
       # TODO: activate a scene, if configured
-      qc = @quest.clone
-      qc.hero = subject
-      subject.quests << qc
+      subject.assign_quest @quest
       true
     end
 

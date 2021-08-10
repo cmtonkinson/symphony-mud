@@ -344,7 +344,7 @@ module Command
         being.puts t('none')
       else
         being.puts t('title'), z
-        list.each { |_,q| being.puts t('line'), q, q }
+        list.each { |_, q| being.puts t('line'), q, q }
       end
     end
   end

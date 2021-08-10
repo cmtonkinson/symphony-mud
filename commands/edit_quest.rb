@@ -52,7 +52,7 @@ module Command
     level Realm::Being::DEMIGOD
     usage('add', :rest)
     usage({ rid: :int }, 'description', :rest)
-    usage({ rid: :int }, 'objective', 'visit_room', room_id: :string)
+    usage({ rid: :int }, 'objective', 'visit_room', room_id: :int)
     usage({ rid: :int }, 'parameter', 'add', { type: :string }, :rest)
     usage({ rid: :int }, 'parameter', 'remove', { type: :string })
     usage({ rid: :int }, 'parent', { parent_rid: :int })

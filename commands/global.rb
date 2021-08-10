@@ -305,6 +305,59 @@ module Command
     end
   end
 
+  define :quest do
+    usage('list')
+    # usage('list', { filter: %w[available accepted complete failed abandoned hidden] })
+    usage({ action: %w[accept abandon hide unhide] }, number: :int)
+    exec do
+      if list
+        if being.quests.empty?
+          being.puts t('empty')
+        else
+          being.puts t('title')
+          being.quests.each { |q| being.puts t('line'), q, q.status, q }
+        end
+      elsif action
+        quest = being.quests.find { |q| q.rid == number }
+        being.puts t('err_none') and next if quest.nil?
+
+        case action
+        ##########
+        when 'accept'
+          if quest.assigned?
+            being.accept_quest quest
+          else
+            being.puts t('cant_accept')
+          end
+        ##########
+        when 'abandon'
+          if quest.assigned? || quest.accepted?
+            being.abandon_quest quest
+            being.puts t('abandoned'), quest
+          else
+            being.puts t('cant_abandon')
+          end
+        ##########
+        when 'hide'
+          if quest.hidden?
+            being.puts t('already_hidden')
+          else
+            quest.hide!
+            being.puts t('hidden'), quest
+          end
+        ##########
+        when 'unhide'
+          if quest.hidden?
+            quest.unhide
+            being.puts t('unhidden'), quest
+          else
+            being.puts t('not_hidden')
+          end
+        end
+      end
+    end
+  end
+
   define :remove do
     usage :target
     exec do

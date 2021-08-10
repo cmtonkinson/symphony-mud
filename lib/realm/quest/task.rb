@@ -139,12 +139,14 @@ module Realm
     end
 
     # Spies don't automatically listen for events - they need to be activated
-    def activate
-      objective.activate
-      parameters.each(&:activate)
+    def activate(hero)
+      @hero = hero
+      objective.activate self
+      parameters.each { |p| p.activate self }
     end
 
     def deactivate
+      @hero = nil
       objective.deactivate
       parameters.each(&:deactivate)
     end

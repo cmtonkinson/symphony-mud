@@ -51,7 +51,7 @@ module Realm
     vivify lambda {
       reset
       $world.schedule Mechanics::RecurringJob.new 90, self, 90, :reset
-      @quests.values.each { |q| q.run_hook :vivify }
+      @quests.each_value { |q| q.run_hook :vivify }
     }
 
     def layout

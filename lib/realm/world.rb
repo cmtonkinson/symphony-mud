@@ -82,7 +82,7 @@ module Realm
 
         room_ary.find { |r| r.rid == rid_or_uuid }
       # It's a UUID
-      # TODO centarlize the UUID regexp someplace - maybe under Util?
+      # TODO: centralize the UUID regexp someplace - maybe under Util?
       elsif /\h{8}-?\h{4}-?\h{4}-?\h{4}-?\h{12}/i.match?(rid_or_uuid)
         (room = find rid_or_uuid) ? room : find(THE_VOID_ID)
       else

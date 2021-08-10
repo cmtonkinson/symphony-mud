@@ -1,6 +1,6 @@
 # Spy is meant as an abstract base class for Objective and Parameter, which
 # share a lot of conceptual functionality since both are ultimately just
-# monitoring hooks on the tasked Objekt.
+# monitoring hooks on the hero Objekt.
 
 module Realm
   class Spy < Objekt
@@ -41,11 +41,12 @@ module Realm
     }
 
     # Activating the Spy will cause it to monitor the underlying Objekt (the
-    # 'tasked') for relevant events.
-    def activate
+    # 'hero') for relevant events.
+    def activate(task)
       Symphony.logger.trace 'Spy %s (%s) #activate for %s' % [fqid_str, task.fqid_str, name]
+      @task = task
       @active = true
-      task.tasked.register_effect trigger, self if trigger
+      task.hero.register_effect trigger, self if trigger
 
       activate_meth = "activate_#{name}".to_sym
       send activate_meth if respond_to? activate_meth
@@ -54,7 +55,7 @@ module Realm
     def deactivate
       Symphony.logger.trace 'Spy %s (%s) #deactivate for %s' % [fqid_str, task.fqid_str, name]
       @active = false
-      task.tasked.unregister_effect trigger, self if trigger
+      task.hero.unregister_effect trigger, self if trigger
 
       deactivate_meth = "deactivate_#{name}".to_sym
       send deactivate_meth if respond_to? deactivate_meth

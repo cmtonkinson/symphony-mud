@@ -117,4 +117,82 @@ module Test
       admin 'info'
     end
   end
+
+  define :create_full_quest do
+    from :create_quest
+    with :admin
+    test do
+      # create Rooms 2 and 3
+      # the quest will activate in room 2 and the task objective is to visit 3
+      admin 'redit'
+      admin 'dig east'
+      admin 'dig north'
+      admin 'exit'
+      admin 'goto 1'
+      admin 'map'
+
+      # create the quest
+      admin 'qedit 1'
+      admin 'title A New Quest'
+      admin 'activation enter_room 2'
+      admin 'task add The First Task'
+      admin 'task 1 description Go North'
+      admin 'task 1 objective visit_room 3'
+      admin 'task 1 reward silver 100'
+      admin 'task 1 reward gold 100'
+      admin 'task 1 reward exp 100'
+
+      # verify
+      admin 'info'
+      admin 'exit'
+      admin 'quest list'
+      expect "don't have any quests available"
+    end
+  end
+
+  define :assign_quest do
+    from :create_full_quest
+    with :frodo
+    test do
+      frodo 'east'
+      expect 'You have a new quest available'
+      expect 'A New Quest'
+
+      frodo 'quest list'
+      expect 'A New Quest'
+      expect 'available'
+      n_expect 'accepted'
+
+      frodo 'quest accept 2'
+      expect "Can't find that"
+
+      frodo 'quest accept 1'
+      expect 'You have accepted A New Quest'
+
+      frodo 'quest list'
+      expect 'accepted'
+      n_expect 'available'
+
+      frodo 'west'
+    end
+  end
+
+  define :dont_double_assign do
+    from :assign_quest
+    with :frodo
+    test do
+      frodo 'east'
+      n_expect 'You have a new quest available'
+    end
+  end
+
+  define :complete_first_task do
+    from :assign_quest
+    with :frodo
+    test do
+      frodo 'east'
+      frodo 'north'
+      expect 'complete'
+    end
+  end
 end
