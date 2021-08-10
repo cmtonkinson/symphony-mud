@@ -12,6 +12,7 @@ Naming/MethodParameterName:
 Metrics/ModuleLength:
   Exclude:
     - 'commands/*'
+    - 'test/scenarios/*'
 
 Metrics/ClassLength:
   Exclude:
