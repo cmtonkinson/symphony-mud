@@ -16,6 +16,8 @@ module Realm
           name: @name
         }
       }
+      # Only relevant if this is a clone.
+      hash[:objekt][:cloned_from] = cloned_from if cloned_from
       # Run the hook to get other Hashes from different functional areas.
       sub_hashes = run_hook :on_hashify
       # Merge all the subsequent Hashes into the original.
@@ -36,6 +38,7 @@ module Realm
                                                       rid: o_hash[:rid],
                                                       name: o_hash[:name]
                                                     })
+      objekt.instance_variable_set :@cloned_from, o_hash[:cloned_from] if o_hash[:cloned_from]
 
       # Run dehashification hooks to complete the loading.
       objekt.run_hook :on_dehashify, hash
