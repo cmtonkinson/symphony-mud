@@ -42,5 +42,5 @@ system-tests:
   artifacts:
     when: always
     paths:
-      - test/state
+      - tmp/test-state
 

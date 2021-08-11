@@ -7,8 +7,6 @@
 /game
 /scripts/*
 !/scripts/.keep
-/test/state/*
-!/test/state/.keep
 /tmp/*
 !/tmp/.keep
 /TAGS
