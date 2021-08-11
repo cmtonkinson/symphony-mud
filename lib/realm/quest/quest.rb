@@ -26,40 +26,33 @@ module Realm
 
     on_hashify lambda {
       h = {}
-
-      h[:tasks] = @tasks.map(&:hashify)
-      h[:activation] = @activation.hashify if @activation
       h[:status] = @status
       h[:hidden] = @hidden
-
+      h[:activation] = @activation.hashify if @activation
+      h[:tasks] = @tasks.map(&:hashify)
       { quest: h }
     }
 
     on_dehashify lambda { |hash|
       h = hash[:quest]
-
-      @tasks = []
-      h[:tasks].each { |t| @tasks << Realm::Task.dehashify(t) } if h[:tasks]
-
+      @status = h[:status]
+      @hidden = h[:hidden]
       if h[:activation]
         @activation = Realm::Activation.dehashify(h[:activation])
         @activation.quest = self
       end
-
-      @status = h[:status]
-      @hidden = h[:hidden]
+      @tasks = []
+      h[:tasks].each { |t| @tasks << Realm::Task.dehashify(t) } if h[:tasks]
     }
 
     on_deep_copy lambda { |original|
-      @tasks = []
-      original.tasks.each { |t| @tasks << t.clone }
-
-      @activation = original.activation.clone
-      @activation.quest = self
-
       @status = original.status
       @hidden = original.hidden
-    }
+      @activation = original.activation.clone
+      @activation.quest = self
+      @tasks = []
+      original.tasks.each { |t| @tasks << t.clone }
+   }
 
     vivify lambda {
       @activation.run_hook :vivify if @activation
@@ -79,6 +72,10 @@ module Realm
       @tasks.empty? ? 1 : (@tasks.flat_map(&:flat_tree).max(&:rid).rid + 1)
     end
 
+    def activate
+      @tasks.each { |t| t.activate @hero }
+    end
+
     def assigned?
       @status == :available
     end
@@ -93,6 +90,7 @@ module Realm
 
     def accept!
       @status = :accepted
+      activate
     end
 
     def complete?

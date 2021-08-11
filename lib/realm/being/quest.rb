@@ -22,18 +22,17 @@ module Realm
 
       @quests = []
       hash[:quests].each do |h|
-        @quests << Realm::Quest.dehashify(h)
-        # TODO: 'link' each Quest to the Being (activate effect triggers, etc)
+        q = Realm::Quest.dehashify(h)
+        q.hero = self
+        @quests << q
+        q.activate if q.accepted?
       end
     }
 
     task_completed lambda { |task|
       puts "you completed #{task.name}"
-
-      task.rewards.each do |reward|
-        reward.to_str_array.each do |str|
-          puts "  you receive #{str}"
-        end
+      task.reward.to_str_array.each do |str|
+        puts "  you receive #{str}"
       end
     }
 
@@ -53,7 +52,6 @@ module Realm
       q.hero = self
       q.assign!
       @quests << q
-
       puts "\nYou have a new quest available!"
       puts '  [{C$rid{x] {Y$quest{x', q, q
     end
@@ -65,10 +63,7 @@ module Realm
 
       quest.accept!
       puts "\nYou have accepted {Y$quest{x. First up:", quest
-      quest.tasks.each do |t|
-        t.activate self
-        puts "\n  {W$task{x", t
-      end
+      quest.tasks.each { |t| puts "\n  {W$task{x", t }
     end
 
     # Forget all about this Quest.

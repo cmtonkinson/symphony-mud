@@ -4,7 +4,7 @@
 
 module Realm
   class Spy < Objekt
-    attr_accessor :task, :name, :trigger, :params, :active, :status
+    attr_accessor :task, :name, :trigger, :params, :active, :status, :state
 
     def initialize(id = nil, props = {})
       @task    = nil
@@ -40,6 +40,15 @@ module Realm
       @state = hash[:state]
     }
 
+    on_deep_copy lambda { |original|
+      @name = original.name
+      @trigger = original.trigger
+      @params = original.params
+      @active = original.active
+      @status = original.status
+      @state = original.state if original.state
+    }
+
     # Activating the Spy will cause it to monitor the underlying Objekt (the
     # 'hero') for relevant events.
     def activate(task)
@@ -47,7 +56,6 @@ module Realm
       @task = task
       @active = true
       task.hero.register_effect trigger, self if trigger
-
       activate_meth = "activate_#{name}".to_sym
       send activate_meth if respond_to? activate_meth
     end
@@ -56,7 +64,6 @@ module Realm
       Symphony.logger.trace 'Spy %s (%s) #deactivate for %s' % [fqid_str, task.fqid_str, name]
       @active = false
       task.hero.unregister_effect trigger, self if trigger
-
       deactivate_meth = "deactivate_#{name}".to_sym
       send deactivate_meth if respond_to? deactivate_meth
     end

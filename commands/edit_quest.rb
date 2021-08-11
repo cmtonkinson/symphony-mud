@@ -22,7 +22,7 @@ module Command
 
   define :activation, :edit_quest do
     level Realm::Being::DEMIGOD
-    usage('enter_room', { room_id: :string })
+    usage('enter_room', { room_id: :int })
     exec do
       a = Realm::Activation.new nil, { quest: being.qedit, trigger: :enter_room, params: room_id }
       being.qedit.activation = a

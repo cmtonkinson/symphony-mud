@@ -146,9 +146,9 @@ module Realm
     end
 
     def deactivate
-      @hero = nil
       objective.deactivate
       parameters.each(&:deactivate)
+      @hero = nil
     end
 
     # Tests whether the Objective has been met and none of the auxillary

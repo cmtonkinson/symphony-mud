@@ -13,7 +13,7 @@ module Realm
 
     def setup_visit_room(room)
       # TODO: validate this is a valid room reference (UUID, rid, etc.)
-      @params = room
+      @params = room.to_i
     end
 
     def exec_visit_room(being)
