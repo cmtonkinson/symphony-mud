@@ -52,7 +52,7 @@ module Realm
       @activation.quest = self
       @tasks = []
       original.tasks.each { |t| @tasks << t.clone }
-   }
+    }
 
     vivify lambda {
       @activation.run_hook :vivify if @activation
