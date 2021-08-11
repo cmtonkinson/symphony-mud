@@ -49,7 +49,7 @@ module Command
         return true
       end
 
-      Symphony.logger.trace "  performing command '#{@command.get_name}' with arguments '#{rest}' for #{being.fqid_str}"
+      Symphony.logger.trace "Performing command '#{@command.get_name}' with arguments '#{rest}' for #{being.fqid_str}"
       @command.perform being, context, rest
       true
     end
