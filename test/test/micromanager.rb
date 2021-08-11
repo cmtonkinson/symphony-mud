@@ -10,11 +10,11 @@ module Test
       go
     end
 
-    def ancestral_path(n)
-      if n.parent.name == :root
-        n.name
+    def ancestral_path(node)
+      if node.parent.name == :root
+        node.name
       else
-        "#{ancestral_path n.parent}..#{n.name}"
+        "#{ancestral_path node.parent}..#{node.name}"
       end
     end
 
