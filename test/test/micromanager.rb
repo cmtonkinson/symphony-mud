@@ -10,8 +10,16 @@ module Test
       go
     end
 
+    def ancestral_path(n)
+      if n.parent.name == :root
+        n.name
+      else
+        "#{ancestral_path n.parent}..#{n.name}"
+      end
+    end
+
     def state_path
-      @state_path ||= $ROOT_DIR.join('test', 'state', @id)
+      @state_path ||= $ROOT_DIR.join('test', 'state', ancestral_path(@node))
     end
 
     def data_path
@@ -39,7 +47,7 @@ module Test
         FileUtils.mkdir_p data_path
       # Otherwise, copy the parent data to start with.
       else
-        parent_data = $ROOT_DIR.join 'test', 'state', @test.get_parent_id
+        parent_data = $ROOT_DIR.join 'test', 'state', ancestral_path(@node.parent)
         FileUtils.cp_r parent_data, state_path
         # Truncate any logs.
         FileUtils.rm_rf Dir.glob(state_path.to_s + '/*-log.txt')
