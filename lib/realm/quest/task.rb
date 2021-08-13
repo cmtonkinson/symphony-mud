@@ -3,7 +3,8 @@
 # keeps the hero Objekt coordinated with those details.
 module Realm
   class Task < Objekt
-    attr_accessor :description, :hero, :objective, :parameters, :reward, :parent, :children
+    attr_accessor :description, :hero, :objective, :parameters,
+                  :reward, :parent, :children, :quest
 
     define_hooks :spy_completed, :spy_failed, :spy_updated
 
@@ -33,6 +34,7 @@ module Realm
 
     def initialize(id = nil, props = {})
       @description = ''
+      @quest       = nil
       @hero        = nil
       @objective   = nil
       @parameters  = []
@@ -65,14 +67,10 @@ module Realm
 
     on_dehashify lambda { |hash|
       hash = hash[:task]
-
       @description = hash[:description]
       @objective = Realm::Objective.dehashify(hash[:objective]) if hash[:objective]
-
-      hash[:parameters].each { |param| @parameters << Realm::Parameter.dehashify(param) }
-
+      hash[:parameters].each { |p| @parameters << Realm::Parameter.dehashify(p) }
       @reward = Realm::Reward.dehashify(hash[:reward]) if hash[:reward]
-
       hash[:children].each do |c|
         c = Realm::Task.dehashify(c)
         c.parent = self
@@ -83,11 +81,8 @@ module Realm
     on_deep_copy lambda { |original|
       @description = original.description
       @objective = original.objective.clone
-
-      original.parameters.each { |param| @parameters << param.clone }
-
+      original.parameters.each { |p| @parameters << p.clone }
       @reward = original.reward.clone
-
       original.children.each do |c|
         child = c.clone
         child.parent = self

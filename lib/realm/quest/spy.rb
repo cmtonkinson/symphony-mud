@@ -1,7 +1,8 @@
 # Spy is meant as an abstract base class for Objective and Parameter, which
 # share a lot of conceptual functionality since both are ultimately just
 # monitoring hooks on the hero Objekt.
-
+#
+# status can be one of nil, :active, :complete, :failed
 module Realm
   class Spy < Objekt
     attr_accessor :task, :name, :trigger, :params, :active, :status, :state
@@ -31,7 +32,6 @@ module Realm
 
     on_dehashify lambda { |hash|
       hash = hash[:spy]
-
       @name = hash[:name]
       @trigger = hash[:trigger]
       @params = hash[:params]
@@ -54,7 +54,7 @@ module Realm
     def activate(task)
       Symphony.logger.trace 'Spy %s (%s) #activate for %s' % [fqid_str, task.fqid_str, name]
       @task = task
-      @active = true
+      @status = :active
       task.hero.register_effect trigger, self if trigger
       activate_meth = "activate_#{name}".to_sym
       send activate_meth if respond_to? activate_meth
@@ -62,7 +62,6 @@ module Realm
 
     def deactivate
       Symphony.logger.trace 'Spy %s (%s) #deactivate for %s' % [fqid_str, task.fqid_str, name]
-      @active = false
       task.hero.unregister_effect trigger, self if trigger
       deactivate_meth = "deactivate_#{name}".to_sym
       send deactivate_meth if respond_to? deactivate_meth
@@ -88,7 +87,7 @@ module Realm
     # A Spy can be configured and 'ready to go' but not activated. Take the
     # example of a player who has a quest available, but hasn't accepted it.
     def active?
-      @active == true
+      @status == :active
     end
 
     def complete?

@@ -1,13 +1,6 @@
 # Quest is the top-level object in the questing system. It encapsulates
 # a list of Tasks along with associated metadata and is designed with an
 # interface to be manipulated directly by users and builders alike.
-#
-# Valid statuses:
-#   - template (only used for the master copy in the Zone list)
-#   - assigned
-#   - accepted
-#   - complete
-#   - failed
 module Realm
   class Quest < Objekt
     attr_accessor :tasks, :hero, :activation, :status, :hidden
@@ -22,7 +15,6 @@ module Realm
     end
 
     # TODO: implement status based on tasks
-    # TODO: new rid per player when activated
 
     on_hashify lambda {
       h = {}
@@ -42,7 +34,13 @@ module Realm
         @activation.quest = self
       end
       @tasks = []
-      h[:tasks].each { |t| @tasks << Realm::Task.dehashify(t) } if h[:tasks]
+      if h[:tasks]
+        h[:tasks].each do |t|
+          task = Realm::Task.dehashify(t)
+          task.quest = self
+          @tasks << task
+        end
+      end
     }
 
     on_deep_copy lambda { |original|
@@ -51,7 +49,11 @@ module Realm
       @activation = original.activation.clone
       @activation.quest = self
       @tasks = []
-      original.tasks.each { |t| @tasks << t.clone }
+      original.tasks.each do |t|
+        task = t.clone
+        task.quest = self
+        @tasks << task
+      end
     }
 
     vivify lambda {
@@ -62,6 +64,18 @@ module Realm
       @hero&.quests&.delete self if @hero
       @tasks.each { |t| t.run_hook :enervate }
       @activation.run_hook :enervate
+    }
+
+    task_completed lambda { |task|
+      @hero.run_hook :task_completed, task
+    }
+
+    task_failed lambda { |task|
+      @hero.run_hook :task_failed, task
+    }
+
+    task_updated lambda { |task|
+      @hero.run_hook :task_updated, task
     }
 
     def task_by_rid(rid)

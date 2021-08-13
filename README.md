@@ -118,3 +118,6 @@ todo
 
 ## TODO
 creatively enough, todo ;) (but seriously, check issues in GitLab)
+
+## Other Documentation
+[quests](/doc/quest.md)
