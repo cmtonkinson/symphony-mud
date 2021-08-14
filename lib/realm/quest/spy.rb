@@ -55,14 +55,14 @@ module Realm
       Symphony.logger.trace 'Spy %s (%s) #activate for %s' % [fqid_str, task.fqid_str, name]
       @task = task
       @status = :active
-      task.hero.register_effect trigger, self if trigger
+      task.quest.hero.register_effect trigger, self if trigger
       activate_meth = "activate_#{name}".to_sym
       send activate_meth if respond_to? activate_meth
     end
 
     def deactivate
       Symphony.logger.trace 'Spy %s (%s) #deactivate for %s' % [fqid_str, task.fqid_str, name]
-      task.hero.unregister_effect trigger, self if trigger
+      task.quest.hero.unregister_effect trigger, self if trigger
       deactivate_meth = "deactivate_#{name}".to_sym
       send deactivate_meth if respond_to? deactivate_meth
     end

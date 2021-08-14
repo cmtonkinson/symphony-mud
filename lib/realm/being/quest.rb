@@ -77,20 +77,7 @@ module Realm
 
     # for Quests, RIDs are meant to act like an auto-increment number from 1
     def next_quest_rid
-      return 1 if @quests.empty?
-
-      @quests.map(&:rid).max + 1
-    end
-
-    def accept_task(task)
-      # register callback for objective
-      #   - this means the objective needs to be phrased in terms of callbacks
-      #   - that make sense to the Being (e.g. `:visit_room, 4332`)
-      #
-      # register callbacks for parameters
-      #   - parameters may invalidate completion of the objective
-      #   - e.g. if you enter a fight or go to sleep, perhaps the Task resets/abandons
-      #   - also setting a timer could invalidate a Task
+      @quests.empty? ? 1 : (@quests.map(&:rid).max + 1)
     end
   end
 end

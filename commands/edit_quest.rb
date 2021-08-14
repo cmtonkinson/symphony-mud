@@ -90,27 +90,27 @@ module Command
         ####################
         # remove
         elsif remove
-          parent = task.parent
+          parents = task.parents
           children = task.children
 
-          if parent
-            # If the task is a child, then we need to connect its parent
-            # with all its children (effectively plucking it out of the tree).
-            parent.children.delete task
+          if parents.any?
+            # If the task has parents, we need to link all the tasks children
+            # with all of its parents.
+            parents.each do |p|
+              p.children.delete task
+              p.children |= task.children
+            end
             children.each do |c|
-              parent.children << c
-              c.parent = parent
+              c.parents.delete task
+              c.parents |= parents
             end
           else
-            # If the task was top-level in the quest, then it's children
-            # now become top-level tasks.
-            being.qedit.tasks.delete task
-            children.each do |c|
-              being.qedit.tasks << c
-              c.parent = nil
-            end
+            # If this was a root Task, then it's a simplification of the above
+            # wherein the children may wind up becoming roots themselves.
+            children.each { |c| c.parents.delete task }
           end
 
+          being.qedit.tasks.delete task
           being.puts t('removed'), task.rid
 
         ####################

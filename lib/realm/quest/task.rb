@@ -1,10 +1,11 @@
 # Task is the "main" workhorse class of the questing system. It encapsulates
 # the objective, requirements, and rewards of a particular quest segment and
 # keeps the hero Objekt coordinated with those details.
+#
 module Realm
   class Task < Objekt
-    attr_accessor :description, :hero, :objective, :parameters,
-                  :reward, :parent, :children, :quest
+    attr_accessor :description, :objective, :parameters,
+                  :reward, :parents, :children, :quest
 
     define_hooks :spy_completed, :spy_failed, :spy_updated
 
@@ -35,11 +36,10 @@ module Realm
     def initialize(id = nil, props = {})
       @description = ''
       @quest       = nil
-      @hero        = nil
       @objective   = nil
       @parameters  = []
       @reward      = nil
-      @parent      = nil
+      @parents     = []
       @children    = []
       super
     end
@@ -54,13 +54,18 @@ module Realm
       @name
     end
 
+    def hero
+      @quest.hero
+    end
+
+    # Note that Task only partially implements serialization hooks and relies on
+    # logic in Quest serialization hooks to manipulate parent/child relationships
     on_hashify lambda {
       hash = {
         description: description,
         objective: objective&.hashify,
         parameters: parameters&.map(&:hashify),
-        reward: reward&.hashify,
-        children: children.map(&:hashify)
+        reward: reward&.hashify
       }
       { task: hash }
     }
@@ -71,11 +76,6 @@ module Realm
       @objective = Realm::Objective.dehashify(hash[:objective]) if hash[:objective]
       hash[:parameters].each { |p| @parameters << Realm::Parameter.dehashify(p) }
       @reward = Realm::Reward.dehashify(hash[:reward]) if hash[:reward]
-      hash[:children].each do |c|
-        c = Realm::Task.dehashify(c)
-        c.parent = self
-        @children << c
-      end
     }
 
     on_deep_copy lambda { |original|
@@ -83,33 +83,27 @@ module Realm
       @objective = original.objective.clone
       original.parameters.each { |p| @parameters << p.clone }
       @reward = original.reward.clone
-      original.children.each do |c|
-        child = c.clone
-        child.parent = self
-        @children << child
-      end
     }
 
     enervate lambda {
       @objective.run_hook :enervate
       @parameters.each { |p| p.run_hook :enervate }
       @reward.run_hook :enervate
-      @children.each { |c| c.run_hook :enervate }
       dispose
     }
 
     spy_completed lambda {
-      Symphony.logger.debug '%s :spy_completed for %s' % [fqid_str, hero.fqid_str]
+      Symphony.logger.debug '%s :spy_completed for %s' % [fqid_str, @quest.hero.fqid_str]
       evaluate_spies
     }
 
     spy_failed lambda {
-      Symphony.logger.debug '%s :spy_failed for %s' % [fqid_str, hero.fqid_str]
+      Symphony.logger.debug '%s :spy_failed for %s' % [fqid_str, @quest.hero.fqid_str]
       evaluate_spies
     }
 
     spy_updated lambda {
-      Symphony.logger.trace '%s :spy_updated for %s' % [fqid_str, hero.fqid_str]
+      Symphony.logger.trace '%s :spy_updated for %s' % [fqid_str, @quest.hero.fqid_str]
       evaluate_spies
     }
 
@@ -117,25 +111,24 @@ module Realm
     # to figure out if the Task is complete.
     def evaluate_spies
       if complete?
-        hero.run_hook :task_completed, self
+        @quest.run_hook :task_completed, self
         finish
       elsif failed?
-        hero.run_hook :task_failed, self
+        @quest.run_hook :task_failed, self
         finish
       else
-        hero.run_hook :task_updated, self
+        @quest.run_hook :task_updated, self
       end
     end
 
     # Finishing the Task will cause deactivation.
     def finish
-      Symphony.logger.trace '%s #finish for %s' % [fqid_str, hero.fqid_str]
+      Symphony.logger.trace '%s #finish for %s' % [fqid_str, @quest.hero.fqid_str]
       deactivate
     end
 
     # Spies don't automatically listen for events - they need to be activated
-    def activate(hero)
-      @hero = hero
+    def activate
       objective.activate self
       parameters.each { |p| p.activate self }
     end
@@ -143,7 +136,6 @@ module Realm
     def deactivate
       objective.deactivate
       parameters.each(&:deactivate)
-      @hero = nil
     end
 
     # Tests whether the Objective has been met and none of the auxillary
@@ -183,14 +175,6 @@ module Realm
     def remove_reward_item(item_id)
       @reward.item_ids.delete item_id
       @reward = nil if @reward.empty?
-    end
-
-    # Recursive method to return a flat array of this Task, and all descendent
-    # Tasks.
-    def flat_tree
-      array = [self]
-      children.each { |c| array += c.flat_tree }
-      array
     end
   end
 end

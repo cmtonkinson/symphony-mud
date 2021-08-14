@@ -7,7 +7,7 @@ module Realm
 
     def initialize(id = nil, props = {})
       @tasks      = [] # Tasks to be completed
-      @hero       = nil # Objekt burdened with the Glorious Purpose(tm) of this Quest
+      @hero       = nil # Objekt Burdened with the Glorious Purpose(tm) of this Quest
       @activation = nil # Conditions under which this Quest is made available to the hero
       @status     = :template # As seen by the player
       @hidden     = false
@@ -21,7 +21,12 @@ module Realm
       h[:status] = @status
       h[:hidden] = @hidden
       h[:activation] = @activation.hashify if @activation
-      h[:tasks] = @tasks.map(&:hashify)
+      h[:tasks] = []
+      h[:task_children] = {}
+      @tasks.each do |t|
+        h[:tasks] << t.hashify
+        h[:task_children][t.id] = t.children.map(&:id) if t.children
+      end
       { quest: h }
     }
 
@@ -33,12 +38,27 @@ module Realm
         @activation = Realm::Activation.dehashify(h[:activation])
         @activation.quest = self
       end
+      # see /doc/quest.md for detail about how and why Tasks are [de]serialized this way
       @tasks = []
       if h[:tasks]
         h[:tasks].each do |t|
           task = Realm::Task.dehashify(t)
           task.quest = self
           @tasks << task
+        end
+      end
+      @tasks.each do |t|
+        next unless h[:task_children][t.id]
+
+        h[:task_children][t.id].each do |child_id|
+          child = @tasks.find { |c| c.id == child_id }
+          unless child
+            Symphony.logger.error 'Task child_id %s not found during dehashification of %s' % [child_id, t.fqid_str]
+            next
+          end
+
+          t.children << child
+          child.parents << t
         end
       end
     }
@@ -79,15 +99,15 @@ module Realm
     }
 
     def task_by_rid(rid)
-      @tasks.flat_map(&:flat_tree).find { |t| t.rid == rid }
+      @tasks.find { |t| t.rid == rid }
     end
 
     def next_task_rid
-      @tasks.empty? ? 1 : (@tasks.flat_map(&:flat_tree).max(&:rid).rid + 1)
+      @tasks.empty? ? 1 : (@tasks.map(&:rid).max + 1)
     end
 
     def activate
-      @tasks.each { |t| t.activate @hero }
+      @tasks.each(&:activate)
     end
 
     def assigned?

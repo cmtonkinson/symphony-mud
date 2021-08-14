@@ -38,6 +38,8 @@ module Realm
 
     def save
       Symphony.logger.info 'World#save beginning'
+      FileUtils.mkdir_p 'tmp/data-backup'
+      FileUtils.cp_r 'data', "tmp/data-backup/#{Time.now.strftime '%Y-%m-%d-%H-%M-%S-%z'}"
       s = Logistics::Scribe
       @zones.each { |_id, z| s.save z }
       @avatars.each { |_id, a| s.save a }
