@@ -89,15 +89,32 @@ module Realm
 
     task_completed lambda { |task|
       @hero.run_hook :task_completed, task
+      task.quest.evaluate_state
     }
 
     task_failed lambda { |task|
       @hero.run_hook :task_failed, task
+      task.quest.evaluate_state
     }
 
     task_updated lambda { |task|
       @hero.run_hook :task_updated, task
     }
+
+    # TODO: refactor:
+    #   1. delegate output to hero via callback hook
+    #   2. does this account for task heirarchy? (eg children failure/success)
+    def evaluate_state
+      if @tasks.all?(&:complete?)
+        @hero.puts 'complete ==='
+        @status = :complete
+      elsif @tasks.any?(&:failed?)
+        @hero.puts 'failed ==='
+        @status = :failed
+      else
+        @hero.puts 'ongoing ==='
+      end
+    end
 
     def task_by_rid(rid)
       @tasks.find { |t| t.rid == rid }

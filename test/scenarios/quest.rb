@@ -195,4 +195,15 @@ module Test
       expect 'complete'
     end
   end
+
+  define :dont_double_complete do
+    from :complete_first_task
+    with :frodo
+    test do
+      frodo 'south'
+      frodo 'north'
+      n_expect 'complete'
+    end
+  end
 end
+
