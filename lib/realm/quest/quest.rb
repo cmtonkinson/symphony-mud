@@ -30,6 +30,8 @@ module Realm
       { quest: h }
     }
 
+    # See doc/quest.md for detail about how and why Tasks are [de]serialized
+    # in the Quest [de]serialization hooks.
     on_dehashify lambda { |hash|
       h = hash[:quest]
       @status = h[:status]
@@ -38,7 +40,6 @@ module Realm
         @activation = Realm::Activation.dehashify(h[:activation])
         @activation.quest = self
       end
-      # see /doc/quest.md for detail about how and why Tasks are [de]serialized this way
       @tasks = []
       if h[:tasks]
         h[:tasks].each do |t|
