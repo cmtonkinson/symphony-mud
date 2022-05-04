@@ -1,3 +1,5 @@
+require 'fileutils'
+
 module Logistics
   class Scribe
     def self.save(objekt)
