@@ -29,14 +29,15 @@ module Test
         raise 'test undefined' if @test.nil?
 
         @start_time = Time.now
-
         @accounts.each { |a| login_or_create a }
+        @error_context = nil
 
         @before&.call
         @test.call
         @after&.call
         @status = :pass unless @status == :fail
 
+        @result += "\n#{@error_context}" if @status == :fail && @error_context
         @end_time = Time.now
       rescue StandardError => e
         @end_time = Time.now
@@ -114,6 +115,7 @@ module Test
       else
         corpus = client.buffer[range]
         corpus = corpus.join("\n") if corpus.is_a? Array
+        @error_context = corpus
       end
 
       case e
