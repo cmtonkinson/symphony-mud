@@ -20,25 +20,24 @@ module Test
       # Construct the full test tree.
       analyze @reg[0] until @reg.empty?
 
-      if $LEAF_TEST
-        # During a leaf test, we only need the target node and it's ancestors.
-        target = @test_tree.find { |n| n.name == $LEAF_TEST }
-        @test_tree = target.parentage.reverse << target
-      elsif $TREE_TEST
-        # During a tree test, we need the target node and it's ancestors, but
-        # then must also recreate the
-        target = @test_tree.find { |n| n.name == $TREE_TEST }
-        parents = target.parentage.reverse
-        new_tree = Tree::TreeNode.new :root, nil
-        last_node = new_tree.root
-        parents.each do |p|
-          p_copy = p.detached_copy
-          last_node.add p_copy
-          last_node = p_copy
+      return unless (target_name = $LEAF_TEST || $TREE_TEST)
+
+      # At this point the entire heirarchy has been created. If we are running
+      # a 'tree' or 'leaf' test however, we need to prune the unwanted tests.
+      target = @test_tree.find { |n| n.name == target_name }
+
+      # Prune all siblings.
+      target.siblings.each { |s| target.parent.remove! s }
+
+      # Prune all siblings of parents (siblings of grandparents, etc).
+      target.parentage.each do |p|
+        p.siblings.each do |s|
+          p.parent.remove! s
         end
-        last_node.add target
-        @test_tree = new_tree
       end
+
+      # If this is a leaf test, prune all children.
+      target.remove_all! if $LEAF_TEST
     end
 
     def analyze(test)
@@ -109,9 +108,7 @@ module Test
     # Returns two spaces for every level of depth of the node in the tree.
     # Used for indenting output.
     def i(node)
-      # I'm not spending the time to figure out why node_depth is off-by-one
-      # (seemingly) when running a tree test.
-      num = $TREE_TEST ? node.node_depth - 2 : node.node_depth - 1
+      num = node.node_depth - 1
       '  ' * num
     end
   end
