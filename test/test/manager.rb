@@ -3,7 +3,7 @@ require 'colorize'
 
 module Test
   class Manager
-    attr_accessor :num_tests, :num_pass, :num_fail
+    attr_accessor :num_tests, :num_assertions, :num_pass, :num_fail
 
     def initialize
       @test_tree = Tree::TreeNode.new :root, nil
@@ -11,6 +11,7 @@ module Test
       @num_tests = 0
       @num_pass = 0
       @num_fail = 0
+      @num_assertions = 0
 
       setup
     end
@@ -83,6 +84,7 @@ module Test
         Micromanager.new n
 
         @num_tests += 1
+        @num_assertions += n.content.assertions
         color = :green
 
         output = '%s: %s (%d assertions in %s) ' % [
