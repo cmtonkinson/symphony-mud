@@ -17,6 +17,7 @@ Metrics/ModuleLength:
 Metrics/ClassLength:
   Exclude:
     - 'lib/sequences/login_sequence.rb'
+    - 'test/test/test.rb'
 
 Metrics/BlockLength:
   Exclude:
