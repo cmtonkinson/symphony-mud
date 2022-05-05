@@ -30,6 +30,7 @@ module Realm
     }
 
     task_completed lambda { |task|
+      Symphony.logger.debug "#{task.hero.fqid_str} completed #{task.fqid_str}"
       puts "you completed #{task.name}"
       task.reward.to_str_array.each do |str|
         puts "  you receive #{str}"
@@ -37,11 +38,23 @@ module Realm
     }
 
     task_failed lambda { |task|
+      Symphony.logger.debug "#{task.hero.fqid_str} failed #{task.fqid_str}"
       puts "you failed #{task.name}"
     }
 
     task_updated lambda { |task|
+      Symphony.logger.trace "#{task.hero.fqid_str} updated #{task.fqid_str}"
       puts "task #{task.name} updated"
+    }
+
+    quest_complete lambda { |quest|
+      Symphony.logger.debug "#{quest.hero.fqid_str} completed #{quest.fqid_str}"
+      puts "you completed quest #{quest.name}"
+    }
+
+    quest_failed lambda { |quest|
+      Symphony.logger.debug "#{quest.hero.fqid_str} failed #{quest.fqid_str}"
+      puts "you failed quest #{quest.name}"
     }
 
     # Add the given Quest to the players list of quests and notify them that it
@@ -52,6 +65,7 @@ module Realm
       q.hero = self
       q.assign!
       @quests << q
+      Symphony.logger.trace "#{q.fqid_str} (from #{quest}) assigned to #{fqid_str}"
       puts "\nYou have a new quest available!"
       puts '  [{C$rid{x] {Y$quest{x', q, q
     end
@@ -62,6 +76,7 @@ module Realm
       return unless quest.assigned?
 
       quest.accept!
+      Symphony.logger.debug "#{fqid_str} accepted by #{quest.fqid_str}"
       puts "\nYou have accepted {Y$quest{x. First up:", quest
       quest.tasks.each { |t| puts "\n  {W$task{x", t }
     end
@@ -71,6 +86,7 @@ module Realm
       return unless @quests.include? quest
 
       # TODO: ensure there are no further cleanup tasks needed here
+      Symphony.logger.debug "#{quest.fqid_str} abandoned by #{fqid_str}"
       @quests.delete quest
       quest.run_hook :enervate
     end

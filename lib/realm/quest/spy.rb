@@ -49,6 +49,10 @@ module Realm
       @state = original.state if original.state
     }
 
+    enervate lambda {
+      deactivate
+    }
+
     # Activating the Spy will cause it to monitor the underlying Objekt (the
     # 'hero') for relevant events.
     def activate(task)

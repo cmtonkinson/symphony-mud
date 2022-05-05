@@ -106,13 +106,11 @@ module Realm
     #   2. does this account for task heirarchy? (eg children failure/success)
     def evaluate_state
       if @tasks.all?(&:complete?)
-        @hero.puts 'complete ==='
         @status = :complete
+        @hero.run_hook :quest_complete, self
       elsif @tasks.any?(&:failed?)
-        @hero.puts 'failed ==='
         @status = :failed
-      else
-        @hero.puts 'ongoing ==='
+        @hero.run_hook :quest_failed, self
       end
     end
 

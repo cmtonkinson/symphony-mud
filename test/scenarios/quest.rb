@@ -205,4 +205,32 @@ module Test
       n_expect 'complete'
     end
   end
+
+  define :abandon_quest do
+    from :assign_quest
+    with :frodo
+    test do
+      frodo 'quest list'
+      expect 'A New Quest'
+
+      frodo 'quest abandon 1'
+      expect 'You have abandoned'
+
+      frodo 'quest list'
+      n_expect 'A New Quest'
+    end
+  end
+
+  define :disable_abandoned_task_spies do
+    from :assign_quest
+    with :frodo
+    test do
+      frodo 'quest abandon 1'
+      expect 'abandoned'
+
+      frodo 'east'
+      frodo 'north'
+      n_expect 'complete'
+    end
+  end
 end
