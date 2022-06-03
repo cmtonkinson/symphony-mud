@@ -1,7 +1,7 @@
 # The 'information' command at the end of these are just to get the full state
 # of the quest into the log.
 module Test
-  define :create_quest do
+  define :create_quest_stub do
     with :admin
     test do
       admin 'commands'
@@ -15,7 +15,7 @@ module Test
   end
 
   define :add_task do
-    from :create_quest
+    from :create_quest_stub
     with :admin
     test do
       admin 'qedit 1'
@@ -97,7 +97,7 @@ module Test
   end
 
   define :set_activation do
-    from :create_quest
+    from :create_quest_stub
     with :admin
     test do
       admin 'qedit 1'
@@ -108,7 +108,7 @@ module Test
   end
 
   define :set_title do
-    from :create_quest
+    from :create_quest_stub
     with :admin
     test do
       admin 'qedit 1'
@@ -119,7 +119,7 @@ module Test
   end
 
   define :create_full_quest do
-    from :create_quest
+    from :create_quest_stub
     with :admin
     test do
       # create Rooms 2 and 3
@@ -147,6 +147,31 @@ module Test
       admin 'exit'
       admin 'quest list'
       expect "don't have any quests available"
+    end
+  end
+
+  define :create_child_task do
+    from :create_full_quest
+    with :admin
+    test do
+      admin 'qedit 1'
+      admin 'task add The Child Task'
+      admin 'task 2 add parent 1'
+      admin 'info'
+      expect '  Task 2:'
+      admin 'exit'
+    end
+  end
+
+  define :remove_child_relationship do
+    from :create_child_task
+    with :admin
+    test do
+      admin 'qedit 1'
+      admin 'task 2 remove parent 1'
+      admin 'info'
+      expect 'Task 2:'
+      admin 'exit'
     end
   end
 

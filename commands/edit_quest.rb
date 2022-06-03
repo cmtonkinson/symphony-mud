@@ -55,18 +55,20 @@ module Command
     usage({ rid: :int }, 'objective', 'visit_room', room_id: :int)
     usage({ rid: :int }, 'parameter', 'add', { type: :string }, :rest)
     usage({ rid: :int }, 'parameter', 'remove', { type: :string })
-    usage({ rid: :int }, 'parent', { parent_rid: :int })
-    usage({ rid: :int }, 'remove')
+    usage({ rid: :int }, 'add', 'parent', { parent_rid: :int })
+    usage({ rid: :int }, 'remove', 'parent', { parent_rid: :int })
     usage({ rid: :int }, 'reward', 'item', { action: %w[add remove] }, :item_id)
     usage({ rid: :int }, 'reward', { kind: %w[silver gold exp] }, { amount: :int })
+    usage({ rid: :int }, 'subtask', :rest)
     usage({ rid: :int }, 'title', :rest)
     # rubocop:disable Metrics/BlockNesting
     exec do
       ####################
       # add
-      if add
+      if add && !parent
         task = Realm::Task.new nil, rid: being.qedit.next_task_rid, name: rest
         being.qedit.tasks << task
+        task.quest = being.qedit
         being.puts t('add'), task.rid, task.name
 
       elsif rid.is_a? Integer
@@ -88,29 +90,24 @@ module Command
           end
 
         ####################
-        # remove
-        elsif remove
-          parents = task.parents
-          children = task.children
+        # parent
+        elsif parent
+          target_parent = being.qedit.task_by_rid parent_rid
+          being.puts t('err_nothing') and next if target_parent.nil?
 
-          if parents.any?
-            # If the task has parents, we need to link all the tasks children
-            # with all of its parents.
-            parents.each do |p|
-              p.children.delete task
-              p.children |= task.children
-            end
-            children.each do |c|
-              c.parents.delete task
-              c.parents |= parents
-            end
-          else
-            # If this was a root Task, then it's a simplification of the above
-            # wherein the children may wind up becoming roots themselves.
-            children.each { |c| c.parents.delete task }
+          if add
+            task.add_parent target_parent
+            being.puts t('parent_added'), target_parent, task
+          elsif remove
+            task.remove_parent target_parent
+            being.puts t('parent_removed'), target_parent, task
           end
 
-          being.qedit.tasks.delete task
+        ####################
+        # remove
+        elsif remove
+          task.pluck
+          being.qedit.tasks.delete task # only necessary for root Tasks
           being.puts t('removed'), task.rid
 
         ####################

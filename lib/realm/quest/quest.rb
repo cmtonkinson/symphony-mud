@@ -24,6 +24,10 @@ module Realm
       h[:tasks] = []
       h[:task_children] = {}
       @tasks.each do |t|
+        # TODO: this will only preserve root tasks and generate an error on dehashify
+        # because direct children of roots won't be found. Need to flatten the heirarchy
+        # then write out all tasks and all relationships - the following 2 lines will
+        # not recurse cleanly the way they are / were originally written
         h[:tasks] << t.hashify
         h[:task_children][t.id] = t.children.map(&:id) if t.children
       end
@@ -57,7 +61,6 @@ module Realm
             Symphony.logger.error 'Task child_id %s not found during dehashification of %s' % [child_id, t.fqid_str]
             next
           end
-
           t.children << child
           child.parents << t
         end
@@ -102,7 +105,7 @@ module Realm
     }
 
     # TODO: refactor:
-    #   1. delegate output to hero via callback hook
+    #   1. delegate output to hero via callback hook (DONE)
     #   2. does this account for task heirarchy? (eg children failure/success)
     def evaluate_state
       if @tasks.all?(&:complete?)
@@ -184,7 +187,7 @@ module Realm
       str << "#{i}  - objective: #{task.objective.name} (#{task.objective.params.to_json})" if task.objective
       task.parameters.each { |p| str << "#{i}  - parameter: #{p.name} (#{p.params.to_json})" }
       task&.reward&.to_str_array&.each { |s| str << "#{i}  - reward: #{s}" }
-      task.children.each { |c| str << c.task_summary(c, indent + 1) }
+      task.children.each { |c| str << task_summary(c, indent + 1) }
       str
     end
   end

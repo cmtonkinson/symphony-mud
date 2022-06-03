@@ -107,6 +107,53 @@ module Realm
       evaluate_spies
     }
 
+    # There are a few places where we need to remove a task from its heirarchy,
+    # and in those cases parent/child relationships have to be adjusted.
+    def pluck
+      if parents.any?
+        # If self has any parents, we need to make said parents aware of each of
+        # self's children.
+        parents.each do |p|
+          p.children.delete self
+          p.children |= children
+        end
+        # If self has any children, we need to make said children aware of each
+        # of self's parents.
+        children.each do |c|
+          c.parents.delete self
+          c.parents |= parents
+        end
+      else
+        # This is a root Task, and so it's current children will become root
+        # Tasks themselves.
+        children.each { |c| c.parents.delete self }
+      end
+    end
+
+    def add_parent(new_parent)
+      # if this is a root task, remove if from the quest
+      @quest.tasks.delete self if parents.empty?
+      @parents << new_parent
+      new_parent.children << self
+    end
+
+    def remove_parent(old_parent)
+      # if this is the last parent, add the task back into the quest as a root
+      @quest.tasks << self if @parents == [old_parent]
+      @parents.delete old_parent
+      old_parent.children.delete self
+    end
+
+    def add_child(new_child)
+      @children << new_child
+      new_child.parents << self
+    end
+
+    def remove_child(old_child)
+      @children.delete old_child
+      old_child.parents.delete self
+    end
+
     # Each time a Spy is updated, we need to recheck the state of all of them
     # to figure out if the Task is complete.
     def evaluate_spies
