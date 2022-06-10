@@ -23,11 +23,11 @@ module Realm
       h[:activation] = @activation.hashify if @activation
       h[:tasks] = []
       h[:task_children] = {}
-      @tasks.each do |t|
-        # TODO: this will only preserve root tasks and generate an error on dehashify
-        # because direct children of roots won't be found. Need to flatten the heirarchy
-        # then write out all tasks and all relationships - the following 2 lines will
-        # not recurse cleanly the way they are / were originally written
+
+      # All Tasks are stored flattened, and then their relationships are
+      # mapped separately. It makes the tree easier to reconstruct during
+      # dehashify.
+      all_tasks_flattened.each do |t|
         h[:tasks] << t.hashify
         h[:task_children][t.id] = t.children.map(&:id) if t.children
       end
@@ -61,8 +61,7 @@ module Realm
             Symphony.logger.error 'Task child_id %s not found during dehashification of %s' % [child_id, t.fqid_str]
             next
           end
-          t.children << child
-          child.parents << t
+          child.add_parent t
         end
       end
     }
@@ -104,6 +103,23 @@ module Realm
       @hero.run_hook :task_updated, task
     }
 
+    # This returns all Tasks in the Quest Task heirarchy in a flattened Array.
+    # This is an iterative solution to the recursive problem because it needs
+    # to live within the Quest class (yea yea I hear you... coupling... ew).
+    def all_tasks_flattened
+      final_task_list = []
+      new_children = []
+
+      new_children |= @tasks
+      while new_children.any? do
+        next_task = new_children.shift
+        final_task_list << next_task
+        new_children |= next_task.children
+      end
+
+      final_task_list
+    end
+
     # TODO: refactor:
     #   1. delegate output to hero via callback hook (DONE)
     #   2. does this account for task heirarchy? (eg children failure/success)
@@ -118,7 +134,7 @@ module Realm
     end
 
     def task_by_rid(rid)
-      @tasks.find { |t| t.rid == rid }
+      all_tasks_flattened.find { |t| t.rid == rid }
     end
 
     def next_task_rid

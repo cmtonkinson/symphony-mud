@@ -33,8 +33,8 @@ module Test
     with :admin
     test do
       admin 'qedit 1'
-      admin 'task 1 remove'
-      expect '1 removed'
+      admin 'task 1 delete'
+      expect 'deleted'
 
       admin 'info'
       n_expect 'TaskA'
@@ -170,7 +170,7 @@ module Test
       admin 'qedit 1'
       admin 'task 2 remove parent 1'
       admin 'info'
-      expect 'Task 2:'
+      expect /^Task 2:/
       admin 'exit'
     end
   end

@@ -51,6 +51,7 @@ module Command
   define :task, :edit_quest do
     level Realm::Being::DEMIGOD
     usage('add', :rest)
+    usage({ rid: :int }, 'delete')
     usage({ rid: :int }, 'description', :rest)
     usage({ rid: :int }, 'objective', 'visit_room', room_id: :int)
     usage({ rid: :int }, 'parameter', 'add', { type: :string }, :rest)
@@ -76,8 +77,14 @@ module Command
         being.puts t('err_nothing') and next if task.nil?
 
         ####################
+        # delete
+        if delete
+          task.pluck
+          being.puts t('deleted'), task
+
+        ####################
         # description
-        if description
+        elsif description
           task.description = rest
           being.puts t('description'), task.rid, task.description
 
@@ -102,13 +109,6 @@ module Command
             task.remove_parent target_parent
             being.puts t('parent_removed'), target_parent, task
           end
-
-        ####################
-        # remove
-        elsif remove
-          task.pluck
-          being.qedit.tasks.delete task # only necessary for root Tasks
-          being.puts t('removed'), task.rid
 
         ####################
         # reward

@@ -110,6 +110,9 @@ module Realm
     # There are a few places where we need to remove a task from its heirarchy,
     # and in those cases parent/child relationships have to be adjusted.
     def pluck
+      @quest.tasks.delete self # uneccessary and harmless for non-root tasks
+      @quest = nil
+
       if parents.any?
         # If self has any parents, we need to make said parents aware of each of
         # self's children.
