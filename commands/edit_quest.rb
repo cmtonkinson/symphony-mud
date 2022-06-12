@@ -54,13 +54,12 @@ module Command
     usage({ rid: :int }, 'delete')
     usage({ rid: :int }, 'description', :rest)
     usage({ rid: :int }, 'objective', 'visit_room', room_id: :int)
-    usage({ rid: :int }, 'parameter', 'add', { type: :string }, :rest)
-    usage({ rid: :int }, 'parameter', 'remove', { type: :string })
+#    usage({ rid: :int }, 'parameter', 'add', { type: :string }, :rest)
+#    usage({ rid: :int }, 'parameter', 'remove', { type: :string })
     usage({ rid: :int }, 'add', 'parent', { parent_rid: :int })
     usage({ rid: :int }, 'remove', 'parent', { parent_rid: :int })
     usage({ rid: :int }, 'reward', 'item', { action: %w[add remove] }, :item_id)
     usage({ rid: :int }, 'reward', { kind: %w[silver gold exp] }, { amount: :int })
-    usage({ rid: :int }, 'subtask', :rest)
     usage({ rid: :int }, 'title', :rest)
     # rubocop:disable Metrics/BlockNesting
     exec do
