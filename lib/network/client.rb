@@ -1,13 +1,18 @@
 module Network
   class Client
-    attr_accessor :socket, :should_terminate, :user, :last_input
+    attr_accessor :socket, :telnet, :should_terminate, :user, :last_input,
+      :telnet_data
 
     def initialize(tcp_socket)
       @should_terminate = false
       @socket           = tcp_socket
       @user             = nil
       @last_input       = ''
+      @telnet_data      = {}
+      @telnet           = Telnet.new(self)
       Symphony.logger.info "New Client on socket #{fd}"
+
+      @telnet.negotiate
     end
 
     def fd
@@ -24,7 +29,15 @@ module Network
 
     def recv
       input = socket.recv_nonblock Network.configuration.recv_maxlen
-      input.strip
+
+      if input[0].unpack("C")[0] == Telnet::TNET_IAC
+        # Telnet in-band option negotiation sets the first byte as IAC.
+        @telnet.recv_command input
+        input = nil
+      else
+        # Otherwise, this is normal user input.
+        input.strip
+      end
     rescue Errno::EWOULDBLOCK, Errno::EINTR
       nil
     rescue Errno::ECONNRESET => e

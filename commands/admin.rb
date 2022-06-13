@@ -24,8 +24,8 @@ module Command
     usage
     exec do
       dns_width = 35
-      format = "%-15s{C%-6s{Y%-23s{W%-#{dns_width}s"
-      being.puts format % %w[Name Sock IP:Port DNS]
+      format = "%-15s{C%-6s{x%4sx%-4s {Y%-23s{W%-#{dns_width}s"
+      being.puts format % %w[Name Sock Cols Rows IP:Port DNS]
       being.puts '-------------------------------------------------------------------------------'
       $universe.clients.each do |client|
         _sock_domain, remote_port, _remote_hostname, remote_ip = client.socket.peeraddr
@@ -33,6 +33,8 @@ module Command
         being.puts format % [
           client.user.avatar.name,
           client.fd,
+          client.telnet.values[:cols],
+          client.telnet.values[:rows],
           "#{remote_ip}:#{remote_port}",
           Util::Linguist.truncate_middle(dns_name, dns_width)
         ]
