@@ -111,7 +111,7 @@ module Realm
       new_children = []
 
       new_children |= @tasks
-      while new_children.any? do
+      while new_children.any?
         next_task = new_children.shift
         final_task_list << next_task
         new_children |= next_task.children
