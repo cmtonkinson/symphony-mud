@@ -56,6 +56,7 @@ module InputSequence
       SETUP[key][str].sub '%', replacement
     end
 
+    # rubocop:disable Metrics/BlockLength
     aasm do
       # Initial state.
       state :get_name
@@ -297,4 +298,5 @@ module InputSequence
       avatar.room.puts I18n.t('universe.room_announce_newbie'), avatar
     end
   end
+  # rubocop:enable Metrics/BlockLength
 end

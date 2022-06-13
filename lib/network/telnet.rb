@@ -101,7 +101,7 @@ module Network
       cmd = bytes[1]
 
       case cmd
-      when CMD_WILL
+      when CMD_WILL, CMD_WONT
         opt = bytes[2]
         case opt
         when OPT_WIN_SIZE
@@ -109,15 +109,7 @@ module Network
         else
           Symphony.logger.warn "Telnet recieved unsupported option #{opt} (#{bytes.join(',')})."
         end
-      when CMD_DO
-        opt = bytes[2]
-        case opt
-        when OPT_ECHO
-          bytes_consumed = 3
-        else
-          Symphony.logger.warn "Telnet received unsupported option #{opt} (#{bytes.join(',')})."
-        end
-      when CMD_DONT
+      when CMD_DO, CMD_DONT
         opt = bytes[2]
         case opt
         when OPT_ECHO
