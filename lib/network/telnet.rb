@@ -67,6 +67,7 @@ module Network
     end
 
     # Where we actually do something with received commands.
+    # rubocop:disable Metrics/MethodLength
     def interpret_command(input, bytes)
       # We will use the bytes_consumed variable after the nested case to eat
       # the appropriate maount of data out of the input. This is because telnet
@@ -78,6 +79,15 @@ module Network
       cmd = bytes[1]
 
       case cmd
+      when TNET_CMD_WILL
+        opt = bytes[2]
+        case opt
+        when TNET_OPT_WIN_SIZE
+          # We don't actually need to do anything useful here.
+          bytes_consumed = 3
+        else
+          Symphony.logger.warn "Telnet recieved unsupported option #{opt} (#{bytes.join(',')})."
+        end
       when TNET_CMD_SUB_START
         opt = bytes[2]
         case opt
@@ -98,6 +108,9 @@ module Network
         Symphony.logger.warn "Telnet recieved unsupported command #{cmd} (#{bytes.join(',')})"
       end
 
+      # Sometimes the client will stack multiple commands in the same input so
+      # we have to eat whatever bytes we used and recurse into the parser again
+      # when that happens.
       return unless bytes_consumed.positive? && bytes.length > bytes_consumed
 
       Symphony.logger.trace "Consumed #{bytes_consumed} bytes of #{bytes.length}. Recursing."
@@ -105,4 +118,5 @@ module Network
       recv_command bytes.pack('C*')
     end
   end
+  # rubocop:enable Metrics/MethodLength
 end
