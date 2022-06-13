@@ -93,6 +93,7 @@ module InputSequence
         transitions from: :get_name, to: :get_passphrase
         after do
           user.print 'Please enter your passphrase: '
+          user.client.telnet.echo_off
         end
       end
 
@@ -170,6 +171,7 @@ module InputSequence
       event :complete do
         transitions to: :login
         after do
+          user.client.telnet.echo_on
           case @context.account_type
           when :new
             user.puts 'Welcome!'

@@ -3,28 +3,28 @@
 # a specific network Client instance.
 module Network
   class Telnet
-    TNET_IAC            = 255 # command marker (Interpret As Command)
+    IAC            = 255 # command marker (Interpret As Command)
 
-    TNET_CMD_SUB_END    = 240 # Subnegotiation end
-    TNET_CMD_NOOP       = 241 # No operation
-    TNET_CMD_AYT        = 246 # Are You There?
-    TNET_CMD_SUB_START  = 250 # Subnegotiation begin
-    TNET_CMD_WILL       = 251 # Sender would like to use an option
-    TNET_CMD_WONT       = 252 # Sender will not use an option
-    TNET_CMD_DO         = 253 # Tell sender to use an option
-    TNET_CMD_DONT       = 254 # Tell sender not to use option
+    CMD_SUB_END    = 240 # Subnegotiation end
+    CMD_NOOP       = 241 # No operation
+    CMD_AYT        = 246 # Are You There?
+    CMD_SUB_START  = 250 # Subnegotiation begin
+    CMD_WILL       = 251 # Sender would like to use an option
+    CMD_WONT       = 252 # Sender will not use an option
+    CMD_DO         = 253 # Tell sender to use an option
+    CMD_DONT       = 254 # Tell sender not to use option
 
-    TNET_OPT_ECHO       = 1 # Echo
-    TNET_OPT_SGA        = 3 # Suppress Go Ahead
-    TNET_OPT_STATUS     = 5 # Status
-    TNET_OPT_TIME       = 6 # Timing Mark
-    TNET_OPT_LINE_WIDTH = 8 # Output Line Width
-    TNET_OPT_PAGE_SIZE  = 9 # Output Page Size
-    TNET_OPT_TTYPE      = 24 # Terminal Type
-    TNET_OPT_EOR        = 25 # End of Record
-    TNET_OPT_WIN_SIZE   = 31 # Window Size
-    TNET_OPT_TSPEED     = 32 # Terminal Speed
-    TNET_OPT_LINEMODE   = 34 # Linemode
+    OPT_ECHO       = 1 # Echo
+    OPT_SGA        = 3 # Suppress Go Ahead
+    OPT_STATUS     = 5 # Status
+    OPT_TIME       = 6 # Timing Mark
+    OPT_LINE_WIDTH = 8 # Output Line Width
+    OPT_PAGE_SIZE  = 9 # Output Page Size
+    OPT_TTYPE      = 24 # Terminal Type
+    OPT_EOR        = 25 # End of Record
+    OPT_WIN_SIZE   = 31 # Window S  ize
+    OPT_TSPEED     = 32 # Terminal Speed
+    OPT_LINEMODE   = 34 # Linemode
 
     attr_accessor :client, :values
 
@@ -38,13 +38,35 @@ module Network
     # Validate that the client respects the commands we care about
     # and attempt to set defaults.
     def negotiate
-      send_command TNET_CMD_DO, TNET_OPT_WIN_SIZE
+      send_command CMD_DO, OPT_WIN_SIZE
+    end
+
+    # Disable local echo (mainly for password entry)
+    # NOTE: strange thing about ECHO, telling the client the server WILL ECHO
+    # seems be work more reliably than telling the client DONT ECHO.
+    def echo_off
+      send_command CMD_WILL, OPT_ECHO
+    end
+
+    # Enable local echo
+    def echo_on
+      send_command CMD_WONT, OPT_ECHO
+    end
+
+    # Enable interactive mode
+    def interactive_on
+      send_command CMD_WILL, OPT_SGA
+    end
+
+    # Disable interactive mode
+    def interactive_off
+      send_command CMD_WONT, OPT_SGA
     end
 
     # Send a command or response to the client.
-    def send_command(cmd, opt, data = 0)
-      dgram = [TNET_IAC, cmd, opt, data]
-      Symphony.logger.trace "Sending TELNET command #{dgram.join(',')} to socket #{@client.fd}"
+    def send_command(cmd, opt, *data)
+      dgram = [IAC, cmd, opt, *data]
+      Symphony.logger.debug "Sending TELNET command #{dgram.join(',')} to socket #{@client.fd}"
       @client.socket.print dgram.pack('C*')
       @client.socket.flush
     end
@@ -52,13 +74,13 @@ module Network
     # Parse a command or response from the client.
     def recv_command(input)
       bytes = input.unpack('C*')
-      Symphony.logger.trace "Recieved TELNET command #{bytes.join(',')} on socket #{@client.fd}"
+      Symphony.logger.trace "Recieved #{bytes.length}-byte TELNET command #{bytes.join(',')} on socket #{@client.fd}"
 
       # At this point, the first byte should be IAC.
       # Treating this as an invariant for all recieved Telnet commands.
       iac = bytes[0]
-      unless iac == TNET_IAC
-        Symphony.logger.warn "Telnet - first byte != IAC (expected #{TNET_IAC} got #{iac}). Rest was #{bytes.join(',')}"
+      unless iac == IAC
+        Symphony.logger.debug "Telnet - first byte != IAC (expected #{IAC} got #{iac}). Rest was #{bytes.join(',')}"
         return
       end
 
@@ -79,21 +101,36 @@ module Network
       cmd = bytes[1]
 
       case cmd
-      when TNET_CMD_WILL
+      when CMD_WILL
         opt = bytes[2]
         case opt
-        when TNET_OPT_WIN_SIZE
-          # We don't actually need to do anything useful here.
+        when OPT_WIN_SIZE
           bytes_consumed = 3
         else
           Symphony.logger.warn "Telnet recieved unsupported option #{opt} (#{bytes.join(',')})."
         end
-      when TNET_CMD_SUB_START
+      when CMD_DO
         opt = bytes[2]
         case opt
-        when TNET_OPT_WIN_SIZE
+        when OPT_ECHO
+          bytes_consumed = 3
+        else
+          Symphony.logger.warn "Telnet received unsupported option #{opt} (#{bytes.join(',')})."
+        end
+      when CMD_DONT
+        opt = bytes[2]
+        case opt
+        when OPT_ECHO
+          bytes_consumed = 3
+        else
+          Symphony.logger.warn "Telnet received unsupported option #{opt} (#{bytes.join(',')})."
+        end
+      when CMD_SUB_START
+        opt = bytes[2]
+        case opt
+        when OPT_WIN_SIZE
           data = input.unpack('CCCnnCC')
-          if data[5] != TNET_IAC || data[6] != TNET_CMD_SUB_END
+          if data[5] != IAC || data[6] != CMD_SUB_END
             Symphony.logger.warn "Telnet subnegotiation for NAWS did not end with IAC/SE (#{bytes.join(',')})."
             return
           end

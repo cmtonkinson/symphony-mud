@@ -30,7 +30,7 @@ module Network
     def recv
       input = socket.recv_nonblock Network.configuration.recv_maxlen
 
-      if input.unpack1('C') == Telnet::TNET_IAC
+      if input.unpack1('C') == Telnet::IAC
         # Telnet in-band option negotiation sets the first byte as IAC.
         @telnet.recv_command input
         nil
