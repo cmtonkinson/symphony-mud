@@ -45,13 +45,13 @@ module Network
     def send_command(cmd, opt, data = 0)
       dgram = [TNET_IAC, cmd, opt, data]
       Symphony.logger.trace "Sending TELNET command #{dgram.join(',')} to socket #{@client.fd}"
-      @client.socket.print dgram.pack("C*")
+      @client.socket.print dgram.pack('C*')
       @client.socket.flush
     end
 
     # Parse a command or response from the client.
     def recv_command(input)
-      bytes = input.unpack("C*")
+      bytes = input.unpack('C*')
       Symphony.logger.trace "Recieved TELNET command #{bytes.join(',')} on socket #{@client.fd}"
 
       # At this point, the first byte should be IAC.
@@ -82,9 +82,9 @@ module Network
         opt = bytes[2]
         case opt
         when TNET_OPT_WIN_SIZE
-          data = input.unpack("CCCnnCC")
+          data = input.unpack('CCCnnCC')
           if data[5] != TNET_IAC || data[6] != TNET_CMD_SUB_END
-            Symphony.logger.warn "Telnet subnegotiation for NAWS did not end with IAC/SE"
+            Symphony.logger.warn "Telnet subnegotiation for NAWS did not end with IAC/SE (#{bytes.join(',')})."
             return
           end
           @values[:cols] = data[3]
@@ -98,11 +98,11 @@ module Network
         Symphony.logger.warn "Telnet recieved unsupported command #{cmd} (#{bytes.join(',')})"
       end
 
-      if bytes_consumed > 0 && bytes.length > bytes_consumed
-        Symphony.logger.trace "Consumed #{bytes_consumed} bytes of #{bytes.length}. Recursing."
-        bytes.shift(bytes_consumed)
-        recv_command bytes.pack("C*")
-      end
+      return unless bytes_consumed.positive? && bytes.length > bytes_consumed
+
+      Symphony.logger.trace "Consumed #{bytes_consumed} bytes of #{bytes.length}. Recursing."
+      bytes.shift(bytes_consumed)
+      recv_command bytes.pack('C*')
     end
   end
 end

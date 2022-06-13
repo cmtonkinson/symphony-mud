@@ -1,7 +1,7 @@
 module Network
   class Client
     attr_accessor :socket, :telnet, :should_terminate, :user, :last_input,
-      :telnet_data
+                  :telnet_data
 
     def initialize(tcp_socket)
       @should_terminate = false
@@ -30,10 +30,10 @@ module Network
     def recv
       input = socket.recv_nonblock Network.configuration.recv_maxlen
 
-      if input[0].unpack("C")[0] == Telnet::TNET_IAC
+      if input.unpack1('C') == Telnet::TNET_IAC
         # Telnet in-band option negotiation sets the first byte as IAC.
         @telnet.recv_command input
-        input = nil
+        nil
       else
         # Otherwise, this is normal user input.
         input.strip
