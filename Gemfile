@@ -6,6 +6,7 @@ group :symphony do
   gem 'descriptive_statistics'
   gem 'hooks'
   gem 'i18n'
+  gem 'matrix'
   gem 'pqueue'
   gem 'ruby-enum'
   gem 'rubytree', git: 'https://github.com/cmtonkinson/RubyTree.git', ref: 'fix-syntax-warning'

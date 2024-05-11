@@ -22,7 +22,7 @@ module Network
     OPT_PAGE_SIZE  = 9 # Output Page Size
     OPT_TTYPE      = 24 # Terminal Type
     OPT_EOR        = 25 # End of Record
-    OPT_WIN_SIZE   = 31 # Window S  ize
+    OPT_WIN_SIZE   = 31 # Window Size
     OPT_TSPEED     = 32 # Terminal Speed
     OPT_LINEMODE   = 34 # Linemode
 

@@ -34,6 +34,7 @@ GEM
       concurrent-ruby (~> 1.0)
     interception (0.5)
     json (2.5.1)
+    matrix (0.4.2)
     method_source (1.0.0)
     net-telnet (0.2.0)
     parallel (1.20.1)
@@ -111,6 +112,7 @@ DEPENDENCIES
   fuubar
   hooks
   i18n
+  matrix
   net-telnet
   pqueue
   pry

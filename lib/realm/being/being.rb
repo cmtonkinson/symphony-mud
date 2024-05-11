@@ -96,7 +96,11 @@ module Realm
     end
 
     def output!
-      buf = @output_buffer.dup + prompt
+      buf = if interactive
+              @output_buffer.dup
+            else
+              @output_buffer.dup + prompt
+            end
       @output_buffer = ''
       buf
     end

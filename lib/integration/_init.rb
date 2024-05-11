@@ -1,5 +1,7 @@
 require_relative 'builder'
 require_relative 'integrator'
+require_relative 'interactive_mode'
+require_relative 'interactive_map'
 require_relative 'pathfinder'
 require_relative 'scribe'
 require_relative 'transporter'

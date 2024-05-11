@@ -450,9 +450,12 @@ module Command
     level Realm::Being::CREATOR
     usage
     exec do
-      q = room.zone.find_by_rid Realm::Quest, 1
-      qc = q.clone
-      being.assign qc
+      im = Interactive::InteractiveMode.new being
+      iv = View::InteractiveView.new im
+      being.interactive = im
+
+      iv.render
+      being.puts 'testing text buffer'
     end
   end
 

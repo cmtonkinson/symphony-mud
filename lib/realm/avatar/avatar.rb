@@ -1,6 +1,6 @@
 module Realm
   class Avatar < Being
-    attr_accessor :user, :iedit, :nedit, :zedit, :redit, :qedit
+    attr_accessor :user, :interactive, :iedit, :nedit, :zedit, :redit, :qedit
 
     define_hooks :before_disconnect
 
