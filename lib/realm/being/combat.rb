@@ -127,7 +127,7 @@ module Realm
     after_strike_defense ->(strike) {}
 
     before_death lambda {
-      if god?
+      if is_a?(Realm::Avatar) && god?
         health.increase 1
         return false
       end
