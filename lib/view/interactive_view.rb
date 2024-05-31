@@ -52,6 +52,11 @@ module View
       @mode.output_width
     end
 
+    # Return the width and height of the raster zone.
+    def raster_dimensions
+      [raster_width, raster_height]
+    end
+
     # Where is the top-left cell of the raster zone?
     def raster_origin
       [2, 1]
@@ -83,7 +88,7 @@ module View
     end
 
     def render_raster
-      "#{vt100_cursor_position(*raster_origin)}raster"
+      "#{vt100_cursor_position(*raster_origin)}_render_raster"
     end
   end
 end

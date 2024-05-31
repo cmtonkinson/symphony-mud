@@ -56,6 +56,8 @@ module Realm
 
     def layout
       # Create a 2D Array that is large enough to hold the shape of the Zone.
+      # The x/y_translation values are used to map from the Zone's realtive
+      # coordinates to the map layout's coordinates.
       x_min, x_max  = extreme_coords 0
       width         = x_max - x_min + 1
       x_translation = x_min.negative? ? -x_min : 0
