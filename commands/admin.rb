@@ -448,14 +448,23 @@ module Command
   #       book, "Changing Stuff and Seeing What Happens" (aka "The Kitten Book")
   define :test do
     level Realm::Being::CREATOR
-    usage
+    usage({ rest: :string })
     exec do
-      im = Interactive::InteractiveMode.new being
-      iv = View::InteractiveView.new im
-      being.interactive = im
+      being.puts t('start')
 
-      iv.render
-      being.puts 'testing text buffer'
+      lua = Scripting::Lua::State.new
+
+      lua.load "print('Hello, from Lua!')"
+      lua.call
+
+      lua.load 'print(1 + 41)'
+      lua.call
+
+      being.puts "test arg: #{rest}"
+      lua.load "print(lua_do_stuff('#{rest}'))"
+      being.puts lua.call.inspect
+
+      being.puts t('end')
     end
   end
 

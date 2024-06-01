@@ -83,8 +83,6 @@ GEM
     ruby-enum (0.9.0)
       i18n
     ruby-progressbar (1.11.0)
-    rufus-lua (1.1.5)
-      ffi (~> 1.9)
     set (1.0.1)
     simplecov (0.21.2)
       docile (~> 1.1)
@@ -109,6 +107,7 @@ DEPENDENCIES
   deep_merge
   descriptive_statistics
   fakefs
+  ffi
   fuubar
   hooks
   i18n
@@ -123,7 +122,6 @@ DEPENDENCIES
   rubocop
   ruby-enum
   rubytree!
-  rufus-lua
   simplecov
   sorted_set
   text
