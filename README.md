@@ -1,6 +1,6 @@
 # Symphony  
 The harmonius MUD codebase  
-[![pipeline status](https://gitlab.com/cmtonkinson/symphony/badges/master/pipeline.svg)](https://gitlab.com/cmtonkinson/symphony/-/pipelines) [![coverage report](https://gitlab.com/cmtonkinson/symphony/badges/master/coverage.svg?key_text=unit+coverage)](https://gitlab.com/cmtonkinson/symphony/-/commits/master)
+[![pipeline status](https://gitlab.com/cmtonkinson/symphony/badges/master/pipeline.svg)](https://gitlab.com/cmtonkinson/symphony/-/pipelines) [![coverage report](https://gitlab.com/cmtonkinson/symphony/badges/master/coverage.svg?key_text=unit+coverage&key_width=130)](https://gitlab.com/cmtonkinson/symphony/-/commits/master)
 
 ---
 Symphony is a modern MUD codebase. The inspiration comes from the Rom-family of MUDs, and the user experience inherits from that style of play. The primary project goal is **extensibility** in both form and function. It should be simple and intuitive to customize the interface, extend and modify the feature set, and create new content. This is achieved by maintaining a minimally complex core and implementing as much of the game as possible through a robust module system. Some other engineering considerations include, in no particular order:
