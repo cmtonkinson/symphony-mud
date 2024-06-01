@@ -17,7 +17,6 @@ module Scripting
     extend FFI::Library
     ffi_lib 'lua5.4'
 
-    # Disable rubocop Sytle/SymbolArray
     # rubocop:disable Style/SymbolArray
     attach_function :luaL_loadstring, [:pointer, :string], :int
     attach_function :luaL_newstate, [], :pointer
