@@ -7,7 +7,7 @@ stages:
 before_script:
   - uname -a
   - cat /etc/os-release
-  - apt update && apt install -y lua5.1 liblua5.1-dev
+  - apt update && apt install -y lua5.4 liblua5.4-dev
   - ruby -v
   - gem install bundler
   - bundle install -j $(nproc)
