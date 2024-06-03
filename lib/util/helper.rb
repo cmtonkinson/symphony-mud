@@ -8,7 +8,7 @@ module Util
         usage.each do |arg|
           next if arg.type == :literal
 
-          output << "\n    where %s is %s" % [arg.help_name, arg.help_description]
+          output << ("\n    where %s is %s" % [arg.help_name, arg.help_description])
         end
         output
       end.join "\n"

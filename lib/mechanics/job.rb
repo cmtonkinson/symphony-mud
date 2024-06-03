@@ -167,8 +167,8 @@ module Mechanics
 
   # RecurringJob provides a one-liner initialization for creating repeat Jobs.
   class RecurringJob < Job
-    def initialize(wen, who, every, callable = nil, *args, &block)
-      super(wen, who, callable, *args, &block)
+    def initialize(wen, who, every, callable = nil, *, &)
+      super(wen, who, callable, *, &)
       recur every, -1
     end
   end

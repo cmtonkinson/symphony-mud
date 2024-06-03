@@ -98,7 +98,7 @@ module Talent
       # The mastery gained on each practice is inversely proportional to the
       # difficulty. The formula here yields roughly 35 points per practice for
       # a difficulty 1 ability and about 12 points for a difficulty 5 ability.
-      boost = 5.75 * (6.0 - difficulty) + 6.0
+      boost = (5.75 * (6.0 - difficulty)) + 6.0
 
       # Add a 20% fudge factor.
       adjust = Random.rand(80..120) / 100
@@ -129,7 +129,7 @@ module Talent
       improve context if Util::Computation.percent_chance 90 / difficulty
     end
 
-    def invoke(*args)
+    def invoke(*)
       # Do they have the resources to perform?
       able_being.puts I18n.t('talent.ability.err_no_stamina') and return if able_being.stamina.current < stamina
       able_being.puts I18n.t('talent.ability.err_no_mana') and return if able_being.mana.current < mana
@@ -153,7 +153,7 @@ module Talent
 
       # Do the deed.
       able_being.run_hook :before_ability_invocation, name
-      retval = _invoke(*args)
+      retval = _invoke(*)
       able_being.run_hook :after_ability_invocation, name, retval
 
       # Randomly improve upon the ability. The more novice you are, the more

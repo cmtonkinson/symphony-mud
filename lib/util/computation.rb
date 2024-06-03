@@ -21,7 +21,7 @@ module Util
       a = 1.0 * (limit - min) / min
       k = 1.0 * Math.log(a) / half_max_x
 
-      limit / (1 + a * Math::E**(-k * x))
+      limit / (1 + (a * (Math::E**(-k * x))))
     end
 
     # Calculate the value of a polynomial curve for the given value of x, where
@@ -30,7 +30,7 @@ module Util
     def self.polynomial_curve(x, x_max, y_min, y_max)
       exponent = Math.log(y_max - y_min) / Math.log(x_max - 1)
 
-      1.0 * y_min + (x - 1)**exponent
+      (1.0 * y_min) + ((x - 1)**exponent)
     end
 
     # Determine whether a randomized event will occur "this time" given a

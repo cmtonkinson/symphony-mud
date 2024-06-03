@@ -65,9 +65,9 @@ module Realm
       end
     end
 
-    def indented_puts(spaces, format, *args, **opts)
+    def indented_puts(spaces, format, *, **)
       indented_format = (' ' * spaces) + format
-      puts indented_format, *args, **opts
+      puts(indented_format, *, **)
     end
 
     def find_being(name)

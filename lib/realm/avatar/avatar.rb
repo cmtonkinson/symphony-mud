@@ -55,11 +55,11 @@ module Realm
     }
 
     def summary
-      $templates.avatar_summary % [
+      ($templates.avatar_summary % [
         name,
         id,
         level
-      ] + summary_plate
+      ]) + summary_plate
     end
 
     def summary_plate

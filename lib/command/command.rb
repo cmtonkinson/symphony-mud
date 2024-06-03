@@ -7,7 +7,7 @@ module Command
     end
 
     # Set sane defaults, and run the `define` block from the command file.
-    def setup(&block)
+    def setup(&)
       @name       = '_'
       @shortcut   = nil
       @brief      = 'TODO'
@@ -17,7 +17,7 @@ module Command
       @exec       = nil
       @usages     = [] # A collection of Usages
       @context    = nil
-      instance_eval(&block) if block_given?
+      instance_eval(&) if block_given?
     end
 
     # Heart and soul of the command processing subsystem.
@@ -49,15 +49,15 @@ module Command
     # Since we key all command text translations by the command name, we can
     # provide a convenience method to invoke I18n#t, prefix the command name
     # and pass through the optional arguments.
-    def translate(str, *args)
-      I18n.t "#{get_group}.#{get_name}.#{str}", *args
+    def translate(str, *)
+      I18n.t("#{get_group}.#{get_name}.#{str}", *)
     end
     alias t translate
 
     # This enables us to access anything in the @context OpenStruct with a simple method call inside the
     # Command exec blocks. Said another way, the only access we allow through method_missing is to
     # return values out of the @context Hash for Command execution.
-    def method_missing(meth, *args, &block) # rubocop:disable Style/MissingRespondToMissing
+    def method_missing(meth, *args, &) # rubocop:disable Style/MissingRespondToMissing
       if @context.respond_to? meth
         @context.send meth
       else

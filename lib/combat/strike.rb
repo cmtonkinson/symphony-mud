@@ -33,7 +33,7 @@ module Combat
       weapon = attacker.anatomy.primary_weapon
       weapon_bonus = attacker.level
       weapon_bonus = weapon.hitroll if weapon
-      base_damage = 2 * attacker.level + rand(attacker.level) + rand((bonus / 2)..bonus) + rand(weapon_bonus * 2)
+      base_damage = (2 * attacker.level) + rand(attacker.level) + rand((bonus / 2)..bonus) + rand(weapon_bonus * 2)
       dam = Damage.new base_damage
       dam.source = attacker
       dam.send weapon.element_type.to_sym, weapon.element_ratio if weapon&.element_type

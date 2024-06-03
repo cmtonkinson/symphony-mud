@@ -44,7 +44,7 @@ module Mechanics
         top_job.fire
       end
       # Keep track of execution times (in microseconds)
-      @execution_times << realtime * 1_000_000.0
+      @execution_times << (realtime * 1_000_000.0)
 
       @docket.pop
 

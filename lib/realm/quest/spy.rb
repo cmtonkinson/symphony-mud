@@ -60,14 +60,14 @@ module Realm
       @task = task
       @status = :active
       task.quest.hero.register_effect trigger, self if trigger
-      activate_meth = "activate_#{name}".to_sym
+      activate_meth = :"activate_#{name}"
       send activate_meth if respond_to? activate_meth
     end
 
     def deactivate
       Symphony.logger.trace 'Spy %s (%s) #deactivate for %s' % [fqid_str, task.fqid_str, name]
       task.quest.hero.unregister_effect trigger, self if trigger
-      deactivate_meth = "deactivate_#{name}".to_sym
+      deactivate_meth = :"deactivate_#{name}"
       send deactivate_meth if respond_to? deactivate_meth
     end
 
@@ -141,7 +141,7 @@ module Realm
       end
 
       @name = name
-      setup_meth = "setup_#{name}".to_sym
+      setup_meth = :"setup_#{name}"
       send setup_meth, *args if respond_to? setup_meth
     end
 
@@ -150,7 +150,7 @@ module Realm
     def exec(arg = nil)
       return false unless validate_name name
 
-      callback_method = "exec_#{name}".to_sym
+      callback_method = :"exec_#{name}"
       callback_retval = send callback_method, arg
 
       case callback_retval

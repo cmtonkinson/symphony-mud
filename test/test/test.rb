@@ -2,7 +2,7 @@ module Test
   class Test
     attr_accessor :accounts, :status, :result, :assertions, :output_polling
 
-    def setup(&block)
+    def setup(&)
       @id                = nil
       @parent_id         = nil
       @before            = nil
@@ -17,7 +17,7 @@ module Test
       @result            = nil
       @start_time        = nil
       @end_time          = nil
-      instance_eval(&block) if block_given?
+      instance_eval(&) if block_given?
     end
 
     def conduct_test(context)
@@ -224,11 +224,11 @@ module Test
 
     # This convoluted garbage does a few things, all aimed at easing the
     # convenience of the system test DSL.
-    def method_missing(meth, *args, &block) # rubocop:disable Style/MissingRespondToMissing
+    def method_missing(meth, *args, &) # rubocop:disable Style/MissingRespondToMissing
       # The first form simply looks to proxy the method directly to the
       # @context object.
       if @context.respond_to? meth
-        @context.send(meth, *args, &block)
+        @context.send(meth, *args, &)
       # The second form assumes that you either want to send a command through
       # a given connection and you'll reference it by name (e.g. you want
       # to type `ogre "kill elf"` in your test and have the command "kill elf"
@@ -255,7 +255,7 @@ module Test
         if output_polling
           @accounts.reject { |a| a == meth.to_s }.each do |a|
             # Don't use the acm method or it'll make @last_used_account wrong.
-            @context.send("#{a}_client".to_sym).poll
+            @context.send(:"#{a}_client").poll
           end
         end
 

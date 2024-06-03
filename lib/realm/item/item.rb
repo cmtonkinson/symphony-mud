@@ -87,14 +87,14 @@ module Realm
         (element_str == '' ? 'N/A' : element_str)
       ]
       if type == :weapon
-        str << $templates.item_weapon_summary % [
+        str << ($templates.item_weapon_summary % [
           weapon_type, damage_type, hitroll, damroll
-        ]
+        ])
       end
       if wearable && modifiers.any?
         str << "{xModfiers:\n"
         modifiers.each do |name, amount|
-          str << "{x %-15s %s%d{x\n" % [name.to_s, amount.positive? ? '{G+' : '{R', amount]
+          str << ("{x %-15s %s%d{x\n" % [name.to_s, amount.positive? ? '{G+' : '{R', amount])
         end
       end
       if effects.any?

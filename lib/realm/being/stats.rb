@@ -194,7 +194,8 @@ module Realm
 
     def circumstance_name
       if battle then 'battle'
-      else 'normal'
+      else
+        'normal'
       end
     end
 

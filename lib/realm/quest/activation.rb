@@ -76,7 +76,7 @@ module Realm
       return false if subject.quests.any? { |q| q.cloned_from == @quest.id }
 
       # Should we activate the Quest?
-      test_meth = "test_#{trigger}".to_sym
+      test_meth = :"test_#{trigger}"
       test_result = send test_meth, subject
       return false unless test_result
 

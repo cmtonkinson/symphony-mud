@@ -77,18 +77,18 @@ module Realm
       dispose
     }
 
-    def print(format, *args)
-      @output_buffer << Util::Linguist.interpret(self, format, *args)
+    def print(format, *)
+      @output_buffer << Util::Linguist.interpret(self, format, *)
     end
 
-    def puts(format, *args)
-      print format, *args
+    def puts(format, *)
+      print(format, *)
       @output_buffer << "\n" unless @output_buffer[-1] == "\n"
     end
 
-    def indented_puts(spaces, format, *args)
+    def indented_puts(spaces, format, *)
       indented_format = (' ' * spaces) + format
-      puts indented_format, *args
+      puts(indented_format, *)
     end
 
     def output?

@@ -3,8 +3,8 @@
 module Util
   # ADT to keep simple collections DRY
   class SimpleCollection
-    def initialize(*args)
-      @array = Array.[](*args)
+    def initialize(*)
+      @array = Array.[](*)
     end
 
     def push(_element)
@@ -27,8 +27,8 @@ module Util
       @array.empty?
     end
 
-    def each(&block)
-      @array.each(&block)
+    def each(&)
+      @array.each(&)
     end
   end
 
