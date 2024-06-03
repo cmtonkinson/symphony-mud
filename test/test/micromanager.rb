@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'ostruct'
 
 module Test
   class Micromanager
