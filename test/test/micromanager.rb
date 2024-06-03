@@ -38,7 +38,14 @@ module Test
       start_test
 
       # Need to stop the server process before joining the thread.
-      `kill -s USR1 #{File.read(data_path.join('pidfile'))}`
+      # The only time the pidfile shouldn't exist is when testing the shutdown
+      # command.
+      pid_file = data_path.join('pidfile')
+      if File.exist?(pid_file) && (pid = File.read(pid_file).to_i).positive?
+        `kill -s USR1 #{pid}`
+      elsif @node.name != 'shutdown'
+        puts "No pidfile found, but we weren't testing the shutdown command."
+      end
       server_thread.join
     end
 

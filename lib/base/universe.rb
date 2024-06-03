@@ -27,6 +27,7 @@ module Base
       end
       $world.save if should_save
       Symphony.logger.unknown 'Server shutting down.'
+      File.delete Symphony.pidfile
     end
 
     def setup_server
