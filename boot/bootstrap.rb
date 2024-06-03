@@ -59,4 +59,4 @@ trap('USR1') do
 end
 
 # Write the pid to a file.
-IO.write(Symphony.pidfile, Process.pid.to_s, mode: 'w')
+File.write(Symphony.pidfile, Process.pid.to_s, mode: 'w')

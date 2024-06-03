@@ -109,21 +109,21 @@ module Command
     end
   end
 
-  is_positive = ->(x) { return x.positive? }
-  is_word     = ->(x) { return !x.match(/\Aa-z+\z/i) }
-  in_types    = ->(x) { return Konst::ITEM_TYPES.include?(x.to_sym) }
+  is_positive = lambda(&:positive?)
+  is_word     = ->(x) { !x.match(/\Aa-z+\z/i) }
+  in_types    = ->(x) { Konst::ITEM_TYPES.include?(x.to_sym) }
 
   [
     [:name, :rest, nil, ->(x) { !x.empty? }, 'cannot be blank', nil],
     [:level, :int, nil, is_positive, 'must be 1 or higher', nil],
-    [:type, :string, nil, in_types, "must be one of: #{Konst::ITEM_TYPES.join(', ')}", ->(x) { return x.to_sym }],
-    [:slot, :string, nil, is_word, 'must be a word', ->(x) { return x.to_sym }],
+    [:type, :string, nil, in_types, "must be one of: #{Konst::ITEM_TYPES.join(', ')}", lambda(&:to_sym)],
+    [:slot, :string, nil, is_word, 'must be a word', lambda(&:to_sym)],
     [:max_items, :int, :container, is_positive, 'must be 1 or higher', nil],
     [:load_factor, :int, :container, is_positive, 'must be 1 or higher', nil],
     [:health, :int, :food, is_positive, 'must be 1 or higher', nil],
     [:mana, :int, :food, is_positive, 'must be 1 or higher', nil],
     [:max_occupants, :int, :furniture, is_positive, 'must be 1 or higher', nil],
-    [:opens_type, :string, :key, ->(x) { return %w[room item].include?(x) }, 'must be either room or item', nil],
+    [:opens_type, :string, :key, ->(x) { %w[room item].include?(x) }, 'must be either room or item', nil],
     [:opens_rid, :int, :key, is_positive, 'must be 1 or higher', nil],
     [:weapon_type, :string, :weapon, is_word, 'must be a word', nil],
     [:damage_type, :string, :weapon, is_word, 'must be a word', nil],

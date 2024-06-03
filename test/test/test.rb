@@ -2,8 +2,6 @@ module Test
   class Test
     attr_accessor :accounts, :status, :result, :assertions, :output_polling
 
-    def initialize; end
-
     def setup(&block)
       @id                = nil
       @parent_id         = nil

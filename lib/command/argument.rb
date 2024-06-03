@@ -15,7 +15,7 @@ module Command
     bool: {
       pattern: / t(?:rue)? | f(?:alse)? | y(?:es)? | n(?:o)? |on | off | 1 | 0 /ix,
       cast_func: lambda { |b|
-        return !/t(?:rue)?|y(?:es)?|on|1/i.match(b).nil?
+        !/t(?:rue)?|y(?:es)?|on|1/i.match(b).nil?
       },
       description: 'a true or false value',
       examples: ['t', 'true', 'f', 'false', 'y', 'yes', 'n', 'no', 0, 1]
@@ -39,7 +39,7 @@ module Command
       pattern: / [^'"\s]+ | (?:('|") [^\1]*? \1) /ix,
       cast_func: lambda { |src|
         c = src[0]
-        return ['"', "'"].include?(c) ? src.slice(1..-2) : src
+        ['"', "'"].include?(c) ? src.slice(1..-2) : src
       },
       description: 'arbitrary text (can include letters, numbers, words, spaces, and puctuation)',
       examples: ['hello world', 'you won 2nd place!', "can you say 'hello world?'"]
@@ -61,7 +61,7 @@ module Command
       pattern: /\A.+/ix,
       cast_func: lambda { |src|
         c = src[0]
-        return ['"', "'"].include?(c) ? src.slice(1..-2) : src
+        ['"', "'"].include?(c) ? src.slice(1..-2) : src
       },
       description: 'any other text on the line (e.g. the remainder of the input)'
     }

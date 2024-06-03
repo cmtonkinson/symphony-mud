@@ -13,7 +13,7 @@ module Util
     end
 
     def delete(obj)
-      super attribute_value(obj)
+      super(attribute_value(obj))
     end
 
     def attribute_value(obj)

@@ -39,7 +39,7 @@ module Base
     end
 
     def self.colorize(source)
-      source.gsub!(/\{\?/) do |_|
+      source.gsub!('{?') do |_|
         COLORS.values.map { |v| v[:escape] }
               .reject { |x| SPECIAL_CODES.include?(x) }
               .sample

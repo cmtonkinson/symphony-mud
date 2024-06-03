@@ -2,8 +2,6 @@ module Command
   class Command
     attr_reader :usages
 
-    def initialize; end
-
     def <=>(other)
       @name <=> other.get_name
     end

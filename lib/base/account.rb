@@ -63,7 +63,7 @@ module Base
     def self.user_map
       # Cache the file contents.
       begin
-        @user_map ||= YAML.load File.read file_path
+        @user_map ||= YAML.load_file(file_path)
       rescue Errno::ENOENT
         @user_map = {}
       end
@@ -76,7 +76,7 @@ module Base
       raise ArgumentError, 'user_map is nil' if user_map.nil?
 
       # Write the updated YAML.
-      File.open(file_path, 'w') { |f| f.write YAML.dump(@user_map) }
+      File.write(file_path, YAML.dump(@user_map))
       # Invalidate the cache.
       @user_map = nil
     end

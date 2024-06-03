@@ -17,7 +17,7 @@ module Talent
     attr_reader :default_target
 
     def initialize(*args)
-      super(*args)
+      super
 
       @spell_category = nil
       @default_target = nil

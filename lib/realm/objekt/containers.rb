@@ -1,5 +1,3 @@
-require 'set'
-
 module Realm
   class Objekt
     attr_reader :containers

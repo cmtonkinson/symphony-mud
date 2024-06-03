@@ -35,7 +35,7 @@ module Base
       else
         @server = Network::Server.new
       end
-      @quotes = YAML.load IO.read Symphony.root.join 'data', 'quotes.yml'
+      @quotes = YAML.load_file(Symphony.root.join('data', 'quotes.yml'))
     end
 
     def welcome(client)
@@ -168,7 +168,7 @@ module Base
     # Reconnect all Avatars back to their corresponding descriptors.
     def load_reboot_map
       # Read the recovery Hash.
-      recovery_map = YAML.load File.read Base.configuration.recovery_file
+      recovery_map = YAML.load_file(Base.configuration.recovery_file)
 
       # rubocop:disable Security/MarshalLoad
       Marshal.load(ENV['SYMPHONY_CLIENT_FDS']).each do |fd|

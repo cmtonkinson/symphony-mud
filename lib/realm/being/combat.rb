@@ -132,7 +132,7 @@ module Realm
         return false
       end
 
-      return true
+      true
     }
 
     on_death lambda {

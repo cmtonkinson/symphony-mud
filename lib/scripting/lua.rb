@@ -31,7 +31,6 @@ module Scripting
     attach_function :lua_setglobal, [:pointer, :string], :void
     # rubocop:enable Style/SymbolArray
 
-
     # State will be the main class for consumers to interact with
     # the Lua engine. It handles state cretion and most importantly,
     # because I'm a shit architect, it also directly handles exposing
@@ -76,7 +75,7 @@ module Scripting
         @abstraction = @abstraction_class.new context
         @state = Lua.luaL_newstate
         # TODO: Do we actually want/need All The Libs?
-        Lua.luaL_openlibs(@state) 
+        Lua.luaL_openlibs(@state)
       end
 
       # This is a mess. Each method in the abstration class gets mapped to

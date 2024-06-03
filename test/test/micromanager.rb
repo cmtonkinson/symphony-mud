@@ -38,7 +38,7 @@ module Test
       start_test
 
       # Need to stop the server process before joining the thread.
-      `kill -s USR1 #{IO.read(data_path.join('pidfile'))}`
+      `kill -s USR1 #{File.read(data_path.join('pidfile'))}`
       server_thread.join
     end
 
@@ -77,7 +77,7 @@ module Test
 
     def start_test
       # Get the ephemeral port the server is listening on from the log.
-      matches = /listening on \d+\.\d+\.\d+\.\d+:(\d+)/.match(IO.read(log_path))
+      matches = /listening on \d+\.\d+\.\d+\.\d+:(\d+)/.match(File.read(log_path))
       port = matches[1]
 
       context = OpenStruct.new

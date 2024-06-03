@@ -49,7 +49,7 @@ module Realm
     end
 
     (LEVELS - %w[NEWBIE]).each do |lvl|
-      define_method :"#{lvl.downcase}?", (proc { @level >= Realm::Being.const_get(lvl) })
+      define_method :"#{lvl.downcase}?", proc { @level >= Realm::Being.const_get(lvl) }
     end
 
     def seniority?(victim)

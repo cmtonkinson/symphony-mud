@@ -33,11 +33,11 @@ module Test
 
     def command(str)
       retval = nil
-      IO.write @log_path, "\n$> #{str}\n", mode: 'a'
+      File.write @log_path, "\n$> #{str}\n", mode: 'a'
       @conn.cmd(str) do |c|
         retval = ::Base::Terminal.unescape(c)
         @buffer << retval
-        IO.write @log_path, retval, mode: 'a'
+        File.write @log_path, retval, mode: 'a'
       end
       retval
     end
@@ -50,7 +50,7 @@ module Test
       @conn.waitfor('Match' => /./, 'Timeout' => $TELNET_DELAY) do |c|
         retval = ::Base::Terminal.unescape(c)
         @buffer << retval
-        IO.write @log_path, retval, mode: 'a'
+        File.write @log_path, retval, mode: 'a'
       end
     # Assuming the client recieved no new data, eat the timeout exception.
     rescue Net::ReadTimeout # rubocop:disable Lint/SuppressedException

@@ -8,7 +8,7 @@ module Logistics
       # Ensure the directory exists.
       FileUtils.mkdir_p File.dirname path
       # Write the serialized content to disk.
-      File.open(path, 'w') { |fp| fp.write content }
+      File.write(path, content)
     end
 
     def self.load(klass, objekt_id)
@@ -34,7 +34,7 @@ module Logistics
     # Returns all zone ids found in the data directory.
     def self.the_story_of_baron_munchausen
       Dir[Symphony.zone.join '*.yml'].map do |zonefile|
-        File.basename(zonefile).gsub(/\.yml/, '')
+        File.basename(zonefile).gsub('.yml', '')
       end
     end
   end

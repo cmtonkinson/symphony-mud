@@ -3,7 +3,7 @@ module Talent
     include PassiveAbility
 
     def initialize(*args)
-      super(*args)
+      super
       @category = :skill
       @name     = :second_attack
     end

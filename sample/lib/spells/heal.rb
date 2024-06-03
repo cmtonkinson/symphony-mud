@@ -1,7 +1,7 @@
 module Talent
   class HealSpell < Spell
     def initialize(*args)
-      super(*args)
+      super
       @category       = :spell
       @name           = :heal
       @spell_category = :cure

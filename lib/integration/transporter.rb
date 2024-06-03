@@ -41,19 +41,19 @@ module Logistics
 
   class Adder < Transporter
     def initialize(objekt)
-      super objekt, :add
+      super(objekt, :add)
     end
   end
 
   class Remover < Transporter
     def initialize(objekt)
-      super objekt, :remove
+      super(objekt, :remove)
     end
   end
 
   class Mover < Transporter
     def initialize(objekt)
-      super objekt, :move
+      super(objekt, :move)
     end
   end
 end
