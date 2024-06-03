@@ -10,7 +10,7 @@ group :symphony do
   gem 'matrix'
   gem 'pqueue'
   gem 'ruby-enum'
-  gem 'rubytree', git: 'https://github.com/cmtonkinson/RubyTree.git', ref: 'fix-syntax-warning'
+  gem 'rubytree', '~> 1.0.2'
   gem 'sorted_set'
   gem 'text'
 end
