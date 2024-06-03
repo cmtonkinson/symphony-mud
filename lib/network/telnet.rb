@@ -89,7 +89,6 @@ module Network
     end
 
     # Where we actually do something with received commands.
-    # rubocop:disable Metrics/MethodLength
     def interpret_command(input, bytes)
       # We will use the bytes_consumed variable after the nested case to eat
       # the appropriate maount of data out of the input. This is because telnet
@@ -147,5 +146,4 @@ module Network
       recv_command bytes.pack('C*')
     end
   end
-  # rubocop:enable Metrics/MethodLength
 end

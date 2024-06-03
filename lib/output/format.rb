@@ -22,7 +22,6 @@ module Display
       str
     end
 
-    # rubocop:disable Metrics/MethodLength
     def self.damage(damage, target)
       str = quantity(damage.actual, {
                        10_000 => '{wrains calamity upon{x',
@@ -62,7 +61,6 @@ module Display
       end
       str
     end
-    # rubocop:enable Metrics/MethodLength
 
     def self.mastery(percent, numeric = false)
       str = quantity(percent, {
