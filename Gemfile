@@ -1,19 +1,17 @@
 source 'https://rubygems.org'
 
-group :symphony do
-  gem 'aasm'
-  gem 'deep_merge'
-  gem 'descriptive_statistics'
-  gem 'ffi'
-  gem 'hooks'
-  gem 'i18n'
-  gem 'matrix'
-  gem 'pqueue'
-  gem 'ruby-enum'
-  gem 'rubytree', '~> 1.0.2'
-  gem 'sorted_set'
-  gem 'text'
-end
+gem 'aasm'
+gem 'deep_merge'
+gem 'descriptive_statistics'
+gem 'ffi'
+gem 'hooks'
+gem 'i18n'
+gem 'matrix'
+gem 'pqueue'
+gem 'ruby-enum'
+gem 'rubytree'
+gem 'sorted_set'
+gem 'text'
 
 group :test do
   gem 'colorize'

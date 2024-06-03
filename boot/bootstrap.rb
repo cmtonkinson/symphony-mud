@@ -2,7 +2,7 @@
 # Standard practice puts the Gemfile at the project root.
 ENV['GEMFILE'] ||= File.expand_path '../Gemfile', __dir__
 require 'bundler/setup'
-Bundler.require :default, :symphony
+Bundler.require :default
 
 # Our application object, designed to be a global singleton.
 Symphony = App.new
