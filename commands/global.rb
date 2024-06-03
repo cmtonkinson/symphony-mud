@@ -45,7 +45,7 @@ module Command
           next unless commands_by_level.key? level_num
 
           being.puts "\n{Y#{level_name}{x"
-          being.puts '  ' + commands_by_level[level_num].map(&:get_name).join(', ')
+          being.puts "  #{commands_by_level[level_num].map(&:get_name).join(', ')}"
         end
       end
     end
@@ -450,7 +450,7 @@ module Command
     exec do
       being.puts t('title')
       $world.avatars.each_value do |a|
-        being.puts '  ' + a.name
+        being.puts "  #{a.name}"
       end
     end
   end

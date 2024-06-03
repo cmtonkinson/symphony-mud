@@ -141,7 +141,7 @@ module Mechanics
 
     def what_to_s
       if @what.respond_to? :to_sym
-        ':' + @what.to_sym.to_s
+        ":#{@what.to_sym}"
       else
         file, line = @what.source_location
         '%s %s:%s' % [(@what.lambda? ? 'lambda' : 'proc'), file, line]

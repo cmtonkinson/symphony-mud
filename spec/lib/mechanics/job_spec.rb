@@ -67,7 +67,7 @@ describe Mechanics::Job do
     end
 
     it 'should invoke the callable if passed as a Lambda' do
-      job = Mechanics::Job.new 0, @job_tester, ->(tester) { tester.call_me_maybe }
+      job = Mechanics::Job.new 0, @job_tester, lambda(&:call_me_maybe)
       job.fire
       expect(@job_tester.x).to eq 10
     end

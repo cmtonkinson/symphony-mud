@@ -2,11 +2,7 @@ module Combat
   class Strike
     include ::DoesDamage
 
-    attr_reader :attacker, :defender # combatants (Beings)
-    attr_reader :parent, :bout, :battle # references
-    attr_reader :level # nesting level of this Strike within the Bout
-    attr_reader :avoided # is this Strike going to be prevented in some way? (bool)
-    attr_reader :created_by # through what mechanism was this attack made?
+    attr_reader :attacker, :defender, :parent, :bout, :battle, :level, :avoided, :created_by # combatants (Beings) # references # nesting level of this Strike within the Bout # is this Strike going to be prevented in some way? (bool) # through what mechanism was this attack made?
 
     # Strike objects execute immediately upon construction and don't outlive
     # the Battle.

@@ -50,9 +50,7 @@ module Test
     end
 
     def expect(e, msg = nil)
-      unless @last_used_account
-        raise 'SystemTest#expect() called without first send a command through the shortcut interface.'
-      end
+      raise 'SystemTest#expect() called without first send a command through the shortcut interface.' unless @last_used_account
 
       if e.is_a?(String) || e.is_a?(Regexp)
         expect_last acm(@last_used_account), e, msg
@@ -64,9 +62,7 @@ module Test
     end
 
     def n_expect(e, msg = nil)
-      unless @last_used_account
-        raise 'SystemTest#n_expect() called without first send a command through the shortcut interface.'
-      end
+      raise 'SystemTest#n_expect() called without first send a command through the shortcut interface.' unless @last_used_account
 
       if e.is_a?(String) || e.is_a?(Regexp)
         n_expect_last acm(@last_used_account), e, msg
@@ -125,8 +121,8 @@ module Test
 
     def not_found_error(e, msg = nil)
       case e
-      when String then "Did not find substring '#{e}'%s" % (msg ? '  ' + msg : '')
-      when Regexp then "No match found for '#{e}'%s" % (msg ? '  ' + msg : '')
+      when String then "Did not find substring '#{e}'%s" % (msg ? "  #{msg}" : '')
+      when Regexp then "No match found for '#{e}'%s" % (msg ? "  #{msg}" : '')
       else raise 'Bad param'
       end
     end
@@ -155,7 +151,7 @@ module Test
 
     def account_client_method(account_name)
       @last_used_account = account_name.to_s
-      @context.send (account_name.to_s + '_client').to_sym
+      @context.send :"#{account_name}_client"
     end
     alias acm account_client_method
 

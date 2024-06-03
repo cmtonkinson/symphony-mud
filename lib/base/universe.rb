@@ -111,7 +111,7 @@ module Base
       # Begin anew.
       env, options = reboot_exec_details
       cli = Symphony.binary.to_s + $command_line_args
-      [env, cli, options].each { |x| Symphony.logger.warn '  ' + x.inspect }
+      [env, cli, options].each { |x| Symphony.logger.warn "  #{x.inspect}" }
       Process.exec env, cli, options
     rescue StandardError => e
       @should_reboot = false
@@ -171,7 +171,7 @@ module Base
       recovery_map = YAML.load_file(Base.configuration.recovery_file)
 
       # rubocop:disable Security/MarshalLoad
-      Marshal.load(ENV['SYMPHONY_CLIENT_FDS']).each do |fd|
+      Marshal.load(ENV.fetch('SYMPHONY_CLIENT_FDS', nil)).each do |fd|
         client = Network::Client.new TCPSocket.for_fd fd.to_i
         user   = User.new
         user.bind_client client, false

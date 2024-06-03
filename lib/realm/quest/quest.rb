@@ -198,7 +198,7 @@ module Realm
     end
 
     def task_summary(task, indent = 0)
-      i = "\n" + ('  ' * indent)
+      i = "\n#{'  ' * indent}"
       str = "#{i}Task #{task.rid}: #{task.name}"
       str << "#{i}  - objective: #{task.objective.name} (#{task.objective.params.to_json})" if task.objective
       task.parameters.each { |p| str << "#{i}  - parameter: #{p.name} (#{p.params.to_json})" }

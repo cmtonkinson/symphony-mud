@@ -32,7 +32,7 @@ module Command
     },
     set: {
       pattern: nil,
-      description: ->(arg) { 'any one of: ' + arg.value.join(', ') },
+      description: ->(arg) { "any one of: #{arg.value.join(', ')}" },
       examples: ['silver,gold', 'to,from,on,at']
     },
     string: {
@@ -50,7 +50,7 @@ module Command
         name, symbol, number = x.partition(/#|\*/)
         OpenStruct.new(
           name: name.downcase.sub(/('|") (.+?) \1/ix, '\2'),
-          symbol: symbol,
+          symbol:,
           number: %w[all half].include?(number) ? number : number.to_i
         )
       },

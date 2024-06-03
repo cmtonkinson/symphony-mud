@@ -33,7 +33,7 @@ module Base
 
     def self.add(name, id, given_passphrase)
       user_map[name] = {
-        id: id,
+        id:,
         passphrase: hash(given_passphrase)
       }
       update_user_map!

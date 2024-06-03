@@ -63,7 +63,7 @@ describe Util::AttrHash do
       ['sword', 'sword', 'crystal', 'sword',
        'mushroom', 'small cup', 'mutton',
        'little pink flower'].each_with_index do |name, i|
-        @h.insert Realm::TestItem.new nil, name: name, rid: i
+        @h.insert Realm::TestItem.new nil, name:, rid: i
       end
     end
 

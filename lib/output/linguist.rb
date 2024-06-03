@@ -15,7 +15,7 @@ module Util
         arg = args.shift
 
         begin
-          send 'interpret_' + interpreter[1..], target, arg
+          send "interpret_#{interpreter[1..]}", target, arg
         rescue NoMethodError
           Symphony.logger.error ERR_TMPL % [
             format,
@@ -115,10 +115,10 @@ module Util
       return name if first_char == first_char.upcase
 
       # Starts with a vowel, so we add "an"
-      return name.prepend(I18n.t('linguist.article.indefinite.vowel') + ' ') if first_char =~ /[aeiou]/i
+      return name.prepend("#{I18n.t('linguist.article.indefinite.vowel')} ") if first_char =~ /[aeiou]/i
 
       # Just a regular name, so we add "a"
-      name.prepend(I18n.t('linguist.article.indefinite.consonant') + ' ')
+      name.prepend("#{I18n.t('linguist.article.indefinite.consonant')} ")
     end
 
     # Truncate the middle of a `source` string, replacing enough characters

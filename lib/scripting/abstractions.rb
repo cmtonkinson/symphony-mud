@@ -8,37 +8,37 @@ module Scripting
           name: 'get_name',
           return_type: :string,
           params: [],
-          exec: ->(being) { being.name }
+          exec: lambda(&:name)
         },
         {
           name: 'get_level',
           return_type: :int,
           params: [],
-          exec: ->(being) { being.level }
+          exec: lambda(&:level)
         },
         {
           name: 'get_health',
           return_type: :int,
           params: [],
-          exec: ->(being) { being.health }
+          exec: lambda(&:health)
         },
         {
           name: 'get_mana',
           return_type: :int,
           params: [],
-          exec: ->(being) { being.mana }
+          exec: lambda(&:mana)
         },
         {
           name: 'get_stamina',
           return_type: :int,
           params: [],
-          exec: ->(being) { being.stamina }
+          exec: lambda(&:stamina)
         },
         {
           name: 'heal',
           return_type: :void,
           params: [],
-          exec: ->(being) { being.heal }
+          exec: lambda(&:heal)
         },
         {
           name: 'puts',
@@ -49,9 +49,7 @@ module Scripting
       ]
 
       def initialize(being)
-        unless being.is_a? Realm::Being
-          raise ArgumentError, 'Being abstraction must be initialized with a Being instance.'
-        end
+        raise ArgumentError, 'Being abstraction must be initialized with a Being instance.' unless being.is_a? Realm::Being
 
         # Bind this instance to the being.
         @being = being
@@ -73,20 +71,18 @@ module Scripting
           name: 'get_name',
           return_type: :string,
           params: [],
-          exec: ->(item) { item.name }
+          exec: lambda(&:name)
         },
         {
           name: 'get_level',
           return_type: :int,
           params: [],
-          exec: ->(item) { item.level }
+          exec: lambda(&:level)
         }
       ]
 
       def initialize(item)
-        unless being.is_a? Realm::Item
-          raise ArgumentError, 'Item abstraction must be initialized with an Item instance.'
-        end
+        raise ArgumentError, 'Item abstraction must be initialized with an Item instance.' unless being.is_a? Realm::Item
 
         # Bind this instance to the item.
         @item = item

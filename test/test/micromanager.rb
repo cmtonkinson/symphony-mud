@@ -51,7 +51,7 @@ module Test
         parent_data = $ROOT_DIR.join 'tmp', 'test-state', ancestral_path(@node.parent)
         FileUtils.cp_r parent_data, state_path
         # Truncate any logs.
-        FileUtils.rm_rf Dir.glob(state_path.to_s + '/*-log.txt')
+        FileUtils.rm_rf Dir.glob("#{state_path}/*-log.txt")
       end
 
       th = Thread.new do
@@ -87,7 +87,7 @@ module Test
       # For each 'with' account (e.g. "with :larry"), define a variable to
       # access the Client (e.g. "larry_client").
       @test.accounts.each do |acct|
-        context[(acct + '_client').to_sym] = Client.new(port, state_path, acct)
+        context[:"#{acct}_client"] = Client.new(port, state_path, acct)
       end
 
       @test.conduct_test context

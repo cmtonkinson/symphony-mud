@@ -97,11 +97,11 @@ module Command
         end
 
         placement = Realm::Placement.new(nil, {
-                                           room: room,
+                                           room:,
                                            klass: objekt.class.name,
                                            objekt_id: objekt.id,
-                                           number: number,
-                                           max: max
+                                           number:,
+                                           max:
                                          })
         Symphony.logger.debug '%s created %s in %s' % [being, placement, room].map(&:fqid_str)
         placement.add.to room

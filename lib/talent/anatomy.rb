@@ -85,13 +85,13 @@ module Talent
 
     def primary_slot
       case being.anatomy
-      when Human then get_slots(being.hand + ' hand').first
+      when Human then get_slots("#{being.hand} hand").first
       end
     end
 
     def secondary_slot
       case being.anatomy
-      when Human then get_slots((being.hand == 'right' ? 'left' : 'right') + ' hand').first
+      when Human then get_slots("#{being.hand == 'right' ? 'left' : 'right'} hand").first
       end
     end
 

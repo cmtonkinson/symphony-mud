@@ -62,7 +62,7 @@ module Realm
     # logic in Quest serialization hooks to manipulate parent/child relationships
     on_hashify lambda {
       hash = {
-        description: description,
+        description:,
         objective: objective&.hashify,
         parameters: parameters&.map(&:hashify),
         reward: reward&.hashify

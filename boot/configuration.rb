@@ -109,14 +109,14 @@ end
 # We want to skip over the OptionParser if the application is being loaded in
 # the context of another program (e.g. rspec) or this will cause any CLI args
 # intended for that program to be processd here.
-$command_line_args = ARGF.argv.map { |a| ' ' + a }.reduce(:+) || ''
+$command_line_args = ARGF.argv.map { |a| " #{a}" }.reduce(:+) || ''
 if /symphony/.match?($PROGRAM_NAME)
   OptionParser.new do |opts|
     opts.banner = "Usage: #{BINARY_NAME} [options]"
 
     CONFIGURATION.each do |config|
-      short = '-' + config[:short]
-      long  = '--' + config[:long] + (config.key?(:placeholder) ? " #{config[:placeholder]}" : '')
+      short = "-#{config[:short]}"
+      long  = "--#{config[:long]}#{config.key?(:placeholder) ? " #{config[:placeholder]}" : ''}"
       desc  = config[:description]
       func  = config[:callback]
       opts.on short, long, desc, func

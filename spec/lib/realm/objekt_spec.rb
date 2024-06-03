@@ -83,9 +83,7 @@ describe Realm::Objekt do
         # The values should be the same.
         expect(@clone.send(att)).to eq @original.send(att)
         # The objects should not be the same.
-        unless [NilClass, Integer].include? @clone.send(att).class
-          expect(@clone.send(att)).not_to be @original.send(att)
-        end
+        expect(@clone.send(att)).not_to be @original.send(att) unless [NilClass, Integer].include? @clone.send(att).class
       end
     end
   end

@@ -48,8 +48,8 @@ module Realm
       end.to_h
 
       {
-        default_open: default_open,
-        default_lock: default_lock
+        default_open:,
+        default_lock:
       }.merge! exit_room_ids
     }
 

@@ -17,9 +17,9 @@ module Realm
 
     on_hashify lambda {
       hash = {
-        silver: silver,
-        gold: gold,
-        exp: exp,
+        silver:,
+        gold:,
+        exp:,
         item_ids: item_ids.join(',')
       }
       { reward: hash }

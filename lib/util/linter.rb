@@ -8,7 +8,7 @@ module Util
     def self.lint_project_source
       # RbConfig will give us the path to the current ruby interpreter binary,
       # and should be accurate no matter how Ruby is installed or managed.
-      ruby_bin = RbConfig::CONFIG['bindir'] + '/' + RbConfig::CONFIG['ruby_install_name']
+      ruby_bin = "#{RbConfig::CONFIG['bindir']}/#{RbConfig::CONFIG['ruby_install_name']}"
 
       # Pipe the content of all .rb files in the project directory into Ruby's
       # built-in syntax checking function.

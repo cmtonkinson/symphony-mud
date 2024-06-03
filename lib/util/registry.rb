@@ -22,9 +22,7 @@ module Util
       objekt = nil
       if (bucket = hash.values.find { |buck| buck.key? objekt_id })
         objekt = bucket[objekt_id]
-        if objekt._disposal_requested
-          Symphony.logger.error "Lookup on disposed Objekt #{objekt.class.name} #{objekt.id}"
-        end
+        Symphony.logger.error "Lookup on disposed Objekt #{objekt.class.name} #{objekt.id}" if objekt._disposal_requested
       end
 
       objekt
@@ -39,7 +37,7 @@ module Util
       end.to_h
       {
         size: buckets.values.map { |b| b[:size] }.reduce(:+),
-        buckets: buckets
+        buckets:
       }
     end
 

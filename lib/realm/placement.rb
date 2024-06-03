@@ -13,10 +13,10 @@ module Realm
 
     on_hashify lambda {
       {
-        klass: klass,
-        objekt_id: objekt_id,
-        number: number,
-        max: max
+        klass:,
+        objekt_id:,
+        number:,
+        max:
       }
     }
 

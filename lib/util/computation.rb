@@ -6,13 +6,7 @@ module Util
     # Returns min if the value is less than min.
     # Returns max if the value is greater than max.
     def self.bound(value, min, max)
-      if value < min
-        min
-      elsif value > max
-        max
-      else
-        value
-      end
+      value.clamp(min, max)
     end
 
     # Plain and simple implementation of the Logistic Function.

@@ -49,7 +49,7 @@ module Realm
         raise ArgumentError, "No #{obj.class.name} container configured on #{self.class.name}" if klass == Objekt
 
         # Construct a container name from the klass.
-        container_name = klass.name.split('::').last.downcase.to_s + 's'
+        container_name = "#{klass.name.split('::').last.downcase}s"
 
         # If the Objekct responds to the container name, then we've found the
         # most-specific container configured to accept objects of this type.

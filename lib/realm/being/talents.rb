@@ -90,8 +90,8 @@ module Realm
           if a.learned?
             puts I18n.t('being.talents.list_learned'), a_level, a_name, Display::Format.mastery(a.mastery, true)
           else
-            deps = a.prerequisites.empty? ? '' : (' requires ' + a.prereq_string)
-            puts I18n.t('being.talents.list_' + (a.can_learn? ? 'can_learn' : 'cannot_learn')), a_level, a_name, deps
+            deps = a.prerequisites.empty? ? '' : " requires #{a.prereq_string}"
+            puts I18n.t("being.talents.list_#{a.can_learn? ? 'can_learn' : 'cannot_learn'}"), a_level, a_name, deps
           end
         end
     end
