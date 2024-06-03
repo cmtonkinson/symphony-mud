@@ -121,7 +121,7 @@ DEPENDENCIES
   rspec-collection_matchers
   rubocop
   ruby-enum
-  rubytree (~> 1.0.2)
+  rubytree
   simplecov
   sorted_set
   text
