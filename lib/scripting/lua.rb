@@ -27,48 +27,113 @@ module Scripting
     attach_function :lua_pcallk, [:pointer, :int, :int, :int, :pointer, :pointer], :int
     attach_function :lua_pushcclosure, [:pointer, :pointer], :void
     attach_function :lua_pushstring, [:pointer, :string], :void
+    attach_function :lua_pushinteger, [:pointer, :int], :void
     attach_function :lua_setglobal, [:pointer, :string], :void
     # rubocop:enable Style/SymbolArray
-  end
-end
 
-module Scripting
-  module Lua
+
     # State will be the main class for consumers to interact with
     # the Lua engine. It handles state cretion and most importantly,
     # because I'm a shit architect, it also directly handles exposing
     # the myriad Symphony functions we need available in the Lua
     # environment.
     #
-    # TODO: Consider another abstraction to manage mapping in all the methods.
     # TODO: Look for a way where we can create a new state, configure the
     # environment, globals, functions, and then serialize/clone/snapshot etc
     # so we don't have to keep reinitializing everything from scratch every
     # time a new Lua script needs to be run.
     class State
-      def initialize
-        @state = Lua.luaL_newstate
-        Lua.luaL_openlibs(@state)
-
-        # rubocop:disable Lint/NestedMethodDefinition
-        def ruby_do_stuff(str)
-          puts "Hello from Ruby! Your argument was: >>>#{str}<<<"
-        end
-        # rubocop:enable Lint/NestedMethodDefinition
-
-        lua_do_stuff = FFI::Function.new(:int, [:pointer]) do |lua_state|
-          if Lua.lua_isstring(lua_state, 1) == 1
-            str = Lua.luaL_tolstring lua_state, 1
-            result = ruby_do_stuff str
-            Lua.lua_pushstring lua_state, result
-          else
-            Lua.lua_pushstring lua_state, 'Error: expected string'
+      # Expects an Object (we'll call it the "given" object) that has a
+      # corresponding class defined in the Scripting::Abstraction module. An
+      # abstracted object will be created (wrapping the given object). Then we
+      # add a generic Lua closure that will proxy methods on the abstraction.
+      #
+      # The whole point of this is:
+      #   A) Whitelist which methods can be invoked on the given object.
+      #   B) Reduce the number of FFI functions we need to add to Lua state.
+      #   C) Allow metaprogramming for the management & documentation of
+      #      Symphony's Lua API.
+      def initialize(context)
+        Symphony.logger.debug "Initializing Lua state for #{context.class.name}"
+        begin
+          Scripting::Abstraction.constants.each do |const|
+            if context.is_a? Scripting::Abstraction.const_get(const)::MAPPED_CLASS
+              @abstraction_class = Scripting::Abstraction.const_get(const)
+            end
           end
-          1
+
+          if @abstraction_class.nil?
+            err = "No abstraction class found for #{context.class.name}"
+            Symphony.logger.error err
+            raise StandardError, err
+          end
+        rescue NameError
+          err = "No abstraction class found for #{context.class.name}"
+          Symphony.logger.error err
+          raise StandardError, err
         end
 
-        Lua.lua_pushcclosure(@state, lua_do_stuff)
-        Lua.lua_setglobal(@state, 'lua_do_stuff')
+        @abstraction = @abstraction_class.new context
+        @state = Lua.luaL_newstate
+        # TODO: Do we actually want/need All The Libs?
+        Lua.luaL_openlibs(@state) 
+      end
+
+      # This is a mess. Each method in the abstration class gets mapped to
+      # its own Lua closure. The function has to iterate over the param
+      # definitions and check the Lua stack for the correct type. If the
+      # type is incorrect, we have error handling to do.
+      def setup
+        @abstraction_class::METHODS.each do |method|
+          puts "registering method: #{method[:name]}"
+          lua_method = FFI::Function.new(:int, [:pointer]) do |lua_state|
+            Symphony.logger.debug "executing #{@abstraction_class}::#{method[:name]}(#{method[:params]})"
+            args = []
+            method[:params].each_with_index do |param, index|
+              case param
+              when :string
+                if Lua.lua_isstring(lua_state, index + 1) == 1
+                  str = Lua.luaL_tolstring lua_state, index + 1
+                  args << str
+                else
+                  err = "Error: #{@abstraction_class}::#{method[:name]} \
+                    expected string for param #{index + 1}"
+                  Lua.lua_pushstring lua_state, err
+                  Symphony.logger.warn err
+                  return 1
+                end
+              # TODO: Add more types as needed
+              else
+                err = "Error: #{@abstraction_class}::#{method[:name]} \
+                  unknown param type for param #{index + 1}"
+                Lua.lua_pushstring lua_state, err
+                Symphony.logger.warn err
+                return 1
+              end
+            end
+
+            result = @abstraction.send method[:name], *args
+
+            case method[:return_type]
+            when :void
+              return 0
+            when :int
+              Symphony.logger.debug "returning integer: #{result}"
+              Lua.lua_pushinteger lua_state, result
+            when :string
+              Lua.lua_pushstring lua_state, result
+            else
+              err = "Error: #{@abstraction_class}::#{method[:name]} \
+                unknown return type"
+              Lua.lua_pushstring lua_state, err
+              Symphony.logger.warn err
+              return 1
+            end
+          end
+
+          Lua.lua_pushcclosure @state, lua_method
+          Lua.lua_setglobal @state, method[:name]
+        end
       end
 
       def load(script)
@@ -76,7 +141,10 @@ module Scripting
       end
 
       def call
-        Lua.lua_pcallk(@state, 0, 0, 0, nil, nil)
+        if Lua.lua_pcallk(@state, 0, 0, 0, nil, nil) != 0
+          err = "Lua error: #{Lua.luaL_tolstring @state, -1}"
+          Symphony.logger.warn err
+        end
       end
 
       def close
