@@ -23,7 +23,7 @@ module Base
         handle_disconnections
         begin_reboot if should_reboot
         Util::Registry.cleanup
-        sleep Base.configuration.sleep_interval
+        sleep(Base.configuration.sleep_interval / 1000.0)
       end
       $world.save if should_save
       Symphony.logger.unknown 'Server shutting down.'

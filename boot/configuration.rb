@@ -44,9 +44,9 @@ CONFIGURATION = [
   {
     short: 'i',
     long: 'sleep-interval',
-    placeholder: 'SECONDS',
-    default: 0.02,
-    description: 'Wait time (in seconds) between server loops.',
+    placeholder: 'MS',
+    default: 20,
+    description: 'Wait time (in milliseconds) between server loops.',
     callback: proc { |value| Symphony.configuration.sleep_interval = value.to_f }
   },
   {

@@ -68,7 +68,7 @@ module Test
         #   * with its own data directory (pursuant to above condition)
         #   * with file logging enabled
         #   * with maximum verbosity
-        `#{$SYMPHONY} -p 0 -i 0 -d #{data_path} -o #{log_path} -l trace`
+        `#{$SYMPHONY} -p 0 -i 1 -d #{data_path} -o #{log_path} -l trace`
       end
 
       # Busywait for the server to boot.

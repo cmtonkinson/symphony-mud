@@ -14,7 +14,7 @@ module Mechanics
       @jobs_per_batch     = MIN_JOBS_PER_BATCH
       @job_cycle_counter  = 0
       @jobs_this_cycle    = 0
-      @batches_per_second = 1 / Base.configuration.sleep_interval
+      @batches_per_second = 1000.0 / Base.configuration.sleep_interval
     end
 
     # Insert the Job into the priority queue.
