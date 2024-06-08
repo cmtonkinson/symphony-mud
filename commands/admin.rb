@@ -450,23 +450,13 @@ module Command
     level Realm::Being::CREATOR
     usage({ rest: :string })
     exec do
-      being.puts 'start'
-
-      lua = Scripting::Lua::State.new being
-      lua.setup
-
-      lua.load "print('Hello, from Lua!')"
-      lua.call
-
-      lua_script = <<~LUA
-        local level = get_level()
-        local out = string.format("This is a level %d miracle!", level)
-        puts(out)
+      ls = Scripting::Script.new
+      ls.set_context 'hero', being
+      lua = <<-LUA
+        hero_puts("You said '#{rest}'");
       LUA
-      lua.load lua_script
-      lua.call
-
-      being.puts 'end'
+      ls.set_script lua
+      ls.run
     end
   end
 

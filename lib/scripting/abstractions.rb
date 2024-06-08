@@ -1,35 +1,48 @@
 module Scripting
   module Abstraction
     #########################################################################
+    def self.create_abstraction(object)
+      case object
+      when Realm::Being
+        Being.new(object)
+      when Realm::Item
+        Item.new(object)
+      else
+        Symphony.log.error "Cannot create abstraction for object of type #{object.class}."
+        nil
+      end
+    end
+
+    #########################################################################
     class Being
       MAPPED_CLASS = Realm::Being
       METHODS = [
         {
-          name: 'get_name',
+          name: 'name',
           return_type: :string,
           params: [],
           exec: lambda(&:name)
         },
         {
-          name: 'get_level',
+          name: 'level',
           return_type: :int,
           params: [],
           exec: lambda(&:level)
         },
         {
-          name: 'get_health',
+          name: 'health',
           return_type: :int,
           params: [],
           exec: lambda(&:health)
         },
         {
-          name: 'get_mana',
+          name: 'mana',
           return_type: :int,
           params: [],
           exec: lambda(&:mana)
         },
         {
-          name: 'get_stamina',
+          name: 'stamina',
           return_type: :int,
           params: [],
           exec: lambda(&:stamina)
@@ -68,13 +81,13 @@ module Scripting
       MAPPED_CLASS = Realm::Item
       METHODS = [
         {
-          name: 'get_name',
+          name: 'name',
           return_type: :string,
           params: [],
           exec: lambda(&:name)
         },
         {
-          name: 'get_level',
+          name: 'level',
           return_type: :int,
           params: [],
           exec: lambda(&:level)
