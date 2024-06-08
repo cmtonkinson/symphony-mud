@@ -9,9 +9,9 @@ module Scripting
 
     # Set the script content to be run. Successive calls will overwrite the
     # previous script.
-    def set_script(text)
+    def script(text)
       @text = text
-      @state.set_script text
+      @state.script text
     end
 
     # Creates a set of functions my combining the given name with each of the

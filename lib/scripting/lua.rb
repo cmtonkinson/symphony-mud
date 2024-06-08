@@ -17,17 +17,17 @@ module Scripting
     extend FFI::Library
     ffi_lib 'lua5.4'
 
-    attach_function :luaL_loadstring, [:pointer, :string], :int
+    attach_function :luaL_loadstring, %i[pointer string], :int
     attach_function :luaL_newstate, [], :pointer
     attach_function :luaL_openlibs, [:pointer], :void
-    attach_function :luaL_tolstring, [:pointer, :int, :pointer], :string
+    attach_function :luaL_tolstring, %i[pointer int pointer], :string
     attach_function :lua_close, [:pointer], :void
-    attach_function :lua_isstring, [:pointer, :int], :int
-    attach_function :lua_pcallk, [:pointer, :int, :int, :int, :pointer, :pointer], :int
-    attach_function :lua_pushcclosure, [:pointer, :pointer, :int], :void
-    attach_function :lua_pushstring, [:pointer, :string], :void
-    attach_function :lua_pushinteger, [:pointer, :int], :void
-    attach_function :lua_setglobal, [:pointer, :string], :void
+    attach_function :lua_isstring, %i[pointer int], :int
+    attach_function :lua_pcallk, %i[pointer int int int pointer pointer], :int
+    attach_function :lua_pushcclosure, %i[pointer pointer int], :void
+    attach_function :lua_pushstring, %i[pointer string], :void
+    attach_function :lua_pushinteger, %i[pointer int], :void
+    attach_function :lua_setglobal, %i[pointer string], :void
 
     class State
       def initialize
@@ -35,7 +35,7 @@ module Scripting
         Lua.luaL_openlibs(@state) # TODO: Do we actually want/need All The Libs?
       end
 
-      def set_script(text)
+      def script(text)
         if Lua.luaL_loadstring(@state, text).nonzero?
           err_msg = "Lua error: #{Lua.luaL_tolstring @state, -1, nil}"
           Symphony.logger.warn err_msg
@@ -47,46 +47,29 @@ module Scripting
         # This is the closure that will be called by Lua when the method is
         # invoked.
         lua_closure = FFI::Function.new(:int, [:pointer]) do |lua_state|
-          Symphony.logger.trace "executing #{name}(#{config[:params]})"
+          Symphony.logger.trace "Executing #{name}(#{config[:params]})"
           args = []
 
           # Because the C API is typed (duh) we need to check each parameter
-          # type manually.
+          # type manually and grab it with a special function.
           config[:params].each_with_index do |param, index|
             case param
             when :string
-              if Lua.lua_isstring(lua_state, index + 1) == 1
-                str = Lua.luaL_tolstring lua_state, index + 1, nil
-                args << str
-              else
-                err = "Error: #{name} expected string for param #{index + 1}"
-                Lua.lua_pushstring lua_state, err
-                Symphony.logger.warn err
-                return 1
-              end
+              args << get_string_param(lua_state, index + 1)
             when :int
-              if Lua.lua_isinteger(lua_state, index + 1) == 1
-                int = Lua.lua_tointegerx lua_state, index + 1
-                args << int
-              else
-                err = "Error: #{name} expected integer for param #{index + 1}"
-                Lua.lua_pushstring lua_state, err
-                Symphony.logger.warn err
-                return 1
-              end
+              args << get_int_param(lua_state, index + 1)
             else
-              err = "Error: #{name} unknown param type for param #{index + 1}"
-              Lua.lua_pushstring lua_state, err
-              Symphony.logger.warn err
-              return 1
+              # Oh noes! Unknown param type!
+              param_error(lua_state, index + 1)
             end
           end
 
-          # With the appropriate parameters in the right place, we can invoke
-          # the method against the abstraction.
+          # With the appropriate parameters in the right order, we can invoke
+          # the designated method against the abstraction.
           result = abstraction.send config[:name], *args
 
-          # Like parameters, we have to handle each return type manually.
+          # Like parameters, we have to handle each return type manually
+          # because the C API is typed (duh (again)).
           case config[:return_type]
           when :void
             # NOOP
@@ -95,7 +78,8 @@ module Scripting
           when :string
             Lua.lua_pushstring lua_state, result
           else
-            err = "Error: #{name} unknown return type"
+            # Oh noes! Unknown return type!
+            err = "Lua error: #{name} unknown return type"
             Lua.lua_pushstring lua_state, err
             Symphony.logger.warn err
           end
@@ -104,6 +88,35 @@ module Scripting
         # With the closure defined, we can push it to the Lua stack and set it.
         Lua.lua_pushcclosure @state, lua_closure, 0
         Lua.lua_setglobal @state, name
+      end
+
+      def get_string_param(lua_state, index)
+        if Lua.lua_isstring(lua_state, index) == 1
+          Lua.luaL_tolstring lua_state, index, nil
+        else
+          err = "Lua error: expected string for param #{index}"
+          Lua.lua_pushstring lua_state, err
+          Symphony.logger.warn err
+          nil
+        end
+      end
+
+      def get_int_param(lua_state, index)
+        if Lua.lua_isinteger(lua_state, index) == 1
+          Lua.lua_tointeger lua_state, index
+        else
+          err = "Lua error: expected integer for param #{index}"
+          Lua.lua_pushstring lua_state, err
+          Symphony.logger.warn err
+          nil
+        end
+      end
+
+      def param_error(lua_state, index)
+        err = "Lua FFI error: unknown param type for param #{index}"
+        Lua.lua_pushstring lua_state, err
+        Symphony.logger.warn err
+        nil
       end
 
       def execute

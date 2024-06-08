@@ -455,7 +455,7 @@ module Command
       lua = <<-LUA
         hero_puts("You said '#{rest}'");
       LUA
-      ls.set_script lua
+      ls.script lua
       ls.run
     end
   end
