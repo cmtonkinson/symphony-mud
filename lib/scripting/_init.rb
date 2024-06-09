@@ -1,3 +1,4 @@
+require_relative 'error'
 require_relative 'lua'
 require_relative 'abstractions'
 require_relative 'script'
