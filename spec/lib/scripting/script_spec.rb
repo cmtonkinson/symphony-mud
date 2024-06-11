@@ -29,7 +29,7 @@ describe Scripting::Script do
   it 'should limit execution time' do
     infinite_loop = <<-LUA
       local x = 0;
-      for i = 1, 2000000 do
+      for i = 1, 20000000 do
         x = x + 1;
       end
     LUA

@@ -17,82 +17,71 @@ module Scripting
     extend FFI::Library
     ffi_lib 'lua5.4'
 
-    attach_function :luaL_loadstring, %i[pointer string], :int
-    attach_function :luaL_newstate, [], :pointer
-    attach_function :luaL_tolstring, %i[pointer int pointer], :string
-    attach_function :lua_close, [:pointer], :void
-    attach_function :lua_getglobal, %i[pointer string], :void
-    attach_function :lua_isstring, %i[pointer int], :int
-    attach_function :lua_pcallk, %i[pointer int int int pointer pointer], :int
+    attach_function :luaL_loadstring , %i[pointer string], :int
+    attach_function :luaL_newstate   , [], :pointer
+    attach_function :luaL_openlibs   , [:pointer], :void
+    attach_function :luaL_tolstring  , %i[pointer int pointer], :string
+    attach_function :lua_close       , [:pointer], :void
+    attach_function :lua_getglobal   , %i[pointer string], :void
+    attach_function :lua_isstring    , %i[pointer int], :int
+    attach_function :lua_pcallk      , %i[pointer int int int pointer pointer], :int
     attach_function :lua_pushcclosure, %i[pointer pointer int], :void
-    attach_function :lua_pushinteger, %i[pointer int], :void
-    attach_function :lua_pushnil, %i[pointer], :void
-    attach_function :lua_pushstring, %i[pointer string], :void
-    attach_function :lua_setfield, %i[pointer int string], :void
-    attach_function :lua_setglobal, %i[pointer string], :void
-    attach_function :lua_sethook, %i[pointer pointer int int], :int
-    attach_function :lua_settop, %i[pointer int], :void
-    attach_function :lua_error, %i[pointer], :int
+    attach_function :lua_pushinteger , %i[pointer int], :void
+    attach_function :lua_pushnil     , %i[pointer], :void
+    attach_function :lua_pushstring  , %i[pointer string], :void
+    attach_function :lua_setfield    , %i[pointer int string], :void
+    attach_function :lua_setglobal   , %i[pointer string], :void
+    attach_function :lua_settop      , %i[pointer int], :void
 
-    attach_function :luaopen_base, %i[pointer], :int
-    attach_function :luaopen_math, %i[pointer], :int
-    attach_function :luaopen_string, %i[pointer], :int
-    attach_function :luaopen_table, %i[pointer], :int
+    # This is the maximum time a script is allowed to run (in seconds).
+    SCRIPT_TIME_LIMIT = 0.05
 
-    # This controls the number of instructions run between time check
-    # callbascks to guard against infinite loops (or just really long
-    # scripts).
-    INSTRUCTION_COUNT = 1000
-    HOOK_MASK         = 0x04
-    SCRIPT_TIME_LIMIT = 0.50 # 50 milliseconds
+    # This is the number of lines of code after which the time limit check
+    # will be performed.
+    SCRIPT_TIME_CHECK_INTERVAL = 1000
 
-    DISALLOWED_FUNCTIONS = %w[
-      dofile
-      loadfile
-      print
-    ].freeze
+    # Error messages for a script that exceeds the time limit.
+    SCRIPT_TIME_ERROR = 'Script execution time exceeded'
+
+    # This is the Lua code that will be injected into the user script to
+    # enforce the time limit.
+    SCRIPT_WRAPPER = <<-LUA
+      -- Limit total script execution time.
+      local _symphony_time_limit = os.clock() + #{SCRIPT_TIME_LIMIT}
+      local function _symphony_check_time()
+        if os.clock() >= _symphony_time_limit then
+          error('#{SCRIPT_TIME_ERROR}')
+        end
+      end
+      debug.sethook(_symphony_check_time, 'l', #{SCRIPT_TIME_CHECK_INTERVAL})
+
+      -- Sandbox the user script.
+      do
+        local _ENV = {
+          math   = math,
+          string = string,
+          table  = table,
+          os     = {
+            clock    = os.clock,      
+            date     = os.date,       
+            difftime = os.difftime,
+            time     = os.time,       
+          },
+        }
+        %s
+      end
+    LUA
 
     class State
       def initialize
-        # Allocate a new Lua context.
+        # Allocate a new Lua context with libraries open.
         @state = Lua.luaL_newstate
-
-        # Load default libraries.
-        Lua.luaopen_base @state
-        Lua.luaopen_table @state
-        Lua.luaopen_math @state
-        Lua.luaopen_string @state
-
-        # Disable OS and I/O functions.
-        Lua.lua_getglobal @state, '_G'
-        DISALLOWED_FUNCTIONS.each do |fn|
-          Lua.lua_pushnil @state
-          Lua.lua_setfield @state, -2, fn
-        end
-        Lua.lua_settop @state, -1
-
-        # Create a timeout hook.
-        # @end_time needs to be set just before pcallk is invoked.
-        @end_time = 0
-        check_time = FFI::Function.new(:void, %i[pointer]) do |lua_state|
-          if Time.now >= @end_time
-            err = 'Lua TimeoutError: script execution took too long'
-            Lua.lua_pushstring lua_state, err
-            Lua.lua_error lua_state
-            Symphony.logger.warn err
-            raise Scripting::TimeoutError, err
-          end
-        end
-        Lua.lua_sethook @state, check_time, HOOK_MASK, INSTRUCTION_COUNT
+        Lua.luaL_openlibs @state
       end
 
-      def script(text)
-        wrapped = <<~LUA
-          function wrapper()
-            #{text}
-          end
-          wrapper()
-        LUA
+      def script(user_script)
+        wrapped = SCRIPT_WRAPPER % [user_script]
+
         if Lua.luaL_loadstring(@state, wrapped).nonzero?
           err_msg = "Lua ParsingError: #{Lua.luaL_tolstring @state, -1, nil}"
           Symphony.logger.warn err_msg
@@ -178,11 +167,17 @@ module Scripting
       end
 
       def execute
-        @end_time = Time.now + SCRIPT_TIME_LIMIT
         if Lua.lua_pcallk(@state, 0, 0, 0, nil, nil).nonzero?
-          err_msg = "Lua RuntimeError: #{Lua.luaL_tolstring @state, -1, nil}"
-          Symphony.logger.warn err_msg
-          raise Scripting::RuntimeError, err_msg
+          raw_err = Lua.luaL_tolstring @state, -1, nil
+          if raw_err.include? SCRIPT_TIME_ERROR
+            err_msg = "Lua TimeoutError: #{raw_err}"
+            Symphony.logger.warn err_msg
+            raise Scripting::TimeoutError, err_msg
+          else
+            err_msg = "Lua RuntimeError: #{raw_err}"
+            Symphony.logger.warn err_msg
+            raise Scripting::RuntimeError, err_msg
+          end
         end
       end
 
