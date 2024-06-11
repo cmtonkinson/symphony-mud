@@ -32,6 +32,7 @@ module Scripting
     attach_function :lua_setglobal, %i[pointer string], :void
     attach_function :lua_sethook, %i[pointer pointer int int], :int
     attach_function :lua_settop, %i[pointer int], :void
+    attach_function :lua_error, %i[pointer], :int
 
     attach_function :luaopen_base, %i[pointer], :int
     attach_function :luaopen_math, %i[pointer], :int
@@ -42,8 +43,8 @@ module Scripting
     # callbascks to guard against infinite loops (or just really long
     # scripts).
     INSTRUCTION_COUNT = 1000
-    HOOK_MASK         = 0x02
-    SCRIPT_TIME_LIMIT = 0.25 # 250 milliseconds
+    HOOK_MASK         = 0x04
+    SCRIPT_TIME_LIMIT = 0.50 # 50 milliseconds
 
     DISALLOWED_FUNCTIONS = %w[
       dofile
@@ -73,10 +74,11 @@ module Scripting
         # Create a timeout hook.
         # @end_time needs to be set just before pcallk is invoked.
         @end_time = 0
-        check_time = FFI::Function.new(:int, %i[pointer]) do |_|
-          puts 'Checking time...'
+        check_time = FFI::Function.new(:void, %i[pointer]) do |lua_state|
           if Time.now >= @end_time
             err = 'Lua TimeoutError: script execution took too long'
+            Lua.lua_pushstring lua_state, err
+            Lua.lua_error lua_state
             Symphony.logger.warn err
             raise Scripting::TimeoutError, err
           end

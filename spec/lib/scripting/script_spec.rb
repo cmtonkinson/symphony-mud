@@ -28,8 +28,9 @@ describe Scripting::Script do
 
   it 'should limit execution time' do
     infinite_loop = <<-LUA
-      while true do
-        local a = 1;
+      local x = 0;
+      for i = 1, 2000000 do
+        x = x + 1;
       end
     LUA
     expect { subject.script infinite_loop }.not_to raise_error
