@@ -17,21 +17,21 @@ module Scripting
     extend FFI::Library
     ffi_lib 'lua5.4'
 
-    attach_function :luaL_loadstring , %i[pointer string], :int
-    attach_function :luaL_newstate   , [], :pointer
-    attach_function :luaL_openlibs   , [:pointer], :void
-    attach_function :luaL_tolstring  , %i[pointer int pointer], :string
-    attach_function :lua_close       , [:pointer], :void
-    attach_function :lua_getglobal   , %i[pointer string], :void
-    attach_function :lua_isstring    , %i[pointer int], :int
-    attach_function :lua_pcallk      , %i[pointer int int int pointer pointer], :int
+    attach_function :luaL_loadstring, %i[pointer string], :int
+    attach_function :luaL_newstate, [], :pointer
+    attach_function :luaL_openlibs, [:pointer], :void
+    attach_function :luaL_tolstring, %i[pointer int pointer], :string
+    attach_function :lua_close, [:pointer], :void
+    attach_function :lua_getglobal, %i[pointer string], :void
+    attach_function :lua_isstring, %i[pointer int], :int
+    attach_function :lua_pcallk, %i[pointer int int int pointer pointer], :int
     attach_function :lua_pushcclosure, %i[pointer pointer int], :void
-    attach_function :lua_pushinteger , %i[pointer int], :void
-    attach_function :lua_pushnil     , %i[pointer], :void
-    attach_function :lua_pushstring  , %i[pointer string], :void
-    attach_function :lua_setfield    , %i[pointer int string], :void
-    attach_function :lua_setglobal   , %i[pointer string], :void
-    attach_function :lua_settop      , %i[pointer int], :void
+    attach_function :lua_pushinteger, %i[pointer int], :void
+    attach_function :lua_pushnil, %i[pointer], :void
+    attach_function :lua_pushstring, %i[pointer string], :void
+    attach_function :lua_setfield, %i[pointer int string], :void
+    attach_function :lua_setglobal, %i[pointer string], :void
+    attach_function :lua_settop, %i[pointer int], :void
 
     # This is the maximum time a script is allowed to run (in seconds).
     SCRIPT_TIME_LIMIT = 0.05
@@ -41,11 +41,11 @@ module Scripting
     SCRIPT_TIME_CHECK_INTERVAL = 1000
 
     # Error messages for a script that exceeds the time limit.
-    SCRIPT_TIME_ERROR = 'Script execution time exceeded'
+    SCRIPT_TIME_ERROR = 'Script execution time exceeded'.freeze
 
     # This is the Lua code that will be injected into the user script to
     # enforce the time limit.
-    SCRIPT_WRAPPER = <<-LUA
+    SCRIPT_WRAPPER = <<-LUA.freeze
       -- Limit total script execution time.
       local _symphony_time_limit = os.clock() + #{SCRIPT_TIME_LIMIT}
       local function _symphony_check_time()
@@ -62,10 +62,10 @@ module Scripting
           string = string,
           table  = table,
           os     = {
-            clock    = os.clock,      
-            date     = os.date,       
+            clock    = os.clock,
+            date     = os.date,
             difftime = os.difftime,
-            time     = os.time,       
+            time     = os.time,
           },
         }
         %s
