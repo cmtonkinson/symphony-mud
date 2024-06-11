@@ -451,11 +451,17 @@ module Command
     usage({ rest: :string })
     exec do
       ls = Scripting::Script.new
-      ls.set_context 'hero', being
       lua = <<-LUA
-        hero_puts("You said '#{rest}'");
+        --local message = "%s, you are a level %d '%s'";
+        local name = hero_name();
+        --local lvl = hero_level();
+        --local msg = string.format(message, name, lvl, "#{rest}");
+        --hero_puts(msg);
+        --hero_puts(hero_name());
+        hero_puts(hero_name());
       LUA
       ls.script lua
+      ls.set_context 'hero', being
       ls.run
     end
   end

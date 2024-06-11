@@ -58,29 +58,47 @@ module Scripting
       -- Sandbox the user script.
       do
         local _ENV = {
+          -- Expose the libraries we want to allow.
           math   = math,
           string = string,
           table  = table,
+          -- We don't want to expose all of the os library, so we have to
+          -- manually allow specific functions.
           os     = {
             clock    = os.clock,
             date     = os.date,
             difftime = os.difftime,
             time     = os.time,
           },
+          -- This is where we inject the user-defined methods.
+          %s
         }
+        -- This is where the user script is injected.
         %s
       end
     LUA
 
     class State
       def initialize
+        # The user provided script.
+        @raw_script = ''
+
+        # Because of how we restrict the Lua _ENV, we need to keep track of
+        # the method names that are defined so we can allow them to be called.
+        @method_names = Set.new
+
         # Allocate a new Lua context with libraries open.
         @state = Lua.luaL_newstate
         Lua.luaL_openlibs @state
       end
 
       def script(user_script)
-        wrapped = SCRIPT_WRAPPER % [user_script]
+        @raw_script = user_script
+      end
+
+      def wrap_script
+        name_mapping = @method_names.map { |name| "#{name} = #{name}," }.join("\n")
+        wrapped      = SCRIPT_WRAPPER % [name_mapping, @raw_script]
 
         if Lua.luaL_loadstring(@state, wrapped).nonzero?
           err_msg = "Lua ParsingError: #{Lua.luaL_tolstring @state, -1, nil}"
@@ -90,6 +108,8 @@ module Scripting
       end
 
       def setup_method(name, config, abstraction)
+        @method_names.add name
+
         # This is the closure that will be called by Lua when the method is
         # invoked.
         lua_closure = FFI::Function.new(:int, [:pointer]) do |lua_state|
@@ -113,6 +133,7 @@ module Scripting
           # With the appropriate parameters in the right order, we can invoke
           # the designated method against the abstraction.
           result = abstraction.send config[:name], *args
+          Symphony.logger.trace "Result: #{result}"
 
           # Like parameters, we have to handle each return type manually
           # because the C API is typed (duh (again)).
@@ -167,6 +188,8 @@ module Scripting
       end
 
       def execute
+        wrap_script
+
         if Lua.lua_pcallk(@state, 0, 0, 0, nil, nil).nonzero?
           raw_err = Lua.luaL_tolstring @state, -1, nil
           if raw_err.include? SCRIPT_TIME_ERROR
