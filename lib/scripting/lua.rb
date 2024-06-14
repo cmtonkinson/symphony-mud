@@ -22,16 +22,13 @@ module Scripting
     attach_function :luaL_openlibs, [:pointer], :void
     attach_function :luaL_tolstring, %i[pointer int pointer], :string
     attach_function :lua_close, [:pointer], :void
-    attach_function :lua_getglobal, %i[pointer string], :void
+    attach_function :lua_isinteger, %i[pointer int], :int
     attach_function :lua_isstring, %i[pointer int], :int
     attach_function :lua_pcallk, %i[pointer int int int pointer pointer], :int
     attach_function :lua_pushcclosure, %i[pointer pointer int], :void
     attach_function :lua_pushinteger, %i[pointer int], :void
-    attach_function :lua_pushnil, %i[pointer], :void
     attach_function :lua_pushstring, %i[pointer string], :void
-    attach_function :lua_setfield, %i[pointer int string], :void
     attach_function :lua_setglobal, %i[pointer string], :void
-    attach_function :lua_settop, %i[pointer int], :void
 
     # This is the maximum time a script is allowed to run (in seconds).
     SCRIPT_TIME_LIMIT = 0.05
@@ -62,8 +59,8 @@ module Scripting
           math   = math,
           string = string,
           table  = table,
-          -- We don't want to expose all of the os library, so we have to
-          -- manually allow specific functions.
+          -- We don't want to expose all of the os library, so we manually
+          -- allow specific functions.
           os     = {
             clock    = os.clock,
             date     = os.date,
@@ -92,10 +89,14 @@ module Scripting
         Lua.luaL_openlibs @state
       end
 
+      # Sets the user script to be executed.
       def script(user_script)
         @raw_script = user_script
       end
 
+      # This method prefixes the user script with the necessary code to
+      # enforce the time limit and sandboxing. Then it loads the script into
+      # the Lua environment.
       def wrap_script
         name_mapping = @method_names.map { |name| "#{name} = #{name}," }.join("\n")
         wrapped      = SCRIPT_WRAPPER % [name_mapping, @raw_script]
@@ -107,18 +108,38 @@ module Scripting
         end
       end
 
+      # This method creates the actual underlying Lua method corresponding to
+      # the method defined in the abstraction.
       def setup_method(name, config, abstraction)
         @method_names.add name
 
         # This is the closure that will be called by Lua when the method is
         # invoked.
         lua_closure = FFI::Function.new(:int, [:pointer]) do |lua_state|
+          # Reset the trace variables.
+          @trace_object      = nil
+          @trace_method      = nil
+          @trace_args        = nil
+          @trace_return_type = nil
+          @trace_return      = nil
+
           Symphony.logger.trace "Executing #{name}(#{config[:params]})"
+          @trace_object      = abstraction.underlying.class.name
+          @trace_method      = config[:name]
+          @trace_args        = config[:params].map { |p| ":#{p}" }.join(',')
+          @trace_return_type = config[:return_type]
           args = []
 
           # Because the C API is typed (duh) we need to check each parameter
           # type manually and grab it with a special function.
           config[:params].each_with_index do |param, index|
+            puts index
+            puts param.inspect
+            type = Lua.lua_type lua_state, index + 1
+            typename = Lua.lua_typename lua_state, type
+            puts type
+            puts typename
+
             case param
             when :string
               args << get_string_param(lua_state, index + 1)
@@ -133,20 +154,25 @@ module Scripting
           # With the appropriate parameters in the right order, we can invoke
           # the designated method against the abstraction.
           result = abstraction.send config[:name], *args
+          @trace_return = result
           Symphony.logger.trace "Result: #{result}"
 
           # Like parameters, we have to handle each return type manually
           # because the C API is typed (duh (again)).
+          # Remember that the return value is the number of items pushed to
+          # the stack.
           case config[:return_type]
           when :void
-            # NOOP
+            0
           when :int
             Lua.lua_pushinteger lua_state, result
+            1
           when :string
             Lua.lua_pushstring lua_state, result
+            1
           else
             # Oh noes! Unknown return type!
-            err = "Lua ReturnTypeError: #{name} unknown return type"
+            err = "Lua ReturnTypeError: #{name} unknown return type :: #{trace_string}"
             Lua.lua_pushstring lua_state, err
             Symphony.logger.warn err
             raise Scripting::ReturnTypeError, err
@@ -158,35 +184,39 @@ module Scripting
         Lua.lua_setglobal @state, name
       end
 
+      # This method is used to get string parameters from the Lua stack.
       def get_string_param(lua_state, index)
         if Lua.lua_isstring(lua_state, index) == 1
           Lua.luaL_tolstring lua_state, index, nil
         else
-          err = "Lua ArgumentError: expected string for param #{index}"
+          err = "Lua ArgumentError: expected string for param #{index} :: #{trace_string}"
           Lua.lua_pushstring lua_state, err
           Symphony.logger.warn err
           raise Scripting::ArgumentError, err
         end
       end
 
+      # This method is used to get integer parameters from the Lua stack.
       def get_int_param(lua_state, index)
         if Lua.lua_isinteger(lua_state, index) == 1
           Lua.lua_tointeger lua_state, index
         else
-          err = "Lua ArgumentError: expected integer for param #{index}"
+          err = "Lua ArgumentError: expected integer for param #{index} :: #{trace_string}"
           Lua.lua_pushstring lua_state, err
           Symphony.logger.warn err
           raise Scripting::ArgumentError, err
         end
       end
 
+      # This is the error message for when we encounter an unknown parameter.
       def param_error(lua_state, index)
-        err = "Lua ArgumentError: unknown param type for param #{index}"
+        err = "Lua ArgumentError: unknown param type for param #{index} :: #{trace_string}"
         Lua.lua_pushstring lua_state, err
         Symphony.logger.warn err
         raise Scripting::ArgumentError, err
       end
 
+      # Finish setting up the Lua environment and execute the script.
       def execute
         wrap_script
 
@@ -204,8 +234,19 @@ module Scripting
         end
       end
 
+      # Clean up the Lua environment.
       def close
         Lua.lua_close(@state)
+      end
+
+      # This just returns a nicely formatted string to help with script
+      # debuggin.
+      def trace_string
+        "%s#%s(%s) -> %s:%s" % [@trace_object,
+                                @trace_method,
+                                @trace_args,
+                                @trace_return_type,
+                                @trace_return]
       end
     end
   end

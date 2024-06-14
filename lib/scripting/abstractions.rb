@@ -15,62 +15,63 @@ module Scripting
 
     #########################################################################
     class Being
+      attr_reader :underlying
       MAPPED_CLASS = Realm::Being
       METHODS = [
         {
           name: 'name',
           return_type: :string,
           params: [],
-          exec: lambda(&:name)
+          exec: ->(underlying) { underlying.name }
         },
         {
           name: 'level',
           return_type: :int,
           params: [],
-          exec: lambda(&:level)
+          exec: ->(underlying) { underlying.level }
         },
         {
           name: 'health',
           return_type: :int,
           params: [],
-          exec: lambda(&:health)
+          exec: ->(underlying) { underlying.health }
         },
         {
           name: 'mana',
           return_type: :int,
           params: [],
-          exec: lambda(&:mana)
+          exec: ->(underlying) { underlying.mana }
         },
         {
           name: 'stamina',
           return_type: :int,
           params: [],
-          exec: lambda(&:stamina)
+          exec: ->(underlying) { underlying.stamina }
         },
         {
           name: 'heal',
           return_type: :void,
           params: [],
-          exec: lambda(&:heal)
+          exec: ->(underlying) { underlying.heal }
         },
         {
           name: 'puts',
           return_type: :void,
           params: [:string],
-          exec: ->(being, message) { being.puts message }
+          exec: ->(underlying, message) { underlying.puts message }
         }
       ]
 
       def initialize(being)
         raise ArgumentError, 'Being abstraction must be initialized with a Being instance.' unless being.is_a? Realm::Being
 
-        # Bind this instance to the being.
-        @being = being
+        # Bind this instance to the underlying.
+        @underlying = being
 
         # Define the methods that are allowed to be invoked inside Lua.
         METHODS.each do |method|
           define_singleton_method(method[:name]) do |*args|
-            method[:exec].call(@being, *args)
+            method[:exec].call(@underlying, *args)
           end
         end
       end
@@ -78,32 +79,33 @@ module Scripting
 
     #########################################################################
     class Item
+      attr_reader :underlying
       MAPPED_CLASS = Realm::Item
       METHODS = [
         {
           name: 'name',
           return_type: :string,
           params: [],
-          exec: lambda(&:name)
+          exec: ->(underlying) { underlying.name }
         },
         {
           name: 'level',
           return_type: :int,
           params: [],
-          exec: lambda(&:level)
+          exec: ->(underlying) { underlying.level }
         }
       ]
 
       def initialize(item)
-        raise ArgumentError, 'Item abstraction must be initialized with an Item instance.' unless being.is_a? Realm::Item
+        raise ArgumentError, 'Item abstraction must be initialized with an Item instance.' unless item.is_a? Realm::Item
 
-        # Bind this instance to the item.
-        @item = item
+        # Bind this instance to the underlying.
+        @underlying = item
 
         # Define the methods that are allowed to be invoked inside Lua.
         METHODS.each do |method|
           define_singleton_method(method[:name]) do |*args|
-            method[:exec].call(item, *args)
+            method[:exec].call(underlying, *args)
           end
         end
       end
