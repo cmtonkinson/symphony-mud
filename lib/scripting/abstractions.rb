@@ -16,7 +16,10 @@ module Scripting
     #########################################################################
     class Being
       attr_reader :underlying
+
       MAPPED_CLASS = Realm::Being
+
+      # rubocop:disable Style/SymbolProc
       METHODS = [
         {
           name: 'name',
@@ -61,6 +64,7 @@ module Scripting
           exec: ->(underlying, message) { underlying.puts message }
         }
       ]
+      # rubocop:enable Style/SymbolProc
 
       def initialize(being)
         raise ArgumentError, 'Being abstraction must be initialized with a Being instance.' unless being.is_a? Realm::Being
@@ -80,7 +84,10 @@ module Scripting
     #########################################################################
     class Item
       attr_reader :underlying
+
       MAPPED_CLASS = Realm::Item
+
+      # rubocop:disable Style/SymbolProc
       METHODS = [
         {
           name: 'name',
@@ -95,6 +102,7 @@ module Scripting
           exec: ->(underlying) { underlying.level }
         }
       ]
+      # rubocop:enable Style/SymbolProc
 
       def initialize(item)
         raise ArgumentError, 'Item abstraction must be initialized with an Item instance.' unless item.is_a? Realm::Item

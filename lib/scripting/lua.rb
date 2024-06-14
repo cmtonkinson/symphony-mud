@@ -108,6 +108,35 @@ module Scripting
         end
       end
 
+      # To help with debugging, we keep track of the method that is currently
+      # being executed along with its parameters and return value.
+      # This method resets the trace variables.
+      def clear_trace
+        @trace_object      = nil
+        @trace_method      = nil
+        @trace_args        = nil
+        @trace_return_type = nil
+        @trace_return      = nil
+      end
+
+      # This method is used to set the trace variables for the current method.
+      def set_trace(abstraction, config)
+        @trace_object      = abstraction.underlying.class.name
+        @trace_method      = config[:name]
+        @trace_args        = config[:params].map { |p| ":#{p}" }.join(',')
+        @trace_return_type = config[:return_type]
+      end
+
+      # This just returns a nicely formatted string to help with script
+      # debuggin.
+      def trace_string
+        '%s#%s(%s) -> %s:%s' % [@trace_object,
+                                @trace_method,
+                                @trace_args,
+                                @trace_return_type,
+                                @trace_return]
+      end
+
       # This method creates the actual underlying Lua method corresponding to
       # the method defined in the abstraction.
       def setup_method(name, config, abstraction)
@@ -116,30 +145,14 @@ module Scripting
         # This is the closure that will be called by Lua when the method is
         # invoked.
         lua_closure = FFI::Function.new(:int, [:pointer]) do |lua_state|
-          # Reset the trace variables.
-          @trace_object      = nil
-          @trace_method      = nil
-          @trace_args        = nil
-          @trace_return_type = nil
-          @trace_return      = nil
-
+          clear_trace
           Symphony.logger.trace "Executing #{name}(#{config[:params]})"
-          @trace_object      = abstraction.underlying.class.name
-          @trace_method      = config[:name]
-          @trace_args        = config[:params].map { |p| ":#{p}" }.join(',')
-          @trace_return_type = config[:return_type]
+          set_trace abstraction, config
           args = []
 
           # Because the C API is typed (duh) we need to check each parameter
           # type manually and grab it with a special function.
           config[:params].each_with_index do |param, index|
-            puts index
-            puts param.inspect
-            type = Lua.lua_type lua_state, index + 1
-            typename = Lua.lua_typename lua_state, type
-            puts type
-            puts typename
-
             case param
             when :string
               args << get_string_param(lua_state, index + 1)
@@ -155,7 +168,6 @@ module Scripting
           # the designated method against the abstraction.
           result = abstraction.send config[:name], *args
           @trace_return = result
-          Symphony.logger.trace "Result: #{result}"
 
           # Like parameters, we have to handle each return type manually
           # because the C API is typed (duh (again)).
@@ -237,16 +249,6 @@ module Scripting
       # Clean up the Lua environment.
       def close
         Lua.lua_close(@state)
-      end
-
-      # This just returns a nicely formatted string to help with script
-      # debuggin.
-      def trace_string
-        "%s#%s(%s) -> %s:%s" % [@trace_object,
-                                @trace_method,
-                                @trace_args,
-                                @trace_return_type,
-                                @trace_return]
       end
     end
   end
