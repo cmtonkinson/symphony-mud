@@ -456,6 +456,7 @@ module Command
         local name = hero_name();
         local lvl  = hero_level();
         local msg  = string.format(tpl, name, lvl, "#{rest}");
+        _symphony_return['first_return'] = lvl * 3;
         hero_puts(msg);
       LUA
       ls.script lua

@@ -29,6 +29,8 @@ module Scripting
     attach_function :lua_pushinteger, %i[pointer int], :void
     attach_function :lua_pushstring, %i[pointer string], :void
     attach_function :lua_setglobal, %i[pointer string], :void
+    attach_function :lua_toboolean, %i[pointer int], :int
+    attach_function :lua_tonumberx, %i[pointer int pointer], :double
 
     # This is the maximum time a script is allowed to run (in seconds).
     SCRIPT_TIME_LIMIT = 0.05
@@ -55,27 +57,57 @@ module Scripting
       -- Sandbox the user script.
       do
         local _ENV = {
-          -- Expose the libraries we want to allow.
+          -- Expose the basic Lua functions we want to allow.
+          assert   = assert,
+          error    = error,
+          ipairs   = ipairs,
+          next     = next,
+          pairs    = pairs,
+          select   = select,
+          tonumber = tonumber,
+          tostring = tostring,
+          type     = type,
+          -- Expose the module we want to allow.
           math   = math,
           string = string,
           table  = table,
-          -- We don't want to expose all of the os library, so we manually
-          -- allow specific functions.
+          -- Expose just the date/time functions from the os module.
           os     = {
             clock    = os.clock,
             date     = os.date,
             difftime = os.difftime,
             time     = os.time,
           },
-          -- This is where we inject the user-defined methods.
+          -- The script return table allows the script to share primitive
+          -- variables back to Symphony itself. And the internal functions
+          -- need to be in scope for the script to call them.
+          _symphony_return = {},
+          _symphony_return_boolean = _symphony_return_boolean,
+          _symphony_return_number  = _symphony_return_number,
+          _symphony_return_string  = _symphony_return_string,
+          -- This is where we inject the user-defined functions.
           %s
         }
         -- This is where the user script is injected.
         %s
+        -- Loop through the return table and send each value back to
+        for k, v in pairs(_symphony_return) do
+          if type(v) == 'boolean' then
+            _symphony_return_boolean(k, v and 1 or 0)
+          elseif type(v) == 'number' then
+            _symphony_return_number(k, v)
+          elseif type(v) == 'string' then
+            _symphony_return_string(k, v)
+          else
+            error('Unknown return type')
+          end
+        end
       end
     LUA
 
     class State
+      attr_accessor :return_table
+
       def initialize
         # The user provided script.
         @raw_script = ''
@@ -83,6 +115,11 @@ module Scripting
         # Because of how we restrict the Lua _ENV, we need to keep track of
         # the method names that are defined so we can allow them to be called.
         @method_names = Set.new
+
+        # There are certain cases where we may want to return variables from
+        # the script back to Symphony. This is the Hash that will hold those
+        # variables.
+        @return_table = {}
 
         # Allocate a new Lua context with libraries open.
         @state = Lua.luaL_newstate
@@ -228,8 +265,46 @@ module Scripting
         raise Scripting::ArgumentError, err
       end
 
+      # This method creates the Lua functions that will be called to return
+      # values to Symphony.
+      def create_return_functions
+        # This is the Lua function that will be called to return a boolean
+        # value to Symphony.
+        lua_return_boolean = FFI::Function.new(:int, [:pointer]) do |lua_state|
+          key   = Lua.luaL_tolstring lua_state, 1, nil
+          value = Lua.lua_toboolean lua_state, 2
+          @return_table[key] = value ? true : false
+          0
+        end
+        Lua.lua_pushcclosure @state, lua_return_boolean, 0
+        Lua.lua_setglobal @state, '_symphony_return_boolean'
+
+        # This is the Lua function that will be called to return an integer
+        # value to Symphony.
+        lua_return_number = FFI::Function.new(:int, [:pointer]) do |lua_state|
+          key   = Lua.luaL_tolstring lua_state, 1, nil
+          value = Lua.lua_tonumberx lua_state, 2, nil
+          @return_table[key] = value.to_f
+          0
+        end
+        Lua.lua_pushcclosure @state, lua_return_number, 0
+        Lua.lua_setglobal @state, '_symphony_return_number'
+
+        # This is the Lua function that will be called to return a string
+        # value to Symphony.
+        lua_return_string = FFI::Function.new(:int, [:pointer]) do |lua_state|
+          key   = Lua.luaL_tolstring lua_state, 1, nil
+          value = Lua.luaL_tolstring lua_state, 2, nil
+          @return_table[key] = value.to_s
+          0
+        end
+        Lua.lua_pushcclosure @state, lua_return_string, 0
+        Lua.lua_setglobal @state, '_symphony_return_string'
+      end
+
       # Finish setting up the Lua environment and execute the script.
       def execute
+        create_return_functions
         wrap_script
 
         if Lua.lua_pcallk(@state, 0, 0, 0, nil, nil).nonzero?

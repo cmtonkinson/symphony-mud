@@ -2,9 +2,10 @@ module Scripting
   # This is the consumer-facing class for the scripting module.
   class Script
     def initialize
-      @state   = Lua::State.new
-      @text    = nil
-      @context = {}
+      @state         = Lua::State.new
+      @text          = nil
+      @context       = {}
+      @return_values = {}
     end
 
     # Set the script content to be run. Successive calls will overwrite the
@@ -55,6 +56,13 @@ module Scripting
 
       @state.execute
       @state.close
+
+      @return_values = @state.return_table
+    end
+
+    # Returns any values that were returned by the script.
+    def result
+      @return_values
     end
   end
 end

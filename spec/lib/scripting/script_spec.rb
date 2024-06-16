@@ -36,4 +36,38 @@ describe Scripting::Script do
     expect { subject.script infinite_loop }.not_to raise_error
     expect { subject.run }.to raise_error Scripting::TimeoutError
   end
+
+  it 'should not return anything by default' do
+    basic_script = <<-LUA
+      local x = 4;
+    LUA
+    expect { subject.script basic_script }.not_to raise_error
+    expect { subject.run }.not_to raise_error
+
+    return_hash = subject.result
+    expect(return_hash).to be_a Hash
+    expect(return_hash).to be_empty
+  end
+
+  it 'should allow the script to return values' do
+    return_script = <<-LUA
+      _symphony_return['one'] = 9;
+      _symphony_return['two'] = true;
+      _symphony_return['three'] = "test";
+    LUA
+    expect { subject.script return_script }.not_to raise_error
+    expect { subject.run }.not_to raise_error
+
+    return_hash = subject.result
+    expect(return_hash).to be_a Hash
+    expect(return_hash.size).to eq 3
+
+    expect(return_hash['one']).to be_a Numeric
+    expect(return_hash['one']).to eq 9
+
+    expect(return_hash['two']).to eq true
+
+    expect(return_hash['three']).to be_a String
+    expect(return_hash['three']).to eq 'test'
+  end
 end
