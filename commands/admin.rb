@@ -459,6 +459,10 @@ module Command
         _symphony_return['first_return'] = lvl * 3;
         hero_puts(msg);
       LUA
+      ls.set_variable 'x', 42
+      ls.set_variable 'y', 'hello'
+      ls.set_variable 'z', true
+      ls.set_variable 'a', 3.14
       ls.script lua
       ls.set_context 'hero', being
       ls.run

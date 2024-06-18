@@ -49,6 +49,17 @@ describe Scripting::Script do
     expect(return_hash).to be_empty
   end
 
+  it 'should allow symphony to pass variables into Lua' do
+    foo = 'bar'.freeze
+    variable_script = <<-LUA
+      _symphony_return['baz'] = foo;
+    LUA
+    subject.set_variable 'foo', foo
+    expect { subject.script variable_script }.not_to raise_error
+    expect { subject.run }.not_to raise_error
+    expect(subject.result['baz']).to eq 'bar'
+  end
+
   it 'should allow the script to return values' do
     return_script = <<-LUA
       _symphony_return['one'] = 9;

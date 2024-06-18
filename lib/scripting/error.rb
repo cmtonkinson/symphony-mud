@@ -8,6 +8,9 @@ module Scripting
   class ArgumentError < Error
   end
 
+  class VariableError < Error
+  end
+
   class ReturnTypeError < Error
   end
 

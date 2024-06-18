@@ -5,6 +5,7 @@ module Scripting
       @state         = Lua::State.new
       @text          = nil
       @context       = {}
+      @variables     = {}
       @return_values = {}
     end
 
@@ -28,13 +29,16 @@ module Scripting
       @context[name] = abstraction
     end
 
+    def set_variable(name, value)
+      @variables[name] = value
+    end
+
     def clear_context(name)
       @context.delete name
     end
 
     # Creates all the individual methods for each context key/value pair.
     def configure_environment
-      Symphony.logger.debug 'Configuring Lua environment'
       @context.each do |name, abstraction|
         abstraction.class::METHODS.each do |method_cfg|
           method_name = "#{name}_#{method_cfg[:name]}"
@@ -47,11 +51,12 @@ module Scripting
     # Execute the script with the configured context.
     def run
       configure_environment
+      @state.setup_variables @variables
 
-      Symphony.logger.debug 'Running script'
+      Symphony.logger.debug 'Executing Lua script'
       # Log each line of the scrip text
       @text.each_line do |line|
-        Symphony.logger.trace "  #{line}"
+        Symphony.logger.trace "  #{line.chomp}"
       end
 
       @state.execute

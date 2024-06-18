@@ -85,6 +85,8 @@ module Scripting
           _symphony_return_boolean = _symphony_return_boolean,
           _symphony_return_number  = _symphony_return_number,
           _symphony_return_string  = _symphony_return_string,
+          -- This is where we inject any user-defined variables.
+          %s
           -- This is where we inject the user-defined functions.
           %s
         }
@@ -112,9 +114,12 @@ module Scripting
         # The user provided script.
         @raw_script = ''
 
+        # Symphony is allowed to inject variables into the Lua environment.
+        @user_variables = {}
+
         # Because of how we restrict the Lua _ENV, we need to keep track of
         # the method names that are defined so we can allow them to be called.
-        @method_names = Set.new
+        @user_methods = Set.new
 
         # There are certain cases where we may want to return variables from
         # the script back to Symphony. This is the Hash that will hold those
@@ -135,8 +140,9 @@ module Scripting
       # enforce the time limit and sandboxing. Then it loads the script into
       # the Lua environment.
       def wrap_script
-        name_mapping = @method_names.map { |name| "#{name} = #{name}," }.join("\n")
-        wrapped      = SCRIPT_WRAPPER % [name_mapping, @raw_script]
+        variable_mapping = @user_variables.map { |k, v| "#{k} = #{v}," }.join("\n")
+        method_mapping   = @user_methods.map { |name| "#{name} = #{name}," }.join("\n")
+        wrapped          = SCRIPT_WRAPPER % [variable_mapping, method_mapping, @raw_script]
 
         if Lua.luaL_loadstring(@state, wrapped).nonzero?
           err_msg = "Lua ParsingError: #{Lua.luaL_tolstring @state, -1, nil}"
@@ -174,10 +180,30 @@ module Scripting
                                 @trace_return]
       end
 
+      # This method is used to set the user-defined variables that will be
+      # injected into the Lua environment.
+      def setup_variables(variables)
+        variables.each do |name, value|
+          # rubocop:disable Style/CaseLikeIf
+          @user_variables[name] = if value.is_a? String
+                                    "\"#{value}\""
+                                  elsif value.is_a? Numeric
+                                    value
+                                  elsif value.is_a?(TrueClass) || value.is_a?(FalseClass)
+                                    value ? 'true' : 'false'
+                                  else
+                                    err = "Lua VariableError: unknown variable type for #{name} :: #{trace_string}"
+                                    Symphony.logger.warn err
+                                    raise Scripting::VariableError, err
+                                  end
+          # rubocop:enable Style/CaseLikeIf
+        end
+      end
+
       # This method creates the actual underlying Lua method corresponding to
       # the method defined in the abstraction.
       def setup_method(name, config, abstraction)
-        @method_names.add name
+        @user_methods.add name
 
         # This is the closure that will be called by Lua when the method is
         # invoked.
