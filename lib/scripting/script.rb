@@ -54,10 +54,7 @@ module Scripting
       @state.setup_variables @variables
 
       Symphony.logger.debug 'Executing Lua script'
-      # Log each line of the scrip text
-      @text.each_line do |line|
-        Symphony.logger.trace "  #{line.chomp}"
-      end
+      @text.each_line { |l| Symphony.logger.trace "  #{l.strip}" }
 
       @state.execute
       @state.close
